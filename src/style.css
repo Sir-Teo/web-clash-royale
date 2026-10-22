@@ -3703,3 +3703,363 @@ kbd {
     margin-bottom: 13px;
   }
 }
+
+/* A match owns the viewport. The battlefield gets all space left after controls. */
+body.in-battle {
+  overflow: hidden;
+  overscroll-behavior: none;
+  height: 100vh;
+  height: 100dvh;
+}
+.in-battle #app {
+  height: 100%;
+}
+.in-battle .app-shell {
+  height: 100%;
+  min-height: 0;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+    env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  background: radial-gradient(ellipse at center, #314c51, #101c2d 75%);
+}
+.in-battle .topbar,
+.in-battle .left-sidebar,
+.in-battle .right-sidebar,
+.in-battle .app-footer {
+  display: none;
+}
+.in-battle .workspace {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+}
+.in-battle .arena-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 680px);
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: 0 0 90px #0007;
+}
+.in-battle .arena-heading {
+  flex: 0 0 48px;
+  height: 48px;
+  padding: 0 14px;
+}
+.in-battle .arena-heading h1 {
+  font-size: 21px;
+}
+.in-battle .arena-heading .eyebrow {
+  display: none;
+}
+.in-battle .arena-heading > .icon-button {
+  width: 44px;
+  height: 44px;
+}
+.in-battle .arena-stage {
+  flex: 1 1 0;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+}
+.in-battle .battle-tray {
+  flex: 0 0 auto;
+  height: auto;
+  padding: 20px 18px 8px;
+}
+.in-battle .hand-row {
+  width: 100%;
+  max-width: 400px;
+  gap: 14px;
+}
+.in-battle .hand {
+  gap: 12px;
+}
+.in-battle .hand-card {
+  width: 100%;
+  height: auto;
+  max-height: clamp(72px, 13dvh, 100px);
+  aspect-ratio: 0.78;
+}
+.in-battle .elixir-row,
+.in-battle .tray-caption {
+  width: 100%;
+  max-width: 400px;
+}
+.in-battle .elixir-row {
+  margin-top: 7px;
+  margin-bottom: 2px;
+}
+.in-battle .tray-caption {
+  min-height: 12px;
+}
+.in-battle .battle-tools > button {
+  width: 44px;
+  height: 44px;
+}
+.in-battle .replay-controls {
+  flex: 0 0 44px;
+  height: 44px;
+}
+.in-battle .replay-controls .icon-button {
+  width: 44px;
+  height: 40px;
+}
+.in-battle .match-bottom {
+  bottom: 8px;
+}
+.in-battle .deploy-hint {
+  bottom: 61px;
+}
+.in-battle .match-crowns {
+  top: 69px;
+}
+
+@media (max-width: 720px) {
+  body {
+    min-width: 320px;
+  }
+  .primary-nav {
+    height: calc(60px + env(safe-area-inset-bottom, 0px));
+  }
+  .topbar {
+    padding-top: env(safe-area-inset-top, 0px);
+    height: calc(68px + env(safe-area-inset-top, 0px));
+  }
+  .right-sidebar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .deck-panel {
+    padding: 22px 18px;
+  }
+  .deck-panel h3 {
+    font-size: 20px;
+  }
+  .deck-panel .eyebrow {
+    font-size: 9px;
+  }
+  .deck-panel .card-level {
+    font-size: 9px;
+  }
+  .deck-tabs > button {
+    width: 44px;
+    height: 44px;
+  }
+  .deck-tabs > span {
+    display: block;
+    font-size: 10px;
+  }
+  .deck-grid {
+    gap: 18px 12px;
+  }
+  .deck-grid .game-card .cost {
+    min-width: 22px;
+    height: 26px;
+    font-size: 20px;
+  }
+  .deck-summary {
+    font-size: 11px;
+  }
+  .deck-panel > .secondary-button {
+    min-height: 44px;
+    font-size: 13px;
+  }
+  .battle-brief {
+    display: none;
+  }
+  .arena-heading > .icon-button {
+    width: 44px;
+    height: 44px;
+  }
+  .top-actions .sound-toggle {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .modal-heading .icon-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .modal-backdrop {
+    padding: max(10px, env(safe-area-inset-top, 0px))
+      max(10px, env(safe-area-inset-right, 0px))
+      max(10px, env(safe-area-inset-bottom, 0px))
+      max(10px, env(safe-area-inset-left, 0px));
+  }
+  .modal {
+    max-height: 100%;
+    overscroll-behavior: contain;
+  }
+  input {
+    font-size: 16px;
+  }
+  .search-input input {
+    font-size: 16px;
+  }
+  .filter-row > button {
+    min-height: 44px;
+  }
+  .collection-grid {
+    max-height: none;
+  }
+  .builder-footer {
+    position: sticky;
+    bottom: -22px;
+    background: #1a2a42;
+    padding: 12px 0;
+  }
+  .builder-footer > .primary-button {
+    min-height: 44px;
+  }
+  .in-battle .hand-row {
+    max-width: 380px;
+  }
+  .in-battle .hand-card .card-name {
+    font-size: 9px;
+  }
+  .in-battle .next-card {
+    width: 32px;
+  }
+  .in-battle .next-card > img {
+    width: 28px;
+    height: 36px;
+  }
+}
+@media (max-width: 360px) {
+  .brand {
+    gap: 5px;
+  }
+  .brand b {
+    font-size: 16px;
+  }
+  .brand small {
+    letter-spacing: 1.6px;
+  }
+  .topbar {
+    padding-left: 10px;
+    padding-right: 10px;
+    gap: 4px;
+  }
+  .top-actions {
+    gap: 2px;
+  }
+  .gold-wallet {
+    padding-right: 4px;
+  }
+  .in-battle .battle-tray {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .in-battle .hand-row {
+    gap: 10px;
+  }
+  .in-battle .hand {
+    gap: 9px;
+  }
+}
+/* On a sideways phone the hand moves alongside the arena instead of squeezing it. */
+@media (orientation: landscape) and (max-height: 540px) {
+  .in-battle .arena-panel {
+    width: min(100%, 1000px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(190px, 28vw, 260px);
+    grid-template-rows: 44px minmax(0, 1fr);
+  }
+  .in-battle .arena-heading {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    height: 44px;
+  }
+  .in-battle .arena-stage {
+    grid-column: 1;
+    grid-row: 2;
+    height: 100%;
+  }
+  .in-battle .battle-tray {
+    grid-column: 2;
+    grid-row: 2;
+    min-height: 0;
+    padding: 15px 14px 8px;
+    border-top: 0;
+    border-left: 1px solid #44616d;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .in-battle .hand-row {
+    flex-direction: column-reverse;
+    gap: 6px;
+  }
+  .in-battle .hand {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 14px;
+    width: auto;
+  }
+  .in-battle .hand-card {
+    width: clamp(48px, 17dvh, 75px);
+    height: auto;
+    max-height: none;
+  }
+  .in-battle .next-card {
+    width: 100%;
+    height: 27px;
+    flex-direction: row;
+    gap: 8px;
+    padding: 0;
+  }
+  .in-battle .next-card > img {
+    width: 18px;
+    height: 23px;
+  }
+  .in-battle .next-card > b {
+    position: static;
+  }
+  .in-battle .tray-caption {
+    display: none;
+  }
+  .in-battle .elixir-row {
+    margin-top: 3px;
+  }
+  .in-battle .competitor span:not(.mini-shield) {
+    display: none;
+  }
+  .in-battle .match-crowns {
+    top: 64px;
+  }
+  .in-battle .match-top {
+    left: 10px;
+    right: 10px;
+    top: 8px;
+  }
+  .in-battle .match-bottom {
+    left: 10px;
+    right: 10px;
+  }
+  .in-battle .deploy-hint {
+    display: none;
+  }
+  .in-replay .arena-panel {
+    grid-template-rows: 44px minmax(0, 1fr) 44px;
+  }
+  .in-replay .arena-stage {
+    grid-row: 2 / 4;
+  }
+  .in-replay .replay-controls {
+    grid-column: 2;
+    grid-row: 3;
+    gap: 3px;
+    padding: 2px 5px;
+  }
+  .in-replay .replay-controls > span {
+    display: none;
+  }
+  .in-replay .hand-card {
+    width: clamp(44px, 14dvh, 65px);
+  }
+}

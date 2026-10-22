@@ -27,6 +27,15 @@ export default defineConfig({
         defaultBrowserType: "chromium",
       },
     },
+    {
+      name: "mobile-safari",
+      use: {
+        ...devices["iPhone 13"],
+        browserName: "webkit",
+        deviceScaleFactor: 1,
+        launchOptions: { args: [] },
+      },
+    },
   ],
   webServer: {
     command: "npm run dev -- --host 127.0.0.1 --port 5188 --strictPort",

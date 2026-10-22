@@ -14,13 +14,13 @@ An initial seeded shuffle plus timestamped commands makes battles replayable. Re
 
 ## Rendering
 
-`src/render/arena.ts` projects the board with an orthographic Three.js camera. Static opaque geometry is batched by material. Animated source sprites share atlas textures and materials while each unit updates its own UV geometry. Camera-facing tower and scenery artwork keeps the original perspective. Locally constructed models remain available as asset-loading fallbacks.
+`src/render/arena.ts` projects the board with an orthographic Three.js camera. Static opaque geometry is batched by material. Animated source sprites share native textures, materials and lazily cached frame geometry. The importer preserves complete directional clips, child transforms and per-part color transforms. Sprites follow movement direction on bridges; attacks use full source sequences; Prince uses its separate charge animation and Balloon retains its multipart motion. Princess Tower archers animate with their tower attacks. Camera-facing tower and scenery artwork keeps the original perspective. Locally constructed models remain available as asset-loading fallbacks.
 
 Rendering interpolates positions independently of simulation steps. Health labels use the camera projection. Pointer coordinates are raycast onto the arena floor and passed to the same placement validator as AI commands. Preview ghosts use that validator, too.
 
 ## Interface and persistence
 
-`src/main.ts` owns lobby, deck editing, battle controls, results and replay views. Card hand elements update only after the hand changes. Health, timer and elixir update at about 10 Hz. Simulation automatically pauses when the page is hidden. Modal dialogs pause a live match and resume when dismissed.
+`src/main.ts` owns lobby, deck editing, battle controls, results and replay views. During battles, a viewport-height flex layout gives the arena all remaining space after the header and hand; short landscape screens use a two-column arena/hand layout. Safe-area insets, dynamic viewport height and touch targets support phone use without scrolling the match. Card hand elements update only after the hand changes. Health, timer and elixir update at about 10 Hz. Simulation automatically pauses when the page is hidden. Modal dialogs pause a live match and resume when dismissed.
 
 `src/game/profile.ts` validates versioned localStorage data and recovers from corrupt or unavailable storage. It retains three decks, results for ten matches, trophy/gold counters, audio preferences and four chest slots. Card levels are normalized to level 11; progression does not alter battle stats.
 

@@ -256,7 +256,8 @@ function closeModal() {
     lobby();
     return;
   }
-  if (screen === "battle" && !paused) arena.renderer.domElement.focus();
+  if (screen === "battle" && !paused)
+    arena.renderer.domElement.focus({ preventScroll: true });
 }
 function refreshProfile() {
   $("#gold").textContent = fmt(profile.gold);
@@ -364,6 +365,7 @@ function startBattle() {
   eventCursor = 0;
   lastPhase = "normal";
   document.body.classList.add("in-battle");
+  window.scrollTo(0, 0);
   document.body.classList.remove("in-replay");
   battle = new Battle({
     deck: profile.deck,
@@ -390,7 +392,6 @@ function startBattle() {
   if (!profile.seenTutorial) {
     profile.seenTutorial = true;
     saveProfile(profile);
-    toast("Select a card below, then tap the blue half to deploy.");
   }
 }
 let lastHand = "";
@@ -414,7 +415,11 @@ function updateBattleUI(force = false) {
         ),
       )
       .join("");
-    document.querySelectorAll<HTMLButtonElement>("[data-slot]").forEach((e) =>
+    document.querySelectorAll<HTMLButtonElement>("[data-slot]").forEach((e) => {
+      e.addEventListener("click", (event) => {
+        if (event.detail === 0 && screen === "battle" && !paused)
+          selectCard(Number(e.dataset.slot));
+      });
       e.addEventListener("pointerdown", (event) => {
         if (screen !== "battle" || paused) return;
         activeSlot = Number(e.dataset.slot);
@@ -422,8 +427,8 @@ function updateBattleUI(force = false) {
         pointerStart = { x: event.clientX, y: event.clientY };
         selectCard(activeSlot);
         event.preventDefault();
-      }),
-    );
+      });
+    });
   }
   const next = CARD_MAP[p.queue[0]];
   $("#next-card-img").setAttribute("src", cardArt(next.id));
@@ -546,6 +551,7 @@ function playReplay(record: RecordEntry) {
   accumulator = 0;
   eventCursor = 0;
   document.body.classList.add("in-battle", "in-replay");
+  window.scrollTo(0, 0);
   battle = new Battle({ replay: replayData });
   arena.setBattle(battle);
   arena.showPlacement(null, null);
@@ -1099,6 +1105,7 @@ Object.defineProperty(window, "__arena", {
         actions: battle.actions.length,
         fps,
         drawCalls: arena.renderer.info.render.calls,
+        loadedAnimations: arena.loadedAnimations,
       };
     },
     project: (x: number, y: number) => {
