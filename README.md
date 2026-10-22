@@ -1,6 +1,6 @@
 # Clash Royale · Browser Arena
 
-A private, independent browser fan game for Sir-Teo. Built with TypeScript, Three.js and Vite. No account, API key, or backend is required to play.
+A private, independent browser fan game for Sir-Teo. Built with TypeScript, Three.js and Vite. AI battles work offline. Friendly two-player battles use the included room server.
 
 Build an eight-card deck from 24 cards, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
 
@@ -8,7 +8,7 @@ Combat includes cancellable attack windups, defensive building pulls, homing sho
 
 Princess Towers preserve the original base and foreground battlements, with the animated character placed between them using her authored origin and the archived attachment height.
 
-This version supports AI opponents. Online multiplayer, the full live card roster and current balance parity are not implemented.
+Play against AI or challenge a friend in a private two-player room over Wi-Fi or a hosted HTTPS server. Room codes, invite links, ready checks, reconnects, emotes and both players’ replays are supported. The full live card roster and current balance parity are not implemented. See [multiplayer setup](docs/MULTIPLAYER.md) for Wi-Fi and remote hosting.
 
 Destroyed towers leave native rubble for the rest of the battle. Their collapse uses original fire, smoke, flying plank and wall-fragment artwork. Debris pauses with the match and finishes settling after victory; replay seeking reconstructs the correct ruins.
 
@@ -61,7 +61,7 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 
 ## Phone play
 
-Open the Vite **Network** URL on a phone connected to the same Wi-Fi as the development computer. `localhost` on a phone refers to the phone itself. Portrait battles fill the available browser height; rotating into landscape moves the hand alongside the arena. Safe-area padding keeps controls away from display cutouts and the home indicator. Tap a card and then the arena, or drag a card onto the battlefield. Pause and settings use 44-pixel touch targets. Battle progress pauses when the browser goes into the background.
+Open the Vite **Network** URL on a phone connected to the same Wi-Fi as the development computer. `localhost` on a phone refers to the phone itself. Portrait battles fill the available browser height; rotating into landscape moves the hand alongside the arena. Safe-area padding keeps controls away from display cutouts and the home indicator. Tap a card and then the arena, or drag a card onto the battlefield. Pause and settings use 44-pixel touch targets. AI battles pause when the browser goes into the background. Friendly battles keep running on the server; reconnect within 30 seconds after a connection loss.
 
 ## Controls
 
