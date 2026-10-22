@@ -92,6 +92,7 @@ export interface Action extends Point {
   card: CardId;
 }
 export interface Replay {
+  perspective?: Team;
   version: 1 | 2 | 3 | 4 | 5;
   seed: number;
   mode: Mode;

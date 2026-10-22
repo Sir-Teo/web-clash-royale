@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "tsc --noEmit && vite build && node scripts/build-sw.mjs",
+    "build": "tsc --noEmit && vite build && node scripts/build-sw.mjs && npm run build:server",
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run",
     "test:e2e": "playwright test",
@@ -23,17 +23,24 @@
     "assets:elixir": "node scripts/import-elixir.mjs",
     "assets:cards": "node scripts/import-cards.mjs",
     "assets:health": "node scripts/import-health.mjs",
-    "assets:hud": "node scripts/import-hud.mjs"
+    "assets:hud": "node scripts/import-hud.mjs",
+    "build:server": "esbuild server/index.ts --bundle --platform=node --format=esm --packages=external --outfile=dist-server/index.js",
+    "start": "node dist-server/index.js"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",
     "@fontsource/nunito-sans": "^5.2.5",
     "lucide": "^0.468.0",
-    "three": "^0.180.0"
+    "sirv": "^3.0.2",
+    "three": "^0.180.0",
+    "ws": "^8.22.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.0",
+    "@types/node": "^26.6.5",
     "@types/three": "^0.180.0",
+    "@types/ws": "^8.18.2",
+    "esbuild": "^0.28.2",
     "prettier": "^3.9.10",
     "sharp": "^0.35.5",
     "typescript": "^5.9.3",
