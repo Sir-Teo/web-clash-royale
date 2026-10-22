@@ -8,6 +8,8 @@ Original in-game shapes and animation export metadata are imported from [smlbiob
 
 `scripts/compose-scene.mjs` reconstructs first-frame display lists, resolves child clips and transform matrices, triangulates source UV polygons and produces tower and scenery textures. The format reference is [Galaxy1036/sc_decode](https://github.com/Galaxy1036/sc_decode/blob/master/sc_decode.py). Scaling is 1/1024 for matrix coefficients and 1/20 for vertex/translation coordinates. The retained per-export JSON files record bounds, origins and triangle counts. This is static asset reconstruction; no original game executable was run, and it does not establish original runtime behavior.
 
+`reference/goblin-arena.csv` retains the historical 1.8.0 `assets/locations/goblin_arena.csv` placement table from the same archive commit. It was decoded as LZMA with the archived four-byte length field expanded to the standard eight-byte field. Stadium decorations use those coordinates at 1,000 coordinate units per tile. The renderer uses a 30-pixel art scale per tile; this display scale is a reconstruction choice.
+
 The surrounding 3D geometry, fallback troop models, effects, user interface and simulation code are created for this project. Fonts: Lilita One and Nunito Sans via Fontsource (OFL).
 
 Rules reference: [Supercell's November 2019 update](https://supercell.com/en/games/clashroyale/blog/release-notes/november-update/) documents three-minute regulation, two-minute overtime and triple elixir in the last overtime minute. This game implements a classic eight-card format with normalized, curated card stats; it does not claim live balance parity.

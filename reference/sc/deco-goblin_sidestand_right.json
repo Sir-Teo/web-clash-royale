@@ -1,0 +1,17 @@
+{
+  "source": "level_goblin_arena",
+  "export": "goblin_sidestand_right",
+  "bounds": [
+    -97.15,
+    -125.4,
+    52.95,
+    83.75
+  ],
+  "width": 151,
+  "height": 210,
+  "triangles": 4,
+  "origin": [
+    0.6433774834437086,
+    0.4028571428571428
+  ]
+}

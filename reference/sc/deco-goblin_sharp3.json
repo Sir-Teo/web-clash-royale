@@ -1,0 +1,17 @@
+{
+  "source": "level_goblin_arena",
+  "export": "goblin_sharp3",
+  "bounds": [
+    -29.5,
+    -128.85,
+    29.5,
+    22.15
+  ],
+  "width": 59,
+  "height": 151,
+  "triangles": 4,
+  "origin": [
+    0.5,
+    0.1466887417218543
+  ]
+}

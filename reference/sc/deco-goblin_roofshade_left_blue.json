@@ -1,0 +1,17 @@
+{
+  "source": "level_goblin_arena",
+  "export": "goblin_roofshade_left_blue",
+  "bounds": [
+    -183.7642578125,
+    -350.63818359375,
+    7.606103515624994,
+    -24.371044921874997
+  ],
+  "width": 192,
+  "height": 327,
+  "triangles": 10,
+  "origin": [
+    0.9571055094401042,
+    -0.07228802322247696
+  ]
+}

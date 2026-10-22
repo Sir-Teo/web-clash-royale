@@ -1,0 +1,17 @@
+{
+  "source": "level_goblin_arena",
+  "export": "goblin_stone2",
+  "bounds": [
+    -60.75,
+    -103.7,
+    56.4,
+    37.75
+  ],
+  "width": 118,
+  "height": 142,
+  "triangles": 6,
+  "origin": [
+    0.5148305084745762,
+    0.2697183098591549
+  ]
+}

@@ -191,7 +191,9 @@ export class Arena {
       }),
     );
     try {
-      const texture = await loader.loadAsync("/assets/scenery/battlefield.png");
+      const texture = await loader.loadAsync(
+        "/assets/scenery/goblin-field.png",
+      );
       texture.colorSpace = T.SRGBColorSpace;
       texture.anisotropy = Math.min(
         8,
@@ -204,10 +206,18 @@ export class Arena {
       floor.rotation.x = -Math.PI / 2;
       floor.position.y = 0.16;
       this.root.add(floor);
-      // Original trees and cliffs continue the battlefield artwork beyond the playable tiles.
+      const layout = (await fetch("/assets/scenery/goblin-layout.json").then(
+        (r) => r.json(),
+      )) as {
+        file: string;
+        width: number;
+        height: number;
+        anchor: [number, number];
+        positions: { x: number; y: number }[];
+      }[];
       await Promise.all(
-        [4, 5, 7, 8, 9, 17, 18, 19, 20].map(async (i) => {
-          const tex = await loader.loadAsync(`/assets/scenery/arena-${i}.png`);
+        layout.map(async (item) => {
+          const tex = await loader.loadAsync(`/assets/scenery/${item.file}`);
           tex.colorSpace = T.SRGBColorSpace;
           const material = new T.MeshBasicMaterial({
             map: tex,
@@ -217,40 +227,17 @@ export class Arena {
             toneMapped: false,
             side: T.DoubleSide,
           });
-          const ratio = tex.image.width / tex.image.height;
-          if (i === 4 || i === 5) {
-            const width = 4.5,
-              height = width / ratio;
-            const m = new T.Mesh(new T.PlaneGeometry(width, height), material);
-            m.position.set(i === 4 ? 11.5 : -11.5, height * 0.3, 0);
-            this.scene.add(m);
-            this.artwork.push(m);
-          } else if (i < 10) {
-            for (const s of [-1, 1])
-              for (const z of [-13, -6, 6, 13]) {
-                if ((Math.abs(z) + i) % 3 !== 0) continue;
-                const height = 3.2 + (i - 7) * 0.3;
-                const mesh = new T.Mesh(
-                  new T.PlaneGeometry(height * ratio, height),
-                  material,
-                );
-                mesh.position.set(s * 10.7, height * 0.43, z + (i - 8));
-                this.scene.add(mesh);
-                this.artwork.push(mesh);
-              }
-          } else {
-            for (const s of [-1, 1])
-              for (const z of [-11, -4, 4, 11]) {
-                if (i !== 17 + (z < 0 ? 0 : 2) + (s < 0 ? 1 : 0)) continue;
-                const width = 3.5;
-                const mesh = new T.Mesh(
-                  new T.PlaneGeometry(width, width / ratio),
-                  material,
-                );
-                mesh.position.set(s * 9.65, 0.6, z);
-                this.scene.add(mesh);
-                this.artwork.push(mesh);
-              }
+          for (const point of item.positions) {
+            const geometry = new T.PlaneGeometry(item.width, item.height);
+            geometry.translate(
+              (0.5 - item.anchor[0]) * item.width,
+              (0.5 - item.anchor[1]) * item.height,
+              0,
+            );
+            const mesh = new T.Mesh(geometry, material);
+            mesh.position.set(point.x - 9, 0.15, point.y - 16);
+            this.scene.add(mesh);
+            this.artwork.push(mesh);
           }
         }),
       );

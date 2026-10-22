@@ -1,0 +1,17 @@
+{
+  "source": "level_goblin_arena",
+  "export": "goblin_woodwall1",
+  "bounds": [
+    -61.6,
+    -119.3,
+    64.2,
+    14.35
+  ],
+  "width": 126,
+  "height": 134,
+  "triangles": 4,
+  "origin": [
+    0.4888888888888889,
+    0.10970149253731343
+  ]
+}

@@ -102,13 +102,11 @@ function parse(b) {
         if (t === 11) {
           const count = b.readUInt16LE(q + 5);
           frames.push(
-            refs
-              .slice(offset, offset + count)
-              .map(([child, mat, color]) => ({
-                id: children[child],
-                matrix: mat,
-                color,
-              })),
+            refs.slice(offset, offset + count).map(([child, mat, color]) => ({
+              id: children[child],
+              matrix: mat,
+              color,
+            })),
           );
           offset += count;
         }
@@ -158,7 +156,12 @@ function affine(s, d) {
   ];
 }
 async function compose(name, exports) {
-  const sourceBase = name.startsWith("level_") ? base.replace("1.8.1/com.supercell.clashroyale-1.8.1", "1.8.0/com.supercell.clashroyale_1.8.0_unpack") : base;
+  const sourceBase = name.startsWith("level_")
+    ? base.replace(
+        "1.8.1/com.supercell.clashroyale-1.8.1",
+        "1.8.0/com.supercell.clashroyale_1.8.0_unpack",
+      )
+    : base;
   const data = parse(await readFile(`reference/sc/${name}.bin`));
   const textures = [];
   for (let i = 0; i < data.textures.length; i++) {
@@ -231,7 +234,9 @@ async function compose(name, exports) {
     };
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${w}" height="${h}" viewBox="${bounds[0]} ${bounds[1]} ${w} ${h}"><defs>${textures.map((t, i) => `<image id="tex${i}" width="${t.w}" height="${t.h}" xlink:href="data:image/png;base64,${t.b.toString("base64")}"/>`).join("")}${tris.map((t, i) => `<clipPath id="p${i}"><polygon points="${expand(t.points)}"/></clipPath>`).join("")}</defs>${tris.map((t, i) => `<g clip-path="url(#p${i})"><use xlink:href="#tex${t.sheet}" transform="matrix(${t.matrix.join(" ")})"/></g>`).join("")}</svg>`;
     await sharp(Buffer.from(svg), { limitInputPixels: 100000000 })
-      .resize({ width: out === "ground" || out === "goblin-ground" ? 1400 : 400 })
+      .resize({
+        width: out === "ground" || out === "goblin-ground" ? 1400 : 400,
+      })
       .png()
       .toFile(`public/assets/scenery/${out}.png`);
     console.log(exp, out, w, h, "triangles", tris.length);
@@ -268,17 +273,83 @@ await sharp("public/assets/scenery/ground.png")
   .png()
   .toFile("public/assets/scenery/battlefield.png");
 
-await compose("chr_balloon",{balloon1_idle1_1:"balloon-blue",balloon1_enemy_idle1_1:"balloon-red"});
-await compose("building_basic_cannon",{building_cannon:"cannon-blue",building_enemy_cannon:"cannon-red"});
-await compose("building_tesla",{tesla1_blue:"tesla-blue",tesla1_red:"tesla-red"});
-await compose("level_goblin_arena",{goblin_bgr:"goblin-ground",goblin_sidestand_left:"goblin-stand-left",goblin_sidestand_right:"goblin-stand-right",goblin_blue_tower:"goblin-tower-blue",goblin_red_tower:"goblin-tower-red",goblin_tree1:"goblin-tree",goblin_waterwheel:"goblin-wheel"});
+await compose("chr_balloon", {
+  balloon1_idle1_1: "balloon-blue",
+  balloon1_enemy_idle1_1: "balloon-red",
+});
+await compose("building_basic_cannon", {
+  building_cannon: "cannon-blue",
+  building_enemy_cannon: "cannon-red",
+});
+await compose("building_tesla", {
+  tesla1_blue: "tesla-blue",
+  tesla1_red: "tesla-red",
+});
+await compose("level_goblin_arena", {
+  goblin_bgr: "goblin-ground",
+  goblin_sidestand_left: "goblin-stand-left",
+  goblin_sidestand_right: "goblin-stand-right",
+  goblin_blue_tower: "goblin-tower-blue",
+  goblin_red_tower: "goblin-tower-red",
+  goblin_tree1: "goblin-tree",
+  goblin_waterwheel: "goblin-wheel",
+});
 
-const goblinSource=parse(await readFile('reference/sc/level_goblin_arena.bin'));
-const decoExports=Object.fromEntries(Object.keys(goblinSource.names).filter(name=>name.startsWith('goblin_')&&!['goblin_bgr','goblin_bridge_asset'].includes(name)).map(name=>[name,`deco-${name}`]));
-await compose('level_goblin_arena',decoExports);
-await sharp('public/assets/scenery/goblin-ground.png').extract({left:531,top:217,width:334,height:465}).resize(810,1128).png().toFile('public/assets/scenery/goblin-field.png');
-const placements={};let current='';
-for(const line of (await readFile('reference/goblin-arena.csv','utf8')).split(/\r?\n/)){const cells=line.split(',').map(v=>v.replaceAll('"',''));if(cells[1]&&cells[1].startsWith('goblin_'))current=cells[1];if(!cells[0]&&!cells[1]&&cells[2]!==''&&cells[3]!==''&&Number.isFinite(Number(cells[2]))&&Number.isFinite(Number(cells[3]))){const x=Number(cells[2])/1000,y=Number(cells[3])/1000;if(x>=-7&&x<=25&&y>=-6&&y<=38)(placements[current]??=[]).push({x,y});}}
-const layout=[];
-for(const [name,positions] of Object.entries(placements)){if(!decoExports[name])continue;const data=JSON.parse(await readFile(`reference/sc/deco-${name}.json`,'utf8'));layout.push({name,file:`deco-${name}.png`,width:data.width/30,height:data.height/30,anchor:data.origin,positions});}
-await writeFile('public/assets/scenery/goblin-layout.json',JSON.stringify(layout));
+const goblinSource = parse(
+  await readFile("reference/sc/level_goblin_arena.bin"),
+);
+const decoExports = Object.fromEntries(
+  Object.keys(goblinSource.names)
+    .filter(
+      (name) =>
+        name.startsWith("goblin_") &&
+        !["goblin_bgr", "goblin_bridge_asset"].includes(name),
+    )
+    .map((name) => [name, `deco-${name}`]),
+);
+await compose("level_goblin_arena", decoExports);
+await sharp("public/assets/scenery/goblin-ground.png")
+  .extract({ left: 531, top: 217, width: 334, height: 465 })
+  .resize(810, 1128)
+  .png()
+  .toFile("public/assets/scenery/goblin-field.png");
+const placements = {};
+let current = "";
+for (const line of (await readFile("reference/goblin-arena.csv", "utf8")).split(
+  /\r?\n/,
+)) {
+  const cells = line.split(",").map((v) => v.replaceAll('"', ""));
+  if (cells[1] && cells[1].startsWith("goblin_")) current = cells[1];
+  if (
+    !cells[0] &&
+    !cells[1] &&
+    cells[2] !== "" &&
+    cells[3] !== "" &&
+    Number.isFinite(Number(cells[2])) &&
+    Number.isFinite(Number(cells[3]))
+  ) {
+    const x = Number(cells[2]) / 1000,
+      y = Number(cells[3]) / 1000;
+    if (x >= -7 && x <= 25 && y >= -6 && y <= 38)
+      (placements[current] ??= []).push({ x, y });
+  }
+}
+const layout = [];
+for (const [name, positions] of Object.entries(placements)) {
+  if (!decoExports[name]) continue;
+  const data = JSON.parse(
+    await readFile(`reference/sc/deco-${name}.json`, "utf8"),
+  );
+  layout.push({
+    name,
+    file: `deco-${name}.png`,
+    width: data.width / 30,
+    height: data.height / 30,
+    anchor: data.origin,
+    positions,
+  });
+}
+await writeFile(
+  "public/assets/scenery/goblin-layout.json",
+  JSON.stringify(layout),
+);

@@ -1,0 +1,17 @@
+{
+  "source": "level_goblin_arena",
+  "export": "goblin_woodpole1",
+  "bounds": [
+    -39.05,
+    -53.4,
+    67.65,
+    16.05
+  ],
+  "width": 107,
+  "height": 70,
+  "triangles": 6,
+  "origin": [
+    0.3649532710280374,
+    0.2371428571428572
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "source": "level_goblin_arena",
+  "export": "goblin_woodtower2",
+  "bounds": [
+    -86.75,
+    -223.1,
+    99.75,
+    58.2900390625
+  ],
+  "width": 187,
+  "height": 282,
+  "triangles": 18,
+  "origin": [
+    0.46390374331550804,
+    0.2088652482269504
+  ]
+}

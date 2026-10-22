@@ -1,0 +1,17 @@
+{
+  "source": "level_goblin_arena",
+  "export": "goblin_tree4",
+  "bounds": [
+    -39.05,
+    -56,
+    39.9,
+    28.2
+  ],
+  "width": 79,
+  "height": 85,
+  "triangles": 6,
+  "origin": [
+    0.4943037974683544,
+    0.3411764705882353
+  ]
+}
