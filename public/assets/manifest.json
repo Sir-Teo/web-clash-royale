@@ -1,0 +1,420 @@
+{
+  "source": "https://github.com/RoyaleAPI/cr-api-assets",
+  "commit": "b4530a1043b213ee2baf9c50a3d0d7fae22c2313",
+  "files": [
+    {
+      "path": "arenas/arena0.png",
+      "source": "arenas/arena0.png",
+      "bytes": 243314,
+      "sha256": "93ee4d6a0561b4473b637bc672cdf77b64be8e9f3fb0e60f07fd9144ec02e92b"
+    },
+    {
+      "path": "arenas/arena1.png",
+      "source": "arenas/arena1.png",
+      "bytes": 223321,
+      "sha256": "827c6fc19e3b9096d4419f1df67af96788444e9f5dadedd84f6e7d93d5759336"
+    },
+    {
+      "path": "arenas/arena2.png",
+      "source": "arenas/arena2.png",
+      "bytes": 228566,
+      "sha256": "669df9da83326b74cbb0fcae8abc6ac1680a4a983d0687d561524e00dbdbd249"
+    },
+    {
+      "path": "arenas/arena3.png",
+      "source": "arenas/arena3.png",
+      "bytes": 257930,
+      "sha256": "d125c2d8a73ed8f3c628849bf7ed51576cbeb623154ae401318cc3b088d1b97c"
+    },
+    {
+      "path": "arenas/arena4.png",
+      "source": "arenas/arena4.png",
+      "bytes": 264402,
+      "sha256": "796ee0a5e43cc4130a68004ba51d4805e11db9d84cc3d0bc008d51423b334a46"
+    },
+    {
+      "path": "arenas/arena5.png",
+      "source": "arenas/arena5.png",
+      "bytes": 279532,
+      "sha256": "2ebabb6be891330a56f3ce6ce96edbde0ed2509f3d06fb4559b494f56b108c4e"
+    },
+    {
+      "path": "arenas/arena6.png",
+      "source": "arenas/arena6.png",
+      "bytes": 258745,
+      "sha256": "da1a7e0001751cb12152d957f7a977897b809649cd1a31bc5b76b47b5b17fbd7"
+    },
+    {
+      "path": "arenas/arena7.png",
+      "source": "arenas/arena7.png",
+      "bytes": 248492,
+      "sha256": "1d2e083d569d4253ff5d0a5e6d6ecacd2f7aa323a6b0c5ac5bfe9c3cafd71347"
+    },
+    {
+      "path": "arenas/arena8.png",
+      "source": "arenas/arena8.png",
+      "bytes": 288074,
+      "sha256": "f33664548b71b943db8273e5d8f28f88dd0a2faa23a6e64aba8760f9313fa182"
+    },
+    {
+      "path": "audio/1st_crown_01.ogg",
+      "source": "sfx/1st_crown_01.ogg",
+      "bytes": 10361,
+      "sha256": "bbb1b4a8595599e299c89d1d301f3aba5c27e839fe605c02664d7ccd6b6f9e5d"
+    },
+    {
+      "path": "audio/archer_attack_07.ogg",
+      "source": "sfx/archer_attack_07.ogg",
+      "bytes": 5687,
+      "sha256": "a408d4239b63fee714d1f57235d04e9a0f273a7f53b51778ab770b21ed28d029"
+    },
+    {
+      "path": "audio/arrow_hit_13.ogg",
+      "source": "sfx/arrow_hit_13.ogg",
+      "bytes": 4963,
+      "sha256": "3585e3ff8a714d88da66b779e581642fc4b23563a69fa867a619ec46216a02b7"
+    },
+    {
+      "path": "audio/bad_drop_03.ogg",
+      "source": "sfx/bad_drop_03.ogg",
+      "bytes": 7985,
+      "sha256": "ac117bb5117b0214028edfe0d4bfb6a73f2654533eb56fda7a7775777d6fe1e1"
+    },
+    {
+      "path": "audio/battle.ogg",
+      "source": "music/2min_loop_battle_01.ogg",
+      "bytes": 705869,
+      "sha256": "e9b0e9d89f9c0c734438228794e9adf7c460b45aa9d86849b8627627df68ab4f"
+    },
+    {
+      "path": "audio/button_click_02.ogg",
+      "source": "sfx/button_click_02.ogg",
+      "bytes": 4394,
+      "sha256": "56f0af72f1f6ab778357da4fc281a072661111f25a9250b0c37cfc66058a585b"
+    },
+    {
+      "path": "audio/fireball_hit_01.ogg",
+      "source": "sfx/fireball_hit_01.ogg",
+      "bytes": 9553,
+      "sha256": "af935647b3cc6d16115ecb146e0965d07d350c080b2def1a3bf4b4d192205da6"
+    },
+    {
+      "path": "audio/giant_deploy_01.ogg",
+      "source": "sfx/giant_deploy_01.ogg",
+      "bytes": 11149,
+      "sha256": "a940d2a0708045e6886d33690a3c365f11d7af771d8a0d33953de00b93f60d01"
+    },
+    {
+      "path": "audio/gold_chest_open_01.ogg",
+      "source": "sfx/gold_chest_open_01.ogg",
+      "bytes": 13347,
+      "sha256": "9be3d908fa688bed4d71c5575a045af7d54872294af6c5ec59a69fcd85c9210a"
+    },
+    {
+      "path": "audio/king_laughter_01.ogg",
+      "source": "sfx/king_laughter_01.ogg",
+      "bytes": 8542,
+      "sha256": "846151f731d95808efe8e9b8a827c4b37ed44c3d3898ee0e2549586fc4adffea"
+    },
+    {
+      "path": "audio/knight_deploy_31111.ogg",
+      "source": "sfx/knight_deploy_31111.ogg",
+      "bytes": 7375,
+      "sha256": "a0b8a6f19895cec543204652dc23d53343bcadf6607fe62404f64e2da0f7a14b"
+    },
+    {
+      "path": "audio/lose_tour_01.ogg",
+      "source": "sfx/lose_tour_01.ogg",
+      "bytes": 13307,
+      "sha256": "b88d30e6440ebf2d058db67c0530c45f76bc79bacb3c459a8c0261d33de1aedc"
+    },
+    {
+      "path": "audio/skeleton_deploy_03.ogg",
+      "source": "sfx/skeleton_deploy_03.ogg",
+      "bytes": 8639,
+      "sha256": "5446501ce040ea292b57eb52fc52c5fecf534da91870c24bbedfbc9f149c2c8c"
+    },
+    {
+      "path": "audio/win_tour_01.ogg",
+      "source": "sfx/win_tour_01.ogg",
+      "bytes": 22547,
+      "sha256": "aa4d2eaea0ece69dbf6a7cb8ecac8c84e2b772c5cd9487cc2136dd91acafd45f"
+    },
+    {
+      "path": "audio/zap_02.ogg",
+      "source": "sfx/zap_02.ogg",
+      "bytes": 12938,
+      "sha256": "252a588cf53af35d0c2edc639d76d52d224c202555ce205c5c248f43de48be6f"
+    },
+    {
+      "path": "cards/archers.png",
+      "source": "cards/archers.png",
+      "bytes": 150985,
+      "sha256": "7427cdce681c78eb61fc97c849a4ff6e8bc1739e1a46b56da9d62d8ee610ef85"
+    },
+    {
+      "path": "cards/arrows.png",
+      "source": "cards/arrows.png",
+      "bytes": 127040,
+      "sha256": "3edcaaafe1d1955ad274896bb15efb85172bb8d44aea79083239b813bebddd99"
+    },
+    {
+      "path": "cards/baby-dragon.png",
+      "source": "cards/baby-dragon.png",
+      "bytes": 129546,
+      "sha256": "eda98b83fee22aa1e2da87fa8c407221d1a83f44b75941e45bd97564b7ae22b2"
+    },
+    {
+      "path": "cards/balloon.png",
+      "source": "cards/balloon.png",
+      "bytes": 145863,
+      "sha256": "81cedea30710838650fbc2dab748ffc6709707cdae2081c4831b255f0e33d96c"
+    },
+    {
+      "path": "cards/bomber.png",
+      "source": "cards/bomber.png",
+      "bytes": 139334,
+      "sha256": "aee0f0da304a067388f1203a931b8bc42e50cac923c1fa9b3eb7dfa4e78de9b0"
+    },
+    {
+      "path": "cards/cannon.png",
+      "source": "cards/cannon.png",
+      "bytes": 126894,
+      "sha256": "6d830474c1f3d710cebcc233844af30333aec010f25debee1f875d69d74acb7e"
+    },
+    {
+      "path": "cards/fireball.png",
+      "source": "cards/fireball.png",
+      "bytes": 123797,
+      "sha256": "6bbe17a15330f6c0b9020f149023f728a97bffbd8a373d18a69ee09784ac571a"
+    },
+    {
+      "path": "cards/giant.png",
+      "source": "cards/giant.png",
+      "bytes": 136801,
+      "sha256": "390277aa877d9b952d0b2c8843ee080b1fd5a40eb68acf8760ad18f106985367"
+    },
+    {
+      "path": "cards/goblins.png",
+      "source": "cards/goblins.png",
+      "bytes": 126701,
+      "sha256": "c0bb707e824b63babb8890925ad889d50838e8c94dcaf567f3e8061bb2404f40"
+    },
+    {
+      "path": "cards/hog-rider.png",
+      "source": "cards/hog-rider.png",
+      "bytes": 131428,
+      "sha256": "b34fb968d5843729c24cca9b65271345092a2e2ddde5647381d7186446a9b928"
+    },
+    {
+      "path": "cards/knight.png",
+      "source": "cards/knight.png",
+      "bytes": 153676,
+      "sha256": "bc85a17a817c5e29d0e12adc854499670b648e710985a8d05dea9ccfcaa95abe"
+    },
+    {
+      "path": "cards/mini-pekka.png",
+      "source": "cards/mini-pekka.png",
+      "bytes": 145092,
+      "sha256": "dcf726551fb3c83db8bc304bdeaff48e1f7553127567b5669573674b81204a1f"
+    },
+    {
+      "path": "cards/minions.png",
+      "source": "cards/minions.png",
+      "bytes": 133625,
+      "sha256": "aa00d7b23fd564665c76aee4f03f508d0ce727f3c39cee306a98fa657e97f1f5"
+    },
+    {
+      "path": "cards/musketeer.png",
+      "source": "cards/musketeer.png",
+      "bytes": 138281,
+      "sha256": "db28ed3c9eec23740bba7ae86cda7226479291c147f7453ccb3009f87e5d754b"
+    },
+    {
+      "path": "cards/pekka.png",
+      "source": "cards/pekka.png",
+      "bytes": 125580,
+      "sha256": "e00b43b02ae1a7b2c1517577f7bbaf96cd405f2ed549df195d6ed38beef90d45"
+    },
+    {
+      "path": "cards/prince.png",
+      "source": "cards/prince.png",
+      "bytes": 146529,
+      "sha256": "0b35ecc5f4821656f8066cc8d6ea2f65fc8985b536c056ed0d63225676cdfa0a"
+    },
+    {
+      "path": "cards/skeleton-army.png",
+      "source": "cards/skeleton-army.png",
+      "bytes": 132165,
+      "sha256": "4fe348d2115ffa1d08d3e418863b9013c928f3e5e9e60b98f431dd3c48f9fd18"
+    },
+    {
+      "path": "cards/skeletons.png",
+      "source": "cards/skeletons.png",
+      "bytes": 123669,
+      "sha256": "577c897f22f0270ed7f7297f9f8e52c72557b43e673e7ea2368e00309bdece6b"
+    },
+    {
+      "path": "cards/spear-goblins.png",
+      "source": "cards/spear-goblins.png",
+      "bytes": 147457,
+      "sha256": "f73d718dcc1fad6cc5696a9ef532cdb07154e503f891d01ca549f40435b49eb2"
+    },
+    {
+      "path": "cards/tesla.png",
+      "source": "cards/tesla.png",
+      "bytes": 128746,
+      "sha256": "4dce8e5c833db04903b51b6495e774914ed3c7a8b0e26c14c1378bf6a18f5590"
+    },
+    {
+      "path": "cards/valkyrie.png",
+      "source": "cards/valkyrie.png",
+      "bytes": 148663,
+      "sha256": "ed98ea746360fdca51628b5ce3e16ad40f15ba296478409a52e8c6ba0aed682e"
+    },
+    {
+      "path": "cards/witch.png",
+      "source": "cards/witch.png",
+      "bytes": 149912,
+      "sha256": "37287bf62936eae84fd5d898110381af59e033841a707b91d33bb4ebe995d8af"
+    },
+    {
+      "path": "cards/wizard.png",
+      "source": "cards/wizard.png",
+      "bytes": 128594,
+      "sha256": "12254947e7486740288b315062fdb1c415ffd2482d8b00fd6ac4dd65cfc0561a"
+    },
+    {
+      "path": "cards/zap.png",
+      "source": "cards/zap.png",
+      "bytes": 137311,
+      "sha256": "8d02f5743a858ba2a6ddee722a297c515f23d0cbb5ac04ff2e7db1058d686a24"
+    },
+    {
+      "path": "characters/archers.png",
+      "source": "chr/archers.png",
+      "bytes": 141835,
+      "sha256": "550d6027c86fdbd9b9d94c80510558cf6e54c952c03b6c4354b6b9ba2fb8dd34"
+    },
+    {
+      "path": "characters/baby_dragon.png",
+      "source": "chr/baby_dragon.png",
+      "bytes": 93417,
+      "sha256": "2c2b595d0116ad27456c3350c31710aad9d4204e792bf6444c152ae4549da7b3"
+    },
+    {
+      "path": "characters/balloon.png",
+      "source": "chr/balloon.png",
+      "bytes": 110013,
+      "sha256": "c36e93ad2bad82130d6a635ec05c36d354af2a5936ab169629f2bdb639bade02"
+    },
+    {
+      "path": "characters/bomber.png",
+      "source": "chr/bomber.png",
+      "bytes": 66704,
+      "sha256": "0154a49985e1e3dbc490cc487d145e355e2848a4e49ff6249c46e146567a1f52"
+    },
+    {
+      "path": "characters/giant.png",
+      "source": "chr/giant.png",
+      "bytes": 153087,
+      "sha256": "46ea658b64f7fb70cf64d0a4e425d646865c480474635f1cba23096b567268fc"
+    },
+    {
+      "path": "characters/goblins.png",
+      "source": "chr/goblins.png",
+      "bytes": 53588,
+      "sha256": "fad8289449c0979c054eefe83582c6d3297faed1bf6a259a06b7a15fc72e2131"
+    },
+    {
+      "path": "characters/hog_rider.png",
+      "source": "chr/hog_rider.png",
+      "bytes": 91115,
+      "sha256": "9cffc84cc5e03e85f74e695604e36dfd77a60f5a71b30602b495f1367ca3b6a4"
+    },
+    {
+      "path": "characters/knight.png",
+      "source": "chr/knight.png",
+      "bytes": 93619,
+      "sha256": "e48b2809ea3eef5757e0520bbcba697148c1175784ebf9075e350b8e4ac3d571"
+    },
+    {
+      "path": "characters/mini_pekka.png",
+      "source": "chr/mini_pekka.png",
+      "bytes": 140210,
+      "sha256": "e82363df840830723c7871b668847a4acf75de64cb4e1be4ae563729301f905e"
+    },
+    {
+      "path": "characters/minions.png",
+      "source": "chr/minions.png",
+      "bytes": 138231,
+      "sha256": "766a6f3e32d625f7548fbeefa4b4cba8e1a3022653e1f3e35b62ca65800e587a"
+    },
+    {
+      "path": "characters/musketeer.png",
+      "source": "chr/musketeer.png",
+      "bytes": 91353,
+      "sha256": "6f224585d1228985b83778b2f653216894f897177cce7a2a30e7d165968bd8de"
+    },
+    {
+      "path": "characters/pekka.png",
+      "source": "chr/pekka.png",
+      "bytes": 138938,
+      "sha256": "87cd9d27ab2cd81ca151f741a2782234f5c4f2d1edffe91227a5f1b46440be59"
+    },
+    {
+      "path": "characters/prince.png",
+      "source": "chr/prince.png",
+      "bytes": 138537,
+      "sha256": "03dddd476429a7a94d96253a4fc0f955c9b5b74479191cc811a2e2dcac89acdf"
+    },
+    {
+      "path": "characters/skeletons.png",
+      "source": "chr/skeletons.png",
+      "bytes": 88301,
+      "sha256": "c8e619b94e00a66d0ae7f6b724e6533f30b4b5e1e488dd7ed94b5b4411ac7968"
+    },
+    {
+      "path": "characters/valkyrie.png",
+      "source": "chr/valkyrie.png",
+      "bytes": 128370,
+      "sha256": "4f749f3c157b81a63e5cd831d732a8130a58ed6ad1c21c4012d7281aa527e3ba"
+    },
+    {
+      "path": "characters/witch.png",
+      "source": "chr/witch.png",
+      "bytes": 139904,
+      "sha256": "c281397073ff80a199527eeec0e59fa58e62837ec074bf2e449482ebab42f6a4"
+    },
+    {
+      "path": "characters/wizard.png",
+      "source": "chr/wizard.png",
+      "bytes": 81818,
+      "sha256": "36a1542e30355bdc83434991795ebe98e25970780401d701041e642a969c0edb"
+    },
+    {
+      "path": "chests/gold.png",
+      "source": "chests/chest-gold.png",
+      "bytes": 28159,
+      "sha256": "025285f77cfca233e1c13c66497a1fc78937b392000031f0f5b40575f2f27e5c"
+    },
+    {
+      "path": "chests/magical.png",
+      "source": "chests/chest-magical.png",
+      "bytes": 36949,
+      "sha256": "ef07a709beb44a2b2f78cab3d62184fc7de21be4c6520197b8bdaf4ca6e5b6c7"
+    },
+    {
+      "path": "chests/silver.png",
+      "source": "chests/chest-silver.png",
+      "bytes": 57376,
+      "sha256": "ab247b07edea270a9462d5db64226ef0fc9cbd6fad01d1001f891a70c0460986"
+    },
+    {
+      "path": "chests/wooden.png",
+      "source": "chests/chest-wooden.png",
+      "bytes": 29774,
+      "sha256": "94e7c193a4e0d071f3530cd169f6e3871b25934b3351105c219a94a00fb630e6"
+    }
+  ]
+}
