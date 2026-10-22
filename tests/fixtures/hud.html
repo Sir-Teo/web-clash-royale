@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <title>Native timer and crown HUD</title>
+    <style>
+      body {
+        margin: 0;
+        background: #142c31;
+        color: #eaf6ed;
+        font: 15px system-ui;
+      }
+      header,
+      footer {
+        padding: 12px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      h1 {
+        font-size: 19px;
+        margin: 0;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+        color: inherit;
+        background: #2a514f;
+        border: 1px solid #7b9c96;
+        border-radius: 5px;
+        padding: 8px;
+      }
+      input[type="number"] {
+        width: 72px;
+      }
+      label {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .stage {
+        position: relative;
+        width: min(600px, 100%);
+        height: 420px;
+        margin: auto;
+        background: linear-gradient(
+          #668d51 49%,
+          #36b4a5 49%,
+          #36b4a5 51%,
+          #668d51 51%
+        );
+        box-shadow: inset 0 0 0 28px #153f3355;
+      }
+      .match-timer {
+        position: absolute;
+        right: 10px;
+        top: 12px;
+        padding: 8px;
+        background: #1239;
+      }
+      .match-crowns {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        display: flex;
+        gap: 8px;
+      }
+      .native-score-ready {
+        position: absolute;
+      }
+      .fallback {
+        font: 24px sans-serif;
+      }
+      .source {
+        max-width: 680px;
+        margin: auto;
+        padding: 16px;
+      }
+      .source-art {
+        height: 280px;
+        max-width: 280px;
+        margin: auto;
+      }
+      .source-art svg {
+        width: 100%;
+        height: 100%;
+        font-family: "Supercell Magic", sans-serif;
+        font-weight: 400;
+      }
+      .controls {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      #status {
+        font: 13px monospace;
+      }
+      button {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Native match HUD</h1>
+      <label
+        >Time
+        <input
+          id="time"
+          type="number"
+          min="0"
+          max="300"
+          step="0.1"
+          value="0" /></label
+      ><label
+        >Blue <input id="blue" type="number" min="0" max="3" value="0" /></label
+      ><label
+        >Red <input id="red" type="number" min="0" max="3" value="0" /></label
+      ><button id="step">Step 0.1s</button><button id="play">Play</button
+      ><button id="reset">Reset feedback</button>
+    </header>
+    <main>
+      <div class="stage">
+        <div class="match-timer">
+          <span id="phase-label">Time left</span><b id="match-clock">3:00</b>
+        </div>
+        <div class="match-crowns">
+          <div class="red"><b id="red-crowns">0</b></div>
+          <span>:</span>
+          <div class="blue"><b id="blue-crowns">0</b></div>
+        </div>
+      </div>
+      <footer id="status"></footer>
+      <section class="source">
+        <div class="controls">
+          <label
+            >Source
+            <select id="source"></select></label
+          ><label
+            >Frame
+            <input id="frame" type="range" min="0" max="99" value="0" /></label
+          ><span id="source-status"></span>
+        </div>
+        <div class="source-art" id="source-art"></div>
+      </section>
+    </main>
+    <script type="module" src="./hud.ts"></script>
+  </body>
+</html>

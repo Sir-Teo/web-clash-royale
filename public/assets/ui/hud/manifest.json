@@ -1,0 +1,76 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "sources": [
+    {
+      "source": "csv_client/texts.decoded.csv",
+      "path": "reference/client/texts.csv",
+      "bytes": 1676624,
+      "sha256": "0102d5ec1cbe3f6b2abf9e57f3068b029c3c2e9304c2cd56f0b06aacd8bdd43e"
+    },
+    {
+      "source": "font/supercell-magic_0.ttf",
+      "path": "public/assets/ui/supercell-magic.ttf",
+      "bytes": 127716,
+      "sha256": "b39e9bd4d46006fe559302ba3205c746b7967dea3554bdf1b32685dbfacfbb2b"
+    },
+    {
+      "source": "sc/ui",
+      "path": "reference/sc/ui.bin",
+      "bytes": 2207168,
+      "sha256": "e835a19396a344c0739f8b054efa7fe030a4b55d832eace8064675fa4f9e00bd"
+    },
+    {
+      "source": "sc/ui_tex.png",
+      "bytes": 4876660,
+      "sha256": "f33ba6c1dc1457a4551546843c7c9318cad0a1f82603ae2c8c850975d5220ef0"
+    }
+  ],
+  "files": [
+    {
+      "file": "shape-677-0.webp",
+      "bytes": 450,
+      "sha256": "baa1b298cdd5021626bf62509c6b1f06a6f344d069bbec7e672146211835f477"
+    },
+    {
+      "file": "shape-677-1.webp",
+      "bytes": 450,
+      "sha256": "baa1b298cdd5021626bf62509c6b1f06a6f344d069bbec7e672146211835f477"
+    },
+    {
+      "file": "shape-677-2.webp",
+      "bytes": 450,
+      "sha256": "baa1b298cdd5021626bf62509c6b1f06a6f344d069bbec7e672146211835f477"
+    },
+    {
+      "file": "shape-677-3.webp",
+      "bytes": 450,
+      "sha256": "baa1b298cdd5021626bf62509c6b1f06a6f344d069bbec7e672146211835f477"
+    },
+    {
+      "file": "shape-669-0.webp",
+      "bytes": 128,
+      "sha256": "6e1f097b4fb9faaff5e743aead86e4373ce0538bcdb97107a43a64f3d21324ba"
+    },
+    {
+      "file": "shape-670-0.webp",
+      "bytes": 82,
+      "sha256": "5da542838f0cea6e3f0643f77a652a4b8960a3e8fd4d0c4382e58fcd80ff4971"
+    },
+    {
+      "file": "shape-671-0.webp",
+      "bytes": 8436,
+      "sha256": "fc8d6d673818da8abeb2c4cc4e554cbe953e0f15730ab86e21042e3049e1cac6"
+    },
+    {
+      "file": "shape-672-0.webp",
+      "bytes": 8392,
+      "sha256": "8490e2381f4616e5f948c59cc0171e0e32a7f8e65a2c1e2323028317e6254ae6"
+    },
+    {
+      "file": "hud.json",
+      "bytes": 45313,
+      "sha256": "41ea936b429540e2428e1aa53fd3bf63b5aa385e87c4837da70645f41212e5ee"
+    }
+  ]
+}

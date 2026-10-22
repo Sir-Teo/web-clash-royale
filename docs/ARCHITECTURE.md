@@ -83,6 +83,12 @@ A four-slot presentation clock tracks newly drawn cards independently of hand DO
 
 Six tower HUD hosts use the shared native SVG renderer and accessible meter values. Cached artwork signatures and position transforms avoid DOM writes while paused, while a resize recalculates placement. The renderer initializes newly created visuals at each entity’s actual position before interpolation, fixing older troops appearing at the origin when a replay or paused scene is rebuilt. Read-only `loadedHealth` and `health` diagnostics report readiness and visible troop HUD states.
 
+## Native timer and crown counters
+
+`src/ui/hud-data.ts` derives the timer's outgoing/incoming frame from regulation/overtime time and composes each crown's independent frame into the original portrait or landscape display list. `CrownFeedback` tracks awards on the renderer's presentation clock, with explicit reset on match/replay start and seeking. Using one clock throughout the battle preserves the winning award when simulation time stops but post-match effects continue. The timer itself remains tied to simulation time.
+
+`src/ui/hud.ts` preloads the native font and all cropped artwork before replacing the fallback HUD. Cached signatures avoid rebuilding unchanged SVGs. Timer semantics and crown totals remain accessible; native timer artwork hides the duplicate fallback text from assistive technology. The existing elixir badge remains a separate sibling. Media-query changes select the source landscape layout, and reduced motion uses stopped timer/crown frames. Crown flights target the rendered native icon bounds, falling back to the old score element if assets are unavailable. Read-only diagnostics expose `loadedHud` and the current crown/layout state.
+
 ## Current boundaries
 
 - AI battles only; online multiplayer and account synchronization are not implemented.

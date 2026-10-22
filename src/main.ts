@@ -8,6 +8,7 @@ import "./ui/announcements.css";
 import { NativeAnnouncements, battleClock } from "./ui/announcements";
 import { NativeIntro } from "./ui/intro";
 import { NativeElixir, elixirMarkup } from "./ui/elixir";
+import { NativeBattleHud } from "./ui/hud";
 import "./ui/elixir.css";
 import { NativeCards, nativeCardArt } from "./ui/cards";
 import "./ui/cards.css";
@@ -225,6 +226,11 @@ $("#app").innerHTML = `
  </div><div id="modal-root"></div><div class="toast" id="toast" role="status"></div><div id="drag-card" class="drag-card hidden"></div>`;
 
 const nativeCards = new NativeCards();
+const matchHud = new NativeBattleHud($(".match-timer"), $(".match-crowns"));
+const crownCounts = () => ({
+  blue: battle.players.blue.crowns,
+  red: battle.players.red.crowns,
+});
 const announcements = new NativeAnnouncements($("#battle-announcements"));
 const intro = new NativeIntro($("#battle-intro"));
 const elixir = new NativeElixir($("#elixir-hud"));
@@ -411,6 +417,7 @@ function startBattle() {
   intro.start(profile.name, battle.mode);
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
   nativeCards.reset(battle.time, battle.players.blue.hand);
+  matchHud.reset(arena.effectTime, crownCounts());
   updateBattleUI(true);
   audio.startMusic();
   if (!profile.seenTutorial) {
@@ -422,11 +429,15 @@ let lastHand = "";
 function updateBattleUI(force = false) {
   refreshPlacement();
   const timer = battleClock(battle);
-  $("#match-clock").textContent = clock(Math.ceil(timer.remaining));
-  $("#phase-label").textContent = timer.overtime ? "SUDDEN DEATH" : "TIME LEFT";
+  const text = (selector: string, value: string) => {
+    const node = $(selector);
+    if (node.textContent !== value) node.textContent = value;
+  };
+  text("#match-clock", clock(Math.ceil(timer.remaining)));
+  text("#phase-label", timer.overtime ? "SUDDEN DEATH" : "TIME LEFT");
   $(".match-timer").classList.toggle("urgent", timer.remaining <= 30);
-  $("#blue-crowns").textContent = String(battle.players.blue.crowns);
-  $("#red-crowns").textContent = String(battle.players.red.crowns);
+  text("#blue-crowns", String(battle.players.blue.crowns));
+  text("#red-crowns", String(battle.players.red.crowns));
   const p = battle.players.blue,
     key = p.hand.join(",");
   if (force || key !== lastHand) {
@@ -669,6 +680,7 @@ function playReplay(record: RecordEntry) {
   intro.start(profile.name, battle.mode);
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
   nativeCards.reset(battle.time, battle.players.blue.hand);
+  matchHud.reset(arena.effectTime, crownCounts());
   updateBattleUI(true);
   refreshIcons();
 }
@@ -939,7 +951,8 @@ function processEvents() {
 try {
   arena = new Arena($("#arena-canvas"));
   arena.crownTarget = (team) => {
-    const target = $(`#${team}-crowns`).getBoundingClientRect();
+    const target =
+      matchHud.target(team) ?? $(`#${team}-crowns`).getBoundingClientRect();
     if (!target.width) return null;
     const host = arena.host.getBoundingClientRect();
     return {
@@ -1114,6 +1127,7 @@ $("#replay-seek").addEventListener("input", () => {
   eventCursor = battle.events.at(-1)?.id ?? 0;
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
   nativeCards.reset(battle.time, battle.players.blue.hand);
+  matchHud.reset(arena.effectTime, crownCounts());
   accumulator = 0;
   updateBattleUI(true);
 });
@@ -1263,7 +1277,12 @@ function frame(now: number) {
   }
   announcements.update(battle, screen !== "lobby");
   intro.update(screen !== "lobby" && !battle.winner);
-  if (screen !== "lobby") nativeCards.updateHand($("#hand"), battle.time);
+  if (screen !== "lobby") {
+    nativeCards.updateHand($("#hand"), battle.time);
+    // Crown feedback and its flights share one continuous clock through victory.
+    // Switching from match time here would reset the final award after a seek.
+    matchHud.update(battle, crownCounts(), arena.effectTime);
+  }
   if (screen !== "lobby")
     elixir.update(
       battle.time,
@@ -1309,6 +1328,8 @@ Object.defineProperty(window, "__arena", {
         loadedElixir: elixir.loaded,
         loadedCards: nativeCards.loaded,
         loadedHealth: arena.loadedHealth,
+        loadedHud: matchHud.loaded,
+        hud: matchHud.state,
         health: arena.healthState,
         intro: intro.state,
         announcement: announcements.state,
