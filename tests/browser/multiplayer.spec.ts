@@ -137,11 +137,11 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
     await red.getByRole("button", { name: "Back to battle" }).click();
     console.log("Multiplayer: deployed from both sides; reloading red");
     await red.reload();
-    await red.getByRole("button", { name: "Reconnect to your room" }).click();
     await expect
       .poll(async () => (await state(red)).multiplayer?.team)
       .toBe("red");
     await expect.poll(async () => (await state(red)).actions).toBe(2);
+    expect((await state(red)).winner).toBeNull();
     await expect
       .poll(async () => (await state(red)).time)
       .toBeGreaterThan(beforeMenu);

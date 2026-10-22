@@ -1492,9 +1492,16 @@ window.addEventListener("beforeunload", () => saveProfile(profile));
 lobby();
 refreshIcons();
 const invitedRoom = new URL(location.href).searchParams.get("room");
-if (invitedRoom && /^[a-z2-9]{6}$/i.test(invitedRoom))
+const savedRoom = network.saved;
+if (
+  savedRoom &&
+  (!invitedRoom || invitedRoom.toUpperCase() === savedRoom.code)
+) {
+  showMultiplayer();
+  network.resume();
+} else if (invitedRoom && /^[a-z2-9]{6}$/i.test(invitedRoom)) {
   showMultiplayer(invitedRoom.toUpperCase());
-else if (network.saved) showMultiplayer();
+}
 if (["localhost", "127.0.0.1"].includes(location.hostname)) {
   void fetch("/api/lan")
     .then((r) => r.json())
