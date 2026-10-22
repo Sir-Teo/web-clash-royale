@@ -21,6 +21,7 @@ import { EffectLibrary } from "./effects";
 import type { EffectSprite } from "./effects";
 import { makeProjectile, updateProjectile } from "./projectiles";
 import type { ProjectileVisual } from "./projectiles";
+import { DeploymentPreview } from "./deployment";
 interface Visual {
   object: T.Group;
   model?: Model;
@@ -54,7 +55,16 @@ export class Arena {
   private floor = new T.Plane(new T.Vector3(0, 1, 0), 0);
   private cursor = new T.Group();
   private rangeRing: T.Mesh;
-  private block: T.Mesh;
+  private block = new T.Group();
+  private blockedLanes: T.Mesh[] = [];
+  private deployment: DeploymentPreview;
+  private placementFeedback: HTMLDivElement;
+  private placement: {
+    card: CardId;
+    point: Point | null;
+    valid: boolean;
+    reason: string;
+  } | null = null;
   private lastEvent = 0;
   private battle: Battle | null = null;
   private width = 1;
@@ -67,8 +77,6 @@ export class Arena {
     { texture: T.Texture; aspect: number; anchor: [number, number] }
   >();
   private artwork: T.Mesh[] = [];
-  private ghost: T.Group | null = null;
-  private ghostId: CardId | null = null;
   private contextLost = false;
   onContextLost: () => void = () => {};
   constructor(readonly host: HTMLElement) {
@@ -100,6 +108,16 @@ export class Arena {
     this.labels = document.createElement("div");
     this.labels.className = "tower-labels";
     host.append(this.labels);
+    this.placementFeedback = document.createElement("div");
+    this.placementFeedback.className = "placement-feedback hidden";
+    this.placementFeedback.setAttribute("role", "status");
+    this.placementFeedback.setAttribute("aria-live", "polite");
+    this.placementFeedback.setAttribute("aria-atomic", "true");
+    host.append(this.placementFeedback);
+    this.deployment = new DeploymentPreview(this.sprites, (id) =>
+      this.previewBuilding(id),
+    );
+    this.scene.add(this.deployment.object);
     this.camera = new T.OrthographicCamera(-12, 12, 18, -18, 0.1, 160);
     this.camera.position.set(0, 40, 29);
     this.camera.lookAt(0, 0, 0);
@@ -143,17 +161,24 @@ export class Arena {
     this.cursor.add(center);
     this.cursor.visible = false;
     this.scene.add(this.cursor);
-    this.block = new T.Mesh(
-      new T.PlaneGeometry(18, 14.4),
-      new T.MeshBasicMaterial({
-        color: 0xee3848,
-        transparent: true,
-        opacity: 0.13,
-        depthWrite: false,
-      }),
-    );
-    this.block.rotation.x = -Math.PI / 2;
-    this.block.position.set(0, 0.2, -8.8);
+    const illegalMaterial = new T.MeshBasicMaterial({
+      color: 0xee3848,
+      transparent: true,
+      opacity: 0.15,
+      depthWrite: false,
+    });
+    for (let lane = 0; lane < 2; lane++) {
+      const overlay = new T.Mesh(new T.PlaneGeometry(9, 1), illegalMaterial);
+      overlay.rotation.x = -Math.PI / 2;
+      overlay.position.x = lane === 0 ? -4.5 : 4.5;
+      overlay.position.y = 0.21;
+      this.blockedLanes.push(overlay);
+      this.block.add(overlay);
+    }
+    const river = new T.Mesh(new T.PlaneGeometry(18, 3), illegalMaterial);
+    river.rotation.x = -Math.PI / 2;
+    river.position.set(0, 0.22, 0);
+    this.block.add(river);
     this.block.visible = false;
     this.scene.add(this.block);
     this.observer = new ResizeObserver(() => this.resize());
@@ -408,6 +433,8 @@ export class Arena {
     batchGeometry(r, [...this.waters, ...this.flags]);
   }
   setBattle(battle: Battle) {
+    this.showPlacement(null, null);
+    this.deployment.clear();
     for (const v of this.units.values()) {
       this.scene.remove(v.object);
       v.label?.remove();
@@ -434,6 +461,19 @@ export class Arena {
   }
   get loadedEffects() {
     return Object.keys(this.effects.asset?.data.clips ?? {}).length;
+  }
+  get placementState() {
+    return this.placement
+      ? {
+          ...this.placement,
+          point: this.placement.point ? { ...this.placement.point } : null,
+          count: this.deployment.object.visible ? this.deployment.count : 0,
+          nativeCount: this.deployment.object.visible
+            ? this.deployment.nativeCount
+            : 0,
+          blockedUntil: this.blockedLanes.map((o) => o.scale.y),
+        }
+      : null;
   }
   private resize() {
     const { width, height } = this.host.getBoundingClientRect();
@@ -468,11 +508,55 @@ export class Arena {
       y: ((-v.y + 1) / 2) * this.height,
     };
   }
-  showPlacement(id: CardId | null, point: Point | null, valid = true) {
+  private previewBuilding(id: CardId) {
+    const art = this.towerArt.get(`${id}-blue`);
+    if (!art) return buildingModel(id, "blue");
+    const group = new T.Group(),
+      width = 2.2,
+      height = width / art.aspect;
+    const geometry = new T.PlaneGeometry(width, height);
+    geometry.translate(0, (0.5 - art.anchor[1]) * height, 0);
+    const material = new T.MeshBasicMaterial({
+      map: art.texture,
+      transparent: true,
+      alphaTest: 0.04,
+      depthWrite: false,
+      toneMapped: false,
+      side: T.DoubleSide,
+    });
+    material.userData.previewOwned = true;
+    const mesh = new T.Mesh(geometry, material);
+    mesh.userData.billboard = true;
+    mesh.quaternion.copy(this.camera.quaternion);
+    group.add(mesh);
+    return group;
+  }
+  showPlacement(
+    id: CardId | null,
+    point: Point | null,
+    valid = true,
+    reason = "",
+  ) {
+    this.placement = id ? { card: id, point, valid, reason } : null;
     this.block.visible = !!id && CARD_MAP[id].kind !== "spell";
     this.cursor.visible = !!id && !!point;
+    this.placementFeedback.classList.toggle("hidden", !id || !point);
+    this.blockedLanes.forEach((overlay, i) => {
+      const lane = i === 0 ? "left" : "right";
+      const enemyTower = this.battle?.entities.some(
+        (e) =>
+          e.team === "red" &&
+          e.kind === "tower" &&
+          !e.king &&
+          e.lane === lane &&
+          e.hp > 0,
+      );
+      const height = enemyTower ? 17.8 : 11.5;
+      overlay.scale.y = height;
+      overlay.position.z = height / 2 - 16;
+    });
     if (!id || !point) {
-      if (this.ghost) this.ghost.visible = false;
+      this.deployment.object.visible = false;
       return;
     }
     this.cursor.position.set(point.x - 9, 0.2, point.y - 16);
@@ -482,31 +566,32 @@ export class Arena {
     (this.rangeRing.material as T.MeshBasicMaterial).color.setHex(
       valid ? 0x9bffca : 0xff536a,
     );
-    if (card.kind !== "spell") {
-      if (this.ghostId !== id) {
-        if (this.ghost) {
-          this.scene.remove(this.ghost);
-          this.disposeObject(this.ghost);
-        }
-        this.ghostId = id;
-        this.ghost =
-          card.kind === "building"
-            ? buildingModel(id, "blue")
-            : troopModel(id, "blue").group;
-        this.ghost.traverse((o) => {
-          if (o instanceof T.Mesh) {
-            o.material = (o.material as T.Material).clone();
-            (o.material as T.MeshStandardMaterial).transparent = true;
-            (o.material as T.MeshStandardMaterial).opacity = 0.5;
-            o.castShadow = false;
-          }
-        });
-        this.scene.add(this.ghost);
-      }
-      this.ghost!.visible = true;
-      this.ghost!.position.set(point.x - 9, 0.15, point.y - 16);
-      this.ghost!.rotation.y = Math.PI;
-    } else if (this.ghost) this.ghost.visible = false;
+    if (card.kind !== "spell") this.deployment.show(id, point, valid);
+    else this.deployment.object.visible = false;
+    this.placementFeedback.classList.toggle("invalid", !valid);
+    const feedback = valid
+      ? `${card.name}${card.count > 1 ? ` ×${card.count}` : ""} · Level 11`
+      : reason || "Cannot deploy here";
+    if (this.placementFeedback.textContent !== feedback)
+      this.placementFeedback.textContent = feedback;
+    this.positionPlacementFeedback();
+  }
+  private positionPlacementFeedback() {
+    const point = this.placement?.point;
+    if (!point) return;
+    const p = this.screen(
+      point.x,
+      point.y,
+      CARD_MAP[this.placement!.card].air ? 5 : 3.2,
+    );
+    const x = T.MathUtils.clamp(p.x, 92, Math.max(92, this.width - 92));
+    const labelHeight = this.placementFeedback.offsetHeight;
+    const y = T.MathUtils.clamp(
+      p.y,
+      labelHeight + 8,
+      Math.max(labelHeight + 8, this.height - 12),
+    );
+    this.placementFeedback.style.transform = `translate(${x}px,${y}px) translate(-50%,-100%)`;
   }
   render(dt: number, time: number) {
     if (this.destroyed || this.contextLost) return;
@@ -823,6 +908,8 @@ export class Arena {
       this.effects.animate(impact.sprite, age);
       return true;
     });
+    this.deployment.render(time, this.camera);
+    this.positionPlacementFeedback();
     this.renderer.render(this.scene, this.camera);
   }
   private impact(name: string, position: T.Vector3, life: number) {
@@ -965,6 +1052,8 @@ export class Arena {
       if (o instanceof T.Mesh && !o.geometry.userData.shared)
         o.geometry.dispose();
     });
+    this.deployment.clear();
+    this.placementFeedback.remove();
     this.sprites.destroy();
     this.effects.destroy();
     this.renderer.dispose();

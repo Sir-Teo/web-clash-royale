@@ -24,6 +24,8 @@ The original combat loop is frozen in `updateLegacyCombat()` for version-1 repla
 
 Rendering interpolates positions independently of simulation steps. Health labels use the camera projection. Pointer coordinates are raycast onto the arena floor and passed to the same placement validator as AI commands. Preview ghosts use that validator, too.
 
+Deployment previews use the same `deploymentPositions()` formation as troop creation, including the complete 15-unit Skeleton Army and board-edge clamping. They share native animation geometry but own their translucent materials, keeping the actual troops opaque. Buildings use the loaded source artwork. Each lane's prohibited overlay follows its surviving Princess Tower, and the river stays blocked. Inline placement feedback combines territory and elixir checks, updates as elixir regenerates, and is announced as a polite status message. Dragged card portraits hide over the board so they do not cover the native formation. Pointer ownership prevents a second touch from changing an in-progress drag.
+
 `src/render/effects.ts` reuses the native frame geometry and SC color-transform shader for 18 original effect exports. `src/render/projectiles.ts` draws source arrow, spear, cannonball, bomb and flame art along simulation flight positions, with trajectory-dependent billboard rotation and per-shot heights. Arrow waves are separate visible volleys. Tesla hit events retain the firing position so their authored beam joins the correct endpoints; Zap uses the original bolt and ground glow. Transient native effects follow battle time, including replay speed and pause, and share cached geometry/materials.
 
 ## Interface and persistence

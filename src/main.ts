@@ -153,6 +153,7 @@ let filter = "all";
 let search = "";
 let dragging = false;
 let pointerDown = false;
+let activePointerId: number | null = null;
 let pointerStart = { x: 0, y: 0 };
 let activeSlot = -1;
 let toastTimer = 0;
@@ -396,6 +397,7 @@ function startBattle() {
 }
 let lastHand = "";
 function updateBattleUI(force = false) {
+  refreshPlacement();
   $("#match-clock").textContent = clock(Math.ceil(battle.remaining));
   $("#phase-label").textContent =
     battle.time >= 180 ? "SUDDEN DEATH" : "TIME LEFT";
@@ -422,8 +424,10 @@ function updateBattleUI(force = false) {
       });
       e.addEventListener("pointerdown", (event) => {
         if (screen !== "battle" || paused) return;
+        if (!event.isPrimary || pointerDown) return;
         activeSlot = Number(e.dataset.slot);
         pointerDown = true;
+        activePointerId = event.pointerId;
         pointerStart = { x: event.clientX, y: event.clientY };
         selectCard(activeSlot);
         event.preventDefault();
@@ -474,15 +478,27 @@ function selectCard(slot: number) {
       c.kind === "spell"
         ? `${c.name} · Target anywhere`
         : `${c.name} · Deploy on your side`;
-    if (hover)
-      arena.showPlacement(
-        c.id,
-        hover,
-        battle.canPlace("blue", c.id, hover.x, hover.y).ok &&
-          battle.players.blue.elixir >= c.cost,
-      );
+    refreshPlacement();
   }
   updateBattleUI();
+}
+function refreshPlacement() {
+  if (screen !== "battle" || paused || selected < 0 || battle.winner) {
+    arena.showPlacement(null, null);
+    return;
+  }
+  const id = battle.players.blue.hand[selected],
+    cost = CARD_MAP[id].cost;
+  const place = hover
+    ? battle.canPlace("blue", id, hover.x, hover.y)
+    : { ok: true, reason: "" };
+  const affordable = battle.players.blue.elixir + 1e-6 >= cost;
+  arena.showPlacement(
+    id,
+    hover,
+    place.ok && affordable,
+    !place.ok ? place.reason : !affordable ? `You need ${cost} elixir` : "",
+  );
 }
 function deploy(point: Point) {
   if (selected < 0 || screen !== "battle" || paused || battle.winner) return;
@@ -496,13 +512,15 @@ function deploy(point: Point) {
     $("#deploy-hint").textContent = "Select a card to deploy";
     updateBattleUI(true);
   } else {
-    toast(result.reason);
+    hover = point;
+    refreshPlacement();
     audio.play("bad_drop_03", 0.2);
   }
 }
 function togglePause() {
   if (screen === "lobby" || battle.winner) return;
   paused = !paused;
+  if (paused) cancelPointer();
   accumulator = 0;
   if (screen === "battle") {
     $(".pause-cover").classList.toggle("hidden", !paused);
@@ -851,33 +869,31 @@ try {
 }
 arena.renderer.domElement.tabIndex = 0;
 arena.host.addEventListener("pointermove", (e) => {
+  if (!e.isPrimary) return;
   hover = arena.point(e.clientX, e.clientY);
-  if (selected >= 0 && hover && screen === "battle") {
-    const id = battle.players.blue.hand[selected];
-    arena.showPlacement(
-      id,
-      hover,
-      battle.canPlace("blue", id, hover.x, hover.y).ok &&
-        battle.players.blue.elixir >= CARD_MAP[id].cost,
-    );
-  }
+  refreshPlacement();
 });
 arena.host.addEventListener("pointerleave", () => {
-  if (!dragging)
-    arena.showPlacement(
-      selected < 0 ? null : battle.players.blue.hand[selected],
-      null,
-    );
+  if (!dragging) {
+    hover = null;
+    refreshPlacement();
+  }
 });
 arena.host.addEventListener("pointerdown", (e) => {
+  if (!e.isPrimary) return;
   if (screen !== "battle" || selected < 0 || paused || pointerDown) return;
   const p = arena.point(e.clientX, e.clientY);
   if (p) deploy(p);
 });
 document.addEventListener("pointermove", (e) => {
-  if (!pointerDown) return;
-  if (Math.hypot(e.clientX - pointerStart.x, e.clientY - pointerStart.y) > 8)
+  if (!pointerDown || e.pointerId !== activePointerId) return;
+  if (
+    !dragging &&
+    Math.hypot(e.clientX - pointerStart.x, e.clientY - pointerStart.y) > 8
+  ) {
     dragging = true;
+    if (selected !== activeSlot) selectCard(activeSlot);
+  }
   if (!dragging) return;
   const id = battle.players.blue.hand[activeSlot];
   $("#drag-card").classList.remove("hidden");
@@ -885,17 +901,15 @@ document.addEventListener("pointermove", (e) => {
   $("#drag-card").style.transform =
     `translate(${e.clientX}px,${e.clientY - 45}px) translate(-50%,-50%)`;
   hover = arena.point(e.clientX, e.clientY);
-  if (hover)
-    arena.showPlacement(
-      id,
-      hover,
-      battle.canPlace("blue", id, hover.x, hover.y).ok,
-    );
+  if (hover && hover.x >= 0 && hover.x <= 18 && hover.y >= 0 && hover.y <= 32)
+    $("#drag-card").classList.add("hidden");
+  refreshPlacement();
 });
 document.addEventListener("pointerup", (e) => {
-  if (!pointerDown) return;
+  if (!pointerDown || e.pointerId !== activePointerId) return;
   const wasDragging = dragging;
   pointerDown = false;
+  activePointerId = null;
   dragging = false;
   $("#drag-card").classList.add("hidden");
   if (wasDragging) {
@@ -908,14 +922,22 @@ document.addEventListener("pointerup", (e) => {
     ) {
       const p = arena.point(e.clientX, e.clientY);
       if (p) deploy(p);
-    } else arena.showPlacement(null, null);
+    } else {
+      hover = null;
+      refreshPlacement();
+    }
   }
 });
-document.addEventListener("pointercancel", () => {
+function cancelPointer() {
   pointerDown = false;
+  activePointerId = null;
   dragging = false;
+  hover = null;
   $("#drag-card").classList.add("hidden");
   arena.showPlacement(null, null);
+}
+document.addEventListener("pointercancel", (e) => {
+  if (e.pointerId === activePointerId) cancelPointer();
 });
 $("#battle-button").onclick = startBattle;
 $(".mode-select").onclick = showModes;
@@ -999,6 +1021,14 @@ $("#about-button").onclick = () =>
     "about",
   );
 document.addEventListener("keydown", (e) => {
+  if (pointerDown) {
+    if (e.key === "Escape") {
+      cancelPointer();
+      selected = -1;
+      updateBattleUI();
+    }
+    return;
+  }
   if (e.key === "Escape" && modalKey) {
     e.preventDefault();
     closeModal();
@@ -1047,6 +1077,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 document.addEventListener("visibilitychange", () => {
+  if (document.hidden) cancelPointer();
   if (document.hidden && screen === "battle" && !paused && !battle.winner)
     togglePause();
   frameTime = performance.now();
@@ -1106,6 +1137,7 @@ Object.defineProperty(window, "__arena", {
         fps,
         drawCalls: arena.renderer.info.render.calls,
         loadedEffects: arena.loadedEffects,
+        placement: arena.placementState,
         loadedAnimations: arena.loadedAnimations,
       };
     },

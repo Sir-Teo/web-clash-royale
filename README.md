@@ -30,6 +30,7 @@ Open the Vite **Network** URL on a phone connected to the same Wi-Fi as the deve
 ## Controls
 
 - Click a hand card, then click the arena, or drag the card into position.
+- Placement previews show the complete troop formation in native artwork, with live elixir and territory feedback.
 - Keys **1–4** select a card. **Escape** cancels a selection or pauses; **Space** pauses.
 - Troops deploy on your half; spells can target either half. Destroying a Princess Tower opens deployment territory in that lane.
 - Decks, results and preferences save automatically in this browser.

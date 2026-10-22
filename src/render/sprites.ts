@@ -36,6 +36,10 @@ export interface AnimatedSprite {
   facingX: number;
   facingY: number;
 }
+export type SpriteState = Pick<
+  Entity,
+  "id" | "card" | "team" | "x" | "y" | "attack" | "interval" | "move" | "deploy"
+>;
 const heights: Partial<Record<CardId, number>> = {
   knight: 1.65,
   wizard: 1.8,
@@ -182,8 +186,8 @@ export class SpriteLibrary {
   }
   update(
     sprite: AnimatedSprite,
-    e: Entity,
-    target: Entity | undefined,
+    e: SpriteState,
+    target: { x: number; y: number } | undefined,
     moving: boolean,
     time: number,
     camera: T.Camera,

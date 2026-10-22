@@ -1,5 +1,6 @@
 import { CARD_MAP, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
+import { deploymentPositions } from "./deployment";
 import {
   combatTraits,
   FIREBALL_SPEED,
@@ -360,16 +361,8 @@ export class Battle {
             : {}),
         });
     } else {
-      for (let i = 0; i < c.count; i++) {
-        const angle = i * 2.39996;
-        const spread = c.count === 1 ? 0 : Math.sqrt(i) * 0.43;
-        this.spawn(
-          id,
-          team,
-          clamp(x + Math.cos(angle) * spread, 0.6, 17.4),
-          clamp(y + Math.sin(angle) * spread, 0.8, 31.2),
-        );
-      }
+      for (const point of deploymentPositions(id, { x, y }))
+        this.spawn(id, team, point.x, point.y);
     }
     return { ok: true, reason: "" };
   }
