@@ -15,26 +15,72 @@ describe("bundled game artwork", () => {
     for (const c of CARDS)
       expect(existsSync(`public/assets/cards/${c.id}.png`), c.id).toBe(true);
   });
-  it("keeps every sampled animation frame inside its atlas", () => {
-    const manifest = json("public/assets/sprites/manifest.json");
-    expect(manifest.files.length).toBe(17);
+  it("preserves full source animations and every referenced UV polygon", () => {
+    const manifest = json("public/assets/animations/manifest.json");
+    expect(manifest.files.length).toBe(18);
+    let total = 0;
     for (const file of manifest.files) {
-      const bytes = readFileSync(`public/assets/sprites/${file.id}.png`);
+      const bytes = readFileSync(`public/assets/animations/${file.id}.json`);
       expect(createHash("sha256").update(bytes).digest("hex")).toBe(
-        file.atlasSha256,
+        file.dataSha256,
       );
-      const data = json(`public/assets/sprites/${file.id}.json`);
+      for (const texture of file.textures) {
+        expect(
+          createHash("sha256")
+            .update(readFileSync(`public/assets/animations/${texture.file}`))
+            .digest("hex"),
+        ).toBe(texture.sha256);
+      }
+      const data = JSON.parse(bytes.toString());
       expect(data.anchor.every(Number.isFinite)).toBe(true);
-      for (const sequence of Object.values(data.clips) as number[][]) {
-        expect(sequence.length).toBeGreaterThan(0);
-        for (const index of sequence) {
-          const [x, y, w, h] = data.frames[index];
-          expect(
-            x >= 0 && y >= 0 && x + w <= data.width && y + h <= data.height,
-          ).toBe(true);
+      for (const sequence of Object.values(data.clips) as {
+        fps: number;
+        frames: number[];
+        source: string;
+      }[]) {
+        expect(sequence.fps).toBeGreaterThanOrEqual(24);
+        expect(sequence.frames.length).toBeGreaterThan(0);
+        total += sequence.frames.length;
+        for (const index of sequence.frames) {
+          expect(data.frames[index].length).toBeGreaterThan(0);
+          for (const part of data.frames[index]) {
+            expect(part.matrix.every(Number.isFinite)).toBe(true);
+            expect(part.color.every((v: number) => v >= 0 && v <= 255)).toBe(
+              true,
+            );
+            for (const polygon of data.shapes[part.shape]) {
+              expect(data.textures[polygon.sheet]).toBeDefined();
+              expect(polygon.xy.length).toBe(polygon.uv.length);
+              expect(polygon.xy.length).toBeGreaterThanOrEqual(3);
+              expect(polygon.xy.flat().every(Number.isFinite)).toBe(true);
+              expect(
+                polygon.uv.flat().every((v: number) => v >= 0 && v <= 1),
+              ).toBe(true);
+            }
+          }
         }
       }
+      const directions =
+        file.id === "balloon" ? [1] : [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      for (const direction of directions) {
+        expect(
+          data.clips[`blue-run-${direction}`].frames.length,
+        ).toBeGreaterThan(4);
+        if (file.id !== "skeletons")
+          expect(
+            data.clips[`red-run-${direction}`].frames.length,
+          ).toBeGreaterThan(4);
+      }
+      if (file.id === "baby-dragon")
+        expect(
+          Object.values(data.clips).every((c: any) =>
+            c.source.startsWith("baby_dragon_"),
+          ),
+        ).toBe(true);
+      if (file.id === "prince")
+        expect(data.clips["blue-charge-1"].frames.length).toBeGreaterThan(4);
     }
+    expect(total).toBeGreaterThan(16000);
   });
   it("includes every reconstructed stadium decoration and static unit", () => {
     const layout = json("public/assets/scenery/goblin-layout.json");

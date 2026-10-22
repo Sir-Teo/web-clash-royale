@@ -1,0 +1,313 @@
+{
+  "version": 2,
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "files": [
+    {
+      "id": "knight",
+      "source": "chr_knight",
+      "metadataSha256": "dfb22ff4f3de91521616aea81ac79f5c786fd336ba6fc3ccc26652d089810cbc",
+      "dataSha256": "21695cc488b845af7a76cbc812357c157adb05f3609e43403cd7fa4b93eef159",
+      "textures": [
+        {
+          "file": "knight-0.webp",
+          "sha256": "2c35f16cc87e2ee77ffbb547b09fa647b72ce73b6f67f3552154c9a229ea74fe",
+          "originalSha256": "731230054f55653ecf4998172a68e5ecb82ff97222d0a4c42ce2d57d7b9804e6"
+        }
+      ],
+      "shapes": 486,
+      "clips": 54,
+      "frames": 1116,
+      "uniqueFrames": 486
+    },
+    {
+      "id": "archers",
+      "source": "chr_archer",
+      "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",
+      "dataSha256": "c36b4eaa5c78e31b31d5c7ca4fa5971952c9a74ff2cf015c5ab93e0213083397",
+      "textures": [
+        {
+          "file": "archers-0.webp",
+          "sha256": "27830487f5d9684709ad789941e95ce7eb302bf5318e2d8b652acb3371967d8a",
+          "originalSha256": "d8db2faee7d22dece883107daf924a3d115d373aa9fc8e9f84e8d968bed61fad"
+        }
+      ],
+      "shapes": 252,
+      "clips": 54,
+      "frames": 738,
+      "uniqueFrames": 252
+    },
+    {
+      "id": "giant",
+      "source": "chr_giant",
+      "metadataSha256": "13e1f81b328406242857fac8f9ace8734ddd1c9adba405cf12bcc6a395dc37b8",
+      "dataSha256": "e75a9347b7c305c0a43a8cde20a81413747ff15520b82361c1a3dd62b6a73bf7",
+      "textures": [
+        {
+          "file": "giant-0.webp",
+          "sha256": "59d25c0369860c0f275aa76d6d3dfb18b8990bca14dadd07f65fd257f33589fa",
+          "originalSha256": "5ce2ef6ff1611258358e030525d1d36a19b8c5c2940c9343a6cdcda67f11e965"
+        }
+      ],
+      "shapes": 468,
+      "clips": 54,
+      "frames": 1674,
+      "uniqueFrames": 1016
+    },
+    {
+      "id": "musketeer",
+      "source": "chr_musketeer",
+      "metadataSha256": "8ceb69fb0d485a971f2990081d8d88823beade5453183190d15ec45fe691f4ca",
+      "dataSha256": "e8c6a11f268b632a01d3fd071ccb3201e8a1707f0eebc5eb7d74adfd91cc3fff",
+      "textures": [
+        {
+          "file": "musketeer-0.webp",
+          "sha256": "0121b7d099cb006a77e573e9c9ea5038e5169484bce5ea568f2ececb95d8169d",
+          "originalSha256": "b48fb5f52eb75a469ee1351b4eb271fdd031fa000264ba0ba0427b0e4459c07b"
+        }
+      ],
+      "shapes": 414,
+      "clips": 54,
+      "frames": 1062,
+      "uniqueFrames": 414
+    },
+    {
+      "id": "mini-pekka",
+      "source": "chr_mini_pekka",
+      "metadataSha256": "7602a82a6d4ea82af08440793702a5b0dbe71208a1e425c6365b7d66b6dcd1b0",
+      "dataSha256": "9bdc3cdcb38a47f349f38aac1ee165939a01f1b209758ecadb7dbc24489ce477",
+      "textures": [
+        {
+          "file": "mini-pekka-0.webp",
+          "sha256": "350c431cea2af1f0c770a483597c59d8df3c15fd820581fbefabff2d347c0d93",
+          "originalSha256": "c28a95b215fbbad2a0a90215f699ab3fd06d2854175cb6d1827d738782ea3aab"
+        }
+      ],
+      "shapes": 416,
+      "clips": 54,
+      "frames": 720,
+      "uniqueFrames": 416
+    },
+    {
+      "id": "goblins",
+      "source": "chr_goblin",
+      "metadataSha256": "910da99a909743eb9780aae2692c008e192f458db128c88d40fedff1b383c11a",
+      "dataSha256": "a4fedfa389220deb329ee3388fd85e30a74ec6363d3812de14a24068fd7d4321",
+      "textures": [
+        {
+          "file": "goblins-0.webp",
+          "sha256": "bb4f08ed4aeb36f20928ee06c19d9d53fded5bf375c153928af0498afbe0dc1a",
+          "originalSha256": "f037a384506e1de51ef33897745287b41513ffd4ea985a8b15769067cbe5beb2"
+        }
+      ],
+      "shapes": 288,
+      "clips": 54,
+      "frames": 684,
+      "uniqueFrames": 288
+    },
+    {
+      "id": "spear-goblins",
+      "source": "chr_goblin_archer",
+      "metadataSha256": "a5225cd1d31673195e1a609b3d10ae910c46d671a71b754e93621300a9681f98",
+      "dataSha256": "6fd8f2ae24cdd1044fb43f25c8e77a6994160d7bc54f210c986b0af9b08dbd9e",
+      "textures": [
+        {
+          "file": "spear-goblins-0.webp",
+          "sha256": "20fb8444e87087413e4b839d8ae003781135643d49d87d89b22d63d58e9095a2",
+          "originalSha256": "8770a2df7b87aad827fbcc61a22943b14d77e7c52e226e40642d22a89a7f7213"
+        }
+      ],
+      "shapes": 342,
+      "clips": 54,
+      "frames": 1224,
+      "uniqueFrames": 711
+    },
+    {
+      "id": "skeletons",
+      "source": "chr_skeleton",
+      "metadataSha256": "ebb73cd9cf005f5fc65f17e71cb3a88b32b7de3393269b36696876fab8eeac16",
+      "dataSha256": "5a3cbf2fb488b4f7d53a9d396d14ab7d97b7f19ff168feee6203c0f2abbc2581",
+      "textures": [
+        {
+          "file": "skeletons-0.webp",
+          "sha256": "76c20f2ad71b3a54ead11040e308a1d564184e8c0ec0baaba3459f2e4a9ad67d",
+          "originalSha256": "81390339e3219859f68a61038c13f8622e2e1a9b5e1390971096e377c489ef82"
+        }
+      ],
+      "shapes": 117,
+      "clips": 27,
+      "frames": 288,
+      "uniqueFrames": 117
+    },
+    {
+      "id": "bomber",
+      "source": "chr_bomber",
+      "metadataSha256": "28b57f7bb591151cdc29f60a54919ed6551b2d731a0887a464208b025dc90ac3",
+      "dataSha256": "99da28e2f0825eec866c1258d8b208be700a646a997460ba150c80b824b28c64",
+      "textures": [
+        {
+          "file": "bomber-0.webp",
+          "sha256": "27144b07f3795ff799d8258d15272ecf46008fefcd8d2e1a5fd942edc8aa94e4",
+          "originalSha256": "f81aed0cf3ef855356349bfd9c6d77639498e0b2556e735a820bcf594ff783eb"
+        }
+      ],
+      "shapes": 432,
+      "clips": 54,
+      "frames": 1584,
+      "uniqueFrames": 1044
+    },
+    {
+      "id": "valkyrie",
+      "source": "chr_valkyrie",
+      "metadataSha256": "5bb62da5ea8152f55125b75f2d80b5df27cee63e24df84d91b574f18463c9e08",
+      "dataSha256": "e8de031efd44722465946a526b5fa7fb1c18fa47294628da12074f1ce2817928",
+      "textures": [
+        {
+          "file": "valkyrie-0.webp",
+          "sha256": "c4bdd91d3c72eff1a85b7709213bac63b91f0cf2613ba306080236e9f91e1589",
+          "originalSha256": "6102af34d83945f1688bf5660998c2921f76e995b172da7a27a12014888555ab"
+        }
+      ],
+      "shapes": 379,
+      "clips": 54,
+      "frames": 792,
+      "uniqueFrames": 558
+    },
+    {
+      "id": "hog-rider",
+      "source": "chr_hog_rider",
+      "metadataSha256": "77f4801dfd738fa55639505944df7448831cd733ebfb38f7c587e4b753ac5be7",
+      "dataSha256": "820318addd92fb1fcd661c58657ee7e12de064d1d1e1fb86d55544f3a6d03296",
+      "textures": [
+        {
+          "file": "hog-rider-0.webp",
+          "sha256": "42240e1675744fc8366a37dd49afee3dba34bdc9e796bc757d2fe53af2fe0771",
+          "originalSha256": "9af1c4d4fdd2673ba3dbb31fba81eeee46647e01a2fdc3042937866137cbf7c1"
+        }
+      ],
+      "shapes": 342,
+      "clips": 54,
+      "frames": 684,
+      "uniqueFrames": 342
+    },
+    {
+      "id": "baby-dragon",
+      "source": "chr_baby_dragon",
+      "metadataSha256": "9d8d74eff5463e27df6bb4db13b9a93aeafb0bbba8f32b1ee582e526ce679190",
+      "dataSha256": "212514169f6c8d12e9a438831263ac051e511d0af4fdc2c19aa0f5cbe44d5bc0",
+      "textures": [
+        {
+          "file": "baby-dragon-0.webp",
+          "sha256": "b49d1f374060d5e42445c257b76cf83f01f7b48f973948ed9edf6c9344fb7803",
+          "originalSha256": "88c172db5ebce4e847b4f341d7fc59b58de1bb2e8eb3b269a1d92fcdab927ca5"
+        }
+      ],
+      "shapes": 468,
+      "clips": 54,
+      "frames": 1044,
+      "uniqueFrames": 325
+    },
+    {
+      "id": "minions",
+      "source": "chr_minion",
+      "metadataSha256": "7b590037f1f49d09a16bdf0a60e2c7744a264d893d1ae664fb532f7306fb1346",
+      "dataSha256": "ce8cdbdb8448c25078442ed3a7a7cccd1da7f76ff79498aaced6a5138fe20f95",
+      "textures": [
+        {
+          "file": "minions-0.webp",
+          "sha256": "a3e4ddffef42b93351490804a4d171a4ff3c56c9a707002dc359ffa8188673e8",
+          "originalSha256": "60a5d3f96b01e5f01eed02ff69dfa41b3c55d061c5f1e0dddc37464454203d76"
+        }
+      ],
+      "shapes": 270,
+      "clips": 54,
+      "frames": 828,
+      "uniqueFrames": 282
+    },
+    {
+      "id": "witch",
+      "source": "chr_witch",
+      "metadataSha256": "162c723c4c17e1cb0fca5d361548ec46bd622cf1177b93bbf5b1d5308d299333",
+      "dataSha256": "50077209aaba05f46a570c6d083e42cc034c7f50e760ffcdb1f8c5c2ef063cff",
+      "textures": [
+        {
+          "file": "witch-0.webp",
+          "sha256": "a7b6c6f0788122ccf0bc2c1376a95d6d8533c9d14ff50d48337775dca0f51861",
+          "originalSha256": "4be040fe2791a9b45d6fcc1f9a4cf5d59da54c280f0dd6cacb440830380f0ad4"
+        }
+      ],
+      "shapes": 253,
+      "clips": 54,
+      "frames": 756,
+      "uniqueFrames": 432
+    },
+    {
+      "id": "prince",
+      "source": "chr_prince",
+      "metadataSha256": "e19e550df6dac25a6462835ee08f1ea60d45704707eb1d570153c87528c50ab3",
+      "dataSha256": "8f3fc4e035f80ef47f7a9aca81ef272864be95885cc9c5f62b05b9c91f876fb4",
+      "textures": [
+        {
+          "file": "prince-0.webp",
+          "sha256": "a4427eab9af571c04d937b3da8a29e77e5eb3e279310e6466efaa6f5d8955b0c",
+          "originalSha256": "9844f387efa8e82cae1c62a625fcec3197a5840baacef539bc7716df21a42a0b"
+        }
+      ],
+      "shapes": 522,
+      "clips": 72,
+      "frames": 1152,
+      "uniqueFrames": 531
+    },
+    {
+      "id": "pekka",
+      "source": "chr_pekka",
+      "metadataSha256": "8b5026b261a2199f06d7b7440ea62cd50a549d5abc85be67ca3ff557d48ed042",
+      "dataSha256": "c64392f043cd524c826a0b11bc298cb509a7d53b557bb57a03054cf4256ba068",
+      "textures": [
+        {
+          "file": "pekka-0.webp",
+          "sha256": "ab18cc8c2045aa3b359afbaee80586ac13def4bd6374a8680fa466f2180a525b",
+          "originalSha256": "cdc59bbfa171d28393ab97e181da8db94735c4b4ff5b9cf4f95de96472b94b18"
+        }
+      ],
+      "shapes": 396,
+      "clips": 54,
+      "frames": 945,
+      "uniqueFrames": 396
+    },
+    {
+      "id": "balloon",
+      "source": "chr_balloon",
+      "metadataSha256": "2a60d89564423b7b2607ee3a242cc342bd44fbd6626d7d9ce06a11f54a5121a4",
+      "dataSha256": "d7a2dd5acf4c3964ee09da883faba1fc7103e18646305bd91a106ee83507d285",
+      "textures": [
+        {
+          "file": "balloon-0.webp",
+          "sha256": "81ebd7484e3fa1ba03fff794c950d611887ec0fba5b4b655fa28af4932a460bf",
+          "originalSha256": "b6fa52b5aa742835418be6bf6d7a094bfee42555b840beebd8fe8ed77c188ecd"
+        }
+      ],
+      "shapes": 10,
+      "clips": 6,
+      "frames": 226,
+      "uniqueFrames": 162
+    },
+    {
+      "id": "wizard",
+      "source": "chr_wizard",
+      "metadataSha256": "6f228541846aa77e903a1f362aa1bcdccb270fc0623ef75ff7ccd12bc6191f55",
+      "dataSha256": "6eca84847ef9b72d7b8c01d08f248dffd003bff8e6496d5e471e073e7b623a47",
+      "textures": [
+        {
+          "file": "wizard-0.webp",
+          "sha256": "984b667b0b5691d9823c14d6cf5589a4d6ec62cd04da094a49a9292b02e3cf08",
+          "originalSha256": "1c2b270bc1a45ecc5397ef9c5c70c268df4f2c58e027f68c2e6688624e9d59ce"
+        }
+      ],
+      "shapes": 312,
+      "clips": 54,
+      "frames": 864,
+      "uniqueFrames": 666
+    }
+  ]
+}

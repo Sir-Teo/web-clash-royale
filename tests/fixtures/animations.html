@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Troop animation inspection</title>
+    <style>
+      body {
+        margin: 0;
+        background: #19382c;
+        color: #e8f0df;
+        font: 14px system-ui;
+      }
+      header {
+        padding: 12px;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        background: #132b26;
+      }
+      select,
+      button {
+        padding: 9px;
+        color: #fff;
+        background: #274b3e;
+        border: 1px solid #748c77;
+        border-radius: 5px;
+      }
+      main {
+        position: relative;
+        width: 100%;
+        height: calc(100vh - 62px);
+      }
+      canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .labels {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        pointer-events: none;
+      }
+      .labels span {
+        padding: 10px;
+        border: 1px solid #ffffff10;
+        font-weight: 600;
+        font-size: 12px;
+      }
+      small {
+        color: #b7d2c3;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <b>Native troop animations</b
+      ><label
+        >State
+        <select id="state">
+          <option value="run">Walk</option>
+          <option value="idle">Idle</option>
+          <option value="attack">Attack</option>
+        </select></label
+      ><label
+        >Facing
+        <select id="direction">
+          <option value="9">Front</option>
+          <option value="1">Back</option>
+          <option value="5">Right</option>
+          <option value="-5">Left</option>
+        </select></label
+      ><button id="pause">Pause</button><small id="status">Loading</small>
+    </header>
+    <main><div class="labels"></div></main>
+    <script type="module" src="./animations.ts"></script>
+  </body>
+</html>

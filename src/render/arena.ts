@@ -21,6 +21,7 @@ interface Visual {
   object: T.Group;
   model?: Model;
   sprite?: AnimatedSprite;
+  archer?: AnimatedSprite;
   art?: T.Mesh;
   label?: HTMLDivElement;
   health?: T.Group;
@@ -416,6 +417,9 @@ export class Arena {
     this.battle = battle;
     this.lastEvent = battle.events.at(-1)?.id ?? 0;
   }
+  get loadedAnimations() {
+    return this.sprites.assets.size;
+  }
   private resize() {
     const { width, height } = this.host.getBoundingClientRect();
     if (!width || !height) return;
@@ -526,6 +530,7 @@ export class Arena {
         let object: T.Group,
           model: Model | undefined,
           sprite: AnimatedSprite | undefined,
+          towerArcher: AnimatedSprite | undefined,
           art: T.Mesh | undefined;
         const tower = this.towerArt.get(
           `${e.king ? "king" : "princess-base"}-${e.team}`,
@@ -555,6 +560,7 @@ export class Arena {
           if (!e.king) {
             const archer = this.sprites.make("archers");
             if (archer) {
+              towerArcher = archer;
               archer.mesh.scale.setScalar(0.65);
               archer.mesh.position.set(0, 1.6, -0.15);
               archer.mesh.quaternion.copy(this.camera.quaternion);
@@ -571,7 +577,7 @@ export class Arena {
             }
           }
         } else if (
-          ["balloon", "cannon", "tesla"].includes(e.card) &&
+          ["cannon", "tesla"].includes(e.card) &&
           this.towerArt.has(`${e.card}-${e.team}`)
         ) {
           const a = this.towerArt.get(`${e.card}-${e.team}`)!;
@@ -618,7 +624,7 @@ export class Arena {
           }
         }
         this.scene.add(object);
-        v = { object, model, sprite, art };
+        v = { object, model, sprite, art, archer: towerArcher };
         if (e.kind === "tower") {
           const label = document.createElement("div");
           label.className = `tower-health ${e.team}`;
@@ -798,9 +804,20 @@ export class Arena {
           : 0);
     if (v.sprite) {
       const target = this.battle?.entities.find((t) => t.id === e.target);
-      this.sprites.update(v.sprite, e, target, moving, time, this.camera);
+      this.sprites.update(v.sprite, e, target, moving, time, this.camera, {
+        x: o.position.x - oldX,
+        y: o.position.z - oldZ,
+      });
     }
-    if (v.art) v.art.quaternion.copy(this.camera.quaternion);
+    if (v.archer) {
+      const target = this.battle?.entities.find((t) => t.id === e.target);
+      this.sprites.update(v.archer, e, target, false, time, this.camera);
+      v.archer.mesh.scale.multiplyScalar(0.65);
+    }
+    if (v.art) {
+      v.art.quaternion.copy(this.camera.quaternion);
+      v.art.renderOrder = 1;
+    }
     if (v.health && v.healthFill) {
       v.health.visible = e.hp < e.maxHp && e.deploy <= 0;
       v.health.position.set(
@@ -836,7 +853,7 @@ export class Arena {
         for (let i = 0; i < m.arms.length; i++)
           m.arms[i].rotation.x =
             e.attack > 0
-              ? -Math.sin((e.attack / 0.3) * Math.PI) * 1.2
+              ? -Math.sin((e.attack / e.interval) * Math.PI) * 1.2
               : moving
                 ? Math.sin(time * 10 + e.id + i * Math.PI) * 0.22
                 : 0;
@@ -884,14 +901,16 @@ export class Arena {
   }
   private disposeObject(object: T.Object3D) {
     object.traverse((o) => {
-      if (o instanceof T.Mesh) o.geometry.dispose();
+      if (o instanceof T.Mesh && !o.geometry.userData.shared)
+        o.geometry.dispose();
     });
   }
   destroy() {
     this.destroyed = true;
     this.observer.disconnect();
     this.scene.traverse((o) => {
-      if (o instanceof T.Mesh) o.geometry.dispose();
+      if (o instanceof T.Mesh && !o.geometry.userData.shared)
+        o.geometry.dispose();
     });
     this.sprites.destroy();
     this.renderer.dispose();

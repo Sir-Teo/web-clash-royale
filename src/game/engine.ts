@@ -463,7 +463,7 @@ export class Battle {
             e.damage * (e.card === "prince" && e.move >= 2.3 ? 2 : 1);
           e.move = 0;
           e.cooldown = e.interval;
-          e.attack = 0.3;
+          e.attack = e.interval;
           if (e.range > 2 || e.kind === "tower" || e.card === "balloon") {
             const duration = Math.max(0.1, distance / 18);
             this.projectiles.push({
