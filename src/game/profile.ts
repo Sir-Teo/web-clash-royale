@@ -2,6 +2,8 @@ import { CARDS, CARD_MAP, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
 import type { Battle, Mode, Replay } from "./engine";
 export interface RecordEntry {
+  opponent?: string;
+  matchId?: string;
   id: number;
   winner: "blue" | "red" | "draw";
   crowns: [number, number];
@@ -121,6 +123,10 @@ export function loadProfile(): Profile {
             (r: RecordEntry) =>
               r &&
               Number.isFinite(r.id) &&
+              (r.opponent === undefined || typeof r.opponent === "string") &&
+              (r.matchId === undefined || typeof r.matchId === "string") &&
+              (r.replay?.perspective === undefined ||
+                ["blue", "red"].includes(r.replay.perspective)) &&
               ["blue", "red", "draw"].includes(r.winner) &&
               Array.isArray(r.crowns) &&
               r.crowns.length === 2 &&
@@ -163,10 +169,20 @@ export function saveProfile(p: Profile) {
 export function recordBattle(
   p: Profile,
   b: Battle,
+  options?: {
+    friendly?: boolean;
+    opponent?: string;
+    matchId?: string;
+    replay?: Replay;
+  },
 ): { trophies: number; gold: number; chest: string | null } {
-  if (!b.winner) return { trophies: 0, gold: 0, chest: null };
+  if (
+    !b.winner ||
+    (options?.matchId && p.history.some((r) => r.matchId === options.matchId))
+  )
+    return { trophies: 0, gold: 0, chest: null };
   const win = b.winner === "blue",
-    ranked = b.mode !== "training";
+    ranked = !options?.friendly && b.mode !== "training";
   const trophies = ranked
     ? win
       ? 30
@@ -191,7 +207,9 @@ export function recordBattle(
     winner: b.winner,
     crowns: [b.players.blue.crowns, b.players.red.crowns],
     mode: b.mode,
-    replay: b.exportReplay(),
+    replay: options?.replay ?? b.exportReplay(),
+    opponent: options?.opponent,
+    matchId: options?.matchId,
     date: new Date().toISOString(),
   });
   p.history = p.history.slice(0, 10);

@@ -6,7 +6,11 @@ import "@fontsource/nunito-sans/latin-800.css";
 import "./style.css";
 import "./ui/announcements.css";
 import { NativeAnnouncements, battleClock } from "./ui/announcements";
-import { NativeIntro } from "./ui/intro";
+import "./ui/rooms.css";
+import { RoomClient } from "./network/client";
+import { PROTOCOL } from "./network/protocol";
+import { applySnapshot, snapshot } from "./network/perspective";
+import { NativeIntro, INTRO_ACTION_TIME } from "./ui/intro";
 import { NativeElixir, elixirMarkup } from "./ui/elixir";
 import { NativeBattleHud } from "./ui/hud";
 import "./ui/elixir.css";
@@ -139,6 +143,15 @@ const profile = loadProfile(),
   audio = new GameAudio();
 audio.enabled = profile.sound;
 audio.musicEnabled = profile.music;
+const network = new RoomClient();
+let multiplayer = false;
+let networkReplay: Replay | undefined;
+let replaySource: Battle | null = null;
+let roomError = "";
+let connectionStatus = "";
+let lanOrigin = "";
+let networkBattleCode = "";
+let opponentName = "Royal Trainer";
 let arena: Arena;
 let battle: Battle;
 let screen: "lobby" | "battle" | "replay" = "lobby";
@@ -204,11 +217,11 @@ $("#app").innerHTML = `
     <div class="arena-stage" id="arena-stage"><div class="arena-vignette"></div><div class="arena-canvas" id="arena-canvas"></div>
      <div class="arena-corner top-left"></div><div class="arena-corner bottom-right"></div>
      <div class="lobby-badge"><span class="live-dot"></span> THE ARENA IS YOURS</div>
-     <div class="lobby-bottom"><div class="battle-button-wrap"><span class="battle-flare"></span><button id="battle-button" class="battle-button">${icon("swords")} BATTLE ${icon("chevron-right")}</button></div><span class="battle-caption">${icon("shield-check")} Level 11 cards <span>·</span> Offline AI opponent</span></div>
+     <div class="lobby-bottom"><div class="battle-button-wrap"><span class="battle-flare"></span><button id="battle-button" class="battle-button">${icon("swords")} BATTLE ${icon("chevron-right")}</button></div><button id="friend-button" class="friend-button">${icon("users")} Play with a friend</button><span class="battle-caption">${icon("shield-check")} Level 11 cards <span>·</span> Offline AI opponent</span></div>
      <div class="match-top hidden"><div class="competitor enemy"><span class="mini-shield red">${icon("shield")}</span><div><b>Royal Trainer</b><span>Training guild</span></div></div><div class="match-timer"><span id="phase-label">TIME LEFT</span><b id="match-clock">3:00</b></div></div>
      <div class="match-crowns hidden"><div class="red">${icon("crown")}<b id="red-crowns">0</b></div><span>:</span><div class="blue"><b id="blue-crowns">0</b>${icon("crown")}</div></div>
      <div class="match-bottom hidden"><div class="competitor"><span class="mini-shield blue">${icon("shield")}</span><div><b class="player-name">${esc(profile.name)}</b><span>Browser kingdom</span></div></div><div class="battle-tools"><button id="emote-button" class="small-icon" aria-label="Send King laugh emote">${icon("smile")}</button><button id="pause-button" class="small-icon" aria-label="Pause battle">${icon("pause")}</button></div></div>
-     <div id="deploy-hint" class="deploy-hint hidden">Select a card to deploy</div>
+     <div id="connection-status" class="connection-status hidden" role="status"></div><div id="deploy-hint" class="deploy-hint hidden">Select a card to deploy</div>
      <div class="battle-announcements hidden" id="battle-announcements" role="img" aria-label="Battle announcement"></div>
      <div class="battle-intro hidden" id="battle-intro" role="img" aria-label="Battle introduction"></div>
      <div class="pause-cover hidden"><span class="eyebrow">TAKE A BREATHER</span><h2>Battle paused</h2><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button><button class="text-button" id="surrender-button">Leave battle</button></div>
@@ -251,7 +264,13 @@ function toast(message: string) {
   );
 }
 function modal(title: string, body: string, key = "generic", wide = false) {
-  if (!modalKey && screen !== "lobby" && !paused && !battle.winner) {
+  if (
+    !multiplayer &&
+    !modalKey &&
+    screen !== "lobby" &&
+    !paused &&
+    !battle.winner
+  ) {
     paused = true;
     modalPausedBattle = true;
     audio.stopMusic();
@@ -351,6 +370,13 @@ function claimChest(index: number) {
 }
 
 function lobby() {
+  if (network.room || multiplayer) network.leave();
+  multiplayer = false;
+  networkBattleCode = "";
+  networkReplay = undefined;
+  replaySource = null;
+  $("#connection-status").classList.add("hidden");
+  $("#pause-button").setAttribute("aria-label", "Pause battle");
   screen = "lobby";
   selected = -1;
   paused = false;
@@ -380,7 +406,11 @@ function lobby() {
   $(".mode-select").classList.remove("hidden");
   refreshProfile();
 }
-function startBattle() {
+function startBattle(online = false) {
+  if (!online) network.leave();
+  multiplayer = online;
+  networkReplay = undefined;
+  replaySource = null;
   closeModal();
   screen = "battle";
   paused = false;
@@ -398,10 +428,24 @@ function startBattle() {
   document.body.classList.remove("in-replay");
   battle = new Battle({
     deck: profile.deck,
-    mode,
+    mode: online ? (network.room?.mode ?? mode) : mode,
+    ai: !online,
     seed: Math.floor(Math.random() * 2147483646) + 1,
   });
   arena.setBattle(battle);
+  opponentName = online
+    ? (network.room?.players.find((p) => p.team !== network.team)?.name ??
+      "Opponent")
+    : "Royal Trainer";
+  $(".competitor.enemy b").textContent = opponentName;
+  $(".competitor.enemy div > span").textContent = online
+    ? "Friendly battle"
+    : "Training guild";
+  $("#pause-button").setAttribute(
+    "aria-label",
+    online ? "Battle options" : "Pause battle",
+  );
+  $("#connection-status").classList.toggle("hidden", !online);
   $(".lobby-badge").classList.add("hidden");
   $(".lobby-bottom").classList.add("hidden");
   $("#lobby-footer").classList.add("hidden");
@@ -414,7 +458,7 @@ function startBattle() {
   $("#deploy-hint").classList.remove("hidden");
   $(".replay-controls").classList.add("hidden");
   refreshDeck();
-  intro.start(profile.name, battle.mode);
+  intro.start(profile.name, battle.mode, opponentName);
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
   nativeCards.reset(battle.time, battle.players.blue.hand);
   matchHud.reset(arena.effectTime, crownCounts());
@@ -479,7 +523,9 @@ function updateBattleUI(force = false) {
       nativeCards.draw(e);
     });
   document.querySelectorAll<HTMLElement>("[data-slot]").forEach((e, i) => {
-    (e as HTMLButtonElement).disabled = intro.clock.blocking;
+    (e as HTMLButtonElement).disabled =
+      intro.clock.blocking ||
+      (multiplayer && (!network.connected || network.pending));
     e.classList.toggle("unaffordable", CARD_MAP[p.hand[i]].cost > p.elixir);
     e.classList.toggle("selected", selected === i);
     e.setAttribute("aria-pressed", String(selected === i));
@@ -560,7 +606,12 @@ function deploy(point: Point) {
   )
     return;
   const id = battle.players.blue.hand[selected];
-  const result = battle.play("blue", selected, point.x, point.y);
+  const result = multiplayer
+    ? {
+        ok: network.play(id, point.x, point.y),
+        reason: "Waiting for the server",
+      }
+    : battle.play("blue", selected, point.x, point.y);
   if (result.ok) {
     selected = -1;
     arena.showPlacement(null, null);
@@ -576,6 +627,19 @@ function deploy(point: Point) {
 }
 function togglePause() {
   if (screen === "lobby" || battle.winner) return;
+  if (multiplayer) {
+    modal(
+      "Battle continues",
+      `<p class="room-note">Online battles keep running while this menu is open.</p><button class="primary-button" id="online-resume">Back to battle</button><button class="text-button" id="online-surrender">Surrender</button>`,
+      "online-options",
+    );
+    $("#online-resume").onclick = closeModal;
+    $("#online-surrender").onclick = () => {
+      network.send({ type: "surrender" });
+      closeModal();
+    };
+    return;
+  }
   paused = !paused;
   if (paused) {
     cancelPointer();
@@ -617,7 +681,21 @@ function showResult() {
   audio.stopMusic();
   audio.stopEffects();
   announcements.cue("Gameend Horn");
-  const reward = recordBattle(profile, battle),
+  const wasMultiplayer = multiplayer;
+  const reward = recordBattle(
+      profile,
+      battle,
+      wasMultiplayer
+        ? {
+            friendly: true,
+            opponent: opponentName,
+            matchId: networkBattleCode,
+            replay: networkReplay
+              ? { ...networkReplay, perspective: network.team }
+              : undefined,
+          }
+        : undefined,
+    ),
     win = battle.winner === "blue",
     draw = battle.winner === "draw";
   refreshProfile();
@@ -638,13 +716,29 @@ function showResult() {
         `<div class="result-content ${win ? "victory" : "defeat"}"><div class="result-crown">${icon("crown")}</div><span class="eyebrow">${esc(battle.reason)}</span><div class="result-score"><span class="blue">${icon("crown")} ${battle.players.blue.crowns}</span><b>–</b><span class="red">${battle.players.red.crowns} ${icon("crown")}</span></div><p>${win ? "Your kingdom stands tall. Well played." : draw ? "An even battle. A rematch awaits." : "Every great king learns from a battle."}</p><div class="result-rewards"><div>${icon("trophy")}<b>${reward.trophies > 0 ? "+" : ""}${reward.trophies}</b><small>TROPHIES</small></div><div>${icon("coins")}<b>+${reward.gold}</b><small>GOLD</small></div>${reward.chest ? `<div><img src="/assets/chests/${reward.chest}.png" alt="${reward.chest} chest"/><b>+1</b><small>${reward.chest.toUpperCase()} CHEST</small></div>` : ""}</div><button class="primary-button" id="rematch">${icon("swords")} Battle again</button><div class="result-links"><button class="text-button" id="watch-replay">${icon("play")} Watch replay</button><button class="text-button" id="return-home">Back to arena ${icon("arrow-right")}</button></div></div>`,
         "result",
       );
-      $("#rematch").onclick = startBattle;
+      if (wasMultiplayer)
+        $(".result-rewards").innerHTML =
+          "<p>Friendly battle · no trophies or rewards</p>";
+      $("#rematch").onclick = () => {
+        if (wasMultiplayer) {
+          lobby();
+          showMultiplayer();
+        } else startBattle();
+      };
       $("#return-home").onclick = lobby;
       $("#watch-replay").onclick = () => playReplay(profile.history[0]);
     },
   };
 }
 function playReplay(record: RecordEntry) {
+  if (network.room) network.leave();
+  multiplayer = false;
+  $("#connection-status").classList.add("hidden");
+  opponentName = record.opponent ?? "Royal Trainer";
+  $(".competitor.enemy b").textContent = opponentName;
+  $(".competitor.enemy div > span").textContent = record.opponent
+    ? "Friendly battle replay"
+    : "Training guild";
   closeModal();
   screen = "replay";
   replayRecord = record;
@@ -660,7 +754,7 @@ function playReplay(record: RecordEntry) {
   eventCursor = 0;
   document.body.classList.add("in-battle", "in-replay");
   window.scrollTo(0, 0);
-  battle = new Battle({ replay: replayData });
+  createReplayBattle(replayData);
   arena.setBattle(battle);
   arena.showPlacement(null, null);
   $(".lobby-badge").classList.add("hidden");
@@ -677,13 +771,179 @@ function playReplay(record: RecordEntry) {
   syncReplayControl();
   $("#replay-speed").textContent = "1×";
   refreshDeck();
-  intro.start(profile.name, battle.mode);
+  intro.start(profile.name, battle.mode, opponentName);
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
   nativeCards.reset(battle.time, battle.players.blue.hand);
   matchHud.reset(arena.effectTime, crownCounts());
   updateBattleUI(true);
   refreshIcons();
 }
+function createReplayBattle(replay: Replay) {
+  replaySource = replay.perspective === "red" ? new Battle({ replay }) : null;
+  battle = replaySource
+    ? new Battle({
+        ai: false,
+        mode: replay.mode,
+        deck: replay.enemyDeck,
+        enemyDeck: replay.deck,
+      })
+    : new Battle({ replay });
+  if (replaySource) applySnapshot(battle, snapshot(replaySource), "red");
+}
+function stepReplay() {
+  if (replaySource) {
+    replaySource.step();
+    applySnapshot(battle, snapshot(replaySource), "red");
+  } else battle.step();
+}
+function updateConnection() {
+  const opponent = network.room?.players.find((p) => p.team !== network.team);
+  $("#connection-status").textContent = !network.connected
+    ? "Reconnecting… battle continues"
+    : opponent && !opponent.connected
+      ? "Opponent reconnecting · 30s grace"
+      : `FRIENDLY · ${network.latency ? `${network.latency} ms` : "Connected"}`;
+  $("#connection-status").classList.toggle(
+    "reconnecting",
+    !network.connected || (!!opponent && !opponent.connected),
+  );
+}
+function roomLink(code: string) {
+  return `${lanOrigin || location.origin}/?room=${code}`;
+}
+function showMultiplayer(code = "") {
+  if (screen !== "lobby") return;
+  const room = network.room;
+  if (room) {
+    modal(
+      "Friendly battle",
+      `<div class="room-banner">${icon("swords")}<span>${modeNames[room.mode]} · Level 11</span></div><p class="room-note">Share this room with a friend. Both players must open the same server.</p><div class="room-code" aria-label="Room code">${room.code}</div><div class="room-players">${(
+        ["blue", "red"] as const
+      )
+        .map((team) => {
+          const p = room.players.find((p) => p.team === team);
+          return `<div class="room-player ${team}">${icon("shield")}<div><b>${esc(p?.name ?? "Waiting for a friend…")}</b><span>${!p ? "Share the link below" : !p.connected ? "Reconnecting…" : p.ready ? "Ready for battle" : "Preparing deck"}</span></div><span class="room-ready">${p?.ready ? icon("check") : icon("swords")}</span></div>`;
+        })
+        .join(
+          "",
+        )}</div><label class="field-label" for="room-link">INVITE LINK</label><input id="room-link" class="name-input room-link" readonly value="${esc(roomLink(room.code))}"/><button class="secondary-button" id="copy-room">Copy invite link</button><p class="room-error" role="status">${esc(roomError)}</p><button class="primary-button" id="room-ready">${room.players.find((p) => p.team === network.team)?.ready ? "Cancel ready" : "Ready for battle"}</button><button class="text-button" id="leave-room">Leave room</button>`,
+      "room",
+    );
+    $("#room-ready").onclick = () =>
+      network.send({
+        type: "ready",
+        ready: !network.room?.players.find((p) => p.team === network.team)
+          ?.ready,
+      });
+    $("#leave-room").onclick = () => {
+      network.leave();
+      closeModal();
+    };
+    $("#copy-room").onclick = async () => {
+      const field = $<HTMLInputElement>("#room-link");
+      try {
+        await navigator.clipboard.writeText(field.value);
+        toast("Invite link copied.");
+      } catch {
+        field.focus();
+        field.select();
+        toast("Select and copy the invite link.");
+      }
+    };
+    return;
+  }
+  modal(
+    "Play with a friend",
+    `<div class="room-banner">${icon("users")}<span>Two players. One crown.</span></div><p class="room-note">Play on the same Wi-Fi, or open a hosted game link to battle from anywhere.</p>${network.saved ? '<button class="secondary-button" id="resume-room">Reconnect to your room</button>' : ""}<button class="primary-button" id="create-room">Create a room</button><div class="room-divider">OR JOIN A FRIEND</div><form id="join-room-form"><label class="field-label" for="join-code">ROOM CODE</label><div class="room-join"><input id="join-code" class="name-input" maxlength="6" minlength="6" pattern="[A-Za-z2-9]{6}" placeholder="ABC123" value="${esc(code)}" autocapitalize="characters" autocomplete="off" spellcheck="false" required/><button class="secondary-button" type="submit">Join room</button></div></form><p class="room-error" role="status">${esc(roomError || connectionStatus)}</p><p class="modal-footnote">${lanOrigin ? `On your Wi-Fi, open <a href="${esc(lanOrigin)}">${esc(lanOrigin)}</a> on the other phone.` : "Open this same address on both devices. Room codes work on the server that created them."}<br>Friendly battles keep running if you switch apps. Rejoin within 30 seconds after losing connection.</p>`,
+    "room",
+  );
+  $("#create-room").onclick = () => {
+    roomError = "";
+    network.connect({
+      type: "create",
+      version: PROTOCOL,
+      name: profile.name,
+      deck: profile.deck,
+      mode: mode === "double" ? "double" : "classic",
+    });
+  };
+  $("#join-room-form").onsubmit = (e) => {
+    e.preventDefault();
+    roomError = "";
+    network.connect({
+      type: "join",
+      version: PROTOCOL,
+      name: profile.name,
+      deck: profile.deck,
+      code: $<HTMLInputElement>("#join-code").value.trim().toUpperCase(),
+    });
+  };
+  document
+    .querySelector<HTMLButtonElement>("#resume-room")
+    ?.addEventListener("click", () => network.resume());
+}
+network.onConnection = (status) => {
+  connectionStatus =
+    status === "connecting"
+      ? "Connecting…"
+      : status === "reconnecting"
+        ? "Reconnecting…"
+        : "";
+  if (multiplayer) updateConnection();
+  else if (modalKey === "room") {
+    $(".room-error").textContent = connectionStatus;
+    document
+      .querySelectorAll<HTMLButtonElement>(
+        "#create-room,#join-room-form button",
+      )
+      .forEach((b) => (b.disabled = status === "connecting"));
+  }
+};
+network.onMessage = (message) => {
+  if (message.type === "room") {
+    if (screen === "lobby" && modalKey === "room") showMultiplayer();
+    if (multiplayer) updateConnection();
+  }
+  if (message.type === "state") {
+    const joining = networkBattleCode !== network.room?.code || !multiplayer;
+    if (joining) {
+      networkBattleCode = network.room!.code;
+      startBattle(true);
+    }
+    if (message.replay) networkReplay = message.replay;
+    applySnapshot(battle, message.state, network.team);
+    if (message.countdownMs > 0)
+      intro.clock.time = Math.max(
+        0,
+        INTRO_ACTION_TIME - message.countdownMs / 1000,
+      );
+    else if (intro.clock.blocking) intro.clock.time = INTRO_ACTION_TIME;
+    if (joining) {
+      arena.setBattle(battle);
+      if (battle.tick > 0) {
+        eventCursor = battle.events.at(-1)?.id ?? 0;
+        intro.skip();
+      }
+      elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
+      nativeCards.reset(battle.time, battle.players.blue.hand);
+      matchHud.reset(arena.effectTime, crownCounts());
+      updateBattleUI(true);
+    } else if (document.hidden)
+      eventCursor = battle.events.at(-1)?.id ?? eventCursor;
+  }
+  if (message.type === "ack" && !message.ok) toast(message.reason);
+  if (message.type === "error") {
+    roomError = message.message;
+    if (multiplayer) {
+      if (message.fatal) {
+        lobby();
+        showMultiplayer();
+      } else toast(message.message);
+    } else if (modalKey === "room") showMultiplayer();
+  }
+  if (message.type === "emote") showEmote(message.team !== network.team);
+};
+
 function showModes() {
   if (screen !== "lobby") return;
   modal(
@@ -823,7 +1083,7 @@ function renderCollection() {
 function showHistory() {
   modal(
     "Your battle log",
-    `<div class="history-summary"><div>${icon("swords")}<b>${profile.battles}</b><span>BATTLES</span></div><div>${icon("trophy")}<b>${profile.wins}</b><span>VICTORIES</span></div><div>${icon("crown")}<b>${profile.crowns}</b><span>CROWNS</span></div></div><div class="history-list">${profile.history.length ? profile.history.map((r, i) => `<div class="history-entry"><span class="history-outcome ${r.winner === "blue" ? "win" : "loss"}">${icon(r.winner === "blue" ? "trophy" : r.winner === "draw" ? "equal" : "swords")}</span><div><b>${r.winner === "blue" ? "Victory" : r.winner === "draw" ? "Draw" : "Defeat"} <small>vs Royal Trainer</small></b><span>${modeNames[r.mode] ?? "Classic 1v1"} · ${new Date(r.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span></div><strong>${r.crowns[0]} – ${r.crowns[1]}</strong><button class="secondary-button" data-replay="${i}">${icon("play")} Replay</button></div>`).join("") : `<div class="empty-history">${icon("swords")}<h3>Your story starts in the arena.</h3><p>Play a battle to see your results and replays here.</p><button class="primary-button" id="history-battle">Let's battle ${icon("arrow-right")}</button></div>`}</div><p class="modal-footnote">Your latest 10 battles are saved locally, with playable replays.</p>`,
+    `<div class="history-summary"><div>${icon("swords")}<b>${profile.battles}</b><span>BATTLES</span></div><div>${icon("trophy")}<b>${profile.wins}</b><span>VICTORIES</span></div><div>${icon("crown")}<b>${profile.crowns}</b><span>CROWNS</span></div></div><div class="history-list">${profile.history.length ? profile.history.map((r, i) => `<div class="history-entry"><span class="history-outcome ${r.winner === "blue" ? "win" : "loss"}">${icon(r.winner === "blue" ? "trophy" : r.winner === "draw" ? "equal" : "swords")}</span><div><b>${r.winner === "blue" ? "Victory" : r.winner === "draw" ? "Draw" : "Defeat"} <small>vs ${esc(r.opponent ?? "Royal Trainer")}</small></b><span>${modeNames[r.mode] ?? "Classic 1v1"} · ${new Date(r.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span></div><strong>${r.crowns[0]} – ${r.crowns[1]}</strong><button class="secondary-button" data-replay="${i}">${icon("play")} Replay</button></div>`).join("") : `<div class="empty-history">${icon("swords")}<h3>Your story starts in the arena.</h3><p>Play a battle to see your results and replays here.</p><button class="primary-button" id="history-battle">Let's battle ${icon("arrow-right")}</button></div>`}</div><p class="modal-footnote">Your latest 10 battles are saved locally, with playable replays.</p>`,
     "history",
     true,
   );
@@ -1049,7 +1309,8 @@ function cancelPointer() {
 document.addEventListener("pointercancel", (e) => {
   if (e.pointerId === activePointerId) cancelPointer();
 });
-$("#battle-button").onclick = startBattle;
+$("#battle-button").onclick = () => startBattle();
+$("#friend-button").onclick = () => showMultiplayer();
 $(".mode-select").onclick = showModes;
 $("#arena-settings").onclick = showSettings;
 $("#edit-deck").onclick = showDeckBuilder;
@@ -1093,14 +1354,23 @@ $("#resume-button").onclick = togglePause;
 $("#surrender-button").onclick = () => {
   paused = false;
   $(".pause-cover").classList.add("hidden");
-  battle.finish("red", "Surrender");
+  if (multiplayer) network.send({ type: "surrender" });
+  else battle.finish("red", "Surrender");
   updateBattleUI();
 };
 $("#emote-button").onclick = () => {
+  if (multiplayer) {
+    network.send({ type: "emote" });
+    return;
+  }
+  showEmote(false);
+};
+function showEmote(enemy: boolean) {
+  $(".emote-bubble").classList.toggle("enemy-emote", enemy);
   audio.play("king_laughter_01", 0.5);
   $(".emote-bubble").classList.remove("hidden");
   setTimeout(() => $(".emote-bubble").classList.add("hidden"), 1800);
-};
+}
 $("#replay-play").onclick = () => {
   if (replayData && battle.tick >= replayData.duration && replayRecord)
     playReplay(replayRecord);
@@ -1121,8 +1391,8 @@ $("#replay-seek").addEventListener("input", () => {
     (Number(($("#replay-seek") as HTMLInputElement).value) / 100) *
       replayData.duration,
   );
-  battle = new Battle({ replay: replayData });
-  for (let i = 0; i < target && !battle.winner; i++) battle.step();
+  createReplayBattle(replayData);
+  for (let i = 0; i < target && !battle.winner; i++) stepReplay();
   arena.setBattle(battle);
   eventCursor = battle.events.at(-1)?.id ?? 0;
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
@@ -1134,7 +1404,7 @@ $("#replay-seek").addEventListener("input", () => {
 $("#about-button").onclick = () =>
   modal(
     "Made for the love of the game.",
-    `<div class="about-content"><span class="about-crown">${icon("crown")}</span><p>An independent browser fan project. Built with TypeScript and Three.js, with local saves and a deterministic battle simulation.</p><p>This project is not affiliated with, endorsed, sponsored, or specifically approved by Supercell. Clash Royale artwork, audio, and trademarks belong to Supercell.</p><p>Card art, renders, and audio sourced from <a href="https://github.com/RoyaleAPI/cr-api-assets" target="_blank" rel="noreferrer">RoyaleAPI's asset collection</a>. Original troop and building animations, projectile effects and scenery are reconstructed from archived game assets. Surrounding 3D geometry, particles and fallback models were created for this project.</p><small>24 curated cards · Classic rules · Level 11 standard · AI battles<br>Not a live balance replica. No online multiplayer or official game account connection.</small></div>`,
+    `<div class="about-content"><span class="about-crown">${icon("crown")}</span><p>An independent browser fan project. Built with TypeScript and Three.js, with local saves and a deterministic battle simulation.</p><p>This project is not affiliated with, endorsed, sponsored, or specifically approved by Supercell. Clash Royale artwork, audio, and trademarks belong to Supercell.</p><p>Card art, renders, and audio sourced from <a href="https://github.com/RoyaleAPI/cr-api-assets" target="_blank" rel="noreferrer">RoyaleAPI's asset collection</a>. Original troop and building animations, projectile effects and scenery are reconstructed from archived game assets. Surrounding 3D geometry, particles and fallback models were created for this project.</p><small>24 curated cards · Classic rules · Level 11 standard · AI battles<br>Not a live balance replica. Friendly 1v1 rooms over Wi-Fi or a hosted server. No official game account connection.</small></div>`,
     "about",
   );
 document.addEventListener("keydown", (e) => {
@@ -1195,7 +1465,8 @@ document.addEventListener("keydown", (e) => {
 });
 function suspendFrameLoop() {
   cancelPointer();
-  if (screen !== "lobby" && !paused && !battle.winner) togglePause();
+  if (!multiplayer && screen !== "lobby" && !paused && !battle.winner)
+    togglePause();
   audio.stopMusic();
   audio.stopEffects();
   if (frameHandle !== undefined) cancelAnimationFrame(frameHandle);
@@ -1220,6 +1491,18 @@ window.addEventListener("beforeunload", () => saveProfile(profile));
 
 lobby();
 refreshIcons();
+const invitedRoom = new URL(location.href).searchParams.get("room");
+if (invitedRoom && /^[a-z2-9]{6}$/i.test(invitedRoom))
+  showMultiplayer(invitedRoom.toUpperCase());
+else if (network.saved) showMultiplayer();
+if (["localhost", "127.0.0.1"].includes(location.hostname)) {
+  void fetch("/api/lan")
+    .then((r) => r.json())
+    .then((data) => {
+      lanOrigin = data.origins?.[0] ?? "";
+    })
+    .catch(() => {});
+}
 if (!storageAvailable)
   toast("Browser storage is unavailable. Progress lasts for this session.");
 function frame(now: number) {
@@ -1236,20 +1519,22 @@ function frame(now: number) {
       updateBattleUI(true);
     }
     let ticks = 0;
-    while (accumulator >= STEP && ticks < 15) {
+    while (!multiplayer && accumulator >= STEP && ticks < 15) {
       if (
         screen === "replay" &&
         replayData &&
         battle.tick >= replayData.duration
       )
         break;
-      battle.step();
+      if (screen === "replay") stepReplay();
+      else battle.step();
       accumulator -= STEP;
       ticks++;
     }
-    if (ticks === 15) accumulator = 0;
-    processEvents();
+    if (ticks === 15 || multiplayer) accumulator = 0;
+    if (!multiplayer) processEvents();
   }
+  if (multiplayer) processEvents();
   const idle = screen === "lobby" || paused || !!battle.winner;
   if (!idle || now - lastRenderTime >= 1000 / 30 - 0.5) {
     const renderDelta = Math.min((now - lastRenderTime) / 1000, 0.1);
@@ -1273,6 +1558,7 @@ function frame(now: number) {
   }
   if (now - lastUi > 90 && screen !== "lobby") {
     updateBattleUI();
+    if (multiplayer) updateConnection();
     lastUi = now;
   }
   announcements.update(battle, screen !== "lobby");
@@ -1316,7 +1602,26 @@ Object.defineProperty(window, "__arena", {
         elixir: battle.players.blue.elixir,
         hand: [...battle.players.blue.hand],
         troops: battle.entities.filter((e) => e.kind === "troop").length,
-        actions: battle.actions.length,
+        actions: multiplayer ? network.actionCount : battle.actions.length,
+        multiplayer: multiplayer
+          ? {
+              team: network.team,
+              code: network.room?.code,
+              connected: network.connected,
+              phase: network.room?.phase,
+              latency: network.latency,
+            }
+          : null,
+        units: multiplayer
+          ? battle.entities.map((e) => ({
+              id: e.id,
+              team: e.team,
+              x: e.x,
+              y: e.y,
+              hp: e.hp,
+              card: e.card,
+            }))
+          : [],
         fps,
         renderedFrames: frameCount,
         animationTime,

@@ -79,10 +79,10 @@ export class NativeIntro {
       console.warn("Native intro assets unavailable", error);
     }
   }
-  start(player: string, mode: Mode) {
+  start(player: string, mode: Mode, enemy = "Royal Trainer") {
     this.name =
       mode === "training" ? "pvp_battle_start_training" : "pvp_battle_start";
-    this.overrides = { "player/name": player };
+    this.overrides = { "player/name": player, "enemy/name": enemy };
     this.signature = "";
     this.clock.start();
   }

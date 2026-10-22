@@ -96,3 +96,11 @@ Six tower HUD hosts use the shared native SVG renderer and accessible meter valu
 - Historical art and curated normalized stats; no claim of current balance parity.
 - Local browser progress only; clearing browser storage removes it.
 - The surrounding diorama, some placement/pathing details and effects are approximations.
+
+## Authoritative friendly rooms
+
+`server/rooms.ts` attaches the `/battle` WebSocket endpoint to either Vite's development server or the production HTTP server. Each room owns a 30-Hz `Battle` with AI disabled. Both ready checks start the same native intro countdown. Room membership selects a player's team; submitted cards are resolved against the server hand and normal deployment rules. The client cannot submit a clock, damage or elixir value. Snapshots are sent at 15 Hz and after accepted moves, with opponent hand/queue/elixir masked until the final replay. Input sequences prevent duplicate spends.
+
+`src/network/client.ts` manages same-origin WebSocket connections, session-storage reconnect credentials, liveness checks and bounded retries. `src/network/perspective.ts` rotates red's coordinates and swaps presentation colors without altering canonical server commands. This includes projectile destinations/origins, troop positions, event positions and tower lanes. Replay metadata records the viewing team; a red replay runs the original canonical engine and projects its state into the rendered battle. No combat rules version change is needed.
+
+Online menus do not pause the simulation, and the server continues while a browser is backgrounded. Lost connections receive 30 seconds to resume; explicit surrender/leave and timeout resolve on the server. Friendly records keep the opponent name and room identity, suppress ranked rewards and deduplicate reconnects to a finished match. Room state is ephemeral and single-process. Deployment, lifecycle and validation details are in `MULTIPLAYER.md`.

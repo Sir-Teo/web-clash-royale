@@ -11,6 +11,7 @@ import combatV2 from "./fixtures/combat-v2-replay.json";
 import combatV3 from "./fixtures/combat-v3-replay.json";
 import combatV4 from "./fixtures/combat-v4-replay.json";
 import type { Replay } from "../src/game/engine";
+import { applySnapshot, snapshot } from "../src/network/perspective";
 const data = new Map<string, string>();
 beforeEach(() => {
   data.clear();
@@ -20,6 +21,36 @@ beforeEach(() => {
   });
 });
 describe("local progress", () => {
+  it("saves friendly red-side replays without rewards or duplicate reconnect records", () => {
+    const p = loadProfile();
+    const canonical = new Battle({ ai: false, seed: 16 });
+    canonical.play("red", 0, 14, 10);
+    canonical.step();
+    canonical.finish("red", "Surrender");
+    const view = new Battle({ ai: false });
+    applySnapshot(view, snapshot(canonical), "red");
+    const metadata = {
+      friendly: true,
+      opponent: "Blue King",
+      matchId: "ABC234",
+      replay: { ...canonical.exportReplay(), perspective: "red" as const },
+    };
+    expect(recordBattle(p, view, metadata)).toEqual({
+      trophies: 0,
+      gold: 0,
+      chest: null,
+    });
+    recordBattle(p, view, metadata);
+    const saved = loadProfile();
+    expect(saved.battles).toBe(1);
+    expect(saved.wins).toBe(1);
+    expect(saved.gold).toBe(1000);
+    expect(saved.chests).toEqual([]);
+    expect(saved.history).toHaveLength(1);
+    expect(saved.history[0].winner).toBe("blue");
+    expect(saved.history[0].opponent).toBe("Blue King");
+    expect(saved.history[0].replay).toEqual(metadata.replay);
+  });
   it("preserves both legacy and current replays across reload and rejects future versions", () => {
     const p = loadProfile(),
       b = new Battle({ ai: false, seed: 1 });

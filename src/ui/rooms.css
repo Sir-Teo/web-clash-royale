@@ -1,0 +1,251 @@
+.friend-button {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 8px 20px;
+  border: 1px solid #ffffff38;
+  border-radius: 9px;
+  color: #fff;
+  background: linear-gradient(#367db5, #21558e);
+  box-shadow:
+    0 3px 0 #143454,
+    0 4px 12px #0005;
+  font:
+    800 13px "Nunito Sans",
+    sans-serif;
+  cursor: pointer;
+  margin: 10px auto 0;
+}
+.friend-button svg {
+  width: 18px;
+  height: 18px;
+}
+.room-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #d5e8ff;
+  background: linear-gradient(110deg, #214b76, #172739);
+  padding: 16px;
+  border-radius: 12px;
+  font-weight: 800;
+}
+.room-banner svg {
+  color: #e9bf5d;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+.room-note {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #9fb2c6;
+  margin: 16px 0;
+}
+.room-code {
+  text-align: center;
+  font:
+    36px "Lilita One",
+    sans-serif;
+  color: #f6d16b;
+  letter-spacing: 8px;
+  padding: 8px 0 16px;
+  user-select: all;
+}
+.room-players {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.room-player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 9px;
+  background: #22384f;
+  border: 1px solid #416b91;
+}
+.room-player.red {
+  background: #452f3a;
+  border-color: #775062;
+}
+.room-player > svg {
+  width: 26px;
+  color: #77b9ff;
+}
+.room-player.red > svg {
+  color: #fa8992;
+}
+.room-player div {
+  flex: 1;
+  min-width: 0;
+}
+.room-player b {
+  display: block;
+  overflow-wrap: anywhere;
+  color: #f2f5fa;
+}
+.room-player div span {
+  display: block;
+  font-size: 12px;
+  color: #b3c2d5;
+  margin-top: 2px;
+}
+.room-ready svg {
+  color: #dfc571;
+  width: 22px;
+}
+.room-link {
+  font-size: 13px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+.room-join {
+  display: flex;
+  gap: 10px;
+}
+.room-join input {
+  min-width: 0;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+.room-join button {
+  flex-shrink: 0;
+}
+.room-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0;
+  color: #8497ab;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.room-divider:before,
+.room-divider:after {
+  content: "";
+  height: 1px;
+  background: #ffffff15;
+  flex: 1;
+}
+.room-error {
+  color: #ffc17d;
+  font-size: 13px;
+  min-height: 20px;
+  margin: 12px 0;
+}
+#room-ready,
+#create-room {
+  width: 100%;
+  min-height: 48px;
+}
+#create-room {
+  margin-top: 8px;
+}
+#leave-room,
+#online-surrender {
+  display: block;
+  margin: 12px auto 0;
+  min-height: 44px;
+}
+.connection-status {
+  position: absolute;
+  z-index: 9;
+  left: 50%;
+  top: 76px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  max-width: 75%;
+  background: #102b3de0;
+  color: #c9ebdf;
+  border: 1px solid #a8ebd43c;
+  border-radius: 12px;
+  padding: 4px 9px;
+  font-size: 9px;
+  font-weight: 800;
+  text-align: center;
+}
+.connection-status.reconnecting {
+  color: #ffd388;
+  background: #4c302bed;
+}
+.emote-bubble.enemy-emote {
+  top: 90px;
+  bottom: auto;
+  left: 18px;
+  right: auto;
+}
+@media (max-width: 480px) {
+  .friend-button {
+    margin-top: 8px;
+    min-height: 44px;
+    padding: 7px 16px;
+  }
+  .room-code {
+    font-size: 32px;
+    letter-spacing: 6px;
+  }
+  .room-join {
+    gap: 6px;
+  }
+  .room-join button {
+    padding: 10px;
+  }
+  .connection-status {
+    top: 64px;
+    font-size: 8px;
+  }
+}
+@media (orientation: landscape) and (max-height: 540px) {
+  .friend-button {
+    min-height: 44px;
+    margin-top: 4px;
+  }
+  .connection-status {
+    top: 52px;
+  }
+}
+
+.room-error:empty {
+  display: none;
+}
+body.in-battle {
+  overflow-anchor: none;
+}
+@media (max-width: 480px) {
+  .room-banner {
+    padding: 12px;
+    gap: 10px;
+  }
+  .room-banner svg {
+    width: 24px;
+    height: 24px;
+  }
+  .room-note {
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 10px 0;
+  }
+  .room-code {
+    padding: 6px 0 12px;
+  }
+  .room-players {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .room-player {
+    padding: 10px;
+  }
+  .room-link {
+    margin-bottom: 8px;
+  }
+  #room-ready {
+    margin-top: 12px;
+  }
+}

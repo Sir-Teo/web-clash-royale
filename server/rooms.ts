@@ -202,7 +202,7 @@ export function attachRooms(
         do {
           code = Array.from(
             randomBytes(6),
-            (n) => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[n % 31],
+            (n) => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[n % 32],
           ).join("");
         } while (rooms.has(code));
         r = {
