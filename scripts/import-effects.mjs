@@ -71,6 +71,7 @@ const exports = [
   "fireball_trail1",
   "explosion_cloud_1",
   "Smoke_puff_01",
+  "crown_rotate_anim",
   ...new Set(Object.values(destruction.emitters).flatMap((e) => e.clips)),
 ];
 for (const name of exports) {

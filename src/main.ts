@@ -148,6 +148,8 @@ let fpsFrames = 0;
 let animationTime = 0;
 let eventCursor = 0;
 let resultShown = false;
+let pendingResult: { battle: Battle; time: number; show: () => void } | null =
+  null;
 let replayData: Replay | null = null;
 let replayRecord: RecordEntry | null = null;
 let lastUi = 0;
@@ -556,6 +558,7 @@ function syncReplayControl() {
   refreshIcons();
 }
 function showResult() {
+  const completedBattle = battle;
   resultShown = true;
   audio.stopMusic();
   const reward = recordBattle(profile, battle),
@@ -565,21 +568,25 @@ function showResult() {
   refreshProfile();
   arena.showPlacement(null, null);
   $("#deploy-hint").classList.add("hidden");
-  setTimeout(() => {
-    if (screen !== "battle") return;
-    modal(
-      draw
-        ? "A worthy battle."
-        : win
-          ? "Victory is yours!"
-          : "A crown to chase.",
-      `<div class="result-content ${win ? "victory" : "defeat"}"><div class="result-crown">${icon("crown")}</div><span class="eyebrow">${esc(battle.reason)}</span><div class="result-score"><span class="blue">${icon("crown")} ${battle.players.blue.crowns}</span><b>–</b><span class="red">${battle.players.red.crowns} ${icon("crown")}</span></div><p>${win ? "Your kingdom stands tall. Well played." : draw ? "Two kings still standing. A rematch awaits." : "Every great king learns from a battle."}</p><div class="result-rewards"><div>${icon("trophy")}<b>${reward.trophies > 0 ? "+" : ""}${reward.trophies}</b><small>TROPHIES</small></div><div>${icon("coins")}<b>+${reward.gold}</b><small>GOLD</small></div>${reward.chest ? `<div><img src="/assets/chests/${reward.chest}.png" alt="${reward.chest} chest"/><b>+1</b><small>${reward.chest.toUpperCase()} CHEST</small></div>` : ""}</div><button class="primary-button" id="rematch">${icon("swords")} Battle again</button><div class="result-links"><button class="text-button" id="watch-replay">${icon("play")} Watch replay</button><button class="text-button" id="return-home">Back to arena ${icon("arrow-right")}</button></div></div>`,
-      "result",
-    );
-    $("#rematch").onclick = startBattle;
-    $("#return-home").onclick = lobby;
-    $("#watch-replay").onclick = () => playReplay(profile.history[0]);
-  }, 1000);
+  pendingResult = {
+    battle: completedBattle,
+    time: arena.effectTime + 1.4,
+    show: () => {
+      if (screen !== "battle" || battle !== completedBattle) return;
+      modal(
+        draw
+          ? "A worthy battle."
+          : win
+            ? "Victory is yours!"
+            : "A crown to chase.",
+        `<div class="result-content ${win ? "victory" : "defeat"}"><div class="result-crown">${icon("crown")}</div><span class="eyebrow">${esc(battle.reason)}</span><div class="result-score"><span class="blue">${icon("crown")} ${battle.players.blue.crowns}</span><b>–</b><span class="red">${battle.players.red.crowns} ${icon("crown")}</span></div><p>${win ? "Your kingdom stands tall. Well played." : draw ? "Two kings still standing. A rematch awaits." : "Every great king learns from a battle."}</p><div class="result-rewards"><div>${icon("trophy")}<b>${reward.trophies > 0 ? "+" : ""}${reward.trophies}</b><small>TROPHIES</small></div><div>${icon("coins")}<b>+${reward.gold}</b><small>GOLD</small></div>${reward.chest ? `<div><img src="/assets/chests/${reward.chest}.png" alt="${reward.chest} chest"/><b>+1</b><small>${reward.chest.toUpperCase()} CHEST</small></div>` : ""}</div><button class="primary-button" id="rematch">${icon("swords")} Battle again</button><div class="result-links"><button class="text-button" id="watch-replay">${icon("play")} Watch replay</button><button class="text-button" id="return-home">Back to arena ${icon("arrow-right")}</button></div></div>`,
+        "result",
+      );
+      $("#rematch").onclick = startBattle;
+      $("#return-home").onclick = lobby;
+      $("#watch-replay").onclick = () => playReplay(profile.history[0]);
+    },
+  };
 }
 function playReplay(record: RecordEntry) {
   closeModal();
@@ -881,6 +888,15 @@ function processEvents() {
 
 try {
   arena = new Arena($("#arena-canvas"));
+  arena.crownTarget = (team) => {
+    const target = $(`#${team}-crowns`).getBoundingClientRect();
+    if (!target.width) return null;
+    const host = arena.host.getBoundingClientRect();
+    return {
+      x: target.left + target.width / 2 - host.left,
+      y: target.top + target.height / 2 - host.top,
+    };
+  };
   arena.onContextLost = () => {
     if (screen !== "lobby" && !paused) togglePause();
     toast("Graphics paused. Reload if the arena does not recover.");
@@ -1176,6 +1192,15 @@ function frame(now: number) {
     updateBattleUI();
     lastUi = now;
   }
+  if (pendingResult) {
+    if (pendingResult.battle !== battle || screen !== "battle")
+      pendingResult = null;
+    else if (arena.effectTime >= pendingResult.time) {
+      const show = pendingResult.show;
+      pendingResult = null;
+      show();
+    }
+  }
   frameHandle = requestAnimationFrame(frame);
 }
 resumeFrameLoop();
@@ -1205,6 +1230,7 @@ Object.defineProperty(window, "__arena", {
         loadedAnimations: arena.loadedAnimations,
         nativeTowerPrincesses: arena.nativeTowerPrincesses,
         nativePrincessTowers: arena.nativePrincessTowers,
+        crownFlights: arena.crownState,
       };
     },
     project: (x: number, y: number) => {

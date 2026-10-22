@@ -80,7 +80,9 @@ describe("bundled game artwork", () => {
     for (const t of manifest.textures)
       expect(digest(`public/assets/effects/${t.file}`)).toBe(t.sha256);
     const data = json("public/assets/effects/effects.json");
-    expect(Object.keys(data.clips)).toHaveLength(44);
+    expect(Object.keys(data.clips)).toHaveLength(45);
+    expect(data.clips.crown_rotate_anim.frames).toHaveLength(16);
+    expect(data.clips.crown_rotate_anim.fps).toBe(30);
     for (const clip of Object.values(data.clips) as any[]) {
       expect(clip.frames.length).toBeGreaterThan(0);
       expect(clip.bounds.every(Number.isFinite)).toBe(true);

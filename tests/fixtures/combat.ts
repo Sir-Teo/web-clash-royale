@@ -4,6 +4,16 @@ import type { Team } from "../../src/game/engine";
 import type { CardId } from "../../src/game/cards";
 import { CARDS } from "../../src/game/cards";
 const arena = new Arena(document.querySelector("#arena")!);
+arena.crownTarget = (team) => {
+  const target = document
+    .querySelector(`#crown-${team}`)!
+    .getBoundingClientRect();
+  const host = arena.host.getBoundingClientRect();
+  return {
+    x: target.left + target.width / 2 - host.left,
+    y: target.top + target.height / 2 - host.top,
+  };
+};
 let battle: Battle,
   playing = false,
   elapsed = 0,
@@ -228,6 +238,12 @@ function render(now: number) {
     `${destruction.rubble} ruins · ${destruction.particles} debris · ${destruction.time.toFixed(1)}s visual`;
   document.querySelector("#death-stats")!.textContent =
     `${battle.events.filter((e) => e.type === "death" && e.card !== "tower").length} deaths · ${destruction.particles} native particles · ${destruction.ground} ground · ${destruction.draws} draws`;
+  for (const team of ["blue", "red"] as const)
+    document.querySelector(`#crown-${team}`)!.textContent =
+      `♛ ${battle.players[team].crowns}`;
+  const flights = document.querySelector<HTMLElement>("#crown-flights")!;
+  flights.textContent = `${arena.crownState.length} flying crowns`;
+  flights.dataset.poses = JSON.stringify(arena.crownState);
   requestAnimationFrame(render);
 }
 requestAnimationFrame(render);

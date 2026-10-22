@@ -1,5 +1,89 @@
 import { test, expect } from "@playwright/test";
 
+test("native crowns fly to scores, pause, resize and finish after a King win", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text());
+  });
+  await page.goto("/tests/fixtures/combat.html");
+  await page.locator("#scenario").selectOption("king");
+  await expect(page.locator("#status")).toContainText("45 effects", {
+    timeout: 30000,
+  });
+  const step = page.locator("#step"),
+    second = page.locator("#second");
+  await page.locator("#princess").click();
+  for (let i = 0; i < 5; i++) await step.click();
+  await expect(page.locator("#crown-flights")).toHaveText("2 flying crowns");
+  await expect(page.locator("#crown-blue")).toHaveText("♛ 1");
+  await expect(page.locator("#crown-red")).toHaveText("♛ 1");
+  await expect(page.locator("#status")).toContainText("0.5s");
+  const poses = await page.locator("#crown-flights").getAttribute("data-poses");
+  expect(JSON.parse(poses!).every((c: { visible: boolean }) => c.visible)).toBe(
+    true,
+  );
+  await page.waitForTimeout(400);
+  await expect(page.locator("#crown-flights")).toHaveAttribute(
+    "data-poses",
+    poses!,
+  );
+  await page.screenshot({
+    path: `test-results/${info.project.name}-native-crowns.png`,
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 844, height: 390 });
+  await expect(page.locator("#crown-flights")).not.toHaveAttribute(
+    "data-poses",
+    poses!,
+  );
+  await expect
+    .poll(async () => {
+      const data = JSON.parse(
+        (await page.locator("#crown-flights").getAttribute("data-poses"))!,
+      );
+      const bounds = (await page.locator("#arena canvas").boundingBox())!;
+      return data.every(
+        (c: { x: number; y: number }) =>
+          c.x > 0 && c.x < bounds.width && c.y > 0 && c.y < bounds.height,
+      );
+    })
+    .toBe(true);
+  const resized = JSON.parse(
+    (await page.locator("#crown-flights").getAttribute("data-poses"))!,
+  );
+  const box = (await page.locator("#arena canvas").boundingBox())!;
+  for (const c of resized) {
+    expect(c.x).toBeGreaterThan(0);
+    expect(c.x).toBeLessThan(box.width);
+    expect(c.y).toBeGreaterThan(0);
+    expect(c.y).toBeLessThan(box.height);
+  }
+  await second.click();
+  await expect(page.locator("#crown-flights")).toHaveText("0 flying crowns");
+  await page.locator("#destroy-king").click();
+  for (let i = 0; i < 5; i++) await step.click();
+  await expect(page.locator("#destruction")).toContainText("2.0s visual");
+  await expect(page.locator("#crown-blue")).toHaveText("♛ 3");
+  await expect(page.locator("#crown-flights")).toHaveText("2 flying crowns");
+  const endTime = (await page.locator("#status").textContent())!.split(
+    " · ",
+  )[0];
+  await second.click();
+  await expect(page.locator("#status")).toContainText(endTime);
+  await expect(page.locator("#crown-flights")).toHaveText("0 flying crowns");
+  await page.locator("#reset").click();
+  await page.locator("#destroy-king").click();
+  for (let i = 0; i < 5; i++) await step.click();
+  await expect(page.locator("#destruction")).toContainText("0.5s visual");
+  await expect(page.locator("#crown-flights")).toHaveText("3 flying crowns");
+  await page.locator("#rebuild").click();
+  await expect(page.locator("#crown-flights")).toHaveText("0 flying crowns");
+  expect(errors).toEqual([]);
+});
+
 test("native swarm deaths retain all particles with bounded draw calls and pause cleanly", async ({
   page,
 }, info) => {
@@ -10,7 +94,7 @@ test("native swarm deaths retain all particles with bounded draw calls and pause
   });
   await page.goto("/tests/fixtures/combat.html");
   await page.locator("#scenario").selectOption("death");
-  await expect(page.locator("#status")).toContainText("44 effects", {
+  await expect(page.locator("#status")).toContainText("45 effects", {
     timeout: 30000,
   });
   await page.locator("#defeat").click();
@@ -57,7 +141,7 @@ test("a paused Fireball does not keep emitting trail particles", async ({
   page,
 }) => {
   await page.goto("/tests/fixtures/combat.html");
-  await expect(page.locator("#status")).toContainText("44 effects", {
+  await expect(page.locator("#status")).toContainText("45 effects", {
     timeout: 30000,
   });
   await page.getByRole("button", { name: "Step 0.1s", exact: true }).click();
@@ -75,7 +159,7 @@ test("tower debris pauses, settles after victory, and rubble survives renderer r
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/tests/fixtures/combat.html");
   await page.locator("#scenario").selectOption("king");
-  await expect(page.locator("#status")).toContainText("44 effects", {
+  await expect(page.locator("#status")).toContainText("45 effects", {
     timeout: 30000,
   });
   await expect(page.locator("#status")).toContainText("3 buildings loaded");

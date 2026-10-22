@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 
-async function backgroundAndReturn(page: Page) {
+async function backgroundAndReturn(page: Page, awaitingResult = false) {
   // Headless browsers keep tabs visible. Emulate the platform visibility event,
   // while leaving all game state accessible only through read-only diagnostics.
   await page.evaluate(() => {
@@ -11,13 +11,17 @@ async function backgroundAndReturn(page: Page) {
     document.dispatchEvent(new Event("visibilitychange"));
   });
   const before = await page.evaluate(() => (window as any).__arena.state);
-  expect(before.paused).toBe(true);
+  expect(before.paused).toBe(!awaitingResult);
   expect(before.frameLoopRunning).toBe(false);
-  await page.waitForTimeout(350);
+  await page.waitForTimeout(awaitingResult ? 1700 : 350);
   const after = await page.evaluate(() => (window as any).__arena.state);
   expect(after.renderedFrames).toBe(before.renderedFrames);
   expect(after.time).toBe(before.time);
   expect(after.animationTime).toBe(before.animationTime);
+  if (awaitingResult)
+    await expect(
+      page.getByRole("button", { name: "Watch replay", exact: true }),
+    ).not.toBeVisible();
   await page.evaluate(() => {
     delete (document as any).hidden;
     document.dispatchEvent(new Event("visibilitychange"));
@@ -28,7 +32,7 @@ async function backgroundAndReturn(page: Page) {
     )
     .toBeGreaterThan(after.renderedFrames);
   expect(await page.evaluate(() => (window as any).__arena.state.paused)).toBe(
-    true,
+    !awaitingResult,
   );
 }
 
@@ -44,7 +48,7 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
       () => page.evaluate(() => (window as any).__arena.state.loadedEffects),
       { timeout: 30000 },
     )
-    .toBe(44);
+    .toBe(45);
   await expect
     .poll(
       () => page.evaluate(() => (window as any).__arena.state.loadedBuildings),
@@ -123,6 +127,7 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
   });
   await page.getByRole("button", { name: "Pause battle", exact: true }).click();
   await page.getByRole("button", { name: "Leave battle", exact: true }).click();
+  await backgroundAndReturn(page, true);
   await expect(
     page.getByRole("button", { name: "Watch replay", exact: true }),
   ).toBeVisible();

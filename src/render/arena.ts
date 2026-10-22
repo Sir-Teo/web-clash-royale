@@ -1,6 +1,6 @@
 import * as T from "three";
 import { Battle } from "../game/engine";
-import type { Entity, Point } from "../game/engine";
+import type { Entity, Point, Team } from "../game/engine";
 import { CARD_MAP } from "../game/cards";
 import type { CardId } from "../game/cards";
 import {
@@ -26,6 +26,7 @@ import { BuildingLibrary } from "./buildings";
 import type { BuildingSprite } from "./buildings";
 import { destroyedTowerSites, TOWER_SITES } from "../game/arena-layout";
 import { DestructionEffects, deathEffect } from "./destruction";
+import { CrownEffects } from "./crowns";
 interface Visual {
   object: T.Group;
   model?: Model;
@@ -53,6 +54,7 @@ export class Arena {
   private effects = new EffectLibrary();
   private buildings = new BuildingLibrary();
   private destruction = new DestructionEffects(this.scene, this.effects);
+  private crowns = new CrownEffects(this.scene, this.effects);
   private rubble = new Map<string, T.Mesh>();
   private impacts: { sprite: EffectSprite; start: number; life: number }[] = [];
   private particles: Particle[] = [];
@@ -87,6 +89,7 @@ export class Arena {
   private artwork: T.Mesh[] = [];
   private contextLost = false;
   onContextLost: () => void = () => {};
+  crownTarget: (team: Team) => Point | null = () => null;
   constructor(readonly host: HTMLElement) {
     this.renderer = new T.WebGLRenderer({
       antialias: true,
@@ -443,6 +446,7 @@ export class Arena {
   }
   setBattle(battle: Battle) {
     this.destruction.clear();
+    this.crowns.clear();
     for (const mesh of this.rubble.values()) this.scene.remove(mesh);
     this.rubble.clear();
     this.showPlacement(null, null);
@@ -479,6 +483,12 @@ export class Arena {
   }
   get nativePrincessTowers() {
     return [...this.units.values()].filter((v) => v.building?.princess).length;
+  }
+  get crownState() {
+    return this.crowns.state;
+  }
+  get effectTime() {
+    return this.destruction.time;
   }
   get loadedEffects() {
     return Object.keys(this.effects.asset?.data.clips ?? {}).length;
@@ -1004,7 +1014,14 @@ export class Arena {
           );
       if (event.type === "deploy")
         for (let i = 0; i < 12; i++) this.particle(pos, 0xf2d09e, 0.08, 0.7, 2);
-      if (event.type === "crown")
+      if (event.type === "crown") {
+        this.crowns.burst(
+          event.team,
+          new T.Vector3(event.x - 9, 3, event.y - 16),
+          event.value ?? 1,
+          this.destruction.time,
+          eventAge,
+        );
         for (let i = 0; i < 24; i++)
           this.particle(
             new T.Vector3(event.x - 9, 3, event.y - 16),
@@ -1013,6 +1030,7 @@ export class Arena {
             1.5,
             5,
           );
+      }
     }
     for (const p of this.particles) {
       p.life -= dt;
@@ -1035,6 +1053,13 @@ export class Arena {
       this.effects.animate(impact.sprite, age);
       return true;
     });
+    this.crowns.update(
+      this.destruction.time,
+      this.camera,
+      this.width,
+      this.height,
+      this.crownTarget,
+    );
     this.deployment.render(time, this.camera);
     this.positionPlacementFeedback();
     this.renderer.render(this.scene, this.camera);
@@ -1191,6 +1216,7 @@ export class Arena {
     });
     this.deployment.clear();
     this.destruction.clear();
+    this.crowns.clear();
     this.placementFeedback.remove();
     this.sprites.destroy();
     this.effects.destroy();

@@ -49,6 +49,24 @@
       small {
         color: #bedce0;
       }
+      #crown-score {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 5;
+        display: flex;
+        gap: 14px;
+        padding: 6px 10px;
+        border-radius: 8px;
+        background: #17312ddd;
+        pointer-events: none;
+      }
+      #crown-red {
+        color: #ff8e8e;
+      }
+      #crown-blue {
+        color: #87d4ff;
+      }
     </style>
   </head>
   <body>
@@ -83,8 +101,13 @@
       <small id="king-hits"></small>
       <small id="destruction"></small>
       <small id="death-stats"></small>
+      <small id="crown-flights"></small>
     </header>
-    <main id="arena"></main>
+    <main id="arena">
+      <div id="crown-score">
+        <span id="crown-red">♛ 0</span><span id="crown-blue">♛ 0</span>
+      </div>
+    </main>
     <script type="module" src="./combat.ts"></script>
   </body>
 </html>

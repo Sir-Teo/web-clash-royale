@@ -1053,8 +1053,16 @@ export class Battle {
       });
     if (e.kind === "tower") {
       const enemy = other(e.team);
+      const previousCrowns = this.players[enemy].crowns;
       this.players[enemy].crowns = e.king ? 3 : this.players[enemy].crowns + 1;
-      this.emit("crown", enemy, e.x, e.y, "tower");
+      this.emit(
+        "crown",
+        enemy,
+        e.x,
+        e.y,
+        "tower",
+        this.players[enemy].crowns - previousCrowns,
+      );
       for (const king of this.entities.filter(
         (t) => t.team === e.team && t.king,
       ))
