@@ -6,6 +6,12 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
   await expect(page.locator("canvas")).toBeVisible();
+  await expect
+    .poll(
+      () => page.evaluate(() => (window as any).__arena.state.loadedEffects),
+      { timeout: 30000 },
+    )
+    .toBe(18);
   await page.getByRole("button", { name: "Cards 24", exact: true }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.locator('[data-edit-slot="0"]').click();
@@ -22,15 +28,13 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
   await page.locator("#battle-button").click();
   await expect(page.locator("#hand .game-card")).toHaveCount(4);
   // Select an affordable opening troop using the same public controls as a player.
-  const cards = await page
-    .locator("#hand .game-card")
-    .evaluateAll((els) =>
-      els.map((e) => ({
-        id: (e as HTMLElement).dataset.slot,
-        label: e.getAttribute("aria-label")!,
-        cost: Number(e.querySelector(".cost")!.textContent),
-      })),
-    );
+  const cards = await page.locator("#hand .game-card").evaluateAll((els) =>
+    els.map((e) => ({
+      id: (e as HTMLElement).dataset.slot,
+      label: e.getAttribute("aria-label")!,
+      cost: Number(e.querySelector(".cost")!.textContent),
+    })),
+  );
   const troop = cards.find(
     (c) => c.cost <= 5 && !/Fireball|Arrows/.test(c.label),
   )!;

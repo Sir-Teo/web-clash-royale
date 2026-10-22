@@ -1105,6 +1105,7 @@ Object.defineProperty(window, "__arena", {
         actions: battle.actions.length,
         fps,
         drawCalls: arena.renderer.info.render.calls,
+        loadedEffects: arena.loadedEffects,
         loadedAnimations: arena.loadedAnimations,
       };
     },

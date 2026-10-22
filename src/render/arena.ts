@@ -17,6 +17,10 @@ import {
 import type { Model } from "./models";
 import { SpriteLibrary } from "./sprites";
 import type { AnimatedSprite } from "./sprites";
+import { EffectLibrary } from "./effects";
+import type { EffectSprite } from "./effects";
+import { makeProjectile, updateProjectile } from "./projectiles";
+import type { ProjectileVisual } from "./projectiles";
 interface Visual {
   object: T.Group;
   model?: Model;
@@ -39,7 +43,9 @@ export class Arena {
   readonly camera: T.OrthographicCamera;
   private root = new T.Group();
   private units = new Map<number, Visual>();
-  private shots = new Map<number, T.Group>();
+  private shots = new Map<number, ProjectileVisual>();
+  private effects = new EffectLibrary();
+  private impacts: { sprite: EffectSprite; start: number; life: number }[] = [];
   private particles: Particle[] = [];
   private waters: T.Mesh[] = [];
   private flags: T.Mesh[] = [];
@@ -153,7 +159,11 @@ export class Arena {
     this.observer = new ResizeObserver(() => this.resize());
     this.observer.observe(host);
     this.resize();
-    void Promise.all([this.sprites.load(), this.loadArtwork()]).then(() => {
+    void Promise.all([
+      this.sprites.load(),
+      this.effects.load(),
+      this.loadArtwork(),
+    ]).then(() => {
       if (!this.destroyed && this.battle) this.setBattle(this.battle);
     });
   }
@@ -405,10 +415,12 @@ export class Arena {
     }
     this.units.clear();
     for (const p of this.shots.values()) {
-      this.scene.remove(p);
-      this.disposeObject(p);
+      this.scene.remove(p.object);
+      this.disposeObject(p.object);
     }
     this.shots.clear();
+    for (const impact of this.impacts) this.scene.remove(impact.sprite.mesh);
+    this.impacts = [];
     for (const p of this.particles) {
       this.scene.remove(p.mesh);
       p.mesh.geometry.dispose();
@@ -419,6 +431,9 @@ export class Arena {
   }
   get loadedAnimations() {
     return this.sprites.assets.size;
+  }
+  get loadedEffects() {
+    return Object.keys(this.effects.asset?.data.clips ?? {}).length;
   }
   private resize() {
     const { width, height } = this.host.getBoundingClientRect();
@@ -680,53 +695,29 @@ export class Arena {
       liveShots.add(p.id);
       let shot = this.shots.get(p.id);
       if (!shot) {
-        shot = new T.Group();
-        const spell = p.style === "fireball" || p.style === "zap";
-        if (p.style === "arrows") {
-          for (let i = 0; i < 9; i++) {
-            const arrow = cylinder(
-              shot,
-              Math.sin(i * 2.4) * 1.5,
-              0,
-              Math.cos(i * 2.4) * 1.5,
-              0.035,
-              0.7,
-              0xecdcb6,
-            );
-            arrow.rotation.x = -Math.PI / 5;
-          }
-        } else {
-          sphere(
-            shot,
-            0,
-            0,
-            0,
-            spell ? 0.34 : p.style === "balloon" ? 0.25 : 0.1,
-            spell ? 0xff9e32 : p.style === "tesla" ? 0x9ff6ff : 0xeacf8b,
-          );
-          if (spell) sphere(shot, 0, 0, 0, 0.2, 0xfff2ab);
-        }
+        shot = makeProjectile(p, this.effects);
         this.shots.set(p.id, shot);
-        this.scene.add(shot);
+        this.scene.add(shot.object);
       }
-      const progress = 1 - p.remaining / p.duration;
-      const target = p.target
-        ? b.entities.find((e) => e.id === p.target)
-        : undefined;
-      const tx = target?.x ?? p.tx,
-        ty = target?.y ?? p.ty;
-      shot.position.set(
-        T.MathUtils.lerp(p.x, tx, progress) - 9,
-        1 + Math.sin(progress * Math.PI) * (p.source === 0 ? 7 : 1.5),
-        T.MathUtils.lerp(p.y, ty, progress) - 16,
-      );
-      if (p.style === "fireball" && Math.random() < 0.6)
-        this.particle(shot.position, 0xffab3d, 0.13, 0.4, 0.6);
+      const target = b.entities.find((e) => e.id === p.target && e.hp > 0);
+      updateProjectile(shot, p, this.effects, this.camera, target);
+      if (
+        shot.object.visible &&
+        ["fireball", "wizard", "baby-dragon"].includes(p.style) &&
+        Math.random() < 0.6
+      )
+        this.particle(
+          shot.object.position,
+          0xffab3d,
+          p.style === "fireball" ? 0.12 : 0.06,
+          0.3,
+          0.4,
+        );
     }
     for (const [id, s] of this.shots)
       if (!liveShots.has(id)) {
-        this.scene.remove(s);
-        this.disposeObject(s);
+        this.scene.remove(s.object);
+        this.disposeObject(s.object);
         this.shots.delete(id);
       }
     for (const event of b.events) {
@@ -734,6 +725,49 @@ export class Arena {
       this.lastEvent = event.id;
       const pos = new T.Vector3(event.x - 9, 0.6, event.y - 16);
       if (event.type === "hit") {
+        const impactPosition = new T.Vector3(
+          event.x - 9,
+          event.height ?? 0.6,
+          event.y - 16,
+        );
+        if (event.card === "tesla" && event.origin) {
+          const origin = new T.Vector3(
+            event.origin.x - 9,
+            event.origin.height,
+            event.origin.y - 16,
+          );
+          const direction = impactPosition
+            .clone()
+            .sub(origin)
+            .applyQuaternion(this.camera.quaternion.clone().invert());
+          const beam = this.impact("tesla_beam", origin, 0.3);
+          if (beam) {
+            beam.mesh.rotateZ(Math.atan2(direction.y, direction.x));
+            beam.mesh.scale.set(
+              Math.hypot(direction.x, direction.y) / 2.7,
+              0.7,
+              1,
+            );
+          }
+        } else if (event.card === "zap") {
+          const bolt = this.impact("zap_bolt1", impactPosition, 11 / 30);
+          if (bolt) bolt.mesh.scale.set(0.8, 0.22, 1);
+          this.impact(
+            "ExplosionGroundGlowBlue",
+            pos,
+            10 / 30,
+          )?.mesh.scale.setScalar(1.7);
+        } else {
+          const flash = this.impact("effect_Hit1", impactPosition, 5 / 60);
+          if (flash)
+            flash.mesh.scale.setScalar(
+              event.card === "fireball"
+                ? 2.6
+                : event.card === "arrows"
+                  ? 0.8
+                  : 0.45,
+            );
+        }
         const spell =
           event.card === "fireball" ||
           event.card === "arrows" ||
@@ -780,7 +814,26 @@ export class Arena {
       p.mesh.geometry.dispose();
     }
     this.particles = this.particles.filter((p) => p.life > 0);
+    this.impacts = this.impacts.filter((impact) => {
+      const age = b.time - impact.start;
+      if (age >= impact.life) {
+        this.scene.remove(impact.sprite.mesh);
+        return false;
+      }
+      this.effects.animate(impact.sprite, age);
+      return true;
+    });
     this.renderer.render(this.scene, this.camera);
+  }
+  private impact(name: string, position: T.Vector3, life: number) {
+    if (this.impacts.length >= 120 || !this.battle) return null;
+    const sprite = this.effects.make(name);
+    if (!sprite) return null;
+    sprite.mesh.position.copy(position);
+    sprite.mesh.quaternion.copy(this.camera.quaternion);
+    this.scene.add(sprite.mesh);
+    this.impacts.push({ sprite, start: this.battle.time, life });
+    return sprite;
   }
   private updateUnit(v: Visual, e: Entity, dt: number, time: number) {
     const o = v.object;
@@ -913,6 +966,7 @@ export class Arena {
         o.geometry.dispose();
     });
     this.sprites.destroy();
+    this.effects.destroy();
     this.renderer.dispose();
     this.renderer.domElement.remove();
     this.labels.remove();

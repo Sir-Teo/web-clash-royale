@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Combat inspection</title>
+    <style>
+      body {
+        margin: 0;
+        background: #123a43;
+        color: #fff;
+        font: 14px system-ui;
+      }
+      header {
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      button,
+      select {
+        padding: 9px;
+        background: #225360;
+        color: #fff;
+        border: 1px solid #81a9ad;
+        border-radius: 6px;
+      }
+      main {
+        position: relative;
+        height: calc(100dvh - 90px);
+        max-width: 760px;
+        margin: auto;
+      }
+      .tower-labels {
+        display: none;
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      small {
+        color: #bedce0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <b>Combat inspection</b
+      ><label
+        >Scene
+        <select id="scenario">
+          <option value="volley">Fireball &amp; Arrows</option>
+          <option value="ranged">Ranged projectiles</option>
+          <option value="tesla">Tesla &amp; Zap</option>
+          <option value="melee">Melee timing</option>
+        </select></label
+      ><button id="play">Play</button><button id="step">Step 0.1s</button
+      ><button id="reset">Reset</button><small id="status">Loading</small>
+    </header>
+    <main id="arena"></main>
+    <script type="module" src="./combat.ts"></script>
+  </body>
+</html>

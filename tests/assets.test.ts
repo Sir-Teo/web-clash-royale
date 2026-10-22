@@ -4,6 +4,38 @@ import { createHash } from "node:crypto";
 import { CARDS } from "../src/game/cards";
 const json = (path: string) => JSON.parse(readFileSync(path, "utf8"));
 describe("bundled game artwork", () => {
+  it("retains the original effects clips, textures and combat source tables", () => {
+    const manifest = json("public/assets/effects/manifest.json");
+    const digest = (path: string) =>
+      createHash("sha256").update(readFileSync(path)).digest("hex");
+    expect(digest("reference/sc/effects.bin")).toBe(manifest.metadataSha256);
+    expect(digest("public/assets/effects/effects.json")).toBe(
+      manifest.dataSha256,
+    );
+    for (const t of manifest.textures)
+      expect(digest(`public/assets/effects/${t.file}`)).toBe(t.sha256);
+    const data = json("public/assets/effects/effects.json");
+    expect(Object.keys(data.clips)).toHaveLength(18);
+    for (const clip of Object.values(data.clips) as any[]) {
+      expect(clip.frames.length).toBeGreaterThan(0);
+      for (const frame of clip.frames)
+        for (const part of data.frames[frame]) {
+          expect(part.matrix.every(Number.isFinite)).toBe(true);
+          expect(part.color.every((n: number) => n >= 0 && n <= 255)).toBe(
+            true,
+          );
+          for (const polygon of data.shapes[part.shape]) {
+            expect(data.textures[polygon.sheet]).toBeDefined();
+            expect(polygon.xy.length).toBe(polygon.uv.length);
+            expect(
+              polygon.uv.flat().every((n: number) => n >= 0 && n <= 1),
+            ).toBe(true);
+          }
+        }
+    }
+    for (const file of json("reference/logic/manifest.json").files)
+      expect(digest(file.path)).toBe(file.sha256);
+  });
   it("matches every imported card, character and sound to its recorded hash", () => {
     const manifest = json("public/assets/manifest.json");
     for (const file of manifest.files) {

@@ -14,7 +14,8 @@
     "test:offline": "node scripts/check-offline.mjs",
     "assets:sprites": "node scripts/import-sprites.mjs",
     "assets:scenery": "node scripts/compose-scene.mjs",
-    "assets:combat": "node scripts/import-combat.mjs"
+    "assets:combat": "node scripts/import-combat.mjs",
+    "assets:effects": "node scripts/import-effects.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",

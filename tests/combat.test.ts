@@ -130,6 +130,16 @@ describe("combat timing and targeting", () => {
 });
 
 describe("projectile impacts", () => {
+  it("retains all delayed Arrow waves even when cast at the launch point", () => {
+    const b = sandbox(),
+      target = dummy(b, "knight", "red", 9, 31.1);
+    cast(b, "arrows", "blue", 9, 30);
+    advance(b, 0.5);
+    expect(target.hp).toBe(10000 - CARD_MAP.arrows.damage);
+    expect(
+      b.events.filter((e) => e.type === "hit" && e.card === "arrows"),
+    ).toHaveLength(3);
+  });
   it("a Bomber throw lands at its original aim and can miss a moving target", () => {
     const b = sandbox(),
       bomber = unit(b, "bomber", "blue", 9, 21);

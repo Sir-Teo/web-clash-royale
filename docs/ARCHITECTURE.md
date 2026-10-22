@@ -24,6 +24,8 @@ The original combat loop is frozen in `updateLegacyCombat()` for version-1 repla
 
 Rendering interpolates positions independently of simulation steps. Health labels use the camera projection. Pointer coordinates are raycast onto the arena floor and passed to the same placement validator as AI commands. Preview ghosts use that validator, too.
 
+`src/render/effects.ts` reuses the native frame geometry and SC color-transform shader for 18 original effect exports. `src/render/projectiles.ts` draws source arrow, spear, cannonball, bomb and flame art along simulation flight positions, with trajectory-dependent billboard rotation and per-shot heights. Arrow waves are separate visible volleys. Tesla hit events retain the firing position so their authored beam joins the correct endpoints; Zap uses the original bolt and ground glow. Transient native effects follow battle time, including replay speed and pause, and share cached geometry/materials.
+
 ## Interface and persistence
 
 `src/main.ts` owns lobby, deck editing, battle controls, results and replay views. During battles, a viewport-height flex layout gives the arena all remaining space after the header and hand; short landscape screens use a two-column arena/hand layout. Safe-area insets, dynamic viewport height and touch targets support phone use without scrolling the match. Card hand elements update only after the hand changes. Health, timer and elixir update at about 10 Hz. Simulation automatically pauses when the page is hidden. Modal dialogs pause a live match and resume when dismissed.

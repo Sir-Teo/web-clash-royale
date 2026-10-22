@@ -10,7 +10,9 @@ Original in-game shapes and animation export metadata are imported from [smlbiob
 
 `reference/goblin-arena.csv` retains the historical 1.8.0 `assets/locations/goblin_arena.csv` placement table from the same archive commit. It was decoded as LZMA with the archived four-byte length field expanded to the standard eight-byte field. Stadium decorations use those coordinates at 1,000 coordinate units per tile. The renderer uses a 30-pixel art scale per tile; this display scale is a reconstruction choice.
 
-The surrounding 3D geometry, fallback troop models, effects, user interface and simulation code are created for this project. Fonts: Lilita One and Nunito Sans via Fontsource (OFL).
+The surrounding 3D geometry, fallback troop models, particle effects, user interface and simulation code are created for this project. Fonts: Lilita One and Nunito Sans via Fontsource (OFL).
+
+Original projectile/electrical/impact exports are retained from the same 1.8.0 archive's `assets/sc/effects` and `effects_tex.png`. `reference/sc/effects.bin` stores the source metadata; `scripts/import-effects.mjs` reconstructs 18 selected exports, preserving their source parts, UV polygons and color transforms. `public/assets/effects/manifest.json` records source, metadata, output and texture hashes. The arrow, spear and Fireball orientation sequences are not played as looping animations: selected side-view source frames are rotated to the projected flight tangent. Dragon flames, Wizard fire, Tesla beams and Zap bolts retain authored animation frames. Native-to-world scaling, projectile heights, arcs, trail particles and effect placement are reconstruction choices. The original effects sheet is bundled as lossless WebP.
 
 Rules reference: [Supercell's November 2019 update](https://supercell.com/en/games/clashroyale/blog/release-notes/november-update/) documents three-minute regulation, two-minute overtime and triple elixir in the last overtime minute. This game implements a classic eight-card format with normalized, curated card stats; it does not claim live balance parity.
 

@@ -2,7 +2,9 @@
 
 A private, independent browser fan game for Sir-Teo. Built with TypeScript, Three.js and Vite. No account, API key, or backend is required to play.
 
-Build an eight-card deck from 24 cards, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and tower artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
+Build an eight-card deck from 24 cards, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
+
+Combat includes cancellable attack windups, defensive building pulls, homing shots, ballistic bombs, Fireball travel and knockback, three-wave Arrows and Zap charge resets. Existing version-1 replays retain their original rules; new matches record version-2 combat.
 
 This version supports AI opponents. Online multiplayer, the full live card roster and current balance parity are not implemented.
 
@@ -18,6 +20,8 @@ npm run dev
 To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189 --strictPort` and then `npm run test:offline`.
 
 `npm run assets` refreshes cards, renders and audio. `npm run assets:sprites` imports complete native animation sequences and lossless textures; `npm run assets:scenery` reconstructs tower and arena textures from the retained metadata. No asset generation is needed for normal development.
+
+`npm run assets:combat` regenerates combat traits from retained historical CSVs. `npm run assets:effects` imports the original projectile and electrical-effect clips. Development inspection pages are available at `/tests/fixtures/animations.html`, `/tests/fixtures/effects.html` and `/tests/fixtures/combat.html`; they are excluded from the production build.
 
 ## Phone play
 

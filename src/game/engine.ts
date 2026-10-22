@@ -73,6 +73,8 @@ export interface BattleEvent extends Point {
   team: Team;
   card?: CardId | "tower";
   value?: number;
+  origin?: Point & { height: number };
+  height?: number;
 }
 export interface Action extends Point {
   tick: number;
@@ -321,7 +323,7 @@ export class Battle {
         id === "zap"
           ? 0.15
           : modern
-            ? dist(origin, { x, y }) / speed
+            ? Math.max(STEP, dist(origin, { x, y }) / speed)
             : id === "arrows"
               ? 0.65
               : 0.9;
@@ -414,8 +416,18 @@ export class Battle {
     y: number,
     card?: CardId | "tower",
     value?: number,
+    details: Pick<BattleEvent, "origin" | "height"> = {},
   ) {
-    this.events.push({ id: this.nextId++, type, team, x, y, card, value });
+    this.events.push({
+      id: this.nextId++,
+      type,
+      team,
+      x,
+      y,
+      card,
+      value,
+      ...details,
+    });
     if (this.events.length > 160)
       this.events.splice(0, this.events.length - 160);
   }
@@ -738,9 +750,13 @@ export class Battle {
             : 3.5
           : e.card === "balloon"
             ? 3.8
-            : e.air
-              ? 2.3
-              : 0.8;
+            : e.card === "tesla"
+              ? 1.8
+              : e.card === "cannon"
+                ? 1.1
+                : e.air
+                  ? 2.3
+                  : 0.8;
       this.projectiles.push({
         id: this.nextId++,
         team: e.team,
@@ -844,6 +860,13 @@ export class Battle {
           ? undefined
           : (p.style as CardId),
         p.damage,
+        {
+          origin:
+            p.style === "tesla"
+              ? { x: p.x, y: p.y, height: p.fromHeight ?? 1.5 }
+              : undefined,
+          height: p.toHeight ?? 0.6,
+        },
       );
     }
     this.projectiles = this.projectiles.filter((p) => p.remaining > 0);
@@ -970,6 +993,15 @@ export class Battle {
         style: "bomb",
         stun: 0,
         source: e.id,
+        ...(this.rulesVersion === 2
+          ? {
+              flight: { x: e.x, y: e.y },
+              elapsed: 0,
+              fromHeight: 3.8,
+              toHeight: 0.2,
+              arc: 0,
+            }
+          : {}),
       });
     if (e.kind === "tower") {
       const enemy = other(e.team);

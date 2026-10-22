@@ -22,7 +22,7 @@ export interface SpriteData {
   clips: Record<string, AnimationClip>;
   frames: FramePart[][];
 }
-interface SpriteAsset {
+export interface SpriteAsset {
   data: SpriteData;
   textures: T.Texture[];
   materials: T.MeshBasicMaterial[];
@@ -56,7 +56,7 @@ const heights: Partial<Record<CardId, number>> = {
   pekka: 2.7,
   balloon: 4,
 };
-function makeMaterial(texture: T.Texture) {
+export function makeMaterial(texture: T.Texture) {
   const material = new T.MeshBasicMaterial({
     map: texture,
     transparent: true,
@@ -89,6 +89,55 @@ function makeMaterial(texture: T.Texture) {
   material.customProgramCacheKey = () => "sc1-color-transform-v1";
   return material;
 }
+export function spriteGeometry(asset: SpriteAsset, index: number) {
+  const cached = asset.geometry.get(index);
+  if (cached) return cached;
+  const positions: number[] = [],
+    uvs: number[] = [],
+    multiply: number[] = [],
+    add: number[] = [];
+  const geometry = new T.BufferGeometry();
+  let sheet = -1,
+    start = 0;
+  asset.data.frames[index].forEach((part, layer) => {
+    const m = part.matrix,
+      c = part.color;
+    for (const polygon of asset.data.shapes[part.shape]) {
+      if (polygon.sheet !== sheet) {
+        if (sheet >= 0)
+          geometry.addGroup(start, positions.length / 3 - start, sheet);
+        sheet = polygon.sheet;
+        start = positions.length / 3;
+      }
+      for (let j = 1; j < polygon.xy.length - 1; j++)
+        for (const vertex of [0, j, j + 1]) {
+          const [x, y] = polygon.xy[vertex],
+            [u, v] = polygon.uv[vertex];
+          positions.push(
+            (m[0] * x + m[2] * y + m[4] - asset.data.anchor[0]) * asset.scale,
+            -(m[1] * x + m[3] * y + m[5] - asset.data.anchor[1]) * asset.scale,
+            layer * 0.0005,
+          );
+          uvs.push(u, 1 - v);
+          multiply.push(c[4] / 255, c[5] / 255, c[6] / 255, c[3] / 255);
+          add.push(c[0] / 255, c[1] / 255, c[2] / 255);
+        }
+    }
+  });
+  if (sheet >= 0) geometry.addGroup(start, positions.length / 3 - start, sheet);
+  geometry.setAttribute("position", new T.Float32BufferAttribute(positions, 3));
+  geometry.setAttribute("uv", new T.Float32BufferAttribute(uvs, 2));
+  geometry.setAttribute(
+    "scMultiply",
+    new T.Float32BufferAttribute(multiply, 4),
+  );
+  geometry.setAttribute("scAdd", new T.Float32BufferAttribute(add, 3));
+  geometry.computeBoundingSphere();
+  geometry.userData.shared = true;
+  asset.geometry.set(index, geometry);
+  return geometry;
+}
+
 export class SpriteLibrary {
   assets = new Map<CardId, SpriteAsset>();
   private loader = new T.TextureLoader();
@@ -123,64 +172,11 @@ export class SpriteLibrary {
       }),
     );
   }
-  private geometry(asset: SpriteAsset, index: number) {
-    const cached = asset.geometry.get(index);
-    if (cached) return cached;
-    const positions: number[] = [],
-      uvs: number[] = [],
-      multiply: number[] = [],
-      add: number[] = [];
-    const geometry = new T.BufferGeometry();
-    let sheet = -1,
-      start = 0;
-    asset.data.frames[index].forEach((part, layer) => {
-      const m = part.matrix,
-        c = part.color;
-      for (const polygon of asset.data.shapes[part.shape]) {
-        if (polygon.sheet !== sheet) {
-          if (sheet >= 0)
-            geometry.addGroup(start, positions.length / 3 - start, sheet);
-          sheet = polygon.sheet;
-          start = positions.length / 3;
-        }
-        for (let j = 1; j < polygon.xy.length - 1; j++)
-          for (const vertex of [0, j, j + 1]) {
-            const [x, y] = polygon.xy[vertex],
-              [u, v] = polygon.uv[vertex];
-            positions.push(
-              (m[0] * x + m[2] * y + m[4] - asset.data.anchor[0]) * asset.scale,
-              -(m[1] * x + m[3] * y + m[5] - asset.data.anchor[1]) *
-                asset.scale,
-              layer * 0.0005,
-            );
-            uvs.push(u, 1 - v);
-            multiply.push(c[4] / 255, c[5] / 255, c[6] / 255, c[3] / 255);
-            add.push(c[0] / 255, c[1] / 255, c[2] / 255);
-          }
-      }
-    });
-    if (sheet >= 0)
-      geometry.addGroup(start, positions.length / 3 - start, sheet);
-    geometry.setAttribute(
-      "position",
-      new T.Float32BufferAttribute(positions, 3),
-    );
-    geometry.setAttribute("uv", new T.Float32BufferAttribute(uvs, 2));
-    geometry.setAttribute(
-      "scMultiply",
-      new T.Float32BufferAttribute(multiply, 4),
-    );
-    geometry.setAttribute("scAdd", new T.Float32BufferAttribute(add, 3));
-    geometry.computeBoundingSphere();
-    geometry.userData.shared = true;
-    asset.geometry.set(index, geometry);
-    return geometry;
-  }
   make(id: CardId): AnimatedSprite | null {
     const asset = this.assets.get(id === "skeleton-army" ? "skeletons" : id);
     if (!asset) return null;
     const frame = Object.values(asset.data.clips)[0].frames[0];
-    const mesh = new T.Mesh(this.geometry(asset, frame), asset.materials);
+    const mesh = new T.Mesh(spriteGeometry(asset, frame), asset.materials);
     mesh.renderOrder = 1;
     return { mesh, asset, lastFrame: frame, facingX: 0, facingY: 0 };
   }
@@ -216,7 +212,7 @@ export class SpriteLibrary {
       kind === "attack" ? e.interval - e.attack : time + e.id * 0.13;
     const frame = animationFrame(clip, elapsed, kind === "attack", e.interval);
     if (frame !== sprite.lastFrame) {
-      sprite.mesh.geometry = this.geometry(sprite.asset, frame);
+      sprite.mesh.geometry = spriteGeometry(sprite.asset, frame);
       sprite.lastFrame = frame;
     }
     sprite.mesh.quaternion.copy(camera.quaternion);
