@@ -157,6 +157,7 @@ let multiplayer = false;
 let networkReplay: Replay | undefined;
 let replaySource: Battle | null = null;
 let endingBattle: Battle | null = null;
+let endingFrameTime = 0;
 let roomError = "";
 let connectionStatus = "";
 let lanOrigin = "";
@@ -295,6 +296,7 @@ function startEnding(hold = false) {
   if (endingBattle === battle || !battle.winner) return;
   emotes.reset();
   endingBattle = battle;
+  endingFrameTime = arena.effectTime;
   const player = multiplayer
     ? (network.room?.players.find((p) => p.team === network.team)?.name ??
       profile.name)
@@ -1596,7 +1598,8 @@ function frame(now: number) {
   if (multiplayer) processEvents();
   const idle = screen === "lobby" || paused || !!battle.winner;
   if (!idle || now - lastRenderTime >= 1000 / 30 - 0.5) {
-    const renderDelta = Math.min((now - lastRenderTime) / 1000, 0.1);
+    const renderElapsed = Math.max(0, (now - lastRenderTime) / 1000);
+    const renderDelta = Math.min(renderElapsed, 0.1);
     lastRenderTime = now;
     animationTime = screen === "lobby" ? now / 1000 : battle.time;
     arena.render(
@@ -1606,6 +1609,11 @@ function frame(now: number) {
           ? 0
           : renderDelta * speed,
       animationTime,
+      screen === "lobby" || battle.winner
+        ? renderElapsed
+        : paused
+          ? 0
+          : renderElapsed * speed,
     );
     frameCount++;
     fpsFrames++;
@@ -1637,9 +1645,10 @@ function frame(now: number) {
     );
   if (screen === "replay" && battle.winner) startEnding();
   ending.update(
-    delta,
+    Math.max(0, arena.effectTime - endingFrameTime),
     !!pendingResult && arena.effectTime >= pendingResult.time,
   );
+  endingFrameTime = arena.effectTime;
   emotes.update(
     paused ? 0 : delta,
     screen === "battle" &&

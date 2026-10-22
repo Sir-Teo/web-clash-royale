@@ -28,7 +28,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run build
-      - run: npx playwright test tests/browser/multiplayer.spec.ts tests/browser/startup.spec.ts --project=desktop
+      - run: npx playwright test tests/browser/multiplayer.spec.ts tests/browser/startup.spec.ts tests/browser/ending-performance.spec.ts --project=desktop
         env:
           ARENA_PRODUCTION: "1"
           ARENA_NETWORK_TRACE: "1"

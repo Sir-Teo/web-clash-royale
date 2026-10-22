@@ -667,7 +667,7 @@ export class Arena {
     );
     this.placementFeedback.style.transform = `translate(${x}px,${y}px) translate(-50%,-100%)`;
   }
-  render(dt: number, time: number) {
+  render(dt: number, time: number, effectDelta = dt) {
     if (this.destroyed || this.contextLost) return;
     for (let i = 0; i < this.waters.length; i++) {
       const wave = this.waters[i];
@@ -694,7 +694,9 @@ export class Arena {
     }
     const b = this.battle;
     if (!b) return;
-    this.destruction.update(dt, this.camera);
+    // Authored effects use elapsed presentation time. Movement and legacy
+    // particle integration keep the bounded step supplied separately.
+    this.destruction.update(effectDelta, this.camera);
     const ruins = destroyedTowerSites(b.entities);
     const ruinKeys = new Set(ruins.map((s) => `${s.team}-${s.x}`));
     for (const [key, mesh] of this.rubble)

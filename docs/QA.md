@@ -231,3 +231,10 @@ The phone Chromium suite passes all eight scenarios. WebKit initially exposed tw
 The test now observes canonical reactions delivered from the worker to each UI. A UI responsiveness pulse prevents false quiet-connection decisions and application ping buildup while that delivery path is blocked, then allows one callback turn after recovery. Unit cases retain the original silent-connection deadline for responsive clients and close a still-silent connection after recovery. All 138 unit checks/build pass; WebKit now passes the complete match, actual 55-second freeze, and aborted-worker-download fallback.
 
 CI run `39869833855` confirms the original disconnect is fixed: a 52-second reload returns connected with no winner, and all seven startup cases pass. Its remaining failure is a missing replay button after surrender on a one-frame-per-second renderer. That result presentation issue is being investigated separately.
+
+
+## Results on slow renderers
+
+The remaining CI replay-button failure occurred with diagnostics reporting one rendered frame per second. A controlled production test delivers frames 1.5 seconds apart and reproduces the missing result controls after twelve seconds. Native effects had inherited the 0.1-second movement-integration cap, while the ending had a separate capped delta; this stretched both the crown-flight deadline and final-score presentation.
+
+The renderer now accepts elapsed effect time separately from its bounded movement step. Crown flights, destruction/impact animation and the ending share that foreground clock, preserving background suspension and replay hold behavior. All 138 unit checks/build pass. The controlled slow-frame result test passes on desktop Chromium, phone Chromium and phone WebKit, and is included in CI.
