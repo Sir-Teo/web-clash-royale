@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="UTF-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><title>Health HUD in the arena</title
+  ><style>
+    body {
+      margin: 0;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      background: #122d28;
+      color: #e8fff2;
+      font: 14px system-ui;
+    }
+    header {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 10px;
+    }
+    button {
+      padding: 8px 10px;
+      color: white;
+      background: #27523f;
+      border: 1px solid #719f83;
+      border-radius: 6px;
+    }
+    main {
+      position: relative;
+      min-height: 0;
+      flex: 1;
+      width: 100%;
+      max-width: 800px;
+      margin: auto;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .tower-labels {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .tower-health {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+    }
+    #status,
+    #units {
+      font:
+        12px ui-monospace,
+        monospace;
+      max-width: 100%;
+    }
+    footer {
+      padding: 8px;
+      min-height: 42px;
+    }
+    h1 {
+      font-size: 17px;
+      margin: 0 5px 0 0;
+    }
+  </style>
+  <header>
+    <h1>Native health in combat</h1>
+    <button id="damage">Damage 25%</button
+    ><button id="wake">Activate Kings</button
+    ><button id="step">Step 0.1s</button><button id="second">Step 1s</button
+    ><button id="play">Play</button><button id="defeat">Defeat troops</button
+    ><button id="rebuild">Rebuild renderer</button
+    ><button id="reset">Reset</button>
+  </header>
+  <main id="arena"></main>
+  <footer>
+    <div id="status">Loading</div>
+    <div id="units"></div>
+  </footer>
+  <script type="module" src="/tests/fixtures/health-arena.ts"></script>
+</html>

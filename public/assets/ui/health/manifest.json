@@ -1,0 +1,188 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "sources": [
+    {
+      "source": "csv_client/texts.decoded.csv",
+      "path": "reference/client/texts.csv",
+      "bytes": 1676624,
+      "sha256": "0102d5ec1cbe3f6b2abf9e57f3068b029c3c2e9304c2cd56f0b06aacd8bdd43e"
+    },
+    {
+      "source": "font/supercell-magic_0.ttf",
+      "path": "public/assets/ui/supercell-magic.ttf",
+      "bytes": 127716,
+      "sha256": "b39e9bd4d46006fe559302ba3205c746b7967dea3554bdf1b32685dbfacfbb2b"
+    },
+    {
+      "source": "sc/ui",
+      "path": "reference/sc/ui.bin",
+      "bytes": 2207168,
+      "sha256": "e835a19396a344c0739f8b054efa7fe030a4b55d832eace8064675fa4f9e00bd"
+    },
+    {
+      "source": "sc/ui_tex.png",
+      "bytes": 4876660,
+      "sha256": "f33ba6c1dc1457a4551546843c7c9318cad0a1f82603ae2c8c850975d5220ef0"
+    },
+    {
+      "path": "src/game/combat-data.json",
+      "source": "browser card-to-character mapping",
+      "sha256": "bc8cad0c44c442dd2565641f0c8bcaca14f2d2e9ecb551a88b9cc67a9830ea66"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "source": "csv_logic/characters.decoded.csv",
+      "bytes": 31635,
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "source": "csv_logic/buildings.decoded.csv",
+      "bytes": 12345,
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    }
+  ],
+  "files": [
+    {
+      "file": "shape-4997-0.webp",
+      "bytes": 280,
+      "sha256": "20c34ac1528870ae6c98734779c24339da4873be5d6115c156d784da4ee55524"
+    },
+    {
+      "file": "shape-4995-0.webp",
+      "bytes": 116,
+      "sha256": "dc7231baf439d8827964a081feccaa040bd1cf50cb63928fcbfa35c261703630"
+    },
+    {
+      "file": "shape-4996-0.webp",
+      "bytes": 162,
+      "sha256": "bf7de9a19175b0dd4e713f3d8be97385794712aefa24f8d1bb11cd76f1239c6a"
+    },
+    {
+      "file": "shape-4999-0.webp",
+      "bytes": 116,
+      "sha256": "23804a6586278f8ce90d4b70f415db20e46514f0648c0a40bc19954d0a453493"
+    },
+    {
+      "file": "shape-5000-0.webp",
+      "bytes": 102,
+      "sha256": "1054ca6836de1f988d0d1c3505d517d63b9ce876a7e409323b45157e133e8d08"
+    },
+    {
+      "file": "shape-5011-0.webp",
+      "bytes": 506,
+      "sha256": "0a697d3b6c320d169a6da113ab5cbe31a062ed0044c5dc777c13317bf46414ac"
+    },
+    {
+      "file": "shape-5012-0.webp",
+      "bytes": 112,
+      "sha256": "445a990177d92bbd218a5a6bb6d41868e9c444bd61e8c1d2b75a8cc93bc55ff1"
+    },
+    {
+      "file": "shape-666-0.webp",
+      "bytes": 350,
+      "sha256": "d4a7242d867143ad94c90690d5d6652bc8174aecb7fb42ca8e586d47ff48a453"
+    },
+    {
+      "file": "shape-5016-0.webp",
+      "bytes": 1628,
+      "sha256": "51de64b680e38980bf77e63c35bf02f26bd360b37f3003dd79ff5872b99ef3a0"
+    },
+    {
+      "file": "shape-5013-0.webp",
+      "bytes": 122,
+      "sha256": "80afbbe32703ff1eb798b062f6f563ea39723b98b2cebcf7d1955b6b08c15f29"
+    },
+    {
+      "file": "shape-5014-0.webp",
+      "bytes": 134,
+      "sha256": "b466c305b93adc9fa1b4cc025ac78451a92ab5145caad8e9650760d9f18069d1"
+    },
+    {
+      "file": "shape-5023-0.webp",
+      "bytes": 936,
+      "sha256": "df83ebaf923b4e6f2df296bc21f1706898c9bd63dce400e84b4bd335ef626f08"
+    },
+    {
+      "file": "shape-5019-0.webp",
+      "bytes": 816,
+      "sha256": "cb7020e0c1124a18454ab2078938c538ef660835493355793220e84b7f2d6f1f"
+    },
+    {
+      "file": "shape-5020-0.webp",
+      "bytes": 330,
+      "sha256": "81431321cc32773cf213bc80321f16112a4852719df1b2d270a0fe9181c6a21b"
+    },
+    {
+      "file": "shape-5021-0.webp",
+      "bytes": 180,
+      "sha256": "2b0305fceb596324562e5f180037c7c588db300151679986e2859f434a18533e"
+    },
+    {
+      "file": "shape-5022-0.webp",
+      "bytes": 278,
+      "sha256": "494a82c62217ac5799e51e89178e076f13cf4eae316332dfe42fc1315b38c6e2"
+    },
+    {
+      "file": "shape-5007-0.webp",
+      "bytes": 236,
+      "sha256": "a49f747107ad660088eaed424a139c1d6ddf93d3be531c7ef11dcfac2c1407a4"
+    },
+    {
+      "file": "shape-5005-0.webp",
+      "bytes": 118,
+      "sha256": "eae42b19fdf55de375d8e90123ecf5934142d61f9ecf800adb760f038e63b6f7"
+    },
+    {
+      "file": "shape-5006-0.webp",
+      "bytes": 136,
+      "sha256": "cb5f02d7228bf41c54bca7fcf9a197cb5ef96d53ab54017dd0bc32e30aefbf69"
+    },
+    {
+      "file": "shape-5009-0.webp",
+      "bytes": 116,
+      "sha256": "bee730eda72c93e3aced78a51dc3075d458605fdfe7ef5b9d7c626b50cb0157a"
+    },
+    {
+      "file": "shape-5010-0.webp",
+      "bytes": 92,
+      "sha256": "92e0735c6feeeb721399bf9a79a9fd71de8c58e926be866e387b3076873e1916"
+    },
+    {
+      "file": "shape-5017-0.webp",
+      "bytes": 114,
+      "sha256": "8e9dfa84a593fe3addb88b6b359444590b0ea07dbfc88166eff49fe1ce7635a3"
+    },
+    {
+      "file": "shape-5018-0.webp",
+      "bytes": 142,
+      "sha256": "5e74089e912663c4af43ba7f678115b2cedc05c7af7e4d596d266b610128e059"
+    },
+    {
+      "file": "shape-5026-0.webp",
+      "bytes": 962,
+      "sha256": "5447926d7ccc65f962ac849039bf702452293eb8b57b3cef3ee56497c7c8474c"
+    },
+    {
+      "file": "shape-5024-0.webp",
+      "bytes": 172,
+      "sha256": "ae853a69ce02abbc5c7d80d6089c3c673d3410c60fc7d35cb277f91f0012a5f9"
+    },
+    {
+      "file": "shape-5025-0.webp",
+      "bytes": 192,
+      "sha256": "bf938a3d0c7ffb12804a7c3b18501c24d86460ec1888e9cacdea656e528a8056"
+    },
+    {
+      "file": "atlas.webp",
+      "bytes": 8532,
+      "sha256": "b8e8edc2575ba41ab65274deb174681082c98093dbffae27b372178f7bf1fb05"
+    },
+    {
+      "file": "health.json",
+      "bytes": 311231,
+      "sha256": "7adde040dea616c29c558af5e5f1f6e51ab3c295e50eec32865ab77163512d8d"
+    }
+  ]
+}

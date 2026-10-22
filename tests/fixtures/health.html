@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="UTF-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><title>Native health displays</title
+  ><style>
+    body {
+      background: #16312c;
+      color: #ecfff4;
+      font: 14px system-ui;
+      padding: 20px;
+      margin: 0;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+    .controls {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 12px 0;
+    }
+    input {
+      width: 200px;
+    }
+    #gallery {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .sample {
+      background: #102920;
+      border: 1px solid #38634d;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      min-width: 0;
+    }
+    .art {
+      height: 175px;
+      font-family: "Supercell Magic", sans-serif;
+    }
+    .art svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    p {
+      color: #a6c5b4;
+    }
+    button {
+      background: #23543c;
+      color: white;
+      border: 1px solid #4a8962;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+    @media (max-width: 600px) {
+      #gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+  <h1>Native health displays</h1>
+  <p>
+    Source bar states, level badges and King activation. Both team palettes use
+    their own source art.
+  </p>
+  <div class="controls">
+    <label
+      >Health
+      <input id="health" type="range" min="0" max="100" value="100" /></label
+    ><label
+      >King frame
+      <input id="frame" type="range" min="0" max="31" value="31" /></label
+    ><button id="step">Step frame</button>
+  </div>
+  <div id="status">Loading</div>
+  <div id="gallery"></div>
+  <script type="module" src="/tests/fixtures/health.ts"></script>
+</html>

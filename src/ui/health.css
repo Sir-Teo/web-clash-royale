@@ -1,0 +1,39 @@
+@import "./native-font.css";
+.tower-health.native-health-ready {
+  width: 88px;
+  height: 36px;
+  min-width: 0;
+  gap: 0;
+  filter: none;
+  font-family: "Supercell Magic", sans-serif;
+  font-weight: 400;
+}
+.tower-health.native-health-ready.king-health {
+  width: 124px;
+  height: 42px;
+}
+.tower-health.native-health-ready > span,
+.tower-health.native-health-ready > i {
+  display: none;
+}
+.native-health-art {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.native-health-art svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+@media (max-width: 480px), (max-height: 540px) and (orientation: landscape) {
+  .tower-health.native-health-ready {
+    width: 80px;
+    height: 33px;
+  }
+  .tower-health.native-health-ready.king-health {
+    width: 116px;
+    height: 39px;
+  }
+}

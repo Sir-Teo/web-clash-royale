@@ -27,6 +27,7 @@ import type { BuildingSprite } from "./buildings";
 import { destroyedTowerSites, TOWER_SITES } from "../game/arena-layout";
 import { DestructionEffects, deathEffect } from "./destruction";
 import { CrownEffects } from "./crowns";
+import { HealthLibrary, type HealthSprite } from "./health";
 interface Visual {
   object: T.Group;
   model?: Model;
@@ -35,8 +36,10 @@ interface Visual {
   building?: BuildingSprite;
   art?: T.Mesh;
   label?: HTMLDivElement;
+  labelTransform?: string;
   health?: T.Group;
   healthFill?: T.Mesh;
+  nativeHealth?: HealthSprite;
 }
 interface Particle {
   mesh: T.Mesh;
@@ -53,6 +56,8 @@ export class Arena {
   private shots = new Map<number, ProjectileVisual>();
   private effects = new EffectLibrary();
   private buildings = new BuildingLibrary();
+  private health = new HealthLibrary();
+  private healthPosition = new T.Vector3();
   private destruction = new DestructionEffects(this.scene, this.effects);
   private crowns = new CrownEffects(this.scene, this.effects);
   private rubble = new Map<string, T.Mesh>();
@@ -199,6 +204,7 @@ export class Arena {
       this.sprites.load(),
       this.effects.load(),
       this.buildings.load(),
+      this.health.load(),
       this.loadArtwork(),
     ]).then(() => {
       if (!this.destroyed && this.battle) this.setBattle(this.battle);
@@ -454,6 +460,7 @@ export class Arena {
     for (const v of this.units.values()) {
       this.scene.remove(v.object);
       v.label?.remove();
+      if (v.nativeHealth) this.scene.remove(v.nativeHealth.mesh);
       this.disposeObject(v.object);
     }
     this.units.clear();
@@ -492,6 +499,19 @@ export class Arena {
   }
   get loadedEffects() {
     return Object.keys(this.effects.asset?.data.clips ?? {}).length;
+  }
+  get loadedHealth() {
+    return this.health.loaded;
+  }
+  get healthState() {
+    return [...this.units.entries()]
+      .filter(([, v]) => v.nativeHealth?.mesh.visible)
+      .map(([id, v]) => ({
+        id,
+        ...v.nativeHealth!.mesh.userData.health,
+        x: v.nativeHealth!.mesh.position.x + 9,
+        y: v.nativeHealth!.mesh.position.z + 16,
+      }));
   }
   get loadedBuildings() {
     return this.buildings.assets.size;
@@ -820,6 +840,9 @@ export class Arena {
             } else object.add(archer.mesh);
           }
         }
+        // Rebuilt/seeked entities may already be old while the clock is paused.
+        // Initialize their actual position before any movement interpolation.
+        object.position.set(e.x - 9, e.air ? 2.2 : 0.2, e.y - 16);
         this.scene.add(object);
         v = {
           object,
@@ -832,6 +855,7 @@ export class Arena {
         if (e.kind === "tower") {
           const label = document.createElement("div");
           label.className = `tower-health ${e.team}`;
+          label.dataset.entityId = String(e.id);
           label.innerHTML = "<span></span><i><b></b></i>";
           this.labels.append(label);
           v.label = label;
@@ -849,24 +873,28 @@ export class Arena {
           ring.rotation.x = -Math.PI / 2;
           ring.position.y = 0.03;
           object.add(ring);
-          const health = new T.Group();
-          const back = new T.Mesh(
-            new T.PlaneGeometry(0.95, 0.16),
-            new T.MeshBasicMaterial({ color: 0x20312d, depthWrite: false }),
-          );
-          const fill = new T.Mesh(
-            new T.PlaneGeometry(0.85, 0.09),
-            new T.MeshBasicMaterial({
-              color: teamColor(e.team),
-              depthWrite: false,
-            }),
-          );
-          fill.position.z = 0.008;
-          health.add(back, fill);
-          health.renderOrder = 3;
-          object.add(health);
-          v.health = health;
-          v.healthFill = fill;
+          v.nativeHealth = this.health.make(e) ?? undefined;
+          if (v.nativeHealth) this.scene.add(v.nativeHealth.mesh);
+          else {
+            const health = new T.Group();
+            const back = new T.Mesh(
+              new T.PlaneGeometry(0.95, 0.16),
+              new T.MeshBasicMaterial({ color: 0x20312d, depthWrite: false }),
+            );
+            const fill = new T.Mesh(
+              new T.PlaneGeometry(0.85, 0.09),
+              new T.MeshBasicMaterial({
+                color: teamColor(e.team),
+                depthWrite: false,
+              }),
+            );
+            fill.position.z = 0.008;
+            health.add(back, fill);
+            health.renderOrder = 3;
+            object.add(health);
+            v.health = health;
+            v.healthFill = fill;
+          }
         }
         this.units.set(e.id, v);
       }
@@ -877,6 +905,7 @@ export class Arena {
         this.scene.remove(v.object);
         this.disposeObject(v.object);
         v.label?.remove();
+        if (v.nativeHealth) this.scene.remove(v.nativeHealth.mesh);
         this.units.delete(id);
       }
     const liveShots = new Set<number>();
@@ -1118,6 +1147,26 @@ export class Arena {
       v.art.quaternion.copy(this.camera.quaternion);
       v.art.renderOrder = 1;
     }
+    if (v.nativeHealth) {
+      const offset = this.health.data?.profiles[e.card]?.offsetY ?? 0;
+      const height = e.burrow
+        ? 0.65 + e.burrow.exposure * 2.05
+        : v.sprite
+          ? (v.sprite.asset.data.anchor[1] - v.sprite.asset.data.bounds[1]) *
+              v.sprite.asset.scale +
+            0.35 +
+            offset * v.sprite.asset.scale * 0.5
+          : 1.9;
+      this.healthPosition.copy(o.position);
+      this.healthPosition.y += height;
+      this.health.update(
+        v.nativeHealth,
+        e,
+        this.camera,
+        this.healthPosition,
+        (this.camera.right - this.camera.left) / this.width,
+      );
+    }
     if (v.health && v.healthFill) {
       v.health.visible = e.hp < e.maxHp && e.deploy <= 0;
       v.health.position.set(
@@ -1170,13 +1219,21 @@ export class Arena {
     if (e.kind === "tower" && e.team === "red" && !v.art && !v.building)
       o.rotation.y = Math.PI;
     if (v.label) {
-      const p = this.screen(e.x, e.y, 4);
-      v.label.style.transform = `translate(${p.x}px,${p.y}px) translate(-50%,-50%)`;
-      v.label.querySelector("span")!.textContent = Math.ceil(
-        e.hp,
-      ).toLocaleString();
-      (v.label.querySelector("b") as HTMLElement).style.width =
-        `${(e.hp / e.maxHp) * 100}%`;
+      const native = this.health.tower(v.label, e);
+      const p = this.screen(e.x, e.y, native && e.team === "blue" ? 0.25 : 4);
+      const y = native ? Math.min(this.height - 48, Math.max(18, p.y)) : p.y;
+      const transform = `translate(${p.x}px,${y}px) translate(-50%,-50%)`;
+      if (v.labelTransform !== transform) {
+        v.label.style.transform = transform;
+        v.labelTransform = transform;
+      }
+      if (!native) {
+        v.label.querySelector("span")!.textContent = Math.ceil(
+          e.hp,
+        ).toLocaleString();
+        (v.label.querySelector("b") as HTMLElement).style.width =
+          `${(e.hp / e.maxHp) * 100}%`;
+      }
     }
   }
   private particle(
@@ -1221,6 +1278,7 @@ export class Arena {
     this.sprites.destroy();
     this.effects.destroy();
     this.buildings.destroy();
+    this.health.destroy();
     this.renderer.dispose();
     this.renderer.domElement.remove();
     this.labels.remove();

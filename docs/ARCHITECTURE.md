@@ -75,6 +75,14 @@ The native display-list parser preserves each child's instance index as well as 
 
 A four-slot presentation clock tracks newly drawn cards independently of hand DOM replacement. Only changed slots play the 60-FPS source reveal; unchanged cards remain still. Animation uses simulation time, pauses with the battle, respects reduced motion and resets on replay seeking/restarting. Loading all native images and the local font precedes the switch from fallback art. Failed loading leaves the previous playable UI intact. `loadedCards` exposes the number of ready portraits through read-only diagnostics.
 
+## Native health displays
+
+`src/ui/health-data.ts` separates health fill selection from animation time. Its flattening helper substitutes the chosen 100-state bar frame into the source root while composing its matrices and colors. `healthSelection` derives team, source bar size, visibility and the King’s opening frame from entity state. Paused rendering and replay seeking therefore reconstruct the current display without replaying historical transitions.
+
+`src/render/health.ts` preloads the shared atlas, tower crops and native font. Troop health uses cached GPU geometry with one shared texture/material; only the two team-specific Level 11 glyphs are rasterized into the reserved atlas band. Billboard meshes retain screen-readable sizing as the orthographic camera fits a phone viewport. Death and scene rebuilds remove their meshes; library disposal releases shared GPU resources. Missing assets retain the previous health bars.
+
+Six tower HUD hosts use the shared native SVG renderer and accessible meter values. Cached artwork signatures and position transforms avoid DOM writes while paused, while a resize recalculates placement. The renderer initializes newly created visuals at each entity’s actual position before interpolation, fixing older troops appearing at the origin when a replay or paused scene is rebuilt. Read-only `loadedHealth` and `health` diagnostics report readiness and visible troop HUD states.
+
 ## Current boundaries
 
 - AI battles only; online multiplayer and account synchronization are not implemented.

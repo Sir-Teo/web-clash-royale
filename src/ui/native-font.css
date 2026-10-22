@@ -1,0 +1,7 @@
+@font-face {
+  font-family: "Supercell Magic";
+  src: url("/assets/ui/supercell-magic.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}

@@ -21,7 +21,8 @@
     "assets:ui": "node scripts/import-ui.mjs",
     "assets:intro": "node scripts/import-intro.mjs",
     "assets:elixir": "node scripts/import-elixir.mjs",
-    "assets:cards": "node scripts/import-cards.mjs"
+    "assets:cards": "node scripts/import-cards.mjs",
+    "assets:health": "node scripts/import-health.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",

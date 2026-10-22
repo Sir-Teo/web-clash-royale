@@ -1308,6 +1308,8 @@ Object.defineProperty(window, "__arena", {
         loadedIntros: intro.loaded,
         loadedElixir: elixir.loaded,
         loadedCards: nativeCards.loaded,
+        loadedHealth: arena.loadedHealth,
+        health: arena.healthState,
         intro: intro.state,
         announcement: announcements.state,
         loadedBuildings: arena.loadedBuildings,
