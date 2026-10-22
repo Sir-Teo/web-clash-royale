@@ -470,6 +470,9 @@ export class Arena {
   get loadedBuildings() {
     return this.buildings.assets.size;
   }
+  get particleCount() {
+    return this.particles.length;
+  }
   get placementState() {
     return this.placement
       ? {
@@ -816,6 +819,7 @@ export class Arena {
       const target = b.entities.find((e) => e.id === p.target && e.hp > 0);
       updateProjectile(shot, p, this.effects, this.camera, target);
       if (
+        dt > 0 &&
         shot.object.visible &&
         ["fireball", "wizard", "baby-dragon"].includes(p.style) &&
         Math.random() < 0.6

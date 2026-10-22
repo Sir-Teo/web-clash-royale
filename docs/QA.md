@@ -36,3 +36,7 @@ The defensive-building checkpoint passes 53 unit/asset/persistence checks and 14
 Type checking and the production build pass with 287 cached files. The isolated offline check loads all 18 troop families, 18 effect exports and both native buildings after disabling the network, then starts a battle. An initial offline run concurrent with the browser suite timed out on page load; the isolated rerun passed.
 
 The background/render-timing check emulates the browser visibility event in headless Chromium and WebKit. It verifies that live battles and replays pause, rendered-frame counts and both clocks remain unchanged while hidden, and returning restarts rendering without automatically resuming combat. Replay controls expose the correct Pause, Resume or Restart label. This is automated lifecycle coverage; physical phone app-switching and battery measurements remain untested.
+
+A paused-projectile regression test holds a Fireball at 0.1 seconds and checks that its trail particle count stops changing. It reproduced the bug before the fix (the count grew from 2 to 40 while simulation time stayed frozen). The combat inspection page now advances its visual delta only when simulation time advances, including manual steps.
+
+The final pause/particle checkpoint passes 53 unit/asset tests, type checking, production build and 17 browser checks (plus the intentional desktop touch skip). The paused-Fireball regression passes on desktop Chromium and both phone browser projects.

@@ -6,6 +6,7 @@ const arena = new Arena(document.querySelector("#arena")!);
 let battle: Battle,
   playing = false,
   elapsed = 0,
+  renderedTime = 0,
   last = performance.now();
 function cast(id: CardId, team: Team, x: number, y: number) {
   battle.players[team].elixir = 10;
@@ -26,6 +27,7 @@ function unit(id: CardId, team: Team, x: number, y: number) {
 function setup() {
   playing = false;
   elapsed = 0;
+  renderedTime = 0;
   document.querySelector("#play")!.textContent = "Play";
   battle = new Battle({ seed: 12, ai: false });
   for (const t of battle.entities) t.active = false;
@@ -103,7 +105,8 @@ function render(now: number) {
       elapsed -= STEP;
     }
   }
-  arena.render(delta, battle.time);
+  arena.render(Math.max(0, battle.time - renderedTime), battle.time);
+  renderedTime = battle.time;
   document.querySelector("#status")!.textContent =
     `${battle.time.toFixed(1)}s · ${battle.projectiles.length} shots · ${arena.loadedEffects} effects · ${arena.loadedBuildings} buildings loaded`;
   document.querySelector("#buildings")!.textContent = battle.entities
@@ -113,6 +116,8 @@ function render(now: number) {
         `${e.team}: ${e.burrow!.phase} ${Math.round(e.burrow!.exposure * 100)}%`,
     )
     .join(" · ");
+  document.querySelector("#particles")!.textContent =
+    `${arena.particleCount} particles`;
   requestAnimationFrame(render);
 }
 requestAnimationFrame(render);
