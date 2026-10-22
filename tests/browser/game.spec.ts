@@ -1,4 +1,37 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
+
+async function backgroundAndReturn(page: Page) {
+  // Headless browsers keep tabs visible. Emulate the platform visibility event,
+  // while leaving all game state accessible only through read-only diagnostics.
+  await page.evaluate(() => {
+    Object.defineProperty(document, "hidden", {
+      configurable: true,
+      value: true,
+    });
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  const before = await page.evaluate(() => (window as any).__arena.state);
+  expect(before.paused).toBe(true);
+  expect(before.frameLoopRunning).toBe(false);
+  await page.waitForTimeout(350);
+  const after = await page.evaluate(() => (window as any).__arena.state);
+  expect(after.renderedFrames).toBe(before.renderedFrames);
+  expect(after.time).toBe(before.time);
+  expect(after.animationTime).toBe(before.animationTime);
+  await page.evaluate(() => {
+    delete (document as any).hidden;
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  await expect
+    .poll(() =>
+      page.evaluate(() => (window as any).__arena.state.renderedFrames),
+    )
+    .toBeGreaterThan(after.renderedFrames);
+  expect(await page.evaluate(() => (window as any).__arena.state.paused)).toBe(
+    true,
+  );
+}
+
 test("deck changes persist, battle deploys, pause and replay work", async ({
   page,
 }, info) => {
@@ -62,7 +95,7 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
   expect(tray!.y + tray!.height).toBeLessThanOrEqual(
     page.viewportSize()!.height + 2,
   );
-  await page.getByRole("button", { name: "Pause battle", exact: true }).click();
+  await backgroundAndReturn(page);
   await expect(
     page.getByRole("heading", { name: "Battle paused" }),
   ).toBeVisible();
@@ -85,6 +118,16 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
   ).toBeVisible();
   await page.getByRole("button", { name: "Watch replay", exact: true }).click();
   await expect(page.locator(".replay-controls")).toBeVisible();
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__arena.state.time))
+    .toBeGreaterThan(0);
+  await backgroundAndReturn(page);
+  await page
+    .getByRole("button", { name: "Resume replay", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Pause replay", exact: true }),
+  ).toBeVisible();
   await page.locator("#replay-speed").click();
   await expect(page.locator("#replay-speed")).toHaveText("2×");
   await page.locator("#replay-exit").click();

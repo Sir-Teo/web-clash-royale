@@ -141,6 +141,11 @@ let modalPausedBattle = false;
 let speed = 1;
 let accumulator = 0;
 let frameTime = performance.now();
+let frameHandle: number | undefined;
+let lastRenderTime = frameTime;
+let lastFpsTime = frameTime;
+let fpsFrames = 0;
+let animationTime = 0;
 let eventCursor = 0;
 let resultShown = false;
 let replayData: Replay | null = null;
@@ -455,11 +460,10 @@ function updateBattleUI(force = false) {
   if (screen === "battle" && battle.winner && !resultShown) showResult();
   if (screen === "replay" && replayData && battle.tick >= replayData.duration) {
     paused = true;
-    $("#replay-play").innerHTML = icon("rotate-ccw");
-    refreshIcons();
     if (replayRecord && !battle.winner)
       battle.finish(replayRecord.winner, "Replay complete");
   }
+  if (screen === "replay") syncReplayControl();
 }
 function selectCard(slot: number) {
   if (screen !== "battle" || paused || battle.winner) return;
@@ -527,9 +531,29 @@ function togglePause() {
     if (paused) audio.stopMusic();
     else audio.startMusic();
   } else {
-    $("#replay-play").innerHTML = icon(paused ? "play" : "pause");
-    refreshIcons();
+    syncReplayControl();
   }
+}
+function syncReplayControl() {
+  const action =
+    replayData && battle.tick >= replayData.duration
+      ? "restart"
+      : paused
+        ? "play"
+        : "pause";
+  const button = $("#replay-play");
+  if (button.dataset.action === action) return;
+  button.dataset.action = action;
+  button.innerHTML = icon(action === "restart" ? "rotate-ccw" : action);
+  button.setAttribute(
+    "aria-label",
+    action === "restart"
+      ? "Restart replay"
+      : action === "play"
+        ? "Resume replay"
+        : "Pause replay",
+  );
+  refreshIcons();
 }
 function showResult() {
   resultShown = true;
@@ -584,7 +608,7 @@ function playReplay(record: RecordEntry) {
   $(".mode-select").classList.add("hidden");
   $("#deploy-hint").classList.add("hidden");
   $(".replay-controls").classList.remove("hidden");
-  $("#replay-play").innerHTML = icon("pause");
+  syncReplayControl();
   $("#replay-speed").textContent = "1×";
   refreshDeck();
   updateBattleUI(true);
@@ -858,7 +882,7 @@ function processEvents() {
 try {
   arena = new Arena($("#arena-canvas"));
   arena.onContextLost = () => {
-    if (screen === "battle" && !paused) togglePause();
+    if (screen !== "lobby" && !paused) togglePause();
     toast("Graphics paused. Reload if the arena does not recover.");
   };
 } catch (error) {
@@ -1076,13 +1100,28 @@ document.addEventListener("keydown", (e) => {
     togglePause();
   }
 });
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) cancelPointer();
-  if (document.hidden && screen === "battle" && !paused && !battle.winner)
-    togglePause();
-  frameTime = performance.now();
+function suspendFrameLoop() {
+  cancelPointer();
+  if (screen !== "lobby" && !paused && !battle.winner) togglePause();
+  audio.stopMusic();
+  if (frameHandle !== undefined) cancelAnimationFrame(frameHandle);
+  frameHandle = undefined;
   accumulator = 0;
+}
+function resumeFrameLoop() {
+  if (document.hidden || frameHandle !== undefined) return;
+  frameTime = performance.now();
+  lastRenderTime = lastFpsTime = frameTime;
+  fpsFrames = 0;
+  accumulator = 0;
+  frameHandle = requestAnimationFrame(frame);
+}
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) suspendFrameLoop();
+  else resumeFrameLoop();
 });
+window.addEventListener("pagehide", suspendFrameLoop);
+window.addEventListener("pageshow", resumeFrameLoop);
 window.addEventListener("beforeunload", () => saveProfile(profile));
 
 lobby();
@@ -1090,6 +1129,8 @@ refreshIcons();
 if (!storageAvailable)
   toast("Browser storage is unavailable. Progress lasts for this session.");
 function frame(now: number) {
+  frameHandle = undefined;
+  if (document.hidden) return;
   const elapsed = (now - frameTime) / 1000;
   const delta = Math.min(0.5, elapsed);
   frameTime = now;
@@ -1110,16 +1151,34 @@ function frame(now: number) {
     if (ticks === 15) accumulator = 0;
     processEvents();
   }
-  arena.render(Math.min(delta, 0.1), now / 1000);
+  const idle = screen === "lobby" || paused || !!battle.winner;
+  if (!idle || now - lastRenderTime >= 1000 / 30 - 0.5) {
+    const renderDelta = Math.min((now - lastRenderTime) / 1000, 0.1);
+    lastRenderTime = now;
+    animationTime = screen === "lobby" ? now / 1000 : battle.time;
+    arena.render(
+      screen === "lobby" || battle.winner
+        ? renderDelta
+        : paused
+          ? 0
+          : renderDelta * speed,
+      animationTime,
+    );
+    frameCount++;
+    fpsFrames++;
+    if (now - lastFpsTime >= 1000) {
+      fps = Math.round((fpsFrames * 1000) / (now - lastFpsTime));
+      fpsFrames = 0;
+      lastFpsTime = now;
+    }
+  }
   if (now - lastUi > 90 && screen !== "lobby") {
     updateBattleUI();
     lastUi = now;
   }
-  frameCount++;
-  if (frameCount % 120 === 0) fps = Math.round(1 / Math.max(elapsed, 0.001));
-  requestAnimationFrame(frame);
+  frameHandle = requestAnimationFrame(frame);
 }
-requestAnimationFrame(frame);
+resumeFrameLoop();
 // A read-only diagnostics surface for browser checks and performance inspection.
 Object.defineProperty(window, "__arena", {
   value: {
@@ -1135,6 +1194,9 @@ Object.defineProperty(window, "__arena", {
         troops: battle.entities.filter((e) => e.kind === "troop").length,
         actions: battle.actions.length,
         fps,
+        renderedFrames: frameCount,
+        animationTime,
+        frameLoopRunning: frameHandle !== undefined,
         drawCalls: arena.renderer.info.render.calls,
         loadedEffects: arena.loadedEffects,
         loadedBuildings: arena.loadedBuildings,
