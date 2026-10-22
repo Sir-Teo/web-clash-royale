@@ -1,0 +1,334 @@
+{
+  "effects": {
+    "tower": {
+      "source": "TowerExplode",
+      "rubble": "Tower_destroyed_ground1",
+      "components": [
+        {
+          "emitter": "TargetDummy_planks",
+          "delay": 0.05
+        },
+        {
+          "emitter": "FireRingEmitter",
+          "delay": 0
+        },
+        {
+          "emitter": "TargetDummy_smoke",
+          "delay": 0.25
+        },
+        {
+          "emitter": "TowerExplode_rockEmitter",
+          "delay": 0
+        },
+        {
+          "emitter": "Big_rock_particle1",
+          "delay": 0
+        },
+        {
+          "emitter": "TargetDummy_planks2",
+          "delay": 0
+        }
+      ]
+    },
+    "king": {
+      "source": "King_player_die",
+      "rubble": "Tower_destroyed_ground2",
+      "components": [
+        {
+          "emitter": "TargetDummy_planks",
+          "delay": 0.05
+        },
+        {
+          "emitter": "FireRingEmitter",
+          "delay": 0
+        },
+        {
+          "emitter": "TargetDummy_smoke",
+          "delay": 0.25
+        },
+        {
+          "emitter": "TowerExplode_rockEmitter",
+          "delay": 0
+        },
+        {
+          "emitter": "Big_rock_particle1",
+          "delay": 0
+        },
+        {
+          "emitter": "TargetDummy_planks2",
+          "delay": 0
+        }
+      ]
+    }
+  },
+  "emitters": {
+    "TargetDummy_planks": {
+      "count": 13,
+      "emissionLife": [
+        0.13,
+        0.13
+      ],
+      "interval": [
+        0.002,
+        0.005
+      ],
+      "life": [
+        0.5,
+        1.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.1
+      ],
+      "speed": [
+        0.3333333333333333,
+        3.3333333333333335
+      ],
+      "height": 0.26666666666666666,
+      "verticalSpeed": [
+        3.3333333333333335,
+        10
+      ],
+      "gravity": -16.666666666666668,
+      "startScale": 0.7,
+      "endScale": 0.1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0.2,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "crate_particle_1",
+        "crate_particle_2",
+        "crate_particle_3"
+      ]
+    },
+    "FireRingEmitter": {
+      "count": 16,
+      "emissionLife": [
+        0.12,
+        0.25
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.2,
+        0.55
+      ],
+      "angle": [
+        1.7453292519943295,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0.06666666666666667
+      ],
+      "speed": [
+        2,
+        4
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0.3333333333333333,
+        5
+      ],
+      "gravity": 0,
+      "startScale": 1.1,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 0.05,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "FireParticle1",
+        "FireParticle2",
+        "FireParticle3"
+      ]
+    },
+    "TargetDummy_smoke": {
+      "count": 10,
+      "emissionLife": [
+        0.15,
+        0.15
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        1.1,
+        2.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0.06666666666666667
+      ],
+      "speed": [
+        0.16666666666666666,
+        0.5
+      ],
+      "height": 1.9666666666666666,
+      "verticalSpeed": [
+        1.6666666666666667,
+        3
+      ],
+      "gravity": -0.6666666666666666,
+      "startScale": 1.4,
+      "endScale": 0.01,
+      "fadeIn": 0,
+      "fadeOut": 0.4,
+      "inertia": 0,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "smoke_cloud_1"
+      ]
+    },
+    "TowerExplode_rockEmitter": {
+      "count": 23,
+      "emissionLife": [
+        0.35,
+        0.35
+      ],
+      "interval": [
+        0,
+        0.01
+      ],
+      "life": [
+        0.6,
+        2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.06666666666666667,
+        0.13333333333333333
+      ],
+      "speed": [
+        0,
+        2
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        10,
+        33.333333333333336
+      ],
+      "gravity": -116.66666666666667,
+      "startScale": 0.5,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Rock1Particle",
+        "towerExplode_wall1",
+        "towerExplode_wall2",
+        "towerExplode_wall3"
+      ]
+    },
+    "Big_rock_particle1": {
+      "count": 1,
+      "emissionLife": [
+        0.18,
+        0.18
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        1.9,
+        1.9
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        2.3333333333333335,
+        2.3333333333333335
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "gravity": 0.5,
+      "startScale": 0.8,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0.55,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "big_rock_particle1",
+        "big_rock_particle2"
+      ]
+    },
+    "TargetDummy_planks2": {
+      "count": 15,
+      "emissionLife": [
+        0.13,
+        0.13
+      ],
+      "interval": [
+        0.002,
+        0.005
+      ],
+      "life": [
+        2.5,
+        3
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.1
+      ],
+      "speed": [
+        0.3333333333333333,
+        1.6666666666666667
+      ],
+      "height": 0.13333333333333333,
+      "verticalSpeed": [
+        13.333333333333334,
+        23.333333333333332
+      ],
+      "gravity": -40,
+      "startScale": 0.7,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0.2,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "crate_particle_1",
+        "crate_particle_2",
+        "crate_particle_3"
+      ]
+    }
+  }
+}

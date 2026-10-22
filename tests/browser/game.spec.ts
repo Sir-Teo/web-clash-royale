@@ -44,7 +44,7 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
       () => page.evaluate(() => (window as any).__arena.state.loadedEffects),
       { timeout: 30000 },
     )
-    .toBe(18);
+    .toBe(31);
   await expect
     .poll(
       () => page.evaluate(() => (window as any).__arena.state.loadedBuildings),

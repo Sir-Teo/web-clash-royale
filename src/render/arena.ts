@@ -24,6 +24,8 @@ import type { ProjectileVisual } from "./projectiles";
 import { DeploymentPreview } from "./deployment";
 import { BuildingLibrary } from "./buildings";
 import type { BuildingSprite } from "./buildings";
+import { destroyedTowerSites, TOWER_SITES } from "../game/arena-layout";
+import { DestructionEffects } from "./destruction";
 interface Visual {
   object: T.Group;
   model?: Model;
@@ -50,6 +52,8 @@ export class Arena {
   private shots = new Map<number, ProjectileVisual>();
   private effects = new EffectLibrary();
   private buildings = new BuildingLibrary();
+  private destruction = new DestructionEffects(this.scene, this.effects);
+  private rubble = new Map<string, T.Mesh>();
   private impacts: { sprite: EffectSprite; start: number; life: number }[] = [];
   private particles: Particle[] = [];
   private waters: T.Mesh[] = [];
@@ -438,6 +442,9 @@ export class Arena {
     batchGeometry(r, [...this.waters, ...this.flags]);
   }
   setBattle(battle: Battle) {
+    this.destruction.clear();
+    for (const mesh of this.rubble.values()) this.scene.remove(mesh);
+    this.rubble.clear();
     this.showPlacement(null, null);
     this.deployment.clear();
     for (const v of this.units.values()) {
@@ -471,7 +478,14 @@ export class Arena {
     return this.buildings.assets.size;
   }
   get particleCount() {
-    return this.particles.length;
+    return this.particles.length + this.destruction.count;
+  }
+  get destructionState() {
+    return {
+      rubble: this.rubble.size,
+      particles: this.destruction.count,
+      time: this.destruction.time,
+    };
   }
   get placementState() {
     return this.placement
@@ -638,6 +652,33 @@ export class Arena {
     }
     const b = this.battle;
     if (!b) return;
+    this.destruction.update(dt, this.camera);
+    const ruins = destroyedTowerSites(b.entities);
+    const ruinKeys = new Set(ruins.map((s) => `${s.team}-${s.x}`));
+    for (const [key, mesh] of this.rubble)
+      if (!ruinKeys.has(key)) {
+        this.scene.remove(mesh);
+        this.rubble.delete(key);
+      }
+    for (const site of ruins) {
+      const key = `${site.team}-${site.x}`;
+      let mesh = this.rubble.get(key);
+      if (!mesh) {
+        mesh = this.buildings.rubble(site.king) ?? undefined;
+        if (!mesh) continue;
+        mesh.position.set(site.x - 9, 0.19, site.y - 16);
+        this.rubble.set(key, mesh);
+        this.scene.add(mesh);
+      }
+      // Ground artwork retains its authored projected proportions without the
+      // bottom half of a billboard intersecting the opaque arena floor.
+      mesh.rotation.x = -Math.PI / 2;
+      mesh.scale.y =
+        1 /
+        Math.abs(
+          new T.Vector3(0, 0, 1).applyQuaternion(this.camera.quaternion).y,
+        );
+    }
     for (const mesh of this.artwork)
       mesh.quaternion.copy(this.camera.quaternion);
     const alive = new Set<number>();
@@ -826,6 +867,7 @@ export class Arena {
       updateProjectile(shot, p, this.effects, this.camera, target);
       if (
         dt > 0 &&
+        !b.winner &&
         shot.object.visible &&
         ["fireball", "wizard", "baby-dragon"].includes(p.style) &&
         Math.random() < 0.6
@@ -905,7 +947,20 @@ export class Arena {
             spell ? 4 : 2,
           );
       }
-      if (event.type === "death")
+      if (
+        event.type === "death" &&
+        event.card === "tower" &&
+        this.effects.asset
+      ) {
+        const site = TOWER_SITES.find(
+          (s) => s.team === event.team && s.x === event.x && s.y === event.y,
+        );
+        this.destruction.burst(
+          !!site?.king,
+          new T.Vector3(event.x - 9, 0.1, event.y - 16),
+          b.seed ^ event.id,
+        );
+      } else if (event.type === "death")
         for (let i = 0; i < (event.card === "tower" ? 55 : 9); i++)
           this.particle(
             pos,
@@ -939,7 +994,7 @@ export class Arena {
     }
     this.particles = this.particles.filter((p) => p.life > 0);
     this.impacts = this.impacts.filter((impact) => {
-      const age = b.time - impact.start;
+      const age = this.destruction.time - impact.start;
       if (age >= impact.life) {
         this.scene.remove(impact.sprite.mesh);
         return false;
@@ -958,7 +1013,7 @@ export class Arena {
     sprite.mesh.position.copy(position);
     sprite.mesh.quaternion.copy(this.camera.quaternion);
     this.scene.add(sprite.mesh);
-    this.impacts.push({ sprite, start: this.battle.time, life });
+    this.impacts.push({ sprite, start: this.destruction.time, life });
     return sprite;
   }
   private updateUnit(v: Visual, e: Entity, dt: number, time: number) {
@@ -1102,6 +1157,7 @@ export class Arena {
         o.geometry.dispose();
     });
     this.deployment.clear();
+    this.destruction.clear();
     this.placementFeedback.remove();
     this.sprites.destroy();
     this.effects.destroy();

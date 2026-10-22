@@ -8,6 +8,8 @@ Combat includes cancellable attack windups, defensive building pulls, homing sho
 
 This version supports AI opponents. Online multiplayer, the full live card roster and current balance parity are not implemented.
 
+Destroyed towers leave native rubble for the rest of the battle. Their collapse uses original fire, smoke, flying plank and wall-fragment artwork. Debris pauses with the match and finishes settling after victory; replay seeking reconstructs the correct ruins.
+
 ## Development
 
 ```sh
@@ -22,6 +24,8 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 `npm run assets` refreshes cards, renders and audio. `npm run assets:sprites` imports complete native animation sequences and lossless textures; `npm run assets:scenery` reconstructs tower and arena textures from the retained metadata. No asset generation is needed for normal development.
 
 `npm run assets:combat` regenerates combat traits from retained historical CSVs. `npm run assets:effects` imports the original projectile and electrical-effect clips. `npm run assets:buildings` imports both teams’ Cannon, Tesla and layered King Tower timelines. Development inspection pages are available at `/tests/fixtures/animations.html`, `/tests/fixtures/effects.html`, `/tests/fixtures/buildings.html` and `/tests/fixtures/combat.html`; they are excluded from the production build.
+
+`npm run assets:destruction` regenerates tower-collapse compositions from retained client tables and imports their native particle clips.
 
 ## Phone play
 

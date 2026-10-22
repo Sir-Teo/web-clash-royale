@@ -7,6 +7,7 @@ let battle: Battle,
   playing = false,
   elapsed = 0,
   renderedTime = 0,
+  extraVisualTime = 0,
   last = performance.now();
 function cast(id: CardId, team: Team, x: number, y: number) {
   battle.players[team].elixir = 10;
@@ -28,6 +29,7 @@ function setup() {
   playing = false;
   elapsed = 0;
   renderedTime = 0;
+  extraVisualTime = 0;
   document.querySelector("#play")!.textContent = "Play";
   battle = new Battle({ seed: 12, ai: false });
   for (const t of battle.entities) t.active = false;
@@ -35,7 +37,14 @@ function setup() {
     .value;
   (document.querySelector("#attackers") as HTMLButtonElement).hidden =
     scenario !== "burrow";
-  for (const id of ["wake", "princess", "king-hits"])
+  for (const id of [
+    "wake",
+    "princess",
+    "king-hits",
+    "destroy-king",
+    "rebuild",
+    "destruction",
+  ])
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king";
   if (scenario === "volley") {
@@ -95,6 +104,16 @@ document.querySelector("#princess")!.addEventListener("click", () => {
     cast("zap", tower.team === "blue" ? "red" : "blue", tower.x, tower.y);
   }
 });
+document.querySelector("#destroy-king")!.addEventListener("click", () => {
+  const king = battle.entities.find((e) => e.king && e.team === "red");
+  if (king) {
+    king.hp = 1;
+    cast("zap", "blue", king.x, king.y);
+  }
+});
+document
+  .querySelector("#rebuild")!
+  .addEventListener("click", () => arena.setBattle(battle));
 document.querySelector("#attackers")!.addEventListener("click", () => {
   const attackers = battle.entities.filter(
     (e) => e.kind === "troop" && e.hp > 0,
@@ -111,12 +130,14 @@ document.querySelector("#attackers")!.addEventListener("click", () => {
       }
     }
 });
-document.querySelector("#step")!.addEventListener("click", () => {
-  for (let i = 0; i < 3; i++) battle.step();
-});
-document.querySelector("#second")!.addEventListener("click", () => {
-  for (let i = 0; i < 30; i++) battle.step();
-});
+function advance(ticks: number) {
+  for (let i = 0; i < ticks; i++) {
+    if (battle.winner) extraVisualTime += STEP;
+    else battle.step();
+  }
+}
+document.querySelector("#step")!.addEventListener("click", () => advance(3));
+document.querySelector("#second")!.addEventListener("click", () => advance(30));
 document.querySelector("#play")!.addEventListener("click", () => {
   playing = !playing;
   document.querySelector("#play")!.textContent = playing ? "Pause" : "Play";
@@ -128,11 +149,15 @@ function render(now: number) {
   if (playing) {
     elapsed += delta;
     while (elapsed >= STEP) {
-      battle.step();
+      advance(1);
       elapsed -= STEP;
     }
   }
-  arena.render(Math.max(0, battle.time - renderedTime), battle.time);
+  arena.render(
+    Math.max(0, battle.time - renderedTime) + extraVisualTime,
+    battle.time,
+  );
+  extraVisualTime = 0;
   renderedTime = battle.time;
   document.querySelector("#status")!.textContent =
     `${battle.time.toFixed(1)}s · ${battle.projectiles.length} shots · ${arena.loadedEffects} effects · ${arena.loadedBuildings} buildings loaded`;
@@ -154,6 +179,9 @@ function render(now: number) {
     .join(" · ");
   document.querySelector("#king-hits")!.textContent =
     `${battle.events.filter((e) => e.type === "hit" && e.card === undefined).length} tower hits`;
+  const destruction = arena.destructionState;
+  document.querySelector("#destruction")!.textContent =
+    `${destruction.rubble} ruins · ${destruction.particles} debris · ${destruction.time.toFixed(1)}s visual`;
   requestAnimationFrame(render);
 }
 requestAnimationFrame(render);

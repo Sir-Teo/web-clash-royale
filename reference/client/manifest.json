@@ -1,0 +1,19 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "directory": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/csv_client/",
+  "files": [
+    {
+      "path": "reference/client/effects.csv",
+      "sha256": "22591ef669cb9af6535a10caae5b7f7f8b5b79c81630aeb3381a04bfef298985"
+    },
+    {
+      "path": "reference/client/particle_emitters.csv",
+      "sha256": "5d086e26d80b8a50be2c99b84c17057c25d402159d9721c9b256cc50f0c2e0f6"
+    }
+  ],
+  "output": {
+    "path": "src/render/destruction-data.json",
+    "sha256": "4e4f9431cc5243d1f9c2b8700c597907c663a437ebf02561e492ae7cd076ee93"
+  }
+}

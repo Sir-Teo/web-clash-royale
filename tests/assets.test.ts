@@ -67,9 +67,10 @@ describe("bundled game artwork", () => {
     for (const t of manifest.textures)
       expect(digest(`public/assets/effects/${t.file}`)).toBe(t.sha256);
     const data = json("public/assets/effects/effects.json");
-    expect(Object.keys(data.clips)).toHaveLength(18);
+    expect(Object.keys(data.clips)).toHaveLength(31);
     for (const clip of Object.values(data.clips) as any[]) {
       expect(clip.frames.length).toBeGreaterThan(0);
+      expect(clip.bounds.every(Number.isFinite)).toBe(true);
       for (const frame of clip.frames)
         for (const part of data.frames[frame]) {
           expect(part.matrix.every(Number.isFinite)).toBe(true);
@@ -87,6 +88,12 @@ describe("bundled game artwork", () => {
     }
     for (const file of json("reference/logic/manifest.json").files)
       expect(digest(file.path)).toBe(file.sha256);
+    const client = json("reference/client/manifest.json");
+    for (const file of [...client.files, client.output])
+      expect(digest(file.path)).toBe(file.sha256);
+    const destruction = json(client.output.path);
+    for (const emitter of Object.values(destruction.emitters) as any[])
+      for (const name of emitter.clips) expect(data.clips[name]).toBeDefined();
   });
   it("matches every imported card, character and sound to its recorded hash", () => {
     const manifest = json("public/assets/manifest.json");

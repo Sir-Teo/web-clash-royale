@@ -10,6 +10,7 @@ import {
   ARROWS_WAVE_GAP,
   KING_ACTIVATION_TIME,
 } from "./combat";
+import { TOWER_SITES } from "./arena-layout";
 export type Team = "blue" | "red";
 export type Mode = "classic" | "training" | "double";
 export const STEP = 1 / 30;
@@ -172,11 +173,8 @@ export class Battle {
       };
     };
     this.players = { blue: player(this.deck), red: player(this.enemyDeck) };
-    for (const team of ["red", "blue"] as Team[]) {
-      this.makeTower(team, 4, team === "blue" ? 26 : 6, false, "left");
-      this.makeTower(team, 14, team === "blue" ? 26 : 6, false, "right");
-      this.makeTower(team, 9, team === "blue" ? 29.5 : 2.5, true);
-    }
+    for (const site of TOWER_SITES)
+      this.makeTower(site.team, site.x, site.y, site.king, site.lane);
   }
   private validateDeck(deck: CardId[]) {
     if (

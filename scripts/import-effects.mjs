@@ -49,6 +49,9 @@ function flatten(ref, frame, matrix = identity, color = neutral, depth = 0) {
   );
 }
 
+const destruction = JSON.parse(
+  await readFile("src/render/destruction-data.json", "utf8"),
+);
 const exports = [
   "projectile_arrow_basic",
   "projectile_arrow_basic_enemy",
@@ -68,6 +71,7 @@ const exports = [
   "fireball_trail1",
   "explosion_cloud_1",
   "Smoke_puff_01",
+  ...new Set(Object.values(destruction.emitters).flatMap((e) => e.clips)),
 ];
 for (const name of exports) {
   const ref = data.names[name],
@@ -85,7 +89,7 @@ for (const name of exports) {
     return index;
   });
   const bounds = [Infinity, Infinity, -Infinity, -Infinity];
-  for (const part of frames[sequence[0]])
+  for (const part of [...new Set(sequence)].flatMap((index) => frames[index]))
     for (const polygon of data.shapes[part.shape])
       for (const [x, y] of polygon.xy) {
         const m = part.matrix,

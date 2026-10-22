@@ -1200,6 +1200,7 @@ Object.defineProperty(window, "__arena", {
         drawCalls: arena.renderer.info.render.calls,
         loadedEffects: arena.loadedEffects,
         loadedBuildings: arena.loadedBuildings,
+        destruction: arena.destructionState,
         placement: arena.placementState,
         loadedAnimations: arena.loadedAnimations,
       };

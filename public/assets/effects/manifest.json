@@ -3,7 +3,7 @@
   "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
   "version": "1.8.0",
   "metadataSha256": "1a9b0a2efe99578cd03fb9d8673ddb042aa067ba9f9fc0d3a253e15c2e9c7b7c",
-  "dataSha256": "f5dbe69bdf5a764affed3177e7e387d9e000f3fd33ecf6524326599b5f0fff66",
+  "dataSha256": "e24b1f67ca1db23f2dd14aaeed22c7a307e06c1e2604ce08313cc8de20aca749",
   "textures": [
     {
       "file": "effects-0.webp",
@@ -11,6 +11,6 @@
       "originalSha256": "9f59f5631c5dc7977fff2e45f8de84f9a55c4ff17903eea177e95d8161b3524c"
     }
   ],
-  "clips": 18,
-  "frames": 528
+  "clips": 31,
+  "frames": 1281
 }

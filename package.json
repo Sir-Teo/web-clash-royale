@@ -16,6 +16,7 @@
     "assets:scenery": "node scripts/compose-scene.mjs",
     "assets:combat": "node scripts/import-combat.mjs",
     "assets:effects": "node scripts/import-effects.mjs",
+    "assets:destruction": "node scripts/import-destruction.mjs && npm run assets:effects",
     "assets:buildings": "node scripts/import-buildings.mjs"
   },
   "dependencies": {

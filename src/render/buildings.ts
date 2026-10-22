@@ -83,6 +83,17 @@ export class BuildingLibrary {
     }
     return sprite;
   }
+  rubble(king: boolean) {
+    const asset = this.assets.get("king");
+    if (!asset) return null;
+    const clip = asset.data.clips[king ? "rubble-2" : "rubble-1"];
+    const mesh = new T.Mesh(
+      spriteGeometry(asset, clip.frames[0]),
+      asset.materials,
+    );
+    mesh.renderOrder = 0;
+    return mesh;
+  }
   frame(sprite: BuildingSprite, index: number) {
     const frame =
       sprite.clip.frames[

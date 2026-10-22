@@ -28,7 +28,7 @@ try {
   await page.reload();
   await page.waitForFunction(
     () =>
-      window.__arena?.state.loadedEffects === 18 &&
+      window.__arena?.state.loadedEffects === 31 &&
       window.__arena?.state.loadedBuildings === 3 &&
       window.__arena?.state.loadedAnimations === 18,
   );
