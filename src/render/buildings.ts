@@ -10,6 +10,10 @@ export interface BuildingSprite {
   asset: SpriteAsset;
   clip: AnimationClip & { labels: Record<string, number> };
   frame: number;
+  princess?: {
+    front: T.Mesh<T.BufferGeometry, T.MeshBasicMaterial[]>;
+    height: number;
+  };
   king?: {
     team: Team;
     turret: T.Mesh<T.BufferGeometry, T.MeshBasicMaterial[]>;
@@ -19,6 +23,7 @@ export interface BuildingSprite {
 }
 export class BuildingLibrary {
   assets = new Map<string, SpriteAsset>();
+  private princessAsset?: SpriteAsset;
   async load() {
     const loader = new T.TextureLoader();
     await Promise.all(
@@ -59,14 +64,46 @@ export class BuildingLibrary {
     );
   }
   make(id: string, team: Team): BuildingSprite | null {
-    const asset = this.assets.get(id);
+    let asset = this.assets.get(id === "princess" ? "king" : id);
     if (!asset) return null;
-    const clip = asset.data.clips[team] as BuildingSprite["clip"],
+    if (id === "princess") {
+      if (!this.princessAsset) {
+        const base = spriteGeometry(
+          asset,
+          asset.data.clips["princess-blue"].frames[0],
+        );
+        base.computeBoundingBox();
+        const width = base.boundingBox!.max.x - base.boundingBox!.min.x;
+        // Both tower types share the original sheet and materials, while their
+        // frame geometry uses each tower's world scale and authored origin.
+        this.princessAsset = {
+          ...asset,
+          scale: (asset.scale * 2.85) / width,
+          geometry: new Map(),
+        };
+      }
+      asset = this.princessAsset;
+    }
+    const key = id === "princess" ? `princess-${team}` : team;
+    const clip = asset.data.clips[key] as BuildingSprite["clip"],
       frame = clip.frames[0];
     const mesh = new T.Mesh(spriteGeometry(asset, frame), asset.materials);
     mesh.renderOrder = 1;
     mesh.userData.billboard = true;
     const sprite: BuildingSprite = { mesh, asset, clip, frame };
+    if (id === "princess") {
+      const front = new T.Mesh(
+        spriteGeometry(asset, asset.data.clips[`${key}-front`].frames[0]),
+        asset.materials,
+      );
+      front.position.z = 0.02;
+      front.renderOrder = 1;
+      mesh.add(front);
+      sprite.princess = {
+        front,
+        height: asset.data.attachedCharacterHeight ?? 2.2,
+      };
+    }
     if (id === "king") {
       const makeLayer = (name: string, depth: number) => {
         const clip = asset.data.clips[`${team}-${name}`];
@@ -194,6 +231,8 @@ export class BuildingLibrary {
     );
   }
   destroy() {
+    this.princessAsset?.geometry.forEach((g) => g.dispose());
+    this.princessAsset = undefined;
     for (const asset of this.assets.values()) {
       asset.textures.forEach((t) => t.dispose());
       asset.materials.forEach((m) => m.dispose());

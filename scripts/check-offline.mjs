@@ -31,7 +31,8 @@ try {
       window.__arena?.state.loadedEffects === 44 &&
       window.__arena?.state.loadedBuildings === 3 &&
       window.__arena?.state.loadedAnimations === 19 &&
-      window.__arena?.state.nativeTowerPrincesses === 4,
+      window.__arena?.state.nativeTowerPrincesses === 4 &&
+      window.__arena?.state.nativePrincessTowers === 4,
   );
   console.log(
     "Offline title:",

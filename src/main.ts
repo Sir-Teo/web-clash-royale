@@ -1204,6 +1204,7 @@ Object.defineProperty(window, "__arena", {
         placement: arena.placementState,
         loadedAnimations: arena.loadedAnimations,
         nativeTowerPrincesses: arena.nativeTowerPrincesses,
+        nativePrincessTowers: arena.nativePrincessTowers,
       };
     },
     project: (x: number, y: number) => {

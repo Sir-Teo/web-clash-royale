@@ -2,6 +2,12 @@
   "source": "https://github.com/smlbiobot/cr",
   "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
   "version": "1.8.1",
+  "sourceTables": [
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    }
+  ],
   "files": [
     {
       "id": "tesla",
@@ -35,7 +41,7 @@
       "id": "king",
       "source": "building_tower",
       "metadataSha256": "0096da89499bf03437a1caa2a88c811b293a5a3067fe571e1ef12bafadbf7962",
-      "dataSha256": "d181398d0942e9a6899477009d730dc620aae014e3fe2026b240398d572693d2",
+      "dataSha256": "46a5e3c8d756b1a3b75215a0e92a91d4fcb3df1d90d1f87c3adad1fc0762b8a7",
       "textures": [
         {
           "file": "king-0.webp",
@@ -43,7 +49,7 @@
           "originalSha256": "e031c4ae5c2b586a464a2c260cf13715f989651c03c43e5d993e41a53161cf47"
         }
       ],
-      "frames": 449
+      "frames": 453
     }
   ]
 }

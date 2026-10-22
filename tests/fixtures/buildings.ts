@@ -1,9 +1,10 @@
 import * as T from "three";
 import { BuildingLibrary } from "../../src/render/buildings";
-import { spriteGeometry } from "../../src/render/sprites";
+import { spriteGeometry, SpriteLibrary } from "../../src/render/sprites";
 import type { Entity, Team } from "../../src/game/engine";
 const library = new BuildingLibrary(),
   host = document.querySelector("main")!;
+const characters = new SpriteLibrary();
 const renderer = new T.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(1);
 renderer.outputColorSpace = T.SRGBColorSpace;
@@ -13,8 +14,52 @@ scene.background = new T.Color("#19382c");
 const camera = new T.OrthographicCamera(-18, 18, 12, -12, 0.1, 100);
 camera.position.z = 20;
 await library.load();
-function setup(id: string) {
+async function setup(id: string) {
   scene.clear();
+  if (id === "princess") {
+    if (!characters.assets.size) await characters.load();
+    document.querySelector(".labels")!.innerHTML =
+      "<span>Blue and red: source base · complete layers</span>";
+    for (const [i, team] of (["blue", "red"] as const).entries()) {
+      for (const complete of [false, true]) {
+        const tower = library.make("princess", team)!;
+        tower.princess!.front.visible = complete;
+        if (complete) {
+          const princess = characters.make("tower-princess")!;
+          characters.update(
+            princess,
+            {
+              id: i,
+              team,
+              card: "tower",
+              x: 0,
+              y: 0,
+              attack: 0,
+              interval: 0.8,
+              move: 0,
+              deploy: 0,
+            },
+            undefined,
+            false,
+            0,
+            camera,
+          );
+          // Match the arena camera's vertical projection of the sourced height.
+          princess.mesh.position.set(
+            0,
+            (tower.princess!.height * 29) / Math.hypot(40, 29),
+            0.01,
+          );
+          tower.mesh.add(princess.mesh);
+        }
+        tower.mesh.scale.setScalar(2.5);
+        tower.mesh.position.set(complete ? 7 : -7, i ? -5.5 : 5.5, 0);
+        scene.add(tower.mesh);
+      }
+    }
+    document.title = "Princess Tower: original base, character and foreground";
+    return;
+  }
   if (id === "king-barrel") {
     document.querySelector(".labels")!.innerHTML =
       "<span>Source direction frames: 0 · 9 · 18 · 27</span>";

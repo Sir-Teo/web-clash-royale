@@ -3,6 +3,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import sharp from "sharp";
 import { parseSC } from "./lib/sc.mjs";
+import { csvRows } from "./lib/csv.mjs";
 const output = "public/assets/buildings";
 await mkdir(output, { recursive: true });
 const sha256 = (b) => createHash("sha256").update(b).digest("hex");
@@ -22,11 +23,17 @@ const composeColor = (parent, child) => [
   ...[4, 5, 6].map((i) => (parent[i] * child[i]) / 255),
 ];
 const round = (n) => Math.round(n * 100000) / 100000;
+const buildingsPath = "reference/logic/buildings.csv";
+const buildingTable = await readFile(buildingsPath);
+const princessRow = csvRows(buildingTable.toString()).find(
+  (row) => row.Name === "PrincessTower",
+);
 
 const manifest = {
   source: "https://github.com/smlbiobot/cr",
   commit: "7fc7687e6de74690e902543ee4b59f562121e225",
   version: "1.8.1",
+  sourceTables: [{ path: buildingsPath, sha256: sha256(buildingTable) }],
   files: [],
 };
 for (const [id, name] of Object.entries({
@@ -99,6 +106,10 @@ for (const [id, name] of Object.entries({
           red: "KingTower_red",
           "rubble-1": "Tower_destroyed_ground1",
           "rubble-2": "Tower_destroyed_ground2",
+          "princess-blue": "StarTower_base_blue",
+          "princess-red": "StarTower_base_red",
+          "princess-blue-front": "StarTower_top_blue",
+          "princess-red-front": "StarTower_top_red",
         }
       : Object.fromEntries(
           Object.keys(data.names).map((name) => [
@@ -221,6 +232,12 @@ for (const [id, name] of Object.entries({
   }
   const json = JSON.stringify({
     version: 2,
+    ...(id === "king"
+      ? {
+          attachedCharacterHeight:
+            Number(princessRow.AttachedCharacterHeight) / 1000,
+        }
+      : {}),
     textures,
     bounds,
     anchor: [0, 0],

@@ -7,6 +7,10 @@ describe("bundled game artwork", () => {
   it("preserves both teams' building directions and Tesla's labeled state transitions", () => {
     const manifest = json("public/assets/buildings/manifest.json");
     expect(manifest.files).toHaveLength(3);
+    for (const source of manifest.sourceTables)
+      expect(
+        createHash("sha256").update(readFileSync(source.path)).digest("hex"),
+      ).toBe(source.sha256);
     for (const file of manifest.files) {
       const digest = (path: string) =>
         createHash("sha256").update(readFileSync(path)).digest("hex");
@@ -22,12 +26,21 @@ describe("bundled game artwork", () => {
         );
       const data = json(`public/assets/buildings/${file.id}.json`);
       if (file.id === "king") {
+        expect(data.attachedCharacterHeight).toBe(2.2);
         expect(data.clips["blue-sleep"].frames).toHaveLength(86);
         expect(data.clips["red-sleep"].frames).toHaveLength(99);
         expect(data.clips["blue-front"].frames).toHaveLength(86);
         expect(data.clips["red-base"].frames).toHaveLength(99);
-        for (const team of ["blue", "red"])
+        for (const team of ["blue", "red"]) {
           expect(data.clips[`${team}-turret`].frames).toHaveLength(36);
+          for (const layer of ["", "-front"]) {
+            const clip = data.clips[`princess-${team}${layer}`];
+            expect(clip.frames).toHaveLength(1);
+            expect(clip.source).toBe(
+              `StarTower_${layer ? "top" : "base"}_${team}`,
+            );
+          }
+        }
       }
       for (const team of ["blue", "red"]) {
         const clip = data.clips[team];
@@ -174,6 +187,7 @@ describe("bundled game artwork", () => {
           ),
         ).toBe(true);
       if (file.id === "tower-princess") {
+        expect(data.anchor).toEqual([0, 0]);
         expect(Object.keys(data.clips)).toHaveLength(54);
         for (const [name, clip] of Object.entries(data.clips) as [
           string,

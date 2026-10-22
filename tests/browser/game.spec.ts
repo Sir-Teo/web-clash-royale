@@ -54,12 +54,13 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
   await expect
     .poll(
       () =>
-        page.evaluate(
-          () => (window as any).__arena.state.nativeTowerPrincesses,
-        ),
+        page.evaluate(() => [
+          (window as any).__arena.state.nativeTowerPrincesses,
+          (window as any).__arena.state.nativePrincessTowers,
+        ]),
       { timeout: 30000 },
     )
-    .toBe(4);
+    .toEqual([4, 4]);
   await page.getByRole("button", { name: "Cards 24", exact: true }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.locator('[data-edit-slot="0"]').click();

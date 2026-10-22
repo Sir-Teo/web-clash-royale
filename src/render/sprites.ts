@@ -19,6 +19,7 @@ export interface SpriteData {
   textures: { file: string; width: number; height: number }[];
   bounds: [number, number, number, number];
   anchor: [number, number];
+  attachedCharacterHeight?: number;
   shapes: Record<number, Polygon[]>;
   clips: Record<string, AnimationClip>;
   frames: FramePart[][];

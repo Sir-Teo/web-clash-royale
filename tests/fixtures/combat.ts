@@ -204,7 +204,7 @@ function render(now: number) {
   extraVisualTime = 0;
   renderedTime = battle.time;
   document.querySelector("#status")!.textContent =
-    `${battle.time.toFixed(1)}s · ${battle.projectiles.length} shots · ${arena.loadedEffects} effects · ${arena.loadedBuildings} buildings loaded · ${arena.nativeTowerPrincesses} native Princesses`;
+    `${battle.time.toFixed(1)}s · ${battle.projectiles.length} shots · ${arena.loadedEffects} effects · ${arena.loadedBuildings} buildings loaded · ${arena.nativeTowerPrincesses} native Princesses · ${arena.nativePrincessTowers} layered towers`;
   document.querySelector("#buildings")!.textContent = battle.entities
     .filter((e) => e.burrow)
     .map(

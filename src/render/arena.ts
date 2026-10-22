@@ -477,6 +477,9 @@ export class Arena {
       (v) => asset && v.archer?.asset === asset,
     ).length;
   }
+  get nativePrincessTowers() {
+    return [...this.units.values()].filter((v) => v.building?.princess).length;
+  }
   get loadedEffects() {
     return Object.keys(this.effects.asset?.data.clips ?? {}).length;
   }
@@ -705,8 +708,10 @@ export class Arena {
           `${e.king ? "king" : "princess-base"}-${e.team}`,
         );
         if (
-          e.king &&
-          (buildingSprite = this.buildings.make("king", e.team) ?? undefined)
+          e.kind === "tower" &&
+          (buildingSprite =
+            this.buildings.make(e.king ? "king" : "princess", e.team) ??
+            undefined)
         ) {
           object = new T.Group();
           object.add(buildingSprite.mesh);
@@ -733,25 +738,6 @@ export class Arena {
             }),
           );
           object.add(art);
-          if (!e.king) {
-            const archer =
-              this.sprites.make("tower-princess") ??
-              this.sprites.make("archers");
-            if (archer) {
-              towerArcher = archer;
-              archer.mesh.position.set(0, 1.6, -0.15);
-              archer.mesh.quaternion.copy(this.camera.quaternion);
-              object.add(archer.mesh);
-              this.sprites.update(
-                archer,
-                { ...e, attack: 0 },
-                undefined,
-                false,
-                time,
-                this.camera,
-              );
-            }
-          }
         } else if (
           e.kind === "building" &&
           (buildingSprite = this.buildings.make(e.card, e.team) ?? undefined)
@@ -804,6 +790,24 @@ export class Arena {
           } else {
             model = troopModel(e.card as CardId, e.team);
             object = model.group;
+          }
+        }
+        if (e.kind === "tower" && !e.king) {
+          const archer =
+            this.sprites.make("tower-princess") ?? this.sprites.make("archers");
+          if (archer) {
+            towerArcher = archer;
+            archer.mesh.position.set(0, 1.6, -0.15);
+            if (buildingSprite?.princess) {
+              // Preserve screen placement in the tower's billboard plane, with
+              // the character between the native base and front battlements.
+              archer.mesh.position.set(0, buildingSprite.princess.height, 0);
+              archer.mesh.position.applyQuaternion(
+                this.camera.quaternion.clone().invert(),
+              );
+              archer.mesh.position.z = 0.01;
+              buildingSprite.mesh.add(archer.mesh);
+            } else object.add(archer.mesh);
           }
         }
         this.scene.add(object);
@@ -1083,6 +1087,7 @@ export class Arena {
     if (v.archer) {
       const target = this.battle?.entities.find((t) => t.id === e.target);
       this.sprites.update(v.archer, e, target, false, time, this.camera);
+      if (v.building?.princess) v.archer.mesh.quaternion.identity();
     }
     if (v.art) {
       v.art.quaternion.copy(this.camera.quaternion);

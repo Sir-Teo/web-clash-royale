@@ -313,7 +313,7 @@
       "id": "tower-princess",
       "source": "chr_princess",
       "metadataSha256": "4efbc493b84ef3638642a2cacf21d63bfcb1a77927afae5719c56d64e3307db9",
-      "dataSha256": "3eaa2f0f73389f503e4805927ac89c121f35af19fcf1e69da791dec43f3a2a71",
+      "dataSha256": "bbc3b8cb1188c1c1f12864b85d85e194643f7203c97fdf145cfc7d3ea2a3c177",
       "textures": [
         {
           "file": "tower-princess-0.webp",

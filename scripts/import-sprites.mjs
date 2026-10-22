@@ -193,7 +193,10 @@ for (const [id, source] of Object.entries(sources)) {
     version: 2,
     textures,
     bounds,
-    anchor: [(bounds[0] + bounds[2]) / 2, bounds[3] - 2],
+    anchor:
+      id === "tower-princess"
+        ? [0, 0]
+        : [(bounds[0] + bounds[2]) / 2, bounds[3] - 2],
     shapes,
     clips,
     frames,
