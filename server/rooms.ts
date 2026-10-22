@@ -23,6 +23,7 @@ type Peer = {
   budget: number;
   budgetAt: number;
   alive: boolean;
+  lastPong: number;
 };
 type Player = {
   team: Team;
@@ -57,9 +58,26 @@ const validName = (name: unknown): name is string =>
   name.length <= 18 &&
   !/[\u0000-\u001f\u007f]/.test(name);
 const teams: Team[] = ["blue", "red"];
+function tracePeer(peer: Peer, event: string, details: object = {}) {
+  if (process.env.ARENA_NETWORK_TRACE !== "1") return;
+  console.info(
+    "Room transport",
+    JSON.stringify({
+      at: Date.now(),
+      event,
+      team: peer.player?.team,
+      phase: peer.room?.phase,
+      buffered: peer.ws.bufferedAmount,
+      lastPongAgo: Math.round(performance.now() - peer.lastPong),
+      lastMessageAgo: Math.round(performance.now() - peer.budgetAt),
+      ...details,
+    }),
+  );
+}
 const send = (peer: Peer | undefined, message: ServerMessage) => {
   if (!peer || peer.ws.readyState !== WebSocket.OPEN) return;
   if (peer.ws.bufferedAmount > 512_000) {
+    tracePeer(peer, "backpressure-terminate");
     peer.ws.terminate();
     return;
   }
@@ -148,6 +166,7 @@ export function attachRooms(
     peer.player = p;
     p.peer = peer;
     p.disconnectedAt = 0;
+    tracePeer(peer, "welcome");
     send(peer, {
       type: "welcome",
       code: r.code,
@@ -330,16 +349,19 @@ export function attachRooms(
       budget: 40,
       budgetAt: performance.now(),
       alive: true,
+      lastPong: performance.now(),
     };
     peers.add(peer);
     ws.on("pong", () => {
       peer.alive = true;
+      peer.lastPong = performance.now();
     });
     ws.on("message", (data, binary) => {
       const now = performance.now();
       peer.budget = Math.min(40, peer.budget + (now - peer.budgetAt) * 0.02);
       peer.budgetAt = now;
       if (binary || --peer.budget < 0) {
+        tracePeer(peer, "invalid-or-excessive-messages", { binary });
         ws.close(1008, "Too many messages");
         return;
       }
@@ -349,8 +371,15 @@ export function attachRooms(
         fail(peer, "Invalid message.");
       }
     });
-    ws.on("error", () => ws.terminate());
-    ws.on("close", () => {
+    ws.on("error", (error) => {
+      tracePeer(peer, "socket-error", { message: error.message.slice(0, 120) });
+      ws.terminate();
+    });
+    ws.on("close", (code, reason) => {
+      tracePeer(peer, "close", {
+        code,
+        reason: reason.toString().slice(0, 120),
+      });
       remove(peer, false);
       peers.delete(peer);
     });
@@ -444,8 +473,10 @@ export function attachRooms(
   }, 1000 / 30);
   const heartbeat = setInterval(() => {
     for (const p of peers) {
-      if (!p.alive) p.ws.terminate();
-      else {
+      if (!p.alive) {
+        tracePeer(p, "heartbeat-terminate");
+        p.ws.terminate();
+      } else {
         p.alive = false;
         p.ws.ping();
       }

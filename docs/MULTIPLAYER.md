@@ -50,3 +50,5 @@ The transport uses bounded messages, rate limits, connection limits, heartbeat d
 ## Verification
 
 `tests/network.test.ts` opens real WebSocket connections to an ephemeral server and checks synchronization, hidden hands, forged/duplicate moves, deck/version validation, multiple-room isolation, ready checks, reconnect credentials and disconnect forfeits. `tests/browser/multiplayer.spec.ts` plays with two browser contexts through the UI, checks both perspectives, reload/rejoin, surrender, friendly rewards and the red-side replay. It runs on desktop Chromium, phone Chromium and phone WebKit.
+
+For connection diagnosis, start the server with `ARENA_NETWORK_TRACE=1 npm start`. It logs canonical team, connection events, heartbeat/message age and buffered bytes; it does not log reconnect tokens or complete battle snapshots. The CI browser job enables this switch and saves a compact socket timeline alongside any failed test's trace.

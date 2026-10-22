@@ -208,3 +208,9 @@ The production offline reload starts an AI battle, renders native text chat with
 ## Card rarity audit
 
 Knight and Tesla were incorrectly marked Rare; both now use Common, matching `reference/logic/spells_characters.csv` and `spells_buildings.csv`. All 24 roster rarities match the retained spell tables (the Archers card maps to the source `Archer` row). A production phone check opens both card details and verifies their Common labels/classes. The native card fixture passes in desktop Chromium and phone Chromium/WebKit, and type checking/build pass. Combat values and replay rules are unchanged.
+
+## CI transport investigation
+
+The quick-chat CI run exposed the same 15-second startup assumption in the initial two-browser setup. Initial loads and invite navigation now share the explicit 60-second graphics-readiness helper; the local production multiplayer rerun passes. The subsequent rarity commit's CI run reached battle but forfeited the reloading player during a 51-second graphics reload. Its five dedicated startup tests passed. This slower-host disconnect remains under investigation; server reconnect grace is still 30 seconds.
+
+Opt-in server transport diagnostics and a browser socket timeline now distinguish native heartbeat termination, backpressure, protocol errors and close events using canonical teams. Logs omit reconnect tokens and full snapshots. All 128 unit checks, the build, seven real-WebSocket tests with diagnostics enabled and the production desktop multiplayer scenario pass locally with the instrumentation.

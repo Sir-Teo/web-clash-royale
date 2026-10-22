@@ -38,6 +38,7 @@ export default defineConfig({
     },
   ],
   webServer: {
+    stdout: process.env.ARENA_NETWORK_TRACE === "1" ? "pipe" : "ignore",
     command: process.env.ARENA_PRODUCTION
       ? "PORT=5188 npm start"
       : "npm run dev -- --host 127.0.0.1 --port 5188 --strictPort",

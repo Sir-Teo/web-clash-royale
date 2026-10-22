@@ -1,4 +1,5 @@
 import { test, expect as baseExpect, type Page } from "@playwright/test";
+import { writeFileSync } from "node:fs";
 import { CARD_MAP } from "../../src/game/cards";
 const expect = baseExpect.configure({ timeout: 15000 });
 const state = (p: Page) =>
@@ -61,17 +62,68 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
   const red = await context.newPage();
   const errors: string[] = [];
   const reactions: Record<string, any[]> = { blue: [], red: [] };
+  const timeline: object[] = [];
+  let socketId = 0;
+  const record = (player: string, event: string, details: object = {}) => {
+    timeline.push({ at: Date.now(), player, event, ...details });
+  };
   for (const [name, player] of [
     ["blue", page],
     ["red", red],
-  ] as const)
-    player.on("websocket", (socket) =>
+  ] as const) {
+    player.on("websocket", (socket) => {
+      const id = ++socketId;
+      let snapshotAt = 0,
+        winner: string | null = null;
+      record(name, "socket", { id });
+      socket.on("close", () => record(name, "socket-close", { id }));
+      socket.on("framesent", (frame) => {
+        const m = JSON.parse(frame.payload.toString());
+        record(name, "send", {
+          id,
+          type: m.type,
+          ...(m.type === "ping" ? { pingAt: m.at } : {}),
+        });
+      });
       socket.on("framereceived", (frame) => {
         const message = JSON.parse(frame.payload.toString());
         if (["emote", "quick-chat"].includes(message.type))
           reactions[name].push(message);
-      }),
-    );
+        if (message.type === "state") {
+          if (
+            Date.now() - snapshotAt > 5000 ||
+            message.state.winner !== winner
+          ) {
+            snapshotAt = Date.now();
+            winner = message.state.winner;
+            record(name, "state", {
+              id,
+              time: message.state.time,
+              winner,
+              reason: message.state.reason,
+            });
+          }
+        } else if (message.type === "room") {
+          record(name, "room", {
+            id,
+            phase: message.room.phase,
+            players: message.room.players.map((p: any) => ({
+              team: p.team,
+              connected: p.connected,
+            })),
+          });
+        } else {
+          // Never retain reconnect credentials or full snapshots in artifacts.
+          record(name, "receive", {
+            id,
+            type: message.type,
+            team: message.team,
+            ...(message.type === "pong" ? { pingAt: message.at } : {}),
+          });
+        }
+      });
+    });
+  }
   page.on("pageerror", (e) => errors.push(e.message));
   red.on("pageerror", (e) => errors.push(e.message));
   try {
@@ -197,6 +249,7 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
     expect((await state(red)).paused).toBe(false);
     await red.getByRole("button", { name: "Back to battle" }).click();
     console.log("Multiplayer: deployed from both sides; reloading red");
+    record("red", "reload");
     const reloadStart = Date.now();
     await red.reload();
     await expect(
@@ -255,6 +308,12 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
     expect(replayProfile.trophies).toBe(0);
     expect(errors).toEqual([]);
   } finally {
+    const timelinePath = info.outputPath("network-timeline.json");
+    writeFileSync(timelinePath, JSON.stringify(timeline, null, 2));
+    await info.attach("network-timeline", {
+      path: timelinePath,
+      contentType: "application/json",
+    });
     await context.close().catch(() => {});
   }
 });
