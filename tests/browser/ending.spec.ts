@@ -92,6 +92,15 @@ test("native ending keeps authored match text, crown states, long names and redu
   ).toBe(false);
   await page.locator("#hold").uncheck();
   await page.emulateMedia({ reducedMotion: "reduce" });
+  // WebKit applies media emulation asynchronously; the next ending captures
+  // this preference when it starts, so wait for that precondition first.
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => matchMedia("(prefers-reduced-motion: reduce)").matches,
+      ),
+    )
+    .toBe(true);
   await page.locator("#time").fill("0.2");
   await expect(end).toHaveAttribute("data-stage", "scores");
   await expect(end).toHaveAttribute("data-frame", "87");
