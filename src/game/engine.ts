@@ -78,6 +78,7 @@ export interface Projectile extends Point {
 }
 export interface BattleEvent extends Point {
   id: number;
+  time: number;
   type: "deploy" | "hit" | "death" | "crown" | "spell" | "phase" | "finish";
   team: Team;
   card?: CardId | "tower";
@@ -422,6 +423,7 @@ export class Battle {
   ) {
     this.events.push({
       id: this.nextId++,
+      time: this.time,
       type,
       team,
       x,

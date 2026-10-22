@@ -1,10 +1,63 @@
 import { test, expect } from "@playwright/test";
 
+test("native swarm deaths retain all particles with bounded draw calls and pause cleanly", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text());
+  });
+  await page.goto("/tests/fixtures/combat.html");
+  await page.locator("#scenario").selectOption("death");
+  await expect(page.locator("#status")).toContainText("44 effects", {
+    timeout: 30000,
+  });
+  await page.locator("#defeat").click();
+  for (let i = 0; i < 3; i++) await page.locator("#step").click();
+  await expect(page.locator("#status")).toContainText("0.3s");
+  await expect(page.locator("#death-stats")).toContainText(
+    "60 deaths · 960 native particles · 420 ground",
+  );
+  await expect
+    .poll(async () =>
+      Number(
+        (await page.locator("#death-stats").textContent())!.match(
+          /(\d+) draws/,
+        )![1],
+      ),
+    )
+    .toBeGreaterThan(0);
+  const text = (await page.locator("#death-stats").textContent())!;
+  expect(Number(text.match(/(\d+) draws/)![1])).toBeLessThan(40);
+  await page.waitForTimeout(400);
+  await expect(page.locator("#death-stats")).toHaveText(text);
+  await page.screenshot({
+    path: `test-results/${info.project.name}-native-swarm-deaths.png`,
+    fullPage: true,
+  });
+  for (let i = 0; i < 5; i++) await page.locator("#second").click();
+  await expect(page.locator("#death-stats")).toHaveText(
+    "60 deaths · 0 native particles · 0 ground · 0 draws",
+  );
+  await page.locator("#death-card").selectOption("knight");
+  await page.locator("#defeat").click();
+  for (let i = 0; i < 5; i++) await page.locator("#second").click();
+  await expect(page.locator("#death-stats")).toHaveText(
+    "2 deaths · 2 native particles · 0 ground · 1 draws",
+  );
+  await page.locator("#reset").click();
+  await expect(page.locator("#death-stats")).toHaveText(
+    "0 deaths · 0 native particles · 0 ground · 0 draws",
+  );
+  expect(errors).toEqual([]);
+});
+
 test("a paused Fireball does not keep emitting trail particles", async ({
   page,
 }) => {
   await page.goto("/tests/fixtures/combat.html");
-  await expect(page.locator("#status")).toContainText("31 effects", {
+  await expect(page.locator("#status")).toContainText("44 effects", {
     timeout: 30000,
   });
   await page.getByRole("button", { name: "Step 0.1s", exact: true }).click();
@@ -22,7 +75,7 @@ test("tower debris pauses, settles after victory, and rubble survives renderer r
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/tests/fixtures/combat.html");
   await page.locator("#scenario").selectOption("king");
-  await expect(page.locator("#status")).toContainText("31 effects", {
+  await expect(page.locator("#status")).toContainText("44 effects", {
     timeout: 30000,
   });
   await expect(page.locator("#status")).toContainText("3 buildings loaded");

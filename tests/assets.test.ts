@@ -67,7 +67,7 @@ describe("bundled game artwork", () => {
     for (const t of manifest.textures)
       expect(digest(`public/assets/effects/${t.file}`)).toBe(t.sha256);
     const data = json("public/assets/effects/effects.json");
-    expect(Object.keys(data.clips)).toHaveLength(31);
+    expect(Object.keys(data.clips)).toHaveLength(44);
     for (const clip of Object.values(data.clips) as any[]) {
       expect(clip.frames.length).toBeGreaterThan(0);
       expect(clip.bounds.every(Number.isFinite)).toBe(true);

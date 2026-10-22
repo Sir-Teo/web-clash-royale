@@ -10,10 +10,22 @@
     {
       "path": "reference/client/particle_emitters.csv",
       "sha256": "5d086e26d80b8a50be2c99b84c17057c25d402159d9721c9b256cc50f0c2e0f6"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "src/game/combat-data.json",
+      "sha256": "bc8cad0c44c442dd2565641f0c8bcaca14f2d2e9ecb551a88b9cc67a9830ea66"
     }
   ],
   "output": {
     "path": "src/render/destruction-data.json",
-    "sha256": "4e4f9431cc5243d1f9c2b8700c597907c663a437ebf02561e492ae7cd076ee93"
+    "sha256": "f2ca097b3ad838f454a51b02a916ab23da08908c147d8f1524a708728c2dd751"
   }
 }

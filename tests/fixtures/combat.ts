@@ -2,6 +2,7 @@ import { Arena } from "../../src/render/arena";
 import { Battle, STEP } from "../../src/game/engine";
 import type { Team } from "../../src/game/engine";
 import type { CardId } from "../../src/game/cards";
+import { CARDS } from "../../src/game/cards";
 const arena = new Arena(document.querySelector("#arena")!);
 let battle: Battle,
   playing = false,
@@ -9,6 +10,15 @@ let battle: Battle,
   renderedTime = 0,
   extraVisualTime = 0,
   last = performance.now();
+let victims: { team: Team; x: number; y: number }[] = [];
+document.querySelector("#death-card")!.innerHTML = CARDS.filter(
+  (c) => c.kind !== "spell",
+)
+  .map(
+    (c) =>
+      `<option value="${c.id}" ${c.id === "skeleton-army" ? "selected" : ""}>${c.name}</option>`,
+  )
+  .join("");
 function cast(id: CardId, team: Team, x: number, y: number) {
   battle.players[team].elixir = 10;
   battle.players[team].hand[0] = id;
@@ -30,6 +40,7 @@ function setup() {
   elapsed = 0;
   renderedTime = 0;
   extraVisualTime = 0;
+  victims = [];
   document.querySelector("#play")!.textContent = "Play";
   battle = new Battle({ seed: 12, ai: false });
   for (const t of battle.entities) t.active = false;
@@ -37,6 +48,9 @@ function setup() {
     .value;
   (document.querySelector("#attackers") as HTMLButtonElement).hidden =
     scenario !== "burrow";
+  for (const id of ["death-config", "defeat", "death-stats"])
+    (document.querySelector(`#${id}`) as HTMLElement).hidden =
+      scenario !== "death";
   for (const id of [
     "wake",
     "princess",
@@ -63,6 +77,20 @@ function setup() {
       unit(id, "blue", x, y);
       for (const e of unit("giant", "red", x, y - 4)) e.active = false;
     }
+  } else if (scenario === "death") {
+    const card = (document.querySelector("#death-card") as HTMLSelectElement)
+      .value as CardId;
+    for (const [team, y] of [
+      ["red", 12],
+      ["blue", 20],
+    ] as [Team, number][])
+      for (const x of card === "skeleton-army" ? [4, 14] : [9]) {
+        victims.push({ team, x, y });
+        for (const e of unit(card, team, x, y)) {
+          e.active = false;
+          e.hp = 1;
+        }
+      }
   } else if (scenario === "princess") {
     for (const e of battle.entities) if (!e.king) e.active = true;
     for (const [team, y] of [
@@ -102,6 +130,11 @@ function setup() {
   arena.setBattle(battle);
 }
 document.querySelector("#scenario")!.addEventListener("change", setup);
+document.querySelector("#death-card")!.addEventListener("change", setup);
+document.querySelector("#defeat")!.addEventListener("click", () => {
+  for (const v of victims)
+    cast("zap", v.team === "red" ? "blue" : "red", v.x, v.y);
+});
 document.querySelector("#reset")!.addEventListener("click", setup);
 document.querySelector("#wake")!.addEventListener("click", () => {
   for (const king of battle.entities.filter((e) => e.king))
@@ -193,6 +226,8 @@ function render(now: number) {
   const destruction = arena.destructionState;
   document.querySelector("#destruction")!.textContent =
     `${destruction.rubble} ruins · ${destruction.particles} debris · ${destruction.time.toFixed(1)}s visual`;
+  document.querySelector("#death-stats")!.textContent =
+    `${battle.events.filter((e) => e.type === "death" && e.card !== "tower").length} deaths · ${destruction.particles} native particles · ${destruction.ground} ground · ${destruction.draws} draws`;
   requestAnimationFrame(render);
 }
 requestAnimationFrame(render);

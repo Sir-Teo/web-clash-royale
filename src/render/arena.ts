@@ -25,7 +25,7 @@ import { DeploymentPreview } from "./deployment";
 import { BuildingLibrary } from "./buildings";
 import type { BuildingSprite } from "./buildings";
 import { destroyedTowerSites, TOWER_SITES } from "../game/arena-layout";
-import { DestructionEffects } from "./destruction";
+import { DestructionEffects, deathEffect } from "./destruction";
 interface Visual {
   object: T.Group;
   model?: Model;
@@ -490,6 +490,8 @@ export class Arena {
     return {
       rubble: this.rubble.size,
       particles: this.destruction.count,
+      ground: this.destruction.groundCount,
+      draws: this.destruction.drawCount,
       time: this.destruction.time,
     };
   }
@@ -898,6 +900,7 @@ export class Arena {
     for (const event of b.events) {
       if (event.id <= this.lastEvent) continue;
       this.lastEvent = event.id;
+      const eventAge = Math.max(0, b.time - event.time);
       const pos = new T.Vector3(event.x - 9, 0.6, event.y - 16);
       if (event.type === "hit") {
         const impactPosition = new T.Vector3(
@@ -915,7 +918,7 @@ export class Arena {
             .clone()
             .sub(origin)
             .applyQuaternion(this.camera.quaternion.clone().invert());
-          const beam = this.impact("tesla_beam", origin, 0.3);
+          const beam = this.impact("tesla_beam", origin, 0.3, eventAge);
           if (beam) {
             beam.mesh.rotateZ(Math.atan2(direction.y, direction.x));
             beam.mesh.scale.set(
@@ -925,15 +928,26 @@ export class Arena {
             );
           }
         } else if (event.card === "zap") {
-          const bolt = this.impact("zap_bolt1", impactPosition, 11 / 30);
+          const bolt = this.impact(
+            "zap_bolt1",
+            impactPosition,
+            11 / 30,
+            eventAge,
+          );
           if (bolt) bolt.mesh.scale.set(0.8, 0.22, 1);
           this.impact(
             "ExplosionGroundGlowBlue",
             pos,
             10 / 30,
+            eventAge,
           )?.mesh.scale.setScalar(1.7);
         } else {
-          const flash = this.impact("effect_Hit1", impactPosition, 5 / 60);
+          const flash = this.impact(
+            "effect_Hit1",
+            impactPosition,
+            5 / 60,
+            eventAge,
+          );
           if (flash)
             flash.mesh.scale.setScalar(
               event.card === "fireball"
@@ -956,19 +970,25 @@ export class Arena {
             spell ? 4 : 2,
           );
       }
-      if (
-        event.type === "death" &&
-        event.card === "tower" &&
-        this.effects.asset
-      ) {
+      if (event.type === "death" && this.effects.asset) {
         const site = TOWER_SITES.find(
           (s) => s.team === event.team && s.x === event.x && s.y === event.y,
         );
-        this.destruction.burst(
-          !!site?.king,
-          new T.Vector3(event.x - 9, 0.1, event.y - 16),
-          b.seed ^ event.id,
-        );
+        const effect = deathEffect(event.card ?? "", !!site?.king);
+        if (effect)
+          this.destruction.burst(
+            effect,
+            new T.Vector3(
+              event.x - 9,
+              event.card && event.card !== "tower" && CARD_MAP[event.card].air
+                ? 2.2
+                : 0.2,
+              event.y - 16,
+            ),
+            b.seed ^ event.id,
+            event.team,
+            eventAge,
+          );
       } else if (event.type === "death")
         for (let i = 0; i < (event.card === "tower" ? 55 : 9); i++)
           this.particle(
@@ -1015,14 +1035,14 @@ export class Arena {
     this.positionPlacementFeedback();
     this.renderer.render(this.scene, this.camera);
   }
-  private impact(name: string, position: T.Vector3, life: number) {
-    if (this.impacts.length >= 120 || !this.battle) return null;
+  private impact(name: string, position: T.Vector3, life: number, age = 0) {
+    if (this.impacts.length >= 120 || !this.battle || age >= life) return null;
     const sprite = this.effects.make(name);
     if (!sprite) return null;
     sprite.mesh.position.copy(position);
     sprite.mesh.quaternion.copy(this.camera.quaternion);
     this.scene.add(sprite.mesh);
-    this.impacts.push({ sprite, start: this.destruction.time, life });
+    this.impacts.push({ sprite, start: this.destruction.time - age, life });
     return sprite;
   }
   private updateUnit(v: Visual, e: Entity, dt: number, time: number) {

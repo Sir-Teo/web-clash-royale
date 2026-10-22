@@ -63,6 +63,7 @@
           <option value="burrow">Defensive buildings</option>
           <option value="king">King Tower activation</option>
           <option value="princess">Tower Princess attacks</option>
+          <option value="death">Troop death effects</option>
           <option value="melee">Melee timing</option>
         </select></label
       ><button id="play">Play</button><button id="step">Step 0.1s</button
@@ -72,11 +73,16 @@
       ><button id="princess" hidden>Destroy Princess Towers</button
       ><button id="destroy-king" hidden>Destroy red King</button
       ><button id="rebuild" hidden>Rebuild renderer</button
+      ><label id="death-config" hidden
+        >Victims
+        <select id="death-card"></select></label
+      ><button id="defeat" hidden>Defeat troops</button
       ><small id="status">Loading</small><small id="buildings"></small
       ><small id="particles"></small>
       <small id="kings"></small>
       <small id="king-hits"></small>
       <small id="destruction"></small>
+      <small id="death-stats"></small>
     </header>
     <main id="arena"></main>
     <script type="module" src="./combat.ts"></script>
