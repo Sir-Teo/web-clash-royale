@@ -1685,6 +1685,7 @@ Object.defineProperty(window, "__arena", {
               connected: network.connected,
               phase: network.room?.phase,
               latency: network.latency,
+              transport: network.transport,
             }
           : null,
         units: multiplayer

@@ -214,3 +214,13 @@ Knight and Tesla were incorrectly marked Rare; both now use Common, matching `re
 The quick-chat CI run exposed the same 15-second startup assumption in the initial two-browser setup. Initial loads and invite navigation now share the explicit 60-second graphics-readiness helper; the local production multiplayer rerun passes. The subsequent rarity commit's CI run reached battle but forfeited the reloading player during a 51-second graphics reload. Its five dedicated startup tests passed. This slower-host disconnect remains under investigation; server reconnect grace is still 30 seconds.
 
 Opt-in server transport diagnostics and a browser socket timeline now distinguish native heartbeat termination, backpressure, protocol errors and close events using canonical teams. Logs omit reconnect tokens and full snapshots. All 128 unit checks, the build, seven real-WebSocket tests with diagnostics enabled and the production desktop multiplayer scenario pass locally with the instrumentation.
+
+## Worker transport checkpoint
+
+The instrumented CI run `39867389184` identifies the reloading red player's failure: welcome succeeds, native heartbeat termination follows 13.3 seconds later, and the next welcome arrives after the unchanged 30-second reconnect grace has expired. A separate browser probe reproduces the forfeit by blocking the UI for 55 seconds without Three.js. Native WebSocket pongs and retry timers on that thread cannot run during the stall.
+
+The room socket, heartbeat and retries now run in a dedicated worker. The UI keeps one in-flight snapshot and the newest pending state, rejecting stale messages after session changes. Worker load failures use the direct transport with the same in-memory credentials, including when session storage is unavailable. The direct fallback retains its prior liveness behavior; it does not survive the demonstrated UI stall.
+
+All 135 unit checks and the production build pass. The production Chromium regression blocks the actual UI thread for 55 seconds while an independent player watches the room; both players stay connected, server time advances, and the browser catches up without a winner or connection-loss forfeit. The server heartbeat and reconnect deadlines remain unchanged.
+
+The complete production desktop two-player scenario also passes with `transport: worker`, including opposite-side deployment, shared reactions, reload/rejoin, surrender and red-side replay. Its reload took 22.3 seconds without a forfeit. A deliberately aborted worker script request falls back to a usable room and persists its reconnect token without a page exception. The worker is included in the 472-file production offline cache (`273a98d41ad1`). Phone and hosted CI validation follow this checkpoint.

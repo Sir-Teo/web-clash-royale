@@ -98,7 +98,7 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
             winner = message.state.winner;
             record(name, "state", {
               id,
-              time: message.state.time,
+              tick: message.state.tick,
               winner,
               reason: message.state.reason,
             });

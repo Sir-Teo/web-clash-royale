@@ -201,3 +201,137 @@ test("an unsupported graphics device retains the WebGL recovery guidance", async
   );
   await expect(page.locator("#startup")).toHaveCount(0);
 });
+
+test("a 55-second blocked UI keeps its worker connection and catches up to the live battle", async ({
+  page,
+}) => {
+  test.setTimeout(180000);
+  const host = new WebSocket("ws://127.0.0.1:5188/battle");
+  let code = "";
+  let room: RoomState | undefined;
+  let snapshot: BattleSnapshot | undefined;
+  let monitor = false;
+  const disconnects: string[] = [];
+  host.on("message", (bytes) => {
+    const message: ServerMessage = JSON.parse(bytes.toString());
+    if (message.type === "welcome") code = message.code;
+    if (message.type === "room") {
+      room = message.room;
+      if (monitor)
+        for (const player of room.players)
+          if (!player.connected) disconnects.push(player.team);
+    }
+    if (message.type === "state") snapshot = message.state;
+  });
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  try {
+    await new Promise<void>((resolve, reject) => {
+      host.once("open", resolve);
+      host.once("error", reject);
+    });
+    host.send(
+      JSON.stringify({
+        type: "create",
+        version: PROTOCOL,
+        name: "Waiting King",
+        deck: STARTER_DECK,
+        mode: "classic",
+      }),
+    );
+    await expect.poll(() => code).toMatch(/^[A-Z2-9]{6}$/);
+    await page.addInitScript(() =>
+      localStorage.setItem(
+        "browser-royale.profile.v1",
+        JSON.stringify({
+          version: 1,
+          sound: false,
+          music: false,
+          seenTutorial: true,
+        }),
+      ),
+    );
+    await page.goto(`/?room=${code}`);
+    await expect(page.locator("#friend-button")).toBeVisible({
+      timeout: 60000,
+    });
+    await page.getByRole("button", { name: "Join room", exact: true }).click();
+    await expect(page.locator(".room-code")).toHaveText(code);
+    host.send(JSON.stringify({ type: "ready", ready: true }));
+    await page
+      .getByRole("button", { name: "Ready for battle", exact: true })
+      .click();
+    await expect.poll(() => room?.phase).toBe("playing");
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () => (window as any).__arena?.state.multiplayer?.transport,
+        ),
+      )
+      .toBe("worker");
+    const before = snapshot!.tick;
+    monitor = true;
+    // A delayed fetch does not block WebSocket handling. This deliberately
+    // prevents the UI thread from servicing any socket callbacks or timers.
+    await page.evaluate(() => {
+      const until = performance.now() + 55000;
+      while (performance.now() < until) {
+        /* deliberate regression fixture */
+      }
+    });
+    expect(disconnects).toEqual([]);
+    expect(room?.players.every((player) => player.connected)).toBe(true);
+    expect(snapshot?.winner, snapshot?.reason).toBeNull();
+    expect(snapshot!.tick - before).toBeGreaterThan(30 * 45);
+    await expect
+      .poll(
+        async () => {
+          const state = await page.evaluate(
+            () => (window as any).__arena.state,
+          );
+          return Math.abs(state.time - snapshot!.tick / 30);
+        },
+        { timeout: 10000 },
+      )
+      .toBeLessThan(2);
+    const state = await page.evaluate(() => (window as any).__arena.state);
+    expect(state.multiplayer.connected).toBe(true);
+    expect(state.multiplayer.transport).toBe("worker");
+    expect(state.winner, state.reason).toBeNull();
+    expect(errors).toEqual([]);
+  } finally {
+    host.close();
+  }
+});
+
+test("a failed network worker download falls back to a usable room", async ({
+  page,
+  context,
+}) => {
+  let blocked = 0;
+  await context.route(
+    /\/(?:src\/network\/transport-worker\.ts|assets\/transport-worker-[^/]+\.js)(?:\?|$)/,
+    (route) => {
+      blocked++;
+      return route.abort();
+    },
+  );
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/");
+  await expect(page.locator("#friend-button")).toBeVisible({ timeout: 60000 });
+  await page.getByRole("button", { name: "Play with a friend" }).click();
+  await page
+    .getByRole("button", { name: "Create a room", exact: true })
+    .click();
+  await expect(page.locator(".room-code")).toHaveText(/^[A-Z2-9]{6}$/, {
+    timeout: 15000,
+  });
+  expect(blocked).toBe(1);
+  const saved = await page.evaluate(() =>
+    JSON.parse(sessionStorage.getItem("browser-royale.room.v1")!),
+  );
+  expect(saved.code).toBe(await page.locator(".room-code").textContent());
+  expect(saved.token).toMatch(/^[a-f0-9]{64}$/);
+  expect(errors).toEqual([]);
+});

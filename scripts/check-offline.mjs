@@ -26,6 +26,23 @@ try {
   await page.goto("http://127.0.0.1:5189");
   await page.waitForFunction(() => !!window.__arena);
   await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+  const workerCached = await page.evaluate(async () => {
+    for (const name of await caches.keys()) {
+      if (!name.startsWith("browser-royale-")) continue;
+      const cache = await caches.open(name);
+      if (
+        (await cache.keys()).some((request) =>
+          /\/assets\/transport-worker-[^/]+\.js$/.test(
+            new URL(request.url).pathname,
+          ),
+        )
+      )
+        return true;
+    }
+    return false;
+  });
+  if (!workerCached)
+    throw new Error("Network worker is missing from the offline cache");
   await context.setOffline(true);
   await page.reload();
   await page.waitForFunction(
