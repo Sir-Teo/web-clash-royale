@@ -204,3 +204,7 @@ All nine existing replay/lifecycle/settings cases and both six-size phone touch 
 All three built-server multiplayer scenarios pass with canonical quick-chat messages on both sockets and correct local/opponent bubble placement. Opposite-side deployment, background progression, reconnect, surrender and perspective-correct replay remain covered. Together with the reaction and regression checks, this checkpoint has 32 distinct passing local browser cases plus the intentional desktop touch skip.
 
 The production offline reload starts an AI battle, renders native text chat with the archived font and retrieves a King voice from the service-worker cache. The final cache contains 471 files, version `ce4edb22ee44`. Optional LAN discovery fails harmlessly while offline. No public remote host was provisioned.
+
+## Card rarity audit
+
+Knight and Tesla were incorrectly marked Rare; both now use Common, matching `reference/logic/spells_characters.csv` and `spells_buildings.csv`. All 24 roster rarities match the retained spell tables (the Archers card maps to the source `Archer` row). A production phone check opens both card details and verifies their Common labels/classes. The native card fixture passes in desktop Chromium and phone Chromium/WebKit, and type checking/build pass. Combat values and replay rules are unchanged.

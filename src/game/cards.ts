@@ -81,7 +81,6 @@ export const CARDS: Card[] = [
     0.75,
     1.2,
     "A tough melee fighter. A dependable defender with a magnificent moustache.",
-    { rarity: "Rare" },
   ),
   troop(
     "archers",
@@ -345,7 +344,7 @@ export const CARDS: Card[] = [
     5.5,
     1.2,
     "Hides underground when idle, then emerges to shock enemies on the ground and in the air.",
-    { kind: "building", lifetime: 30, hitsAir: true, rarity: "Rare" },
+    { kind: "building", lifetime: 30, hitsAir: true },
   ),
   troop(
     "zap",
