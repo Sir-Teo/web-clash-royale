@@ -7,6 +7,7 @@ import { combatTraits, KING_ACTIVATION_TIME } from "../src/game/combat";
 import legacy from "./fixtures/legacy-replay.json";
 import combatV2 from "./fixtures/combat-v2-replay.json";
 import combatV3 from "./fixtures/combat-v3-replay.json";
+import combatV4 from "./fixtures/combat-v4-replay.json";
 
 const advance = (b: Battle, seconds: number) => {
   for (let i = 0; i < Math.round(seconds / STEP); i++) b.step();
@@ -325,6 +326,22 @@ describe("Tesla hiding and emergence", () => {
 });
 
 describe("versioned battle replay", () => {
+  it("preserves the captured v4 match with delayed King activation and immediate finish order", () => {
+    const b = new Battle({ replay: combatV4.replay as Replay });
+    for (let i = 0; i < combatV4.replay.duration; i++) b.step();
+    expect(
+      JSON.parse(
+        JSON.stringify({
+          tick: b.tick,
+          winner: b.winner,
+          players: b.players,
+          entities: b.entities,
+          projectiles: b.projectiles,
+        }),
+      ),
+    ).toEqual(combatV4.state);
+    expect(b.exportReplay().version).toBe(4);
+  });
   it("preserves the captured v3 match with immediate King activation", () => {
     const b = new Battle({ replay: combatV3.replay as Replay });
     for (let i = 0; i < combatV3.replay.duration; i++) b.step();
@@ -381,7 +398,7 @@ describe("versioned battle replay", () => {
     }
     expect(b.winner).not.toBeNull();
     const record = b.exportReplay();
-    expect(record.version).toBe(4);
+    expect(record.version).toBe(5);
     const replay = new Battle({ replay: record });
     for (let i = 0; i < record.duration; i++) replay.step();
     expect(replay.winner).toEqual(b.winner);

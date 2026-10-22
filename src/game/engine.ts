@@ -92,7 +92,7 @@ export interface Action extends Point {
   card: CardId;
 }
 export interface Replay {
-  version: 1 | 2 | 3 | 4;
+  version: 1 | 2 | 3 | 4 | 5;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -138,7 +138,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
-    this.rulesVersion = r?.version ?? 4;
+    this.rulesVersion = r?.version ?? 5;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -463,6 +463,7 @@ export class Battle {
       );
     if (this.rulesVersion === 1) this.updateLegacyCombat();
     else this.updateCombat();
+    if (this.rulesVersion >= 5) this.resolveKingLosses();
     this.separate();
     this.entities = this.entities.filter((e) => e.hp > 0);
     if (beforePhase !== this.phase) this.emit("phase", "blue", 9, 16);
@@ -472,7 +473,9 @@ export class Battle {
     )
       this.finish(
         this.players.blue.crowns > this.players.red.crowns ? "blue" : "red",
-        "More crowns",
+        this.rulesVersion >= 5 && this.time > 180
+          ? "Sudden death"
+          : "More crowns",
       );
     if (this.time >= 300 && !this.winner) {
       const lowest = (team: Team) =>
@@ -488,6 +491,26 @@ export class Battle {
         "Tiebreaker",
       );
     }
+  }
+  private resolveKingLosses() {
+    const fallenKings = this.entities.filter((e) => e.king && e.hp <= 0);
+    if (!fallenKings.length) return;
+    // Finish after every impact in this step, so projectile order cannot
+    // choose a winner when both Kings fall together.
+    const defeated = new Set(fallenKings.map((e) => e.team));
+    for (const tower of this.entities) {
+      if (tower.kind !== "tower" || tower.hp <= 0 || !defeated.has(tower.team))
+        continue;
+      tower.hp = 0;
+      this.cancelAttack(tower);
+      this.emit("death", tower.team, tower.x, tower.y, "tower");
+    }
+    this.finish(
+      defeated.size === 2 ? "draw" : other(fallenKings[0].team),
+      defeated.size === 2
+        ? "Both King Towers destroyed"
+        : "King Tower destroyed",
+    );
   }
   // Frozen rules for saved v1 battles. New matches use updateCombat below.
   private updateLegacyCombat() {
@@ -1054,21 +1077,20 @@ export class Battle {
     if (e.kind === "tower") {
       const enemy = other(e.team);
       const previousCrowns = this.players[enemy].crowns;
-      this.players[enemy].crowns = e.king ? 3 : this.players[enemy].crowns + 1;
-      this.emit(
-        "crown",
-        enemy,
-        e.x,
-        e.y,
-        "tower",
-        this.players[enemy].crowns - previousCrowns,
-      );
+      const crowns = e.king ? 3 : previousCrowns + 1;
+      this.players[enemy].crowns =
+        this.rulesVersion >= 5 ? Math.min(3, crowns) : crowns;
+      const earned = this.players[enemy].crowns - previousCrowns;
+      if (earned > 0 || this.rulesVersion < 5)
+        this.emit("crown", enemy, e.x, e.y, "tower", earned);
       for (const king of this.entities.filter(
         (t) => t.team === e.team && t.king,
       ))
         this.activateKing(king);
-      if (e.king) this.finish(enemy, "King Tower destroyed");
-      else if (this.time >= 180) this.finish(enemy, "Sudden death");
+      if (this.rulesVersion < 5) {
+        if (e.king) this.finish(enemy, "King Tower destroyed");
+        else if (this.time >= 180) this.finish(enemy, "Sudden death");
+      }
     }
   }
   private activateKing(king: Entity) {

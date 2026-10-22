@@ -1,4 +1,77 @@
 import { test, expect, type Page } from "@playwright/test";
+import { readFileSync } from "node:fs";
+
+test("saved v4 and v5 replays retain their endings when seeking on desktop and phones", async ({
+  page,
+}) => {
+  // Both histories use the same captured commands. Version 5 additionally
+  // collapses the losing side's remaining tower when its King falls.
+  const fixture = JSON.parse(
+    readFileSync("tests/fixtures/combat-v4-replay.json", "utf8"),
+  );
+  const expected = [
+    { version: 5, ruins: 3 },
+    { version: 4, ruins: 2 },
+  ];
+  const profile = {
+    version: 1,
+    sound: false,
+    seenTutorial: true,
+    battles: 2,
+    history: expected.map(({ version }) => ({
+      id: version,
+      date: "2026-10-22T12:00:00.000Z",
+      mode: fixture.replay.mode,
+      winner: "red",
+      crowns: [0, 3],
+      replay: { ...fixture.replay, version },
+    })),
+  };
+  await page.addInitScript(
+    (saved) =>
+      localStorage.setItem("browser-royale.profile.v1", JSON.stringify(saved)),
+    profile,
+  );
+  await page.goto("/");
+  await expect
+    .poll(
+      () => page.evaluate(() => (window as any).__arena.state.loadedEffects),
+      { timeout: 30000 },
+    )
+    .toBe(45);
+  for (const [index, end] of expected.entries()) {
+    await page.getByRole("button", { name: "Battle log", exact: true }).click();
+    await expect(page.locator("[data-replay]")).toHaveCount(2);
+    await page.locator(`[data-replay="${index}"]`).click();
+    expect(
+      await page.evaluate(() => (window as any).__arena.state.rulesVersion),
+    ).toBe(end.version);
+    const timeline = page.getByRole("slider", { name: "Replay timeline" });
+    await timeline.focus();
+    await timeline.press("End");
+    await expect
+      .poll(() => page.evaluate(() => (window as any).__arena.state.winner))
+      .toBe("red");
+    await expect
+      .poll(() =>
+        page.evaluate(() => (window as any).__arena.state.destruction.rubble),
+      )
+      .toBe(end.ruins);
+    await expect(
+      page.getByRole("button", { name: "Restart replay", exact: true }),
+    ).toBeVisible();
+    await timeline.press("Home");
+    await expect
+      .poll(() =>
+        page.evaluate(() => (window as any).__arena.state.destruction.rubble),
+      )
+      .toBe(0);
+    expect(
+      await page.evaluate(() => (window as any).__arena.state.winner),
+    ).toBeNull();
+    await page.locator("#replay-exit").click();
+  }
+});
 
 async function backgroundAndReturn(page: Page, awaitingResult = false) {
   // Headless browsers keep tabs visible. Emulate the platform visibility event,

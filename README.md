@@ -4,7 +4,7 @@ A private, independent browser fan game for Sir-Teo. Built with TypeScript, Thre
 
 Build an eight-card deck from 24 cards, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
 
-Combat includes cancellable attack windups, defensive building pulls, homing shots, ballistic bombs, Fireball travel and knockback, three-wave Arrows and Zap charge resets. Cannon uses its native aiming frames; Tesla hides underground, rises to attack and retracts when idle. Princess Towers use their dedicated native character animations. The King plays its original wake-up sequence and waits 3.3 seconds before aiming and attacking. Existing version-1 through version-3 replays retain their original rules; new matches record version-4 combat.
+Combat includes cancellable attack windups, defensive building pulls, homing shots, ballistic bombs, Fireball travel and knockback, three-wave Arrows and Zap charge resets. Cannon uses its native aiming frames; Tesla hides underground, rises to attack and retracts when idle. Princess Towers use their dedicated native character animations. The King plays its original wake-up sequence and waits 3.3 seconds before aiming and attacking. Existing version-1 through version-4 replays retain their original rules; new matches record version-5 combat.
 
 Princess Towers preserve the original base and foreground battlements, with the animated character placed between them using her authored origin and the archived attachment height.
 
@@ -13,6 +13,8 @@ This version supports AI opponents. Online multiplayer, the full live card roste
 Destroyed towers leave native rubble for the rest of the battle. Their collapse uses original fire, smoke, flying plank and wall-fragment artwork. Debris pauses with the match and finishes settling after victory; replay seeking reconstructs the correct ruins.
 
 Earned crowns spin out of destroyed towers and fly to the matching score counter. A King Tower awards the remaining crowns to reach three. The flights follow pause and replay speed, adapt when a phone rotates, and finish before the result panel appears.
+
+Tower outcomes resolve after all impacts in the current simulation step. Both Kings falling together produces a draw; equal Princess Tower trades can continue into overtime. A destroyed King collapses its remaining Princess Towers, and rewards never exceed three battle crowns per side.
 
 Troop deaths use source-specific elixir splashes, smoke, dust and ground marks. Knights leave their original sword behind, Giants have a larger burst, Skeletons have smaller effects, and Balloons release airborne clouds. Native particle geometry is batched on the GPU to keep large swarms practical on phone-sized screens.
 

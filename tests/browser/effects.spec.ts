@@ -189,19 +189,70 @@ test("tower debris pauses, settles after victory, and rubble survives renderer r
   await page.locator("#destroy-king").click();
   for (let i = 0; i < 3; i++) await step.click();
   await expect(page.locator("#destruction")).toHaveText(
-    /3 ruins · [1-9]\d* debris/,
+    /4 ruins · [1-9]\d* debris/,
   );
   const endTime = (await page.locator("#status").textContent())!.split(
     " · ",
   )[0];
   for (let i = 0; i < 4; i++) await second.click();
   await expect(page.locator("#status")).toContainText(endTime);
-  await expect(page.locator("#destruction")).toHaveText(/3 ruins · 0 debris/);
+  await expect(page.locator("#destruction")).toHaveText(/4 ruins · 0 debris/);
   await page.screenshot({
     path: `test-results/${info.project.name}-tower-ruins.png`,
     fullPage: true,
   });
   await page.locator("#reset").click();
   await expect(page.locator("#destruction")).toHaveText(/0 ruins · 0 debris/);
+  expect(errors).toEqual([]);
+});
+
+test("simultaneous King losses show a draw with six crowns and persistent ruins", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/tests/fixtures/combat.html");
+  await page.locator("#scenario").selectOption("king");
+  await expect(page.locator("#status")).toContainText("45 effects", {
+    timeout: 30000,
+  });
+  await page.locator("#destroy-both-kings").click();
+  for (let i = 0; i < 5; i++) await page.locator("#step").click();
+  await expect(page.locator("#destruction")).toContainText("0.5s visual");
+  await expect(page.locator("#destruction")).toHaveText(
+    /6 ruins · [1-9]\d* debris/,
+  );
+  await expect(page.locator("#result-state")).toHaveText(
+    "draw · Both King Towers destroyed",
+  );
+  await expect(page.locator("#crown-blue")).toHaveText("♛ 3");
+  await expect(page.locator("#crown-red")).toHaveText("♛ 3");
+  await expect(page.locator("#crown-flights")).toHaveText("6 flying crowns");
+  const paused = await page
+    .locator("#crown-flights")
+    .getAttribute("data-poses");
+  await page.waitForTimeout(400);
+  await expect(page.locator("#crown-flights")).toHaveAttribute(
+    "data-poses",
+    paused!,
+  );
+  await page.screenshot({
+    path: `test-results/${info.project.name}-simultaneous-kings.png`,
+    fullPage: true,
+  });
+  const endTime = (await page.locator("#status").textContent())!.split(
+    " · ",
+  )[0];
+  for (let i = 0; i < 5; i++) await page.locator("#second").click();
+  await expect(page.locator("#status")).toContainText(endTime);
+  await expect(page.locator("#destruction")).toHaveText(/6 ruins · 0 debris/);
+  await expect(page.locator("#crown-flights")).toHaveText("0 flying crowns");
+  await page.locator("#rebuild").click();
+  await expect(page.locator("#destruction")).toHaveText(
+    "6 ruins · 0 debris · 0.0s visual",
+  );
+  await page.locator("#reset").click();
+  await expect(page.locator("#destruction")).toHaveText(/0 ruins · 0 debris/);
+  await expect(page.locator("#result-state")).toHaveText("Battle in progress");
   expect(errors).toEqual([]);
 });

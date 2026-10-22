@@ -66,6 +66,8 @@ function setup() {
     "princess",
     "king-hits",
     "destroy-king",
+    "destroy-both-kings",
+    "result-state",
     "rebuild",
     "destruction",
   ])
@@ -165,6 +167,12 @@ document.querySelector("#destroy-king")!.addEventListener("click", () => {
     cast("zap", "blue", king.x, king.y);
   }
 });
+document.querySelector("#destroy-both-kings")!.addEventListener("click", () => {
+  for (const king of battle.entities.filter((e) => e.king)) {
+    king.hp = 1;
+    cast("zap", king.team === "blue" ? "red" : "blue", king.x, king.y);
+  }
+});
 document
   .querySelector("#rebuild")!
   .addEventListener("click", () => arena.setBattle(battle));
@@ -236,6 +244,9 @@ function render(now: number) {
   const destruction = arena.destructionState;
   document.querySelector("#destruction")!.textContent =
     `${destruction.rubble} ruins · ${destruction.particles} debris · ${destruction.time.toFixed(1)}s visual`;
+  document.querySelector("#result-state")!.textContent = battle.winner
+    ? `${battle.winner} · ${battle.reason}`
+    : "Battle in progress";
   document.querySelector("#death-stats")!.textContent =
     `${battle.events.filter((e) => e.type === "death" && e.card !== "tower").length} deaths · ${destruction.particles} native particles · ${destruction.ground} ground · ${destruction.draws} draws`;
   for (const team of ["blue", "red"] as const)
