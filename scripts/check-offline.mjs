@@ -39,6 +39,7 @@ try {
       window.__arena?.state.loadedCards === 24 &&
       window.__arena?.state.loadedHealth === 22 &&
       window.__arena?.state.loadedHud === 6 &&
+      window.__arena?.state.loadedEndings === 5 &&
       document.fonts.check('40px "Supercell Magic"') &&
       window.__arena?.state.nativeTowerPrincesses === 4 &&
       window.__arena?.state.nativePrincessTowers === 4,

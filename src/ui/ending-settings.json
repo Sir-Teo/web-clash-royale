@@ -1,0 +1,17 @@
+{
+  "fps": 30,
+  "matchFrames": 66,
+  "scoreFrames": 102,
+  "scoreLabels": {
+    "start": 16,
+    "end": 87
+  },
+  "crownLabels": {
+    "noStar": 0,
+    "noStar_end": 19,
+    "newStar": 20,
+    "newStar_end": 45,
+    "oldStar": 46,
+    "oldStar_end": 65
+  }
+}

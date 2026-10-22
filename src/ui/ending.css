@@ -1,0 +1,49 @@
+.battle-ending {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, #0a152819, #08101f61);
+  pointer-events: none;
+}
+.native-ending-art {
+  width: min(100%, 680px);
+  height: 100%;
+  font-family: "Supercell Magic", sans-serif;
+}
+.native-ending-art svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.ending-continue {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 120px;
+  min-height: 44px;
+  padding: 9px 18px;
+  border: 1px solid #f9e7ad88;
+  border-radius: 8px;
+  background: linear-gradient(#ffc84f, #e9a52e);
+  color: #533513;
+  box-shadow: 0 3px 0 #8c601e;
+  font:
+    800 13px "Nunito Sans",
+    sans-serif;
+  pointer-events: auto;
+  cursor: pointer;
+}
+@media (orientation: landscape) and (max-height: 540px) {
+  .ending-continue {
+    left: auto;
+    right: 8px;
+    transform: none;
+    bottom: 8px;
+    min-width: 94px;
+  }
+}

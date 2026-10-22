@@ -148,3 +148,17 @@ The production-server browser regression passes 14 cases plus the intentional de
 Visual inspection covers native arena/card/HUD rendering and the room screen at phone size. Ready and Leave fit the short phone viewport. Rejoining skips the opening sequence and historical effects; disabling scroll anchoring prevents the desktop header from moving above the viewport while artwork loads. Retained examples are `desktop-friendly-battle.png`, `mobile-friendly-battle.png`, `mobile-safari-friendly-battle.png` and `mobile-safari-friendly-room.png` under `docs/screenshots/`.
 
 An isolated production reload with networking disabled loads all native assets and starts an AI battle. The offline cache contains 411 files, version `22e4246ae0c8`. Optional LAN-address discovery fails harmlessly while offline. Production HTTP and WebSocket behavior are exercised locally, including HTTP access through the computer's Wi-Fi address. Docker and Render deployment files are supplied; no external hosting service or Docker build was exercised in this environment.
+
+## Native match ending checkpoint
+
+Five new unit/asset checks preserve all 402 source frames, five shape crops, three text styles, frame labels, output hashes and affine geometry. Timing checks cover the full match-over and score sequences, newly earned versus old/empty crowns, reduced motion, static replay seeking, reset and Continue. Finishing-tick events prevent earlier crowns from being celebrated again. All 117 unit/asset/persistence checks, type checking and the production build pass.
+
+Browser coverage exercises the source fixture and real version-5 battles: native wording, literal markup-like names, long-name fitting, all six phone sizes, static final-score seeks, rewind/restart, background freezing, missing-artwork recovery and skipping the presentation without duplicate results. The first fixture failure used a test name one character longer than its 18-character input limit; it now uses a valid-length name. The existing lifecycle test waits for the complete authored ending before the replay action appears. No animation frames were shortened to satisfy the test.
+
+Visual inspection includes `native-match-over.png`, `native-final-scores.png`, `phone-final-score.png`, `phone-landscape-final-score.png` and `phone-safari-final-score.png`. The real replay screenshots deliberately use an 18-character wide-letter name to exercise fitting. The score panels retain the source red/blue palette and distinct new-crown highlights. These checks use emulated phone viewports, not physical-device performance measurements.
+
+The ending and existing AI/replay/phone regression passes 26 browser cases plus the intentional desktop touch skip across desktop Chromium, phone Chromium and phone WebKit. It includes all 15 new ending cases. The Wi-Fi development address returns HTTP 200 after verification.
+
+All three two-player scenarios also pass against the built production server, including refresh resumption, both players' input, surrender and the red-side replay. Combined with the regression above, this checkpoint has 29 passing browser cases and one intentional skip. Automatic refresh resumption is committed separately from the ending reconstruction.
+
+The isolated production offline reload loads all five ending clips and starts an AI battle with networking disabled. Its cache contains 418 files, version `871b050f29c9`. Optional LAN discovery fails harmlessly offline. No public remote host was provisioned during this checkpoint.

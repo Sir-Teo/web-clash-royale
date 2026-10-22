@@ -203,7 +203,7 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
   await backgroundAndReturn(page, true);
   await expect(
     page.getByRole("button", { name: "Watch replay", exact: true }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15000 });
   await page.getByRole("button", { name: "Watch replay", exact: true }).click();
   await expect(page.locator(".replay-controls")).toBeVisible();
   await expect

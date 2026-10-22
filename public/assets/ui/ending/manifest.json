@@ -1,0 +1,61 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "sources": [
+    {
+      "source": "csv_client/texts.decoded.csv",
+      "path": "reference/client/texts.csv",
+      "bytes": 1676624,
+      "sha256": "0102d5ec1cbe3f6b2abf9e57f3068b029c3c2e9304c2cd56f0b06aacd8bdd43e"
+    },
+    {
+      "source": "font/supercell-magic_0.ttf",
+      "path": "public/assets/ui/supercell-magic.ttf",
+      "bytes": 127716,
+      "sha256": "b39e9bd4d46006fe559302ba3205c746b7967dea3554bdf1b32685dbfacfbb2b"
+    },
+    {
+      "source": "sc/ui",
+      "path": "reference/sc/ui.bin",
+      "bytes": 2207168,
+      "sha256": "e835a19396a344c0739f8b054efa7fe030a4b55d832eace8064675fa4f9e00bd"
+    },
+    {
+      "source": "sc/ui_tex.png",
+      "bytes": 4876660,
+      "sha256": "f33ba6c1dc1457a4551546843c7c9318cad0a1f82603ae2c8c850975d5220ef0"
+    }
+  ],
+  "files": [
+    {
+      "file": "shape-680-0.webp",
+      "bytes": 182,
+      "sha256": "6d688289101ea189edef733d0bcbcee30e3fc0e513633ddb7469fe8319fd9032"
+    },
+    {
+      "file": "shape-671-0.webp",
+      "bytes": 8436,
+      "sha256": "fc8d6d673818da8abeb2c4cc4e554cbe953e0f15730ab86e21042e3049e1cac6"
+    },
+    {
+      "file": "shape-681-0.webp",
+      "bytes": 8814,
+      "sha256": "2cb3122cafbaa0c682b787469ce0c2a34dec3f017af2d47d024fd677f76b7b7d"
+    },
+    {
+      "file": "shape-672-0.webp",
+      "bytes": 8392,
+      "sha256": "8490e2381f4616e5f948c59cc0171e0e32a7f8e65a2c1e2323028317e6254ae6"
+    },
+    {
+      "file": "shape-682-0.webp",
+      "bytes": 9350,
+      "sha256": "ef0bca17e945ba5f5513cbae732d56afd167ab4ae4f4bea4b1fa45b176638b3c"
+    },
+    {
+      "file": "ending.json",
+      "bytes": 130906,
+      "sha256": "78f6c5834ce251ea6cbaafac5f65f8dce07fd4038dddcb2f48fa1589fdca59cc"
+    }
+  ]
+}

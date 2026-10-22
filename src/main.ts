@@ -7,6 +7,9 @@ import "./style.css";
 import "./ui/announcements.css";
 import { NativeAnnouncements, battleClock } from "./ui/announcements";
 import "./ui/rooms.css";
+import "./ui/ending.css";
+import { NativeEnding } from "./ui/ending";
+import { endResult } from "./ui/ending-data";
 import { RoomClient } from "./network/client";
 import { PROTOCOL } from "./network/protocol";
 import { applySnapshot, snapshot } from "./network/perspective";
@@ -147,6 +150,7 @@ const network = new RoomClient();
 let multiplayer = false;
 let networkReplay: Replay | undefined;
 let replaySource: Battle | null = null;
+let endingBattle: Battle | null = null;
 let roomError = "";
 let connectionStatus = "";
 let lanOrigin = "";
@@ -224,6 +228,7 @@ $("#app").innerHTML = `
      <div id="connection-status" class="connection-status hidden" role="status"></div><div id="deploy-hint" class="deploy-hint hidden">Select a card to deploy</div>
      <div class="battle-announcements hidden" id="battle-announcements" role="img" aria-label="Battle announcement"></div>
      <div class="battle-intro hidden" id="battle-intro" role="img" aria-label="Battle introduction"></div>
+     <section class="battle-ending hidden" id="battle-ending" aria-label="Battle ended"></section>
      <div class="pause-cover hidden"><span class="eyebrow">TAKE A BREATHER</span><h2>Battle paused</h2><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button><button class="text-button" id="surrender-button">Leave battle</button></div>
      <div class="emote-bubble hidden">${icon("crown")}<b>HA HA HA!</b></div>
     </div>
@@ -247,6 +252,23 @@ const crownCounts = () => ({
 const announcements = new NativeAnnouncements($("#battle-announcements"));
 const intro = new NativeIntro($("#battle-intro"));
 const elixir = new NativeElixir($("#elixir-hud"));
+const ending = new NativeEnding($("#battle-ending"));
+ending.onContinue = () => {
+  if (pendingResult && arena.effectTime >= pendingResult.time) ending.skip();
+};
+function resetEnding() {
+  ending.reset();
+  endingBattle = null;
+}
+function startEnding(hold = false) {
+  if (endingBattle === battle || !battle.winner) return;
+  endingBattle = battle;
+  const player = multiplayer
+    ? (network.room?.players.find((p) => p.team === network.team)?.name ??
+      profile.name)
+    : profile.name;
+  ending.start(endResult(battle, player, opponentName), hold);
+}
 $(".match-timer").append($("#elixir-rate"));
 announcements.onCue = (file, volume) => audio.play(file, volume);
 
@@ -370,6 +392,7 @@ function claimChest(index: number) {
 }
 
 function lobby() {
+  resetEnding();
   if (network.room || multiplayer) network.leave();
   multiplayer = false;
   networkBattleCode = "";
@@ -407,6 +430,7 @@ function lobby() {
   refreshProfile();
 }
 function startBattle(online = false) {
+  resetEnding();
   if (!online) network.leave();
   multiplayer = online;
   networkReplay = undefined;
@@ -676,6 +700,7 @@ function syncReplayControl() {
   refreshIcons();
 }
 function showResult() {
+  startEnding();
   const completedBattle = battle;
   resultShown = true;
   audio.stopMusic();
@@ -706,6 +731,7 @@ function showResult() {
     time: arena.effectTime + 1.4,
     show: () => {
       if (screen !== "battle" || battle !== completedBattle) return;
+      ending.reset();
       audio.play(win ? "win_tour_01" : "lose_tour_01", 0.45);
       modal(
         draw
@@ -731,6 +757,7 @@ function showResult() {
   };
 }
 function playReplay(record: RecordEntry) {
+  resetEnding();
   if (network.room) network.leave();
   multiplayer = false;
   $("#connection-status").classList.add("hidden");
@@ -1384,6 +1411,7 @@ $("#replay-speed").onclick = () => {
 $("#replay-exit").onclick = lobby;
 $("#replay-seek").addEventListener("input", () => {
   if (!replayData) return;
+  resetEnding();
   announcements.reset();
   intro.skip();
   audio.stopEffects();
@@ -1400,6 +1428,7 @@ $("#replay-seek").addEventListener("input", () => {
   matchHud.reset(arena.effectTime, crownCounts());
   accumulator = 0;
   updateBattleUI(true);
+  if (battle.winner) startEnding(true);
 });
 $("#about-button").onclick = () =>
   modal(
@@ -1583,10 +1612,15 @@ function frame(now: number) {
       battle.multiplier,
       selected >= 0 ? CARD_MAP[battle.players.blue.hand[selected]].cost : null,
     );
+  if (screen === "replay" && battle.winner) startEnding();
+  ending.update(
+    delta,
+    !!pendingResult && arena.effectTime >= pendingResult.time,
+  );
   if (pendingResult) {
     if (pendingResult.battle !== battle || screen !== "battle")
       pendingResult = null;
-    else if (arena.effectTime >= pendingResult.time) {
+    else if (arena.effectTime >= pendingResult.time && ending.clock.finished) {
       const show = pendingResult.show;
       pendingResult = null;
       show();
@@ -1641,6 +1675,8 @@ Object.defineProperty(window, "__arena", {
         loadedCards: nativeCards.loaded,
         loadedHealth: arena.loadedHealth,
         loadedHud: matchHud.loaded,
+        loadedEndings: ending.loaded,
+        ending: ending.state,
         hud: matchHud.state,
         health: arena.healthState,
         intro: intro.state,
