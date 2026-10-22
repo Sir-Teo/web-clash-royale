@@ -5,7 +5,7 @@ const replay = JSON.parse(
   readFileSync("tests/fixtures/combat-v4-replay.json", "utf8"),
 ).replay;
 const state = (page: Page) =>
-  page.evaluate(() => (window as any).__arena.state);
+  page.evaluate(() => (window as any).__arena?.state ?? {});
 async function loadReplay(page: Page) {
   await page.addInitScript(
     (replay) =>
