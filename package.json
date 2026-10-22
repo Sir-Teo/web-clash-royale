@@ -5,12 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && node scripts/build-sw.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "check": "npm test && npm run build",
-    "assets": "node scripts/fetch-assets.mjs"
+    "assets": "node scripts/fetch-assets.mjs",
+    "test:offline": "node scripts/check-offline.mjs",
+    "assets:sprites": "node scripts/import-sprites.mjs",
+    "assets:scenery": "node scripts/compose-scene.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",
@@ -21,8 +24,13 @@
   "devDependencies": {
     "@playwright/test": "^1.56.0",
     "@types/three": "^0.180.0",
+    "prettier": "^3.9.10",
+    "sharp": "^0.35.5",
     "typescript": "^5.9.3",
     "vite": "^7.1.12",
     "vitest": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }

@@ -1,0 +1,17 @@
+{
+  "source": "building_tesla",
+  "export": "tesla1_red",
+  "bounds": [
+    -32,
+    -71,
+    31,
+    20
+  ],
+  "width": 63,
+  "height": 91,
+  "triangles": 22,
+  "origin": [
+    0.5079365079365079,
+    0.21978021978021978
+  ]
+}

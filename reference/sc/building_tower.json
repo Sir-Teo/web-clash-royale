@@ -1,0 +1,83 @@
+{
+  "StarTower_top_red": [
+    0
+  ],
+  "StarTower_top_blue": [
+    1
+  ],
+  "StarTower_base_red": [
+    2
+  ],
+  "StarTower_base_blue": [
+    3
+  ],
+  "2vs2_blue_tower_top": [],
+  "Tower_2v2_destroyed": [
+    5
+  ],
+  "Tower_destroyed_ground2": [
+    6
+  ],
+  "2vs2_red_tower_top": [],
+  "Tower_destroyed_ground1": [
+    8
+  ],
+  "clip175": [
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ],
+  "clip176": [],
+  "clip177": [
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41
+  ],
+  "KingTower_redcampaign_02": [],
+  "clip179": [
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107
+  ],
+  "clip180": [],
+  "KingTower_redcampaign_01": [],
+  "KingTower_red": [],
+  "KingTower_blue": [],
+  "2vs2_platform": []
+}

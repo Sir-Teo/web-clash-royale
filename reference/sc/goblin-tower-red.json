@@ -1,0 +1,17 @@
+{
+  "source": "level_goblin_arena",
+  "export": "goblin_red_tower",
+  "bounds": [
+    -91.1,
+    -213,
+    98.05,
+    91.55
+  ],
+  "width": 190,
+  "height": 305,
+  "triangles": 12,
+  "origin": [
+    0.4794736842105263,
+    0.3016393442622951
+  ]
+}

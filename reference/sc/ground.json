@@ -1,0 +1,17 @@
+{
+  "source": "arena_training",
+  "export": "training_area_bg",
+  "bounds": [
+    -1187.35,
+    -552.5,
+    1183.65,
+    1320
+  ],
+  "width": 2371,
+  "height": 1873,
+  "triangles": 203,
+  "origin": [
+    0.5007802614930409,
+    0.705018686599039
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "source": "building_basic_cannon",
+  "export": "building_enemy_cannon",
+  "bounds": [
+    -34.4775390625,
+    -55.4,
+    32.6787109375,
+    24.7173828125
+  ],
+  "width": 68,
+  "height": 81,
+  "triangles": 6,
+  "origin": [
+    0.5070226332720589,
+    0.31604938271604943
+  ]
+}

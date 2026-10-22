@@ -1,0 +1,142 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "files": [
+    {
+      "id": "knight",
+      "metadataSha256": "dfb22ff4f3de91521616aea81ac79f5c786fd336ba6fc3ccc26652d089810cbc",
+      "atlasSha256": "ec9c9c3bb76a7b42e2ea34be00a2152a48a74c442273647d699fbbf91e676bc3",
+      "source": "chr_knight",
+      "shapes": 80,
+      "clips": 30
+    },
+    {
+      "id": "archers",
+      "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",
+      "atlasSha256": "363544de6cdd51496145e4ec8331c1cfba3f7cea831e6ffe7ee8314306615c61",
+      "source": "chr_archer",
+      "shapes": 70,
+      "clips": 30
+    },
+    {
+      "id": "giant",
+      "metadataSha256": "13e1f81b328406242857fac8f9ace8734ddd1c9adba405cf12bcc6a395dc37b8",
+      "atlasSha256": "6b45b0e39de99c1caad86fce7b4893aee7ce073316ef7fcebd4566c6f755f206",
+      "source": "chr_giant",
+      "shapes": 65,
+      "clips": 20
+    },
+    {
+      "id": "musketeer",
+      "metadataSha256": "8ceb69fb0d485a971f2990081d8d88823beade5453183190d15ec45fe691f4ca",
+      "atlasSha256": "f9038a5855b05a9ae44a7e2c5d9d529228d6e17537d8271a9f2eb4c5b183a9e0",
+      "source": "chr_musketeer",
+      "shapes": 45,
+      "clips": 15
+    },
+    {
+      "id": "mini-pekka",
+      "metadataSha256": "7602a82a6d4ea82af08440793702a5b0dbe71208a1e425c6365b7d66b6dcd1b0",
+      "atlasSha256": "783ecd25e88e13ec4c6f5a31c47868a6d47fc322f2ea1d38c69e26ffc841846d",
+      "source": "chr_mini_pekka",
+      "shapes": 80,
+      "clips": 30
+    },
+    {
+      "id": "goblins",
+      "metadataSha256": "910da99a909743eb9780aae2692c008e192f458db128c88d40fedff1b383c11a",
+      "atlasSha256": "4847cacc8e0a7b4055a117f68cc75c67443b8fe41e88847a58d0c698b2025ac6",
+      "source": "chr_goblin",
+      "shapes": 80,
+      "clips": 30
+    },
+    {
+      "id": "spear-goblins",
+      "metadataSha256": "a5225cd1d31673195e1a609b3d10ae910c46d671a71b754e93621300a9681f98",
+      "atlasSha256": "64ef6be7b33d801e6048762672acfd3ab90fefe9e7f6b2e8b4697d57a31e07c2",
+      "source": "chr_goblin_archer",
+      "shapes": 40,
+      "clips": 15
+    },
+    {
+      "id": "skeletons",
+      "metadataSha256": "ebb73cd9cf005f5fc65f17e71cb3a88b32b7de3393269b36696876fab8eeac16",
+      "atlasSha256": "7e65b7c0e8e77a61e8081ad905ce474f6cc21666deeee61791658e678faf3d1b",
+      "source": "chr_skeleton",
+      "shapes": 40,
+      "clips": 15
+    },
+    {
+      "id": "bomber",
+      "metadataSha256": "28b57f7bb591151cdc29f60a54919ed6551b2d731a0887a464208b025dc90ac3",
+      "atlasSha256": "6a0165956f9fd822071703397f681d24cf4e4a0d56738d54cae99fe3c03b09d7",
+      "source": "chr_bomber",
+      "shapes": 85,
+      "clips": 25
+    },
+    {
+      "id": "valkyrie",
+      "metadataSha256": "5bb62da5ea8152f55125b75f2d80b5df27cee63e24df84d91b574f18463c9e08",
+      "atlasSha256": "c8916c190cf4bcd2c3db0d8b35901085d7fb1b41d5af84a03d4f033018adf30c",
+      "source": "chr_valkyrie",
+      "shapes": 70,
+      "clips": 30
+    },
+    {
+      "id": "hog-rider",
+      "metadataSha256": "77f4801dfd738fa55639505944df7448831cd733ebfb38f7c587e4b753ac5be7",
+      "atlasSha256": "308e2a5c95ca197869f5a0d76b429728f3d9bc2a1f419850b8b8febb53cde5a9",
+      "source": "chr_hog_rider",
+      "shapes": 80,
+      "clips": 30
+    },
+    {
+      "id": "baby-dragon",
+      "metadataSha256": "9d8d74eff5463e27df6bb4db13b9a93aeafb0bbba8f32b1ee582e526ce679190",
+      "atlasSha256": "dd2d9c6f00d4f0b2b56fd4e1ae1f8345b1e91a84429e1044acb7d479a8c15571",
+      "source": "chr_baby_dragon",
+      "shapes": 54,
+      "clips": 20
+    },
+    {
+      "id": "minions",
+      "metadataSha256": "7b590037f1f49d09a16bdf0a60e2c7744a264d893d1ae664fb532f7306fb1346",
+      "atlasSha256": "dd359b666b4cc67e0991dce848197b963c162f3c7db9cbde7c7c191601dc10de",
+      "source": "chr_minion",
+      "shapes": 40,
+      "clips": 10
+    },
+    {
+      "id": "witch",
+      "metadataSha256": "162c723c4c17e1cb0fca5d361548ec46bd622cf1177b93bbf5b1d5308d299333",
+      "atlasSha256": "2626fa64fa74d8f492f526a1b7d24613fd690a79f12b2ff219ba08b357ab830a",
+      "source": "chr_witch",
+      "shapes": 70,
+      "clips": 30
+    },
+    {
+      "id": "prince",
+      "metadataSha256": "e19e550df6dac25a6462835ee08f1ea60d45704707eb1d570153c87528c50ab3",
+      "atlasSha256": "d9348b5e9e4e50a16aaf1798295947914f60874036d5aa91d33c0003c989f76a",
+      "source": "chr_prince",
+      "shapes": 80,
+      "clips": 30
+    },
+    {
+      "id": "pekka",
+      "metadataSha256": "8b5026b261a2199f06d7b7440ea62cd50a549d5abc85be67ca3ff557d48ed042",
+      "atlasSha256": "6c24e417269c7e6bf98bafe6aa0a5885e0bbb16c212f5c3a14b8b30b4039ba4f",
+      "source": "chr_pekka",
+      "shapes": 80,
+      "clips": 30
+    },
+    {
+      "id": "wizard",
+      "metadataSha256": "6f228541846aa77e903a1f362aa1bcdccb270fc0623ef75ff7ccd12bc6191f55",
+      "atlasSha256": "9bd65da883c687d8d44f86ad9e8ca0780ce3ac147b9fd1b7f78d0f0548eb4be8",
+      "source": "chr_wizard",
+      "shapes": 50,
+      "clips": 20
+    }
+  ]
+}

@@ -2,6 +2,12 @@
 
 Card illustrations, character renders, arena thumbnails and audio are imported from [RoyaleAPI/cr-api-assets](https://github.com/RoyaleAPI/cr-api-assets), a public fan resource. Original game artwork/audio and Clash Royale trademarks belong to Supercell. The import script records an exact upstream commit and hashes in `public/assets/manifest.json`.
 
-The battlefield geometry, tower models, animated troop models, effects, user interface and simulation code are created for this project. Fonts: Lilita One and Nunito Sans via Fontsource (OFL).
+Original in-game shapes and animation export metadata are imported from [smlbiobot/cr](https://github.com/smlbiobot/cr) at commit `7fc7687e6de74690e902543ee4b59f562121e225`. These are archived Clash Royale 1.8.1 assets; the Wizard and Goblin Stadium scenery use 1.8.0. They are historical assets, not the current game client. Source metadata is retained in `reference/sc/`; atlas hashes and source shape counts are in `public/assets/sprites/manifest.json`.
+
+`scripts/import-sprites.mjs` reads bounded SC export, shape and movie-clip tables, selects five directions and four samples per walk/attack sequence, and packs the already-decoded PNG shapes into texture atlases. Idle frames retain a common foot anchor. The script checks block boundaries and selects frames by export identities, rather than assuming an ordering of image files.
+
+`scripts/compose-scene.mjs` reconstructs first-frame display lists, resolves child clips and transform matrices, triangulates source UV polygons and produces tower and scenery textures. The format reference is [Galaxy1036/sc_decode](https://github.com/Galaxy1036/sc_decode/blob/master/sc_decode.py). Scaling is 1/1024 for matrix coefficients and 1/20 for vertex/translation coordinates. The retained per-export JSON files record bounds, origins and triangle counts. This is static asset reconstruction; no original game executable was run, and it does not establish original runtime behavior.
+
+The surrounding 3D geometry, fallback troop models, effects, user interface and simulation code are created for this project. Fonts: Lilita One and Nunito Sans via Fontsource (OFL).
 
 Rules reference: [Supercell's November 2019 update](https://supercell.com/en/games/clashroyale/blog/release-notes/november-update/) documents three-minute regulation, two-minute overtime and triple elixir in the last overtime minute. This game implements a classic eight-card format with normalized, curated card stats; it does not claim live balance parity.

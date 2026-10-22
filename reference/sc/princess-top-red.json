@@ -1,0 +1,17 @@
+{
+  "source": "building_tower",
+  "export": "StarTower_top_red",
+  "bounds": [
+    -31,
+    -34,
+    31.5,
+    1.5
+  ],
+  "width": 63,
+  "height": 36,
+  "triangles": 2,
+  "origin": [
+    0.49206349206349204,
+    0.05555555555555558
+  ]
+}
