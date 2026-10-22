@@ -10,6 +10,8 @@ Princess Towers preserve the original base and foreground battlements, with the 
 
 Play against AI or challenge a friend in a private two-player room over Wi-Fi or a hosted HTTPS server. Room codes, invite links, ready checks, reconnects, emotes and both players’ replays are supported. The full live card roster and current balance parity are not implemented. See [multiplayer setup](docs/MULTIPLAYER.md) for Wi-Fi and remote hosting.
 
+The four original King emotes use complete native expressions and speech-bubble animations, with 16 voice variations. Each player has an independent bubble, a server-enforced cooldown and a persistent local mute option. The selector works with touch, mouse and keyboard; reduced motion uses still artwork.
+
 Destroyed towers leave native rubble for the rest of the battle. Their collapse uses original fire, smoke, flying plank and wall-fragment artwork. Debris pauses with the match and finishes settling after victory; replay seeking reconstructs the correct ruins.
 
 Earned crowns spin out of destroyed towers and fly to the matching score counter. A King Tower awards the remaining crowns to reach three. The flights follow pause and replay speed, adapt when a phone rotates, and finish before the result panel appears.
@@ -62,6 +64,8 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 `npm run assets:hud` imports six native timer/crown clips and both responsive crown compositions. `/tests/fixtures/hud.html` provides precise timer, score, animation-frame and source-layout inspection.
 
 `npm run assets:ending` imports five native match-ending and score timelines. `/tests/fixtures/ending.html` inspects exact frames, names, crown awards and still final scores.
+
+`npm run assets:emotes` imports 13 native reaction clips and the four original voice groups. `/tests/fixtures/emotes.html` provides both player bubbles, expression selection, frame stepping, voice playback and mute controls.
 
 ## Phone play
 

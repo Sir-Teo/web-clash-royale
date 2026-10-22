@@ -175,12 +175,6 @@
   color: #ffd388;
   background: #4c302bed;
 }
-.emote-bubble.enemy-emote {
-  top: 90px;
-  bottom: auto;
-  left: 18px;
-  right: auto;
-}
 @media (max-width: 480px) {
   .friend-button {
     margin-top: 8px;

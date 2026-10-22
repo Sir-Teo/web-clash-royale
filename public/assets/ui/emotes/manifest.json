@@ -1,0 +1,252 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "sources": [
+    {
+      "source": "csv_client/sounds.decoded.csv",
+      "path": "reference/client/sounds.csv",
+      "bytes": 51241,
+      "sha256": "89136418aae9513b094b0f66b61c920a1df40347292aee5c28eefac13b13e3ca"
+    },
+    {
+      "source": "csv_client/texts.decoded.csv",
+      "path": "reference/client/texts.csv",
+      "bytes": 1676624,
+      "sha256": "0102d5ec1cbe3f6b2abf9e57f3068b029c3c2e9304c2cd56f0b06aacd8bdd43e"
+    },
+    {
+      "source": "font/supercell-magic_0.ttf",
+      "path": "public/assets/ui/supercell-magic.ttf",
+      "bytes": 127716,
+      "sha256": "b39e9bd4d46006fe559302ba3205c746b7967dea3554bdf1b32685dbfacfbb2b"
+    },
+    {
+      "source": "sc/ui",
+      "path": "reference/sc/ui.bin",
+      "bytes": 2207168,
+      "sha256": "e835a19396a344c0739f8b054efa7fe030a4b55d832eace8064675fa4f9e00bd"
+    },
+    {
+      "source": "sc/ui_tex.png",
+      "bytes": 4876660,
+      "sha256": "f33ba6c1dc1457a4551546843c7c9318cad0a1f82603ae2c8c850975d5220ef0"
+    }
+  ],
+  "files": [
+    {
+      "file": "shape-213-0.webp",
+      "bytes": 3928,
+      "sha256": "810012d2a33039d88ec056638b5ae6555fb483404b0892c2df209fd8a5598be9"
+    },
+    {
+      "file": "shape-208-0.webp",
+      "bytes": 8892,
+      "sha256": "1251035a86a7485430ff710da46e0dd6cbe7dd458e3ed38c797729c44309e23e"
+    },
+    {
+      "file": "shape-219-0.webp",
+      "bytes": 10544,
+      "sha256": "237f82ec2d560e07774a19c55509265ed21c3d05dfda8122f1245a08cf5c72c1"
+    },
+    {
+      "file": "shape-220-0.webp",
+      "bytes": 8796,
+      "sha256": "a270ebd3e4e507098b946c8fe4e8c125ad00e8e9cae1708a9719353a6f7fe931"
+    },
+    {
+      "file": "shape-221-0.webp",
+      "bytes": 16548,
+      "sha256": "9bea4667834a4e9b62ee77928a97326b96198eafbce4a30e54ff0269d4af10b4"
+    },
+    {
+      "file": "shape-222-0.webp",
+      "bytes": 238,
+      "sha256": "651b3e211899732b38ad433e5619833e1cdee0d9499a1d6ad885e2f3b2305d62"
+    },
+    {
+      "file": "shape-223-0.webp",
+      "bytes": 406,
+      "sha256": "8fc3deb4a970f8042e31900bfa691dbf9dde23b7d41901e9e3f6a40625989b74"
+    },
+    {
+      "file": "shape-224-0.webp",
+      "bytes": 430,
+      "sha256": "35ede00a7eb7d82aab0c42498c7c9f56b506ff03c7e003860e1b80e5897e0045"
+    },
+    {
+      "file": "shape-214-0.webp",
+      "bytes": 18398,
+      "sha256": "e5659c071273626abf0af05cf1973a03fd1834f67f642f89356b79b3f943b999"
+    },
+    {
+      "file": "shape-215-0.webp",
+      "bytes": 1506,
+      "sha256": "0870c16968d63a64ce9c4b8ac0871909e8e2d66c0f4766f6030bb3e9459fb643"
+    },
+    {
+      "file": "shape-216-0.webp",
+      "bytes": 1412,
+      "sha256": "d04fec587c61fa59e3ae298be42e7e442a3ff9ce82280a0190e9d74387cb454f"
+    },
+    {
+      "file": "shape-209-0.webp",
+      "bytes": 20000,
+      "sha256": "feebc1ece6f99b5ce47c0759fdcbb090b53ee3f1273e174b0c796d24591662c2"
+    },
+    {
+      "file": "shape-210-0.webp",
+      "bytes": 5566,
+      "sha256": "d4274deffea71fd14da4c39c6daff69448c45101c818b7dbf95a1777ccf9b82e"
+    },
+    {
+      "file": "shape-206-0.webp",
+      "bytes": 492,
+      "sha256": "e04f5d95f3edaa63394837375825ef8724394463f4fc0d8d54d9d1f021b2abeb"
+    },
+    {
+      "file": "shape-212-0.webp",
+      "bytes": 584,
+      "sha256": "d964d18e9eff959ba55de0d42ae4dd579b288088e9056cbec314db5182a7b0cc"
+    },
+    {
+      "file": "shape-211-0.webp",
+      "bytes": 228,
+      "sha256": "ef14ba9370e9ec0e0ef1d8834d52940cfb9a6bfbc01a1b275c6b77639466eac3"
+    },
+    {
+      "file": "shape-211-1.webp",
+      "bytes": 228,
+      "sha256": "ef14ba9370e9ec0e0ef1d8834d52940cfb9a6bfbc01a1b275c6b77639466eac3"
+    },
+    {
+      "file": "shape-207-0.webp",
+      "bytes": 544,
+      "sha256": "b9e226155eba1e59927576e0f7cd56951bf98e98a85b8b896dbedc3f04bf9a65"
+    },
+    {
+      "file": "shape-235-0.webp",
+      "bytes": 1230,
+      "sha256": "c2d7345b47208ffe41c72e45633c4238c78bc3888be65051c7b7351f8a82eac6"
+    },
+    {
+      "file": "shape-236-0.webp",
+      "bytes": 3284,
+      "sha256": "c8ec3ba1b2dce9f5a0a9eb2efa9e6fdcd5bb7126062ecc9390d0f6a3a6f5ad22"
+    },
+    {
+      "file": "shape-237-0.webp",
+      "bytes": 2702,
+      "sha256": "dc21f4b32beec6acecde5dcf1054574ed91897f0585006ff970c61ad4e792fbd"
+    },
+    {
+      "file": "shape-217-0.webp",
+      "bytes": 470,
+      "sha256": "1c6f4236d8a3971b5d7d651fdbb3e3261696b59de0a5f230ab6124ab505f9e6d"
+    },
+    {
+      "file": "emotes.json",
+      "bytes": 264827,
+      "sha256": "1ce5caac184bf70985747b38dacc0b7799966074cc2816967db421eea9c538a3"
+    }
+  ],
+  "audioSource": "https://github.com/RoyaleAPI/cr-api-assets",
+  "audioCommit": "b4530a1043b213ee2baf9c50a3d0d7fae22c2313",
+  "audioFiles": [
+    {
+      "file": "king_laughter_01.ogg",
+      "source": "sfx/king_laughter_01.ogg",
+      "bytes": 8542,
+      "sha256": "846151f731d95808efe8e9b8a827c4b37ed44c3d3898ee0e2549586fc4adffea"
+    },
+    {
+      "file": "king_laughter_02.ogg",
+      "source": "sfx/king_laughter_02.ogg",
+      "bytes": 8071,
+      "sha256": "1550bec7a04c6d70a17ff5095c3633c74759fdd1344809166cf8c33d94b59e94"
+    },
+    {
+      "file": "king_laughter_03.ogg",
+      "source": "sfx/king_laughter_03.ogg",
+      "bytes": 8614,
+      "sha256": "cb4e8bc5dd54acc428b8b22e25a8e4d279326b140e58f7808ab94f1a8c49867f"
+    },
+    {
+      "file": "king_laughter_04.ogg",
+      "source": "sfx/king_laughter_04.ogg",
+      "bytes": 8335,
+      "sha256": "9b68f04674497b6bfed1f2487fb16c23d1669553da8a18a7bc6b4cc83e632ba9"
+    },
+    {
+      "file": "king_crying_01.ogg",
+      "source": "sfx/king_crying_01.ogg",
+      "bytes": 8822,
+      "sha256": "b60e5534048c7ad199658714295919e8bac4db64e469382108f5682d90d6e10d"
+    },
+    {
+      "file": "king_crying_02.ogg",
+      "source": "sfx/king_crying_02.ogg",
+      "bytes": 9800,
+      "sha256": "33dc91153e0b6e723e24801c6693ae546f5f282c18df32cffba296c0024c1dc0"
+    },
+    {
+      "file": "king_crying_03.ogg",
+      "source": "sfx/king_crying_03.ogg",
+      "bytes": 9708,
+      "sha256": "648d5844962523af7a5009bc4c8c44935a2d7c46b692c299f978034fbaefd251"
+    },
+    {
+      "file": "king_crying_04.ogg",
+      "source": "sfx/king_crying_04.ogg",
+      "bytes": 10254,
+      "sha256": "f47bd07da9c0dfb984a0247031b9a71a9b55d1b4f8055ea755608cc5526a8b8f"
+    },
+    {
+      "file": "king_congrats_01.ogg",
+      "source": "sfx/king_congrats_01.ogg",
+      "bytes": 6728,
+      "sha256": "d2a012eb9b66de5dbc2eb4b26d348ca6c9599102394856ca9d7ee68f56f87aca"
+    },
+    {
+      "file": "king_congrats_02.ogg",
+      "source": "sfx/king_congrats_02.ogg",
+      "bytes": 6381,
+      "sha256": "33867422dc0d6d516d839b5616af548720bb5149d621577f8157d12ddb68ec56"
+    },
+    {
+      "file": "king_congrats_03.ogg",
+      "source": "sfx/king_congrats_03.ogg",
+      "bytes": 8248,
+      "sha256": "e4142b44e176b601601b3a023a31edc9b870120da62b8bab9c2fa4bdf5a3f899"
+    },
+    {
+      "file": "king_congrats_04.ogg",
+      "source": "sfx/king_congrats_04.ogg",
+      "bytes": 7678,
+      "sha256": "a87143e401ad0aacff975da7ea0af5bcb98aec5750ba7c27ce5cafa3d7a3e34e"
+    },
+    {
+      "file": "king_mad_01.ogg",
+      "source": "sfx/king_mad_01.ogg",
+      "bytes": 7728,
+      "sha256": "935b45623465f64ae0acf2a25ce72be9e88bdc57291e597d5e7a3d46579268de"
+    },
+    {
+      "file": "king_mad_02.ogg",
+      "source": "sfx/king_mad_02.ogg",
+      "bytes": 7762,
+      "sha256": "b7784a6ee562e606caecf49f8ecc416d5f5370cce1e3f3eb80d207a1808ccd95"
+    },
+    {
+      "file": "king_mad_03.ogg",
+      "source": "sfx/king_mad_03.ogg",
+      "bytes": 11884,
+      "sha256": "b2d32a6380dea2894cfb9d7d4c8dd10ef7e8f7ad32ad0ab20b38c7e1aa240e83"
+    },
+    {
+      "file": "king_mad_04.ogg",
+      "source": "sfx/king_mad_04.ogg",
+      "bytes": 15652,
+      "sha256": "15857313e8c2d252cc193042f870e40c48df341a2f92e5d35e1eafd8869440cf"
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import { NativeAnnouncements, battleClock } from "./ui/announcements";
 import "./ui/rooms.css";
 import "./ui/ending.css";
 import { NativeEnding } from "./ui/ending";
+import { NativeEmotes } from "./ui/emotes";
 import { endResult } from "./ui/ending-data";
 import {
   network,
@@ -228,13 +229,13 @@ $("#app").innerHTML = `
      <div class="lobby-bottom"><div class="battle-button-wrap"><span class="battle-flare"></span><button id="battle-button" class="battle-button">${icon("swords")} BATTLE ${icon("chevron-right")}</button></div><button id="friend-button" class="friend-button">${icon("users")} Play with a friend</button><span class="battle-caption">${icon("shield-check")} Level 11 cards <span>·</span> Offline AI opponent</span></div>
      <div class="match-top hidden"><div class="competitor enemy"><span class="mini-shield red">${icon("shield")}</span><div><b>Royal Trainer</b><span>Training guild</span></div></div><div class="match-timer"><span id="phase-label">TIME LEFT</span><b id="match-clock">3:00</b></div></div>
      <div class="match-crowns hidden"><div class="red">${icon("crown")}<b id="red-crowns">0</b></div><span>:</span><div class="blue"><b id="blue-crowns">0</b>${icon("crown")}</div></div>
-     <div class="match-bottom hidden"><div class="competitor"><span class="mini-shield blue">${icon("shield")}</span><div><b class="player-name">${esc(profile.name)}</b><span>Browser kingdom</span></div></div><div class="battle-tools"><button id="emote-button" class="small-icon" aria-label="Send King laugh emote">${icon("smile")}</button><button id="pause-button" class="small-icon" aria-label="Pause battle">${icon("pause")}</button></div></div>
+     <div class="match-bottom hidden"><div class="competitor"><span class="mini-shield blue">${icon("shield")}</span><div><b class="player-name">${esc(profile.name)}</b><span>Browser kingdom</span></div></div><div class="battle-tools"><button id="emote-button" class="small-icon" aria-label="King emotes">${icon("smile")}</button><button id="pause-button" class="small-icon" aria-label="Pause battle">${icon("pause")}</button></div></div>
      <div id="connection-status" class="connection-status hidden" role="status"></div><div id="deploy-hint" class="deploy-hint hidden">Select a card to deploy</div>
      <div class="battle-announcements hidden" id="battle-announcements" role="img" aria-label="Battle announcement"></div>
      <div class="battle-intro hidden" id="battle-intro" role="img" aria-label="Battle introduction"></div>
      <section class="battle-ending hidden" id="battle-ending" aria-label="Battle ended"></section>
      <div class="pause-cover hidden"><span class="eyebrow">TAKE A BREATHER</span><h2>Battle paused</h2><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button><button class="text-button" id="surrender-button">Leave battle</button></div>
-     <div class="emote-bubble hidden">${icon("crown")}<b>HA HA HA!</b></div>
+     <div id="emote-layer"></div>
     </div>
     <div id="lobby-footer" class="chest-tray"><div class="chest-heading"><span>VICTORY CHESTS</span><b id="chest-count">0 / 4</b></div><div class="chest-slots" id="chest-slots"></div></div>
     <div id="battle-tray" class="battle-tray hidden"><div class="hand-row"><div class="next-card"><span>NEXT</span><div class="next-card-picture" data-native-card="" data-card-variant="thumbnail"><img id="next-card-img" alt="Next card"/>${nativeCardArt}</div><div class="native-next-cost" data-native-card="" data-card-variant="cost"><b id="next-card-cost"></b>${nativeCardArt}</div></div><div class="hand" id="hand"></div></div><div class="elixir-row">${elixirMarkup}</div><div class="tray-caption"><span id="hand-caption">Select a card, then tap your side of the arena</span><span><kbd>1</kbd>–<kbd>4</kbd> SELECT</span></div></div>
@@ -257,15 +258,34 @@ const announcements = new NativeAnnouncements($("#battle-announcements"));
 const intro = new NativeIntro($("#battle-intro"));
 const elixir = new NativeElixir($("#elixir-hud"));
 const ending = new NativeEnding($("#battle-ending"));
+const emotes = new NativeEmotes(
+  $("#emote-layer"),
+  $("#emote-button") as HTMLButtonElement,
+  profile.emotesMuted,
+);
+emotes.onCue = (file, volume) => audio.play(file, volume);
+emotes.onMute = (muted) => {
+  profile.emotesMuted = muted;
+  saveProfile(profile);
+};
+emotes.onSend = (kind) => {
+  if (screen !== "battle" || paused || battle.winner || intro.clock.blocking)
+    return false;
+  if (multiplayer)
+    return network.connected && network.send({ type: "emote", kind });
+  return emotes.show("blue", kind);
+};
 ending.onContinue = () => {
   if (pendingResult && arena.effectTime >= pendingResult.time) ending.skip();
 };
 function resetEnding() {
+  emotes.reset();
   ending.reset();
   endingBattle = null;
 }
 function startEnding(hold = false) {
   if (endingBattle === battle || !battle.winner) return;
+  emotes.reset();
   endingBattle = battle;
   const player = multiplayer
     ? (network.room?.players.find((p) => p.team === network.team)?.name ??
@@ -972,7 +992,11 @@ network.onMessage = (message) => {
       } else toast(message.message);
     } else if (modalKey === "room") showMultiplayer();
   }
-  if (message.type === "emote") showEmote(message.team !== network.team);
+  if (message.type === "emote" && screen === "battle" && !battle.winner)
+    emotes.show(
+      message.team === network.team ? "blue" : "red",
+      message.kind ?? "laugh",
+    );
 };
 
 function showModes() {
@@ -1389,19 +1413,6 @@ $("#surrender-button").onclick = () => {
   else battle.finish("red", "Surrender");
   updateBattleUI();
 };
-$("#emote-button").onclick = () => {
-  if (multiplayer) {
-    network.send({ type: "emote" });
-    return;
-  }
-  showEmote(false);
-};
-function showEmote(enemy: boolean) {
-  $(".emote-bubble").classList.toggle("enemy-emote", enemy);
-  audio.play("king_laughter_01", 0.5);
-  $(".emote-bubble").classList.remove("hidden");
-  setTimeout(() => $(".emote-bubble").classList.add("hidden"), 1800);
-}
 $("#replay-play").onclick = () => {
   if (replayData && battle.tick >= replayData.duration && replayRecord)
     playReplay(replayRecord);
@@ -1498,6 +1509,7 @@ document.addEventListener("keydown", (e) => {
 });
 function suspendFrameLoop() {
   cancelPointer();
+  emotes.suspend();
   if (!multiplayer && screen !== "lobby" && !paused && !battle.winner)
     togglePause();
   audio.stopMusic();
@@ -1618,6 +1630,14 @@ function frame(now: number) {
     delta,
     !!pendingResult && arena.effectTime >= pendingResult.time,
   );
+  emotes.update(
+    paused ? 0 : delta,
+    screen === "battle" &&
+      !paused &&
+      !battle.winner &&
+      !intro.clock.blocking &&
+      (!multiplayer || network.connected),
+  );
   if (pendingResult) {
     if (pendingResult.battle !== battle || screen !== "battle")
       pendingResult = null;
@@ -1642,6 +1662,8 @@ Object.defineProperty(window, "__arena", {
         rulesVersion: battle.rulesVersion,
         winner: battle.winner,
         reason: battle.reason,
+        loadedEmotes: emotes.loaded,
+        emotes: emotes.state,
         elixir: battle.players.blue.elixir,
         hand: [...battle.players.blue.hand],
         troops: battle.entities.filter((e) => e.kind === "troop").length,

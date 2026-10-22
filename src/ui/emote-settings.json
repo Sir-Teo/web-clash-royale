@@ -1,0 +1,38 @@
+{
+  "expressions": {
+    "laugh": {
+      "fps": 60,
+      "frames": 40
+    },
+    "cry": {
+      "fps": 60,
+      "frames": 46
+    },
+    "angry": {
+      "fps": 60,
+      "frames": 31
+    },
+    "thumbs": {
+      "fps": 60,
+      "frames": 37
+    }
+  },
+  "bubbles": {
+    "blue": {
+      "fps": 60,
+      "frames": 145,
+      "anchor": [
+        -141.85,
+        -283.05
+      ]
+    },
+    "red": {
+      "fps": 60,
+      "frames": 145,
+      "anchor": [
+        145.05,
+        109.05
+      ]
+    }
+  }
+}

@@ -40,6 +40,7 @@ try {
       window.__arena?.state.loadedHealth === 22 &&
       window.__arena?.state.loadedHud === 6 &&
       window.__arena?.state.loadedEndings === 5 &&
+      window.__arena?.state.loadedEmotes === 13 &&
       document.fonts.check('40px "Supercell Magic"') &&
       window.__arena?.state.nativeTowerPrincesses === 4 &&
       window.__arena?.state.nativePrincessTowers === 4,
@@ -56,8 +57,23 @@ try {
     () =>
       window.__arena?.state.rulesVersion === 5 && window.__arena.state.time > 0,
   );
+  await page.getByRole("button", { name: "King emotes", exact: true }).click();
+  const voice = page.waitForResponse((r) =>
+    r.url().endsWith("/king_crying_01.ogg"),
+  );
+  await page
+    .getByRole("button", { name: "Send King cry", exact: true })
+    .click();
+  await page.waitForFunction(
+    () => window.__arena.state.emotes.blue?.kind === "cry",
+  );
+  const response = await voice;
+  if (!response.ok() || !response.fromServiceWorker())
+    throw new Error("Emote voice did not load from the offline cache");
   if (errors.length) throw new Error(errors.join("\n"));
-  console.log("Production offline reload and battle start passed.");
+  console.log(
+    "Production offline reload, battle start and native emote/voice passed.",
+  );
 } finally {
   await browser.close();
 }

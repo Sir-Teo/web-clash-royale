@@ -55,6 +55,17 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
   } as any);
   const red = await context.newPage();
   const errors: string[] = [];
+  const reactions: Record<string, any[]> = { blue: [], red: [] };
+  for (const [name, player] of [
+    ["blue", page],
+    ["red", red],
+  ] as const)
+    player.on("websocket", (socket) =>
+      socket.on("framereceived", (frame) => {
+        const message = JSON.parse(frame.payload.toString());
+        if (message.type === "emote") reactions[name].push(message);
+      }),
+    );
   page.on("pageerror", (e) => errors.push(e.message));
   red.on("pageerror", (e) => errors.push(e.message));
   try {
@@ -102,6 +113,23 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
     await expect(red.locator(".competitor.enemy b")).toHaveText("Blue King");
     console.log("Multiplayer: both players in battle");
     await deploy(page);
+    await page
+      .getByRole("button", { name: "King emotes", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Send King cry", exact: true })
+      .click();
+    await red.getByRole("button", { name: "King emotes", exact: true }).click();
+    await red
+      .getByRole("button", { name: "Send King thumbs up", exact: true })
+      .click();
+    for (const side of ["blue", "red"])
+      await expect
+        .poll(() => reactions[side])
+        .toEqual([
+          { type: "emote", team: "blue", kind: "cry" },
+          { type: "emote", team: "red", kind: "thumbs" },
+        ]);
     await page.evaluate(() => {
       Object.defineProperty(document, "hidden", {
         configurable: true,

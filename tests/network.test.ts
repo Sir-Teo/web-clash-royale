@@ -67,6 +67,52 @@ async function match() {
   return { url, a, b, welcome, red };
 }
 describe("authoritative multiplayer", () => {
+  it("validates all four emotes, keeps sender identity authoritative and limits each player independently", async () => {
+    const { a, b } = await match();
+    a.send({ type: "emote", kind: "<script>" });
+    a.send({ type: "emote", kind: 9 });
+    a.send({ type: "emote", kind: null });
+    a.send({ type: "emote", kind: "cry", team: "red" });
+    expect(await a.wait("emote")).toEqual({
+      type: "emote",
+      team: "blue",
+      kind: "cry",
+    });
+    expect(await b.wait("emote")).toEqual({
+      type: "emote",
+      team: "blue",
+      kind: "cry",
+    });
+    a.send({ type: "emote", kind: "angry" });
+    b.send({ type: "emote", kind: "thumbs" });
+    expect(await a.wait("emote")).toEqual({
+      type: "emote",
+      team: "red",
+      kind: "thumbs",
+    });
+    expect(await b.wait("emote")).toEqual({
+      type: "emote",
+      team: "red",
+      kind: "thumbs",
+    });
+    a.send({ type: "ping", at: 1 });
+    await a.wait("pong");
+    expect(a.messages.filter((m) => m.type === "emote")).toEqual([]);
+    await new Promise((resolve) => setTimeout(resolve, 2550));
+    a.send({ type: "emote", kind: "angry" });
+    b.send({ type: "emote" }); // Original clients retain their laugh default.
+    expect((await a.wait("emote", (m) => m.team === "blue")).kind).toBe(
+      "angry",
+    );
+    expect((await a.wait("emote", (m) => m.team === "red")).kind).toBe("laugh");
+    b.send({ type: "surrender" });
+    await a.wait("state", (m) => !!m.state.winner);
+    await new Promise((resolve) => setTimeout(resolve, 2550));
+    a.send({ type: "emote", kind: "cry" });
+    a.send({ type: "ping", at: 2 });
+    await a.wait("pong", (m) => m.at === 2);
+    expect(a.messages.filter((m) => m.type === "emote")).toEqual([]);
+  }, 10000);
   it("isolates rooms, keeps hands private, accepts both sides and rejects forged moves", async () => {
     const { url, a, b, welcome } = await match();
     const outsider = await peer(url);

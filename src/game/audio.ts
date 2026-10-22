@@ -23,6 +23,10 @@ export class GameAudio {
       this.active.add(a);
       a.addEventListener("ended", () => this.active.delete(a), { once: true });
       void a.play().catch(() => this.active.delete(a));
+      return () => {
+        a.pause();
+        this.active.delete(a);
+      };
     } catch {
       /* Audio is optional. */
     }

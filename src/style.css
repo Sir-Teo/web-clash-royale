@@ -1592,32 +1592,6 @@ kbd {
   font-size: 11px;
   color: #9bb0c1;
 }
-.emote-bubble {
-  position: absolute;
-  z-index: 8;
-  bottom: 55px;
-  left: 20px;
-  background: #f1eedc;
-  color: #514431;
-  border: 3px solid #fff8;
-  border-radius: 12px 12px 12px 2px;
-  padding: 12px;
-  display: flex;
-  gap: 7px;
-  align-items: center;
-  transform: rotate(-5deg);
-  box-shadow: 0 3px 10px #0004;
-}
-.emote-bubble svg {
-  color: #cc9d39;
-  fill: #f5cd65;
-  width: 24px;
-  height: 24px;
-}
-.emote-bubble b {
-  font-family: var(--display);
-  font-size: 18px;
-}
 .replay-controls {
   display: flex;
   align-items: center;

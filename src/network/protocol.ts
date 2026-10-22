@@ -1,4 +1,5 @@
 import type { CardId } from "../game/cards";
+import type { EmoteKind } from "../game/emotes";
 import type {
   BattleEvent,
   Entity,
@@ -45,7 +46,8 @@ export type ClientMessage =
   | { type: "resume"; version: number; code: string; token: string }
   | { type: "ready"; ready: boolean }
   | { type: "play"; seq: number; card: CardId; x: number; y: number }
-  | { type: "leave" | "surrender" | "emote" }
+  | { type: "leave" | "surrender" }
+  | { type: "emote"; kind?: EmoteKind }
   | { type: "ping"; at: number };
 export type ServerMessage =
   | {
@@ -65,5 +67,5 @@ export type ServerMessage =
     }
   | { type: "ack"; seq: number; ok: boolean; reason: string }
   | { type: "error"; message: string; fatal?: boolean }
-  | { type: "emote"; team: Team }
+  | { type: "emote"; team: Team; kind: EmoteKind }
   | { type: "pong"; at: number };

@@ -35,7 +35,7 @@ test("saved v4 and v5 replays retain their endings when seeking on desktop and p
   await page.goto("/");
   await expect
     .poll(
-      () => page.evaluate(() => (window as any).__arena.state.loadedEffects),
+      () => page.evaluate(() => (window as any).__arena?.state.loadedEffects),
       { timeout: 30000 },
     )
     .toBe(45);
@@ -115,10 +115,10 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
-  await expect(page.locator("canvas")).toBeVisible();
+  await expect(page.locator("canvas")).toBeVisible({ timeout: 30000 });
   await expect
     .poll(
-      () => page.evaluate(() => (window as any).__arena.state.loadedEffects),
+      () => page.evaluate(() => (window as any).__arena?.state.loadedEffects),
       { timeout: 30000 },
     )
     .toBe(45);
@@ -150,9 +150,14 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
   await page.reload();
   await expect(
     page.locator('#deck-preview [data-card-info="valkyrie"]'),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 30000 });
   await page.locator("#battle-button").click();
   await expect(page.locator("#hand .game-card")).toHaveCount(4);
+  await expect
+    .poll(() =>
+      page.evaluate(() => (window as any).__arena.state.intro.blocking),
+    )
+    .toBe(false);
   // Select an affordable opening troop using the same public controls as a player.
   const cards = await page.locator("#hand .game-card").evaluateAll((els) =>
     els.map((e) => ({

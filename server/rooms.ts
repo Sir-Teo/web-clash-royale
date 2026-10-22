@@ -7,6 +7,7 @@ import type { Mode, Team } from "../src/game/engine";
 import { CARD_MAP, STARTER_DECK } from "../src/game/cards";
 import type { CardId } from "../src/game/cards";
 import { PROTOCOL, RECONNECT_MS } from "../src/network/protocol";
+import { EMOTE_COOLDOWN, isEmote } from "../src/game/emotes";
 import type {
   ClientMessage,
   ServerMessage,
@@ -274,9 +275,16 @@ export function attachRooms(
       finish(r, other(p.team), "Surrender");
       return;
     }
-    if (m.type === "emote" && performance.now() - p.emoteAt >= 2500) {
-      p.emoteAt = performance.now();
-      broadcast(r, { type: "emote", team: p.team });
+    if (m.type === "emote") {
+      const kind = m.kind === undefined ? "laugh" : m.kind;
+      if (
+        isEmote(kind) &&
+        (r.phase === "playing" || r.phase === "countdown") &&
+        performance.now() - p.emoteAt >= EMOTE_COOLDOWN * 1000
+      ) {
+        p.emoteAt = performance.now();
+        broadcast(r, { type: "emote", team: p.team, kind });
+      }
       return;
     }
     if (m.type === "play") {

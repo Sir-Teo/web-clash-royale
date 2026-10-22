@@ -24,6 +24,19 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 describe("battle cue audio", () => {
+  it("can stop an emote voice without silencing an active combat cue", () => {
+    const audio = new GameAudio();
+    audio.play("fireball_hit_01");
+    const combat = instances.at(-1)!;
+    const stop = audio.play("king_laughter_01");
+    const voice = instances.at(-1)!;
+    stop!();
+    expect(voice.pause).toHaveBeenCalledOnce();
+    expect(combat.pause).not.toHaveBeenCalled();
+    audio.stopEffects();
+    expect(combat.pause).toHaveBeenCalledOnce();
+    expect(voice.pause).toHaveBeenCalledOnce();
+  });
   it("follows replay speed and stops all active effects on pause or mute", () => {
     const audio = new GameAudio();
     audio.play("10_cd_02", 0.3);

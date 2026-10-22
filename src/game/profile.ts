@@ -27,6 +27,7 @@ export interface Profile {
   history: RecordEntry[];
   sound: boolean;
   music: boolean;
+  emotesMuted: boolean;
   seenTutorial: boolean;
 }
 const KEY = "browser-royale.profile.v1";
@@ -68,6 +69,7 @@ const base = (): Profile => ({
   history: [],
   sound: true,
   music: false,
+  emotesMuted: false,
   seenTutorial: false,
 });
 export const validDeck = (a: unknown): a is CardId[] =>
@@ -94,7 +96,12 @@ export function loadProfile(): Profile {
         p[key] = Math.floor(saved[key]);
     if (typeof saved.name === "string")
       p.name = saved.name.trim().slice(0, 18) || p.name;
-    for (const key of ["sound", "music", "seenTutorial"] as const)
+    for (const key of [
+      "sound",
+      "music",
+      "emotesMuted",
+      "seenTutorial",
+    ] as const)
       if (typeof saved[key] === "boolean") p[key] = saved[key];
     if (
       Array.isArray(saved.decks) &&
