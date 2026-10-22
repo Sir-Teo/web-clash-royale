@@ -40,7 +40,14 @@ export class BuildingLibrary {
           this.assets.set(id, {
             data,
             textures,
-            materials: textures.map(makeMaterial),
+            // SC buildings include a ground footprint below their authored
+            // pivot. Composite the full billboard above opaque terrain; Three
+            // still sorts these transparent sprites by their arena position.
+            materials: textures.map((texture) => {
+              const material = makeMaterial(texture);
+              material.depthTest = false;
+              return material;
+            }),
             geometry: new Map(),
             scale:
               (id === "king" ? 3.5 : 2.2) / (data.bounds[2] - data.bounds[0]),
