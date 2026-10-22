@@ -1,5 +1,13 @@
 import { CARD_MAP, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
+import {
+  combatTraits,
+  FIREBALL_SPEED,
+  FIREBALL_KNOCKBACK,
+  ARROWS_SPEED,
+  ARROWS_WAVES,
+  ARROWS_WAVE_GAP,
+} from "./combat";
 export type Team = "blue" | "red";
 export type Mode = "classic" | "training" | "double";
 export const STEP = 1 / 30;
@@ -33,6 +41,7 @@ export interface Entity extends Point {
   lane?: "left" | "right";
   lifetime?: number;
   spawnTimer: number;
+  pendingAttack?: { target: number; remaining: number; damage: number };
 }
 export interface Projectile extends Point {
   id: number;
@@ -48,6 +57,15 @@ export interface Projectile extends Point {
   style: string;
   stun: number;
   source: number;
+  flight?: Point;
+  speed?: number;
+  homing?: boolean;
+  elapsed?: number;
+  delay?: number;
+  fromHeight?: number;
+  toHeight?: number;
+  arc?: number;
+  knockback?: number;
 }
 export interface BattleEvent extends Point {
   id: number;
@@ -62,7 +80,7 @@ export interface Action extends Point {
   card: CardId;
 }
 export interface Replay {
-  version: 1;
+  version: 1 | 2;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -91,6 +109,7 @@ export class Battle {
   readonly mode: Mode;
   readonly deck: CardId[];
   readonly enemyDeck: CardId[];
+  readonly rulesVersion: Replay["version"];
   tick = 0;
   entities: Entity[] = [];
   projectiles: Projectile[] = [];
@@ -107,6 +126,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
+    this.rulesVersion = r?.version ?? 2;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -294,24 +314,49 @@ export class Battle {
     this.actions.push({ tick: this.tick, team, card: id, x, y });
     this.emit(c.kind === "spell" ? "spell" : "deploy", team, x, y, id);
     if (c.kind === "spell") {
-      const duration = id === "zap" ? 0.15 : id === "arrows" ? 0.65 : 0.9;
-      this.projectiles.push({
-        id: this.nextId++,
-        team,
-        x: team === "blue" ? 9 : 9,
-        y: team === "blue" ? 30 : 2,
-        tx: x,
-        ty: y,
-        target: null,
-        damage: c.damage,
-        remaining: duration,
-        duration,
-        splash: c.radius!,
-        air: true,
-        style: id,
-        stun: c.stun ?? 0,
-        source: 0,
-      });
+      const origin = { x: 9, y: team === "blue" ? 30 : 2 };
+      const modern = this.rulesVersion === 2;
+      const speed = id === "fireball" ? FIREBALL_SPEED : ARROWS_SPEED;
+      const duration =
+        id === "zap"
+          ? 0.15
+          : modern
+            ? dist(origin, { x, y }) / speed
+            : id === "arrows"
+              ? 0.65
+              : 0.9;
+      const waves = modern && id === "arrows" ? ARROWS_WAVES : 1;
+      for (let wave = 0; wave < waves; wave++)
+        this.projectiles.push({
+          id: this.nextId++,
+          team,
+          x: team === "blue" ? 9 : 9,
+          y: team === "blue" ? 30 : 2,
+          tx: x,
+          ty: y,
+          target: null,
+          damage: c.damage / waves,
+          remaining: duration,
+          duration,
+          splash: c.radius!,
+          air: true,
+          style: id,
+          stun: c.stun ?? 0,
+          source: 0,
+          ...(modern
+            ? {
+                flight: id === "zap" ? { x, y } : { ...origin },
+                speed: id === "zap" ? undefined : speed,
+                homing: false,
+                elapsed: 0,
+                delay: wave * ARROWS_WAVE_GAP,
+                fromHeight: id === "zap" ? 7 : 2.4,
+                toHeight: 0.2,
+                arc: id === "arrows" ? 9 : id === "zap" ? 0 : 6,
+                knockback: id === "fireball" ? FIREBALL_KNOCKBACK : 0,
+              }
+            : {}),
+        });
     } else {
       for (let i = 0; i < c.count; i++) {
         const angle = i * 2.39996;
@@ -400,6 +445,36 @@ export class Battle {
         10,
         this.players[t].elixir + (STEP / 2.8) * this.multiplier,
       );
+    if (this.rulesVersion === 1) this.updateLegacyCombat();
+    else this.updateCombat();
+    this.separate();
+    this.entities = this.entities.filter((e) => e.hp > 0);
+    if (beforePhase !== this.phase) this.emit("phase", "blue", 9, 16);
+    if (
+      this.time >= 180 &&
+      this.players.blue.crowns !== this.players.red.crowns
+    )
+      this.finish(
+        this.players.blue.crowns > this.players.red.crowns ? "blue" : "red",
+        "More crowns",
+      );
+    if (this.time >= 300 && !this.winner) {
+      const lowest = (team: Team) =>
+        Math.min(
+          ...this.entities
+            .filter((e) => e.team === team && e.kind === "tower")
+            .map((e) => e.hp),
+        );
+      const blue = lowest("blue"),
+        red = lowest("red");
+      this.finish(
+        Math.abs(blue - red) < 0.01 ? "draw" : blue > red ? "blue" : "red",
+        "Tiebreaker",
+      );
+    }
+  }
+  // Frozen rules for saved v1 battles. New matches use updateCombat below.
+  private updateLegacyCombat() {
     for (const e of [...this.entities]) {
       if (e.hp <= 0) continue;
       e.age += STEP;
@@ -528,31 +603,279 @@ export class Battle {
       );
     }
     this.projectiles = this.projectiles.filter((p) => p.remaining > 0);
-    this.separate();
-    this.entities = this.entities.filter((e) => e.hp > 0);
-    if (beforePhase !== this.phase) this.emit("phase", "blue", 9, 16);
+  }
+  private validTarget(e: Entity, target: Entity) {
+    const card = e.card === "tower" ? null : CARD_MAP[e.card];
+    return (
+      target.hp > 0 &&
+      target.team !== e.team &&
+      (!target.air || e.kind === "tower" || !!card?.hitsAir) &&
+      (!card?.buildingsOnly || target.kind !== "troop")
+    );
+  }
+  private inRange(e: Entity, target: Entity) {
+    return dist(e, target) <= e.range + target.radius + e.radius * 0.35;
+  }
+  private acquireTarget(e: Entity) {
+    const current = this.entities.find(
+      (t) => t.id === e.target && this.validTarget(e, t),
+    );
+    // Keep an engaged target. A distant tower is only a movement destination;
+    // nearby defenders or a newly deployed building can intercept that path.
+    const sight = Math.max(combatTraits(e).sight, e.range);
     if (
-      this.time >= 180 &&
-      this.players.blue.crowns !== this.players.red.crowns
+      current &&
+      (this.inRange(e, current) ||
+        (current.kind === "troop" &&
+          dist(e, current) <= sight + current.radius))
     )
-      this.finish(
-        this.players.blue.crowns > this.players.red.crowns ? "blue" : "red",
-        "More crowns",
-      );
-    if (this.time >= 300 && !this.winner) {
-      const lowest = (team: Team) =>
-        Math.min(
-          ...this.entities
-            .filter((e) => e.team === team && e.kind === "tower")
-            .map((e) => e.hp),
+      return current;
+    const legal = this.entities.filter((t) => this.validTarget(e, t));
+    const closest = (a: Entity, b: Entity) =>
+      dist(e, a) - a.radius - (dist(e, b) - b.radius);
+    const nearby = legal
+      .filter((t) => dist(e, t) <= sight + t.radius)
+      .sort(closest)[0];
+    const target =
+      nearby ??
+      (e.kind === "troop"
+        ? legal.filter((t) => t.kind !== "troop").sort(closest)[0]
+        : undefined);
+    e.target = target?.id ?? null;
+    return target;
+  }
+  private cancelAttack(e: Entity) {
+    e.pendingAttack = undefined;
+    e.attack = 0;
+    e.cooldown = 0;
+  }
+  private updateCombat() {
+    for (const e of [...this.entities]) {
+      if (e.hp <= 0) continue;
+      e.age += STEP;
+      e.attack = Math.max(0, e.attack - STEP);
+      e.cooldown = Math.max(0, e.cooldown - STEP);
+      e.stun = Math.max(0, e.stun - STEP);
+      if (e.deploy > 0) {
+        e.deploy -= STEP;
+        continue;
+      }
+      if (e.lifetime) {
+        this.hurt(e, (e.maxHp / e.lifetime) * STEP);
+        if (e.hp <= 0) continue;
+      }
+      if (e.stun > 0) {
+        this.cancelAttack(e);
+        e.move = 0;
+        continue;
+      }
+      if (!e.active) {
+        this.cancelAttack(e);
+        continue;
+      }
+      if (e.card === "witch") {
+        e.spawnTimer -= STEP;
+        if (e.spawnTimer <= 0) {
+          e.spawnTimer = 7;
+          for (let i = 0; i < 3; i++)
+            this.spawn(
+              "skeletons",
+              e.team,
+              clamp(e.x + (i - 1) * 0.6, 0.6, 17.4),
+              clamp(e.y + (e.team === "blue" ? -0.8 : 0.8), 0.8, 31.2),
+            );
+        }
+      }
+      if (e.pendingAttack) {
+        const pending = e.pendingAttack;
+        const target = this.entities.find(
+          (t) => t.id === pending.target && this.validTarget(e, t),
         );
-      const blue = lowest("blue"),
-        red = lowest("red");
-      this.finish(
-        Math.abs(blue - red) < 0.01 ? "draw" : blue > red ? "blue" : "red",
-        "Tiebreaker",
+        if (!target || !this.inRange(e, target)) this.cancelAttack(e);
+        else {
+          pending.remaining -= STEP;
+          if (pending.remaining > 1e-8) continue;
+          e.pendingAttack = undefined;
+          this.releaseAttack(e, target, pending.damage);
+        }
+      }
+      const target = this.acquireTarget(e);
+      if (!target) {
+        e.move = 0;
+        continue;
+      }
+      if (this.inRange(e, target)) {
+        if (e.cooldown <= 1e-8) {
+          const damage =
+            e.damage * (e.card === "prince" && e.move >= 2.3 ? 2 : 1);
+          e.move = 0;
+          e.cooldown = e.interval;
+          e.attack = e.interval;
+          e.pendingAttack = {
+            target: target.id,
+            remaining: Math.max(
+              STEP,
+              Math.min(e.interval, combatTraits(e).windup),
+            ),
+            damage,
+          };
+        }
+      } else if (e.kind === "troop") this.moveToward(e, target);
+    }
+    this.updateProjectiles();
+  }
+  private releaseAttack(e: Entity, target: Entity, damage: number) {
+    const card = e.card === "tower" ? null : CARD_MAP[e.card];
+    const traits = combatTraits(e);
+    const p = traits.projectile;
+    if (p || e.card === "balloon" || e.card === "tesla") {
+      const speed = p?.speed ?? (e.card === "tesla" ? 1000 : undefined);
+      const duration = speed ? Math.max(STEP, dist(e, target) / speed) : 0.35;
+      const fromHeight =
+        e.kind === "tower"
+          ? e.king
+            ? 3.1
+            : 3.5
+          : e.card === "balloon"
+            ? 3.8
+            : e.air
+              ? 2.3
+              : 0.8;
+      this.projectiles.push({
+        id: this.nextId++,
+        team: e.team,
+        x: e.x,
+        y: e.y,
+        tx: target.x,
+        ty: target.y,
+        target: target.id,
+        damage,
+        remaining: duration,
+        duration,
+        splash: card?.splash ?? 0,
+        air: e.kind === "tower" || !!card?.hitsAir,
+        style: e.kind === "tower" ? (e.king ? "cannonball" : "arrow") : e.card,
+        stun: 0,
+        source: e.id,
+        flight: { x: e.x, y: e.y },
+        speed,
+        elapsed: 0,
+        homing: p?.homing ?? true,
+        fromHeight,
+        toHeight: target.air ? 2.3 : target.kind === "tower" ? 1.8 : 0.6,
+        arc:
+          e.card === "balloon" || e.card === "tesla"
+            ? 0
+            : (p?.gravity ?? 0) / 100,
+      });
+    } else if (card?.splash) {
+      for (const v of this.entities)
+        if (this.validTarget(e, v) && dist(v, e) <= card.splash + v.radius)
+          this.hurt(v, damage);
+      this.emit("hit", e.team, e.x, e.y, e.card, damage);
+    } else {
+      this.hurt(target, damage);
+      this.emit("hit", e.team, target.x, target.y, e.card, damage);
+    }
+  }
+  private updateProjectiles() {
+    for (const p of [...this.projectiles]) {
+      if (p.delay && p.delay > 1e-8) {
+        p.delay = Math.max(0, p.delay - STEP);
+        continue;
+      }
+      const target = this.entities.find((e) => e.id === p.target && e.hp > 0);
+      if (p.homing && target) {
+        p.tx = target.x;
+        p.ty = target.y;
+        p.toHeight = target.air ? 2.3 : target.kind === "tower" ? 1.8 : 0.6;
+      }
+      p.elapsed = (p.elapsed ?? 0) + STEP;
+      if (p.speed && p.flight) {
+        const dx = p.tx - p.flight.x,
+          dy = p.ty - p.flight.y,
+          distance = Math.hypot(dx, dy);
+        const travel = Math.min(distance, p.speed * STEP);
+        if (distance > 0) {
+          p.flight.x += (dx / distance) * travel;
+          p.flight.y += (dy / distance) * travel;
+        }
+        p.remaining = Math.max(0, (distance - travel) / p.speed);
+        p.duration = p.elapsed + p.remaining;
+      } else {
+        p.remaining = Math.max(0, p.remaining - STEP);
+        if (p.flight) {
+          const progress = Math.min(1, p.elapsed / p.duration);
+          p.flight.x = p.x + (p.tx - p.x) * progress;
+          p.flight.y = p.y + (p.ty - p.y) * progress;
+        }
+      }
+      if (p.remaining > 1e-8) continue;
+      p.remaining = 0;
+      const point = { x: p.tx, y: p.ty };
+      if (p.splash > 0) {
+        for (const e of this.entities) {
+          if (
+            e.hp <= 0 ||
+            e.team === p.team ||
+            (e.air && !p.air) ||
+            dist(e, point) >= p.splash + e.radius
+          )
+            continue;
+          this.hurt(
+            e,
+            p.damage * (p.source === 0 && e.kind === "tower" ? 0.3 : 1),
+          );
+          if (e.hp <= 0) continue;
+          if (p.stun) {
+            e.stun = Math.max(e.stun, p.stun);
+            this.cancelAttack(e);
+            e.move = 0;
+          }
+          if (p.knockback) this.knockback(e, point, p.knockback);
+        }
+      } else if (target) this.hurt(target, p.damage);
+      this.emit(
+        "hit",
+        p.team,
+        point.x,
+        point.y,
+        ["arrow", "cannonball", "bomb"].includes(p.style)
+          ? undefined
+          : (p.style as CardId),
+        p.damage,
       );
     }
+    this.projectiles = this.projectiles.filter((p) => p.remaining > 0);
+  }
+  private knockback(e: Entity, origin: Point, distance: number) {
+    if (e.kind !== "troop" || combatTraits(e).ignoresKnockback) return;
+    const dx = e.x - origin.x,
+      dy = e.y - origin.y,
+      length = Math.hypot(dx, dy);
+    const x = clamp(
+      e.x + (length > 0.001 ? dx / length : 0) * distance,
+      0.5,
+      17.5,
+    );
+    let y = clamp(
+      e.y +
+        (length > 0.001 ? dy / length : e.team === "blue" ? 1 : -1) * distance,
+      0.6,
+      31.4,
+    );
+    if (
+      !e.air &&
+      e.card !== "hog-rider" &&
+      y > 14.8 &&
+      y < 17.2 &&
+      Math.min(Math.abs(x - 4), Math.abs(x - 14)) > 0.95
+    )
+      y = e.y < 16 ? 14.8 : 17.2;
+    e.x = x;
+    e.y = y;
+    this.cancelAttack(e);
+    e.move = 0;
   }
   private moveToward(e: Entity, target: Entity) {
     let x = target.x,
@@ -729,7 +1052,7 @@ export class Battle {
   }
   exportReplay(): Replay {
     return {
-      version: 1,
+      version: this.rulesVersion,
       seed: this.seed,
       mode: this.mode,
       deck: [...this.deck],

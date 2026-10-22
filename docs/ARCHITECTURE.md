@@ -12,6 +12,12 @@ AI uses the same command and resource path as the player. It scores affordable c
 
 An initial seeded shuffle plus timestamped commands makes battles replayable. Replays disable AI decisions and consume the recorded commands. Particle randomness stays outside the simulation. Unit tests compare full entity, player and projectile state between a live run and its replay.
 
+New battles use rules version 2. Attack animations begin a pending windup; melee damage or projectile launch occurs when it completes. Target death, leaving attack range, stun and movable-unit knockback cancel that pending hit. Troops reconsider a distant tower destination when a defender or building enters sight, while retaining an engaged target. Projectile speed and homing are per-unit; Bomber throws retain their original landing position. Fireball travel time depends on distance and its radial knockback respects heavy-unit immunity. Arrows deliver three equal waves 0.2 seconds apart. Zap interrupts windups and Prince charge.
+
+The original combat loop is frozen in `updateLegacyCombat()` for version-1 replay compatibility. A captured v1 match is compared against its original complete saved state. Current replay tests include an entire version-2 match, pending attacks and projectile flight state. Profile history accepts both versions and rejects unknown future versions.
+
+`scripts/import-combat.mjs` derives the compact `src/game/combat-data.json` table from pinned historical CSVs. Sight ranges, homing flags and knockback immunity are direct source fields. First-hit timing (`HitSpeed - LoadTime`) and the speed-to-tile conversion are reconstruction interpretations; damage, health and hit intervals remain this project's curated level-11 values. The implementation is deterministic, but is not a claim of exact original runtime behavior or current balance parity.
+
 ## Rendering
 
 `src/render/arena.ts` projects the board with an orthographic Three.js camera. Static opaque geometry is batched by material. Animated source sprites share native textures, materials and lazily cached frame geometry. The importer preserves complete directional clips, child transforms and per-part color transforms. Sprites follow movement direction on bridges; attacks use full source sequences; Prince uses its separate charge animation and Balloon retains its multipart motion. Princess Tower archers animate with their tower attacks. Camera-facing tower and scenery artwork keeps the original perspective. Locally constructed models remain available as asset-loading fallbacks.

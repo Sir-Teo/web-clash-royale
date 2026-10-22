@@ -57,7 +57,7 @@ describe("battle rules", () => {
     const t = b.entities.find((e) => e.team === "red" && !e.king)!;
     const hp = t.hp;
     expect(b.play("blue", 0, t.x, t.y).ok).toBe(true);
-    advance(b, 1.1);
+    advance(b, 3);
     expect(t.hp).toBeCloseTo(hp - CARD_MAP.fireball.damage * 0.3);
   });
   it("requires ground troops to cross the bridges", () => {
@@ -144,7 +144,7 @@ describe("battle rules", () => {
     b.players.blue.elixir = 10;
     b.players.blue.hand[0] = "fireball";
     b.play("blue", 0, 9, 2.5);
-    advance(b, 1);
+    advance(b, 3);
     expect(b.winner).toBe("blue");
     expect(b.players.blue.crowns).toBe(3);
   });

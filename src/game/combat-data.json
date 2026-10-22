@@ -1,0 +1,218 @@
+{
+  "knight": {
+    "source": "Knight",
+    "windup": 0.4,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "archers": {
+    "source": "Archer",
+    "windup": 0.1,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "ArcherArrow",
+      "speed": 6.666666666666667,
+      "homing": true,
+      "gravity": 60
+    }
+  },
+  "giant": {
+    "source": "Giant",
+    "windup": 0.5,
+    "sight": 7.5,
+    "ignoresKnockback": true,
+    "projectile": null
+  },
+  "musketeer": {
+    "source": "Musketeer",
+    "windup": 0.5,
+    "sight": 6,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "MusketeerProjectile",
+      "speed": 16.666666666666668,
+      "homing": true,
+      "gravity": 0
+    }
+  },
+  "mini-pekka": {
+    "source": "MiniPekka",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "goblins": {
+    "source": "Goblin",
+    "windup": 0.2,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "spear-goblins": {
+    "source": "SpearGoblin",
+    "windup": 0.2,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "SpearGoblinProjectile",
+      "speed": 5.833333333333333,
+      "homing": true,
+      "gravity": 150
+    }
+  },
+  "skeletons": {
+    "source": "Skeleton",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "skeleton-army": {
+    "source": "Skeleton",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "bomber": {
+    "source": "Bomber",
+    "windup": 0.2,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "BombSkeletonProjectile",
+      "speed": 5,
+      "homing": false,
+      "gravity": 200
+    }
+  },
+  "valkyrie": {
+    "source": "Valkyrie",
+    "windup": 0.2,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "hog-rider": {
+    "source": "HogRider",
+    "windup": 0.5,
+    "sight": 9.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "baby-dragon": {
+    "source": "BabyDragon",
+    "windup": 0.3,
+    "sight": 5.5,
+    "ignoresKnockback": true,
+    "projectile": {
+      "source": "BabyDragonProjectile",
+      "speed": 8.333333333333334,
+      "homing": true,
+      "gravity": 250
+    }
+  },
+  "minions": {
+    "source": "Minion",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "MinionSpit",
+      "speed": 16.666666666666668,
+      "homing": true,
+      "gravity": 0
+    }
+  },
+  "witch": {
+    "source": "Witch",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "WitchProjectile",
+      "speed": 10,
+      "homing": true,
+      "gravity": 0
+    }
+  },
+  "wizard": {
+    "source": "Wizard",
+    "windup": 0.4,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "chr_wizardProjectile",
+      "speed": 10,
+      "homing": true,
+      "gravity": 0
+    }
+  },
+  "prince": {
+    "source": "Prince",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": true,
+    "projectile": null
+  },
+  "pekka": {
+    "source": "Pekka",
+    "windup": 0.5,
+    "sight": 5,
+    "ignoresKnockback": true,
+    "projectile": null
+  },
+  "balloon": {
+    "source": "Balloon",
+    "windup": 0.2,
+    "sight": 7.7,
+    "ignoresKnockback": true,
+    "projectile": null
+  },
+  "cannon": {
+    "source": "Cannon",
+    "windup": 0.8,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "TowerCannonball",
+      "speed": 16.666666666666668,
+      "homing": true,
+      "gravity": 0
+    }
+  },
+  "tesla": {
+    "source": "Tesla",
+    "windup": 0.7,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "king-tower": {
+    "source": "KingTower",
+    "windup": 0.5,
+    "sight": 7,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "KingProjectile",
+      "speed": 16.666666666666668,
+      "homing": true,
+      "gravity": 50
+    }
+  },
+  "princess-tower": {
+    "source": "PrincessTower",
+    "windup": 0.8,
+    "sight": 7.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "TowerPrincessProjectile",
+      "speed": 6.666666666666667,
+      "homing": true,
+      "gravity": 60
+    }
+  }
+}

@@ -125,7 +125,7 @@ export function loadProfile(): Profile {
               Array.isArray(r.crowns) &&
               r.crowns.length === 2 &&
               r.crowns.every(Number.isFinite) &&
-              r.replay?.version === 1 &&
+              [1, 2].includes(r.replay?.version) &&
               Number.isInteger(r.replay.duration) &&
               r.replay.duration >= 0 &&
               r.replay.duration <= 9000 &&
