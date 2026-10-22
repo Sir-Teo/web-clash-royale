@@ -115,6 +115,16 @@ describe("native tower destruction", () => {
     const instanceBefore = scene.children.map((o) =>
       (o as T.InstancedMesh).instanceMatrix.array.slice(),
     );
+    const bufferVersions = () =>
+      scene.children.map((o) => {
+        const mesh = o as T.InstancedMesh;
+        return [
+          mesh.instanceMatrix.version,
+          (mesh.geometry.getAttribute("particleOpacity") as T.BufferAttribute)
+            .version,
+        ];
+      });
+    const versionsBefore = bufferVersions();
     for (let i = 0; i < 10; i++) effects.update(0, camera);
     expect(scene.children.map((o) => o.position.toArray())).toEqual(before);
     expect(
@@ -122,6 +132,13 @@ describe("native tower destruction", () => {
         (o as T.InstancedMesh).instanceMatrix.array.slice(),
       ),
     ).toEqual(instanceBefore);
+    expect(bufferVersions()).toEqual(versionsBefore);
+    camera.rotation.z = 0.1;
+    effects.update(0, camera);
+    expect(bufferVersions()).not.toEqual(versionsBefore);
+    const rotated = bufferVersions();
+    effects.update(0, camera);
+    expect(bufferVersions()).toEqual(rotated);
     const mesh = scene.children[0] as T.Mesh<
       T.BufferGeometry,
       T.MeshBasicMaterial[]
@@ -165,6 +182,14 @@ describe("native tower destruction", () => {
     expect(effects.count).toBe(0);
     effects.burst("knight", new T.Vector3(), 1, "blue", 5);
     expect(effects.count).toBe(1);
+    effects.update(0, camera);
+    effects.burst("knight", new T.Vector3(2, 0, 0), 2, "blue", 5);
+    effects.update(0, camera);
+    expect(
+      scene.children
+        .filter((o) => o.visible)
+        .reduce((sum, o) => sum + (o as T.InstancedMesh).count, 0),
+    ).toBe(2);
     effects.clear();
     library.destroy();
   });

@@ -42,6 +42,8 @@ Tower destruction is separate from combat state. `src/game/arena-layout.ts` supp
 
 Particles are grouped by native frame and render layer into instanced meshes. Each instance retains its own transform and fade opacity through an extension of the SC shader; native frame geometry and textures remain shared and intact. Instances sort back-to-front within a batch. Ground marks project onto the arena floor while other particles face the camera. The 1,024-particle cap bounds simultaneous effects. The frame-geometry pool evicts unused batches above 96 entries and releases all batches at rest; clear/reset also disposes the owned materials. A 60-Skeleton inspection scene retains all 960 particles in 11 native particle draw calls at 0.3 seconds, down from 960 separate draws. This measures draw calls rather than physical phone frame rate.
 
+Paused updates reuse existing instance buffers when no particles were added and the camera orientation is unchanged. New bursts and camera rotation invalidate that cache even with zero elapsed time. Empty scenes still advance the effect clock without rebuilding particle groups.
+
 Analytic trajectories make motion independent of render frame rate; exponential drag, ground settling, air height and world scaling are reconstruction choices. Transparency sorting across different frame batches is approximate. Reset/replay seeking clears transient particles. Finished matches stop producing projectile trails and allow the last impacts/debris to expire.
 
 ## Interface and persistence

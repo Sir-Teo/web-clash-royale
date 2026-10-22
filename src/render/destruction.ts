@@ -143,6 +143,8 @@ export class DestructionEffects {
   private batches = new Map<string, Batch>();
   private materials = new Map<boolean, T.MeshBasicMaterial[]>();
   private clock = 0;
+  private dirty = false;
+  private viewQuaternion = new T.Quaternion();
   constructor(
     private scene: T.Scene,
     private library: EffectLibrary,
@@ -179,6 +181,7 @@ export class DestructionEffects {
         origin: origin.clone(),
         start: this.clock - age + plan.delay,
       });
+      this.dirty = true;
     }
   }
   private batch(
@@ -223,6 +226,11 @@ export class DestructionEffects {
   }
   update(dt: number, camera: T.Camera) {
     this.clock += Math.max(0, dt);
+    if (!this.dirty && dt <= 0 && this.viewQuaternion.equals(camera.quaternion))
+      return;
+    this.dirty = false;
+    this.viewQuaternion.copy(camera.quaternion);
+    if (!this.particles.length && !this.batches.size) return;
     this.particles = this.particles.filter(
       (p) => this.clock - p.start < p.plan.life,
     );
@@ -330,5 +338,6 @@ export class DestructionEffects {
     this.materials.clear();
     this.particles = [];
     this.clock = 0;
+    this.dirty = false;
   }
 }
