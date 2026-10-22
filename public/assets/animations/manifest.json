@@ -308,6 +308,23 @@
       "clips": 54,
       "frames": 864,
       "uniqueFrames": 666
+    },
+    {
+      "id": "tower-princess",
+      "source": "chr_princess",
+      "metadataSha256": "4efbc493b84ef3638642a2cacf21d63bfcb1a77927afae5719c56d64e3307db9",
+      "dataSha256": "3eaa2f0f73389f503e4805927ac89c121f35af19fcf1e69da791dec43f3a2a71",
+      "textures": [
+        {
+          "file": "tower-princess-0.webp",
+          "sha256": "754dfbd4ba30996382eacc98eb5734e5deaf8ea4bbb65818587908b9bf03f12a",
+          "originalSha256": "6c3383dddc95b065df4dbf517b32366fca654b9ae3bb49499c121ff288ebf930"
+        }
+      ],
+      "shapes": 216,
+      "clips": 54,
+      "frames": 1800,
+      "uniqueFrames": 1016
     }
   ]
 }

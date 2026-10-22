@@ -30,7 +30,8 @@ try {
     () =>
       window.__arena?.state.loadedEffects === 31 &&
       window.__arena?.state.loadedBuildings === 3 &&
-      window.__arena?.state.loadedAnimations === 18,
+      window.__arena?.state.loadedAnimations === 19 &&
+      window.__arena?.state.nativeTowerPrincesses === 4,
   );
   console.log(
     "Offline title:",

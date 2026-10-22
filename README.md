@@ -4,7 +4,7 @@ A private, independent browser fan game for Sir-Teo. Built with TypeScript, Thre
 
 Build an eight-card deck from 24 cards, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
 
-Combat includes cancellable attack windups, defensive building pulls, homing shots, ballistic bombs, Fireball travel and knockback, three-wave Arrows and Zap charge resets. Cannon uses its native aiming frames; Tesla hides underground, rises to attack and retracts when idle. The King plays its original wake-up sequence and waits 3.3 seconds before aiming and attacking. Existing version-1 through version-3 replays retain their original rules; new matches record version-4 combat.
+Combat includes cancellable attack windups, defensive building pulls, homing shots, ballistic bombs, Fireball travel and knockback, three-wave Arrows and Zap charge resets. Cannon uses its native aiming frames; Tesla hides underground, rises to attack and retracts when idle. Princess Towers use their dedicated native character animations. The King plays its original wake-up sequence and waits 3.3 seconds before aiming and attacking. Existing version-1 through version-3 replays retain their original rules; new matches record version-4 combat.
 
 This version supports AI opponents. Online multiplayer, the full live card roster and current balance parity are not implemented.
 

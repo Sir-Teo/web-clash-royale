@@ -471,6 +471,12 @@ export class Arena {
   get loadedAnimations() {
     return this.sprites.assets.size;
   }
+  get nativeTowerPrincesses() {
+    const asset = this.sprites.assets.get("tower-princess");
+    return [...this.units.values()].filter(
+      (v) => asset && v.archer?.asset === asset,
+    ).length;
+  }
   get loadedEffects() {
     return Object.keys(this.effects.asset?.data.clips ?? {}).length;
   }
@@ -726,22 +732,22 @@ export class Arena {
           );
           object.add(art);
           if (!e.king) {
-            const archer = this.sprites.make("archers");
+            const archer =
+              this.sprites.make("tower-princess") ??
+              this.sprites.make("archers");
             if (archer) {
               towerArcher = archer;
-              archer.mesh.scale.setScalar(0.65);
               archer.mesh.position.set(0, 1.6, -0.15);
               archer.mesh.quaternion.copy(this.camera.quaternion);
               object.add(archer.mesh);
               this.sprites.update(
                 archer,
-                { ...e, attack: 0, card: "archers" },
+                { ...e, attack: 0 },
                 undefined,
                 false,
                 time,
                 this.camera,
               );
-              archer.mesh.scale.setScalar(0.65);
             }
           }
         } else if (
@@ -1057,7 +1063,6 @@ export class Arena {
     if (v.archer) {
       const target = this.battle?.entities.find((t) => t.id === e.target);
       this.sprites.update(v.archer, e, target, false, time, this.camera);
-      v.archer.mesh.scale.multiplyScalar(0.65);
     }
     if (v.art) {
       v.art.quaternion.copy(this.camera.quaternion);

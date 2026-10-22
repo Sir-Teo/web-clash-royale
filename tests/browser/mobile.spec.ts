@@ -34,7 +34,7 @@ test("phone controls fit six sizes, rotate during play, and accept real touch in
         page.evaluate(() => (window as any).__arena?.state.loadedAnimations),
       { timeout: 30000 },
     )
-    .toBe(18);
+    .toBe(19);
   await page.locator("#battle-button").click();
   await expect(page.locator("#hand .game-card")).toHaveCount(4);
   for (const size of phoneSizes) {

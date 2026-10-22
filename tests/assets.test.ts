@@ -108,10 +108,15 @@ describe("bundled game artwork", () => {
   });
   it("preserves full source animations and every referenced UV polygon", () => {
     const manifest = json("public/assets/animations/manifest.json");
-    expect(manifest.files.length).toBe(18);
+    expect(manifest.files.length).toBe(19);
     let total = 0;
     for (const file of manifest.files) {
       const bytes = readFileSync(`public/assets/animations/${file.id}.json`);
+      expect(
+        createHash("sha256")
+          .update(readFileSync(`reference/sc/${file.source}.bin`))
+          .digest("hex"),
+      ).toBe(file.metadataSha256);
       expect(createHash("sha256").update(bytes).digest("hex")).toBe(
         file.dataSha256,
       );
@@ -168,6 +173,17 @@ describe("bundled game artwork", () => {
             c.source.startsWith("baby_dragon_"),
           ),
         ).toBe(true);
+      if (file.id === "tower-princess") {
+        expect(Object.keys(data.clips)).toHaveLength(54);
+        for (const [name, clip] of Object.entries(data.clips) as [
+          string,
+          any,
+        ][]) {
+          expect(clip.source.startsWith("princess_tower_")).toBe(true);
+          expect(clip.fps).toBe(24);
+          expect(clip.frames).toHaveLength(name.includes("attack") ? 40 : 30);
+        }
+      }
       if (file.id === "prince")
         expect(data.clips["blue-charge-1"].frames.length).toBeGreaterThan(4);
     }

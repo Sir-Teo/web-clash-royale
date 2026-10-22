@@ -13,6 +13,7 @@ interface FramePart {
   matrix: number[];
   color: number[];
 }
+export type SpriteId = CardId | "tower-princess";
 export interface SpriteData {
   version: 2;
   textures: { file: string; width: number; height: number }[];
@@ -40,7 +41,7 @@ export type SpriteState = Pick<
   Entity,
   "id" | "card" | "team" | "x" | "y" | "attack" | "interval" | "move" | "deploy"
 >;
-const heights: Partial<Record<CardId, number>> = {
+const heights: Partial<Record<SpriteId, number>> = {
   knight: 1.65,
   wizard: 1.8,
   archers: 1.55,
@@ -59,6 +60,7 @@ const heights: Partial<Record<CardId, number>> = {
   prince: 2.25,
   pekka: 2.7,
   balloon: 4,
+  "tower-princess": 1.35,
 };
 export function makeMaterial(texture: T.Texture) {
   const material = new T.MeshBasicMaterial({
@@ -143,11 +145,11 @@ export function spriteGeometry(asset: SpriteAsset, index: number) {
 }
 
 export class SpriteLibrary {
-  assets = new Map<CardId, SpriteAsset>();
+  assets = new Map<SpriteId, SpriteAsset>();
   private loader = new T.TextureLoader();
   async load() {
     await Promise.all(
-      (Object.keys(heights) as CardId[]).map(async (id) => {
+      (Object.keys(heights) as SpriteId[]).map(async (id) => {
         try {
           const response = await fetch(`/assets/animations/${id}.json`);
           if (!response.ok) throw new Error(`Missing animation ${id}`);
@@ -176,7 +178,7 @@ export class SpriteLibrary {
       }),
     );
   }
-  make(id: CardId): AnimatedSprite | null {
+  make(id: SpriteId): AnimatedSprite | null {
     const asset = this.assets.get(id === "skeleton-army" ? "skeletons" : id);
     if (!asset) return null;
     const frame = Object.values(asset.data.clips)[0].frames[0];

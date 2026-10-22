@@ -63,6 +63,17 @@ function setup() {
       unit(id, "blue", x, y);
       for (const e of unit("giant", "red", x, y - 4)) e.active = false;
     }
+  } else if (scenario === "princess") {
+    for (const e of battle.entities) if (!e.king) e.active = true;
+    for (const [team, y] of [
+      ["blue", 9],
+      ["red", 23],
+    ] as [Team, number][])
+      for (const x of [5, 13])
+        for (const e of unit("giant", team, x, y)) {
+          e.active = false;
+          e.hp = e.maxHp = 10000;
+        }
   } else if (scenario === "king") {
     for (const [team, x, y] of [
       ["blue", 12, 7],
@@ -160,7 +171,7 @@ function render(now: number) {
   extraVisualTime = 0;
   renderedTime = battle.time;
   document.querySelector("#status")!.textContent =
-    `${battle.time.toFixed(1)}s · ${battle.projectiles.length} shots · ${arena.loadedEffects} effects · ${arena.loadedBuildings} buildings loaded`;
+    `${battle.time.toFixed(1)}s · ${battle.projectiles.length} shots · ${arena.loadedEffects} effects · ${arena.loadedBuildings} buildings loaded · ${arena.nativeTowerPrincesses} native Princesses`;
   document.querySelector("#buildings")!.textContent = battle.entities
     .filter((e) => e.burrow)
     .map(

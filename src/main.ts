@@ -1203,6 +1203,7 @@ Object.defineProperty(window, "__arena", {
         destruction: arena.destructionState,
         placement: arena.placementState,
         loadedAnimations: arena.loadedAnimations,
+        nativeTowerPrincesses: arena.nativeTowerPrincesses,
       };
     },
     project: (x: number, y: number) => {

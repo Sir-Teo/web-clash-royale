@@ -28,6 +28,7 @@ const sources = {
   pekka: "pekka",
   balloon: "balloon",
   wizard: "wizard",
+  "tower-princess": "princess",
 };
 const sha256 = (b) => createHash("sha256").update(b).digest("hex");
 const identity = [1, 0, 0, 1, 0, 0];
@@ -105,6 +106,8 @@ for (const [id, source] of Object.entries(sources)) {
     // This source also contains Inferno Dragon exports. Never overwrite Baby Dragon.
     if (id === "baby-dragon" && !exportName.startsWith("baby_dragon_"))
       continue;
+    if (id === "tower-princess" && !exportName.startsWith("princess_tower_"))
+      continue;
     const direction = Number(match[3]);
     if (direction < 1 || direction > 9) continue;
     const hasExplicitBlue = Object.keys(data.names).some((name) =>
@@ -143,7 +146,12 @@ for (const [id, source] of Object.entries(sources)) {
   const textures = [],
     hashes = [];
   for (let i = 0; i < data.textures.length; i++) {
-    const original = await download(base, `${name}_tex${"_".repeat(i)}.png`);
+    const original = await download(
+      base,
+      id === "tower-princess"
+        ? `${name}_highres_tex.png`
+        : `${name}_tex${"_".repeat(i)}.png`,
+    );
     const texture = await sharp(original)
       .webp({ lossless: true, effort: 6 })
       .toBuffer();

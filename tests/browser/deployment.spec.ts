@@ -32,7 +32,7 @@ test("native deployment formations and invalid placement feedback work through t
         page.evaluate(() => (window as any).__arena?.state.loadedAnimations),
       { timeout: 30000 },
     )
-    .toBe(18);
+    .toBe(19);
   await page.locator("#battle-button").click();
   const group = page
     .locator("#hand .game-card")
