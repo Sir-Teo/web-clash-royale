@@ -1,9 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { DirectRoomClient } from "../src/network/client-core";
+import { UiDelivery } from "../src/network/transport-protocol";
 import { RoomClient } from "../src/network/client";
 import { PROTOCOL } from "../src/network/protocol";
 
 let now = 0;
-let client: RoomClient;
+let client: DirectRoomClient;
 class Socket {
   static OPEN = 1;
   static instances: Socket[] = [];
@@ -96,6 +98,54 @@ describe("room client liveness", () => {
     beat(40000);
     expect(socket.closes).toBe(0);
     beat(43000);
+    expect(socket.closes).toBe(1);
+  });
+});
+
+describe("worker socket delivery through a busy UI", () => {
+  function workerClient() {
+    client.disconnect();
+    const delivery = new UiDelivery(now);
+    client = new DirectRoomClient(() => delivery.ready(now));
+    client.connect({
+      type: "resume",
+      version: PROTOCOL,
+      code: "ABC234",
+      token: "0".repeat(64),
+    });
+    const socket = Socket.instances.at(-1)!;
+    socket.open();
+    return { delivery, socket };
+  }
+  it("does not close or accumulate pings while UI delivery is blocked, then accepts queued messages", () => {
+    const { delivery, socket } = workerClient();
+    for (let time = 3000; time <= 57000; time += 3000) beat(time);
+    expect(socket.closes).toBe(0);
+    expect(socket.sent.filter((m) => m.type === "ping")).toHaveLength(2);
+    delivery.pulse(now);
+    beat(60000);
+    socket.onmessage({ data: JSON.stringify({ type: "pong", at: now }) });
+    delivery.pulse(now);
+    beat(63000);
+    expect(socket.closes).toBe(0);
+    expect(client.connected).toBe(true);
+  });
+  it("retains the quiet connection deadline while the UI is responsive", () => {
+    const { delivery, socket } = workerClient();
+    for (let time = 3000; time <= 18000; time += 3000) {
+      delivery.pulse(time);
+      beat(time);
+    }
+    expect(socket.closes).toBe(1);
+  });
+  it("closes a still-silent connection after the UI resumes and one delivery turn passes", () => {
+    const { delivery, socket } = workerClient();
+    for (let time = 3000; time <= 57000; time += 3000) beat(time);
+    delivery.pulse(now);
+    beat(60000);
+    expect(socket.closes).toBe(0);
+    delivery.pulse(now);
+    beat(63000);
     expect(socket.closes).toBe(1);
   });
 });

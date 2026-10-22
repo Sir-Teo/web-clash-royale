@@ -9,6 +9,7 @@ export class RoomClient extends DirectRoomClient {
   private workerEnabled = typeof Worker !== "undefined";
   private generation = 0;
   private first?: ClientMessage;
+  private uiPulse?: ReturnType<typeof setInterval>;
 
   get transport() {
     return this.worker ? "worker" : "main";
@@ -61,6 +62,9 @@ export class RoomClient extends DirectRoomClient {
         };
       }
       this.post({ type: "connect", generation: this.generation, first });
+      this.uiPulse = setInterval(() => {
+        this.post({ type: "pulse", generation: this.generation });
+      }, 3000);
     } catch {
       this.fallback();
     }
@@ -92,6 +96,7 @@ export class RoomClient extends DirectRoomClient {
 
   override disconnect(clear = true) {
     this.first = undefined;
+    clearInterval(this.uiPulse);
     this.generation++;
     this.post({ type: "disconnect", generation: this.generation, clear });
     super.disconnect(clear);

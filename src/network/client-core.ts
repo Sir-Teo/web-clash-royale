@@ -22,6 +22,7 @@ export class DirectRoomClient {
   private heartbeat: ReturnType<typeof setInterval> | undefined;
   private lastMessage = 0;
   private seq = Date.now();
+  constructor(private deliveryResponsive: () => boolean = () => true) {}
   get saved() {
     try {
       const s = JSON.parse(sessionStorage.getItem(KEY) ?? "null");
@@ -65,6 +66,10 @@ export class DirectRoomClient {
         const now = performance.now();
         const stalled = now - heartbeatAt > 6000;
         heartbeatAt = now;
+        // WebKit can proxy worker socket delivery through the UI thread while
+        // worker timers keep running. Do not queue pings or infer silence when
+        // that delivery path is explicitly known to be blocked.
+        if (!this.deliveryResponsive()) return;
         // A long graphics task can delay both this timer and queued socket
         // messages. Give those messages one turn before declaring a loss.
         if (!stalled && now - this.lastMessage > 15_000) {

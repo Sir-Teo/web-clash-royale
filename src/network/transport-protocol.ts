@@ -5,6 +5,7 @@ export type TransportCommand = { generation: number } & (
   | { type: "disconnect"; clear: boolean }
   | { type: "send"; message: ClientMessage }
   | { type: "consumed"; serial: number }
+  | { type: "pulse" }
 );
 export type TransportEvent = { generation: number } & (
   | { type: "connection"; status: "connecting" | "reconnecting" | "closed" }
@@ -40,5 +41,27 @@ export class LatestSnapshot<T> {
   reset() {
     this.inFlight = undefined;
     this.pending = undefined;
+  }
+}
+
+/** Some engines defer worker socket delivery through a busy UI thread. */
+export class UiDelivery {
+  private stalled = false;
+  constructor(private lastPulse: number) {}
+  pulse(now: number) {
+    if (now - this.lastPulse > 6000) this.stalled = true;
+    this.lastPulse = now;
+  }
+  ready(now: number) {
+    if (now - this.lastPulse > 6000) {
+      this.stalled = true;
+      return false;
+    }
+    // Let queued socket callbacks run once after the UI starts responding.
+    if (this.stalled) {
+      this.stalled = false;
+      return false;
+    }
+    return true;
   }
 }

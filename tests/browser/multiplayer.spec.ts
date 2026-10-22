@@ -71,6 +71,28 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
     ["blue", page],
     ["red", red],
   ] as const) {
+    await player.exposeFunction("recordWorkerReaction", (message: any) => {
+      reactions[name].push(message);
+      record(name, "worker-reaction", message);
+    });
+    await player.addInitScript(() => {
+      const NativeWorker = window.Worker;
+      window.Worker = class extends NativeWorker {
+        constructor(url: string | URL, options?: WorkerOptions) {
+          super(url, options);
+          if (options?.name !== "royale-network") return;
+          // WebKit reports worker socket sends but omits receive-frame events.
+          // Observe the messages actually delivered to the UI on every engine.
+          this.addEventListener("message", ({ data }) => {
+            if (
+              data.type === "message" &&
+              ["emote", "quick-chat"].includes(data.message?.type)
+            )
+              void (window as any).recordWorkerReaction(data.message);
+          });
+        }
+      };
+    });
     player.on("websocket", (socket) => {
       const id = ++socketId;
       let snapshotAt = 0,
@@ -87,8 +109,6 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
       });
       socket.on("framereceived", (frame) => {
         const message = JSON.parse(frame.payload.toString());
-        if (["emote", "quick-chat"].includes(message.type))
-          reactions[name].push(message);
         if (message.type === "state") {
           if (
             Date.now() - snapshotAt > 5000 ||
@@ -170,6 +190,8 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
       .toBe("red");
     await expect(page.locator(".competitor.enemy b")).toHaveText("Red Queen");
     await expect(red.locator(".competitor.enemy b")).toHaveText("Blue King");
+    for (const player of [page, red])
+      expect((await state(player)).multiplayer.transport).toBe("worker");
     console.log("Multiplayer: both players in battle");
     await deploy(page);
     await page

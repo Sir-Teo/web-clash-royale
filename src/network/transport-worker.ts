@@ -1,5 +1,5 @@
 import { DirectRoomClient } from "./client-core";
-import { LatestSnapshot } from "./transport-protocol";
+import { LatestSnapshot, UiDelivery } from "./transport-protocol";
 import type { TransportCommand, TransportEvent } from "./transport-protocol";
 import type { ServerMessage } from "./protocol";
 
@@ -7,7 +7,8 @@ const channel = globalThis as unknown as {
   onmessage: (event: MessageEvent<TransportCommand>) => void;
   postMessage: (event: TransportEvent) => void;
 };
-const client = new DirectRoomClient();
+let ui = new UiDelivery(performance.now());
+const client = new DirectRoomClient(() => ui.ready(performance.now()));
 let generation = 0;
 const snapshots = new LatestSnapshot<ServerMessage>((message, serial) => {
   channel.postMessage({
@@ -38,11 +39,14 @@ channel.onmessage = ({ data }) => {
     if (data.generation < generation) return;
     generation = data.generation;
     snapshots.reset();
-    if (data.type === "connect") client.connect(data.first);
-    else client.disconnect(data.clear);
+    if (data.type === "connect") {
+      ui = new UiDelivery(performance.now());
+      client.connect(data.first);
+    } else client.disconnect(data.clear);
     return;
   }
   if (data.generation !== generation) return;
   if (data.type === "consumed") snapshots.consumed(data.serial);
+  else if (data.type === "pulse") ui.pulse(performance.now());
   else client.send(data.message);
 };
