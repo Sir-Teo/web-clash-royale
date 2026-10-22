@@ -75,6 +75,24 @@
       "sha256": "3585e3ff8a714d88da66b779e581642fc4b23563a69fa867a619ec46216a02b7"
     },
     {
+      "path": "audio/axe_impact_01.ogg",
+      "source": "sfx/axe_impact_01.ogg",
+      "bytes": 4999,
+      "sha256": "40cd5d17d554a1890bb084426914a39ae0d83acb73949c1ebcf6dc081e2e00ea"
+    },
+    {
+      "path": "audio/baby_dragon_fireball_08.ogg",
+      "source": "sfx/baby_dragon_fireball_08.ogg",
+      "bytes": 8080,
+      "sha256": "7b5509d9c1e4fa66a7fce9e9f0c50bd461a136e852aa5818ae7b43a50cc23c5c"
+    },
+    {
+      "path": "audio/babydragon_deploy_01.ogg",
+      "source": "sfx/babydragon_deploy_01.ogg",
+      "bytes": 8668,
+      "sha256": "4bb713adf208f815fd3688cc584a785868a5261f693e55724079a1276540b3fc"
+    },
+    {
       "path": "audio/bad_drop_03.ogg",
       "source": "sfx/bad_drop_03.ogg",
       "bytes": 7985,
@@ -93,10 +111,34 @@
       "sha256": "56f0af72f1f6ab778357da4fc281a072661111f25a9250b0c37cfc66058a585b"
     },
     {
+      "path": "audio/clash_archer_deploy_01.ogg",
+      "source": "sfx/clash_archer_deploy_01.ogg",
+      "bytes": 6736,
+      "sha256": "c9eb08a19d7db65972f866a8594d9ffa451b2f99e005f337766775202766f55c"
+    },
+    {
+      "path": "audio/deploy_balloon_06.ogg",
+      "source": "sfx/deploy_balloon_06.ogg",
+      "bytes": 17505,
+      "sha256": "e23218067d2b99cc8d15ff6d758c2c2732f5e20e2cd6d601d833a6b530d10a1d"
+    },
+    {
+      "path": "audio/deploy_wizard_01.ogg",
+      "source": "sfx/deploy_wizard_01.ogg",
+      "bytes": 7707,
+      "sha256": "d192fee3449b7a76544bad25c02bb6285a14827c22aac09c9ca2142f802732b0"
+    },
+    {
       "path": "audio/fireball_hit_01.ogg",
       "source": "sfx/fireball_hit_01.ogg",
       "bytes": 9553,
       "sha256": "af935647b3cc6d16115ecb146e0965d07d350c080b2def1a3bf4b4d192205da6"
+    },
+    {
+      "path": "audio/giant_attack_swing_01.ogg",
+      "source": "sfx/giant_attack_swing_01.ogg",
+      "bytes": 7664,
+      "sha256": "f07fd46f472fbd2da643ab3f62766909439b6c41959c2cf5080de74077e67ba1"
     },
     {
       "path": "audio/giant_deploy_01.ogg",
@@ -105,10 +147,22 @@
       "sha256": "a940d2a0708045e6886d33690a3c365f11d7af771d8a0d33953de00b93f60d01"
     },
     {
+      "path": "audio/goblin_deploy_14.ogg",
+      "source": "sfx/goblin_deploy_14.ogg",
+      "bytes": 7801,
+      "sha256": "3d0f03976e8ec876b38f79b72b40402e552eb09926d74be6bec745d8e24d6482"
+    },
+    {
       "path": "audio/gold_chest_open_01.ogg",
       "source": "sfx/gold_chest_open_01.ogg",
       "bytes": 13347,
       "sha256": "9be3d908fa688bed4d71c5575a045af7d54872294af6c5ec59a69fcd85c9210a"
+    },
+    {
+      "path": "audio/hogrider_deploy_01.ogg",
+      "source": "sfx/hogrider_deploy_01.ogg",
+      "bytes": 7527,
+      "sha256": "0edf727f05b0ff385ce04674dc38ab207db01f9cf406507ffdaccba6f087d3b3"
     },
     {
       "path": "audio/king_laughter_01.ogg",
@@ -129,10 +183,52 @@
       "sha256": "b88d30e6440ebf2d058db67c0530c45f76bc79bacb3c459a8c0261d33de1aedc"
     },
     {
+      "path": "audio/mini_pekka_hit_03.ogg",
+      "source": "sfx/mini_pekka_hit_03.ogg",
+      "bytes": 10613,
+      "sha256": "cc303589a96a01ad87ee16b31ddda3df892d1d38fecf35867f1ef1777d019e41"
+    },
+    {
+      "path": "audio/minion_deploy_01.ogg",
+      "source": "sfx/minion_deploy_01.ogg",
+      "bytes": 6457,
+      "sha256": "0d111cb411b364145895368547d15bc12786a7f8c8d5aeb1309925095b7aaf28"
+    },
+    {
+      "path": "audio/minipekka_deploy_01.ogg",
+      "source": "sfx/minipekka_deploy_01.ogg",
+      "bytes": 8934,
+      "sha256": "50c996a28c2be9ce37b0fa81454274fa82c51b6260b054205f27ee2dda9288d2"
+    },
+    {
+      "path": "audio/musketeer_deploy_01.ogg",
+      "source": "sfx/musketeer_deploy_01.ogg",
+      "bytes": 7768,
+      "sha256": "934298b8ebe02cc6012a541d9f05f050bc8fc1d3f16e4ff1f2b69f653a201ec1"
+    },
+    {
+      "path": "audio/pekka_deploy_01.ogg",
+      "source": "sfx/pekka_deploy_01.ogg",
+      "bytes": 14162,
+      "sha256": "2854dba802c9e5f5005395da64a117dc8fcfc96076b4b7e6e53b51c2b4219a72"
+    },
+    {
+      "path": "audio/prince_deploy_01.ogg",
+      "source": "sfx/prince_deploy_01.ogg",
+      "bytes": 9891,
+      "sha256": "e41767ef53a25a420661af91ac654fafe31bd54709efa029239ce15af62d2b1c"
+    },
+    {
       "path": "audio/skeleton_deploy_03.ogg",
       "source": "sfx/skeleton_deploy_03.ogg",
       "bytes": 8639,
       "sha256": "5446501ce040ea292b57eb52fc52c5fecf534da91870c24bbedfbc9f149c2c8c"
+    },
+    {
+      "path": "audio/valkyrie_deploy_02.ogg",
+      "source": "sfx/valkyrie_deploy_02.ogg",
+      "bytes": 8215,
+      "sha256": "faa59af128455f61f8bf0980edc7203958b7ae3f3c336930febd7fb91f553538"
     },
     {
       "path": "audio/win_tour_01.ogg",

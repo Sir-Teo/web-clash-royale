@@ -775,24 +775,45 @@ function processEvents() {
     if (ev.id <= eventCursor) continue;
     eventCursor = ev.id;
     if (ev.type === "deploy") {
+      const voices: Partial<Record<CardId, string>> = {
+        knight: "knight_deploy_31111",
+        archers: "clash_archer_deploy_01",
+        giant: "giant_deploy_01",
+        musketeer: "musketeer_deploy_01",
+        "mini-pekka": "minipekka_deploy_01",
+        goblins: "goblin_deploy_14",
+        "spear-goblins": "goblin_deploy_14",
+        skeletons: "skeleton_deploy_03",
+        "skeleton-army": "skeleton_deploy_03",
+        bomber: "skeleton_deploy_03",
+        valkyrie: "valkyrie_deploy_02",
+        "hog-rider": "hogrider_deploy_01",
+        "baby-dragon": "babydragon_deploy_01",
+        minions: "minion_deploy_01",
+        wizard: "deploy_wizard_01",
+        prince: "prince_deploy_01",
+        pekka: "pekka_deploy_01",
+        balloon: "deploy_balloon_06",
+      };
+      audio.play(voices[ev.card as CardId] ?? "button_click_02", 0.22);
+    }
+    if (ev.type === "hit") {
+      const impacts: Partial<Record<CardId, string>> = {
+        fireball: "fireball_hit_01",
+        zap: "zap_02",
+        arrows: "arrow_hit_13",
+        knight: "axe_impact_01",
+        valkyrie: "axe_impact_01",
+        giant: "giant_attack_swing_01",
+        "mini-pekka": "mini_pekka_hit_03",
+        pekka: "mini_pekka_hit_03",
+        "baby-dragon": "baby_dragon_fireball_08",
+      };
       audio.play(
-        ev.card === "giant"
-          ? "giant_deploy_01"
-          : ev.card?.includes("skeleton")
-            ? "skeleton_deploy_03"
-            : "knight_deploy_31111",
-        0.22,
+        impacts[ev.card as CardId] ?? "arrow_hit_13",
+        ev.card === "fireball" ? 0.35 : 0.12,
       );
     }
-    if (ev.type === "spell")
-      audio.play(
-        ev.card === "zap"
-          ? "zap_02"
-          : ev.card === "arrows"
-            ? "archer_attack_07"
-            : "fireball_hit_01",
-        0.3,
-      );
     if (ev.type === "crown") {
       audio.play("1st_crown_01", 0.35);
       showMessage(`${ev.team === "blue" ? "YOU" : "OPPONENT"} TOOK A TOWER`);
@@ -972,6 +993,11 @@ $("#about-button").onclick = () =>
     "about",
   );
 document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && modalKey) {
+    e.preventDefault();
+    closeModal();
+    return;
+  }
   if ((e.target as HTMLElement).matches("input,textarea,select")) return;
   if (e.key === "Escape") {
     if (modalKey) {
@@ -1027,7 +1053,8 @@ refreshIcons();
 if (!storageAvailable)
   toast("Browser storage is unavailable. Progress lasts for this session.");
 function frame(now: number) {
-  const delta = Math.min(0.1, (now - frameTime) / 1000);
+  const elapsed = (now - frameTime) / 1000;
+  const delta = Math.min(0.5, elapsed);
   frameTime = now;
   if (screen !== "lobby" && !paused && !battle.winner) {
     accumulator += delta * speed;
@@ -1046,13 +1073,13 @@ function frame(now: number) {
     if (ticks === 15) accumulator = 0;
     processEvents();
   }
-  arena.render(delta, now / 1000);
+  arena.render(Math.min(delta, 0.1), now / 1000);
   if (now - lastUi > 90 && screen !== "lobby") {
     updateBattleUI();
     lastUi = now;
   }
   frameCount++;
-  if (frameCount % 120 === 0) fps = Math.round(1 / Math.max(delta, 0.001));
+  if (frameCount % 120 === 0) fps = Math.round(1 / Math.max(elapsed, 0.001));
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);

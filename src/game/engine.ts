@@ -488,7 +488,10 @@ export class Battle {
               if (canAttack(v) && dist(v, e) <= card.splash + v.radius)
                 this.hurt(v, damage);
             this.emit("hit", e.team, e.x, e.y, e.card);
-          } else this.hurt(target, damage);
+          } else {
+            this.hurt(target, damage);
+            this.emit("hit", e.team, target.x, target.y, e.card, damage);
+          }
         }
       } else if (e.kind === "troop") this.moveToward(e, target);
     }
@@ -518,7 +521,9 @@ export class Battle {
         p.team,
         point.x,
         point.y,
-        p.source === 0 ? (p.style as CardId) : undefined,
+        p.style === "arrow" || p.style === "bomb"
+          ? undefined
+          : (p.style as CardId),
         p.damage,
       );
     }
