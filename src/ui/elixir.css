@@ -1,0 +1,111 @@
+.elixir-hud {
+  position: relative;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 454 / 62;
+  font-family: "Supercell Magic", sans-serif;
+  font-weight: 400;
+  font-synthesis: none;
+  pointer-events: none;
+  isolation: isolate;
+}
+.elixir-hud svg,
+.native-elixir-rate svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.elixir-art,
+.elixir-requirement {
+  position: absolute;
+  inset: 0;
+}
+.elixir-requirement {
+  opacity: 0.85;
+}
+.elixir-hud.insufficient .elixir-requirement {
+  filter: sepia(1) saturate(5) hue-rotate(310deg);
+}
+.elixir-hud #elixir-number {
+  position: absolute;
+  left: 4%;
+  top: 20%;
+  font-size: 22px;
+  color: #edbaff;
+}
+.elixir-hud.native-ready #elixir-number {
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.elixir-gain {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: calc(var(--elixir-unit, 40) / var(--elixir-total, 454) * 100%);
+}
+.elixir-floats {
+  position: absolute;
+  inset: 0;
+}
+.elixir-floats > div {
+  position: absolute;
+  width: calc(40 / var(--elixir-total, 454) * 100%);
+  height: 161.29%;
+  bottom: 27%;
+  transform: translateX(-50%);
+}
+.elixir-hud #elixir-rate {
+  position: absolute;
+  width: calc(54 / var(--elixir-total, 454) * 100%);
+  height: 100%;
+  bottom: 68%;
+  right: -2%;
+}
+.elixir-hud:not(.native-ready) {
+  border-radius: 8px;
+}
+.elixir-glints {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.elixir-tip,
+.elixir-flow {
+  position: absolute;
+  inset: 0;
+}
+.elixir-warning {
+  position: absolute;
+  width: 70%;
+  height: 55%;
+  left: 15%;
+  bottom: 80%;
+}
+.elixir-hud:not(.native-ready) {
+  background: linear-gradient(
+    90deg,
+    #c777e3 var(--elixir-value, 50%),
+    #172437 var(--elixir-value, 50%)
+  );
+}
+
+.native-elixir-rate {
+  font-family: "Supercell Magic", sans-serif;
+  font-weight: 400;
+  font-synthesis: none;
+  pointer-events: none;
+}
+.match-timer {
+  position: relative;
+}
+.match-timer #elixir-rate {
+  position: absolute;
+  right: calc(100% + 4px);
+  top: 5px;
+  width: 34px;
+  height: 38px;
+}

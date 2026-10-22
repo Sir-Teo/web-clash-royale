@@ -120,6 +120,8 @@ export function renderNativeFrame(
     prefix: string;
     fit?: boolean;
     omit?: string[];
+    bind?: boolean;
+    transform?: string;
   },
 ) {
   const labels: string[] = [];
@@ -157,7 +159,12 @@ export function renderNativeFrame(
         .join("");
       return `<g transform="${matrix(part.matrix)}">${pieces}</g>`;
     })
+    .map((markup, index) =>
+      options.bind && markup
+        ? `<g data-binding="${escape(data.clips[name].frames[frame][index].binding ?? "")}">${markup}</g>`
+        : markup,
+    )
     .join("");
-  host.innerHTML = `<svg viewBox="${options.viewBox}" aria-hidden="true">${content}</svg>`;
+  host.innerHTML = `<svg viewBox="${options.viewBox}" aria-hidden="true">${options.transform ? `<g transform="${options.transform}">${content}</g>` : content}</svg>`;
   host.setAttribute("aria-label", labels.join(" ") || "Battle introduction");
 }

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Native elixir HUD</title>
+    <style>
+      body {
+        margin: 0;
+        background: #122434;
+        color: white;
+        font: 14px system-ui;
+      }
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 16px;
+        background: #1e3b4b;
+        align-items: center;
+      }
+      label {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      button,
+      select,
+      input {
+        font: inherit;
+        min-height: 36px;
+      }
+      main {
+        width: min(90%, 600px);
+        margin: 140px auto 40px;
+        padding: 18px;
+        background: #29475d;
+        border: 1px solid #698395;
+        border-radius: 12px;
+        box-sizing: border-box;
+      }
+      .hidden {
+        display: none !important;
+      }
+      #status {
+        display: block;
+        text-align: center;
+        padding: 16px;
+        color: #aac5d4;
+      }
+      .elixir-hud {
+        max-width: none !important;
+      }
+      @font-face {
+        font-family: "Supercell Magic";
+        src: url("/assets/ui/supercell-magic.ttf");
+      }
+      @media (max-width: 480px) {
+        main {
+          margin-top: 100px;
+          width: 96%;
+          padding: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <b>Native elixir HUD</b
+      ><label
+        >Elixir
+        <input
+          id="amount"
+          type="range"
+          min="0"
+          max="10"
+          step="0.1"
+          value="5" /></label
+      ><label
+        >Selected cost
+        <select id="cost">
+          <option value="0">None</option>
+          <option>1</option>
+          <option>2</option>
+          <option selected>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>7</option>
+          <option>10</option>
+        </select></label
+      ><label
+        >Regeneration
+        <select id="rate">
+          <option value="1">1×</option>
+          <option value="2">2×</option>
+          <option value="3">3×</option>
+        </select></label
+      ><button id="play">Play</button><button id="step">Step 1 frame</button
+      ><button id="spend">Spend selected</button
+      ><button id="reset">Reset</button>
+    </header>
+    <main id="preview"></main>
+    <output id="status"></output>
+    <script type="module" src="./elixir.ts"></script>
+  </body>
+</html>

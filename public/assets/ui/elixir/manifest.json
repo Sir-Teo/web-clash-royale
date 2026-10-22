@@ -1,0 +1,76 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "sources": [
+    {
+      "source": "csv_client/texts.decoded.csv",
+      "path": "reference/client/texts.csv",
+      "bytes": 1676624,
+      "sha256": "0102d5ec1cbe3f6b2abf9e57f3068b029c3c2e9304c2cd56f0b06aacd8bdd43e"
+    },
+    {
+      "source": "font/supercell-magic_0.ttf",
+      "path": "public/assets/ui/supercell-magic.ttf",
+      "bytes": 127716,
+      "sha256": "b39e9bd4d46006fe559302ba3205c746b7967dea3554bdf1b32685dbfacfbb2b"
+    },
+    {
+      "source": "sc/ui",
+      "path": "reference/sc/ui.bin",
+      "bytes": 2207168,
+      "sha256": "e835a19396a344c0739f8b054efa7fe030a4b55d832eace8064675fa4f9e00bd"
+    },
+    {
+      "source": "sc/ui_tex.png",
+      "bytes": 4876660,
+      "sha256": "f33ba6c1dc1457a4551546843c7c9318cad0a1f82603ae2c8c850975d5220ef0"
+    }
+  ],
+  "files": [
+    {
+      "file": "shape-639-0.webp",
+      "bytes": 184,
+      "sha256": "68c4abebbc43bee61cea5ee069cb8c034b7c29213840428965df1768ff65ebc6"
+    },
+    {
+      "file": "shape-640-0.webp",
+      "bytes": 374,
+      "sha256": "c4953c9e41dd70b3cb81b47f1beff78f9acadcedb013e75b6d764afab6953f30"
+    },
+    {
+      "file": "shape-641-0.webp",
+      "bytes": 300,
+      "sha256": "b57f5aa32b4ab2d401a0f9ae7f1289d81deeedde0882631f8a5fc64f4a872f96"
+    },
+    {
+      "file": "shape-642-0.webp",
+      "bytes": 540,
+      "sha256": "915da0350354c31a67c383351e6a917aa0adf74fe9adde17e597d6818beb169c"
+    },
+    {
+      "file": "shape-643-0.webp",
+      "bytes": 5872,
+      "sha256": "e832d205842a9372fa38dde789e3d9d2fa5ba8394dc18589b87ad1d8127e80d2"
+    },
+    {
+      "file": "shape-636-0.webp",
+      "bytes": 528,
+      "sha256": "b1ce76d0e5b5316bfcd3e1d223db0f893a1c73622ea897e41cee7679389753d8"
+    },
+    {
+      "file": "shape-645-0.webp",
+      "bytes": 128,
+      "sha256": "4fb808ac39b18f81cccbc3dbc1ddd9741cd556bcbe753931fff190b38c15ed6d"
+    },
+    {
+      "file": "shape-646-0.webp",
+      "bytes": 270,
+      "sha256": "2b505c2c8bf6ac3ffbbbc66775b40ab9d264a872403efe5a6c95737995166f13"
+    },
+    {
+      "file": "elixir.json",
+      "bytes": 33847,
+      "sha256": "aee5d787d7ed6df69da6eadb5940f229185cf759af65d323777c65805c144486"
+    }
+  ]
+}

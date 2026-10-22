@@ -161,6 +161,7 @@ export function parseSC(b) {
           frames.push(
             refs.slice(offset, offset + count).map(([child, mat, color]) => ({
               id: children[child],
+              child,
               matrix: mat,
               color,
             })),

@@ -7,6 +7,8 @@ import "./style.css";
 import "./ui/announcements.css";
 import { NativeAnnouncements, battleClock } from "./ui/announcements";
 import { NativeIntro } from "./ui/intro";
+import { NativeElixir, elixirMarkup } from "./ui/elixir";
+import "./ui/elixir.css";
 import {
   createIcons,
   Crown,
@@ -210,7 +212,7 @@ $("#app").innerHTML = `
      <div class="emote-bubble hidden">${icon("crown")}<b>HA HA HA!</b></div>
     </div>
     <div id="lobby-footer" class="chest-tray"><div class="chest-heading"><span>VICTORY CHESTS</span><b id="chest-count">0 / 4</b></div><div class="chest-slots" id="chest-slots"></div></div>
-    <div id="battle-tray" class="battle-tray hidden"><div class="hand-row"><div class="next-card"><span>NEXT</span><img id="next-card-img" alt="Next card"/><b id="next-card-cost"></b></div><div class="hand" id="hand"></div></div><div class="elixir-row"><span class="elixir-drop"><b id="elixir-number">5</b></span><div class="elixir-track"><div id="elixir-fill"></div>${"<i></i>".repeat(9)}</div><b id="elixir-rate">1×</b></div><div class="tray-caption"><span id="hand-caption">Select a card, then tap your side of the arena</span><span><kbd>1</kbd>–<kbd>4</kbd> SELECT</span></div></div>
+    <div id="battle-tray" class="battle-tray hidden"><div class="hand-row"><div class="next-card"><span>NEXT</span><img id="next-card-img" alt="Next card"/><b id="next-card-cost"></b></div><div class="hand" id="hand"></div></div><div class="elixir-row">${elixirMarkup}</div><div class="tray-caption"><span id="hand-caption">Select a card, then tap your side of the arena</span><span><kbd>1</kbd>–<kbd>4</kbd> SELECT</span></div></div>
     <div class="replay-controls hidden"><button id="replay-play" class="icon-button" aria-label="Pause replay">${icon("pause")}</button><span id="replay-clock">0:00</span><input id="replay-seek" aria-label="Replay timeline" type="range" min="0" max="100" step="0.01" value="0"/><button id="replay-speed" class="text-button">1×</button><button id="replay-exit" class="text-button">Exit</button></div>
    </main>
    <aside class="right-sidebar"><section class="deck-panel panel"><div class="section-heading"><div><span class="eyebrow">YOUR WINNING EIGHT</span><h3>Battle deck</h3></div><span class="deck-number">01</span></div><div class="deck-tabs" id="deck-tabs"></div><div class="deck-grid" id="deck-preview"></div><div class="deck-summary"><span><i class="tiny-drop"></i> Average elixir <b id="average-elixir">3.5</b></span><span>8 / 8</span></div><button id="edit-deck" class="secondary-button">${icon("layers-2")} Edit deck ${icon("arrow-up-right")}</button></section>
@@ -222,6 +224,8 @@ $("#app").innerHTML = `
 
 const announcements = new NativeAnnouncements($("#battle-announcements"));
 const intro = new NativeIntro($("#battle-intro"));
+const elixir = new NativeElixir($("#elixir-hud"));
+$(".match-timer").append($("#elixir-rate"));
 announcements.onCue = (file, volume) => audio.play(file, volume);
 
 function refreshIcons() {
@@ -401,6 +405,7 @@ function startBattle() {
   $(".replay-controls").classList.add("hidden");
   refreshDeck();
   intro.start(profile.name, battle.mode);
+  elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
   updateBattleUI(true);
   audio.startMusic();
   if (!profile.seenTutorial) {
@@ -451,9 +456,6 @@ function updateBattleUI(force = false) {
   $("#next-card-img").setAttribute("src", cardArt(next.id));
   $("#next-card-img").setAttribute("alt", `Next card: ${next.name}`);
   $("#next-card-cost").textContent = String(next.cost);
-  $("#elixir-number").textContent = String(Math.floor(p.elixir));
-  $("#elixir-fill").style.width = `${p.elixir * 10}%`;
-  $("#elixir-rate").textContent = `${battle.multiplier}×`;
   document.querySelectorAll<HTMLElement>("[data-slot]").forEach((e, i) => {
     (e as HTMLButtonElement).disabled = intro.clock.blocking;
     e.classList.toggle("unaffordable", CARD_MAP[p.hand[i]].cost > p.elixir);
@@ -653,6 +655,7 @@ function playReplay(record: RecordEntry) {
   $("#replay-speed").textContent = "1×";
   refreshDeck();
   intro.start(profile.name, battle.mode);
+  elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
   updateBattleUI(true);
   refreshIcons();
 }
@@ -863,6 +866,13 @@ function processEvents() {
   for (const ev of battle.events) {
     if (ev.id <= eventCursor) continue;
     eventCursor = ev.id;
+    if (
+      ev.team === "blue" &&
+      (ev.type === "deploy" || ev.type === "spell") &&
+      ev.card &&
+      ev.card !== "tower"
+    )
+      elixir.spend(CARD_MAP[ev.card].cost, ev.time, battle.players.blue.elixir);
     if (ev.type === "deploy") {
       const voices: Partial<Record<CardId, string>> = {
         knight: "knight_deploy_31111",
@@ -1082,6 +1092,7 @@ $("#replay-seek").addEventListener("input", () => {
   for (let i = 0; i < target && !battle.winner; i++) battle.step();
   arena.setBattle(battle);
   eventCursor = battle.events.at(-1)?.id ?? 0;
+  elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
   accumulator = 0;
   updateBattleUI(true);
 });
@@ -1231,6 +1242,13 @@ function frame(now: number) {
   }
   announcements.update(battle, screen !== "lobby");
   intro.update(screen !== "lobby" && !battle.winner);
+  if (screen !== "lobby")
+    elixir.update(
+      battle.time,
+      battle.players.blue.elixir,
+      battle.multiplier,
+      selected >= 0 ? CARD_MAP[battle.players.blue.hand[selected]].cost : null,
+    );
   if (pendingResult) {
     if (pendingResult.battle !== battle || screen !== "battle")
       pendingResult = null;
@@ -1266,6 +1284,7 @@ Object.defineProperty(window, "__arena", {
         loadedEffects: arena.loadedEffects,
         loadedAnnouncements: announcements.loaded,
         loadedIntros: intro.loaded,
+        loadedElixir: elixir.loaded,
         intro: intro.state,
         announcement: announcements.state,
         loadedBuildings: arena.loadedBuildings,
