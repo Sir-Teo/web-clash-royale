@@ -1461,7 +1461,7 @@ button:active {
   letter-spacing: 1px;
   font-weight: 900;
 }
-.next-card > img {
+.next-card > .next-card-picture {
   width: 35px;
   height: 43px;
   object-fit: cover;
@@ -1469,7 +1469,7 @@ button:active {
   border-radius: 4px;
   filter: brightness(0.8);
 }
-.next-card > b {
+.next-card > .native-next-cost {
   position: absolute;
   bottom: 3px;
   left: 0;
@@ -3162,11 +3162,11 @@ kbd {
   .next-card {
     width: 35px;
   }
-  .next-card > img {
+  .next-card > .next-card-picture {
     width: 31px;
     height: 39px;
   }
-  .next-card > b {
+  .next-card > .native-next-cost {
     bottom: 9px;
   }
   .elixir-row {
@@ -3817,7 +3817,7 @@ body.in-battle {
   .in-battle .next-card {
     width: 32px;
   }
-  .in-battle .next-card > img {
+  .in-battle .next-card > .next-card-picture {
     width: 28px;
     height: 36px;
   }
@@ -3904,12 +3904,14 @@ body.in-battle {
     gap: 8px;
     padding: 0;
   }
-  .in-battle .next-card > img {
+  .in-battle .next-card > .next-card-picture {
     width: 18px;
     height: 23px;
   }
-  .in-battle .next-card > b {
-    position: static;
+  .in-battle .next-card > .native-next-cost {
+    position: relative;
+    inset: auto;
+    flex-shrink: 0;
   }
   .in-battle .tray-caption {
     display: none;

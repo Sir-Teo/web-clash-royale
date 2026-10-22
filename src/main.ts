@@ -9,6 +9,8 @@ import { NativeAnnouncements, battleClock } from "./ui/announcements";
 import { NativeIntro } from "./ui/intro";
 import { NativeElixir, elixirMarkup } from "./ui/elixir";
 import "./ui/elixir.css";
+import { NativeCards, nativeCardArt } from "./ui/cards";
+import "./ui/cards.css";
 import {
   createIcons,
   Crown,
@@ -179,7 +181,7 @@ const modeNames: Record<Mode, string> = {
 };
 const cardHTML = (id: CardId, attrs = "", extra = "") => {
   const c = CARD_MAP[id];
-  return `<button class="game-card ${c.rarity.toLowerCase()} ${extra}" ${attrs} aria-label="${c.name}, ${c.cost} elixir"><span class="cost">${c.cost}</span><img src="${cardArt(id)}" alt="${c.name}" draggable="false"/><span class="card-level">Level 11</span><span class="card-name">${c.name}</span></button>`;
+  return `<button class="game-card ${c.rarity.toLowerCase()} ${extra}" data-native-card="${id}" data-card-variant="${extra.includes("hand-card") ? "hand" : "deck"}" ${attrs} aria-label="${c.name}, ${c.cost} elixir"><span class="cost">${c.cost}</span><img src="${cardArt(id)}" alt="${c.name}" draggable="false"/>${nativeCardArt}<span class="card-level">Level 11</span><span class="card-name">${c.name}</span></button>`;
 };
 
 $("#app").innerHTML = `
@@ -212,7 +214,7 @@ $("#app").innerHTML = `
      <div class="emote-bubble hidden">${icon("crown")}<b>HA HA HA!</b></div>
     </div>
     <div id="lobby-footer" class="chest-tray"><div class="chest-heading"><span>VICTORY CHESTS</span><b id="chest-count">0 / 4</b></div><div class="chest-slots" id="chest-slots"></div></div>
-    <div id="battle-tray" class="battle-tray hidden"><div class="hand-row"><div class="next-card"><span>NEXT</span><img id="next-card-img" alt="Next card"/><b id="next-card-cost"></b></div><div class="hand" id="hand"></div></div><div class="elixir-row">${elixirMarkup}</div><div class="tray-caption"><span id="hand-caption">Select a card, then tap your side of the arena</span><span><kbd>1</kbd>–<kbd>4</kbd> SELECT</span></div></div>
+    <div id="battle-tray" class="battle-tray hidden"><div class="hand-row"><div class="next-card"><span>NEXT</span><div class="next-card-picture" data-native-card="" data-card-variant="thumbnail"><img id="next-card-img" alt="Next card"/>${nativeCardArt}</div><div class="native-next-cost" data-native-card="" data-card-variant="cost"><b id="next-card-cost"></b>${nativeCardArt}</div></div><div class="hand" id="hand"></div></div><div class="elixir-row">${elixirMarkup}</div><div class="tray-caption"><span id="hand-caption">Select a card, then tap your side of the arena</span><span><kbd>1</kbd>–<kbd>4</kbd> SELECT</span></div></div>
     <div class="replay-controls hidden"><button id="replay-play" class="icon-button" aria-label="Pause replay">${icon("pause")}</button><span id="replay-clock">0:00</span><input id="replay-seek" aria-label="Replay timeline" type="range" min="0" max="100" step="0.01" value="0"/><button id="replay-speed" class="text-button">1×</button><button id="replay-exit" class="text-button">Exit</button></div>
    </main>
    <aside class="right-sidebar"><section class="deck-panel panel"><div class="section-heading"><div><span class="eyebrow">YOUR WINNING EIGHT</span><h3>Battle deck</h3></div><span class="deck-number">01</span></div><div class="deck-tabs" id="deck-tabs"></div><div class="deck-grid" id="deck-preview"></div><div class="deck-summary"><span><i class="tiny-drop"></i> Average elixir <b id="average-elixir">3.5</b></span><span>8 / 8</span></div><button id="edit-deck" class="secondary-button">${icon("layers-2")} Edit deck ${icon("arrow-up-right")}</button></section>
@@ -222,6 +224,7 @@ $("#app").innerHTML = `
   <footer class="app-footer"><span><i></i> BUILT FOR THE BROWSER. MADE FOR THE CROWN.</span><button id="about-button">Independent fan project ${icon("external-link")}</button><span class="fps-label">WEB ARENA · v0.1</span></footer>
  </div><div id="modal-root"></div><div class="toast" id="toast" role="status"></div><div id="drag-card" class="drag-card hidden"></div>`;
 
+const nativeCards = new NativeCards();
 const announcements = new NativeAnnouncements($("#battle-announcements"));
 const intro = new NativeIntro($("#battle-intro"));
 const elixir = new NativeElixir($("#elixir-hud"));
@@ -229,6 +232,7 @@ $(".match-timer").append($("#elixir-rate"));
 announcements.onCue = (file, volume) => audio.play(file, volume);
 
 function refreshIcons() {
+  nativeCards.hydrate();
   createIcons({ icons, attrs: { "stroke-width": 1.8 } });
 }
 function toast(message: string) {
@@ -406,6 +410,7 @@ function startBattle() {
   refreshDeck();
   intro.start(profile.name, battle.mode);
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
+  nativeCards.reset(battle.time, battle.players.blue.hand);
   updateBattleUI(true);
   audio.startMusic();
   if (!profile.seenTutorial) {
@@ -456,12 +461,19 @@ function updateBattleUI(force = false) {
   $("#next-card-img").setAttribute("src", cardArt(next.id));
   $("#next-card-img").setAttribute("alt", `Next card: ${next.name}`);
   $("#next-card-cost").textContent = String(next.cost);
+  document
+    .querySelectorAll<HTMLElement>(".next-card [data-native-card]")
+    .forEach((e) => {
+      e.dataset.nativeCard = next.id;
+      nativeCards.draw(e);
+    });
   document.querySelectorAll<HTMLElement>("[data-slot]").forEach((e, i) => {
     (e as HTMLButtonElement).disabled = intro.clock.blocking;
     e.classList.toggle("unaffordable", CARD_MAP[p.hand[i]].cost > p.elixir);
     e.classList.toggle("selected", selected === i);
     e.setAttribute("aria-pressed", String(selected === i));
   });
+  nativeCards.updateHand($("#hand"), battle.time);
   if (screen === "replay" && replayData) {
     $("#replay-clock").textContent = clock(battle.time);
     ($("#replay-seek") as HTMLInputElement).value = String(
@@ -656,6 +668,7 @@ function playReplay(record: RecordEntry) {
   refreshDeck();
   intro.start(profile.name, battle.mode);
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
+  nativeCards.reset(battle.time, battle.players.blue.hand);
   updateBattleUI(true);
   refreshIcons();
 }
@@ -680,7 +693,7 @@ function showCard(id: CardId) {
   const c = CARD_MAP[id];
   modal(
     c.name,
-    `<div class="card-detail"><div class="detail-art ${c.rarity.toLowerCase()}"><img src="${cardArt(id)}" alt="${c.name}"/><span class="cost">${c.cost}</span></div><div><span class="rarity-label ${c.rarity.toLowerCase()}">${c.rarity} · ${c.kind}</span><p>${c.description}</p><span class="level-pill">TOURNAMENT STANDARD · LEVEL 11</span></div></div><div class="stat-grid">${[
+    `<div class="card-detail"><div class="detail-art ${c.rarity.toLowerCase()}" data-native-card="${id}" data-card-variant="deck">${nativeCardArt}<img src="${cardArt(id)}" alt="${c.name}"/><span class="cost">${c.cost}</span></div><div><span class="rarity-label ${c.rarity.toLowerCase()}">${c.rarity} · ${c.kind}</span><p>${c.description}</p><span class="level-pill">TOURNAMENT STANDARD · LEVEL 11</span></div></div><div class="stat-grid">${[
       [
         c.kind === "spell" ? "Area damage" : "Hitpoints",
         c.kind === "spell" ? c.damage : c.hp,
@@ -974,7 +987,14 @@ document.addEventListener("pointermove", (e) => {
   if (!dragging) return;
   const id = battle.players.blue.hand[activeSlot];
   $("#drag-card").classList.remove("hidden");
-  $("#drag-card").innerHTML = `<img src="${cardArt(id)}" alt=""/>`;
+  if ($("#drag-card").dataset.nativeCard !== id) {
+    $("#drag-card").innerHTML =
+      `<img src="${cardArt(id)}" alt=""/>${nativeCardArt}`;
+    $("#drag-card").dataset.nativeCard = id;
+    $("#drag-card").dataset.cardVariant = "hand";
+    $("#drag-card").classList.remove("native-card-ready");
+    nativeCards.draw($("#drag-card"));
+  }
   $("#drag-card").style.transform =
     `translate(${e.clientX}px,${e.clientY - 45}px) translate(-50%,-50%)`;
   hover = arena.point(e.clientX, e.clientY);
@@ -1093,6 +1113,7 @@ $("#replay-seek").addEventListener("input", () => {
   arena.setBattle(battle);
   eventCursor = battle.events.at(-1)?.id ?? 0;
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
+  nativeCards.reset(battle.time, battle.players.blue.hand);
   accumulator = 0;
   updateBattleUI(true);
 });
@@ -1242,6 +1263,7 @@ function frame(now: number) {
   }
   announcements.update(battle, screen !== "lobby");
   intro.update(screen !== "lobby" && !battle.winner);
+  if (screen !== "lobby") nativeCards.updateHand($("#hand"), battle.time);
   if (screen !== "lobby")
     elixir.update(
       battle.time,
@@ -1285,6 +1307,7 @@ Object.defineProperty(window, "__arena", {
         loadedAnnouncements: announcements.loaded,
         loadedIntros: intro.loaded,
         loadedElixir: elixir.loaded,
+        loadedCards: nativeCards.loaded,
         intro: intro.state,
         announcement: announcements.state,
         loadedBuildings: arena.loadedBuildings,

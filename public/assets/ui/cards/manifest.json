@@ -1,0 +1,260 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "sources": [
+    {
+      "source": "csv_client/texts.decoded.csv",
+      "path": "reference/client/texts.csv",
+      "bytes": 1676624,
+      "sha256": "0102d5ec1cbe3f6b2abf9e57f3068b029c3c2e9304c2cd56f0b06aacd8bdd43e"
+    },
+    {
+      "source": "font/supercell-magic_0.ttf",
+      "path": "public/assets/ui/supercell-magic.ttf",
+      "bytes": 127716,
+      "sha256": "b39e9bd4d46006fe559302ba3205c746b7967dea3554bdf1b32685dbfacfbb2b"
+    },
+    {
+      "source": "sc/ui",
+      "path": "reference/sc/ui.bin",
+      "bytes": 2207168,
+      "sha256": "e835a19396a344c0739f8b054efa7fe030a4b55d832eace8064675fa4f9e00bd"
+    },
+    {
+      "source": "sc/ui_tex.png",
+      "bytes": 4876660,
+      "sha256": "f33ba6c1dc1457a4551546843c7c9318cad0a1f82603ae2c8c850975d5220ef0"
+    },
+    {
+      "source": "csv_logic/spells_characters.decoded.csv",
+      "path": "reference/logic/spells_characters.csv",
+      "bytes": 9315,
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "source": "csv_logic/spells_buildings.decoded.csv",
+      "path": "reference/logic/spells_buildings.csv",
+      "bytes": 3272,
+      "sha256": "f302372ce1d0870e3edb37d0520be9164865eb207ea600910616b9cbf024f456"
+    },
+    {
+      "source": "csv_logic/spells_other.decoded.csv",
+      "path": "reference/logic/spells_other.csv",
+      "bytes": 3891,
+      "sha256": "a50dcc87e6ee337537e2dcb00c6f4f3f81fc383685ce8e630b33c41f6c4e2dda"
+    },
+    {
+      "source": "sc/ui_spells",
+      "path": "reference/sc/ui-spells.bin",
+      "bytes": 12590,
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    },
+    {
+      "source": "sc/ui_spells_tex.png",
+      "bytes": 4132114,
+      "sha256": "1edfc08e407938b29749b5022b7fca13961836c7afca9361bc03c9d82f7b3410"
+    },
+    {
+      "source": "sc/ui_spells_tex_.png",
+      "bytes": 812362,
+      "sha256": "6822a7314b8e904aa88a47d04391cd0989094c86a6649ad719a458bc00528479"
+    }
+  ],
+  "files": [
+    {
+      "file": "shape-1373-0.webp",
+      "bytes": 182,
+      "sha256": "57e9b296ece2bca1b9fb0e6d042f98fe7a2b81005fe802ea6dc69e931ee6418c"
+    },
+    {
+      "file": "shape-1373-1.webp",
+      "bytes": 182,
+      "sha256": "57e9b296ece2bca1b9fb0e6d042f98fe7a2b81005fe802ea6dc69e931ee6418c"
+    },
+    {
+      "file": "shape-1373-2.webp",
+      "bytes": 182,
+      "sha256": "57e9b296ece2bca1b9fb0e6d042f98fe7a2b81005fe802ea6dc69e931ee6418c"
+    },
+    {
+      "file": "shape-1373-3.webp",
+      "bytes": 182,
+      "sha256": "57e9b296ece2bca1b9fb0e6d042f98fe7a2b81005fe802ea6dc69e931ee6418c"
+    },
+    {
+      "file": "shape-1376-0.webp",
+      "bytes": 130,
+      "sha256": "07fc536ac782fd93558b911798f3ca4c8cd80fe28b21b7ab0595328c059fe330"
+    },
+    {
+      "file": "shape-1377-0.webp",
+      "bytes": 1378,
+      "sha256": "e956400d7528f600a2b3a22642a3bdd1c606f959f9b68fe6ee9f0aa4c65b78d0"
+    },
+    {
+      "file": "shape-1378-0.webp",
+      "bytes": 1418,
+      "sha256": "786adb8ffc438a75758529236bd80b5013679ae8e06bf9186d6e7736558f7115"
+    },
+    {
+      "file": "shape-1379-0.webp",
+      "bytes": 1458,
+      "sha256": "369d09def775ea1a86eec4e35d421c77b6a80a09cf959af818a313a660bb09b5"
+    },
+    {
+      "file": "shape-1380-0.webp",
+      "bytes": 1556,
+      "sha256": "c4e2e50bcd922bd58323448a3d2bfd8d1a658fa0de1336a90cb3abe13a4d93c8"
+    },
+    {
+      "file": "shape-1381-0.webp",
+      "bytes": 710,
+      "sha256": "e9285c487bef47835004e5b9aa65a4fefe8ba6bdcbc91008791f35b270817668"
+    },
+    {
+      "file": "shape-1382-0.webp",
+      "bytes": 730,
+      "sha256": "0a6ea5f64b75efdc5ae3e00f2a6910cb2900ebefda73e720f13024612bb67546"
+    },
+    {
+      "file": "shape-1383-0.webp",
+      "bytes": 598,
+      "sha256": "d828558665488dd80126420b92a37d0f15ecd13b7b2b2a578e1955cf0bc54b72"
+    },
+    {
+      "file": "shape-1384-0.webp",
+      "bytes": 742,
+      "sha256": "9331ada625d5ac71262e9e6cc9d9e6d5dbef93c1c50009ba5987f7abc8d66d9d"
+    },
+    {
+      "file": "shape-1389-0.webp",
+      "bytes": 5872,
+      "sha256": "e832d205842a9372fa38dde789e3d9d2fa5ba8394dc18589b87ad1d8127e80d2"
+    },
+    {
+      "file": "portrait-knight.webp",
+      "bytes": 37824,
+      "sha256": "0bae1b5e8900c8a569bd9c8a406b0154552b6f18a2d13cb5a9b522c05748b86c"
+    },
+    {
+      "file": "portrait-archers.webp",
+      "bytes": 42130,
+      "sha256": "255194d01e0626ece325be0243265d0157542eb4f19db51683490469de9eec50"
+    },
+    {
+      "file": "portrait-giant.webp",
+      "bytes": 40686,
+      "sha256": "0516320bca810453bc1f662d793b61f061195fe322bf5a7d96ee2d319ae52d04"
+    },
+    {
+      "file": "portrait-musketeer.webp",
+      "bytes": 33692,
+      "sha256": "cd22e996b19bedcd3a2e69f3aaba20cc466af944f528e97f1193a909afb9b862"
+    },
+    {
+      "file": "portrait-mini-pekka.webp",
+      "bytes": 33292,
+      "sha256": "ae7a7e4846126922ca205d2abf5a948e23d2795a962656ed3b26cde0cfd6ee76"
+    },
+    {
+      "file": "portrait-fireball.webp",
+      "bytes": 34904,
+      "sha256": "e47f90e15117df01d08957c4af966a57fb76dca507012b78730c021a36145b12"
+    },
+    {
+      "file": "portrait-arrows.webp",
+      "bytes": 36242,
+      "sha256": "c0d67e5d9bdc92fcf2583772a6a9a1186565cc95aedf9447ae402bb253800038"
+    },
+    {
+      "file": "portrait-goblins.webp",
+      "bytes": 36240,
+      "sha256": "50e61b66e6cf1518674ef1d41245653bbfad37cdf75f8b0c442cacf6cde15941"
+    },
+    {
+      "file": "portrait-spear-goblins.webp",
+      "bytes": 44326,
+      "sha256": "68c4b70ad810e1d906dd91897063ac50b1eef2b0520ab7dc35d1fb515c33f777"
+    },
+    {
+      "file": "portrait-skeletons.webp",
+      "bytes": 36356,
+      "sha256": "85ef47cfc26845efdafc8e780721f167b4784b281a4404e9e129ce524f80be63"
+    },
+    {
+      "file": "portrait-skeleton-army.webp",
+      "bytes": 38652,
+      "sha256": "feb5ec09af92a98cbb4db73b2572f6564d477525d87a790bbed59e1ac4f15b4f"
+    },
+    {
+      "file": "portrait-bomber.webp",
+      "bytes": 43534,
+      "sha256": "2ea47415c494b29be89ef76d729645b48d2b446b51d0875ed75638cc839e63a8"
+    },
+    {
+      "file": "portrait-valkyrie.webp",
+      "bytes": 43554,
+      "sha256": "f00525f7b58f065c3681c1920b6a8af173d225e4e334f1e42b495a655e55915b"
+    },
+    {
+      "file": "portrait-hog-rider.webp",
+      "bytes": 35276,
+      "sha256": "86151737dbc419d53f1388df10897353bf9fce25f0de1c5115109dea3908f98d"
+    },
+    {
+      "file": "portrait-baby-dragon.webp",
+      "bytes": 34768,
+      "sha256": "53330d1dc855e5565ba304179afa0650b3779321c9ef69b3259efd6a7e59ad6f"
+    },
+    {
+      "file": "portrait-minions.webp",
+      "bytes": 38954,
+      "sha256": "cbca92ca99e84275cb25809860198e2f9124f7029bfaf8d1e3f480bb7c4a0fe0"
+    },
+    {
+      "file": "portrait-witch.webp",
+      "bytes": 36474,
+      "sha256": "0733bc437e35b26735b275e638435a3527257d84af2288de5cff146114a5c5fc"
+    },
+    {
+      "file": "portrait-wizard.webp",
+      "bytes": 34726,
+      "sha256": "08cc727b5e4c74078a44e972648e9e92ffee17436ce5b60f064b6c1fe7d5b0e1"
+    },
+    {
+      "file": "portrait-prince.webp",
+      "bytes": 40100,
+      "sha256": "8350f058b41c06c1df8e80881771134b160b4dba4a11fb2efca208dfa1fec8cb"
+    },
+    {
+      "file": "portrait-pekka.webp",
+      "bytes": 34406,
+      "sha256": "1bd0c6c0b065540293f32b648441f3c398cc1af335a9134c1969e49829a77f10"
+    },
+    {
+      "file": "portrait-balloon.webp",
+      "bytes": 44682,
+      "sha256": "83df65887ea7a802c3fd83b8d54e2fa408137fc6607c21a56a1675f36256b803"
+    },
+    {
+      "file": "portrait-cannon.webp",
+      "bytes": 34130,
+      "sha256": "6abcb63917881f3c135440f9dff0766d6b2fd11300e21cd6406003847e71dada"
+    },
+    {
+      "file": "portrait-tesla.webp",
+      "bytes": 33628,
+      "sha256": "3a17d25515f90873360c0c0e72e136be0739d3b9a5a7bbaa02c46376c3877f72"
+    },
+    {
+      "file": "portrait-zap.webp",
+      "bytes": 39706,
+      "sha256": "0acff86dd7ba3d91c2d161b007f0b38e2e833c2bdce25c08545c1f0874bd14a4"
+    },
+    {
+      "file": "cards.json",
+      "bytes": 90883,
+      "sha256": "f3f34870c2a4577d1122198d2c81018c6c27c327be32c40ef3b815d831385f5d"
+    }
+  ]
+}

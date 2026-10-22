@@ -20,6 +20,8 @@ Battle countdowns and overtime notices use the original font, authored animation
 
 Battles open with the original animated arena title, crossed swords, red/blue player ribbons and FIGHT lettering. Combat, AI and elixir wait for the intro's authored action frame. The opening pauses with the game, fits long player names, adapts to phone rotation and plays when a replay restarts; seeking skips it.
 
+All 24 cards use original unframed portraits with native hand/deck frames, cost drops and text. Selected cards show the original white outline, and newly drawn cards play the source reveal animation. The same artwork appears in the deck editor, details, next-card preview and drag controls; phone touch targets remain at least 44 pixels.
+
 The elixir HUD uses native bar, drop, divider and card-cost artwork, with the original gain, spend, full-bar and regeneration animations. Narrow landscape layouts shorten the bar while keeping its number readable. All feedback follows the simulation clock and clears correctly when seeking a replay.
 
 Troop deaths use source-specific elixir splashes, smoke, dust and ground marks. Knights leave their original sword behind, Giants have a larger burst, Skeletons have smaller effects, and Balloons release airborne clouds. Native particle geometry is batched on the GPU to keep large swarms practical on phone-sized screens.
@@ -46,6 +48,8 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 `npm run assets:intro` imports the complete standard/training battle openings and derives their action-frame timing. `/tests/fixtures/intro.html` inspects source frames, player-name fitting and the transition into combat.
 
 `npm run assets:elixir` imports eight native elixir HUD clips and their source geometry. `/tests/fixtures/elixir.html` provides amount, selected-cost, spending, regeneration and frame-step controls for visual inspection.
+
+`npm run assets:cards` imports native card layers and all 24 source portraits. `/tests/fixtures/cards.html` provides the full gallery, selection states and a frame-stepped hand reveal.
 
 ## Phone play
 

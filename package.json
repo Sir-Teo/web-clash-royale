@@ -20,7 +20,8 @@
     "assets:buildings": "node scripts/import-buildings.mjs",
     "assets:ui": "node scripts/import-ui.mjs",
     "assets:intro": "node scripts/import-intro.mjs",
-    "assets:elixir": "node scripts/import-elixir.mjs"
+    "assets:elixir": "node scripts/import-elixir.mjs",
+    "assets:cards": "node scripts/import-cards.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",

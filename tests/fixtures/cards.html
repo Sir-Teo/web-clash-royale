@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="UTF-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><title>Native card artwork</title
+  ><style>
+    body {
+      margin: 0;
+      background: #102331;
+      color: #edf3ff;
+      font: 14px system-ui;
+      padding: 24px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+    p {
+      color: #a7c0d2;
+    }
+    button,
+    select {
+      font: inherit;
+      background: #25445b;
+      color: white;
+      border: 1px solid #7193ae;
+      border-radius: 6px;
+      padding: 9px;
+    }
+    header {
+      margin-bottom: 18px;
+    }
+    .controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 15px 0;
+    }
+    .preview {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .sample {
+      position: relative;
+      width: 114px;
+      height: 142px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+    }
+    .sample.hand-card {
+      width: 142px;
+      height: 177px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 14px;
+      max-width: 1200px;
+    }
+    .grid .sample {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 142/177;
+    }
+    #status {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+  <header>
+    <h1>Native card artwork</h1>
+    <p>
+      Original portraits, bevels, cost drops, text and draw frames. Select a
+      card to inspect its outline.
+    </p>
+    <div class="controls">
+      <button id="draw">Draw next card</button
+      ><button id="step">Step 1 frame</button><button id="play">Play</button
+      ><button id="reset">Reset</button>
+    </div>
+    <div id="status">Loading artwork</div>
+  </header>
+  <div class="preview" id="hand"></div>
+  <h2>24 source portraits · deck composition</h2>
+  <div class="grid" id="gallery"></div>
+  <script type="module" src="/tests/fixtures/cards.ts"></script>
+</html>

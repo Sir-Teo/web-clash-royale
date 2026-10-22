@@ -1,0 +1,82 @@
+.native-card-art {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  font-family: "Supercell Magic", sans-serif;
+  font-weight: normal;
+  line-height: 1;
+}
+.native-card-art > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.game-card.native-card-ready,
+.detail-art.native-card-ready {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+.game-card.native-card-ready::after {
+  display: none;
+}
+.native-card-ready > img,
+.native-card-ready > .cost,
+.native-card-ready > .card-level,
+.native-card-ready > .card-name,
+.native-card-ready > #next-card-cost {
+  opacity: 0;
+}
+.game-card.native-card-ready > .native-card-art {
+  z-index: 2;
+}
+.game-card.native-card-ready.selected {
+  outline: none;
+}
+.game-card.native-card-ready:focus-visible {
+  outline: 2px solid #fff0ac;
+  outline-offset: 3px;
+}
+.detail-art.native-card-ready {
+  aspect-ratio: 142 / 177;
+}
+.detail-art.native-card-ready > img {
+  height: 100%;
+  object-fit: contain;
+}
+.next-card-picture {
+  position: relative;
+  flex-shrink: 0;
+}
+.next-card-picture > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.next-card-picture.native-card-ready {
+  border-color: transparent;
+}
+.native-next-cost {
+  position: relative;
+}
+.native-next-cost.native-card-ready {
+  background: transparent;
+  border-color: transparent;
+}
+.native-next-cost > #next-card-cost {
+  display: block;
+}
+
+.next-card > .native-next-cost {
+  width: 20px;
+  height: 22px;
+}
+/* Keep the source cost placement, with a readable numeral on compact hands. */
+@media (max-width: 480px), (max-height: 540px) and (orientation: landscape) {
+  .hand-card .native-card-art text {
+    font-size: 34px;
+  }
+}

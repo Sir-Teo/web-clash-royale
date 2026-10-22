@@ -70,6 +70,11 @@ Countdown voices are emitted once when a displayed second crosses 10 through 1. 
 
 The native display-list parser preserves each child's instance index as well as its asset ID. This distinguishes the nine dividers, which all reference the same shape. Runtime HUD layout supplies the dynamic dimensions absent from the archive. Tracks use 400 source units normally and 200 below a 280-pixel container width; only the track and cost geometry shrink, preserving the drop and numeral size on short landscape phones. A ResizeObserver records the new width, and the next presentation update applies it without changing game state or resizing inside the observer callback. Shared SVG rendering supports named binding groups and an optional outer geometry transform.
 
+
+`src/ui/cards.ts` renders source card layers through the shared SVG display-list renderer. Per-card views substitute the unframed portrait at a reserved shape binding; each mounted artwork host has unique SVG clip/filter IDs and a cached render signature. Hand/deck/detail/next/drag presentations share the same assets while retaining their existing buttons, pointer ownership, ARIA labels and hit areas. Drag art is built only when its card changes, so pointer movement updates position without rebuilding the SVG.
+
+A four-slot presentation clock tracks newly drawn cards independently of hand DOM replacement. Only changed slots play the 60-FPS source reveal; unchanged cards remain still. Animation uses simulation time, pauses with the battle, respects reduced motion and resets on replay seeking/restarting. Loading all native images and the local font precedes the switch from fallback art. Failed loading leaves the previous playable UI intact. `loadedCards` exposes the number of ready portraits through read-only diagnostics.
+
 ## Current boundaries
 
 - AI battles only; online multiplayer and account synchronization are not implemented.
