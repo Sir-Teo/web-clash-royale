@@ -84,9 +84,9 @@ export class Battle {
  step(){
    if(this.winner)return;
    if(this.replayActions){while(this.replayIndex<this.replayActions.length&&this.replayActions[this.replayIndex].tick===this.tick){const a=this.replayActions[this.replayIndex++];this.play(a.team,this.players[a.team].hand.indexOf(a.card),a.x,a.y);}}
+   if(this.ai){this.aiTimer-=STEP;if(this.aiTimer<=0){this.think();this.aiTimer=(this.mode==='training'?2.5:1.1)+this.random()*1.3;}}
    const beforePhase=this.phase;this.tick++;
    for(const t of ['blue','red'] as Team[])this.players[t].elixir=Math.min(10,this.players[t].elixir+STEP/2.8*this.multiplier);
-   if(this.ai){this.aiTimer-=STEP;if(this.aiTimer<=0){this.think();this.aiTimer=(this.mode==='training'?2.5:1.1)+this.random()*1.3;}}
    for(const e of [...this.entities]){
     if(e.hp<=0)continue;
     e.age+=STEP;e.attack=Math.max(0,e.attack-STEP);e.stun=Math.max(0,e.stun-STEP);
@@ -184,7 +184,7 @@ export class Battle {
    }).sort((a,b)=>b.score-a.score);
    const a=scored[0];if(a.score<0)return;
    const lane=threat?threat.x<9?4:14:this.random()<0.5?4:14;
-   let x=lane+(this.random()-0.5)*1.4,y=threat?clamp(threat.y+1.3,8,13.8):a.c.buildingsOnly?5.5:8.5;
+   let x=lane+(this.random()-0.5)*1.4,y=threat?clamp(threat.y+1.3,8,13.8):a.c.buildingsOnly?3.5:9;
    if(a.c.kind==='spell'){const target=threat??this.entities.find(e=>e.team==='blue'&&e.kind==='tower'&&!e.king);if(!target)return;x=target.x;y=target.y;}
    if(a.c.kind==='building'){x=9;y=10;}
    this.play('red',a.slot,x,y);
