@@ -1,7 +1,8 @@
 import { test, expect as baseExpect, type Page } from "@playwright/test";
 import { CARD_MAP } from "../../src/game/cards";
 const expect = baseExpect.configure({ timeout: 15000 });
-const state = (p: Page) => p.evaluate(() => (window as any).__arena.state);
+const state = (p: Page) =>
+  p.evaluate(() => (window as any).__arena?.state ?? {});
 async function init(p: Page, name: string) {
   await p.addInitScript((name) => {
     if (!localStorage.getItem("browser-royale.profile.v1"))
@@ -136,12 +137,24 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
     expect((await state(red)).paused).toBe(false);
     await red.getByRole("button", { name: "Back to battle" }).click();
     console.log("Multiplayer: deployed from both sides; reloading red");
+    const reloadStart = Date.now();
     await red.reload();
+    await expect(
+      red.getByRole("button", { name: "Battle options" }),
+    ).toBeVisible({ timeout: 90000 });
     await expect
       .poll(async () => (await state(red)).multiplayer?.team)
       .toBe("red");
     await expect.poll(async () => (await state(red)).actions).toBe(2);
-    expect((await state(red)).winner).toBeNull();
+    const restored = await state(red);
+    console.log("Multiplayer: restored", {
+      seconds: (Date.now() - reloadStart) / 1000,
+      time: restored.time,
+      winner: restored.winner,
+      reason: restored.reason,
+      connection: restored.multiplayer,
+    });
+    expect(restored.winner, restored.reason).toBeNull();
     await expect
       .poll(async () => (await state(red)).time)
       .toBeGreaterThan(beforeMenu);

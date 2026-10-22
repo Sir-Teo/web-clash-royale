@@ -13,9 +13,43 @@
     />
     <title>Clash Royale · Browser Arena</title>
     <link rel="icon" type="image/svg+xml" href="/crown.svg" />
+    <style>
+      body {
+        margin: 0;
+        background: #13233d;
+      }
+      #startup {
+        min-height: 100dvh;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: 12px;
+        color: #eef5ff;
+        font: 700 16px system-ui;
+      }
+      #startup img {
+        width: 64px;
+        height: 64px;
+      }
+      #startup button {
+        min-height: 44px;
+        padding: 10px 24px;
+        border: 0;
+        border-radius: 8px;
+        background: #ffc84f;
+        color: #533513;
+        font: inherit;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <div id="app">
+      <div id="startup" role="status">
+        <img src="/crown.svg" alt="" />
+        <p id="startup-status">Loading the arena…</p>
+      </div>
+    </div>
+    <script type="module" src="/src/bootstrap.ts"></script>
   </body>
 </html>

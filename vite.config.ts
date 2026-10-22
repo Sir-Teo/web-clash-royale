@@ -15,5 +15,10 @@ export default defineConfig({
       },
     },
   ],
-  build: { rollupOptions: { output: { manualChunks: { three: ["three"] } } } },
+  build: {
+    // Older WebKit retains failed preloads across reloads (webkit.org/b/270357).
+    // Ordinary imports remain retryable; async chunk CSS still loads normally.
+    modulePreload: false,
+    rollupOptions: { output: { manualChunks: { three: ["three"] } } },
+  },
 });

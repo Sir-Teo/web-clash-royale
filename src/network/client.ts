@@ -58,12 +58,18 @@ export class RoomClient {
       this.lastMessage = performance.now();
       this.send(first);
       clearInterval(this.heartbeat);
+      let heartbeatAt = performance.now();
       this.heartbeat = window.setInterval(() => {
-        if (performance.now() - this.lastMessage > 15_000) {
+        const now = performance.now();
+        const stalled = now - heartbeatAt > 6000;
+        heartbeatAt = now;
+        // A long graphics task can delay both this timer and queued socket
+        // messages. Give those messages one turn before declaring a loss.
+        if (!stalled && now - this.lastMessage > 15_000) {
           ws.close();
           return;
         }
-        this.send({ type: "ping", at: performance.now() });
+        this.send({ type: "ping", at: now });
       }, 3000);
     };
     ws.onmessage = (e) => {

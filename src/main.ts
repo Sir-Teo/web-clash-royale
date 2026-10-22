@@ -10,7 +10,11 @@ import "./ui/rooms.css";
 import "./ui/ending.css";
 import { NativeEnding } from "./ui/ending";
 import { endResult } from "./ui/ending-data";
-import { RoomClient } from "./network/client";
+import {
+  network,
+  startupRoomRequested,
+  flushStartupRoom,
+} from "./network/session";
 import { PROTOCOL } from "./network/protocol";
 import { applySnapshot, snapshot } from "./network/perspective";
 import { NativeIntro, INTRO_ACTION_TIME } from "./ui/intro";
@@ -146,7 +150,7 @@ const profile = loadProfile(),
   audio = new GameAudio();
 audio.enabled = profile.sound;
 audio.musicEnabled = profile.music;
-const network = new RoomClient();
+let initialized = false;
 let multiplayer = false;
 let networkReplay: Replay | undefined;
 let replaySource: Battle | null = null;
@@ -393,7 +397,7 @@ function claimChest(index: number) {
 
 function lobby() {
   resetEnding();
-  if (network.room || multiplayer) network.leave();
+  if (initialized && (network.room || multiplayer)) network.leave();
   multiplayer = false;
   networkBattleCode = "";
   networkReplay = undefined;
@@ -1519,15 +1523,12 @@ window.addEventListener("pageshow", resumeFrameLoop);
 window.addEventListener("beforeunload", () => saveProfile(profile));
 
 lobby();
+initialized = true;
 refreshIcons();
 const invitedRoom = new URL(location.href).searchParams.get("room");
-const savedRoom = network.saved;
-if (
-  savedRoom &&
-  (!invitedRoom || invitedRoom.toUpperCase() === savedRoom.code)
-) {
+if (startupRoomRequested) {
   showMultiplayer();
-  network.resume();
+  flushStartupRoom();
 } else if (invitedRoom && /^[a-z2-9]{6}$/i.test(invitedRoom)) {
   showMultiplayer(invitedRoom.toUpperCase());
 }
@@ -1640,6 +1641,7 @@ Object.defineProperty(window, "__arena", {
         time: battle.time,
         rulesVersion: battle.rulesVersion,
         winner: battle.winner,
+        reason: battle.reason,
         elixir: battle.players.blue.elixir,
         hand: [...battle.players.blue.hand],
         troops: battle.entities.filter((e) => e.kind === "troop").length,
@@ -1700,7 +1702,9 @@ Object.defineProperty(window, "__arena", {
 });
 
 if (import.meta.env.PROD && "serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
+  const install = () => {
     void navigator.serviceWorker.register("/sw.js").catch(() => {});
-  });
+  };
+  if (document.readyState === "complete") install();
+  else window.addEventListener("load", install, { once: true });
 }
