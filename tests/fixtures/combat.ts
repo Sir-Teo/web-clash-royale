@@ -35,6 +35,9 @@ function setup() {
     .value;
   (document.querySelector("#attackers") as HTMLButtonElement).hidden =
     scenario !== "burrow";
+  for (const id of ["wake", "princess", "king-hits"])
+    (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
+      scenario !== "king";
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -51,6 +54,15 @@ function setup() {
       unit(id, "blue", x, y);
       for (const e of unit("giant", "red", x, y - 4)) e.active = false;
     }
+  } else if (scenario === "king") {
+    for (const [team, x, y] of [
+      ["blue", 12, 7],
+      ["red", 6, 25],
+    ] as [Team, number, number][])
+      for (const e of unit("knight", team, x, y)) {
+        e.active = false;
+        e.hp = e.maxHp = 10000;
+      }
   } else if (scenario === "burrow") {
     unit("tesla", "blue", 6, 21);
     unit("tesla", "red", 12, 11);
@@ -71,6 +83,18 @@ function setup() {
 }
 document.querySelector("#scenario")!.addEventListener("change", setup);
 document.querySelector("#reset")!.addEventListener("click", setup);
+document.querySelector("#wake")!.addEventListener("click", () => {
+  for (const king of battle.entities.filter((e) => e.king))
+    cast("zap", king.team === "blue" ? "red" : "blue", king.x, king.y);
+});
+document.querySelector("#princess")!.addEventListener("click", () => {
+  for (const tower of battle.entities.filter(
+    (e) => e.kind === "tower" && !e.king && e.lane === "left",
+  )) {
+    tower.hp = 1;
+    cast("zap", tower.team === "blue" ? "red" : "blue", tower.x, tower.y);
+  }
+});
 document.querySelector("#attackers")!.addEventListener("click", () => {
   const attackers = battle.entities.filter(
     (e) => e.kind === "troop" && e.hp > 0,
@@ -89,6 +113,9 @@ document.querySelector("#attackers")!.addEventListener("click", () => {
 });
 document.querySelector("#step")!.addEventListener("click", () => {
   for (let i = 0; i < 3; i++) battle.step();
+});
+document.querySelector("#second")!.addEventListener("click", () => {
+  for (let i = 0; i < 30; i++) battle.step();
 });
 document.querySelector("#play")!.addEventListener("click", () => {
   playing = !playing;
@@ -118,6 +145,15 @@ function render(now: number) {
     .join(" · ");
   document.querySelector("#particles")!.textContent =
     `${arena.particleCount} particles`;
+  document.querySelector("#kings")!.textContent = battle.entities
+    .filter((e) => e.king)
+    .map(
+      (e) =>
+        `${e.team}: ${!e.active ? "asleep" : e.activation ? `waking ${e.activation.toFixed(1)}s` : "active"}`,
+    )
+    .join(" · ");
+  document.querySelector("#king-hits")!.textContent =
+    `${battle.events.filter((e) => e.type === "hit" && e.card === undefined).length} tower hits`;
   requestAnimationFrame(render);
 }
 requestAnimationFrame(render);

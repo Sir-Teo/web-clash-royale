@@ -654,7 +654,13 @@ export class Arena {
         const tower = this.towerArt.get(
           `${e.king ? "king" : "princess-base"}-${e.team}`,
         );
-        if (e.kind === "tower" && tower) {
+        if (
+          e.king &&
+          (buildingSprite = this.buildings.make("king", e.team) ?? undefined)
+        ) {
+          object = new T.Group();
+          object.add(buildingSprite.mesh);
+        } else if (e.kind === "tower" && tower) {
           object = new T.Group();
           const width = e.king ? 3.5 : 2.85,
             height = width / tower.aspect;
@@ -988,6 +994,7 @@ export class Arena {
         e,
         this.battle?.entities.find((t) => t.id === e.target),
         this.camera,
+        time,
       );
     if (v.archer) {
       const target = this.battle?.entities.find((t) => t.id === e.target);
@@ -1047,7 +1054,7 @@ export class Arena {
         o.scale.setScalar(scale);
       }
     }
-    if (e.kind === "tower" && e.team === "red" && !v.art)
+    if (e.kind === "tower" && e.team === "red" && !v.art && !v.building)
       o.rotation.y = Math.PI;
     if (v.label) {
       const p = this.screen(e.x, e.y, 4);

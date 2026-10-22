@@ -8,6 +8,7 @@ import {
   ARROWS_SPEED,
   ARROWS_WAVES,
   ARROWS_WAVE_GAP,
+  KING_ACTIVATION_TIME,
 } from "./combat";
 export type Team = "blue" | "red";
 export type Mode = "classic" | "training" | "double";
@@ -39,6 +40,7 @@ export interface Entity extends Point {
   move: number;
   king?: boolean;
   active: boolean;
+  activation?: number;
   lane?: "left" | "right";
   lifetime?: number;
   spawnTimer: number;
@@ -88,7 +90,7 @@ export interface Action extends Point {
   card: CardId;
 }
 export interface Replay {
-  version: 1 | 2 | 3;
+  version: 1 | 2 | 3 | 4;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -134,7 +136,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
-    this.rulesVersion = r?.version ?? 3;
+    this.rulesVersion = r?.version ?? 4;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -248,6 +250,7 @@ export class Battle {
       lane,
       active: !king,
       spawnTimer: 0,
+      ...(king && this.rulesVersion >= 4 ? { activation: 0 } : {}),
     });
   }
   canPlace(
@@ -711,6 +714,12 @@ export class Battle {
         this.hurt(e, (e.maxHp / e.lifetime) * STEP, true);
         if (e.hp <= 0) continue;
       }
+      if ((e.activation ?? 0) > 0) {
+        e.activation = Math.max(0, e.activation! - STEP);
+        if (e.activation < 1e-8) e.activation = 0;
+        this.cancelAttack(e);
+        continue;
+      }
       if (e.stun > 0) {
         this.cancelAttack(e);
         e.move = 0;
@@ -1011,7 +1020,7 @@ export class Battle {
   private hurt(e: Entity, amount: number, decay = false) {
     if (e.hp <= 0 || (!decay && this.isHidden(e))) return;
     e.hp -= amount;
-    if (e.king) e.active = true;
+    if (e.king) this.activateKing(e);
     if (e.hp > 0) return;
     e.hp = 0;
     this.emit("death", e.team, e.x, e.y, e.card);
@@ -1049,10 +1058,20 @@ export class Battle {
       for (const king of this.entities.filter(
         (t) => t.team === e.team && t.king,
       ))
-        king.active = true;
+        this.activateKing(king);
       if (e.king) this.finish(enemy, "King Tower destroyed");
       else if (this.time >= 180) this.finish(enemy, "Sudden death");
     }
+  }
+  private activateKing(king: Entity) {
+    if (this.rulesVersion < 4) {
+      king.active = true;
+      return;
+    }
+    if (king.active || king.hp <= 0) return;
+    king.active = true;
+    king.activation = KING_ACTIVATION_TIME;
+    this.cancelAttack(king);
   }
   private think() {
     const p = this.players.red;

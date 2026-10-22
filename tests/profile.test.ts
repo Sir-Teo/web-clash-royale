@@ -8,6 +8,7 @@ import {
 import { Battle } from "../src/game/engine";
 import legacy from "./fixtures/legacy-replay.json";
 import combatV2 from "./fixtures/combat-v2-replay.json";
+import combatV3 from "./fixtures/combat-v3-replay.json";
 import type { Replay } from "../src/game/engine";
 const data = new Map<string, string>();
 beforeEach(() => {
@@ -26,14 +27,17 @@ describe("local progress", () => {
     const old = { ...p.history[0], id: 2, replay: legacy.replay as Replay };
     p.history.push(old);
     p.history.push({ ...old, id: 3, replay: combatV2.replay as Replay });
+    p.history.push({ ...old, id: 4, replay: combatV3.replay as Replay });
     saveProfile(p);
     expect(loadProfile().history.map((r) => r.replay.version)).toEqual([
-      3, 1, 2,
+      4, 1, 2, 3,
     ]);
     const raw = JSON.parse(data.get("browser-royale.profile.v1")!);
     raw.history[0].replay.version = 99;
     data.set("browser-royale.profile.v1", JSON.stringify(raw));
-    expect(loadProfile().history.map((r) => r.replay.version)).toEqual([1, 2]);
+    expect(loadProfile().history.map((r) => r.replay.version)).toEqual([
+      1, 2, 3,
+    ]);
   });
   it("recovers from corrupt data and rejects duplicate deck cards", () => {
     data.set("browser-royale.profile.v1", "{broken");

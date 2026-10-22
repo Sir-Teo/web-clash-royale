@@ -32,6 +32,7 @@ const manifest = {
 for (const [id, name] of Object.entries({
   tesla: "building_tesla",
   cannon: "building_basic_cannon",
+  king: "building_tower",
 })) {
   const metadata = await readFile(`reference/sc/${name}.bin`),
     data = parseSC(metadata);
@@ -39,7 +40,14 @@ for (const [id, name] of Object.entries({
     frameLookup = new Map(),
     clips = {},
     usedShapes = new Set();
-  function flatten(ref, frame, matrix = identity, color = neutral, depth = 0) {
+  function flatten(
+    ref,
+    frame,
+    matrix = identity,
+    color = neutral,
+    depth = 0,
+    overrides = {},
+  ) {
     if (depth > 20) throw new Error(`Recursive SC display list ${name}`);
     if (data.shapes[ref]) {
       usedShapes.add(ref);
@@ -50,37 +58,123 @@ for (const [id, name] of Object.entries({
     const clip = data.clips[ref];
     if (!clip?.frames.length)
       throw new Error(`Missing SC child ${ref} in ${name}`);
-    return clip.frames[frame % clip.frames.length].flatMap((child) =>
+    const sourceFrame = overrides[ref] ?? frame;
+    return clip.frames[sourceFrame % clip.frames.length].flatMap((child) =>
       flatten(
         child.id,
-        frame,
+        sourceFrame,
         multiply(matrix, data.matrices[child.matrix] ?? identity),
         composeColor(color, data.colors[child.color] ?? neutral),
         depth + 1,
+        overrides,
       ),
     );
   }
+  function saveFrame(parts) {
+    const key = JSON.stringify(parts);
+    let index = frameLookup.get(key);
+    if (index === undefined) {
+      index = frames.length;
+      frames.push(parts);
+      frameLookup.set(key, index);
+    }
+    return index;
+  }
+  const flattenChildren = (children, frame, overrides = {}) =>
+    children.flatMap((child) =>
+      flatten(
+        child.id,
+        frame,
+        data.matrices[child.matrix] ?? identity,
+        data.colors[child.color] ?? neutral,
+        0,
+        overrides,
+      ),
+    );
 
-  for (const [exp, ref] of Object.entries(data.names)) {
-    const team = /red|enemy/.test(exp) ? "red" : "blue",
+  const exports =
+    id === "king"
+      ? {
+          blue: "KingTower_blue",
+          red: "KingTower_red",
+          "rubble-1": "Tower_destroyed_ground1",
+          "rubble-2": "Tower_destroyed_ground2",
+        }
+      : Object.fromEntries(
+          Object.keys(data.names).map((name) => [
+            /red|enemy/.test(name) ? "red" : "blue",
+            name,
+          ]),
+        );
+  for (const [team, exp] of Object.entries(exports)) {
+    const ref = data.names[exp],
       clip = data.clips[ref];
-    const sequence = clip.frames.map((_, i) => {
-      const parts = flatten(ref, i),
-        key = JSON.stringify(parts);
-      let index = frameLookup.get(key);
-      if (index === undefined) {
-        index = frames.length;
-        frames.push(parts);
-        frameLookup.set(key, index);
-      }
-      return index;
-    });
+    const turret =
+      id === "king" && ["blue", "red"].includes(team)
+        ? clip.frames[0].find((child) => data.clips[child.id]?.nf === 36)?.id
+        : undefined;
+    const sequence = clip.frames.map((_, i) =>
+      saveFrame(
+        flatten(
+          ref,
+          i,
+          identity,
+          neutral,
+          0,
+          turret === undefined ? {} : { [turret]: team === "blue" ? 0 : 35 },
+        ),
+      ),
+    );
     clips[team] = {
       source: exp,
       fps: clip.fps,
       frames: sequence,
       labels: clip.labels,
     };
+  }
+  if (id === "king") {
+    for (const team of ["blue", "red"]) {
+      const exp = exports[team],
+        root = data.clips[data.names[exp]],
+        stopped = root.frames[root.labels.stop];
+      const turretIndex = stopped.findIndex(
+        (child) => data.clips[child.id]?.nf === 36,
+      );
+      if (turretIndex < 0)
+        throw new Error(`Missing King cannon direction clip in ${exp}`);
+      const turret = stopped[turretIndex],
+        idle = root.frames[0];
+      for (const [suffix, children] of Object.entries({
+        sleep: idle,
+        base: stopped.slice(0, turretIndex),
+        turret: [turret],
+        front: stopped.slice(turretIndex + 1),
+      })) {
+        if (!children.length) continue;
+        const count = Math.max(
+          1,
+          ...children
+            .filter((child) => suffix === "turret" || child.id !== turret.id)
+            .map((child) => data.clips[child.id]?.nf ?? 1),
+        );
+        clips[`${team}-${suffix}`] = {
+          source: `${exp}/${suffix}`,
+          fps: root.fps,
+          frames: Array.from({ length: count }, (_, frame) =>
+            saveFrame(
+              flattenChildren(
+                children,
+                frame,
+                suffix === "turret"
+                  ? {}
+                  : { [turret.id]: team === "blue" ? 0 : 35 },
+              ),
+            ),
+          ),
+          labels: {},
+        };
+      }
+    }
   }
   const bounds = JSON.parse(
     await readFile(`reference/sc/${id}-blue.json`, "utf8"),

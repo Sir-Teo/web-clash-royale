@@ -30,6 +30,20 @@
         }
       ],
       "frames": 38
+    },
+    {
+      "id": "king",
+      "source": "building_tower",
+      "metadataSha256": "0096da89499bf03437a1caa2a88c811b293a5a3067fe571e1ef12bafadbf7962",
+      "dataSha256": "d181398d0942e9a6899477009d730dc620aae014e3fe2026b240398d572693d2",
+      "textures": [
+        {
+          "file": "king-0.webp",
+          "sha256": "eb889a91d0e4ac8c75fd7ea264d7bc8e99773dcb7d4d25cf3fdadfac540d71d9",
+          "originalSha256": "e031c4ae5c2b586a464a2c260cf13715f989651c03c43e5d993e41a53161cf47"
+        }
+      ],
+      "frames": 449
     }
   ]
 }

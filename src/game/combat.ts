@@ -1,4 +1,5 @@
 import data from "./combat-data.json";
+import settings from "./combat-settings.json";
 import type { Entity } from "./engine";
 
 export interface CombatTraits {
@@ -27,3 +28,4 @@ export const FIREBALL_KNOCKBACK = 1800 / 1000;
 export const ARROWS_SPEED = 800 / 60;
 export const ARROWS_WAVES = 3;
 export const ARROWS_WAVE_GAP = 0.2;
+export const KING_ACTIVATION_TIME = settings.kingActivationSeconds;

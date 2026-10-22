@@ -7,11 +7,15 @@
     <style>
       body {
         margin: 0;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
         background: #123a43;
         color: #fff;
         font: 14px system-ui;
       }
       header {
+        flex: none;
         padding: 10px;
         display: flex;
         align-items: center;
@@ -28,9 +32,11 @@
       }
       main {
         position: relative;
-        height: calc(100dvh - 90px);
+        flex: 1;
+        min-height: 0;
+        width: 100%;
         max-width: 760px;
-        margin: auto;
+        margin: 0 auto;
       }
       .tower-labels {
         display: none;
@@ -55,13 +61,18 @@
           <option value="ranged">Ranged projectiles</option>
           <option value="tesla">Tesla &amp; Zap</option>
           <option value="burrow">Defensive buildings</option>
+          <option value="king">King Tower activation</option>
           <option value="melee">Melee timing</option>
         </select></label
       ><button id="play">Play</button><button id="step">Step 0.1s</button
-      ><button id="reset">Reset</button
+      ><button id="second">Step 1s</button><button id="reset">Reset</button
       ><button id="attackers" hidden>Toggle attackers</button
+      ><button id="wake" hidden>Zap Kings</button
+      ><button id="princess" hidden>Destroy Princess Towers</button
       ><small id="status">Loading</small><small id="buildings"></small
       ><small id="particles"></small>
+      <small id="kings"></small>
+      <small id="king-hits"></small>
     </header>
     <main id="arena"></main>
     <script type="module" src="./combat.ts"></script>

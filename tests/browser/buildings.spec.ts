@@ -7,7 +7,7 @@ test("native defensive buildings emerge, attack and retract in the arena", async
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/tests/fixtures/combat.html");
   await page.locator("#scenario").selectOption("burrow");
-  await expect(page.locator("#status")).toContainText("2 buildings loaded", {
+  await expect(page.locator("#status")).toContainText("3 buildings loaded", {
     timeout: 30000,
   });
   await expect(page.locator("#buildings")).toHaveText(
@@ -38,5 +38,44 @@ test("native defensive buildings emerge, attack and retract in the arena", async
   await expect(page.locator("#buildings")).toHaveText(
     "blue: hidden 0% · red: hidden 0%",
   );
+  expect(errors).toEqual([]);
+});
+
+test("Kings wake before firing and also activate after a Princess Tower falls", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/tests/fixtures/combat.html");
+  await page.locator("#scenario").selectOption("king");
+  await expect(page.locator("#status")).toContainText("3 buildings loaded", {
+    timeout: 30000,
+  });
+  await expect(page.locator("#kings")).toHaveText("red: asleep · blue: asleep");
+  await page.getByRole("button", { name: "Zap Kings", exact: true }).click();
+  const second = page.getByRole("button", { name: "Step 1s", exact: true });
+  await second.click();
+  await expect(page.locator("#kings")).toContainText("waking");
+  await expect(page.locator("#king-hits")).toHaveText("0 tower hits");
+  await page.screenshot({
+    path: `test-results/${info.project.name}-king-wake.png`,
+    fullPage: true,
+  });
+  for (let i = 0; i < 2; i++) await second.click();
+  await expect(page.locator("#kings")).toContainText("waking");
+  await expect(page.locator("#king-hits")).toHaveText("0 tower hits");
+  for (let i = 0; i < 2; i++) await second.click();
+  await expect(page.locator("#kings")).toHaveText("red: active · blue: active");
+  await expect(page.locator("#king-hits")).toHaveText(/[1-9]\d* tower hits/);
+  await page.screenshot({
+    path: `test-results/${info.project.name}-king-active.png`,
+    fullPage: true,
+  });
+  await page.getByRole("button", { name: "Reset", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Destroy Princess Towers", exact: true })
+    .click();
+  await second.click();
+  await expect(page.locator("#kings")).toContainText("waking");
   expect(errors).toEqual([]);
 });

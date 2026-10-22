@@ -6,7 +6,7 @@ const json = (path: string) => JSON.parse(readFileSync(path, "utf8"));
 describe("bundled game artwork", () => {
   it("preserves both teams' building directions and Tesla's labeled state transitions", () => {
     const manifest = json("public/assets/buildings/manifest.json");
-    expect(manifest.files).toHaveLength(2);
+    expect(manifest.files).toHaveLength(3);
     for (const file of manifest.files) {
       const digest = (path: string) =>
         createHash("sha256").update(readFileSync(path)).digest("hex");
@@ -21,9 +21,19 @@ describe("bundled game artwork", () => {
           texture.sha256,
         );
       const data = json(`public/assets/buildings/${file.id}.json`);
+      if (file.id === "king") {
+        expect(data.clips["blue-sleep"].frames).toHaveLength(86);
+        expect(data.clips["red-sleep"].frames).toHaveLength(99);
+        expect(data.clips["blue-front"].frames).toHaveLength(86);
+        expect(data.clips["red-base"].frames).toHaveLength(99);
+        for (const team of ["blue", "red"])
+          expect(data.clips[`${team}-turret`].frames).toHaveLength(36);
+      }
       for (const team of ["blue", "red"]) {
         const clip = data.clips[team];
-        expect(clip.frames).toHaveLength(file.id === "tesla" ? 39 : 19);
+        expect(clip.frames).toHaveLength(
+          file.id === "tesla" ? 39 : file.id === "king" ? 98 : 19,
+        );
         if (file.id === "tesla")
           expect(clip.labels).toEqual({
             deploy: 0,
@@ -33,6 +43,10 @@ describe("bundled game artwork", () => {
             hide_start: 22,
             hide_end: 38,
           });
+        if (file.id === "king")
+          expect(clip.labels).toEqual({ idle: 0, start: 1, stop: 97 });
+      }
+      for (const clip of Object.values(data.clips) as any[])
         for (const frame of clip.frames)
           for (const part of data.frames[frame]) {
             expect(part.matrix.every(Number.isFinite)).toBe(true);
@@ -40,7 +54,6 @@ describe("bundled game artwork", () => {
             for (const polygon of data.shapes[part.shape])
               expect(data.textures[polygon.sheet]).toBeDefined();
           }
-      }
     }
   });
   it("retains the original effects clips, textures and combat source tables", () => {

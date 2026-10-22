@@ -39,7 +39,13 @@ function csv(text) {
 }
 const tables = {},
   files = [];
-for (const name of ["characters", "buildings", "projectiles", "spells_other"]) {
+for (const name of [
+  "characters",
+  "buildings",
+  "projectiles",
+  "spells_other",
+  "globals",
+]) {
   const path = `reference/logic/${name}.csv`,
     bytes = await readFile(path);
   tables[name] = csv(bytes.toString());
@@ -97,6 +103,17 @@ for (const [id, name] of Object.entries(names)) {
 await writeFile(
   "src/game/combat-data.json",
   JSON.stringify(data, null, 2) + "\n",
+);
+await writeFile(
+  "src/game/combat-settings.json",
+  JSON.stringify(
+    {
+      kingActivationSeconds:
+        Number(tables.globals.KING_ACTIVATE_TIME_MS.NumberValue) / 1000,
+    },
+    null,
+    2,
+  ) + "\n",
 );
 await writeFile(
   "reference/logic/manifest.json",

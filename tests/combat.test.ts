@@ -3,9 +3,10 @@ import { Battle, STEP } from "../src/game/engine";
 import type { Entity, Replay, Team } from "../src/game/engine";
 import { CARDS, CARD_MAP } from "../src/game/cards";
 import type { CardId } from "../src/game/cards";
-import { combatTraits } from "../src/game/combat";
+import { combatTraits, KING_ACTIVATION_TIME } from "../src/game/combat";
 import legacy from "./fixtures/legacy-replay.json";
 import combatV2 from "./fixtures/combat-v2-replay.json";
+import combatV3 from "./fixtures/combat-v3-replay.json";
 
 const advance = (b: Battle, seconds: number) => {
   for (let i = 0; i < Math.round(seconds / STEP); i++) b.step();
@@ -324,6 +325,22 @@ describe("Tesla hiding and emergence", () => {
 });
 
 describe("versioned battle replay", () => {
+  it("preserves the captured v3 match with immediate King activation", () => {
+    const b = new Battle({ replay: combatV3.replay as Replay });
+    for (let i = 0; i < combatV3.replay.duration; i++) b.step();
+    expect(
+      JSON.parse(
+        JSON.stringify({
+          tick: b.tick,
+          winner: b.winner,
+          players: b.players,
+          entities: b.entities,
+          projectiles: b.projectiles,
+        }),
+      ),
+    ).toEqual(combatV3.state);
+    expect(b.exportReplay().version).toBe(3);
+  });
   it("preserves v2 Tesla combat and the complete captured final state", () => {
     const b = new Battle({ replay: combatV2.replay as Replay });
     for (let i = 0; i < combatV2.replay.duration; i++) b.step();
@@ -364,7 +381,7 @@ describe("versioned battle replay", () => {
     }
     expect(b.winner).not.toBeNull();
     const record = b.exportReplay();
-    expect(record.version).toBe(3);
+    expect(record.version).toBe(4);
     const replay = new Battle({ replay: record });
     for (let i = 0; i < record.duration; i++) replay.step();
     expect(replay.winner).toEqual(b.winner);
@@ -372,5 +389,76 @@ describe("versioned battle replay", () => {
     expect(replay.players).toEqual(b.players);
     expect(replay.projectiles).toEqual(b.projectiles);
     expect(replay.events).toEqual(b.events);
+  });
+});
+
+describe("King Tower activation", () => {
+  function setup() {
+    const b = sandbox();
+    const king = b.entities.find((e) => e.king && e.team === "red")!;
+    dummy(b, "knight", "blue", 9, 7);
+    return { b, king };
+  }
+  function wake(b: Battle, king: Entity, x = king.x, y = king.y) {
+    cast(b, "zap", "blue", x, y);
+    for (let i = 0; i < 15 && !king.active; i++) b.step();
+    expect(king.active).toBe(true);
+  }
+  it("uses the archived 3.3-second wake delay before starting its first attack", () => {
+    const { b, king } = setup();
+    advance(b, 1);
+    expect(king.active).toBe(false);
+    expect(b.projectiles.some((p) => p.source === king.id)).toBe(false);
+    wake(b, king);
+    expect(KING_ACTIVATION_TIME).toBe(3.3);
+    expect(king.activation).toBe(KING_ACTIVATION_TIME);
+    advance(b, KING_ACTIVATION_TIME - STEP);
+    expect(king.activation).toBeCloseTo(STEP);
+    expect(king.pendingAttack).toBeUndefined();
+    expect(b.projectiles.some((p) => p.source === king.id)).toBe(false);
+    b.step();
+    expect(king.activation).toBe(0);
+    expect(king.pendingAttack).toBeUndefined();
+    b.step();
+    expect(king.pendingAttack?.remaining).toBe(combatTraits(king).windup);
+    const started = b.time;
+    const shot = awaitShot(b, king);
+    expect(shot.source).toBe(king.id);
+    expect(b.time - started).toBeCloseTo(combatTraits(king).windup);
+  });
+  it("starts waking when a Princess Tower falls without losing King health", () => {
+    const { b, king } = setup();
+    const princess = b.entities.find(
+      (e) => e.team === "red" && e.kind === "tower" && !e.king,
+    )!;
+    princess.hp = 1;
+    wake(b, king, princess.x, princess.y);
+    expect(king.hp).toBe(king.maxHp);
+    expect(king.activation).toBe(KING_ACTIVATION_TIME);
+    expect(b.players.blue.crowns).toBe(1);
+  });
+  it("repeated damage does not restart the wake sequence", () => {
+    const { b, king } = setup();
+    wake(b, king);
+    advance(b, 1);
+    const before = king.activation!;
+    cast(b, "zap", "blue", king.x, king.y);
+    advance(b, 0.5);
+    expect(king.activation).toBeCloseTo(before - 0.5);
+    advance(b, 3);
+    expect(king.activation).toBe(0);
+    cast(b, "zap", "blue", king.x, king.y);
+    advance(b, 0.5);
+    expect(king.activation).toBe(0);
+  });
+  it("a King killed while waking never launches a shot", () => {
+    const { b, king } = setup();
+    wake(b, king);
+    king.hp = 1;
+    cast(b, "zap", "blue", king.x, king.y);
+    advance(b, 1);
+    expect(b.winner).toBe("blue");
+    expect(b.players.blue.crowns).toBe(3);
+    expect(b.projectiles.some((p) => p.source === king.id)).toBe(false);
   });
 });
