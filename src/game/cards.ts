@@ -344,7 +344,7 @@ export const CARDS: Card[] = [
     0,
     5.5,
     1.2,
-    "A defensive building that shocks enemies on the ground and in the air.",
+    "Hides underground when idle, then emerges to shock enemies on the ground and in the air.",
     { kind: "building", lifetime: 30, hitsAir: true, rarity: "Rare" },
   ),
   troop(

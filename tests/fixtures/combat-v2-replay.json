@@ -1,0 +1,906 @@
+{
+  "replay": {
+    "version": 2,
+    "seed": 91,
+    "mode": "classic",
+    "deck": [
+      "tesla",
+      "cannon",
+      "hog-rider",
+      "bomber",
+      "wizard",
+      "fireball",
+      "zap",
+      "skeletons"
+    ],
+    "enemyDeck": [
+      "giant",
+      "archers",
+      "knight",
+      "bomber",
+      "minions",
+      "fireball",
+      "mini-pekka",
+      "arrows"
+    ],
+    "actions": [
+      {
+        "tick": 0,
+        "team": "blue",
+        "card": "zap",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 110,
+        "team": "blue",
+        "card": "skeletons",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 138,
+        "team": "red",
+        "card": "bomber",
+        "x": 3.8792788526974618,
+        "y": 9
+      },
+      {
+        "tick": 220,
+        "team": "blue",
+        "card": "cannon",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 314,
+        "team": "red",
+        "card": "archers",
+        "x": 3.732603662041947,
+        "y": 9
+      },
+      {
+        "tick": 440,
+        "team": "blue",
+        "card": "fireball",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 508,
+        "team": "red",
+        "card": "mini-pekka",
+        "x": 14.557153064990416,
+        "y": 9
+      },
+      {
+        "tick": 660,
+        "team": "blue",
+        "card": "bomber",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 902,
+        "team": "red",
+        "card": "knight",
+        "x": 4.1094779707025735,
+        "y": 9
+      },
+      {
+        "tick": 990,
+        "team": "blue",
+        "card": "tesla",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 1100,
+        "team": "blue",
+        "card": "zap",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 1153,
+        "team": "red",
+        "card": "giant",
+        "x": 13.311880215350538,
+        "y": 3.5
+      },
+      {
+        "tick": 1552,
+        "team": "red",
+        "card": "bomber",
+        "x": 4.162348382361233,
+        "y": 9
+      },
+      {
+        "tick": 1650,
+        "team": "blue",
+        "card": "wizard",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 1698,
+        "team": "red",
+        "card": "archers",
+        "x": 4.19125810735859,
+        "y": 9
+      },
+      {
+        "tick": 1870,
+        "team": "blue",
+        "card": "skeletons",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 1941,
+        "team": "red",
+        "card": "mini-pekka",
+        "x": 14.239870622754097,
+        "y": 9
+      },
+      {
+        "tick": 1980,
+        "team": "blue",
+        "card": "cannon",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 2105,
+        "team": "red",
+        "card": "arrows",
+        "x": 4.005872652555278,
+        "y": 13.3806538170614
+      },
+      {
+        "tick": 2310,
+        "team": "blue",
+        "card": "bomber",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 2420,
+        "team": "blue",
+        "card": "tesla",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 2558,
+        "team": "red",
+        "card": "giant",
+        "x": 3.339695644751191,
+        "y": 3.5
+      },
+      {
+        "tick": 2750,
+        "team": "blue",
+        "card": "zap",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 2970,
+        "team": "blue",
+        "card": "fireball",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 2986,
+        "team": "red",
+        "card": "minions",
+        "x": 3.7424073134548963,
+        "y": 9
+      },
+      {
+        "tick": 3210,
+        "team": "red",
+        "card": "archers",
+        "x": 3.6343968965113165,
+        "y": 9
+      },
+      {
+        "tick": 3410,
+        "team": "blue",
+        "card": "cannon",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 3456,
+        "team": "red",
+        "card": "bomber",
+        "x": 13.475144206313416,
+        "y": 9
+      },
+      {
+        "tick": 3630,
+        "team": "blue",
+        "card": "skeletons",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 3671,
+        "team": "red",
+        "card": "knight",
+        "x": 4.668909336114302,
+        "y": 9
+      },
+      {
+        "tick": 3740,
+        "team": "blue",
+        "card": "wizard",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 3759,
+        "team": "red",
+        "card": "giant",
+        "x": 13.397587851295247,
+        "y": 3.5
+      },
+      {
+        "tick": 3850,
+        "team": "blue",
+        "card": "bomber",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 3943,
+        "team": "red",
+        "card": "mini-pekka",
+        "x": 3.9589340847916903,
+        "y": 9
+      },
+      {
+        "tick": 3960,
+        "team": "blue",
+        "card": "hog-rider",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 4070,
+        "team": "blue",
+        "card": "tesla",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 4129,
+        "team": "red",
+        "card": "minions",
+        "x": 3.6667840742506086,
+        "y": 13.702030611747222
+      },
+      {
+        "tick": 4180,
+        "team": "blue",
+        "card": "zap",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 4196,
+        "team": "red",
+        "card": "bomber",
+        "x": 3.5817329859361053,
+        "y": 9.598014663214084
+      },
+      {
+        "tick": 4290,
+        "team": "blue",
+        "card": "fireball",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 4343,
+        "team": "red",
+        "card": "knight",
+        "x": 3.6165897032711656,
+        "y": 9
+      },
+      {
+        "tick": 4469,
+        "team": "red",
+        "card": "giant",
+        "x": 13.52763913543895,
+        "y": 3.5
+      },
+      {
+        "tick": 4664,
+        "team": "red",
+        "card": "mini-pekka",
+        "x": 4.176640486856923,
+        "y": 9
+      },
+      {
+        "tick": 4827,
+        "team": "red",
+        "card": "minions",
+        "x": 13.498854510113597,
+        "y": 9
+      },
+      {
+        "tick": 4840,
+        "team": "blue",
+        "card": "cannon",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 4950,
+        "team": "blue",
+        "card": "skeletons",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 5000,
+        "team": "red",
+        "card": "archers",
+        "x": 3.5349620435852556,
+        "y": 9
+      },
+      {
+        "tick": 5060,
+        "team": "blue",
+        "card": "wizard",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 5126,
+        "team": "red",
+        "card": "bomber",
+        "x": 4.226021045492962,
+        "y": 9
+      },
+      {
+        "tick": 5170,
+        "team": "blue",
+        "card": "bomber",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 5185,
+        "team": "red",
+        "card": "giant",
+        "x": 3.8729769721627236,
+        "y": 3.5
+      },
+      {
+        "tick": 5280,
+        "team": "blue",
+        "card": "hog-rider",
+        "x": 8,
+        "y": 21
+      },
+      {
+        "tick": 5381,
+        "team": "red",
+        "card": "knight",
+        "x": 13.412740645837038,
+        "y": 9
+      },
+      {
+        "tick": 5390,
+        "team": "blue",
+        "card": "tesla",
+        "x": 8,
+        "y": 21
+      }
+    ],
+    "duration": 5400
+  },
+  "state": {
+    "tick": 5400,
+    "winner": "red",
+    "players": {
+      "blue": {
+        "elixir": 3.0952380952380665,
+        "hand": [
+          "cannon",
+          "skeletons",
+          "zap",
+          "fireball"
+        ],
+        "queue": [
+          "wizard",
+          "bomber",
+          "hog-rider",
+          "tesla"
+        ],
+        "crowns": 0
+      },
+      "red": {
+        "elixir": 3.7261904761901716,
+        "hand": [
+          "arrows",
+          "mini-pekka",
+          "minions",
+          "fireball"
+        ],
+        "queue": [
+          "archers",
+          "bomber",
+          "giant",
+          "knight"
+        ],
+        "crowns": 2
+      }
+    },
+    "entities": [
+      {
+        "id": 1,
+        "team": "red",
+        "x": 4,
+        "y": 6,
+        "card": "tower",
+        "kind": "tower",
+        "hp": 2734,
+        "maxHp": 3052,
+        "radius": 1.05,
+        "air": false,
+        "damage": 109,
+        "range": 7.5,
+        "cooldown": 0,
+        "interval": 0.8,
+        "speed": 0,
+        "target": null,
+        "age": 179.99999999999235,
+        "deploy": 0,
+        "stun": 0,
+        "attack": 0,
+        "move": 0,
+        "king": false,
+        "lane": "left",
+        "active": true,
+        "spawnTimer": 0
+      },
+      {
+        "id": 2,
+        "team": "red",
+        "x": 14,
+        "y": 6,
+        "card": "tower",
+        "kind": "tower",
+        "hp": 3052,
+        "maxHp": 3052,
+        "radius": 1.05,
+        "air": false,
+        "damage": 109,
+        "range": 7.5,
+        "cooldown": 0,
+        "interval": 0.8,
+        "speed": 0,
+        "target": null,
+        "age": 179.99999999999235,
+        "deploy": 0,
+        "stun": 0,
+        "attack": 0,
+        "move": 0,
+        "king": false,
+        "lane": "right",
+        "active": true,
+        "spawnTimer": 0
+      },
+      {
+        "id": 3,
+        "team": "red",
+        "x": 9,
+        "y": 2.5,
+        "card": "tower",
+        "kind": "tower",
+        "hp": 4824,
+        "maxHp": 4824,
+        "radius": 1.25,
+        "air": false,
+        "damage": 109,
+        "range": 7,
+        "cooldown": 0,
+        "interval": 1,
+        "speed": 0,
+        "target": null,
+        "age": 179.99999999999235,
+        "deploy": 0,
+        "stun": 0,
+        "attack": 0,
+        "move": 0,
+        "king": true,
+        "active": false,
+        "spawnTimer": 0
+      },
+      {
+        "id": 6,
+        "team": "blue",
+        "x": 9,
+        "y": 29.5,
+        "card": "tower",
+        "kind": "tower",
+        "hp": 4824,
+        "maxHp": 4824,
+        "radius": 1.25,
+        "air": false,
+        "damage": 109,
+        "range": 7,
+        "cooldown": 0,
+        "interval": 1,
+        "speed": 0,
+        "target": null,
+        "age": 179.99999999999235,
+        "deploy": 0,
+        "stun": 0,
+        "attack": 0,
+        "move": 0,
+        "king": true,
+        "active": true,
+        "spawnTimer": 0
+      },
+      {
+        "id": 539,
+        "team": "red",
+        "x": 12.495692887824639,
+        "y": 20.400242968037134,
+        "card": "giant",
+        "kind": "troop",
+        "hp": 4091,
+        "maxHp": 4091,
+        "radius": 0.55,
+        "air": false,
+        "damage": 254,
+        "range": 0.8,
+        "cooldown": 0,
+        "interval": 1.5,
+        "speed": 0.65,
+        "target": 734,
+        "age": 31.033333333334035,
+        "deploy": -0.033333333333333125,
+        "stun": 0,
+        "attack": 0,
+        "move": 30.00000000000065,
+        "active": true,
+        "spawnTimer": 4
+      },
+      {
+        "id": 559,
+        "team": "red",
+        "x": 7.478219918024264,
+        "y": 19.779038780246506,
+        "card": "mini-pekka",
+        "kind": "troop",
+        "hp": 917,
+        "maxHp": 1361,
+        "radius": 0.37,
+        "air": false,
+        "damage": 720,
+        "range": 0.7,
+        "cooldown": 1.2999999999999992,
+        "interval": 1.6,
+        "speed": 1.3,
+        "target": 734,
+        "age": 24.53333333333371,
+        "deploy": -0.033333333333333125,
+        "stun": 0,
+        "attack": 1.2999999999999992,
+        "move": 0,
+        "active": true,
+        "spawnTimer": 4,
+        "pendingAttack": {
+          "target": 734,
+          "remaining": 0.20000000000000007,
+          "damage": 720
+        }
+      },
+      {
+        "id": 581,
+        "team": "red",
+        "x": 7.724615476481837,
+        "y": 19.718841067013713,
+        "card": "minions",
+        "kind": "troop",
+        "hp": 230,
+        "maxHp": 230,
+        "radius": 0.25,
+        "air": true,
+        "damage": 102,
+        "range": 1,
+        "cooldown": 0.7000000000000001,
+        "interval": 1,
+        "speed": 1.6,
+        "target": 734,
+        "age": 19.100000000000108,
+        "deploy": -0.033333333333333125,
+        "stun": 0,
+        "attack": 0.7000000000000001,
+        "move": 0,
+        "active": true,
+        "spawnTimer": 4,
+        "pendingAttack": {
+          "target": 734,
+          "remaining": 0.20000000000000007,
+          "damage": 102
+        }
+      },
+      {
+        "id": 582,
+        "team": "red",
+        "x": 7.296324172126757,
+        "y": 19.682424912758936,
+        "card": "minions",
+        "kind": "troop",
+        "hp": 230,
+        "maxHp": 230,
+        "radius": 0.25,
+        "air": true,
+        "damage": 102,
+        "range": 1,
+        "cooldown": 0.7000000000000001,
+        "interval": 1,
+        "speed": 1.6,
+        "target": 734,
+        "age": 19.100000000000108,
+        "deploy": -0.033333333333333125,
+        "stun": 0,
+        "attack": 0.7000000000000001,
+        "move": 0,
+        "active": true,
+        "spawnTimer": 4,
+        "pendingAttack": {
+          "target": 734,
+          "remaining": 0.20000000000000007,
+          "damage": 102
+        }
+      },
+      {
+        "id": 583,
+        "team": "red",
+        "x": 7.307515436701153,
+        "y": 19.2531606158752,
+        "card": "minions",
+        "kind": "troop",
+        "hp": 230,
+        "maxHp": 230,
+        "radius": 0.25,
+        "air": true,
+        "damage": 102,
+        "range": 1,
+        "cooldown": 0.7333333333333334,
+        "interval": 1,
+        "speed": 1.6,
+        "target": 734,
+        "age": 19.100000000000108,
+        "deploy": -0.033333333333333125,
+        "stun": 0,
+        "attack": 0.7333333333333334,
+        "move": 0,
+        "active": true,
+        "spawnTimer": 4,
+        "pendingAttack": {
+          "target": 734,
+          "remaining": 0.2333333333333334,
+          "damage": 102
+        }
+      },
+      {
+        "id": 626,
+        "team": "red",
+        "x": 4.1790997391196205,
+        "y": 17.58640029654669,
+        "card": "archers",
+        "kind": "troop",
+        "hp": 304,
+        "maxHp": 304,
+        "radius": 0.37,
+        "air": false,
+        "damage": 107,
+        "range": 5,
+        "cooldown": 0.8,
+        "interval": 0.9,
+        "speed": 1,
+        "target": 734,
+        "age": 13.333333333333297,
+        "deploy": -0.033333333333333125,
+        "stun": 0,
+        "attack": 0.8,
+        "move": 0,
+        "active": true,
+        "spawnTimer": 4
+      },
+      {
+        "id": 627,
+        "team": "red",
+        "x": 4.3889756333940735,
+        "y": 18.187197233893237,
+        "card": "archers",
+        "kind": "troop",
+        "hp": 304,
+        "maxHp": 304,
+        "radius": 0.37,
+        "air": false,
+        "damage": 107,
+        "range": 5,
+        "cooldown": 0.6000000000000001,
+        "interval": 0.9,
+        "speed": 1,
+        "target": 734,
+        "age": 13.333333333333297,
+        "deploy": -0.033333333333333125,
+        "stun": 0,
+        "attack": 0.6000000000000001,
+        "move": 0,
+        "active": true,
+        "spawnTimer": 4
+      },
+      {
+        "id": 660,
+        "team": "red",
+        "x": 4.000432985530816,
+        "y": 16.02898429821317,
+        "card": "bomber",
+        "kind": "troop",
+        "hp": 332,
+        "maxHp": 332,
+        "radius": 0.37,
+        "air": false,
+        "damage": 222,
+        "range": 4.5,
+        "cooldown": 0.03333333333333121,
+        "interval": 1.8,
+        "speed": 1,
+        "target": 734,
+        "age": 9.133333333333312,
+        "deploy": -0.033333333333333125,
+        "stun": 0,
+        "attack": 0.03333333333333121,
+        "move": 0.7333333333333333,
+        "active": true,
+        "spawnTimer": 4
+      },
+      {
+        "id": 673,
+        "team": "red",
+        "x": 3.412597018115366,
+        "y": 4.511726592029193,
+        "card": "giant",
+        "kind": "troop",
+        "hp": 4091,
+        "maxHp": 4091,
+        "radius": 0.55,
+        "air": false,
+        "damage": 254,
+        "range": 0.8,
+        "cooldown": 0,
+        "interval": 1.5,
+        "speed": 0.65,
+        "target": 734,
+        "age": 7.166666666666651,
+        "deploy": -0.033333333333333125,
+        "stun": 0,
+        "attack": 0,
+        "move": 6.133333333333321,
+        "active": true,
+        "spawnTimer": 4
+      },
+      {
+        "id": 731,
+        "team": "red",
+        "x": 13.412740645837038,
+        "y": 9,
+        "card": "knight",
+        "kind": "troop",
+        "hp": 1666,
+        "maxHp": 1666,
+        "radius": 0.37,
+        "air": false,
+        "damage": 202,
+        "range": 0.75,
+        "cooldown": 0,
+        "interval": 1.2,
+        "speed": 1,
+        "target": null,
+        "age": 0.6333333333333333,
+        "deploy": 0.3666666666666668,
+        "stun": 0,
+        "attack": 0,
+        "move": 0,
+        "active": true,
+        "spawnTimer": 4
+      },
+      {
+        "id": 734,
+        "team": "blue",
+        "x": 8,
+        "y": 21,
+        "card": "tesla",
+        "kind": "building",
+        "hp": 1152,
+        "maxHp": 1152,
+        "radius": 0.8,
+        "air": false,
+        "damage": 230,
+        "range": 5.5,
+        "cooldown": 0.06666666666666676,
+        "interval": 1.2,
+        "speed": 0,
+        "target": null,
+        "age": 0.3333333333333333,
+        "deploy": 0.6666666666666667,
+        "stun": 0,
+        "attack": 0,
+        "move": 0,
+        "active": true,
+        "lifetime": 30,
+        "spawnTimer": 4
+      }
+    ],
+    "projectiles": [
+      {
+        "id": 735,
+        "team": "red",
+        "x": 4.3889753262200575,
+        "y": 18.187196354567824,
+        "tx": 8,
+        "ty": 21,
+        "target": 734,
+        "damage": 107,
+        "remaining": 0.45325655859932,
+        "duration": 0.6865898919326533,
+        "splash": 0,
+        "air": true,
+        "style": "archers",
+        "stun": 0,
+        "source": 627,
+        "flight": {
+          "x": 5.616159754336623,
+          "y": 19.143110297246743
+        },
+        "speed": 6.666666666666667,
+        "elapsed": 0.2333333333333333,
+        "homing": true,
+        "fromHeight": 0.8,
+        "toHeight": 0.6,
+        "arc": 0.6
+      },
+      {
+        "id": 736,
+        "team": "red",
+        "x": 4.179099747068393,
+        "y": 17.586400319301077,
+        "tx": 8,
+        "ty": 21,
+        "target": 734,
+        "damage": 107,
+        "remaining": 0.7352163945735299,
+        "duration": 0.7685497279068633,
+        "splash": 0,
+        "air": true,
+        "style": "archers",
+        "stun": 0,
+        "source": 626,
+        "flight": {
+          "x": 4.344818811352313,
+          "y": 17.734454052054577
+        },
+        "speed": 6.666666666666667,
+        "elapsed": 0.03333333333333333,
+        "homing": true,
+        "fromHeight": 0.8,
+        "toHeight": 0.6,
+        "arc": 0.6
+      }
+    ]
+  }
+}

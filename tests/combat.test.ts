@@ -5,6 +5,7 @@ import { CARDS, CARD_MAP } from "../src/game/cards";
 import type { CardId } from "../src/game/cards";
 import { combatTraits } from "../src/game/combat";
 import legacy from "./fixtures/legacy-replay.json";
+import combatV2 from "./fixtures/combat-v2-replay.json";
 
 const advance = (b: Battle, seconds: number) => {
   for (let i = 0; i < Math.round(seconds / STEP); i++) b.step();
@@ -213,7 +214,132 @@ describe("projectile impacts", () => {
   });
 });
 
+describe("Tesla hiding and emergence", () => {
+  it("stays hidden without enemies and ignores damage spells while its lifetime decays", () => {
+    const b = sandbox(),
+      tesla = unit(b, "tesla", "blue", 9, 21),
+      hp = tesla.hp;
+    cast(b, "fireball", "red", 9, 21);
+    cast(b, "arrows", "red", 9, 21);
+    cast(b, "zap", "red", 9, 21);
+    advance(b, 3);
+    expect(tesla.burrow?.phase).toBe("hidden");
+    expect(tesla.hp).toBeCloseTo(hp - (hp / tesla.lifetime!) * 3);
+    expect(tesla.stun).toBe(0);
+    expect(tesla.target).toBeNull();
+  });
+  it.each(["knight", "minions"] as CardId[])(
+    "emerges before attacking a nearby %s",
+    (id) => {
+      const b = sandbox(),
+        tesla = unit(b, "tesla", "blue", 9, 21);
+      const target = dummy(b, id, "red", 9, 24);
+      advance(b, 0.4);
+      expect(tesla.burrow?.phase).toBe("rising");
+      expect(tesla.burrow?.exposure).toBeCloseTo(0.5);
+      expect(target.hp).toBe(10000);
+      advance(b, 0.4);
+      expect(tesla.burrow?.phase).toBe("exposed");
+      expect(target.hp).toBe(10000);
+      advance(b, 0.8);
+      expect(target.hp).toBe(10000 - tesla.damage);
+    },
+  );
+  it("cannot attract a Giant until it begins to emerge", () => {
+    const b = sandbox(),
+      tesla = unit(b, "tesla", "blue", 9, 21);
+    const giant = unit(b, "giant", "red", 9, 12);
+    b.step();
+    expect(tesla.burrow?.phase).toBe("hidden");
+    expect(giant.target).not.toBe(tesla.id);
+    giant.x = 9;
+    giant.y = 19;
+    b.step();
+    expect(tesla.burrow?.phase).toBe("rising");
+    expect(giant.target).toBe(tesla.id);
+  });
+  it("retracts after enemies leave and reverses smoothly if they return", () => {
+    const b = sandbox(),
+      tesla = unit(b, "tesla", "blue", 9, 21);
+    const target = dummy(b, "knight", "red", 9, 24);
+    advance(b, 0.8);
+    target.y = 10;
+    advance(b, 0.5);
+    expect(tesla.burrow?.exposure).toBe(1);
+    advance(b, 0.7);
+    expect(tesla.burrow?.phase).toBe("sinking");
+    const exposure = tesla.burrow!.exposure;
+    expect(exposure).toBeGreaterThan(0);
+    expect(exposure).toBeLessThan(1);
+    target.y = 24;
+    b.step();
+    expect(tesla.burrow?.phase).toBe("rising");
+    expect(tesla.burrow!.exposure).toBeGreaterThan(exposure);
+    expect(tesla.burrow!.exposure).toBeLessThan(1);
+    target.y = 10;
+    advance(b, 2);
+    expect(tesla.burrow?.phase).toBe("hidden");
+    expect(tesla.burrow?.exposure).toBe(0);
+  });
+  it("takes spell damage and stun while exposed, then freezes its rise during the stun", () => {
+    const b = sandbox(),
+      tesla = unit(b, "tesla", "blue", 9, 21);
+    dummy(b, "knight", "red", 9, 24);
+    advance(b, 0.2);
+    const hp = tesla.hp;
+    cast(b, "zap", "red", 9, 21);
+    advance(b, 0.2);
+    expect(tesla.hp).toBeCloseTo(
+      hp - CARD_MAP.zap.damage - (tesla.maxHp / tesla.lifetime!) * 0.2,
+    );
+    expect(tesla.stun).toBeGreaterThan(0);
+    const exposure = tesla.burrow!.exposure;
+    advance(b, 0.2);
+    expect(tesla.burrow?.exposure).toBe(exposure);
+  });
+  it("expires underground without awarding a crown", () => {
+    const b = sandbox(),
+      tesla = unit(b, "tesla", "blue", 9, 21);
+    advance(b, 31);
+    expect(b.entities.some((e) => e.id === tesla.id)).toBe(false);
+    expect(b.players.red.crowns).toBe(0);
+  });
+  it("replays hiding, deployment and spell commands deterministically", () => {
+    const source = new Battle({
+      seed: 91,
+      deck: combatV2.replay.deck as CardId[],
+    });
+    for (let i = 0; i < 5400 && !source.winner; i++) {
+      if (i % 110 === 0) source.play("blue", Math.floor(i / 110) % 4, 8, 21);
+      source.step();
+    }
+    expect(source.actions.some((a) => a.card === "tesla")).toBe(true);
+    const replay = new Battle({ replay: source.exportReplay() });
+    for (let i = 0; i < source.tick; i++) replay.step();
+    expect(replay.entities).toEqual(source.entities);
+    expect(replay.projectiles).toEqual(source.projectiles);
+    expect(replay.players).toEqual(source.players);
+    expect(replay.events).toEqual(source.events);
+  });
+});
+
 describe("versioned battle replay", () => {
+  it("preserves v2 Tesla combat and the complete captured final state", () => {
+    const b = new Battle({ replay: combatV2.replay as Replay });
+    for (let i = 0; i < combatV2.replay.duration; i++) b.step();
+    expect(
+      JSON.parse(
+        JSON.stringify({
+          tick: b.tick,
+          winner: b.winner,
+          players: b.players,
+          entities: b.entities,
+          projectiles: b.projectiles,
+        }),
+      ),
+    ).toEqual(combatV2.state);
+    expect(b.exportReplay().version).toBe(2);
+  });
   it("reproduces the frozen v1 battle down to all saved state fields", () => {
     const b = new Battle({ replay: legacy.replay as Replay });
     for (let i = 0; i < legacy.replay.duration; i++) b.step();
@@ -230,7 +356,7 @@ describe("versioned battle replay", () => {
     ).toEqual(legacy.state);
     expect(b.exportReplay().version).toBe(1);
   });
-  it("records v2 commands that reproduce the complete match and pending attacks", () => {
+  it("records current commands that reproduce the complete match and pending attacks", () => {
     const b = new Battle({ seed: 90 });
     for (let i = 0; i < 9000 && !b.winner; i++) {
       if (i % 130 === 0) b.play("blue", i % 4, 4, 21);
@@ -238,7 +364,7 @@ describe("versioned battle replay", () => {
     }
     expect(b.winner).not.toBeNull();
     const record = b.exportReplay();
-    expect(record.version).toBe(2);
+    expect(record.version).toBe(3);
     const replay = new Battle({ replay: record });
     for (let i = 0; i < record.duration; i++) replay.step();
     expect(replay.winner).toEqual(b.winner);

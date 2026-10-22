@@ -22,11 +22,14 @@ import type { EffectSprite } from "./effects";
 import { makeProjectile, updateProjectile } from "./projectiles";
 import type { ProjectileVisual } from "./projectiles";
 import { DeploymentPreview } from "./deployment";
+import { BuildingLibrary } from "./buildings";
+import type { BuildingSprite } from "./buildings";
 interface Visual {
   object: T.Group;
   model?: Model;
   sprite?: AnimatedSprite;
   archer?: AnimatedSprite;
+  building?: BuildingSprite;
   art?: T.Mesh;
   label?: HTMLDivElement;
   health?: T.Group;
@@ -46,6 +49,7 @@ export class Arena {
   private units = new Map<number, Visual>();
   private shots = new Map<number, ProjectileVisual>();
   private effects = new EffectLibrary();
+  private buildings = new BuildingLibrary();
   private impacts: { sprite: EffectSprite; start: number; life: number }[] = [];
   private particles: Particle[] = [];
   private waters: T.Mesh[] = [];
@@ -187,6 +191,7 @@ export class Arena {
     void Promise.all([
       this.sprites.load(),
       this.effects.load(),
+      this.buildings.load(),
       this.loadArtwork(),
     ]).then(() => {
       if (!this.destroyed && this.battle) this.setBattle(this.battle);
@@ -462,6 +467,9 @@ export class Arena {
   get loadedEffects() {
     return Object.keys(this.effects.asset?.data.clips ?? {}).length;
   }
+  get loadedBuildings() {
+    return this.buildings.assets.size;
+  }
   get placementState() {
     return this.placement
       ? {
@@ -509,6 +517,13 @@ export class Arena {
     };
   }
   private previewBuilding(id: CardId) {
+    const native = this.buildings.make(id, "blue");
+    if (native) {
+      const group = new T.Group();
+      native.mesh.quaternion.copy(this.camera.quaternion);
+      group.add(native.mesh);
+      return group;
+    }
     const art = this.towerArt.get(`${id}-blue`);
     if (!art) return buildingModel(id, "blue");
     const group = new T.Group(),
@@ -631,6 +646,7 @@ export class Arena {
           model: Model | undefined,
           sprite: AnimatedSprite | undefined,
           towerArcher: AnimatedSprite | undefined,
+          buildingSprite: BuildingSprite | undefined,
           art: T.Mesh | undefined;
         const tower = this.towerArt.get(
           `${e.king ? "king" : "princess-base"}-${e.team}`,
@@ -676,6 +692,12 @@ export class Arena {
               archer.mesh.scale.setScalar(0.65);
             }
           }
+        } else if (
+          e.kind === "building" &&
+          (buildingSprite = this.buildings.make(e.card, e.team) ?? undefined)
+        ) {
+          object = new T.Group();
+          object.add(buildingSprite.mesh);
         } else if (
           ["cannon", "tesla"].includes(e.card) &&
           this.towerArt.has(`${e.card}-${e.team}`)
@@ -724,7 +746,14 @@ export class Arena {
           }
         }
         this.scene.add(object);
-        v = { object, model, sprite, art, archer: towerArcher };
+        v = {
+          object,
+          model,
+          sprite,
+          art,
+          archer: towerArcher,
+          building: buildingSprite,
+        };
         if (e.kind === "tower") {
           const label = document.createElement("div");
           label.className = `tower-health ${e.team}`;
@@ -949,6 +978,13 @@ export class Arena {
         y: o.position.z - oldZ,
       });
     }
+    if (v.building)
+      this.buildings.update(
+        v.building,
+        e,
+        this.battle?.entities.find((t) => t.id === e.target),
+        this.camera,
+      );
     if (v.archer) {
       const target = this.battle?.entities.find((t) => t.id === e.target);
       this.sprites.update(v.archer, e, target, false, time, this.camera);
@@ -962,18 +998,20 @@ export class Arena {
       v.health.visible = e.hp < e.maxHp && e.deploy <= 0;
       v.health.position.set(
         0,
-        e.card === "giant" || e.card === "pekka"
-          ? 2.5
-          : e.card === "balloon"
-            ? 3.8
-            : 1.9,
+        e.burrow
+          ? 0.65 + e.burrow.exposure * 2.05
+          : e.card === "giant" || e.card === "pekka"
+            ? 2.5
+            : e.card === "balloon"
+              ? 3.8
+              : 1.9,
         0,
       );
       v.health.quaternion.copy(this.camera.quaternion);
       v.healthFill.scale.x = e.hp / e.maxHp;
       v.healthFill.position.x = -(1 - e.hp / e.maxHp) * 0.425;
     }
-    if (e.kind !== "tower" && !v.sprite && !v.art) {
+    if (e.kind !== "tower" && !v.sprite && !v.art && !v.building) {
       const target = this.battle?.entities.find((t) => t.id === e.target);
       const targetAngle = target
         ? Math.atan2(target.x - e.x, target.y - e.y)
@@ -1056,6 +1094,7 @@ export class Arena {
     this.placementFeedback.remove();
     this.sprites.destroy();
     this.effects.destroy();
+    this.buildings.destroy();
     this.renderer.dispose();
     this.renderer.domElement.remove();
     this.labels.remove();

@@ -43,6 +43,11 @@ export interface Entity extends Point {
   lifetime?: number;
   spawnTimer: number;
   pendingAttack?: { target: number; remaining: number; damage: number };
+  burrow?: {
+    exposure: number;
+    idle: number;
+    phase: "hidden" | "rising" | "exposed" | "sinking";
+  };
 }
 export interface Projectile extends Point {
   id: number;
@@ -83,7 +88,7 @@ export interface Action extends Point {
   card: CardId;
 }
 export interface Replay {
-  version: 1 | 2;
+  version: 1 | 2 | 3;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -129,7 +134,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
-    this.rulesVersion = r?.version ?? 2;
+    this.rulesVersion = r?.version ?? 3;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -318,7 +323,7 @@ export class Battle {
     this.emit(c.kind === "spell" ? "spell" : "deploy", team, x, y, id);
     if (c.kind === "spell") {
       const origin = { x: 9, y: team === "blue" ? 30 : 2 };
-      const modern = this.rulesVersion === 2;
+      const modern = this.rulesVersion >= 2;
       const speed = id === "fireball" ? FIREBALL_SPEED : ARROWS_SPEED;
       const duration =
         id === "zap"
@@ -400,6 +405,9 @@ export class Battle {
       active: true,
       lifetime: c.lifetime,
       spawnTimer: 4,
+      ...(id === "tesla" && this.rulesVersion >= 3
+        ? { burrow: { exposure: 0, idle: 0, phase: "hidden" as const } }
+        : {}),
     });
   }
   private emit(
@@ -613,6 +621,7 @@ export class Battle {
     const card = e.card === "tower" ? null : CARD_MAP[e.card];
     return (
       target.hp > 0 &&
+      !this.isHidden(target) &&
       target.team !== e.team &&
       (!target.air || e.kind === "tower" || !!card?.hitsAir) &&
       (!card?.buildingsOnly || target.kind !== "troop")
@@ -654,6 +663,39 @@ export class Battle {
     e.attack = 0;
     e.cooldown = 0;
   }
+  private isHidden(e: Entity) {
+    return e.deploy <= 0 && e.burrow?.phase === "hidden";
+  }
+  private updateTesla(e: Entity) {
+    const state = e.burrow!;
+    const threat = this.entities.some(
+      (target) => this.validTarget(e, target) && this.inRange(e, target),
+    );
+    if (threat) {
+      state.idle = 0;
+      if (state.exposure < 1) {
+        state.phase = "rising";
+        state.exposure = Math.min(1, state.exposure + STEP / 0.8);
+        if (state.exposure >= 1 - 1e-8) state.exposure = 1;
+        this.cancelAttack(e);
+      }
+      if (state.exposure === 1) {
+        state.phase = "exposed";
+        return true;
+      }
+    } else {
+      state.idle += STEP;
+      this.cancelAttack(e);
+      e.target = null;
+      if (state.idle >= 0.8 && state.exposure > 0) {
+        state.phase = "sinking";
+        state.exposure = Math.max(0, state.exposure - STEP / 0.8);
+        if (state.exposure < 1e-8) state.exposure = 0;
+      }
+      if (state.exposure === 0) state.phase = "hidden";
+    }
+    return false;
+  }
   private updateCombat() {
     for (const e of [...this.entities]) {
       if (e.hp <= 0) continue;
@@ -666,7 +708,7 @@ export class Battle {
         continue;
       }
       if (e.lifetime) {
-        this.hurt(e, (e.maxHp / e.lifetime) * STEP);
+        this.hurt(e, (e.maxHp / e.lifetime) * STEP, true);
         if (e.hp <= 0) continue;
       }
       if (e.stun > 0) {
@@ -678,6 +720,7 @@ export class Battle {
         this.cancelAttack(e);
         continue;
       }
+      if (e.burrow && !this.updateTesla(e)) continue;
       if (e.card === "witch") {
         e.spawnTimer -= STEP;
         if (e.spawnTimer <= 0) {
@@ -793,7 +836,9 @@ export class Battle {
         p.delay = Math.max(0, p.delay - STEP);
         continue;
       }
-      const target = this.entities.find((e) => e.id === p.target && e.hp > 0);
+      const target = this.entities.find(
+        (e) => e.id === p.target && e.hp > 0 && !this.isHidden(e),
+      );
       if (p.homing && target) {
         p.tx = target.x;
         p.ty = target.y;
@@ -826,6 +871,7 @@ export class Battle {
         for (const e of this.entities) {
           if (
             e.hp <= 0 ||
+            this.isHidden(e) ||
             e.team === p.team ||
             (e.air && !p.air) ||
             dist(e, point) >= p.splash + e.radius
@@ -944,7 +990,7 @@ export class Battle {
         }
       }
     const buildings = this.entities.filter(
-      (e) => e.kind !== "troop" && e.hp > 0,
+      (e) => e.kind !== "troop" && e.hp > 0 && !this.isHidden(e),
     );
     for (const unit of units) {
       if (unit.air) continue;
@@ -962,8 +1008,8 @@ export class Battle {
       }
     }
   }
-  private hurt(e: Entity, amount: number) {
-    if (e.hp <= 0) return;
+  private hurt(e: Entity, amount: number, decay = false) {
+    if (e.hp <= 0 || (!decay && this.isHidden(e))) return;
     e.hp -= amount;
     if (e.king) e.active = true;
     if (e.hp > 0) return;
@@ -986,7 +1032,7 @@ export class Battle {
         style: "bomb",
         stun: 0,
         source: e.id,
-        ...(this.rulesVersion === 2
+        ...(this.rulesVersion >= 2
           ? {
               flight: { x: e.x, y: e.y },
               elapsed: 0,

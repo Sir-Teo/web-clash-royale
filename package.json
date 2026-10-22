@@ -15,7 +15,8 @@
     "assets:sprites": "node scripts/import-sprites.mjs",
     "assets:scenery": "node scripts/compose-scene.mjs",
     "assets:combat": "node scripts/import-combat.mjs",
-    "assets:effects": "node scripts/import-effects.mjs"
+    "assets:effects": "node scripts/import-effects.mjs",
+    "assets:buildings": "node scripts/import-buildings.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",

@@ -29,6 +29,7 @@ try {
   await page.waitForFunction(
     () =>
       window.__arena?.state.loadedEffects === 18 &&
+      window.__arena?.state.loadedBuildings === 2 &&
       window.__arena?.state.loadedAnimations === 18,
   );
   console.log(

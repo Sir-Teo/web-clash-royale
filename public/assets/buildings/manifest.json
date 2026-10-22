@@ -1,0 +1,35 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "version": "1.8.1",
+  "files": [
+    {
+      "id": "tesla",
+      "source": "building_tesla",
+      "metadataSha256": "e9f6b18f132264a3c619a3eef2161b04b5cba182eedfba676b7b718faeeefd03",
+      "dataSha256": "4aba03c7d46a6ea213df9324a4dade02b153d694ba9e5792075accfbe386689b",
+      "textures": [
+        {
+          "file": "tesla-0.webp",
+          "sha256": "f7fbf350f1ec75f08486a072b17cfefb38cd5d16072646fc6855a504d9674fe7",
+          "originalSha256": "bec1fd43934f28f36730af6b2696a9cee1cd9ce9b66db81ad6578e1ffb1cbaea"
+        }
+      ],
+      "frames": 70
+    },
+    {
+      "id": "cannon",
+      "source": "building_basic_cannon",
+      "metadataSha256": "30ec87409e197c54ebe92c8f5b00487a94f9a321381fd7e4c89b2133449072a4",
+      "dataSha256": "825b312064759654050285050b2f998fb3f129efe09d81042820ae0e853baaa0",
+      "textures": [
+        {
+          "file": "cannon-0.webp",
+          "sha256": "6dcb33c3bc22a131b801dbc7e43f3b3ad476a8318d24cd72a55db6bdd0844997",
+          "originalSha256": "516c2fa463f646248c64789aea23087dac29f4c6efad6fbc748a0d70d5d9e114"
+        }
+      ],
+      "frames": 38
+    }
+  ]
+}

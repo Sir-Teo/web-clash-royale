@@ -31,6 +31,8 @@ function setup() {
   for (const t of battle.entities) t.active = false;
   const scenario = (document.querySelector("#scenario") as HTMLSelectElement)
     .value;
+  (document.querySelector("#attackers") as HTMLButtonElement).hidden =
+    scenario !== "burrow";
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -47,6 +49,11 @@ function setup() {
       unit(id, "blue", x, y);
       for (const e of unit("giant", "red", x, y - 4)) e.active = false;
     }
+  } else if (scenario === "burrow") {
+    unit("tesla", "blue", 6, 21);
+    unit("tesla", "red", 12, 11);
+    unit("cannon", "blue", 3, 22);
+    unit("cannon", "red", 15, 10);
   } else if (scenario === "tesla") {
     unit("tesla", "blue", 6, 21);
     unit("minions", "red", 6, 17.6);
@@ -62,6 +69,22 @@ function setup() {
 }
 document.querySelector("#scenario")!.addEventListener("change", setup);
 document.querySelector("#reset")!.addEventListener("click", setup);
+document.querySelector("#attackers")!.addEventListener("click", () => {
+  const attackers = battle.entities.filter(
+    (e) => e.kind === "troop" && e.hp > 0,
+  );
+  if (attackers.length) for (const e of attackers) e.hp = 0;
+  else
+    for (const [team, x, y] of [
+      ["red", 6, 18.5],
+      ["blue", 12, 13.5],
+    ] as [Team, number, number][]) {
+      for (const e of unit("knight", team, x, y)) {
+        e.active = false;
+        e.hp = e.maxHp = 10000;
+      }
+    }
+});
 document.querySelector("#step")!.addEventListener("click", () => {
   for (let i = 0; i < 3; i++) battle.step();
 });
@@ -82,7 +105,14 @@ function render(now: number) {
   }
   arena.render(delta, battle.time);
   document.querySelector("#status")!.textContent =
-    `${battle.time.toFixed(1)}s · ${battle.projectiles.length} shots · ${arena.loadedEffects} effects loaded`;
+    `${battle.time.toFixed(1)}s · ${battle.projectiles.length} shots · ${arena.loadedEffects} effects · ${arena.loadedBuildings} buildings loaded`;
+  document.querySelector("#buildings")!.textContent = battle.entities
+    .filter((e) => e.burrow)
+    .map(
+      (e) =>
+        `${e.team}: ${e.burrow!.phase} ${Math.round(e.burrow!.exposure * 100)}%`,
+    )
+    .join(" · ");
   requestAnimationFrame(render);
 }
 requestAnimationFrame(render);

@@ -54,10 +54,13 @@
           <option value="volley">Fireball &amp; Arrows</option>
           <option value="ranged">Ranged projectiles</option>
           <option value="tesla">Tesla &amp; Zap</option>
+          <option value="burrow">Defensive buildings</option>
           <option value="melee">Melee timing</option>
         </select></label
       ><button id="play">Play</button><button id="step">Step 0.1s</button
-      ><button id="reset">Reset</button><small id="status">Loading</small>
+      ><button id="reset">Reset</button
+      ><button id="attackers" hidden>Toggle attackers</button
+      ><small id="status">Loading</small><small id="buildings"></small>
     </header>
     <main id="arena"></main>
     <script type="module" src="./combat.ts"></script>

@@ -4,6 +4,45 @@ import { createHash } from "node:crypto";
 import { CARDS } from "../src/game/cards";
 const json = (path: string) => JSON.parse(readFileSync(path, "utf8"));
 describe("bundled game artwork", () => {
+  it("preserves both teams' building directions and Tesla's labeled state transitions", () => {
+    const manifest = json("public/assets/buildings/manifest.json");
+    expect(manifest.files).toHaveLength(2);
+    for (const file of manifest.files) {
+      const digest = (path: string) =>
+        createHash("sha256").update(readFileSync(path)).digest("hex");
+      expect(digest(`reference/sc/${file.source}.bin`)).toBe(
+        file.metadataSha256,
+      );
+      expect(digest(`public/assets/buildings/${file.id}.json`)).toBe(
+        file.dataSha256,
+      );
+      for (const texture of file.textures)
+        expect(digest(`public/assets/buildings/${texture.file}`)).toBe(
+          texture.sha256,
+        );
+      const data = json(`public/assets/buildings/${file.id}.json`);
+      for (const team of ["blue", "red"]) {
+        const clip = data.clips[team];
+        expect(clip.frames).toHaveLength(file.id === "tesla" ? 39 : 19);
+        if (file.id === "tesla")
+          expect(clip.labels).toEqual({
+            deploy: 0,
+            idle: 1,
+            appear_start: 2,
+            appear_end: 21,
+            hide_start: 22,
+            hide_end: 38,
+          });
+        for (const frame of clip.frames)
+          for (const part of data.frames[frame]) {
+            expect(part.matrix.every(Number.isFinite)).toBe(true);
+            expect(data.shapes[part.shape].length).toBeGreaterThan(0);
+            for (const polygon of data.shapes[part.shape])
+              expect(data.textures[polygon.sheet]).toBeDefined();
+          }
+      }
+    }
+  });
   it("retains the original effects clips, textures and combat source tables", () => {
     const manifest = json("public/assets/effects/manifest.json");
     const digest = (path: string) =>

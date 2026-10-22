@@ -1017,7 +1017,7 @@ $("#replay-seek").addEventListener("input", () => {
 $("#about-button").onclick = () =>
   modal(
     "Made for the love of the game.",
-    `<div class="about-content"><span class="about-crown">${icon("crown")}</span><p>An independent browser fan project. Built with TypeScript and Three.js, with local saves and a deterministic battle simulation.</p><p>This project is not affiliated with, endorsed, sponsored, or specifically approved by Supercell. Clash Royale artwork, audio, and trademarks belong to Supercell.</p><p>Card art, renders, and audio sourced from <a href="https://github.com/RoyaleAPI/cr-api-assets" target="_blank" rel="noreferrer">RoyaleAPI's asset collection</a>. Original in-game animation and scenery are reconstructed from archived game assets; 3D effects and fallback models were created for this project.</p><small>24 curated cards · Classic rules · Level 11 standard · AI battles<br>Not a live balance replica. No online multiplayer or official game account connection.</small></div>`,
+    `<div class="about-content"><span class="about-crown">${icon("crown")}</span><p>An independent browser fan project. Built with TypeScript and Three.js, with local saves and a deterministic battle simulation.</p><p>This project is not affiliated with, endorsed, sponsored, or specifically approved by Supercell. Clash Royale artwork, audio, and trademarks belong to Supercell.</p><p>Card art, renders, and audio sourced from <a href="https://github.com/RoyaleAPI/cr-api-assets" target="_blank" rel="noreferrer">RoyaleAPI's asset collection</a>. Original troop and building animations, projectile effects and scenery are reconstructed from archived game assets. Surrounding 3D geometry, particles and fallback models were created for this project.</p><small>24 curated cards · Classic rules · Level 11 standard · AI battles<br>Not a live balance replica. No online multiplayer or official game account connection.</small></div>`,
     "about",
   );
 document.addEventListener("keydown", (e) => {
@@ -1137,6 +1137,7 @@ Object.defineProperty(window, "__arena", {
         fps,
         drawCalls: arena.renderer.info.render.calls,
         loadedEffects: arena.loadedEffects,
+        loadedBuildings: arena.loadedBuildings,
         placement: arena.placementState,
         loadedAnimations: arena.loadedAnimations,
       };

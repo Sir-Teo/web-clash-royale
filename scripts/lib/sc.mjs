@@ -94,13 +94,21 @@ export function parseSC(b) {
         const l = b[q++];
         if (l < 255) q += l;
       }
-      const frames = [];
+      const frames = [],
+        labels = {};
       let offset = 0;
       while (q + 5 <= end) {
         const t = b[q],
           l = b.readUInt32LE(q + 1);
         if (t === 11) {
           const count = b.readUInt16LE(q + 5);
+          const labelLength = b[q + 7];
+          if (labelLength > 0 && labelLength < 255) {
+            if (8 + labelLength > 5 + l)
+              throw new Error("SC frame label range error");
+            labels[b.toString("utf8", q + 8, q + 8 + labelLength)] =
+              frames.length;
+          }
           frames.push(
             refs.slice(offset, offset + count).map(([child, mat, color]) => ({
               id: children[child],
@@ -112,7 +120,7 @@ export function parseSC(b) {
         }
         q += 5 + l;
       }
-      clips[id] = { fps, nf, frames };
+      clips[id] = { fps, nf, frames, labels };
     }
     p = end;
     if (tag === 0) break;
