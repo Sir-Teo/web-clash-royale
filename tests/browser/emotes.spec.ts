@@ -1,4 +1,5 @@
 import { test, expect, type Locator } from "@playwright/test";
+import { QUICK_CHATS, QUICK_CHAT_LABELS } from "../../src/game/emotes";
 const state = (page: any) =>
   page.evaluate(() => (window as any).__arena?.state);
 test("all sixteen native King voices decode in the browser", async ({
@@ -56,7 +57,7 @@ test("native emotes preserve both bubbles, four expressions, manual frames and r
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/tests/fixtures/emotes.html");
-  await expect(page.locator("#status")).toContainText("13 native clips");
+  await expect(page.locator("#status")).toContainText("17 native clips");
   const blue = page.locator(".native-emote-bubble.blue"),
     red = page.locator(".native-emote-bubble.red");
   await page.getByRole("button", { name: "Show player", exact: true }).click();
@@ -82,6 +83,7 @@ test("native emotes preserve both bubbles, four expressions, manual frames and r
   });
   await page.getByRole("button", { name: "King emotes", exact: true }).click();
   await expect(page.locator("[data-emote] svg")).toHaveCount(4);
+  await expect(page.locator("[data-quick-chat] svg text")).toHaveCount(6);
   await page.screenshot({
     path: `test-results/${info.project.name}-native-emote-selector.png`,
     fullPage: true,
@@ -104,6 +106,56 @@ test("native emotes preserve both bubbles, four expressions, manual frames and r
   await expect(red).toBeHidden();
   expect(errors).toEqual([]);
 });
+test("native quick chat renders every phrase on both sides with the archived font", async ({
+  page,
+}, info) => {
+  await page.goto("/tests/fixtures/emotes.html");
+  await expect(page.locator("#status")).toContainText("17 native clips");
+  expect(
+    await page.evaluate(() => document.fonts.check('22px "SC CCBackBeat"')),
+  ).toBe(true);
+  for (const phrase of QUICK_CHATS) {
+    await page.locator("#kind").selectOption(phrase);
+    for (const team of ["blue", "red"] as const) {
+      await page.locator(`#${team}-show`).click();
+      await page.locator("#time").fill("1");
+      const bubble = page.locator(`.native-emote-bubble.${team}`);
+      await expect(bubble).toHaveAttribute("data-kind", phrase);
+      await expect(bubble.locator("text")).toHaveText(
+        QUICK_CHAT_LABELS[phrase],
+      );
+      expect(
+        await bubble
+          .locator("text")
+          .evaluate((n) => getComputedStyle(n).fontFamily),
+      ).toContain("SC CCBackBeat");
+      const visible = await bubble.locator("text").boundingBox();
+      const box = await bubble.boundingBox();
+      expect(visible!.width).toBeGreaterThan(15);
+      expect(visible!.x).toBeGreaterThanOrEqual(box!.x);
+      expect(visible!.x + visible!.width).toBeLessThanOrEqual(
+        box!.x + box!.width,
+      );
+    }
+  }
+  await page.locator("#kind").selectOption("well-played");
+  await page.locator("#blue-show").click();
+  await page.locator("#kind").selectOption("good-luck");
+  await page.locator("#red-show").click();
+  await page.locator("#time").fill("1");
+  await page.screenshot({
+    path: `test-results/${info.project.name}-native-quick-chat.png`,
+    fullPage: true,
+  });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.locator("#time").fill("1.5");
+  await expect(page.locator(".native-emote-bubble.blue")).toHaveAttribute(
+    "data-frame",
+    "60",
+  );
+  await page.locator("#time").fill("2.5");
+  await expect(page.locator(".native-emote-bubble.blue")).toBeHidden();
+});
 test("battle emotes have touch controls, cooldown, mute persistence and lifecycle cleanup", async ({
   page,
 }, info) => {
@@ -117,7 +169,7 @@ test("battle emotes have touch controls, cooldown, mute persistence and lifecycl
   await page.goto("/");
   await expect
     .poll(async () => (await state(page))?.loadedEmotes, { timeout: 30000 })
-    .toBe(13);
+    .toBe(17);
   await page.locator("#battle-button").click();
   await expect.poll(async () => (await state(page)).intro.blocking).toBe(false);
   const toggle = page.getByRole("button", { name: "King emotes", exact: true });
@@ -127,7 +179,7 @@ test("battle emotes have touch controls, cooldown, mute persistence and lifecycl
   const menu = page.getByRole("group", { name: "King emotes", exact: true });
   await expect(menu).toBeVisible();
   const boxes = await page
-    .locator("[data-emote],.emote-mute,#emote-button")
+    .locator("[data-emote],[data-quick-chat],.emote-mute,#emote-button")
     .evaluateAll((nodes) =>
       nodes.map((n) => {
         const r = n.getBoundingClientRect();
@@ -143,6 +195,9 @@ test("battle emotes have touch controls, cooldown, mute persistence and lifecycl
   await toggle.click();
   await expect(
     page.getByRole("button", { name: "Send King cry", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    page.getByRole("button", { name: "Send Good luck!", exact: true }),
   ).toBeDisabled();
   await page.keyboard.press("Escape");
   await expect(menu).toBeHidden();
@@ -207,7 +262,19 @@ test("battle emotes have touch controls, cooldown, mute persistence and lifecycl
     path: `test-results/${info.project.name}-battle-emote-menu.png`,
     fullPage: true,
   });
+  const chat = page.getByRole("button", {
+    name: "Send Well played!",
+    exact: true,
+  });
+  await expect(chat).toBeEnabled();
+  await press(chat);
+  await expect(blue).toHaveAttribute("data-kind", "well-played");
+  await toggle.click();
+  await expect(
+    page.getByRole("button", { name: "Send King laugh", exact: true }),
+  ).toBeDisabled();
   await page.getByRole("button", { name: "Mute emotes", exact: true }).click();
+  await expect(blue).toBeHidden();
   await page.reload();
   await expect
     .poll(async () => (await state(page))?.emotes.muted, { timeout: 30000 })
@@ -220,7 +287,13 @@ test("missing native emote assets retain working text reactions", async ({
   await page.goto("/tests/fixtures/emotes.html");
   await page.getByRole("button", { name: "Show player", exact: true }).click();
   await expect(page.locator(".native-emote-bubble.blue")).toHaveText("Ha ha!");
+  await page.locator("#kind").selectOption("good-game");
+  await page.locator("#red-show").click();
+  await expect(page.locator(".native-emote-bubble.red")).toHaveText(
+    "Good game!",
+  );
   await page.getByRole("button", { name: "King emotes", exact: true }).click();
   await page.getByRole("button", { name: "Mute emotes", exact: true }).click();
   await expect(page.locator(".native-emote-bubble.blue")).toBeHidden();
+  await expect(page.locator(".native-emote-bubble.red")).toBeHidden();
 });

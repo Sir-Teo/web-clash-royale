@@ -1,5 +1,5 @@
 import type { CardId } from "../game/cards";
-import type { EmoteKind } from "../game/emotes";
+import type { EmoteKind, QuickChatKind } from "../game/emotes";
 import type {
   BattleEvent,
   Entity,
@@ -48,6 +48,7 @@ export type ClientMessage =
   | { type: "play"; seq: number; card: CardId; x: number; y: number }
   | { type: "leave" | "surrender" }
   | { type: "emote"; kind?: EmoteKind }
+  | { type: "quick-chat"; phrase: QuickChatKind }
   | { type: "ping"; at: number };
 export type ServerMessage =
   | {
@@ -68,4 +69,5 @@ export type ServerMessage =
   | { type: "ack"; seq: number; ok: boolean; reason: string }
   | { type: "error"; message: string; fatal?: boolean }
   | { type: "emote"; team: Team; kind: EmoteKind }
+  | { type: "quick-chat"; team: Team; phrase: QuickChatKind }
   | { type: "pong"; at: number };

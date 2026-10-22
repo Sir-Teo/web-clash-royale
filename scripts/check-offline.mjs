@@ -40,8 +40,9 @@ try {
       window.__arena?.state.loadedHealth === 22 &&
       window.__arena?.state.loadedHud === 6 &&
       window.__arena?.state.loadedEndings === 5 &&
-      window.__arena?.state.loadedEmotes === 13 &&
+      window.__arena?.state.loadedEmotes === 17 &&
       document.fonts.check('40px "Supercell Magic"') &&
+      document.fonts.check('22px "SC CCBackBeat"') &&
       window.__arena?.state.nativeTowerPrincesses === 4 &&
       window.__arena?.state.nativePrincessTowers === 4,
   );
@@ -70,9 +71,20 @@ try {
   const response = await voice;
   if (!response.ok() || !response.fromServiceWorker())
     throw new Error("Emote voice did not load from the offline cache");
+  await page.getByRole("button", { name: "King emotes", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Send Good luck!", exact: true })
+    .click();
+  await page.waitForFunction(
+    () => window.__arena.state.emotes.blue?.kind === "good-luck",
+  );
+  await page
+    .locator(".native-emote-bubble.blue text")
+    .filter({ hasText: "Good luck!" })
+    .waitFor();
   if (errors.length) throw new Error(errors.join("\n"));
   console.log(
-    "Production offline reload, battle start and native emote/voice passed.",
+    "Production offline reload, battle start and native emote/voice/font/quick chat passed.",
   );
 } finally {
   await browser.close();

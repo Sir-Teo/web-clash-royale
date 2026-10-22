@@ -7,7 +7,7 @@ import type { Mode, Team } from "../src/game/engine";
 import { CARD_MAP, STARTER_DECK } from "../src/game/cards";
 import type { CardId } from "../src/game/cards";
 import { PROTOCOL, RECONNECT_MS } from "../src/network/protocol";
-import { EMOTE_COOLDOWN, isEmote } from "../src/game/emotes";
+import { EMOTE_COOLDOWN, isEmote, isQuickChat } from "../src/game/emotes";
 import type {
   ClientMessage,
   ServerMessage,
@@ -284,6 +284,17 @@ export function attachRooms(
       ) {
         p.emoteAt = performance.now();
         broadcast(r, { type: "emote", team: p.team, kind });
+      }
+      return;
+    }
+    if (m.type === "quick-chat") {
+      if (
+        isQuickChat(m.phrase) &&
+        (r.phase === "playing" || r.phase === "countdown") &&
+        performance.now() - p.emoteAt >= EMOTE_COOLDOWN * 1000
+      ) {
+        p.emoteAt = performance.now();
+        broadcast(r, { type: "quick-chat", team: p.team, phrase: m.phrase });
       }
       return;
     }

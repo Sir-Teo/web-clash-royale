@@ -1,5 +1,5 @@
 import type { Team } from "../game/engine";
-import type { EmoteKind } from "../game/emotes";
+import { isEmote, type EmoteKind, type ReactionKind } from "../game/emotes";
 import type { NativeData, Part } from "./native";
 import settings from "./emote-settings.json";
 export interface EmoteData extends NativeData {
@@ -7,9 +7,11 @@ export interface EmoteData extends NativeData {
 }
 export const EMOTE_DURATION =
   settings.bubbles.blue.frames / settings.bubbles.blue.fps;
+export const QUICK_CHAT_DURATION =
+  settings.speech.blue.frames / settings.speech.blue.fps;
 export class EmoteClock {
-  active: Partial<Record<Team, { kind: EmoteKind; time: number }>> = {};
-  show(team: Team, kind: EmoteKind) {
+  active: Partial<Record<Team, { kind: ReactionKind; time: number }>> = {};
+  show(team: Team, kind: ReactionKind) {
     this.active[team] = { kind, time: 0 };
   }
   reset() {
@@ -18,15 +20,21 @@ export class EmoteClock {
   advance(delta: number) {
     for (const team of ["blue", "red"] as const) {
       const item = this.active[team];
-      if (item && (item.time += Math.max(0, delta)) >= EMOTE_DURATION)
+      if (
+        item &&
+        (item.time += Math.max(0, delta)) >=
+          (isEmote(item.kind) ? EMOTE_DURATION : QUICK_CHAT_DURATION)
+      )
         delete this.active[team];
     }
   }
   frame(team: Team, reduced = false) {
     const item = this.active[team];
     if (!item) return null;
-    const expression = settings.expressions[item.kind],
-      bubble = settings.bubbles[team];
+    const expression = isEmote(item.kind)
+        ? settings.expressions[item.kind]
+        : null,
+      bubble = expression ? settings.bubbles[team] : settings.speech[team];
     return {
       kind: item.kind,
       bubble: reduced
@@ -35,9 +43,10 @@ export class EmoteClock {
             bubble.frames - 1,
             Math.floor(item.time * bubble.fps + 1e-6),
           ),
-      expression: reduced
-        ? 0
-        : Math.floor(item.time * expression.fps + 1e-6) % expression.frames,
+      expression:
+        reduced || !expression
+          ? 0
+          : Math.floor(item.time * expression.fps + 1e-6) % expression.frames,
     };
   }
 }
@@ -67,14 +76,17 @@ const compose = (parent: Part, child: Part): Part => {
 export function emoteView(
   data: EmoteData,
   team: Team,
-  kind: EmoteKind,
+  kind: ReactionKind,
   bubble: number,
   expression: number,
 ): NativeData {
-  const anchor = settings.bubbles[team].anchor;
-  const parts = data.clips[`bubble_${team}`].frames[bubble]
+  const picture = isEmote(kind);
+  const anchor = (picture ? settings.bubbles : settings.speech)[team].anchor;
+  const parts = data.clips[`${picture ? "bubble" : "speech"}_${team}`].frames[
+    bubble
+  ]
     .flatMap((p) =>
-      p.shape === -1
+      p.shape === -1 && picture
         ? data.clips[kind].frames[expression].map((c) => compose(p, c))
         : [p],
     )
@@ -96,3 +108,18 @@ export function emoteCell(data: EmoteData, kind: EmoteKind): NativeData {
   );
   return { ...data, clips: { display: { fps: 60, frames: [parts] } } };
 }
+export function quickChatCell(data: EmoteData): NativeData {
+  // Keep the original text style in the asset; enlarge its rendered size so
+  // six touch-sized buttons remain readable after scaling to phone widths.
+  const part = data.clips.quick_chat_cell.frames[0].find(
+    (p) => p.text !== undefined,
+  )!;
+  return {
+    ...data,
+    texts: {
+      ...data.texts,
+      [part.text!]: { ...data.texts[part.text!], size: 22 },
+    },
+  };
+}
+export const selectorPanelBox = settings.panelBox;

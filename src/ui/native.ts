@@ -92,13 +92,13 @@ export function textureMatrix(shape: Pick<Shape, "uv" | "xy">): Matrix {
 
 let measure: CanvasRenderingContext2D | null = null;
 const measured = new Map<string, number>();
-function fitText(text: string, style: TextStyle) {
-  const key = `${style.size}:${text}`;
+function fitText(text: string, style: TextStyle, font = '"Supercell Magic"') {
+  const key = `${font}:${style.size}:${text}`;
   let width = measured.get(key);
   if (width === undefined) {
     measure ??= document.createElement("canvas").getContext("2d");
     if (!measure) return "";
-    measure.font = `${style.size}px "Supercell Magic"`;
+    measure.font = `${style.size}px ${font}`;
     width = measure.measureText(text).width;
     if (measured.size > 128) measured.clear();
     measured.set(key, width);
@@ -122,6 +122,10 @@ export function renderNativeFrame(
     omit?: string[];
     bind?: boolean;
     transform?: string;
+    font?: string;
+    stretch?: boolean;
+    /** Horizontal clip overlap for rectangular atlas slices, in source units. */
+    sliceOverlap?: Record<number, number>;
   },
 ) {
   const labels: string[] = [];
@@ -138,12 +142,20 @@ export function renderNativeFrame(
         const [left, top, right] = style.bounds,
           align = style.align & 3;
         const x = align === 1 ? right : align === 2 ? (left + right) / 2 : left;
-        return `<g transform="${matrix(part.matrix)}" opacity="${part.color[3] / 255}"><text x="${x}" y="${top}" text-anchor="${align === 1 ? "end" : align === 2 ? "middle" : "start"}" dominant-baseline="text-before-edge" font-size="${style.size}" fill="${color(style.color, part.color)}" stroke="${style.outlined ? color(style.outlineColor, part.color) : "none"}" stroke-width="${Math.max(2, style.size / 18)}" stroke-linejoin="round" paint-order="stroke fill"${options.fit ? fitText(text, style) : ""}>${escape(text)}</text></g>`;
+        const family = options.font
+          ? ` font-family="${escape(options.font)}"`
+          : "";
+        return `<g transform="${matrix(part.matrix)}" opacity="${part.color[3] / 255}"><text${family} x="${x}" y="${top}" text-anchor="${align === 1 ? "end" : align === 2 ? "middle" : "start"}" dominant-baseline="text-before-edge" font-size="${style.size}" fill="${color(style.color, part.color)}" stroke="${style.outlined ? color(style.outlineColor, part.color) : "none"}" stroke-width="${Math.max(2, style.size / 18)}" stroke-linejoin="round" paint-order="stroke fill"${options.fit ? fitText(text, style, options.font) : ""}>${escape(text)}</text></g>`;
       }
       const shape = data.shapes[part.shape!];
       const pieces = (shape.polygons ?? [shape])
         .map((polygon, p) => {
-          const points = polygon.xy.map((v) => v.join(",")).join(" ");
+          const overlap = options.sliceOverlap?.[part.shape!] ?? 0;
+          const center =
+            polygon.xy.reduce((sum, p) => sum + p[0], 0) / polygon.xy.length;
+          const points = polygon.xy
+            .map(([x, y]) => [x + Math.sign(x - center) * overlap, y].join(","))
+            .join(" ");
           if (polygon.solid !== undefined)
             return `<polygon points="${points}" fill="${color(polygon.solid, part.color)}" opacity="${part.color[3] / 255}"/>`;
           const clip = `${options.prefix}-shape-${index}-${p}`,
@@ -165,6 +177,6 @@ export function renderNativeFrame(
         : markup,
     )
     .join("");
-  host.innerHTML = `<svg viewBox="${options.viewBox}" aria-hidden="true">${options.transform ? `<g transform="${options.transform}">${content}</g>` : content}</svg>`;
+  host.innerHTML = `<svg viewBox="${options.viewBox}" aria-hidden="true"${options.stretch ? ' preserveAspectRatio="none"' : ""}>${options.transform ? `<g transform="${options.transform}">${content}</g>` : content}</svg>`;
   host.setAttribute("aria-label", labels.join(" ") || "Battle introduction");
 }

@@ -47,7 +47,8 @@ const tint = (a, b) => [
   (a[3] * b[3]) / 255,
   ...[4, 5, 6].map((i) => (a[i] * b[i]) / 255),
 ];
-const used = new Set();
+const used = new Set(),
+  texts = {};
 function flatten(
   id,
   frame,
@@ -59,6 +60,17 @@ function flatten(
   if (depth > 20) throw new Error("Recursive emote display list");
   const binding = path.split("/").at(-1);
   const placeholder = binding === "anim" ? -1 : binding === "image" ? -2 : null;
+  if (data.texts[id]) {
+    texts[id] = data.texts[id];
+    return [
+      {
+        text: id,
+        binding: path,
+        matrix: matrix.map(round),
+        color: color.map(round),
+      },
+    ];
+  }
   if (placeholder !== null || data.shapes[id]) {
     if (placeholder === null) used.add(id);
     return [
@@ -84,7 +96,7 @@ function flatten(
   );
 }
 const clips = {},
-  settings = { expressions: {}, bubbles: {} };
+  settings = { expressions: {}, bubbles: {}, speech: {}, panelBox: "" };
 for (const [kind, name] of Object.entries({
   laugh: "lol",
   cry: "cry",
@@ -117,6 +129,14 @@ for (const [kind, name] of Object.entries({
 for (const [name, id] of Object.entries({
   bubble_blue: data.names.sticker_bubble_player_master,
   bubble_red: data.names.sticker_bubble_opponent_master,
+  speech_blue: data.names.speech_bubble_player_master,
+  speech_red: data.names.speech_bubble_opponent_master,
+  quick_chat_cell: data.clips[data.names.taunt_selector_new].children.find(
+    (c) => c.name === "taunt_btn_01",
+  ).id,
+  selector_panel: data.clips[data.names.taunt_selector_new].children.find(
+    (c) => c.name === "panel",
+  ).id,
   button: data.clips[data.names.HUD_taunt].children.find(
     (c) => c.name === "taunt_button",
   ).id,
@@ -134,15 +154,29 @@ for (const [name, id] of Object.entries({
     labels: clip.labels,
     frames: clip.frames.map((_, f) => flatten(id, f)),
   };
-  if (name.startsWith("bubble_")) {
+  if (name.startsWith("bubble_") || name.startsWith("speech_")) {
     const anchor = data.matrices[clip.frames[60][0].matrix].slice(4);
-    settings.bubbles[name.slice(7)] = {
+    const target = name.startsWith("bubble_")
+      ? settings.bubbles
+      : settings.speech;
+    target[name.slice(7)] = {
       fps: clip.fps,
       frames: clip.frames.length,
       anchor,
     };
   }
 }
+const corners = clips.selector_panel.frames[0].flatMap((p) =>
+  data.shapes[p.shape].flatMap((s) =>
+    s.xy.map(([x, y]) => [
+      p.matrix[0] * x + p.matrix[2] * y + p.matrix[4],
+      p.matrix[1] * x + p.matrix[3] * y + p.matrix[5],
+    ]),
+  ),
+);
+const left = Math.floor(Math.min(...corners.map((p) => p[0]))),
+  top = Math.floor(Math.min(...corners.map((p) => p[1])));
+settings.panelBox = `${left} ${top} ${Math.ceil(Math.max(...corners.map((p) => p[0]))) - left} ${Math.ceil(Math.max(...corners.map((p) => p[1]))) - top}`;
 const shapes = {},
   files = [],
   [sheetWidth, sheetHeight] = data.textures[0];
@@ -172,10 +206,13 @@ for (const id of used) {
       });
       continue;
     }
-    const left = Math.floor(Math.min(...u)),
-      top = Math.floor(Math.min(...v));
-    const width = Math.min(sheetWidth - left, Math.ceil(Math.max(...u)) - left),
-      height = Math.min(sheetHeight - top, Math.ceil(Math.max(...v)) - top);
+    // Keep the adjacent atlas texels for bilinear sampling. Cropping at the
+    // final UV makes SVG images blend with transparent pixels at slice joins.
+    // The original polygon still clips the image at its authored boundary.
+    const left = Math.max(0, Math.floor(Math.min(...u)) - 1),
+      top = Math.max(0, Math.floor(Math.min(...v)) - 1);
+    const width = Math.min(sheetWidth, Math.ceil(Math.max(...u)) + 1) - left,
+      height = Math.min(sheetHeight, Math.ceil(Math.max(...v)) + 1) - top;
     const file = `shape-${id}-${index}.webp`;
     const image = await sharp(texture)
       .extract({ left, top, width, height })
@@ -232,11 +269,43 @@ for (const row of csvRows(
 const json = JSON.stringify({
   clips,
   shapes,
-  texts: {},
+  texts,
   translations: {},
   audio: {},
   voices: audio,
 });
+const fontSource = "font/sc_ccbackbeatregular.ttf";
+const fontResponse = await fetch(
+  `https://raw.githubusercontent.com/smlbiobot/cr/${source.commit}/apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/${fontSource}`,
+);
+if (!fontResponse.ok) throw new Error(`Chat font: ${fontResponse.status}`);
+const font = Buffer.from(await fontResponse.arrayBuffer());
+if (
+  hash(font) !==
+  "8e53e265a6a3d1ce682c7a37c8ebedd1df182ba3c4e3f746cbb2d54030821ec2"
+)
+  throw new Error("Chat font hash mismatch");
+await writeFile(`${output}/sc-ccbackbeat.ttf`, font);
+files.push({
+  file: "sc-ccbackbeat.ttf",
+  bytes: font.length,
+  sha256: hash(font),
+});
+const dictionary = Object.fromEntries(
+  csvRows(await readFile("reference/client/texts.csv", "utf8")).map((r) => [
+    r[" "],
+    r.EN,
+  ]),
+);
+const phrases = Object.fromEntries(
+  ["good-luck", "well-played", "wow", "thanks", "good-game", "oops"].map(
+    (name, i) => [name, dictionary[`TID_EMOTE${i + 1}`]],
+  ),
+);
+await writeFile(
+  "src/game/quick-chat.json",
+  JSON.stringify(phrases, null, 2) + "\n",
+);
 await writeFile(`${output}/emotes.json`, json);
 files.push({
   file: "emotes.json",
@@ -249,7 +318,14 @@ await writeFile(
     {
       source: source.source,
       commit: source.commit,
-      sources: source.sources,
+      sources: [
+        ...source.sources,
+        {
+          source: fontSource,
+          path: `${output}/sc-ccbackbeat.ttf`,
+          sha256: hash(font),
+        },
+      ],
       files,
       audioSource: sounds.source,
       audioCommit: sounds.commit,

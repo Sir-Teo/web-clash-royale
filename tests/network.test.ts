@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { createServer } from "node:http";
 import { WebSocket } from "ws";
 import { attachRooms } from "../server/rooms";
+import { QUICK_CHATS } from "../src/game/emotes";
 import { STARTER_DECK } from "../src/game/cards";
 import { Battle } from "../src/game/engine";
 import { perspective, snapshot } from "../src/network/perspective";
@@ -84,6 +85,7 @@ describe("authoritative multiplayer", () => {
       kind: "cry",
     });
     a.send({ type: "emote", kind: "angry" });
+    a.send({ type: "quick-chat", phrase: "good-luck" });
     b.send({ type: "emote", kind: "thumbs" });
     expect(await a.wait("emote")).toEqual({
       type: "emote",
@@ -97,7 +99,9 @@ describe("authoritative multiplayer", () => {
     });
     a.send({ type: "ping", at: 1 });
     await a.wait("pong");
-    expect(a.messages.filter((m) => m.type === "emote")).toEqual([]);
+    expect(
+      a.messages.filter((m) => ["emote", "quick-chat"].includes(m.type)),
+    ).toEqual([]);
     await new Promise((resolve) => setTimeout(resolve, 2550));
     a.send({ type: "emote", kind: "angry" });
     b.send({ type: "emote" }); // Original clients retain their laugh default.
@@ -113,6 +117,62 @@ describe("authoritative multiplayer", () => {
     await a.wait("pong", (m) => m.at === 2);
     expect(a.messages.filter((m) => m.type === "emote")).toEqual([]);
   }, 10000);
+  it("validates all six quick chats and shares the emote cooldown across reaction types", async () => {
+    const url = await server();
+    const a = await peer(url),
+      b = await peer(url);
+    a.send({ type: "create", ...identity, mode: "classic" });
+    const welcome = await a.wait("welcome");
+    a.send({ type: "quick-chat", phrase: "good-luck" });
+    a.send({ type: "ping", at: 0 });
+    await a.wait("pong");
+    expect(a.messages.filter((m) => m.type === "quick-chat")).toEqual([]);
+    b.send({ type: "join", ...identity, code: welcome.code });
+    await b.wait("welcome");
+    a.send({ type: "ready", ready: true });
+    b.send({ type: "ready", ready: true });
+    await a.wait("room", (m) => m.room.phase === "playing");
+    for (const phrase of [
+      undefined,
+      null,
+      42,
+      "<script>",
+      "constructor",
+      "__proto__",
+    ])
+      a.send({ type: "quick-chat", phrase });
+    for (let i = 0; i < QUICK_CHATS.length; i += 2) {
+      if (i) await new Promise((resolve) => setTimeout(resolve, 2550));
+      a.send({ type: "quick-chat", phrase: QUICK_CHATS[i], team: "red" });
+      b.send({ type: "quick-chat", phrase: QUICK_CHATS[i + 1], team: "blue" });
+      for (const client of [a, b]) {
+        expect(
+          await client.wait("quick-chat", (m) => m.team === "blue"),
+        ).toEqual({ type: "quick-chat", team: "blue", phrase: QUICK_CHATS[i] });
+        expect(
+          await client.wait("quick-chat", (m) => m.team === "red"),
+        ).toEqual({
+          type: "quick-chat",
+          team: "red",
+          phrase: QUICK_CHATS[i + 1],
+        });
+      }
+      a.send({ type: "emote", kind: "laugh" });
+      a.send({ type: "quick-chat", phrase: "oops" });
+      a.send({ type: "ping", at: i + 1 });
+      await a.wait("pong", (m) => m.at === i + 1);
+      expect(
+        a.messages.filter((m) => ["emote", "quick-chat"].includes(m.type)),
+      ).toEqual([]);
+    }
+    b.send({ type: "surrender" });
+    await a.wait("state", (m) => !!m.state.winner);
+    await new Promise((resolve) => setTimeout(resolve, 2550));
+    a.send({ type: "quick-chat", phrase: "good-game" });
+    a.send({ type: "ping", at: 10 });
+    await a.wait("pong", (m) => m.at === 10);
+    expect(a.messages.filter((m) => m.type === "quick-chat")).toEqual([]);
+  }, 15000);
   it("isolates rooms, keeps hands private, accepts both sides and rejects forged moves", async () => {
     const { url, a, b, welcome } = await match();
     const outsider = await peer(url);

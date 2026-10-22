@@ -30,123 +30,188 @@
       "source": "sc/ui_tex.png",
       "bytes": 4876660,
       "sha256": "f33ba6c1dc1457a4551546843c7c9318cad0a1f82603ae2c8c850975d5220ef0"
+    },
+    {
+      "source": "font/sc_ccbackbeatregular.ttf",
+      "path": "public/assets/ui/emotes/sc-ccbackbeat.ttf",
+      "sha256": "8e53e265a6a3d1ce682c7a37c8ebedd1df182ba3c4e3f746cbb2d54030821ec2"
     }
   ],
   "files": [
     {
       "file": "shape-213-0.webp",
-      "bytes": 3928,
-      "sha256": "810012d2a33039d88ec056638b5ae6555fb483404b0892c2df209fd8a5598be9"
+      "bytes": 3902,
+      "sha256": "82f99967117aab5e68b2a2349ac0cb5f28f8329556408b54737799c0db1b964b"
     },
     {
       "file": "shape-208-0.webp",
-      "bytes": 8892,
-      "sha256": "1251035a86a7485430ff710da46e0dd6cbe7dd458e3ed38c797729c44309e23e"
+      "bytes": 9056,
+      "sha256": "8f51e857d59fa7451568c7c6a71d2baef521bbc7a711b19e76f9ffa17729d378"
     },
     {
       "file": "shape-219-0.webp",
-      "bytes": 10544,
-      "sha256": "237f82ec2d560e07774a19c55509265ed21c3d05dfda8122f1245a08cf5c72c1"
+      "bytes": 10708,
+      "sha256": "79c3387def71f9370ebe0a14338f1a4e613acc6ba64e9e59c38eba3abaf4d745"
     },
     {
       "file": "shape-220-0.webp",
-      "bytes": 8796,
-      "sha256": "a270ebd3e4e507098b946c8fe4e8c125ad00e8e9cae1708a9719353a6f7fe931"
+      "bytes": 8992,
+      "sha256": "19d2176ca85e836cadf7233a757a7eff5ed7046ef15c0ce378aa57dc1d57688b"
     },
     {
       "file": "shape-221-0.webp",
-      "bytes": 16548,
-      "sha256": "9bea4667834a4e9b62ee77928a97326b96198eafbce4a30e54ff0269d4af10b4"
+      "bytes": 16590,
+      "sha256": "5bb4496299401f140a2b4d190c886c739387f4728932c4b3c0843d8bea548073"
     },
     {
       "file": "shape-222-0.webp",
-      "bytes": 238,
-      "sha256": "651b3e211899732b38ad433e5619833e1cdee0d9499a1d6ad885e2f3b2305d62"
+      "bytes": 250,
+      "sha256": "300b110613e7d5b17e5229f807310f4de8d50b83891b7adda45ee760a10c145d"
     },
     {
       "file": "shape-223-0.webp",
-      "bytes": 406,
-      "sha256": "8fc3deb4a970f8042e31900bfa691dbf9dde23b7d41901e9e3f6a40625989b74"
+      "bytes": 412,
+      "sha256": "4453938841715b7b671400a1f5d29a3b5be091224ec5ad2de553e06250d384c0"
     },
     {
       "file": "shape-224-0.webp",
-      "bytes": 430,
-      "sha256": "35ede00a7eb7d82aab0c42498c7c9f56b506ff03c7e003860e1b80e5897e0045"
+      "bytes": 442,
+      "sha256": "1d78811828a8e5544214d95bba5b7cd77ac33e5c7386dd19f7e1b03840663408"
     },
     {
       "file": "shape-214-0.webp",
-      "bytes": 18398,
-      "sha256": "e5659c071273626abf0af05cf1973a03fd1834f67f642f89356b79b3f943b999"
+      "bytes": 18752,
+      "sha256": "3c516bcb1e5db0c6ef8bfa56e4120ba2a4d02c17a7ca9736a2fd328770bdfdd8"
     },
     {
       "file": "shape-215-0.webp",
-      "bytes": 1506,
-      "sha256": "0870c16968d63a64ce9c4b8ac0871909e8e2d66c0f4766f6030bb3e9459fb643"
+      "bytes": 1660,
+      "sha256": "fe482ae9d8ec2809541f308a5b447209f7d06e6deeb6f07bf25bb803997be5de"
     },
     {
       "file": "shape-216-0.webp",
-      "bytes": 1412,
-      "sha256": "d04fec587c61fa59e3ae298be42e7e442a3ff9ce82280a0190e9d74387cb454f"
+      "bytes": 1474,
+      "sha256": "8ed6a6e09f42746cbcfbb0c50448de1c35cc1b1d0af21a9d12d0f04a40855455"
     },
     {
       "file": "shape-209-0.webp",
-      "bytes": 20000,
-      "sha256": "feebc1ece6f99b5ce47c0759fdcbb090b53ee3f1273e174b0c796d24591662c2"
+      "bytes": 20276,
+      "sha256": "0e598c0642decf99f20cf827287176252c69b31d0bc49e2be72a533b87141f57"
     },
     {
       "file": "shape-210-0.webp",
-      "bytes": 5566,
-      "sha256": "d4274deffea71fd14da4c39c6daff69448c45101c818b7dbf95a1777ccf9b82e"
+      "bytes": 5642,
+      "sha256": "4bdc4054a591ecb0fff7c940fddc025ccca8b7770d5de492449ce8c49c728dc6"
     },
     {
       "file": "shape-206-0.webp",
-      "bytes": 492,
-      "sha256": "e04f5d95f3edaa63394837375825ef8724394463f4fc0d8d54d9d1f021b2abeb"
+      "bytes": 498,
+      "sha256": "9ded0dd5f4ad411f4a24bbd186374f39ac5ac29b30009d38c54ae100ae99947c"
     },
     {
       "file": "shape-212-0.webp",
-      "bytes": 584,
-      "sha256": "d964d18e9eff959ba55de0d42ae4dd579b288088e9056cbec314db5182a7b0cc"
+      "bytes": 592,
+      "sha256": "4510ca18889f1b3ec5ec4f18d90e98f9ead0067abd643cfeb9dba485e06d4d88"
     },
     {
       "file": "shape-211-0.webp",
-      "bytes": 228,
-      "sha256": "ef14ba9370e9ec0e0ef1d8834d52940cfb9a6bfbc01a1b275c6b77639466eac3"
+      "bytes": 234,
+      "sha256": "8c4557f3836a617db43b3c03f61d267c76cb1dbe489726f1cccbce5670b978ac"
     },
     {
       "file": "shape-211-1.webp",
-      "bytes": 228,
-      "sha256": "ef14ba9370e9ec0e0ef1d8834d52940cfb9a6bfbc01a1b275c6b77639466eac3"
+      "bytes": 234,
+      "sha256": "8c4557f3836a617db43b3c03f61d267c76cb1dbe489726f1cccbce5670b978ac"
     },
     {
       "file": "shape-207-0.webp",
-      "bytes": 544,
-      "sha256": "b9e226155eba1e59927576e0f7cd56951bf98e98a85b8b896dbedc3f04bf9a65"
-    },
-    {
-      "file": "shape-235-0.webp",
-      "bytes": 1230,
-      "sha256": "c2d7345b47208ffe41c72e45633c4238c78bc3888be65051c7b7351f8a82eac6"
-    },
-    {
-      "file": "shape-236-0.webp",
-      "bytes": 3284,
-      "sha256": "c8ec3ba1b2dce9f5a0a9eb2efa9e6fdcd5bb7126062ecc9390d0f6a3a6f5ad22"
-    },
-    {
-      "file": "shape-237-0.webp",
-      "bytes": 2702,
-      "sha256": "dc21f4b32beec6acecde5dcf1054574ed91897f0585006ff970c61ad4e792fbd"
+      "bytes": 560,
+      "sha256": "91b5190d1760e8e50d6804221e632d11bcc5b800bc5815dff2e61924e52fb75a"
     },
     {
       "file": "shape-217-0.webp",
-      "bytes": 470,
-      "sha256": "1c6f4236d8a3971b5d7d651fdbb3e3261696b59de0a5f230ab6124ab505f9e6d"
+      "bytes": 480,
+      "sha256": "3c4e72ced408a40660973fd737ded7770968e5d9dc5ec86a904686d0a9cd435f"
+    },
+    {
+      "file": "shape-218-0.webp",
+      "bytes": 52,
+      "sha256": "68436c02634db1926714d718b32b61b540219170322a63748640e46dfbe89623"
+    },
+    {
+      "file": "shape-225-0.webp",
+      "bytes": 380,
+      "sha256": "55639135494ca76d29f61fd45ba10bd80345be51e3c9071320a0d6faf72fcf89"
+    },
+    {
+      "file": "shape-226-0.webp",
+      "bytes": 1738,
+      "sha256": "7648153d28ba7363553ab5d9d39e2c038fd1c0c63e30d2726dd4dd7bd42e6a0f"
+    },
+    {
+      "file": "shape-227-0.webp",
+      "bytes": 1898,
+      "sha256": "342b34f0eba1104744690d9f925054d361b558cee381e11f2f38c7cf3d0ee111"
+    },
+    {
+      "file": "shape-228-0.webp",
+      "bytes": 16310,
+      "sha256": "b7e93b06ced0fdfbe8141646fc26cea36907451082c0c0c37e3894d24cb9038c"
+    },
+    {
+      "file": "shape-229-0.webp",
+      "bytes": 1658,
+      "sha256": "bb8d132acf0f8e3b85639104fa995eefa64f258f018d30aa619506c552bfdeb8"
+    },
+    {
+      "file": "shape-230-0.webp",
+      "bytes": 1764,
+      "sha256": "17a7d41e2a778069fbbb237cce018c0c5e48e601d10510009d4350ca93143ef0"
+    },
+    {
+      "file": "shape-231-0.webp",
+      "bytes": 15966,
+      "sha256": "30496a2802eeeae2c896df22e6c7d9963c872caf7db3f69c6780b670c0a85f82"
+    },
+    {
+      "file": "shape-232-0.webp",
+      "bytes": 20890,
+      "sha256": "5a7a6bc65d92bd99ea65c998d375e96a6c72c4e5d1d871c09bc9833b4ca2dbb3"
+    },
+    {
+      "file": "shape-233-0.webp",
+      "bytes": 27916,
+      "sha256": "a9eba15847473af5f62e02446572e3bb31c0154992e7a96b3c9c80091c94c556"
+    },
+    {
+      "file": "shape-234-0.webp",
+      "bytes": 19364,
+      "sha256": "9f2d74c315d2db559d028b0f2ff36e2285b67e7b7f859dc97ae11bbc1752e996"
+    },
+    {
+      "file": "shape-235-0.webp",
+      "bytes": 1240,
+      "sha256": "ba5923239b7396555077608c75dfd755e86e38d98889a8f5a0a837a3e1c4b20e"
+    },
+    {
+      "file": "shape-236-0.webp",
+      "bytes": 3364,
+      "sha256": "b78fce0c9b30f62708973e47bf14b765cad15f3d30e3f5f6c8aa26df4f609b56"
+    },
+    {
+      "file": "shape-237-0.webp",
+      "bytes": 2790,
+      "sha256": "bf6eb01e9f2807bf57c9fbcd8e8e3f9078ad7e2d2bfcac7db8dd7feb9a337465"
+    },
+    {
+      "file": "sc-ccbackbeat.ttf",
+      "bytes": 67744,
+      "sha256": "8e53e265a6a3d1ce682c7a37c8ebedd1df182ba3c4e3f746cbb2d54030821ec2"
     },
     {
       "file": "emotes.json",
-      "bytes": 264827,
-      "sha256": "1ce5caac184bf70985747b38dacc0b7799966074cc2816967db421eea9c538a3"
+      "bytes": 439800,
+      "sha256": "1d2a38dc8fcfb5e500f7b9ea4e0a7973ff30b6dae6af3c1fb8e8208173cfe008"
     }
   ],
   "audioSource": "https://github.com/RoyaleAPI/cr-api-assets",

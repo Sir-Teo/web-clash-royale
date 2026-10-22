@@ -2,14 +2,27 @@ import {
   EMOTES,
   EMOTE_COOLDOWN,
   EMOTE_LABELS,
+  QUICK_CHATS,
+  QUICK_CHAT_LABELS,
+  isEmote,
+  reactionLabel,
   type EmoteKind,
+  type ReactionKind,
 } from "../game/emotes";
 import type { Team } from "../game/engine";
-import { EmoteClock, emoteView, emoteCell, type EmoteData } from "./emote-data";
+import {
+  EmoteClock,
+  emoteView,
+  emoteCell,
+  quickChatCell,
+  selectorPanelBox,
+  type EmoteData,
+} from "./emote-data";
 import { renderNativeFrame } from "./native";
 import "./emotes.css";
 
 const path = "/assets/ui/emotes";
+const chatFont = '"SC CCBackBeat",sans-serif';
 const fallback: Record<EmoteKind, string> = {
   laugh: "Ha ha!",
   thumbs: "Well played!",
@@ -30,7 +43,7 @@ export class NativeEmotes {
   private signatures: Partial<Record<Team, string>> = {};
   private stops: Partial<Record<Team, () => void>> = {};
   private voices: Partial<Record<EmoteKind, number>> = {};
-  onSend: (kind: EmoteKind) => boolean = () => false;
+  onSend: (kind: ReactionKind) => boolean = () => false;
   onMute: (muted: boolean) => void = () => {};
   onCue: (name: string, volume: number) => void | (() => void) = () => {};
   constructor(
@@ -40,7 +53,7 @@ export class NativeEmotes {
   ) {
     this.muted = muted;
     host.classList.add("native-emotes");
-    host.innerHTML = `<div class="native-emote-bubble blue hidden" role="img"></div><div class="native-emote-bubble red hidden" role="img"></div><div id="emote-selector" class="emote-selector hidden" role="group" aria-label="King emotes"><div class="emote-options">${EMOTES.map((kind) => `<button type="button" data-emote="${kind}" aria-label="Send ${EMOTE_LABELS[kind]}"><span class="emote-option-art">${fallback[kind]}</span></button>`).join("")}</div><button class="emote-mute" type="button"><span class="emote-mute-art" aria-hidden="true"></span><span class="emote-mute-label"></span></button></div>`;
+    host.innerHTML = `<div class="native-emote-bubble blue hidden" role="img"></div><div class="native-emote-bubble red hidden" role="img"></div><div id="emote-selector" class="emote-selector hidden" role="group" aria-label="King emotes"><span class="emote-panel-art" aria-hidden="true"></span><div class="emote-options">${EMOTES.map((kind) => `<button type="button" data-emote="${kind}" aria-label="Send ${EMOTE_LABELS[kind]}"><span class="emote-option-art">${fallback[kind]}</span></button>`).join("")}</div><div class="quick-chat-options">${QUICK_CHATS.map((kind) => `<button type="button" data-quick-chat="${kind}" aria-label="Send ${QUICK_CHAT_LABELS[kind]}"><span class="quick-chat-art">${QUICK_CHAT_LABELS[kind]}</span></button>`).join("")}</div><button class="emote-mute" type="button"><span class="emote-mute-art" aria-hidden="true"></span><span class="emote-mute-label"></span></button></div>`;
     this.bubbles = {
       blue: host.querySelector(".blue")!,
       red: host.querySelector(".red")!,
@@ -51,19 +64,37 @@ export class NativeEmotes {
     button.setAttribute("aria-controls", "emote-selector");
     button.setAttribute("aria-expanded", "false");
     button.onclick = () => this.setOpen(!this.open);
-    host.querySelectorAll<HTMLButtonElement>("[data-emote]").forEach((b) => {
-      b.onclick = () => {
-        if (!this.available || this.muted || performance.now() < this.nextSend)
-          return;
-        if (this.onSend(b.dataset.emote as EmoteKind)) {
-          this.nextSend = performance.now() + EMOTE_COOLDOWN * 1000;
-          this.setOpen(false);
-          this.button.focus({ preventScroll: true });
-        }
-      };
-    });
+    host
+      .querySelectorAll<HTMLButtonElement>("[data-emote],[data-quick-chat]")
+      .forEach((b) => {
+        b.onclick = () => {
+          if (
+            !this.available ||
+            this.muted ||
+            performance.now() < this.nextSend
+          )
+            return;
+          if (
+            this.onSend(
+              (b.dataset.emote ?? b.dataset.quickChat) as ReactionKind,
+            )
+          ) {
+            this.nextSend = performance.now() + EMOTE_COOLDOWN * 1000;
+            this.setOpen(false);
+            this.button.focus({ preventScroll: true });
+          }
+        };
+      });
     this.muteButton.onclick = () => this.setMuted(!this.muted);
     document.addEventListener("pointerdown", (e) => {
+      if (
+        this.open &&
+        !this.host.contains(e.target as Node) &&
+        !this.button.contains(e.target as Node)
+      )
+        this.setOpen(false);
+    });
+    document.addEventListener("focusin", (e) => {
       if (
         this.open &&
         !this.host.contains(e.target as Node) &&
@@ -98,6 +129,7 @@ export class NativeEmotes {
       const response = await fetch(`${path}/emotes.json`);
       if (!response.ok) throw new Error(`Native emotes: ${response.status}`);
       const data: EmoteData = await response.json();
+      await document.fonts.load('22px "SC CCBackBeat"').catch(() => {});
       await Promise.all(
         Object.values(data.shapes)
           .flatMap((s) => s.polygons ?? [s])
@@ -130,6 +162,42 @@ export class NativeEmotes {
           0,
           {},
           { path, viewBox: "-58 -73 116 95", prefix: `emote-option-${kind}` },
+        );
+        art.setAttribute("aria-hidden", "true");
+      }
+      const panel = this.menu.querySelector<HTMLElement>(".emote-panel-art")!;
+      renderNativeFrame(
+        panel,
+        data,
+        "selector_panel",
+        0,
+        {},
+        {
+          path,
+          viewBox: selectorPanelBox,
+          prefix: "emote-panel",
+          stretch: true,
+        },
+      );
+      this.menu.classList.add("native-chat-ready");
+      for (const kind of QUICK_CHATS) {
+        const art = this.menu.querySelector<HTMLElement>(
+          `[data-quick-chat="${kind}"] .quick-chat-art`,
+        )!;
+        renderNativeFrame(
+          art,
+          quickChatCell(data),
+          "quick_chat_cell",
+          0,
+          { txt: QUICK_CHAT_LABELS[kind] },
+          {
+            path,
+            viewBox: "-78 -26 156 52",
+            prefix: `chat-${kind}`,
+            font: chatFont,
+            fit: true,
+            sliceOverlap: { 218: 0.08 },
+          },
         );
         art.setAttribute("aria-hidden", "true");
       }
@@ -175,13 +243,14 @@ export class NativeEmotes {
     this.refreshMute();
     this.onMute(muted);
   }
-  show(team: Team, kind: EmoteKind) {
+  show(team: Team, kind: ReactionKind) {
     if (this.muted || document.hidden) return false;
     this.stops[team]?.();
+    delete this.stops[team];
     this.clock.show(team, kind);
     delete this.signatures[team];
-    const voice = this.data?.voices[kind];
-    if (voice) {
+    const voice = isEmote(kind) ? this.data?.voices[kind] : null;
+    if (voice && isEmote(kind)) {
       const index = this.voices[kind] ?? 0;
       this.voices[kind] = index + 1;
       const stop = this.onCue(
@@ -220,7 +289,7 @@ export class NativeEmotes {
     if (this.button.disabled === available) this.button.disabled = !available;
     if (!available && this.open) this.setOpen(false);
     this.menu
-      .querySelectorAll<HTMLButtonElement>("[data-emote]")
+      .querySelectorAll<HTMLButtonElement>("[data-emote],[data-quick-chat]")
       .forEach((b) => {
         const disabled =
           !available || this.muted || performance.now() < this.nextSend;
@@ -242,6 +311,8 @@ export class NativeEmotes {
       if (this.signatures[team] === signature) continue;
       this.signatures[team] = signature;
       host.classList.toggle("native-emote-ready", !!this.data);
+      const chat = !isEmote(frame.kind);
+      host.classList.toggle("native-quick-chat", chat);
       if (this.data)
         renderNativeFrame(
           host,
@@ -254,17 +325,31 @@ export class NativeEmotes {
           ),
           "display",
           0,
-          {},
+          chat ? { "bubble/txt": reactionLabel(frame.kind) } : {},
           {
             path,
-            viewBox: team === "blue" ? "-85 -155 290 220" : "-175 -100 260 175",
+            viewBox: chat
+              ? team === "blue"
+                ? "-160 -120 365 170"
+                : "-180 -70 365 125"
+              : team === "blue"
+                ? "-85 -155 290 220"
+                : "-175 -100 260 175",
             prefix: `emote-${team}`,
+            font: chatFont,
+            fit: true,
+            // A subpixel overlap avoids separately antialiased clip edges
+            // exposing the arena between the three native bubble slices.
+            sliceOverlap: { 218: 0.08 },
           },
         );
-      else host.textContent = fallback[frame.kind];
+      else
+        host.textContent = isEmote(frame.kind)
+          ? fallback[frame.kind]
+          : reactionLabel(frame.kind);
       host.setAttribute(
         "aria-label",
-        `${team === "blue" ? "You" : "Opponent"}: ${EMOTE_LABELS[frame.kind]}`,
+        `${team === "blue" ? "You" : "Opponent"}: ${reactionLabel(frame.kind)}`,
       );
       host.dataset.kind = frame.kind;
       host.dataset.frame = String(frame.bubble);

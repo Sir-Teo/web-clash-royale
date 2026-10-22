@@ -4,6 +4,11 @@
   z-index: 16;
   pointer-events: none;
 }
+.native-emotes clipPath polygon {
+  /* Adjacent native slices share edges. Avoid blending each clipping edge
+     separately and exposing a hairline of the arena beneath the bubble. */
+  shape-rendering: crispEdges;
+}
 .native-emote-bubble {
   position: absolute;
   width: min(58%, 240px);
@@ -17,6 +22,9 @@
 .native-emote-bubble.red {
   right: 4px;
   top: 48px;
+}
+.native-emote-bubble.native-quick-chat {
+  width: min(80%, 300px);
 }
 .native-emote-bubble svg {
   display: block;
@@ -40,7 +48,7 @@
   position: absolute;
   right: 8px;
   bottom: 56px;
-  width: min(300px, calc(100% - 16px));
+  width: min(330px, calc(100% - 16px));
   padding: 10px;
   border: 2px solid #9bb4c6;
   border-radius: 12px;
@@ -49,6 +57,70 @@
     0 5px 0 #11243c,
     0 8px 20px #0007;
   pointer-events: auto;
+}
+.emote-panel-art {
+  display: none;
+  position: absolute;
+  inset: -8px;
+  pointer-events: none;
+}
+.emote-panel-art svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.emote-selector.native-chat-ready {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.native-chat-ready .emote-panel-art {
+  display: block;
+}
+.emote-options,
+.quick-chat-options,
+.emote-mute {
+  position: relative;
+}
+.quick-chat-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  margin-top: 4px;
+}
+.quick-chat-options button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: #fff9e9;
+  color: #333;
+  font:
+    14px "SC CCBackBeat",
+    "Nunito Sans",
+    sans-serif;
+  cursor: pointer;
+}
+.native-chat-ready .quick-chat-options button {
+  background: transparent;
+}
+.quick-chat-options button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.quick-chat-options button:focus-visible {
+  outline: 2px solid #ffd15c;
+  outline-offset: 2px;
+}
+.quick-chat-options button:not(:disabled):hover {
+  filter: brightness(1.1);
+}
+.quick-chat-art,
+.quick-chat-art svg {
+  width: 100%;
+  height: 44px;
+  display: block;
 }
 .emote-options {
   display: grid;
@@ -141,6 +213,9 @@
   .native-emote-bubble.red {
     top: 26px;
   }
+  .native-emote-bubble.native-quick-chat {
+    width: min(65%, 300px);
+  }
   .emote-selector {
     bottom: 49px;
     padding: 6px;
@@ -151,4 +226,9 @@
   .emote-options button {
     min-height: 50px;
   }
+}
+@font-face {
+  font-family: "SC CCBackBeat";
+  src: url("/assets/ui/emotes/sc-ccbackbeat.ttf") format("truetype");
+  font-display: swap;
 }

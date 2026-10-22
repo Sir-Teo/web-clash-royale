@@ -113,6 +113,26 @@ test("phone controls fit six sizes, rotate during play, and accept real touch in
         return [r.width, r.height];
       }),
     );
+    await tap(page, "#emote-button");
+    await expect(page.locator(".emote-selector")).toBeVisible();
+    const chatControls = await page
+      .locator("[data-emote],[data-quick-chat],.emote-mute")
+      .evaluateAll((nodes) =>
+        nodes.map((n) => {
+          const r = n.getBoundingClientRect();
+          return { x: r.x, y: r.y, w: r.width, h: r.height };
+        }),
+      );
+    expect(chatControls).toHaveLength(11);
+    for (const control of chatControls) {
+      expect(control.w).toBeGreaterThanOrEqual(44);
+      expect(control.h).toBeGreaterThanOrEqual(44);
+      expect(control.x).toBeGreaterThanOrEqual(0);
+      expect(control.y).toBeGreaterThanOrEqual(0);
+      expect(control.x + control.w).toBeLessThanOrEqual(size.width);
+      expect(control.y + control.h).toBeLessThanOrEqual(size.height);
+    }
+    await tap(page, "#emote-button");
     for (const [w, h] of cards) {
       expect(w).toBeGreaterThanOrEqual(44);
       expect(h).toBeGreaterThanOrEqual(44);

@@ -63,7 +63,8 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
     player.on("websocket", (socket) =>
       socket.on("framereceived", (frame) => {
         const message = JSON.parse(frame.payload.toString());
-        if (message.type === "emote") reactions[name].push(message);
+        if (["emote", "quick-chat"].includes(message.type))
+          reactions[name].push(message);
       }),
     );
   page.on("pageerror", (e) => errors.push(e.message));
@@ -133,6 +134,31 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
           { type: "emote", team: "blue", kind: "cry" },
           { type: "emote", team: "red", kind: "thumbs" },
         ]);
+    await page
+      .getByRole("button", { name: "King emotes", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Send Good luck!", exact: true })
+      .click();
+    await red.getByRole("button", { name: "King emotes", exact: true }).click();
+    await red
+      .getByRole("button", { name: "Send Well played!", exact: true })
+      .click();
+    for (const side of ["blue", "red"])
+      await expect
+        .poll(() => reactions[side].slice(2))
+        .toEqual([
+          { type: "quick-chat", team: "blue", phrase: "good-luck" },
+          { type: "quick-chat", team: "red", phrase: "well-played" },
+        ]);
+    await expect(red.locator(".native-emote-bubble.blue")).toHaveAttribute(
+      "data-kind",
+      "well-played",
+    );
+    await expect(page.locator(".native-emote-bubble.red")).toHaveAttribute(
+      "data-kind",
+      "well-played",
+    );
     await page.evaluate(() => {
       Object.defineProperty(document, "hidden", {
         configurable: true,

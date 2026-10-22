@@ -10,6 +10,7 @@ import "./ui/rooms.css";
 import "./ui/ending.css";
 import { NativeEnding } from "./ui/ending";
 import { NativeEmotes } from "./ui/emotes";
+import { isEmote } from "./game/emotes";
 import { endResult } from "./ui/ending-data";
 import {
   network,
@@ -272,7 +273,14 @@ emotes.onSend = (kind) => {
   if (screen !== "battle" || paused || battle.winner || intro.clock.blocking)
     return false;
   if (multiplayer)
-    return network.connected && network.send({ type: "emote", kind });
+    return (
+      network.connected &&
+      network.send(
+        isEmote(kind)
+          ? { type: "emote", kind }
+          : { type: "quick-chat", phrase: kind },
+      )
+    );
   return emotes.show("blue", kind);
 };
 ending.onContinue = () => {
@@ -997,6 +1005,8 @@ network.onMessage = (message) => {
       message.team === network.team ? "blue" : "red",
       message.kind ?? "laugh",
     );
+  if (message.type === "quick-chat" && screen === "battle" && !battle.winner)
+    emotes.show(message.team === network.team ? "blue" : "red", message.phrase);
 };
 
 function showModes() {

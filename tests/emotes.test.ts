@@ -2,10 +2,18 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { parseSC } from "../scripts/lib/sc.mjs";
-import { EMOTES, isEmote } from "../src/game/emotes";
+import {
+  EMOTES,
+  isEmote,
+  QUICK_CHATS,
+  QUICK_CHAT_LABELS,
+  isQuickChat,
+} from "../src/game/emotes";
 import {
   EmoteClock,
   EMOTE_DURATION,
+  QUICK_CHAT_DURATION,
+  quickChatCell,
   emoteView,
   emoteCell,
   type EmoteData,
@@ -30,11 +38,11 @@ describe("native King emotes", () => {
     for (const file of manifest.audioFiles)
       expect(hash(`public/assets/audio/${file.file}`)).toBe(file.sha256);
     expect(manifest.audioFiles).toHaveLength(16);
-    expect(Object.keys(data.clips)).toHaveLength(13);
-    expect(Object.keys(data.shapes)).toHaveLength(21);
+    expect(Object.keys(data.clips)).toHaveLength(17);
+    expect(Object.keys(data.shapes)).toHaveLength(32);
     expect(
       Object.values(data.clips).reduce((n, c) => n + c.frames.length, 0),
-    ).toBe(452);
+    ).toBe(744);
     for (const [name, clip] of Object.entries(data.clips) as [string, any][]) {
       const native = source.clips[clip.timelineId ?? clip.sourceId];
       expect(clip.fps).toBe(native.fps);
@@ -45,6 +53,16 @@ describe("native King emotes", () => {
         expect(data.voices[name].files).toHaveLength(4);
         expect(data.voices[name].volume).toBe(0.7);
       }
+    }
+    expect(Object.keys(data.texts)).toHaveLength(2);
+    expect(hash("public/assets/ui/emotes/sc-ccbackbeat.ttf")).toBe(
+      "8e53e265a6a3d1ce682c7a37c8ebedd1df182ba3c4e3f746cbb2d54030821ec2",
+    );
+    for (const [id, style] of Object.entries(data.texts)) {
+      expect(style).toMatchObject({
+        size: source.texts[+id].size,
+        bounds: source.texts[+id].bounds,
+      });
     }
     // The first laugh body preserves the outer wrapper's 0.7998 scale and
     // translation; using only the nested animation would move/enlarge it.
@@ -57,6 +75,14 @@ describe("native King emotes", () => {
         const m = textureMatrix(polygon);
         expect(m.every(Number.isFinite)).toBe(true);
         polygon.uv.forEach(([u, v], i) => {
+          // Filtering at a sliced bubble's edge must sample native atlas
+          // texels, not transparent pixels outside the cropped image.
+          if (/^shape-(217|218)-/.test(polygon.file)) {
+            expect(u).toBeGreaterThanOrEqual(0.5);
+            expect(v).toBeGreaterThanOrEqual(0.5);
+            expect(u).toBeLessThanOrEqual(polygon.width - 0.5);
+            expect(v).toBeLessThanOrEqual(polygon.height - 0.5);
+          }
           expect(
             Math.abs(m[0] * u + m[2] * v + m[4] - polygon.xy[i][0]),
           ).toBeLessThan(0.05);
@@ -99,6 +125,60 @@ describe("native King emotes", () => {
     const first = bubble[0];
     expect(first.matrix[4]).toBeCloseTo(-53 * 0.9990234375, 4);
     expect(first.matrix[5]).toBeCloseTo(-40 * 0.9990234375, 4);
+  });
+  it("retains six archived phrases and both complete text bubble timelines", () => {
+    expect(QUICK_CHAT_LABELS).toEqual({
+      "good-luck": "Good luck!",
+      "well-played": "Well played!",
+      wow: "Wow!",
+      thanks: "Thanks!",
+      "good-game": "Good game!",
+      oops: "Oops",
+    });
+    for (const value of [
+      null,
+      undefined,
+      1,
+      "constructor",
+      "__proto__",
+      "<script>",
+      "laugh",
+    ])
+      expect(isQuickChat(value)).toBe(false);
+    for (const kind of QUICK_CHATS) {
+      expect(isQuickChat(kind)).toBe(true);
+      for (const team of ["blue", "red"] as const) {
+        for (let frame = 0; frame < 145; frame++) {
+          const parts = emoteView(data, team, kind, frame, 0).clips.display
+            .frames[0];
+          expect(parts.every((p) => p.matrix.every(Number.isFinite))).toBe(
+            true,
+          );
+          expect(
+            parts.filter((p) => p.text !== undefined).map((p) => p.binding),
+          ).toEqual(["bubble/txt"]);
+        }
+      }
+    }
+    const cell = quickChatCell(data);
+    expect(cell.texts[241].size).toBe(22);
+    expect(data.texts[241].size).toBe(14);
+    const clock = new EmoteClock();
+    clock.show("blue", "good-luck");
+    clock.advance(1);
+    expect(clock.frame("blue")).toEqual({
+      kind: "good-luck",
+      bubble: 60,
+      expression: 0,
+    });
+    clock.show("red", "oops");
+    clock.advance(QUICK_CHAT_DURATION - 1);
+    expect(clock.frame("blue")).toBeNull();
+    expect(clock.frame("red", true)).toEqual({
+      kind: "oops",
+      bubble: 60,
+      expression: 0,
+    });
   });
   it("keeps player clocks independent, freezes paused poses and expires without looping the bubble", () => {
     const c = new EmoteClock();
