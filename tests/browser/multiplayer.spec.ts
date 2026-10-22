@@ -79,6 +79,9 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
     await expect(page.locator(".room-code")).toHaveText(/^[A-Z2-9]{6}$/);
     const code = (await page.locator(".room-code").textContent())!;
     await red.goto(`/?room=${code}`);
+    // Navigation completes before the dynamically imported graphics bundle.
+    // Two software-rendered arenas can make cold startup slow on CI.
+    await expect(red.locator("#friend-button")).toBeVisible({ timeout: 60000 });
     await expect(red.getByLabel("ROOM CODE", { exact: true })).toHaveValue(
       code,
     );
