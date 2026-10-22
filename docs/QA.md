@@ -241,4 +241,10 @@ The renderer now accepts elapsed effect time separately from its bounded movemen
 
 Final local verification passes all fifteen existing ending cases across desktop Chromium, phone Chromium and phone WebKit: source poses, replay seeking, background suspension, missing-asset recovery and Continue without duplicate rewards. Their diagnostics helper now waits safely through asynchronous graphics startup. The complete desktop multiplayer flow also passes against Vite's development server, including worker loading, canonical reactions, reload, surrender and replay.
 
-The production offline reload passes with the worker present in the 472-file cache (`1c4383e52104`), along with battle startup and native emote voice/font/quick-chat assets. CI run `39872100706` for application commit `c921682` has passed its unit/build job; at this checkpoint its browser job is still installing Chromium dependencies, so no hosted browser result is claimed.
+The production offline reload passes with the worker present in the 472-file cache (`1c4383e52104`), along with battle startup and native emote voice/font/quick-chat assets. CI run `39872100706` for application commit `c921682` passed both the unit/build and production browser jobs.
+
+## Native connection warning
+
+The original `bad_connection` clip now accompanies the existing readable reconnect status. All 60 frames, transforms, colors and geometry match the retained binary, and source/output hashes pass. All 139 unit checks and the production build pass. Six production cases pass across desktop Chromium, phone Chromium and phone WebKit: actual socket loss/recovery, opponent-only loss, animated frames, reduced motion, and missing-artwork text fallback. Phone portrait and landscape screenshots were inspected for clipping and control overlap. The warning does not intercept input.
+
+The production offline reload also passes with the native connection bundle included in the 476-file cache (`1f8a7064db9d`), alongside battle startup and native reactions.

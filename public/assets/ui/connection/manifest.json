@@ -1,0 +1,46 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "sources": [
+    {
+      "source": "csv_client/texts.decoded.csv",
+      "path": "reference/client/texts.csv",
+      "bytes": 1676624,
+      "sha256": "0102d5ec1cbe3f6b2abf9e57f3068b029c3c2e9304c2cd56f0b06aacd8bdd43e"
+    },
+    {
+      "source": "font/supercell-magic_0.ttf",
+      "path": "public/assets/ui/supercell-magic.ttf",
+      "bytes": 127716,
+      "sha256": "b39e9bd4d46006fe559302ba3205c746b7967dea3554bdf1b32685dbfacfbb2b"
+    },
+    {
+      "source": "sc/ui",
+      "path": "reference/sc/ui.bin",
+      "bytes": 2207168,
+      "sha256": "e835a19396a344c0739f8b054efa7fe030a4b55d832eace8064675fa4f9e00bd"
+    },
+    {
+      "source": "sc/ui_tex.png",
+      "bytes": 4876660,
+      "sha256": "f33ba6c1dc1457a4551546843c7c9318cad0a1f82603ae2c8c850975d5220ef0"
+    }
+  ],
+  "files": [
+    {
+      "file": "shape-1490-0.webp",
+      "bytes": 306,
+      "sha256": "43e53f7ac37ca2b32220344a345bf385ce0da8303945df745c1d50a68007a96d"
+    },
+    {
+      "file": "shape-676-0.webp",
+      "bytes": 4004,
+      "sha256": "5454f272632e1d40d730a2f82e4bdaf166a80d9400aeb95935a30039a94b4cd3"
+    },
+    {
+      "file": "connection.json",
+      "bytes": 12124,
+      "sha256": "1f6e27a28c01bbbc1482a4221ae08a52e58476dad39b2d50ee3418995848c55a"
+    }
+  ]
+}

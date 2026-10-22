@@ -1,3 +1,4 @@
+import { NativeConnectionWarning } from "./ui/connection";
 import "@fontsource/lilita-one/latin-400.css";
 import "@fontsource/nunito-sans/latin-400.css";
 import "@fontsource/nunito-sans/latin-600.css";
@@ -237,7 +238,7 @@ $("#app").innerHTML = `
      <div class="battle-intro hidden" id="battle-intro" role="img" aria-label="Battle introduction"></div>
      <section class="battle-ending hidden" id="battle-ending" aria-label="Battle ended"></section>
      <div class="pause-cover hidden"><span class="eyebrow">TAKE A BREATHER</span><h2>Battle paused</h2><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button><button class="text-button" id="surrender-button">Leave battle</button></div>
-     <div id="emote-layer"></div>
+     <div id="emote-layer"></div><div id="connection-warning"></div>
     </div>
     <div id="lobby-footer" class="chest-tray"><div class="chest-heading"><span>VICTORY CHESTS</span><b id="chest-count">0 / 4</b></div><div class="chest-slots" id="chest-slots"></div></div>
     <div id="battle-tray" class="battle-tray hidden"><div class="hand-row"><div class="next-card"><span>NEXT</span><div class="next-card-picture" data-native-card="" data-card-variant="thumbnail"><img id="next-card-img" alt="Next card"/>${nativeCardArt}</div><div class="native-next-cost" data-native-card="" data-card-variant="cost"><b id="next-card-cost"></b>${nativeCardArt}</div></div><div class="hand" id="hand"></div></div><div class="elixir-row">${elixirMarkup}</div><div class="tray-caption"><span id="hand-caption">Select a card, then tap your side of the arena</span><span><kbd>1</kbd>–<kbd>4</kbd> SELECT</span></div></div>
@@ -260,6 +261,7 @@ const announcements = new NativeAnnouncements($("#battle-announcements"));
 const intro = new NativeIntro($("#battle-intro"));
 const elixir = new NativeElixir($("#elixir-hud"));
 const ending = new NativeEnding($("#battle-ending"));
+const connectionWarning = new NativeConnectionWarning($("#connection-warning"));
 const emotes = new NativeEmotes(
   $("#emote-layer"),
   $("#emote-button") as HTMLButtonElement,
@@ -288,6 +290,7 @@ ending.onContinue = () => {
   if (pendingResult && arena.effectTime >= pendingResult.time) ending.skip();
 };
 function resetEnding() {
+  connectionWarning.reset();
   emotes.reset();
   ending.reset();
   endingBattle = null;
@@ -858,13 +861,18 @@ function stepReplay() {
   } else battle.step();
 }
 function updateConnection() {
+  connectionWarning.setActive(
+    screen === "battle" && multiplayer && !network.connected && !battle.winner,
+  );
   const opponent = network.room?.players.find((p) => p.team !== network.team);
-  $("#connection-status").textContent = !network.connected
+  const status = $("#connection-status");
+  const message = !network.connected
     ? "Reconnecting… battle continues"
     : opponent && !opponent.connected
       ? "Opponent reconnecting · 30s grace"
       : `FRIENDLY · ${network.latency ? `${network.latency} ms` : "Connected"}`;
-  $("#connection-status").classList.toggle(
+  if (status.textContent !== message) status.textContent = message;
+  status.classList.toggle(
     "reconnecting",
     !network.connected || (!!opponent && !opponent.connected),
   );
@@ -1520,6 +1528,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 function suspendFrameLoop() {
+  connectionWarning.suspend();
   cancelPointer();
   emotes.suspend();
   if (!multiplayer && screen !== "lobby" && !paused && !battle.winner)
@@ -1649,6 +1658,7 @@ function frame(now: number) {
     !!pendingResult && arena.effectTime >= pendingResult.time,
   );
   endingFrameTime = arena.effectTime;
+  connectionWarning.update(now / 1000);
   emotes.update(
     paused ? 0 : delta,
     screen === "battle" &&
@@ -1719,6 +1729,8 @@ Object.defineProperty(window, "__arena", {
         loadedCards: nativeCards.loaded,
         loadedHealth: arena.loadedHealth,
         loadedHud: matchHud.loaded,
+        loadedConnectionWarnings: connectionWarning.loaded,
+        connectionWarning: connectionWarning.state,
         loadedEndings: ending.loaded,
         ending: ending.state,
         hud: matchHud.state,

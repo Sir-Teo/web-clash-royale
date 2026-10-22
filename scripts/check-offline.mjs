@@ -57,6 +57,7 @@ try {
       window.__arena?.state.loadedHealth === 22 &&
       window.__arena?.state.loadedHud === 6 &&
       window.__arena?.state.loadedEndings === 5 &&
+      window.__arena?.state.loadedConnectionWarnings === 1 &&
       window.__arena?.state.loadedEmotes === 17 &&
       document.fonts.check('40px "Supercell Magic"') &&
       document.fonts.check('22px "SC CCBackBeat"') &&

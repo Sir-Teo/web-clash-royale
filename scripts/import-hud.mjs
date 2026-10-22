@@ -4,7 +4,9 @@ import { createHash } from "node:crypto";
 import sharp from "sharp";
 import { parseSC } from "./lib/sc.mjs";
 import { csvRows } from "./lib/csv.mjs";
-const output = "public/assets/ui/hud";
+const connection = process.argv.includes("--connection");
+const bundle = connection ? "connection" : "hud";
+const output = `public/assets/ui/${bundle}`;
 await mkdir(output, { recursive: true });
 const data = parseSC(await readFile("reference/sc/ui.bin"));
 const sourceManifest = JSON.parse(
@@ -121,16 +123,18 @@ function flatten(
     );
   });
 }
-const exports = Object.fromEntries(
-  [
-    "HUD_topRight",
-    "HUD_topRight_overtime",
-    "HUD_rightMiddle",
-    "HUD_rightMiddle_landscape",
-  ].map((name) => [name, data.names[name]]),
-);
+const exports = connection
+  ? { bad_connection: data.names.bad_connection }
+  : Object.fromEntries(
+      [
+        "HUD_topRight",
+        "HUD_topRight_overtime",
+        "HUD_rightMiddle",
+        "HUD_rightMiddle_landscape",
+      ].map((name) => [name, data.names[name]]),
+    );
 const score = data.clips[data.names.HUD_rightMiddle];
-for (const [binding, name] of Object.entries(crownNames))
+for (const [binding, name] of Object.entries(connection ? {} : crownNames))
   exports[name] = score.children.find((c) => c.name === binding).id;
 const clips = {};
 for (const [name, id] of Object.entries(exports)) {
@@ -199,13 +203,13 @@ const json = JSON.stringify({
   clips,
   texts,
   shapes,
-  translations,
-  crowns: crownNames,
+  translations: connection ? {} : translations,
+  crowns: connection ? {} : crownNames,
   audio: {},
 });
-await writeFile(`${output}/hud.json`, json);
+await writeFile(`${output}/${bundle}.json`, json);
 files.push({
-  file: "hud.json",
+  file: `${bundle}.json`,
   bytes: Buffer.byteLength(json),
   sha256: hash(json),
 });
@@ -225,5 +229,5 @@ await writeFile(
   ) + "\n",
 );
 console.log(
-  `Imported ${Object.keys(clips).length} HUD clips, ${Object.keys(texts).length} text styles, ${usedShapes.size} shapes.`,
+  `Imported ${Object.keys(clips).length} ${bundle} clips, ${Object.keys(texts).length} text styles, ${usedShapes.size} shapes.`,
 );
