@@ -18,6 +18,8 @@ Tower outcomes resolve after all impacts in the current simulation step. Both Ki
 
 Battle countdowns and overtime notices use the original font, authored animation frames, colors and elixir artwork. Native countdown voices and horn cues follow the match; replay seeking restores the correct notice without playing skipped sounds. Pausing, muting or backgrounding stops active sound effects.
 
+Battles open with the original animated arena title, crossed swords, red/blue player ribbons and FIGHT lettering. Combat, AI and elixir wait for the intro's authored action frame. The opening pauses with the game, fits long player names, adapts to phone rotation and plays when a replay restarts; seeking skips it.
+
 Troop deaths use source-specific elixir splashes, smoke, dust and ground marks. Knights leave their original sword behind, Giants have a larger burst, Skeletons have smaller effects, and Balloons release airborne clouds. Native particle geometry is batched on the GPU to keep large swarms practical on phone-sized screens.
 
 ## Development
@@ -38,6 +40,8 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 `npm run assets:destruction` regenerates tower and troop death compositions from retained client/character tables and imports their native particle clips.
 
 `npm run assets:ui` imports five native battle announcement timelines, their text styles, font, elixir icon and sound mappings. `/tests/fixtures/timing.html` provides precise countdown/overtime inspection and is excluded from production.
+
+`npm run assets:intro` imports the complete standard/training battle openings and derives their action-frame timing. `/tests/fixtures/intro.html` inspects source frames, player-name fitting and the transition into combat.
 
 ## Phone play
 

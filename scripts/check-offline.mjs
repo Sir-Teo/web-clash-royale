@@ -34,6 +34,7 @@ try {
       window.__arena?.state.loadedBuildings === 3 &&
       window.__arena?.state.loadedAnimations === 19 &&
       window.__arena?.state.loadedAnnouncements === 5 &&
+      window.__arena?.state.loadedIntros === 2 &&
       document.fonts.check('40px "Supercell Magic"') &&
       window.__arena?.state.nativeTowerPrincesses === 4 &&
       window.__arena?.state.nativePrincessTowers === 4,

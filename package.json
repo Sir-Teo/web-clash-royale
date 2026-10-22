@@ -18,7 +18,8 @@
     "assets:effects": "node scripts/import-effects.mjs",
     "assets:destruction": "node scripts/import-destruction.mjs && npm run assets:effects",
     "assets:buildings": "node scripts/import-buildings.mjs",
-    "assets:ui": "node scripts/import-ui.mjs"
+    "assets:ui": "node scripts/import-ui.mjs",
+    "assets:intro": "node scripts/import-intro.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",

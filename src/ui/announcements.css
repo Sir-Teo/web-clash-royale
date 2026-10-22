@@ -27,3 +27,19 @@
   height: 100%;
   overflow: visible;
 }
+.battle-intro {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  pointer-events: none;
+  overflow: hidden;
+  font-family: "Supercell Magic", "Lilita One", sans-serif;
+  font-weight: 400;
+  font-synthesis: none;
+}
+.battle-intro svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}

@@ -6,6 +6,7 @@ import "@fontsource/nunito-sans/latin-800.css";
 import "./style.css";
 import "./ui/announcements.css";
 import { NativeAnnouncements, battleClock } from "./ui/announcements";
+import { NativeIntro } from "./ui/intro";
 import {
   createIcons,
   Crown,
@@ -166,7 +167,6 @@ let activePointerId: number | null = null;
 let pointerStart = { x: 0, y: 0 };
 let activeSlot = -1;
 let toastTimer = 0;
-let arenaMessage: { start: number; duration: number } | null = null;
 let frameCount = 0;
 let fps = 60;
 
@@ -203,14 +203,15 @@ $("#app").innerHTML = `
      <div class="match-top hidden"><div class="competitor enemy"><span class="mini-shield red">${icon("shield")}</span><div><b>Royal Trainer</b><span>Training guild</span></div></div><div class="match-timer"><span id="phase-label">TIME LEFT</span><b id="match-clock">3:00</b></div></div>
      <div class="match-crowns hidden"><div class="red">${icon("crown")}<b id="red-crowns">0</b></div><span>:</span><div class="blue"><b id="blue-crowns">0</b>${icon("crown")}</div></div>
      <div class="match-bottom hidden"><div class="competitor"><span class="mini-shield blue">${icon("shield")}</span><div><b class="player-name">${esc(profile.name)}</b><span>Browser kingdom</span></div></div><div class="battle-tools"><button id="emote-button" class="small-icon" aria-label="Send King laugh emote">${icon("smile")}</button><button id="pause-button" class="small-icon" aria-label="Pause battle">${icon("pause")}</button></div></div>
-     <div class="arena-message hidden" id="arena-message"></div><div id="deploy-hint" class="deploy-hint hidden">Select a card to deploy</div>
+     <div id="deploy-hint" class="deploy-hint hidden">Select a card to deploy</div>
      <div class="battle-announcements hidden" id="battle-announcements" role="img" aria-label="Battle announcement"></div>
+     <div class="battle-intro hidden" id="battle-intro" role="img" aria-label="Battle introduction"></div>
      <div class="pause-cover hidden"><span class="eyebrow">TAKE A BREATHER</span><h2>Battle paused</h2><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button><button class="text-button" id="surrender-button">Leave battle</button></div>
      <div class="emote-bubble hidden">${icon("crown")}<b>HA HA HA!</b></div>
     </div>
     <div id="lobby-footer" class="chest-tray"><div class="chest-heading"><span>VICTORY CHESTS</span><b id="chest-count">0 / 4</b></div><div class="chest-slots" id="chest-slots"></div></div>
     <div id="battle-tray" class="battle-tray hidden"><div class="hand-row"><div class="next-card"><span>NEXT</span><img id="next-card-img" alt="Next card"/><b id="next-card-cost"></b></div><div class="hand" id="hand"></div></div><div class="elixir-row"><span class="elixir-drop"><b id="elixir-number">5</b></span><div class="elixir-track"><div id="elixir-fill"></div>${"<i></i>".repeat(9)}</div><b id="elixir-rate">1×</b></div><div class="tray-caption"><span id="hand-caption">Select a card, then tap your side of the arena</span><span><kbd>1</kbd>–<kbd>4</kbd> SELECT</span></div></div>
-    <div class="replay-controls hidden"><button id="replay-play" class="icon-button" aria-label="Pause replay">${icon("pause")}</button><span id="replay-clock">0:00</span><input id="replay-seek" aria-label="Replay timeline" type="range" min="0" max="100" value="0"/><button id="replay-speed" class="text-button">1×</button><button id="replay-exit" class="text-button">Exit</button></div>
+    <div class="replay-controls hidden"><button id="replay-play" class="icon-button" aria-label="Pause replay">${icon("pause")}</button><span id="replay-clock">0:00</span><input id="replay-seek" aria-label="Replay timeline" type="range" min="0" max="100" step="0.01" value="0"/><button id="replay-speed" class="text-button">1×</button><button id="replay-exit" class="text-button">Exit</button></div>
    </main>
    <aside class="right-sidebar"><section class="deck-panel panel"><div class="section-heading"><div><span class="eyebrow">YOUR WINNING EIGHT</span><h3>Battle deck</h3></div><span class="deck-number">01</span></div><div class="deck-tabs" id="deck-tabs"></div><div class="deck-grid" id="deck-preview"></div><div class="deck-summary"><span><i class="tiny-drop"></i> Average elixir <b id="average-elixir">3.5</b></span><span>8 / 8</span></div><button id="edit-deck" class="secondary-button">${icon("layers-2")} Edit deck ${icon("arrow-up-right")}</button></section>
     <section class="battle-brief panel"><div class="section-heading"><h3>Battle brief</h3>${icon("scroll-text")}</div><div class="brief-item"><span>${icon("crown")}</span><div><b>Take the crown</b><p>Destroy more towers. Take the King Tower for an instant win.</p></div></div><div class="brief-item"><span class="purple">${icon("droplet")}</span><div><b>Spend wisely</b><p>Elixir refills over time. Save some to defend your side.</p></div></div><div class="brief-item"><span class="blue">${icon("timer")}</span><div><b>Three minutes. One winner.</b><p>Tied? Two-minute sudden death. Elixir speeds up as time runs out.</p></div></div><button id="how-to-play" class="text-button">How to play ${icon("arrow-right")}</button></section>
@@ -220,6 +221,7 @@ $("#app").innerHTML = `
  </div><div id="modal-root"></div><div class="toast" id="toast" role="status"></div><div id="drag-card" class="drag-card hidden"></div>`;
 
 const announcements = new NativeAnnouncements($("#battle-announcements"));
+const intro = new NativeIntro($("#battle-intro"));
 announcements.onCue = (file, volume) => audio.play(file, volume);
 
 function refreshIcons() {
@@ -233,12 +235,6 @@ function toast(message: string) {
     () => $("#toast").classList.remove("visible"),
     3000,
   );
-}
-function showMessage(message: string, duration = 1800) {
-  const m = $("#arena-message");
-  m.textContent = message;
-  m.classList.remove("hidden");
-  arenaMessage = { start: arena.effectTime, duration: duration / 1000 };
 }
 function modal(title: string, body: string, key = "generic", wide = false) {
   if (!modalKey && screen !== "lobby" && !paused && !battle.winner) {
@@ -351,7 +347,7 @@ function lobby() {
   audio.stopMusic();
   audio.stopEffects();
   announcements.reset();
-  arenaMessage = null;
+  intro.skip();
   document.body.classList.remove("in-battle", "in-replay");
   arena.showPlacement(null, null);
   closeModal();
@@ -368,7 +364,6 @@ function lobby() {
     .forEach((e) => e.classList.add("hidden"));
   $("#deploy-hint").classList.add("hidden");
   $(".mode-select").classList.remove("hidden");
-  $("#arena-message").classList.add("hidden");
   refreshProfile();
 }
 function startBattle() {
@@ -405,10 +400,9 @@ function startBattle() {
   $("#deploy-hint").classList.remove("hidden");
   $(".replay-controls").classList.add("hidden");
   refreshDeck();
+  intro.start(profile.name, battle.mode);
   updateBattleUI(true);
-  announcements.cue("match start");
   audio.startMusic();
-  showMessage("FIGHT!", 1500);
   if (!profile.seenTutorial) {
     profile.seenTutorial = true;
     saveProfile(profile);
@@ -442,7 +436,7 @@ function updateBattleUI(force = false) {
           selectCard(Number(e.dataset.slot));
       });
       e.addEventListener("pointerdown", (event) => {
-        if (screen !== "battle" || paused) return;
+        if (screen !== "battle" || paused || intro.clock.blocking) return;
         if (!event.isPrimary || pointerDown) return;
         activeSlot = Number(e.dataset.slot);
         pointerDown = true;
@@ -461,6 +455,7 @@ function updateBattleUI(force = false) {
   $("#elixir-fill").style.width = `${p.elixir * 10}%`;
   $("#elixir-rate").textContent = `${battle.multiplier}×`;
   document.querySelectorAll<HTMLElement>("[data-slot]").forEach((e, i) => {
+    (e as HTMLButtonElement).disabled = intro.clock.blocking;
     e.classList.toggle("unaffordable", CARD_MAP[p.hand[i]].cost > p.elixir);
     e.classList.toggle("selected", selected === i);
     e.setAttribute("aria-pressed", String(selected === i));
@@ -485,7 +480,8 @@ function updateBattleUI(force = false) {
   if (screen === "replay") syncReplayControl();
 }
 function selectCard(slot: number) {
-  if (screen !== "battle" || paused || battle.winner) return;
+  if (screen !== "battle" || paused || battle.winner || intro.clock.blocking)
+    return;
   selected = selected === slot ? -1 : slot;
   audio.play("button_click_02", 0.2);
   if (selected < 0) {
@@ -506,7 +502,13 @@ function selectCard(slot: number) {
   updateBattleUI();
 }
 function refreshPlacement() {
-  if (screen !== "battle" || paused || selected < 0 || battle.winner) {
+  if (
+    screen !== "battle" ||
+    paused ||
+    selected < 0 ||
+    battle.winner ||
+    intro.clock.blocking
+  ) {
     arena.showPlacement(null, null);
     return;
   }
@@ -524,7 +526,14 @@ function refreshPlacement() {
   );
 }
 function deploy(point: Point) {
-  if (selected < 0 || screen !== "battle" || paused || battle.winner) return;
+  if (
+    selected < 0 ||
+    screen !== "battle" ||
+    paused ||
+    battle.winner ||
+    intro.clock.blocking
+  )
+    return;
   const id = battle.players.blue.hand[selected];
   const result = battle.play("blue", selected, point.x, point.y);
   if (result.ok) {
@@ -643,9 +652,8 @@ function playReplay(record: RecordEntry) {
   syncReplayControl();
   $("#replay-speed").textContent = "1×";
   refreshDeck();
+  intro.start(profile.name, battle.mode);
   updateBattleUI(true);
-  showMessage("REPLAY", 1000);
-  announcements.cue("match start");
   refreshIcons();
 }
 function showModes() {
@@ -1064,7 +1072,7 @@ $("#replay-exit").onclick = lobby;
 $("#replay-seek").addEventListener("input", () => {
   if (!replayData) return;
   announcements.reset();
-  arenaMessage = null;
+  intro.skip();
   audio.stopEffects();
   const target = Math.floor(
     (Number(($("#replay-seek") as HTMLInputElement).value) / 100) *
@@ -1175,7 +1183,12 @@ function frame(now: number) {
   const delta = Math.min(0.5, elapsed);
   frameTime = now;
   if (screen !== "lobby" && !paused && !battle.winner) {
-    accumulator += delta * speed;
+    const wasOpening = intro.clock.blocking;
+    accumulator += intro.clock.advance(delta * speed);
+    if (wasOpening && !intro.clock.blocking) {
+      announcements.cue("match start");
+      updateBattleUI(true);
+    }
     let ticks = 0;
     while (accumulator >= STEP && ticks < 15) {
       if (
@@ -1217,22 +1230,7 @@ function frame(now: number) {
     lastUi = now;
   }
   announcements.update(battle, screen !== "lobby");
-  if (arenaMessage) {
-    const age = arena.effectTime - arenaMessage.start;
-    if (age >= arenaMessage.duration || battle.winner || screen === "lobby")
-      arenaMessage = null;
-    else {
-      $("#arena-message").style.opacity = String(
-        Math.min(1, (arenaMessage.duration - age) / 0.2),
-      );
-      $("#arena-message").style.transform =
-        `translate(-50%, -50%) rotate(-3deg) scale(${1 + Math.max(0, 1 - age / 0.25) * 0.4})`;
-    }
-  }
-  $("#arena-message").classList.toggle(
-    "hidden",
-    !arenaMessage || !!announcements.state,
-  );
+  intro.update(screen !== "lobby" && !battle.winner);
   if (pendingResult) {
     if (pendingResult.battle !== battle || screen !== "battle")
       pendingResult = null;
@@ -1267,6 +1265,8 @@ Object.defineProperty(window, "__arena", {
         drawCalls: arena.renderer.info.render.calls,
         loadedEffects: arena.loadedEffects,
         loadedAnnouncements: announcements.loaded,
+        loadedIntros: intro.loaded,
+        intro: intro.state,
         announcement: announcements.state,
         loadedBuildings: arena.loadedBuildings,
         destruction: arena.destructionState,

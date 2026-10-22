@@ -1418,24 +1418,6 @@ button:active {
   width: 30px;
   height: 30px;
 }
-.arena-message {
-  position: absolute;
-  z-index: 7;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-3deg);
-  font-family: "Supercell Magic", var(--display);
-  font-size: clamp(27px, 4vw, 46px);
-  color: #ffdf75;
-  text-shadow:
-    -2px -2px #7d5826,
-    2px -2px #7d5826,
-    -2px 2px #7d5826,
-    2px 4px #7d5826,
-    0 5px 20px #0009;
-  white-space: nowrap;
-  pointer-events: none;
-}
 .deploy-hint {
   position: absolute;
   left: 50%;
@@ -2669,16 +2651,7 @@ kbd {
   margin-top: 15px;
   max-width: 280px;
 }
-@keyframes message-in {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) rotate(-6deg) scale(1.5);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) rotate(-3deg);
-  }
-}
+
 @keyframes fade-in {
   from {
     opacity: 0;
