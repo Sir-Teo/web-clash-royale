@@ -17,6 +17,7 @@ export function parseSC(b) {
   }
   const shapes = {},
     clips = {},
+    texts = {},
     matrices = [],
     textures = [],
     colors = [];
@@ -41,6 +42,52 @@ export function parseSC(b) {
         b.readInt32LE(q + 16) / 20,
         b.readInt32LE(q + 20) / 20,
       ]);
+    if (tag === 25) {
+      const string = () => {
+        const size = b[q++];
+        if (size === 255) return "";
+        if (q + size > end) throw new Error("SC text string range error");
+        const value = b.toString("utf8", q, q + size);
+        q += size;
+        return value;
+      };
+      const id = b.readUInt16LE(q);
+      q += 2;
+      const font = string(),
+        color = b.readUInt32LE(q);
+      q += 4;
+      const bold = !!b[q++],
+        italic = !!b[q++],
+        multiline = !!b[q++];
+      q++;
+      const align = b[q++],
+        size = b[q++];
+      const bounds = Array.from({ length: 4 }, () => {
+        const value = b.readInt16LE(q);
+        q += 2;
+        return value;
+      });
+      const outlined = !!b[q++],
+        text = string();
+      const deviceFont = !!b[q++],
+        outlineColor = b.readUInt32LE(q);
+      q += 4;
+      if (q !== end) throw new Error(`SC text field size mismatch ${id}`);
+      texts[id] = {
+        font,
+        color,
+        bold,
+        italic,
+        multiline,
+        align,
+        size,
+        bounds,
+        outlined,
+        text,
+        deviceFont,
+        outlineColor,
+      };
+    }
     if (tag === 18) {
       const id = b.readUInt16LE(q),
         count = b.readUInt16LE(q + 2);
@@ -90,8 +137,10 @@ export function parseSC(b) {
         q += 2;
       }
       q += nc;
+      const childNames = [];
       for (let i = 0; i < nc; i++) {
         const l = b[q++];
+        childNames.push(l < 255 ? b.toString("utf8", q, q + l) : "");
         if (l < 255) q += l;
       }
       const frames = [],
@@ -120,10 +169,16 @@ export function parseSC(b) {
         }
         q += 5 + l;
       }
-      clips[id] = { fps, nf, frames, labels };
+      clips[id] = {
+        fps,
+        nf,
+        frames,
+        labels,
+        children: children.map((id, i) => ({ id, name: childNames[i] })),
+      };
     }
     p = end;
     if (tag === 0) break;
   }
-  return { names, shapes, clips, matrices, textures, colors };
+  return { names, shapes, clips, texts, matrices, textures, colors };
 }

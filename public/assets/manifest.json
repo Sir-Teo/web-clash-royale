@@ -57,10 +57,70 @@
       "sha256": "f33664548b71b943db8273e5d8f28f88dd0a2faa23a6e64aba8760f9313fa182"
     },
     {
+      "path": "audio/1_cd_02.ogg",
+      "source": "sfx/1_cd_02.ogg",
+      "bytes": 18918,
+      "sha256": "db102cd36b46c6930ebc5ba53edce313cd6ab947420dd5c261c638517cec3ace"
+    },
+    {
+      "path": "audio/10_cd_02.ogg",
+      "source": "sfx/10_cd_02.ogg",
+      "bytes": 17990,
+      "sha256": "a5892f16e8d84b094c0245416ebe57e202665035e1d09adb39c7701eb17b66b6"
+    },
+    {
       "path": "audio/1st_crown_01.ogg",
       "source": "sfx/1st_crown_01.ogg",
       "bytes": 10361,
       "sha256": "bbb1b4a8595599e299c89d1d301f3aba5c27e839fe605c02664d7ccd6b6f9e5d"
+    },
+    {
+      "path": "audio/2_cd_02.ogg",
+      "source": "sfx/2_cd_02.ogg",
+      "bytes": 16900,
+      "sha256": "ed527d0887071bcb9fee5f9f8ff74ca8fba6c283ca8007f4e8be944be3f9559a"
+    },
+    {
+      "path": "audio/3_cd_02.ogg",
+      "source": "sfx/3_cd_02.ogg",
+      "bytes": 15547,
+      "sha256": "58510ed96aa48137a541fd4b16f2bc27acdb88653c93222d14fdc75181a7bf3a"
+    },
+    {
+      "path": "audio/4_cd_02.ogg",
+      "source": "sfx/4_cd_02.ogg",
+      "bytes": 14223,
+      "sha256": "06d34eedcc2226d756e5d892a180f315f83ee214f5bda05c9fa16bc2b7c68cd2"
+    },
+    {
+      "path": "audio/5_cd_02.ogg",
+      "source": "sfx/5_cd_02.ogg",
+      "bytes": 13998,
+      "sha256": "07e95d063f2e9d8889cfcee906530be63221e1eee301c344bee55efa50a1851b"
+    },
+    {
+      "path": "audio/6_cd_02.ogg",
+      "source": "sfx/6_cd_02.ogg",
+      "bytes": 13974,
+      "sha256": "3ba979f606a9e195d9a1a500326afd3ca81b33856c8c5e8ef4f3b2218ff6eda5"
+    },
+    {
+      "path": "audio/7_cd_02.ogg",
+      "source": "sfx/7_cd_02.ogg",
+      "bytes": 14214,
+      "sha256": "8a02c95468fb3d81b9e408a98be190adfe4fad291a518eb974f5b2af78a1e162"
+    },
+    {
+      "path": "audio/8_cd_02.ogg",
+      "source": "sfx/8_cd_02.ogg",
+      "bytes": 15055,
+      "sha256": "975ad66bdea9cfa6ff227531d91b9c173938066e3b3bc90d6d4349eaeba73043"
+    },
+    {
+      "path": "audio/9_cd_02.ogg",
+      "source": "sfx/9_cd_02.ogg",
+      "bytes": 17825,
+      "sha256": "2d0e0834c8c1329d848ea668ddd064c21d99d92b8c1a744b6e407560887a714a"
     },
     {
       "path": "audio/archer_attack_07.ogg",
@@ -105,6 +165,18 @@
       "sha256": "e9b0e9d89f9c0c734438228794e9adf7c460b45aa9d86849b8627627df68ab4f"
     },
     {
+      "path": "audio/big_horn_end_02_v2.ogg",
+      "source": "sfx/big_horn_end_02_v2.ogg",
+      "bytes": 20136,
+      "sha256": "15519b7917757cf86c603cfde74c758634d7fb1d7080a0c82feb2217ab24f5f1"
+    },
+    {
+      "path": "audio/big_horn_start_02_v2.ogg",
+      "source": "sfx/big_horn_start_02_v2.ogg",
+      "bytes": 27640,
+      "sha256": "3d4656bcb9c54849dd2cfe9a5d65c09844f9a455a539cd255170cd20bd341a61"
+    },
+    {
       "path": "audio/button_click_02.ogg",
       "source": "sfx/button_click_02.ogg",
       "bytes": 4394,
@@ -127,6 +199,12 @@
       "source": "sfx/deploy_wizard_01.ogg",
       "bytes": 7707,
       "sha256": "d192fee3449b7a76544bad25c02bb6285a14827c22aac09c9ca2142f802732b0"
+    },
+    {
+      "path": "audio/extratime_jingle_02.ogg",
+      "source": "sfx/extratime_jingle_02.ogg",
+      "bytes": 17590,
+      "sha256": "cb171bf977c32e8c90b1c2e4fbe26b792b87db2e0d0fa793dfeec17d01a73e9f"
     },
     {
       "path": "audio/fireball_hit_01.ogg",

@@ -16,6 +16,8 @@ Earned crowns spin out of destroyed towers and fly to the matching score counter
 
 Tower outcomes resolve after all impacts in the current simulation step. Both Kings falling together produces a draw; equal Princess Tower trades can continue into overtime. A destroyed King collapses its remaining Princess Towers, and rewards never exceed three battle crowns per side.
 
+Battle countdowns and overtime notices use the original font, authored animation frames, colors and elixir artwork. Native countdown voices and horn cues follow the match; replay seeking restores the correct notice without playing skipped sounds. Pausing, muting or backgrounding stops active sound effects.
+
 Troop deaths use source-specific elixir splashes, smoke, dust and ground marks. Knights leave their original sword behind, Giants have a larger burst, Skeletons have smaller effects, and Balloons release airborne clouds. Native particle geometry is batched on the GPU to keep large swarms practical on phone-sized screens.
 
 ## Development
@@ -34,6 +36,8 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 `npm run assets:combat` regenerates combat traits from retained historical CSVs. `npm run assets:effects` imports the original projectile and electrical-effect clips. `npm run assets:buildings` imports both teams’ Cannon, Tesla and layered King Tower timelines. Development inspection pages are available at `/tests/fixtures/animations.html`, `/tests/fixtures/effects.html`, `/tests/fixtures/buildings.html` and `/tests/fixtures/combat.html`; they are excluded from the production build.
 
 `npm run assets:destruction` regenerates tower and troop death compositions from retained client/character tables and imports their native particle clips.
+
+`npm run assets:ui` imports five native battle announcement timelines, their text styles, font, elixir icon and sound mappings. `/tests/fixtures/timing.html` provides precise countdown/overtime inspection and is excluded from production.
 
 ## Phone play
 

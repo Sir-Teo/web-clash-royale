@@ -1,0 +1,29 @@
+@font-face {
+  font-family: "Supercell Magic";
+  src: url("/assets/ui/supercell-magic.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+.battle-announcements {
+  position: absolute;
+  z-index: 7;
+  top: 43%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 720px;
+  height: 280px;
+  max-height: 42%;
+  pointer-events: none;
+  overflow: hidden;
+  font-family: "Supercell Magic", "Lilita One", sans-serif;
+  font-weight: 400;
+  font-synthesis: none;
+}
+.battle-announcements svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}

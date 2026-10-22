@@ -4,6 +4,8 @@ import "@fontsource/nunito-sans/latin-600.css";
 import "@fontsource/nunito-sans/latin-700.css";
 import "@fontsource/nunito-sans/latin-800.css";
 import "./style.css";
+import "./ui/announcements.css";
+import { NativeAnnouncements, battleClock } from "./ui/announcements";
 import {
   createIcons,
   Crown,
@@ -164,7 +166,7 @@ let activePointerId: number | null = null;
 let pointerStart = { x: 0, y: 0 };
 let activeSlot = -1;
 let toastTimer = 0;
-let lastPhase = "normal";
+let arenaMessage: { start: number; duration: number } | null = null;
 let frameCount = 0;
 let fps = 60;
 
@@ -202,6 +204,7 @@ $("#app").innerHTML = `
      <div class="match-crowns hidden"><div class="red">${icon("crown")}<b id="red-crowns">0</b></div><span>:</span><div class="blue"><b id="blue-crowns">0</b>${icon("crown")}</div></div>
      <div class="match-bottom hidden"><div class="competitor"><span class="mini-shield blue">${icon("shield")}</span><div><b class="player-name">${esc(profile.name)}</b><span>Browser kingdom</span></div></div><div class="battle-tools"><button id="emote-button" class="small-icon" aria-label="Send King laugh emote">${icon("smile")}</button><button id="pause-button" class="small-icon" aria-label="Pause battle">${icon("pause")}</button></div></div>
      <div class="arena-message hidden" id="arena-message"></div><div id="deploy-hint" class="deploy-hint hidden">Select a card to deploy</div>
+     <div class="battle-announcements hidden" id="battle-announcements" role="img" aria-label="Battle announcement"></div>
      <div class="pause-cover hidden"><span class="eyebrow">TAKE A BREATHER</span><h2>Battle paused</h2><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button><button class="text-button" id="surrender-button">Leave battle</button></div>
      <div class="emote-bubble hidden">${icon("crown")}<b>HA HA HA!</b></div>
     </div>
@@ -215,6 +218,9 @@ $("#app").innerHTML = `
   </div>
   <footer class="app-footer"><span><i></i> BUILT FOR THE BROWSER. MADE FOR THE CROWN.</span><button id="about-button">Independent fan project ${icon("external-link")}</button><span class="fps-label">WEB ARENA · v0.1</span></footer>
  </div><div id="modal-root"></div><div class="toast" id="toast" role="status"></div><div id="drag-card" class="drag-card hidden"></div>`;
+
+const announcements = new NativeAnnouncements($("#battle-announcements"));
+announcements.onCue = (file, volume) => audio.play(file, volume);
 
 function refreshIcons() {
   createIcons({ icons, attrs: { "stroke-width": 1.8 } });
@@ -232,13 +238,14 @@ function showMessage(message: string, duration = 1800) {
   const m = $("#arena-message");
   m.textContent = message;
   m.classList.remove("hidden");
-  setTimeout(() => m.classList.add("hidden"), duration);
+  arenaMessage = { start: arena.effectTime, duration: duration / 1000 };
 }
 function modal(title: string, body: string, key = "generic", wide = false) {
   if (!modalKey && screen !== "lobby" && !paused && !battle.winner) {
     paused = true;
     modalPausedBattle = true;
     audio.stopMusic();
+    audio.stopEffects();
   }
   modalKey = key;
   $("#modal-root").innerHTML =
@@ -342,6 +349,9 @@ function lobby() {
   replayRecord = null;
   accumulator = 0;
   audio.stopMusic();
+  audio.stopEffects();
+  announcements.reset();
+  arenaMessage = null;
   document.body.classList.remove("in-battle", "in-replay");
   arena.showPlacement(null, null);
   closeModal();
@@ -366,12 +376,14 @@ function startBattle() {
   screen = "battle";
   paused = false;
   speed = 1;
+  audio.setRate(1);
+  audio.stopEffects();
+  announcements.reset();
   selected = -1;
   accumulator = 0;
   resultShown = false;
   replayData = null;
   eventCursor = 0;
-  lastPhase = "normal";
   document.body.classList.add("in-battle");
   window.scrollTo(0, 0);
   document.body.classList.remove("in-replay");
@@ -394,7 +406,7 @@ function startBattle() {
   $(".replay-controls").classList.add("hidden");
   refreshDeck();
   updateBattleUI(true);
-  audio.play("button_click_02");
+  announcements.cue("match start");
   audio.startMusic();
   showMessage("FIGHT!", 1500);
   if (!profile.seenTutorial) {
@@ -405,10 +417,10 @@ function startBattle() {
 let lastHand = "";
 function updateBattleUI(force = false) {
   refreshPlacement();
-  $("#match-clock").textContent = clock(Math.ceil(battle.remaining));
-  $("#phase-label").textContent =
-    battle.time >= 180 ? "SUDDEN DEATH" : "TIME LEFT";
-  $(".match-timer").classList.toggle("urgent", battle.remaining <= 30);
+  const timer = battleClock(battle);
+  $("#match-clock").textContent = clock(Math.ceil(timer.remaining));
+  $("#phase-label").textContent = timer.overtime ? "SUDDEN DEATH" : "TIME LEFT";
+  $(".match-timer").classList.toggle("urgent", timer.remaining <= 30);
   $("#blue-crowns").textContent = String(battle.players.blue.crowns);
   $("#red-crowns").textContent = String(battle.players.red.crowns);
   const p = battle.players.blue,
@@ -462,8 +474,13 @@ function updateBattleUI(force = false) {
   if (screen === "battle" && battle.winner && !resultShown) showResult();
   if (screen === "replay" && replayData && battle.tick >= replayData.duration) {
     paused = true;
-    if (replayRecord && !battle.winner)
+    if (replayRecord && !battle.winner) {
       battle.finish(replayRecord.winner, "Replay complete");
+      if (!force) {
+        audio.stopEffects();
+        announcements.cue("Gameend Horn");
+      }
+    }
   }
   if (screen === "replay") syncReplayControl();
 }
@@ -526,7 +543,10 @@ function deploy(point: Point) {
 function togglePause() {
   if (screen === "lobby" || battle.winner) return;
   paused = !paused;
-  if (paused) cancelPointer();
+  if (paused) {
+    cancelPointer();
+    audio.stopEffects();
+  }
   accumulator = 0;
   if (screen === "battle") {
     $(".pause-cover").classList.toggle("hidden", !paused);
@@ -561,10 +581,11 @@ function showResult() {
   const completedBattle = battle;
   resultShown = true;
   audio.stopMusic();
+  audio.stopEffects();
+  announcements.cue("Gameend Horn");
   const reward = recordBattle(profile, battle),
     win = battle.winner === "blue",
     draw = battle.winner === "draw";
-  audio.play(win ? "win_tour_01" : "lose_tour_01", 0.45);
   refreshProfile();
   arena.showPlacement(null, null);
   $("#deploy-hint").classList.add("hidden");
@@ -573,6 +594,7 @@ function showResult() {
     time: arena.effectTime + 1.4,
     show: () => {
       if (screen !== "battle" || battle !== completedBattle) return;
+      audio.play(win ? "win_tour_01" : "lose_tour_01", 0.45);
       modal(
         draw
           ? "A worthy battle."
@@ -596,6 +618,9 @@ function playReplay(record: RecordEntry) {
   resultShown = true;
   paused = false;
   speed = 1;
+  audio.setRate(1);
+  audio.stopEffects();
+  announcements.reset();
   selected = -1;
   accumulator = 0;
   eventCursor = 0;
@@ -620,6 +645,7 @@ function playReplay(record: RecordEntry) {
   refreshDeck();
   updateBattleUI(true);
   showMessage("REPLAY", 1000);
+  announcements.cue("match start");
   refreshIcons();
 }
 function showModes() {
@@ -871,17 +897,10 @@ function processEvents() {
     }
     if (ev.type === "crown") {
       audio.play("1st_crown_01", 0.35);
-      showMessage(`${ev.team === "blue" ? "YOU" : "OPPONENT"} TOOK A TOWER`);
     }
-    if (ev.type === "phase" && battle.phase !== lastPhase) {
-      lastPhase = battle.phase;
-      showMessage(
-        battle.phase === "overtime"
-          ? "SUDDEN DEATH"
-          : battle.phase === "triple"
-            ? "3× ELIXIR!"
-            : "2× ELIXIR!",
-      );
+    if (ev.type === "finish" && screen === "replay") {
+      audio.stopEffects();
+      announcements.cue("Gameend Horn");
     }
   }
 }
@@ -1038,11 +1057,15 @@ $("#replay-play").onclick = () => {
 };
 $("#replay-speed").onclick = () => {
   speed = speed === 1 ? 2 : speed === 2 ? 4 : 1;
+  audio.setRate(speed);
   $("#replay-speed").textContent = `${speed}×`;
 };
 $("#replay-exit").onclick = lobby;
 $("#replay-seek").addEventListener("input", () => {
   if (!replayData) return;
+  announcements.reset();
+  arenaMessage = null;
+  audio.stopEffects();
   const target = Math.floor(
     (Number(($("#replay-seek") as HTMLInputElement).value) / 100) *
       replayData.duration,
@@ -1120,6 +1143,7 @@ function suspendFrameLoop() {
   cancelPointer();
   if (screen !== "lobby" && !paused && !battle.winner) togglePause();
   audio.stopMusic();
+  audio.stopEffects();
   if (frameHandle !== undefined) cancelAnimationFrame(frameHandle);
   frameHandle = undefined;
   accumulator = 0;
@@ -1192,6 +1216,23 @@ function frame(now: number) {
     updateBattleUI();
     lastUi = now;
   }
+  announcements.update(battle, screen !== "lobby");
+  if (arenaMessage) {
+    const age = arena.effectTime - arenaMessage.start;
+    if (age >= arenaMessage.duration || battle.winner || screen === "lobby")
+      arenaMessage = null;
+    else {
+      $("#arena-message").style.opacity = String(
+        Math.min(1, (arenaMessage.duration - age) / 0.2),
+      );
+      $("#arena-message").style.transform =
+        `translate(-50%, -50%) rotate(-3deg) scale(${1 + Math.max(0, 1 - age / 0.25) * 0.4})`;
+    }
+  }
+  $("#arena-message").classList.toggle(
+    "hidden",
+    !arenaMessage || !!announcements.state,
+  );
   if (pendingResult) {
     if (pendingResult.battle !== battle || screen !== "battle")
       pendingResult = null;
@@ -1225,6 +1266,8 @@ Object.defineProperty(window, "__arena", {
         frameLoopRunning: frameHandle !== undefined,
         drawCalls: arena.renderer.info.render.calls,
         loadedEffects: arena.loadedEffects,
+        loadedAnnouncements: announcements.loaded,
+        announcement: announcements.state,
         loadedBuildings: arena.loadedBuildings,
         destruction: arena.destructionState,
         placement: arena.placementState,

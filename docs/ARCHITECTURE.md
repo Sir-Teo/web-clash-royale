@@ -58,6 +58,10 @@ Analytic trajectories make motion independent of render frame rate; exponential 
 
 `src/game/profile.ts` validates versioned localStorage data and recovers from corrupt or unavailable storage. It retains three decks, results for ten matches, trophy/gold counters, audio preferences and four chest slots. Card levels are normalized to level 11; progression does not alter battle stats.
 
+`src/ui/announcements.ts` selects native announcement frames directly from simulation time. A cached signature avoids DOM changes while paused; seeking resets the previous clock and restores the correct frame without replaying skipped cues. SVG text uses the archived Supercell Magic font and retained source transforms/colors; the elixir icon uses the cropped native texture. Responsive bounds keep the overlay inside the arena in portrait and landscape. A regulation winner at exactly 180 seconds leaves the clock at zero and suppresses overtime; tied battles enter the two-minute overtime sequence. Existing replay rules remain unchanged.
+
+Countdown voices are emitted once when a displayed second crosses 10 through 1. The overtime jingle follows the 180-second boundary; discontinuities larger than half a second are silent. The simulation already caps each rendered update at 15 fixed steps. `GameAudio` tracks active sound instances, removes ended/rejected playback, updates playback rates with replay speed, and stops effects on pause, mute, backgrounding or navigation. Match start/end horns use source sound mappings. Generic opening/replay messages now use the render effect clock instead of untracked wall-clock timeouts; result music begins with the result panel after the final crown animation.
+
 ## Current boundaries
 
 - AI battles only; online multiplayer and account synchronization are not implemented.

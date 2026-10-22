@@ -48,6 +48,10 @@ const characters = [
   "balloon",
 ];
 const sounds = [
+  ...Array.from({ length: 10 }, (_, i) => `${i + 1}_cd_02`),
+  "extratime_jingle_02",
+  "big_horn_start_02_v2",
+  "big_horn_end_02_v2",
   "button_click_02",
   "knight_deploy_31111",
   "giant_deploy_01",

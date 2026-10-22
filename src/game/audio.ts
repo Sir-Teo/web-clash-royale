@@ -4,6 +4,8 @@ export class GameAudio {
   private music: HTMLAudioElement | null = null;
   private sounds = new Map<string, HTMLAudioElement>();
   private last = new Map<string, number>();
+  private active = new Set<HTMLAudioElement>();
+  private rate = 1;
   play(name: string, volume = 0.45) {
     if (!this.enabled) return;
     const now = performance.now();
@@ -17,7 +19,10 @@ export class GameAudio {
       }
       const a = base.cloneNode() as HTMLAudioElement;
       a.volume = volume;
-      void a.play().catch(() => {});
+      a.playbackRate = this.rate;
+      this.active.add(a);
+      a.addEventListener("ended", () => this.active.delete(a), { once: true });
+      void a.play().catch(() => this.active.delete(a));
     } catch {
       /* Audio is optional. */
     }
@@ -34,8 +39,19 @@ export class GameAudio {
   stopMusic() {
     this.music?.pause();
   }
+  stopEffects() {
+    for (const sound of this.active) sound.pause();
+    this.active.clear();
+  }
+  setRate(rate: number) {
+    this.rate = Math.max(0.25, Math.min(4, rate));
+    for (const sound of this.active) sound.playbackRate = this.rate;
+  }
   setEnabled(enabled: boolean) {
     this.enabled = enabled;
-    if (!enabled) this.stopMusic();
+    if (!enabled) {
+      this.stopMusic();
+      this.stopEffects();
+    }
   }
 }

@@ -1,0 +1,2 @@
+# Preserve retained upstream bytes for source hash verification on every OS.
+reference/** -text whitespace=cr-at-eol
