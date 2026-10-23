@@ -70,6 +70,8 @@ function setup() {
     scenario !== "attack-impacts";
   (document.querySelector("#spawn") as HTMLElement).hidden =
     scenario !== "deployment";
+  (document.querySelector("#freeze-cast") as HTMLElement).hidden =
+    scenario !== "freeze";
   for (const id of [
     "wake",
     "princess",
@@ -134,6 +136,12 @@ function setup() {
   } else if (scenario === "deployment") {
     // Spawn through the normal engine after setBattle, so lifecycle events
     // are fresh rather than treated as history by the renderer.
+  } else if (scenario === "freeze") {
+    for (const [team, y] of [
+      ["red", 12],
+      ["blue", 20],
+    ] as [Team, number][])
+      for (const entity of unit("knight", team, 9, y)) entity.active = false;
   } else if (scenario === "ranged") {
     for (const [id, x, y] of [
       ["archers", 3, 23],
@@ -209,6 +217,10 @@ document.querySelector("#spawn")!.addEventListener("click", () => {
   cast(card, "blue", 9, 22);
   cast(card, "red", 9, 10);
   for (const e of battle.entities) if (e.kind !== "tower") e.active = false;
+});
+document.querySelector("#freeze-cast")!.addEventListener("click", () => {
+  cast("freeze", "blue", 9, 12);
+  cast("freeze", "red", 9, 20);
 });
 document.querySelector("#reset")!.addEventListener("click", setup);
 document.querySelector("#wake")!.addEventListener("click", () => {
@@ -313,6 +325,8 @@ function render(now: number) {
     JSON.stringify(arena.chargeFilterState);
   (document.querySelector("#destruction") as HTMLElement).dataset.deployFilter =
     JSON.stringify(arena.deployFilterState);
+  (document.querySelector("#destruction") as HTMLElement).dataset.freezeAreas =
+    JSON.stringify(arena.freezeAreaState);
   (document.querySelector("#destruction") as HTMLElement).dataset.hogJump =
     JSON.stringify(
       battle.entities

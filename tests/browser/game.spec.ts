@@ -139,7 +139,7 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
       { timeout: 30000 },
     )
     .toEqual([4, 4]);
-  await page.getByRole("button", { name: "Cards 24", exact: true }).click();
+  await page.getByRole("button", { name: "Cards 25", exact: true }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.locator('[data-edit-slot="0"]').click();
   await page.locator('[data-collection="valkyrie"]').click();
@@ -243,7 +243,7 @@ test("settings and card search are usable without page overflow", async ({
   await page
     .getByRole("button", { name: "Save settings", exact: true })
     .click();
-  await page.getByRole("button", { name: "Cards 24", exact: true }).click();
+  await page.getByRole("button", { name: "Cards 25", exact: true }).click();
   await page.getByLabel("Search cards", { exact: true }).fill("dragon");
   await expect(page.locator("[data-collection]")).toHaveCount(1);
   await expect(page.locator("[data-collection]")).toHaveAttribute(

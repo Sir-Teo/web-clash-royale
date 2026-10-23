@@ -298,7 +298,7 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
         timeout: 30000,
       })
       .toBe(4);
-    await expect.poll(async () => (await state(red)).loadedCards).toBe(24);
+    await expect.poll(async () => (await state(red)).loadedCards).toBe(25);
     await expect.poll(async () => (await state(red)).loadedHud).toBe(6);
     expect((await state(red)).intro.active).toBe(false);
     const heading = await red.locator(".arena-heading").boundingBox();
