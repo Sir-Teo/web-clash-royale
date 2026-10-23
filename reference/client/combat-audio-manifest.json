@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "4610d4763084605d2d55746df44ef8b1ce4a966f56f44c22bfa7987ad36b8e5b"
+      "sha256": "e8b2014d675ec2c32ffb35636990d93a8612e642d9e3cf443332d08ac08679af"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "a753affbf3817da4683be9b4de1ecb6951f7c642330f5a8658f7239f56922778"
+      "sha256": "31f59bdf54748364cf4d50f854982bbfdb5e1457458a19d2b3ab56f853180683"
     }
   ],
   "ignoredEnemyVersions": [
@@ -448,6 +448,12 @@
       "sha256": "4f4b1d5bb8967982b36db601ce87e5523dee93414124919a00c33e0376c2007e"
     },
     {
+      "path": "public/assets/audio/deploy_ice_golem_01.ogg",
+      "source": "sfx/deploy_ice_golem_01.ogg",
+      "bytes": 12824,
+      "sha256": "677c704d3e6038eb1f87f57b728efd60c308df62f8bebcacfb7a1217ddc2fdab"
+    },
+    {
       "path": "public/assets/audio/deploy_lava_hound_02.ogg",
       "source": "sfx/deploy_lava_hound_02.ogg",
       "bytes": 9911,
@@ -710,6 +716,12 @@
       "source": "sfx/horse_blow_01.ogg",
       "bytes": 7263,
       "sha256": "3544538274674aa2853e75009bb91448c6bbde9c198b1735eb7168cb7707e147"
+    },
+    {
+      "path": "public/assets/audio/ice_golem_atk_01.ogg",
+      "source": "sfx/ice_golem_atk_01.ogg",
+      "bytes": 10381,
+      "sha256": "6b4aa994da9b634eef5a651a158ffdc1b65f7e012427dabee3d1f36ea993e4a1"
     },
     {
       "path": "public/assets/audio/ice_mage_impact_02.ogg",
@@ -1554,6 +1566,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "439233a1844d2674e1d2254b4c698fbaccee552ed2c7bba92da48fc6a1185d3e"
+    "sha256": "48a433d61cad53a660b44e86f6b53f542f02ad75f3a78f5be161baf8b5bc5a2a"
   }
 }

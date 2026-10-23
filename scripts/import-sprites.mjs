@@ -19,6 +19,7 @@ const sources = {
   "ice-wizard": "ice_wizard",
   "ice-spirit": "ice_spirits",
   "fire-spirits": "fire_firespirit",
+  "ice-golem": "snowman",
   princess: "princess",
   "inferno-dragon": "baby_dragon",
   "electro-wizard": "electro_wizard",

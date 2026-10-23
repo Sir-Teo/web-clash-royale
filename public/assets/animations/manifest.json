@@ -157,6 +157,23 @@
       "uniqueFrames": 423
     },
     {
+      "id": "ice-golem",
+      "source": "chr_snowman",
+      "metadataSha256": "3d168f2c36e1ecf99c1b9ec6dd3fdff048033f6d1f07f0fd1f0b8a7e22eef3ff",
+      "dataSha256": "faf53b9b389e41f6613ac7f012811a45a698af54326cc39d4b4ca588c694fe56",
+      "textures": [
+        {
+          "file": "ice-golem-0.webp",
+          "sha256": "0c26e5b7729da54608ee0ab4f8ba78ab8e495fdd0ae482032995e3c9fae6c2e2",
+          "originalSha256": "f620b048e9c915020f135b7cbef6aa86e51ec3c8d2675bd1d074fcb0d078012b"
+        }
+      ],
+      "shapes": 342,
+      "clips": 54,
+      "frames": 1872,
+      "uniqueFrames": 1378
+    },
+    {
       "id": "princess",
       "source": "chr_princess",
       "metadataSha256": "4efbc493b84ef3638642a2cacf21d63bfcb1a77927afae5719c56d64e3307db9",

@@ -1234,6 +1234,69 @@
         }
       ]
     },
+    "ice-golem": {
+      "source": "snowman_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "princess": {
       "source": "princess_die",
       "components": [
@@ -5338,6 +5401,90 @@
         }
       ]
     },
+    "ice-golem-slow": {
+      "source": "IceGolem_slow_loop",
+      "components": [
+        {
+          "emitter": "IceGolem_slow_snow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "IceGolem_slow_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "IceGolem_slow_puff_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "IceGolem_slow_snow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "IceGolem_slow_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "IceGolem_slow_puff_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ]
+    },
+    "ice-golem-ground": {
+      "source": "IceGolem_slow_ground",
+      "components": [
+        {
+          "emitter": "IceGolem_snowPile1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "IceGolem_ground_area",
+          "delay": 0,
+          "scale": 0.68,
+          "layer": "Base",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "IceGolem_snowPile1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "IceGolem_ground_area_red",
+          "delay": 0,
+          "scale": 0.68,
+          "layer": "Ground",
+          "ground": true
+        }
+      ]
+    },
     "hit:giant": {
       "source": "giant_hit",
       "components": [
@@ -7916,6 +8063,69 @@
       "source": "firespirit_deploy",
       "components": [],
       "enemyComponents": []
+    },
+    "ice-golem": {
+      "source": "snowman_deploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
     },
     "princess": {
       "source": "princess_deploy",
@@ -16242,6 +16452,290 @@
       "loop": true,
       "clips": [
         "Death_blue_smoke"
+      ]
+    },
+    "IceGolem_slow_snow": {
+      "count": 7,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        1,
+        1.5
+      ],
+      "angle": [
+        3.141592653589793,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.26666666666666666,
+        0.3333333333333333
+      ],
+      "speed": [
+        0.5,
+        1.6666666666666667
+      ],
+      "height": 1.6,
+      "verticalSpeed": [
+        2.6666666666666665,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -6.666666666666667,
+      "startScale": 0.35,
+      "endScale": 0.25,
+      "fadeIn": 0.5,
+      "fadeOut": 0.5,
+      "inertia": 0.3333333333333333,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "snowflake_anim"
+      ]
+    },
+    "IceGolem_slow_puff": {
+      "count": 50,
+      "emissionLife": [
+        0,
+        0
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.7,
+        0.9
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        3,
+        3.3333333333333335
+      ],
+      "height": 0.9333333333333333,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.7,
+      "endScale": 1,
+      "fadeIn": 0.2,
+      "fadeOut": 0.2,
+      "inertia": 4.166666666666667,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "d3"
+      ]
+    },
+    "IceGolem_slow_puff_shadow": {
+      "count": 48,
+      "emissionLife": [
+        0,
+        0
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.8,
+        0.9
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        3,
+        3.3333333333333335
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.7,
+      "endScale": 1,
+      "fadeIn": 0.8,
+      "fadeOut": 0.8,
+      "inertia": 4,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "d3"
+      ]
+    },
+    "IceGolem_snowPile1": {
+      "count": 6,
+      "emissionLife": [
+        0,
+        0
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        1,
+        1.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0.3
+      ],
+      "speed": [
+        0.3333333333333333,
+        3
+      ],
+      "height": 0.3333333333333333,
+      "verticalSpeed": [
+        0,
+        10
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -56.666666666666664,
+      "startScale": 0.8,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 0.45,
+      "inertia": 3.3333333333333335,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "snowPile1",
+        "snowPile2",
+        "snowPile3"
+      ]
+    },
+    "IceGolem_ground_area": {
+      "count": 1,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0.001
+      ],
+      "life": [
+        1,
+        1
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 1,
+      "fadeOut": 0.4,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "freeze_effect_ground"
+      ]
+    },
+    "IceGolem_ground_area_red": {
+      "count": 1,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0.001
+      ],
+      "life": [
+        1,
+        1
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 1,
+      "fadeOut": 0.4,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "freeze_effect_ground_red"
       ]
     },
     "giant_hit_sparks": {

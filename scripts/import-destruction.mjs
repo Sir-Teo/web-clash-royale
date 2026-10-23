@@ -447,6 +447,19 @@ impacts["clone-appear"] = {
   components: composition("hologram_loop", "blue"),
   enemyComponents: composition("hologram_loop", "red"),
 };
+const iceGolemArea = tables.area_effect_objects.FreezeIceGolemite;
+if (iceGolemArea?.OneShotEffect !== "IceGolem_slow_loop" ||
+    iceGolemArea.ScaledEffect !== "IceGolem_slow_ground")
+  throw new Error("Recheck native Ice Golem death area effects");
+for (const [id, source] of [
+  ["ice-golem-slow", iceGolemArea.OneShotEffect],
+  ["ice-golem-ground", iceGolemArea.ScaledEffect],
+])
+  impacts[id] = {
+    source,
+    components: composition(source, "blue"),
+    enemyComponents: composition(source, "red"),
+  };
 // These DamageEffect compositions contain authored impact layers at the
 // attack target: Giant's punch dust, Balloon's crater and Tesla's beam sparks.
 for (const [id, expected] of Object.entries({

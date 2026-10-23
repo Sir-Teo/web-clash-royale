@@ -1,0 +1,43 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_snowman",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/area_effect_objects.csv",
+      "sha256": "f060f967d137942bd8d2e61edb1a96c4455bf833f7cab7187be3e391d352ec65"
+    },
+    {
+      "path": "reference/logic/character_buffs.csv",
+      "sha256": "fbcc636e6c8025ca0f36aab524b868806b2a6a8606186b622410a5f46fba9bbe"
+    },
+    {
+      "path": "reference/sc/chr_snowman.bin",
+      "sha256": "3d168f2c36e1ecf99c1b9ec6dd3fdff048033f6d1f07f0fd1f0b8a7e22eef3ff"
+    },
+    {
+      "path": "reference/sc/chr_snowman_tex.png",
+      "sha256": "f620b048e9c915020f135b7cbef6aa86e51ec3c8d2675bd1d074fcb0d078012b"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    },
+    {
+      "path": "reference/sc/effects.bin",
+      "sha256": "1a9b0a2efe99578cd03fb9d8673ddb042aa067ba9f9fc0d3a253e15c2e9c7b7c"
+    }
+  ],
+  "output": {
+    "path": "src/game/ice-golem-data.json",
+    "sha256": "e9fc9fac86161ea0b4542fa1fb5c4fb451c0b202c40654a4813ac8fb10fadf57"
+  }
+}

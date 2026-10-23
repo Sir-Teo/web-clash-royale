@@ -71,6 +71,7 @@ const names = {
   "ice-wizard": "IceWizard",
   "ice-spirit": "IceSpirits",
   "fire-spirits": "FireSpirits",
+  "ice-golem": "IceGolemite",
   princess: "Princess",
   "inferno-dragon": "InfernoDragon",
   "electro-wizard": "ElectroWizard",

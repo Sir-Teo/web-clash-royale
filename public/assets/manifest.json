@@ -501,6 +501,12 @@
       "sha256": "b34fb968d5843729c24cca9b65271345092a2e2ddde5647381d7186446a9b928"
     },
     {
+      "path": "cards/ice-golem.png",
+      "source": "cards/ice-golem.png",
+      "bytes": 121660,
+      "sha256": "e2baf07b238430895c67e5f6b433430a9ac4b5e254c81401b12503180cf0d372"
+    },
+    {
       "path": "cards/ice-spirit.png",
       "source": "cards/ice-spirit.png",
       "bytes": 135591,

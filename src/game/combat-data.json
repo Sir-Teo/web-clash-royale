@@ -156,6 +156,13 @@
       "gravity": 400
     }
   },
+  "ice-golem": {
+    "source": "IceGolemite",
+    "windup": 1,
+    "sight": 7,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
   "princess": {
     "source": "Princess",
     "windup": 0.5,
