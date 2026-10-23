@@ -55,6 +55,23 @@
       "uniqueFrames": 1244
     },
     {
+      "id": "mega-minion",
+      "source": "chr_mega_minion",
+      "metadataSha256": "5d62b1b6ffc07f197ab3f86eb982570c7fd27ed1d34d6f23c3869d484ee46c4d",
+      "dataSha256": "9ffe215d76c29d5f943c5e4fcc31fc4136a9d5589dad47d3062403fbc0aa003f",
+      "textures": [
+        {
+          "file": "mega-minion-0.webp",
+          "sha256": "2f1264a73abf0e68b9eaba5faaba268f8f292de06f2feada99889d4d182b70bb",
+          "originalSha256": "48b4d8bb8a2aa3d938a88fba77f7e8b240f221377bd6e2aebcc23a6eec1afc18"
+        }
+      ],
+      "shapes": 252,
+      "clips": 54,
+      "frames": 1620,
+      "uniqueFrames": 361
+    },
+    {
       "id": "archers",
       "source": "chr_archer",
       "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",

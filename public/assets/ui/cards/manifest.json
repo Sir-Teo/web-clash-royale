@@ -332,9 +332,14 @@
       "sha256": "433cd4762b6de4533c1f44dafca45c14387c14da80e758ab2d3690dcce75cac9"
     },
     {
+      "file": "portrait-mega-minion.webp",
+      "bytes": 36030,
+      "sha256": "f45adf72a81f5bce4235458725ce545b75e97d07cb64d9d9fa4f9a5473862395"
+    },
+    {
       "file": "cards.json",
-      "bytes": 96266,
-      "sha256": "7dad2c550c8c80c7fa5a36548bedcba125180076bb2c332d07820a37d90ec808"
+      "bytes": 96588,
+      "sha256": "a9fca137011651d3d9a7d9180431aaaac9864d2b41dce4f1d159f3efbd12d5fa"
     }
   ]
 }

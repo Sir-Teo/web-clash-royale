@@ -842,6 +842,111 @@
         }
       ]
     },
+    "mega-minion": {
+      "source": "royal_minion_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        },
+        {
+          "emitter": "mega_minion_die_helmet",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "mega_minion_helmet_smokePuff",
+          "delay": 0.67,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Mega_Minion_helmet_rockEmitter",
+          "delay": 0.67,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        },
+        {
+          "emitter": "mega_minion_die_helmet",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "mega_minion_helmet_smokePuff",
+          "delay": 0.67,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Mega_Minion_helmet_rockEmitter",
+          "delay": 0.67,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -3413,6 +3518,41 @@
         }
       ]
     },
+    "hit:mega-minion": {
+      "source": "mega_minion_hit",
+      "components": [
+        {
+          "emitter": "mega_minion_hit_sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Mega_minion_hit_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "mega_minion_hit_sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Mega_minion_hit_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
     "freeze": {
       "source": "Spell_freeze_ground",
       "components": [
@@ -4379,6 +4519,11 @@
           "ground": true
         }
       ]
+    },
+    "mega-minion": {
+      "source": "royal_minion_deploy",
+      "components": [],
+      "enemyComponents": []
     },
     "spear-goblins": {
       "source": "spear_goblin_deploy",
@@ -5543,6 +5688,153 @@
         "death_ground_elixir1",
         "death_ground_elixir2",
         "death_ground_elixir3"
+      ]
+    },
+    "mega_minion_die_helmet": {
+      "count": 1,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0.001
+      ],
+      "life": [
+        5,
+        5
+      ],
+      "angle": [
+        -3.141592653589793,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.06666666666666667
+      ],
+      "speed": [
+        0.3333333333333333,
+        0.4
+      ],
+      "height": 3.3333333333333335,
+      "verticalSpeed": [
+        23.333333333333332,
+        26.666666666666668
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -76.66666666666667,
+      "startScale": 1.1,
+      "endScale": 1.1,
+      "fadeIn": 0,
+      "fadeOut": 0.4,
+      "inertia": 0,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "mega_minion_helmet",
+        "mega_minion_helmet1",
+        "mega_minion_helmet",
+        "mega_minion_helmet1",
+        "mega_minion_helmet2"
+      ]
+    },
+    "mega_minion_helmet_smokePuff": {
+      "count": 7,
+      "emissionLife": [
+        0.002,
+        0.002
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.3,
+        0.7
+      ],
+      "angle": [
+        0.17453292519943295,
+        0.8726646259971648
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        1,
+        1.3333333333333333
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        6.666666666666667,
+        8.333333333333334
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -33.333333333333336,
+      "startScale": 1,
+      "endScale": 1.25,
+      "fadeIn": 0,
+      "fadeOut": 0.25,
+      "inertia": 0.3333333333333333,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "SteamSmall"
+      ]
+    },
+    "Mega_Minion_helmet_rockEmitter": {
+      "count": 10,
+      "emissionLife": [
+        0.2,
+        0.4
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        0.4,
+        0.8
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        1,
+        2.5
+      ],
+      "height": 1.1666666666666667,
+      "verticalSpeed": [
+        1.6666666666666667,
+        4
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -33.333333333333336,
+      "startScale": 0.8,
+      "endScale": 0.1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 1.6666666666666667,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Rock1Particle",
+        "Rock2Particle",
+        "Rock3Particle"
       ]
     },
     "Death_elixir_burst1_small": {
@@ -10095,6 +10387,100 @@
       "loop": true,
       "clips": [
         "explosion_cloud_1"
+      ]
+    },
+    "mega_minion_hit_sparks": {
+      "count": 10,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0,
+        0.01
+      ],
+      "life": [
+        0.1,
+        0.1
+      ],
+      "angle": [
+        0.017453292519943295,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        10,
+        11.666666666666666
+      ],
+      "height": 1.6666666666666667,
+      "verticalSpeed": [
+        2,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        500,
+        500
+      ],
+      "gravity": 0,
+      "startScale": 0.8,
+      "endScale": 1.2,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Sparkle"
+      ]
+    },
+    "Mega_minion_hit_puff": {
+      "count": 10,
+      "emissionLife": [
+        0.2,
+        0.2
+      ],
+      "interval": [
+        0.001,
+        0.001
+      ],
+      "life": [
+        0.3,
+        0.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0.03333333333333333
+      ],
+      "speed": [
+        2.5,
+        3.3333333333333335
+      ],
+      "height": 2.066666666666667,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.3,
+      "endScale": 0.1,
+      "fadeIn": 0.4,
+      "fadeOut": 0.5,
+      "inertia": 2,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Smoke_puff_01"
       ]
     },
     "knight_deploy_rocks_hitGround": {

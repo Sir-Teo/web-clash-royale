@@ -1232,6 +1232,133 @@
         "row": "RoyalGiant"
       }
     },
+    "mega-minion": {
+      "source": "MegaMinion",
+      "attack": {
+        "sources": [
+          "royal_minion_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_royal_minion_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_royal_minion_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [
+          "royal_minion_attack"
+        ],
+        "components": [
+          {
+            "sound": "sound_royal_minion_attack",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_royal_minion_attack",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "mega_minion_hit"
+        ],
+        "components": [
+          {
+            "sound": "Arrow hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "Arrow hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "royal_minion_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_royal_minion_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_royal_minion_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "MegaMinion"
+      }
+    },
     "spear-goblins": {
       "source": "SpearGoblin",
       "attack": {
@@ -5965,6 +6092,75 @@
         "repeat": 0,
         "loop": false,
         "priority": 0,
+        "padding": 0
+      }
+    ],
+    "sound_royal_minion_attack_start": [
+      {
+        "sourceFile": "sfx/royal_min_atk_01.wav",
+        "file": "royal_min_atk_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_royal_minion_attack": [
+      {
+        "sourceFile": "",
+        "file": null,
+        "volume": [
+          0,
+          0
+        ],
+        "pitch": [
+          0,
+          0
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 0,
+        "repeat": 0,
+        "loop": false,
+        "priority": 0,
+        "padding": 0
+      }
+    ],
+    "sound_royal_minion_deploy": [
+      {
+        "sourceFile": "sfx/royal_min_dep_01.wav",
+        "file": "royal_min_dep_01",
+        "volume": [
+          0.6,
+          0.7
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
         "padding": 0
       }
     ],

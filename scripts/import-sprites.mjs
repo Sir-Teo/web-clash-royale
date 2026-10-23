@@ -13,6 +13,7 @@ const sources = {
   knight: "knight",
   barbarians: "barbarian",
   "royal-giant": "royal_giant",
+  "mega-minion": "mega_minion",
   archers: "archer",
   giant: "giant",
   musketeer: "musketeer",
@@ -152,7 +153,7 @@ for (const [id, source] of Object.entries(sources)) {
   for (let i = 0; i < data.textures.length; i++) {
     const original = await download(
       base,
-      id === "tower-princess" || id === "royal-giant"
+      id === "tower-princess" || id === "royal-giant" || id === "mega-minion"
         ? `${name}_highres_tex.png`
         : `${name}_tex${"_".repeat(i)}.png`,
     );

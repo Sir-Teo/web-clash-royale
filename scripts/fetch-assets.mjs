@@ -43,6 +43,7 @@ const cards = [
   "goblin-gang",
   "barbarians",
   "royal-giant",
+  "mega-minion",
 ];
 const characters = [
   "knight",

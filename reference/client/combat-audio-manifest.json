@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "e1c79abb2244236b77d9c9754ee7af6f26071cd510fa64b69db61a05abdb6f1a"
+      "sha256": "71d5d60dc5a53866119036a9334cb233fcbf62a3b6b53feffaf0aa411ade0c4d"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "7dad2c550c8c80c7fa5a36548bedcba125180076bb2c332d07820a37d90ec808"
+      "sha256": "a9fca137011651d3d9a7d9180431aaaac9864d2b41dce4f1d159f3efbd12d5fa"
     }
   ],
   "ignoredEnemyVersions": [
@@ -634,6 +634,18 @@
       "sha256": "3ab88a9e77ab1ed6af54b0d26e764d8e543db9d791501b5cc0c4105e5626df3e"
     },
     {
+      "path": "public/assets/audio/royal_min_atk_01.ogg",
+      "source": "sfx/royal_min_atk_01.ogg",
+      "bytes": 7239,
+      "sha256": "afca9e1a8edf305783d7b959681283e46aa2003576b49a6b9c92135dff22fc81"
+    },
+    {
+      "path": "public/assets/audio/royal_min_dep_01.ogg",
+      "source": "sfx/royal_min_dep_01.ogg",
+      "bytes": 7599,
+      "sha256": "840eb480846a094c2b5edfa9f2760dc977dc0df63a88d7f590b4c166fc1a73c0"
+    },
+    {
       "path": "public/assets/audio/royale_tornado_01.ogg",
       "source": "sfx/royale_tornado_01.ogg",
       "bytes": 18757,
@@ -912,6 +924,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "8ea37a129e7830305c36adea6f7c2f4db89659df810ef708830053fb40a28157"
+    "sha256": "bdbb5d1f2fd3ed8a10989bdf2611d110ff9ccbe62498f7327a3d4ef85779f985"
   }
 }

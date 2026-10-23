@@ -89,6 +89,18 @@
       "gravity": 0
     }
   },
+  "mega-minion": {
+    "source": "MegaMinion",
+    "windup": 0.4,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "MegaMinionSpit",
+      "speed": 16.666666666666668,
+      "homing": true,
+      "gravity": 0
+    }
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

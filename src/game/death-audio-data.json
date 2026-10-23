@@ -250,6 +250,29 @@
         }
       ]
     },
+    "mega-minion": {
+      "source": "royal_minion_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_royal_minion_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_royal_minion_die",
+          "delay": 0
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -881,6 +904,29 @@
       ],
       "maximum": 0,
       "priority": 0,
+      "padding": 0
+    },
+    "sound_royal_minion_die": {
+      "sourceFiles": [
+        "sfx/npc_die_02.wav"
+      ],
+      "files": [
+        "npc_die_02"
+      ],
+      "volume": [
+        0.01,
+        0.01
+      ],
+      "pitch": [
+        0.97,
+        1.03
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 5,
+      "priority": 1,
       "padding": 0
     },
     "sound_spear_goblin_die": {

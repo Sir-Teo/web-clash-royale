@@ -435,6 +435,12 @@
       "sha256": "2d9202b67ebd1ae3fd9d0d343b0809c63922f81b3a2afc45d7ef058ae5a1400a"
     },
     {
+      "path": "cards/mega-minion.png",
+      "source": "cards/mega-minion.png",
+      "bytes": 158495,
+      "sha256": "d30ab6393f56450d9801639e0595b6da5ea9cb37924bc42b68344c48eb660430"
+    },
+    {
       "path": "cards/mini-pekka.png",
       "source": "cards/mini-pekka.png",
       "bytes": 145092,
