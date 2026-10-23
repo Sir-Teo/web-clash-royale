@@ -19,7 +19,11 @@ import { SpriteLibrary } from "./sprites";
 import type { AnimatedSprite } from "./sprites";
 import { EffectLibrary } from "./effects";
 import type { EffectSprite } from "./effects";
-import { makeProjectile, rocketFlightPoint, updateProjectile } from "./projectiles";
+import {
+  makeProjectile,
+  rocketFlightPoint,
+  updateProjectile,
+} from "./projectiles";
 import type { ProjectileVisual } from "./projectiles";
 import { DeploymentPreview } from "./deployment";
 import { BuildingLibrary } from "./buildings";
@@ -1145,11 +1149,20 @@ export class Arena {
       }
       if (event.type === "spell" && event.card === "rage") {
         const origin = new T.Vector3(event.x - 9, 0.2, event.y - 16);
-        this.destruction.burst("rage", origin, b.seed ^ event.id, event.team, eventAge);
+        this.destruction.burst(
+          "rage",
+          origin,
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
         for (const [index, offset] of [0, 3].entries())
           this.destruction.burst(
-            "rage-loop", origin, b.seed ^ event.id ^ Math.imul(index, 0x9e3779b9),
-            event.team, eventAge - offset,
+            "rage-loop",
+            origin,
+            b.seed ^ event.id ^ Math.imul(index, 0x9e3779b9),
+            event.team,
+            eventAge - offset,
           );
       }
       if (event.type === "hit") {

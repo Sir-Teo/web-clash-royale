@@ -105,24 +105,24 @@ export function destructionPlan(
   const definition = effect.startsWith("trail:")
     ? definitions.trails[effect.slice(6) as keyof typeof definitions.trails]
     : effect.startsWith("deploy:")
-    ? definitions.deployments[effect.slice(7) as DeploymentCard]
-    : effect.startsWith("launch:")
-      ? definitions.launches[
-          effect.slice(7) as keyof typeof definitions.launches
-        ]
-      : effect.startsWith("move:")
-        ? definitions.movements[
-            effect.slice(5) as keyof typeof definitions.movements
+      ? definitions.deployments[effect.slice(7) as DeploymentCard]
+      : effect.startsWith("launch:")
+        ? definitions.launches[
+            effect.slice(7) as keyof typeof definitions.launches
           ]
-        : effect.startsWith("charge:")
-          ? definitions.charges[
-              effect.slice(7) as keyof typeof definitions.charges
+        : effect.startsWith("move:")
+          ? definitions.movements[
+              effect.slice(5) as keyof typeof definitions.movements
             ]
-          : effect.startsWith("land:")
-            ? definitions.landings[
-                effect.slice(5) as keyof typeof definitions.landings
+          : effect.startsWith("charge:")
+            ? definitions.charges[
+                effect.slice(7) as keyof typeof definitions.charges
               ]
-            : compositions[effect as DeathEffect | ImpactEffect];
+            : effect.startsWith("land:")
+              ? definitions.landings[
+                  effect.slice(5) as keyof typeof definitions.landings
+                ]
+              : compositions[effect as DeathEffect | ImpactEffect];
   const components =
     definition[team === "red" ? "enemyComponents" : "components"];
   return components.flatMap((component) => {

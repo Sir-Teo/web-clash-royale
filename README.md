@@ -22,7 +22,7 @@ Poison costs four elixir and damages enemies across an eight-second, 3.5-tile ar
 
 Rage costs two elixir and boosts friendly troops' movement, attack and summoning speeds by 35% in a five-tile area. Its six-second source area reapplies the buff to troops entering later; the brief remaining buff cannot outlive the area. It uses the original portrait, purple ground rings, sparkles, impact sound, 50-frame troop color filter and 25% higher troop-sound pitch. The same fixed-step rules run in solo play, direct matches and replays.
 
-Rocket costs six elixir and flies at its archived speed before a two-tile explosion damages ground and air troops, knocks surviving troops back and deals 40% damage to Crown Towers. Its original portrait, missile, eight-part impact, sound and screen shake play in solo, direct matches and replays. The 700-point archived damage uses the roster's Fireball level-11 conversion; its trail and projectile orientation are visual approximations.
+Rocket costs six elixir and flies at its archived speed before a two-tile explosion damages ground and air troops, knocks surviving troops back and deals 40% damage to Crown Towers. Its original portrait, missile, smoke/spark/glow trail, eight-part impact, sound and screen shake play in solo, direct matches and replays. The 700-point archived damage uses the roster's Fireball level-11 conversion; the missile's 3D orientation remains a visual approximation.
 
 Musketeer and Cannon shots share the archived cannon impact; Bomber, Baby Dragon and Wizard projectiles use their own native sparks, smoke, flame and debris compositions. These hit effects stay separate from each troop's death effect.
 

@@ -101,6 +101,8 @@ function setup() {
   } else if (scenario === "fireball") {
     cast("fireball", "blue", 4, 13);
     cast("fireball", "red", 14, 19);
+  } else if (scenario === "rocket") {
+    cast("rocket", "blue", 4, 13);
   } else if (scenario === "spell-impacts") {
     cast("zap", "blue", 4, 13);
     cast("arrows", "red", 14, 19);
@@ -169,7 +171,8 @@ function setup() {
     }
   } else if (scenario === "rage") {
     for (const [team, y] of [
-      ["blue", 20], ["red", 12],
+      ["blue", 20],
+      ["red", 12],
     ] as [Team, number][]) {
       for (const entity of unit("knight", team, 9, y)) entity.active = false;
       for (const entity of unit("witch", team, 11, y)) entity.active = false;
@@ -264,7 +267,8 @@ document.querySelector("#rage-cast")!.addEventListener("click", () => {
 });
 document.querySelector("#poison-towers")!.addEventListener("click", () => {
   for (const tower of battle.entities.filter(
-    (entity) => entity.kind === "tower" && !entity.king && entity.lane === "left",
+    (entity) =>
+      entity.kind === "tower" && !entity.king && entity.lane === "left",
   ))
     cast("poison", tower.team === "blue" ? "red" : "blue", tower.x, tower.y);
 });
@@ -372,6 +376,8 @@ function render(now: number) {
   const destruction = arena.destructionState;
   (document.querySelector("#destruction") as HTMLElement).dataset.state =
     JSON.stringify(destruction);
+  (document.querySelector("#destruction") as HTMLElement).dataset.projectiles =
+    JSON.stringify(arena.projectileState);
   (document.querySelector("#destruction") as HTMLElement).dataset.chargeCues =
     String(chargeCues);
   (document.querySelector("#destruction") as HTMLElement).dataset.chargeFilter =
@@ -387,17 +393,26 @@ function render(now: number) {
   (
     document.querySelector("#destruction") as HTMLElement
   ).dataset.coldStructures = JSON.stringify(arena.coldStructureState);
-  (document.querySelector("#destruction") as HTMLElement).dataset.poisonStructures =
-    JSON.stringify(arena.poisonStructureState);
+  (
+    document.querySelector("#destruction") as HTMLElement
+  ).dataset.poisonStructures = JSON.stringify(arena.poisonStructureState);
   (document.querySelector("#destruction") as HTMLElement).dataset.freezeAreas =
     JSON.stringify(arena.freezeAreaState);
   (document.querySelector("#destruction") as HTMLElement).dataset.poisonAreas =
     JSON.stringify(arena.poisonAreaState);
   (document.querySelector("#destruction") as HTMLElement).dataset.rageAreas =
     JSON.stringify(arena.rageAreaState);
-  (document.querySelector("#destruction") as HTMLElement).dataset.poisonEntities =
-    JSON.stringify(battle.entities.filter((entity) => entity.card === "knight")
-      .map((entity) => ({ team: entity.team, hp: entity.hp, poison: entity.poison })));
+  (
+    document.querySelector("#destruction") as HTMLElement
+  ).dataset.poisonEntities = JSON.stringify(
+    battle.entities
+      .filter((entity) => entity.card === "knight")
+      .map((entity) => ({
+        team: entity.team,
+        hp: entity.hp,
+        poison: entity.poison,
+      })),
+  );
   (document.querySelector("#destruction") as HTMLElement).dataset.hogJump =
     JSON.stringify(
       battle.entities
