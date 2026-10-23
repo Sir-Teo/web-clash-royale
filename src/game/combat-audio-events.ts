@@ -24,6 +24,7 @@ export interface CombatAudioEvent {
   profile: AudioProfile;
   actor?: number;
   attack?: number;
+  pitchMultiplier?: number;
   // Optional presentation metadata anchors birth dust and muzzle effects even
   // if a coalesced snapshot arrives after the actor has moved or died.
   origin?: Point;

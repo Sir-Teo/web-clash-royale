@@ -14,5 +14,6 @@
   "hitsAir": true,
   "hitSpeedMultiplier": 1.35,
   "speedMultiplier": 1.35,
-  "spawnSpeedMultiplier": 1.35
+  "spawnSpeedMultiplier": 1.35,
+  "audioPitchMultiplier": 1.25
 }

@@ -505,6 +505,9 @@ export class Battle {
       profile,
       actor,
       attack,
+      ...(actor !== undefined && this.entities.find(
+        (entity) => entity.id === actor && entity.rage && entity.rage.remaining > 0,
+      ) ? { pitchMultiplier: rage.audioPitchMultiplier } : {}),
       ...(origin ? { origin } : {}),
     };
     this.audioEvents.push(event);

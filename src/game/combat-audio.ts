@@ -114,6 +114,7 @@ export class NativeCombatAudio {
       ))
         this.pending.push({
           ...cue,
+          pitch: cue.pitch * (event.pitchMultiplier ?? 1),
           time: origin + cue.delay,
           attack: event.phase === "attack" ? event.id : undefined,
           owner: ["attack", "spawn", "summon", "appear", "hide"].includes(

@@ -23,7 +23,8 @@ if (
   area.HitsGround !== "TRUE" || area.HitsAir !== "TRUE" ||
   buff.HitSpeedMultiplier !== "135" ||
   buff.SpeedMultiplier !== "135" ||
-  buff.SpawnSpeedMultiplier !== "135"
+  buff.SpawnSpeedMultiplier !== "135" ||
+  buff.AudioPitchModifier !== "125"
 ) throw new Error("Recheck archived Rage card, area and buff rules");
 
 const source = {
@@ -43,6 +44,7 @@ const source = {
   hitSpeedMultiplier: Number(buff.HitSpeedMultiplier) / 100,
   speedMultiplier: Number(buff.SpeedMultiplier) / 100,
   spawnSpeedMultiplier: Number(buff.SpawnSpeedMultiplier) / 100,
+  audioPitchMultiplier: Number(buff.AudioPitchModifier) / 100,
 };
 const path = "src/game/rage-data.json";
 const output = Buffer.from(JSON.stringify(source, null, 2) + "\n");

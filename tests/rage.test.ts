@@ -12,6 +12,7 @@ import effects from "../src/render/destruction-data.json";
 import filter from "../src/render/rage-filter-data.json";
 import { destructionPlan } from "../src/render/destruction";
 import { rageFilterFrame } from "../src/render/rage-filter";
+import { combatAudioPlan, NativeCombatAudio } from "../src/game/combat-audio";
 
 const deck = ["rage", ...STARTER_DECK.filter((card) => card !== "arrows")];
 const hash = (path: string) =>
@@ -34,7 +35,7 @@ describe("native Rage rules", () => {
       cost: 2, radius: 5, duration: 6, areaHitInterval: 0.3,
       buffDuration: 2, capBuffToAreaTime: true, targets: "friendlyTroops",
       hitSpeedMultiplier: 1.35, speedMultiplier: 1.35,
-      spawnSpeedMultiplier: 1.35,
+      spawnSpeedMultiplier: 1.35, audioPitchMultiplier: 1.25,
     });
     expect(CARD_MAP.rage).toMatchObject({ cost: 2, rarity: "Epic", kind: "spell", radius: 5 });
     const cards = JSON.parse(readFileSync("public/assets/ui/cards/cards.json", "utf8"));
@@ -82,6 +83,25 @@ describe("native Rage rules", () => {
     expect(knight.y).toBeLessThan(y);
     expect(enemy.rage).toBeUndefined();
     expect(battle.entities.some((e) => e.kind === "tower" && e.rage)).toBe(false);
+    enemy.active = false;
+    enemy.y = knight.y - 0.5;
+    knight.cooldown = 0;
+    battle.step();
+    const attack = battle.audioEvents.findLast((event) =>
+      event.phase === "attack" && event.actor === knight.id)!;
+    expect(attack.pitchMultiplier).toBe(rage.audioPitchMultiplier);
+    const baseCue = combatAudioPlan("knight", "attack", battle.seed ^ attack.id)[0];
+    const played: number[] = [];
+    const cues = new NativeCombatAudio({
+      enabled: true,
+      play: (_name, _volume, options) => {
+        played.push(options?.pitch ?? 1);
+        return () => {};
+      },
+    });
+    cues.consume([attack], battle.seed, attack.time);
+    cues.update(attack.time + baseCue.delay, false, new Set([knight.id]));
+    expect(played[0]).toBeCloseTo(baseCue.pitch * rage.audioPitchMultiplier);
     knight.x = 12;
     for (let i = 0; i < 59; i++) battle.step();
     expect(knight.rage).toBeUndefined();
