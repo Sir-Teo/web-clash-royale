@@ -142,15 +142,17 @@ function setup() {
       document.querySelector("#attack-card") as HTMLSelectElement
     ).value as CardId;
     unit(attacker, "blue", 9, 21);
-    for (const target of unit(
-      attacker === "balloon" || attacker === "giant" ? "cannon" : "giant",
-      "red",
-      9,
-      18,
-    )) {
-      target.active = false;
-      target.hp = target.maxHp = 10000;
-    }
+    const points = attacker === "electro-wizard" ? [8, 10] : [9];
+    for (const x of points)
+      for (const target of unit(
+        attacker === "balloon" || attacker === "giant" ? "cannon" : "giant",
+        "red",
+        x,
+        18,
+      )) {
+        target.active = false;
+        target.hp = target.maxHp = 10000;
+      }
   } else if (scenario === "footsteps") {
     for (const [card, x] of [
       ["knight", 4],
@@ -410,6 +412,8 @@ function render(now: number) {
   const destruction = arena.destructionState;
   (document.querySelector("#destruction") as HTMLElement).dataset.state =
     JSON.stringify(destruction);
+  (document.querySelector("#destruction") as HTMLElement).dataset.impactSprites =
+    JSON.stringify(arena.impactSpriteState);
   (document.querySelector("#destruction") as HTMLElement).dataset.infernoBeams =
     JSON.stringify(arena.infernoBeamState);
   (document.querySelector("#destruction") as HTMLElement).dataset.projectiles =

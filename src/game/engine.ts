@@ -26,6 +26,7 @@ import mirror from "./mirror-data.json" with { type: "json" };
 import iceWizard from "./ice-wizard-data.json" with { type: "json" };
 import princess from "./princess-data.json" with { type: "json" };
 import infernoDragon from "./inferno-dragon-data.json" with { type: "json" };
+import electroWizard from "./electro-wizard-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -1298,6 +1299,10 @@ export class Battle {
       e.stun = Math.max(0, e.stun - STEP);
       if (e.deploy > 0) {
         e.deploy -= STEP;
+        if (e.card === "electro-wizard" && e.deploy <= 1e-8) {
+          e.deploy = 0;
+          this.electroDeployZap(e);
+        }
         continue;
       }
       if (e.lifetime) {
@@ -1419,8 +1424,56 @@ export class Battle {
     this.emitImpactAudio(e, damage);
     if (target.hp <= 0) this.cancelAttack(e);
   }
+  private electroDeployZap(e: Entity) {
+    // The archived spawn references Zap at level index 8. The historical
+    // Common upgrade curve is reconstructed as 10% per index.
+    const damage = Math.round(
+      electroWizard.deployZap.sourceDamage *
+      1.1 ** electroWizard.deployZap.levelIndex,
+    );
+    for (const target of this.entities) {
+      if (!this.validTarget(e, target) ||
+          dist(e, target) >= electroWizard.deployZap.radius + target.radius)
+        continue;
+      this.hurt(target, damage * (target.kind === "tower" ? 0.4 : 1));
+      if (target.hp > 0) {
+        target.stun = Math.max(target.stun, electroWizard.deployZap.stun);
+        this.cancelAttack(target);
+        target.move = 0;
+      }
+    }
+    this.emit("hit", e.team, e.x, e.y, "zap", damage);
+    this.emitAudio("impact", e.team, "zap");
+  }
   private releaseAttack(e: Entity, target: Entity, damage: number) {
     this.audioAttacks.delete(e.id);
+    if (e.card === "electro-wizard") {
+      const targets = [
+        target,
+        ...this.entities
+          .filter((candidate) =>
+            candidate.id !== target.id &&
+            this.validTarget(e, candidate) &&
+            this.inRange(e, candidate),
+          )
+          .sort((a, b) => dist(e, a) - dist(e, b))
+          .slice(0, electroWizard.targets - 1),
+      ];
+      for (const victim of targets) {
+        this.hurt(victim, damage);
+        if (victim.hp > 0) {
+          victim.stun = Math.max(victim.stun, electroWizard.stun);
+          this.cancelAttack(victim);
+          victim.move = 0;
+        }
+        this.emit("hit", e.team, victim.x, victim.y, "electro-wizard", damage, {
+          origin: { x: e.x, y: e.y, height: 1.5 },
+          height: victim.air ? 2.3 : victim.kind === "tower" ? 1.8 : 0.6,
+        });
+        this.emitImpactAudio(e, damage);
+      }
+      return;
+    }
     const card = e.card === "tower" ? null : CARD_MAP[e.card];
     const traits = combatTraits(e);
     const p = traits.projectile;

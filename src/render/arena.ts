@@ -621,6 +621,12 @@ export class Arena {
       tails: this.destruction.tailState,
     };
   }
+  get impactSpriteState() {
+    return this.impacts.map((impact) => ({
+      name: impact.sprite.name,
+      frame: impact.sprite.frame,
+    }));
+  }
   get chargeFilterState() {
     return this.chargeFilter.state;
   }
@@ -1298,7 +1304,7 @@ export class Arena {
           event.height ?? 0.6,
           event.y - 16,
         );
-        if (event.card === "tesla" && event.origin) {
+        if ((event.card === "tesla" || event.card === "electro-wizard") && event.origin) {
           const origin = new T.Vector3(
             event.origin.x - 9,
             event.origin.height,
@@ -1308,14 +1314,23 @@ export class Arena {
             .clone()
             .sub(origin)
             .applyQuaternion(this.camera.quaternion.clone().invert());
-          const beam = this.impact("tesla_beam", origin, 0.3, eventAge);
+          const electro = event.card === "electro-wizard";
+          const name = electro ? "electro_wiz_beam" : "tesla_beam";
+          const beam = this.impact(name, origin, electro ? 0.27 : 0.3, eventAge);
           if (beam) {
-            beam.mesh.rotateZ(Math.atan2(direction.y, direction.x));
-            beam.mesh.scale.set(
-              Math.hypot(direction.x, direction.y) / 2.7,
-              0.7,
-              1,
-            );
+            const angle = Math.atan2(direction.y, direction.x);
+            if (electro) {
+              const bounds = (this.effects.asset!.data.clips[name] as unknown as { bounds: number[] }).bounds;
+              const scale = Math.hypot(direction.x, direction.y) / ((bounds[2] - bounds[0]) / 30);
+              const offset = new T.Vector3(
+                Math.cos(angle) * -bounds[0] / 30 * scale,
+                Math.sin(angle) * -bounds[0] / 30 * scale,
+                0,
+              ).applyQuaternion(this.camera.quaternion);
+              beam.mesh.position.add(offset);
+              beam.mesh.scale.set(scale, 1, 1);
+            } else beam.mesh.scale.set(Math.hypot(direction.x, direction.y) / 2.7, 0.7, 1);
+            beam.mesh.rotateZ(angle);
           }
         }
         const nativeImpact = event.effect ?? impactEffect(event.card ?? "");
@@ -1343,7 +1358,7 @@ export class Arena {
           );
           continue;
         }
-        if (event.card === "tesla" && event.origin) {
+        if ((event.card === "tesla" || event.card === "electro-wizard") && event.origin) {
           continue;
         } else if (event.card === "zap") {
           const bolt = this.impact(
