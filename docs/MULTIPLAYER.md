@@ -26,7 +26,7 @@ npm run build
 npm start -- --port 5189
 ```
 
-The build produces `dist/`, which any ordinary static HTTPS host can serve. `npm start` is a local static preview; no game backend runs. No remote site or paid hosting has been provisioned.
+The build produces `dist/`, which any ordinary static HTTPS host can serve. `npm start` is a local static preview; no game backend runs. The published game is [teozeng.dev/web-clash-royale](https://teozeng.dev/web-clash-royale/). Its GitHub Pages build includes the repository subpath in asset and service-worker URLs; the source repository remains private. Open that address on both devices for remote play. Hosted invites contain the same address and can be shared as links.
 
 Remote play uses Google's public STUN endpoint to discover routes, then carries match data directly between browsers. No TURN relay is configured. Some cellular, corporate and restrictive NAT networks cannot connect directly; use the same Wi-Fi or another network if the connection times out. This is a connectivity limitation, not a requirement to deploy the game server. See the [WebRTC peer connection guide](https://webrtc.org/getting-started/peer-connections).
 
