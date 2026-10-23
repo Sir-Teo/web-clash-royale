@@ -9,6 +9,16 @@ export interface ProjectileVisual {
   object: T.Group;
   sprites: EffectSprite[];
 }
+export function rocketFlightPoint(p: Projectile, seconds: number) {
+  const duration = Math.hypot(p.tx - p.x, p.ty - p.y) / (p.speed ?? 1);
+  const t = T.MathUtils.clamp(seconds / Math.max(duration, 1e-8), 0, 1);
+  return new T.Vector3(
+    T.MathUtils.lerp(p.x, p.tx, t) - 9,
+    T.MathUtils.lerp(p.fromHeight ?? 2.4, p.toHeight ?? 0.2, t) +
+      Math.sin(t * Math.PI) * (p.arc ?? 6),
+    T.MathUtils.lerp(p.y, p.ty, t) - 16,
+  );
+}
 export function projectileArt(p: Projectile) {
   if (["arrow", "arrows", "archers"].includes(p.style))
     return p.team === "blue"

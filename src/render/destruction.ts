@@ -8,6 +8,7 @@ import { particleTailPose, rotatedSpriteHeight } from "./particle-tail";
 type Emitter = (typeof definitions.emitters)[keyof typeof definitions.emitters];
 export type DeathEffect = keyof typeof definitions.effects;
 export type ImpactEffect = keyof typeof definitions.impacts;
+export type TrailEffect = `trail:${keyof typeof definitions.trails}`;
 export type LaunchEffect = `launch:${keyof typeof definitions.launches}`;
 export type MovementEffect = `move:${keyof typeof definitions.movements}`;
 export type ChargeEffect = `charge:${keyof typeof definitions.charges}`;
@@ -17,6 +18,7 @@ export type DeploymentEffect = `deploy:${DeploymentCard}`;
 type NativeEffect =
   | DeathEffect
   | ImpactEffect
+  | TrailEffect
   | LaunchEffect
   | MovementEffect
   | ChargeEffect
@@ -100,7 +102,9 @@ export function destructionPlan(
   };
   const between = (range: number[]) =>
     range[0] + random() * (range[1] - range[0]);
-  const definition = effect.startsWith("deploy:")
+  const definition = effect.startsWith("trail:")
+    ? definitions.trails[effect.slice(6) as keyof typeof definitions.trails]
+    : effect.startsWith("deploy:")
     ? definitions.deployments[effect.slice(7) as DeploymentCard]
     : effect.startsWith("launch:")
       ? definitions.launches[
@@ -305,6 +309,32 @@ export class DestructionEffects {
         plan,
         origin: origin.clone(),
         start: this.clock - age + plan.delay,
+      });
+      this.dirty = true;
+    }
+  }
+  // Emit one archived looping trail cycle along the fixed projectile path.
+  // Its particles keep their exact authored delays, motion and lifetimes;
+  // only the moving attachment point is reconstructed from the flight rule.
+  burstAlong(
+    effect: TrailEffect,
+    positionAt: (seconds: number) => T.Vector3,
+    flightDuration: number,
+    cycleStart: number,
+    seed: number,
+    team: Team,
+    age: number,
+  ) {
+    if (!this.library.asset) return;
+    for (const plan of destructionPlan(effect, seed, team)) {
+      const emission = cycleStart + plan.delay;
+      if (emission > flightDuration || age - emission >= plan.life) continue;
+      if (this.particles.length >= MAX_NATIVE_PARTICLES) break;
+      if (!this.library.asset.data.clips[plan.clip]) continue;
+      this.particles.push({
+        plan,
+        origin: positionAt(emission),
+        start: this.clock - age + emission,
       });
       this.dirty = true;
     }

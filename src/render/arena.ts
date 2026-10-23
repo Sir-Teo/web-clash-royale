@@ -19,7 +19,7 @@ import { SpriteLibrary } from "./sprites";
 import type { AnimatedSprite } from "./sprites";
 import { EffectLibrary } from "./effects";
 import type { EffectSprite } from "./effects";
-import { makeProjectile, updateProjectile } from "./projectiles";
+import { makeProjectile, rocketFlightPoint, updateProjectile } from "./projectiles";
 import type { ProjectileVisual } from "./projectiles";
 import { DeploymentPreview } from "./deployment";
 import { BuildingLibrary } from "./buildings";
@@ -70,6 +70,7 @@ export class Arena {
   private root = new T.Group();
   private units = new Map<number, Visual>();
   private shots = new Map<number, ProjectileVisual>();
+  private rocketTrailCycles = new Map<number, number>();
   private effects = new EffectLibrary();
   private buildings = new BuildingLibrary();
   private health = new HealthLibrary();
@@ -525,6 +526,7 @@ export class Arena {
       this.disposeObject(p.object);
     }
     this.shots.clear();
+    this.rocketTrailCycles.clear();
     for (const impact of this.impacts) this.scene.remove(impact.sprite.mesh);
     this.impacts = [];
     for (const p of this.particles) {
@@ -1066,17 +1068,34 @@ export class Arena {
       }
       const target = b.entities.find((e) => e.id === p.target && e.hp > 0);
       updateProjectile(shot, p, this.effects, this.camera, target);
+      if (p.style === "rocket" && p.speed && this.effects.asset) {
+        const age = p.elapsed ?? 0;
+        const cycle = Math.floor((age + 1e-8) / 0.8);
+        const last = this.rocketTrailCycles.get(p.id) ?? -1;
+        const duration = Math.hypot(p.tx - p.x, p.ty - p.y) / p.speed;
+        for (let i = last + 1; i <= cycle; i++)
+          this.destruction.burstAlong(
+            "trail:rocket",
+            (seconds) => rocketFlightPoint(p, seconds),
+            duration,
+            i * 0.8,
+            b.seed ^ p.id ^ Math.imul(i, 0x9e3779b9),
+            p.team,
+            age,
+          );
+        this.rocketTrailCycles.set(p.id, cycle);
+      }
       if (
         dt > 0 &&
         !b.winner &&
         shot.object.visible &&
-        ["fireball", "rocket", "wizard", "baby-dragon"].includes(p.style) &&
+        ["fireball", "wizard", "baby-dragon"].includes(p.style) &&
         Math.random() < 0.6
       )
         this.particle(
           shot.object.position,
           0xffab3d,
-          p.style === "fireball" || p.style === "rocket" ? 0.12 : 0.06,
+          p.style === "fireball" ? 0.12 : 0.06,
           0.3,
           0.4,
         );
@@ -1086,6 +1105,7 @@ export class Arena {
         this.scene.remove(s.object);
         this.disposeObject(s.object);
         this.shots.delete(id);
+        this.rocketTrailCycles.delete(id);
       }
     for (const event of b.events) {
       if (event.id <= this.lastEvent) continue;
