@@ -122,7 +122,9 @@ for (const perspective of ["blue", "red"] as const)
             (window as any).__shakeSamples.some(
               (s: any) =>
                 s.lastEffect === "Fireball_explosion" &&
-                Math.hypot(s.x, s.y) > 0,
+                Math.hypot(s.x, s.y) > 0 &&
+                s.destruction.clips.explosion_cloud_1 > 0 &&
+                s.destruction.tails.stretched > 0,
             ),
           ),
         { timeout: 15000 },
