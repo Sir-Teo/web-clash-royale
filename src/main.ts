@@ -1448,6 +1448,9 @@ try {
       battle.time - burst.age,
       burst.age,
     );
+    // A slow render may advance match time before the next frame. Flush the
+    // newly observed cue with its visible charge animation now.
+    updateCombatAudio();
   };
 } catch (error) {
   $("#arena-canvas").innerHTML =

@@ -64,11 +64,18 @@ export class NativeMovementEffects {
         elapsed <= 1 &&
         distance > 0 &&
         distance <= 2.5;
+      const chargeTravel =
+        entity.deploy <= 0 &&
+        entity.move > previous.moved &&
+        elapsed > 0 &&
+        elapsed <= 4 &&
+        distance > 0 &&
+        distance <= Math.max(2.5, elapsed * 4);
       // Charge animation begins when the browser's source-backed Prince
       // movement timer passes 2.3 s. A coalesced peer frame interpolates the
       // threshold along the travel path, just like footsteps.
       if (
-        validTravel &&
+        chargeTravel &&
         entity.card === "prince" &&
         previous.moved <= 2.3 &&
         entity.move > 2.3
