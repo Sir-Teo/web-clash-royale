@@ -362,9 +362,14 @@
       "sha256": "6924f97fcdbad44e6f51fcef5019206ef5a35a3e4b8dc8c94e8e0f89e29d1244"
     },
     {
+      "file": "portrait-miner.webp",
+      "bytes": 35960,
+      "sha256": "2d038984258a976bf948fa741accaea61a8626ea86e6a655e880b6f0673ca392"
+    },
+    {
       "file": "cards.json",
-      "bytes": 98825,
-      "sha256": "5eac5a73e70e19fe3158434228c45a7bae95dad2e97a57af569798fb2b291638"
+      "bytes": 99251,
+      "sha256": "f439e12c68f409497af9db1693f635e6f2531d690d190bb22e115d5dd98e0e34"
     }
   ]
 }

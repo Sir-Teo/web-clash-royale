@@ -465,6 +465,12 @@
       "sha256": "d30ab6393f56450d9801639e0595b6da5ea9cb37924bc42b68344c48eb660430"
     },
     {
+      "path": "cards/miner.png",
+      "source": "cards/miner.png",
+      "bytes": 121119,
+      "sha256": "de39cd5d5bad2a83f0c8bbc403cf205ae10cf0f282101b760287b0bcb99a2305"
+    },
+    {
       "path": "cards/mini-pekka.png",
       "source": "cards/mini-pekka.png",
       "bytes": 145092,

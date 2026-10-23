@@ -1,0 +1,18 @@
+{
+  "card": "Miner",
+  "rarity": "Legendary",
+  "cost": 3,
+  "enemySide": true,
+  "sourceHitpoints": 1000,
+  "sourceDamage": 160,
+  "sourceSpeed": 90,
+  "sourceRange": 1300,
+  "sourceHitSpeed": 1200,
+  "crownTowerDamageFraction": 0.4,
+  "travelSpeed": 10.833333333333334,
+  "travelEffect": "miner_travel_effect",
+  "hitEffect": "miner_hit",
+  "blueExport": "miner_blue",
+  "redExport": "miner_red",
+  "deployFilter": "filter_deploy_unit_miner"
+}

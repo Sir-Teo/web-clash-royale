@@ -19,6 +19,7 @@ import iceWizard from "./ice-wizard-data.json" with { type: "json" };
 import princess from "./princess-data.json" with { type: "json" };
 import infernoDragon from "./inferno-dragon-data.json" with { type: "json" };
 import electroWizard from "./electro-wizard-data.json" with { type: "json" };
+import miner from "./miner-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -39,6 +40,7 @@ export type CardId =
   | "princess"
   | "inferno-dragon"
   | "electro-wizard"
+  | "miner"
   | "skeletons"
   | "skeleton-army"
   | "bomber"
@@ -550,6 +552,18 @@ export const CARDS: Card[] = [
     electroWizard.sourceHitSpeed / 1000,
     "Strikes two targets, stuns them briefly, and Zaps enemies when he arrives.",
     { rarity: "Legendary", hitsAir: electroWizard.hitsAir },
+  ),
+  troop(
+    "miner",
+    "Miner",
+    miner.cost,
+    Math.round(miner.sourceHitpoints * 1.1 ** 2),
+    Math.round(miner.sourceDamage * 1.1 ** 2),
+    miner.sourceSpeed / 60,
+    miner.sourceRange / 1000,
+    miner.sourceHitSpeed / 1000,
+    "Tunnels beneath the arena and emerges anywhere to attack ground targets.",
+    { rarity: "Legendary" },
   ),
   troop(
     "minion-horde",
