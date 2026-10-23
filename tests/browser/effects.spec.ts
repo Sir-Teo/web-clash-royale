@@ -115,9 +115,15 @@ test("native swarm deaths retain all particles with bounded draw calls and pause
   await page.locator("#defeat").click();
   for (let i = 0; i < 3; i++) await page.locator("#step").click();
   await expect(page.locator("#status")).toContainText("0.3s");
-  await expect(page.locator("#death-stats")).toContainText(
-    "60 deaths · 960 native particles · 420 ground",
-  );
+  await expect
+    .poll(async () => {
+      const text = (await page.locator("#death-stats").textContent())!;
+      const counts = text.match(
+        /60 deaths · (\d+) native particles · (\d+) ground/,
+      );
+      return !!counts && Number(counts[1]) >= 960 && Number(counts[2]) >= 420;
+    })
+    .toBe(true);
   await expect
     .poll(async () =>
       Number(

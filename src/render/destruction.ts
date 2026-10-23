@@ -12,6 +12,9 @@ type DeploymentCard = keyof typeof definitions.deployments;
 export type DeploymentEffect = `deploy:${DeploymentCard}`;
 type NativeEffect = DeathEffect | ImpactEffect | DeploymentEffect;
 const compositions = { ...definitions.effects, ...definitions.impacts };
+// Two native Zaps plus a full Skeleton Army swarm schedule 1,028 particles.
+// Keep the cap bounded while retaining every authored fragment in that scene.
+const MAX_NATIVE_PARTICLES = 1280;
 export function deploymentEffect(card: string): DeploymentEffect | undefined {
   return Object.hasOwn(definitions.deployments, card)
     ? `deploy:${card as DeploymentCard}`
@@ -245,7 +248,7 @@ export class DestructionEffects {
   ) {
     if (!this.library.asset) return;
     for (const plan of destructionPlan(effect, seed, team)) {
-      if (this.particles.length >= 1024) break;
+      if (this.particles.length >= MAX_NATIVE_PARTICLES) break;
       if (age - plan.delay >= plan.life) continue;
       if (!this.library.asset.data.clips[plan.clip]) continue;
       this.particles.push({

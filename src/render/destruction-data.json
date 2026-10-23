@@ -1760,6 +1760,132 @@
           "ground": false
         }
       ]
+    },
+    "zap": {
+      "source": "Spell_zap_effect",
+      "components": [
+        {
+          "emitter": "Spell_zap_smoke1",
+          "delay": 0.15,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_zap_hitSpot",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Spell_zap_hitSpot2",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Spell_zap_bolt",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_zap_sparks",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_zap_Flash",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Zap_hit_area",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Spell_zap_smoke1",
+          "delay": 0.15,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_zap_hitSpot",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Spell_zap_hitSpot2",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Spell_zap_bolt",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_zap_sparks",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_zap_Flash",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Zap_hit_area",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ]
+    },
+    "arrows": {
+      "source": "ArrowHitGround",
+      "components": [
+        {
+          "emitter": "Arrows Hit Ground",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Arrows Hit Ground",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        }
+      ]
     }
   },
   "deployments": {
@@ -4223,6 +4349,388 @@
       "loop": false,
       "clips": [
         "Deco_fireplace_glow"
+      ]
+    },
+    "Spell_zap_smoke1": {
+      "count": 8,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        1,
+        1.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.06666666666666667
+      ],
+      "speed": [
+        0.3333333333333333,
+        0.8333333333333334
+      ],
+      "height": 1.4,
+      "verticalSpeed": [
+        0.3333333333333333,
+        0.6666666666666666
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.25,
+      "endScale": 0.35,
+      "fadeIn": 0,
+      "fadeOut": 1,
+      "inertia": 0.3333333333333333,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Smoke_puff_01"
+      ]
+    },
+    "Spell_zap_hitSpot": {
+      "count": 1,
+      "emissionLife": [
+        0,
+        0.1
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        1.5,
+        2
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 2,
+      "endScale": 2,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "SparkleBlue"
+      ]
+    },
+    "Spell_zap_hitSpot2": {
+      "count": 1,
+      "emissionLife": [
+        0,
+        0.1
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        1,
+        1
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.8,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Deco_small_glow2"
+      ]
+    },
+    "Spell_zap_bolt": {
+      "count": 1,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.2,
+        0.25
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.03333333333333333
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0.36666666666666664,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0.25,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "zap_bolt1",
+        "zap_bolt2"
+      ]
+    },
+    "Spell_zap_sparks": {
+      "count": 6,
+      "emissionLife": [
+        0.3,
+        0.3
+      ],
+      "interval": [
+        0.01,
+        0.01
+      ],
+      "life": [
+        0.4,
+        0.6
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.03333333333333333
+      ],
+      "speed": [
+        1.6666666666666667,
+        5
+      ],
+      "height": 1.1666666666666667,
+      "verticalSpeed": [
+        1.6666666666666667,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -33.333333333333336,
+      "startScale": 0.2,
+      "endScale": 0.3,
+      "fadeIn": 0,
+      "fadeOut": 0.4,
+      "inertia": 0.6666666666666666,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Death_blue_sparkle1"
+      ]
+    },
+    "Spell_zap_Flash": {
+      "count": 1,
+      "emissionLife": [
+        0,
+        0.1
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        0.1,
+        0.15
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.4,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0.05,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "ExplosionGroundGlowBlue"
+      ]
+    },
+    "Zap_hit_area": {
+      "count": 16,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        0.2,
+        0.6
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.16666666666666666,
+        0.16666666666666666
+      ],
+      "speed": [
+        0,
+        1
+      ],
+      "height": 0.36666666666666664,
+      "verticalSpeed": [
+        0,
+        1.6666666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1.9,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0.2,
+      "inertia": 6.666666666666667,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "electricity"
+      ]
+    },
+    "Arrows Hit Ground": {
+      "count": 1,
+      "emissionLife": [
+        0.001,
+        0.2
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        1.5,
+        1.9
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "Arrow_enemy_ground_anim_1",
+        "Arrow_enemy_ground_anim_2",
+        "Arrow_enemy_ground_anim_3",
+        "Arrow_enemy_ground_anim_4",
+        "Arrow_enemy_ground_anim_5",
+        "Arrow_enemy_ground_anim_6"
       ]
     },
     "knight_deploy_rocks_hitGround": {

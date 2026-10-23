@@ -11,6 +11,7 @@ for (const [name, directory] of [
   ["buildings", "logic"],
   ["projectiles", "logic"],
   ["spells_other", "logic"],
+  ["area_effect_objects", "logic"],
 ]) {
   const path = `reference/${directory}/${name}.csv`,
     bytes = await readFile(path);
@@ -159,14 +160,26 @@ for (const [id, source] of Object.entries(sources)) {
     enemyComponents: composition(source, "red"),
   };
 }
-const fireballCard = cards.fireball;
-const fireballSpell = tables[fireballCard.table][fireballCard.row];
-const fireballImpact = tables.projectiles[fireballSpell.Projectile].HitEffect;
-impacts.fireball = {
-  source: fireballImpact,
-  components: composition(fireballImpact, "blue"),
-  enemyComponents: composition(fireballImpact, "red"),
-};
+for (const [id, expected] of Object.entries({
+  fireball: "Fireball_explosion",
+  zap: "Spell_zap_effect",
+  arrows: "ArrowHitGround",
+})) {
+  const card = cards[id];
+  const spell = tables[card.table][card.row];
+  const projectile =
+    tables.projectiles[spell.CustomFirstProjectile || spell.Projectile];
+  const source =
+    projectile?.HitEffect ||
+    tables.area_effect_objects[spell.AreaEffectObject]?.OneShotEffect;
+  if (source !== expected)
+    throw new Error(`Recheck native ${id} impact binding: ${source}`);
+  impacts[id] = {
+    source,
+    components: composition(source, "blue"),
+    enemyComponents: composition(source, "red"),
+  };
+}
 for (const [id, profile] of Object.entries(profiles)) {
   if (id.endsWith("-tower")) continue;
   const source = (

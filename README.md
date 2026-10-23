@@ -14,6 +14,8 @@ The four original King emotes use complete native expressions and speech-bubble 
 
 Fireball impacts use the original layered smoke, glowing fragments, sparks, flames and lingering scorch effect. Native additive and screen blending keep fire and lightning bright, and particle motion follows the archived client’s linear deceleration and gravity integration. Sparks, fire, smoke and elixir splashes retain source tail delays and stretch their native artwork between projected motion endpoints; pause and replay seeking preserve their poses.
 
+Zap impacts use the archived bolt, electricity, smoke, sparks and ground glow composition. Arrows fly as 15 visible sprites across three waves and leave 15 native ground marks. Their source artwork and particle timing work in solo play, replays and browser-to-browser matches on desktop and phone.
+
 Destroyed towers leave native rubble for the rest of the battle. Their collapse uses original fire, smoke, flying plank and wall-fragment artwork. Debris pauses with the match and finishes settling after victory; replay seeking reconstructs the correct ruins.
 
 Earned crowns spin out of destroyed towers and fly to the matching score counter. A King Tower awards the remaining crowns to reach three. The flights follow pause and replay speed, adapt when a phone rotates, and finish before the result panel appears.

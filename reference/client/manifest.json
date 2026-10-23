@@ -28,6 +28,10 @@
       "sha256": "a50dcc87e6ee337537e2dcb00c6f4f3f81fc383685ce8e630b33c41f6c4e2dda"
     },
     {
+      "path": "reference/logic/area_effect_objects.csv",
+      "sha256": "f060f967d137942bd8d2e61edb1a96c4455bf833f7cab7187be3e391d352ec65"
+    },
+    {
       "path": "src/game/combat-data.json",
       "sha256": "bc8cad0c44c442dd2565641f0c8bcaca14f2d2e9ecb551a88b9cc67a9830ea66"
     },
@@ -45,6 +49,6 @@
   ],
   "output": {
     "path": "src/render/destruction-data.json",
-    "sha256": "ccdbabb3900d6246f6723b6fb1f2d901c71b542185ebde8882b0493524e00033"
+    "sha256": "6259a09fb4c898294d8dcf17604fdfc949930518c27b3c263760dd0d645b1a00"
   }
 }

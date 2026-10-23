@@ -92,6 +92,7 @@ export interface BattleEvent extends Point {
   origin?: Point & { height: number };
   height?: number;
   effect?: "balloon-bomb";
+  arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
   tick: number;
@@ -439,7 +440,10 @@ export class Battle {
     y: number,
     card?: CardId | "tower",
     value?: number,
-    details: Pick<BattleEvent, "origin" | "height" | "effect"> = {},
+    details: Pick<
+      BattleEvent,
+      "origin" | "height" | "effect" | "arrowVolley"
+    > = {},
   ) {
     this.events.push({
       id: this.nextId++,
@@ -728,7 +732,11 @@ export class Battle {
           ? undefined
           : (p.style as CardId),
         p.damage,
-        p.style === "bomb" ? { effect: "balloon-bomb" } : {},
+        p.style === "bomb"
+          ? { effect: "balloon-bomb" }
+          : p.style === "arrows"
+            ? { arrowVolley: { projectileId: p.id, staggered: false } }
+            : {},
       );
       this.projectileAudio(p);
     }
@@ -1041,6 +1049,14 @@ export class Battle {
               : undefined,
           height: p.toHeight ?? 0.6,
           ...(p.style === "bomb" ? { effect: "balloon-bomb" as const } : {}),
+          ...(p.style === "arrows"
+            ? {
+                arrowVolley: {
+                  projectileId: p.id,
+                  staggered: p.delay !== undefined,
+                },
+              }
+            : {}),
         },
       );
       this.projectileAudio(p);

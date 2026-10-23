@@ -86,6 +86,9 @@ function setup() {
   } else if (scenario === "fireball") {
     cast("fireball", "blue", 4, 13);
     cast("fireball", "red", 14, 19);
+  } else if (scenario === "spell-impacts") {
+    cast("zap", "blue", 4, 13);
+    cast("arrows", "red", 14, 19);
   } else if (scenario === "deployment") {
     // Spawn through the normal engine after setBattle, so lifecycle events
     // are fresh rather than treated as history by the renderer.
@@ -268,6 +271,17 @@ function render(now: number) {
     );
   (document.querySelector("#destruction") as HTMLElement).dataset.shake =
     JSON.stringify(arena.shakeState);
+  (document.querySelector("#destruction") as HTMLElement).dataset.spellImpacts =
+    JSON.stringify({
+      zap: battle.events.filter((e) => e.type === "hit" && e.card === "zap")
+        .length,
+      arrows: battle.events.filter(
+        (e) => e.type === "hit" && e.card === "arrows",
+      ).length,
+      arrowSprites: arena.projectileState
+        .filter((p) => p.sprites[0]?.name.includes("arrow_basic"))
+        .map((p) => p.sprites.length),
+    });
   document.querySelector("#destruction")!.textContent =
     `${destruction.rubble} ruins · ${destruction.particles} debris · ${destruction.time.toFixed(1)}s visual`;
   document.querySelector("#result-state")!.textContent = battle.winner

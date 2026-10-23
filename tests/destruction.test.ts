@@ -191,6 +191,16 @@ describe("native tower destruction", () => {
         .reduce((sum, o) => sum + (o as T.InstancedMesh).count, 0),
     ).toBe(2);
     effects.clear();
+    effects.burst("zap", new T.Vector3(1, 0, 0), 1);
+    effects.burst("zap", new T.Vector3(2, 0, 0), 2);
+    for (let i = 0; i < 60; i++)
+      effects.burst("skeletons", new T.Vector3(i % 4, 0, Math.floor(i / 4)), i);
+    expect(effects.count).toBe(1028);
+    expect(effects.groundCount).toBe(426);
+    effects.update(0.1, camera);
+    expect(effects.count).toBe(1028);
+    expect(effects.drawCount).toBeLessThan(60);
+    effects.clear();
     library.destroy();
   });
 });

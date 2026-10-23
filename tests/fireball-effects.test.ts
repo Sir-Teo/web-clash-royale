@@ -33,7 +33,7 @@ describe("native Fireball explosion", () => {
     const manifest = JSON.parse(
       readFileSync("reference/client/manifest.json", "utf8"),
     );
-    expect(manifest.files).toHaveLength(8);
+    expect(manifest.files).toHaveLength(9);
     expect(manifest.files.map((f: any) => f.path)).toContain(
       "public/assets/ui/cards/cards.json",
     );

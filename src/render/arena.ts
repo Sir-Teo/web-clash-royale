@@ -27,6 +27,7 @@ import type { BuildingSprite } from "./buildings";
 import { destroyedTowerSites, TOWER_SITES } from "../game/arena-layout";
 import { DestructionEffects, deathEffect, impactEffect } from "./destruction";
 import { NativeDeploymentEffects } from "./deployment-effects";
+import { arrowOffsets } from "./arrow-volley";
 import { CrownEffects } from "./crowns";
 import { HealthLibrary, type HealthSprite } from "./health";
 import { NativeScreenShake } from "./screen-shake";
@@ -1002,12 +1003,26 @@ export class Arena {
         );
         const nativeImpact = event.effect ?? impactEffect(event.card ?? "");
         if (nativeImpact && this.effects.asset) {
-          this.destruction.burst(
-            nativeImpact,
-            new T.Vector3(event.x - 9, 0.2, event.y - 16),
-            b.seed ^ event.id,
-            event.team,
-            eventAge,
+          const offsets =
+            event.card === "arrows" && event.arrowVolley
+              ? arrowOffsets(
+                  event.arrowVolley.projectileId,
+                  event.arrowVolley.staggered,
+                  event.team,
+                )
+              : [{ x: 0, y: 0 }];
+          offsets.forEach((offset, i) =>
+            this.destruction.burst(
+              nativeImpact,
+              new T.Vector3(
+                event.x - 9 + offset.x,
+                0.2,
+                event.y - 16 + offset.y,
+              ),
+              b.seed ^ event.id ^ Math.imul(i, 0x9e3779b9),
+              event.team,
+              eventAge,
+            ),
           );
           continue;
         }

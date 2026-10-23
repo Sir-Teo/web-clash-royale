@@ -3,6 +3,7 @@ import type { Entity, Projectile } from "../game/engine";
 import { sphere } from "./models";
 import { EffectLibrary } from "./effects";
 import type { EffectSprite } from "./effects";
+import { arrowOffsets } from "./arrow-volley";
 
 export interface ProjectileVisual {
   object: T.Group;
@@ -32,20 +33,17 @@ export function makeProjectile(
   const object = new T.Group(),
     sprites: EffectSprite[] = [];
   const art = projectileArt(p),
-    count = p.style === "arrows" ? 13 : 1;
+    offsets =
+      p.style === "arrows"
+        ? arrowOffsets(p.id, p.delay !== undefined, p.team)
+        : [],
+    count = offsets.length || 1;
   if (art)
     for (let i = 0; i < count; i++) {
       const sprite = library.make(art);
       if (!sprite) break;
-      if (count > 1) {
-        const angle = i * 2.39996,
-          radius = Math.sqrt(i / count) * 3.25;
-        sprite.mesh.position.set(
-          Math.cos(angle) * radius,
-          0,
-          Math.sin(angle) * radius,
-        );
-      }
+      if (offsets.length)
+        sprite.mesh.position.set(offsets[i].x, 0, offsets[i].y);
       object.add(sprite.mesh);
       sprites.push(sprite);
     }
