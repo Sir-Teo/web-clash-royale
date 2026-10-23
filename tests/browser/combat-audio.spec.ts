@@ -6,9 +6,10 @@ import {
   observeCombatAudio,
   playedCombatAudio,
   decodeAudioFiles,
+  replaySeekValue,
 } from "./audio-helpers";
 
-test("all 75 native combat sound files decode in the browser", async ({
+test("all 107 native combat and deployment sound files decode in the browser", async ({
   page,
 }, info) => {
   const manifest = JSON.parse(
@@ -21,7 +22,7 @@ test("all 75 native combat sound files decode in the browser", async ({
       file.path.replace(/^public/, ""),
     ),
   );
-  expect(decoded).toHaveLength(75);
+  expect(decoded).toHaveLength(107);
   expect(
     decoded.every(
       (sound) => Number.isFinite(sound.duration) && sound.duration > 0,
@@ -118,7 +119,9 @@ test("a recorded Musketeer shot sounds at launch and impact, follows replay spee
   await page.getByRole("button", { name: "Pause replay", exact: true }).click();
   const seek = page.getByRole("slider", { name: "Replay timeline" });
   await seek.fill(
-    ((Math.max(0, launch.time * 30 - 40) / replay.duration) * 100).toFixed(2),
+    replaySeekValue(
+      (Math.max(0, launch.time * 30 - 40) / replay.duration) * 100,
+    ),
   );
   expect(await playedCombatAudio(page, files)).toEqual([]);
   await page.locator("#replay-speed").click();
@@ -145,9 +148,13 @@ test("a recorded Musketeer shot sounds at launch and impact, follows replay spee
     expect(played[index].time).toBeLessThan(cue.time + 0.6);
   }
   expect(played.every((entry: any) => entry.paused)).toBe(true);
+  // Pausing may asynchronously reject an already-observed pending play promise.
+  // Compare immutable calls and paused state, not the timing of promise settlement.
+  const calls = (entries: any[]) =>
+    entries.map(({ outcome: _outcome, ...entry }) => entry);
   await page.waitForTimeout(250);
-  expect(await playedCombatAudio(page, files)).toEqual(played);
+  expect(calls(await playedCombatAudio(page, files))).toEqual(calls(played));
   await seek.fill("90");
   await seek.fill("0");
-  expect(await playedCombatAudio(page, files)).toEqual(played);
+  expect(calls(await playedCombatAudio(page, files))).toEqual(calls(played));
 });

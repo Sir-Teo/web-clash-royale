@@ -1,6 +1,7 @@
 import { Battle, other } from "../game/engine";
 import type { Point, Team } from "../game/engine";
 import type { BattleSnapshot } from "./protocol";
+import { isLifecycleAudio } from "../game/combat-audio-events";
 
 export const rotatePoint = <T extends Point>(p: T): T => ({
   ...p,
@@ -32,9 +33,16 @@ export function perspective(s: BattleSnapshot, team: Team): BattleSnapshot {
       origin: e.origin ? rotatePoint(e.origin) : undefined,
     })),
     audioEvents: s.audioEvents?.map((e) => ({ ...e, team: other(e.team) })),
+    lifecycleAudioEvents: s.lifecycleAudioEvents?.map((e) => ({
+      ...e,
+      team: other(e.team),
+    })),
   };
 }
 export function snapshot(b: Battle): BattleSnapshot {
+  const lifecycleAudioEvents = b.audioEvents.filter(
+    (event) => isLifecycleAudio(event) && event.time >= b.time - 4,
+  );
   return {
     tick: b.tick,
     entities: b.entities,
@@ -42,7 +50,11 @@ export function snapshot(b: Battle): BattleSnapshot {
     events: b.events,
     // Older cues are already too late to play. Keep overlap for deduplication
     // without retransmitting the full presentation history at 15 Hz.
-    audioEvents: b.audioEvents.filter((event) => event.time >= b.time - 1),
+    audioEvents: b.audioEvents.filter(
+      (event) => !isLifecycleAudio(event) && event.time >= b.time - 1,
+    ),
+    // Keep new phases out of the field consumed by older browser builds.
+    ...(lifecycleAudioEvents.length ? { lifecycleAudioEvents } : {}),
     players: b.players,
     winner: b.winner,
     reason: b.reason,
@@ -55,7 +67,10 @@ export function applySnapshot(b: Battle, s: BattleSnapshot, team: Team) {
   b.entities = view.entities;
   b.projectiles = view.projectiles;
   b.events = view.events;
-  b.audioEvents = view.audioEvents ?? [];
+  b.audioEvents = [
+    ...(view.audioEvents ?? []),
+    ...(view.lifecycleAudioEvents ?? []),
+  ].sort((a, b) => a.id - b.id);
   b.players = view.players;
   b.winner = view.winner;
   b.reason = view.reason;

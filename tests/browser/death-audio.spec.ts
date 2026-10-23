@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { build } from "esbuild";
 import { pathToFileURL } from "node:url";
+import { replaySeekValue } from "./audio-helpers";
 
 const manifest = JSON.parse(
   readFileSync("reference/client/death-audio-manifest.json", "utf8"),
@@ -173,7 +174,7 @@ for (const perspective of ["blue", "red"] as const)
       0,
       ((death.time * 30 - 45) / replay.duration) * 100,
     );
-    await timeline.fill(before.toFixed(2));
+    await timeline.fill(replaySeekValue(before));
     const nativeCalls = () =>
       page.evaluate(
         (paths) =>
@@ -213,7 +214,7 @@ for (const perspective of ["blue", "red"] as const)
     expect(await nativeCalls()).toEqual(played);
     await timeline.fill("90");
     expect(await nativeCalls()).toEqual(played);
-    await timeline.fill(before.toFixed(2));
+    await timeline.fill(replaySeekValue(before));
     await page
       .getByRole("button", { name: "Battle settings", exact: true })
       .click();

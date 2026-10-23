@@ -20,12 +20,17 @@ export function combatAudioPlan(
   seed: number,
   team: Team = "blue",
 ): CombatCue[] {
-  if (phase === "cancel" || !Object.hasOwn(definitions.profiles, profile))
+  if (
+    phase === "cancel" ||
+    phase === "death" ||
+    !Object.hasOwn(definitions.profiles, profile)
+  )
     return [];
   const components =
-    definitions.profiles[profile as Profile][phase][
+    definitions.profiles[profile as Profile][phase]?.[
       team === "red" ? "enemyComponents" : "components"
     ];
+  if (!Array.isArray(components)) return [];
   let state = seed | 0;
   // Nearby event IDs must not select the same voice throughout a battle.
   state ^= state >>> 16;
@@ -60,13 +65,24 @@ export function combatAudioPlan(
 /** Presentation-only scheduling: source delays use the shared match clock. */
 export class NativeCombatAudio {
   private cursor = 0;
-  private pending: (CombatCue & { time: number; attack?: number })[] = [];
+  private pending: (CombatCue & {
+    time: number;
+    attack?: number;
+    owner?: number;
+  })[] = [];
   private lastPlayed = new Map<string, number>();
   constructor(private readonly audio: Pick<GameAudio, "enabled" | "play">) {}
   consume(events: readonly CombatAudioEvent[], seed: number, now: number) {
     for (const event of events) {
       if (event.id <= this.cursor) continue;
       this.cursor = event.id;
+      if (event.phase === "death") {
+        if (event.actor !== undefined)
+          this.pending = this.pending.filter(
+            (cue) => cue.owner !== event.actor,
+          );
+        continue;
+      }
       if (event.phase === "cancel") {
         if (event.attack !== undefined)
           this.pending = this.pending.filter(
@@ -74,7 +90,12 @@ export class NativeCombatAudio {
           );
         continue;
       }
-      if (!this.audio.enabled || now - event.time > 0.5) continue;
+      const age = now - event.time;
+      if (!this.audio.enabled || age > (event.phase === "spawn" ? 4 : 0.5))
+        continue;
+      // Deployment feedback is infrequent and must survive a short UI stall.
+      // Shift the whole composition together so its follow-up keeps its spacing.
+      const origin = event.phase === "spawn" && age > 0.5 ? now : event.time;
       for (const cue of combatAudioPlan(
         event.profile,
         event.phase,
@@ -83,17 +104,28 @@ export class NativeCombatAudio {
       ))
         this.pending.push({
           ...cue,
-          time: event.time + cue.delay,
+          time: origin + cue.delay,
           attack: event.phase === "attack" ? event.id : undefined,
+          owner: ["attack", "spawn", "summon"].includes(event.phase)
+            ? event.actor
+            : undefined,
         });
     }
     this.pending.sort((a, b) => a.time - b.time);
   }
-  update(time: number, paused = false) {
+  update(time: number, paused = false, livingActors?: ReadonlySet<number>) {
     if (!this.audio.enabled) this.pending = [];
     if (paused) return;
     const remaining: typeof this.pending = [];
     for (const cue of this.pending) {
+      // A coalesced snapshot can omit an older death event. Current entity
+      // liveness still prevents a delayed voice from outliving its owner.
+      if (
+        cue.owner !== undefined &&
+        livingActors &&
+        !livingActors.has(cue.owner)
+      )
+        continue;
       if (cue.time > time) {
         remaining.push(cue);
         continue;

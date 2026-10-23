@@ -1,5 +1,9 @@
 import type { Page } from "@playwright/test";
 
+// Range inputs normalize trailing zeros; Playwright fill checks that exact value.
+export const replaySeekValue = (percent: number) =>
+  Number(percent.toFixed(2)).toString();
+
 export async function observeCombatAudio(page: Page) {
   await page.addInitScript(() => {
     const log: {

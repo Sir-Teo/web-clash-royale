@@ -1127,6 +1127,12 @@ network.onMessage = (message) => {
       eventCursor = battle.events.at(-1)?.id ?? eventCursor;
       combatAudio.skip(battle.audioEvents);
     }
+    if (!document.hidden && !battle.winner) {
+      // Consume before another state replaces this snapshot or a graphics frame
+      // delays presentation. The independent audio cursor prevents duplicates.
+      combatAudio.consume(battle.audioEvents, battle.seed, battle.time);
+      updateCombatAudio();
+    }
   }
   if (message.type === "ack" && !message.ok) toast(message.reason);
   if (message.type === "error") {
@@ -1350,6 +1356,17 @@ function showHelp() {
   $("#help-done").onclick = closeModal;
 }
 
+function updateCombatAudio() {
+  combatAudio.update(
+    battle.time,
+    paused || (multiplayer && !!network.room?.paused),
+    new Set(
+      battle.entities
+        .filter((entity) => entity.hp > 0)
+        .map((entity) => entity.id),
+    ),
+  );
+}
 function processEvents() {
   combatAudio.consume(battle.audioEvents, battle.seed, battle.time);
   for (const ev of battle.events) {
@@ -1363,29 +1380,6 @@ function processEvents() {
       ev.card !== "tower"
     )
       elixir.spend(CARD_MAP[ev.card].cost, ev.time, battle.players.blue.elixir);
-    if (ev.type === "deploy") {
-      const voices: Partial<Record<CardId, string>> = {
-        knight: "knight_deploy_31111",
-        archers: "clash_archer_deploy_01",
-        giant: "giant_deploy_01",
-        musketeer: "musketeer_deploy_01",
-        "mini-pekka": "minipekka_deploy_01",
-        goblins: "goblin_deploy_14",
-        "spear-goblins": "goblin_deploy_14",
-        skeletons: "skeleton_deploy_03",
-        "skeleton-army": "skeleton_deploy_03",
-        bomber: "skeleton_deploy_03",
-        valkyrie: "valkyrie_deploy_02",
-        "hog-rider": "hogrider_deploy_01",
-        "baby-dragon": "babydragon_deploy_01",
-        minions: "minion_deploy_01",
-        wizard: "deploy_wizard_01",
-        prince: "prince_deploy_01",
-        pekka: "pekka_deploy_01",
-        balloon: "deploy_balloon_06",
-      };
-      audio.play(voices[ev.card as CardId] ?? "button_click_02", 0.22);
-    }
     if (ev.type === "crown") {
       audio.play("1st_crown_01", 0.35);
     }
@@ -1733,7 +1727,7 @@ function frame(now: number) {
   if (presentationPaused && !soundPaused) audio.stopEffects();
   soundPaused = presentationPaused;
   if (screen !== "lobby" && !battle.winner) {
-    combatAudio.update(battle.time, presentationPaused);
+    updateCombatAudio();
     deathAudio.update(battle.time, presentationPaused);
   }
   const idle = screen === "lobby" || presentationPaused || !!battle.winner;

@@ -7,7 +7,11 @@ import {
   type Page,
 } from "@playwright/test";
 import { CARD_MAP } from "../../src/game/cards";
+import { readFileSync } from "node:fs";
 import { observeCombatAudio, playedCombatAudio } from "./audio-helpers";
+const nativeAudio = JSON.parse(
+  readFileSync("src/game/combat-audio-data.json", "utf8"),
+);
 const expect = baseExpect.configure({ timeout: 15000 });
 test.use({ serviceWorkers: "block", actionTimeout: 20000 });
 const state = (page: Page) =>
@@ -28,6 +32,22 @@ async function init(page: Page, name: string, sound = false) {
     { name, sound },
   );
   await page.goto("/");
+  // The lobby markup arrives before asynchronous native asset construction.
+  // Wait for that work before starting pointer actions on a busy software GPU.
+  await expect
+    .poll(
+      async () => {
+        const ready = await state(page);
+        return [
+          ready.loadedEffects,
+          ready.loadedAnimations,
+          ready.loadedBuildings,
+          ready.loadedCards,
+        ];
+      },
+      { timeout: 60000 },
+    )
+    .toEqual([45, 19, 3, 24]);
   await expect(page.locator("#friend-button")).toBeVisible({ timeout: 60000 });
   await page.locator("#friend-button").click();
 }
@@ -50,6 +70,7 @@ async function deploy(page: Page, x = 4, y = 22) {
   await expect
     .poll(async () => (await state(page)).actions)
     .toBeGreaterThan(before.actions);
+  return before.hand[slot];
 }
 test("static browsers exchange invites, fight, pause together and replay without a game server", async ({
   page,
@@ -124,10 +145,25 @@ test("static browsers exchange invites, fight, pause together and replay without
         .toBe("playing");
       expect((await state(p)).multiplayer.transport).toBe("peer");
     }
-    await deploy(page, 4, 18);
+    const deployed = await deploy(page, 4, 18);
     await deploy(friend, 4, 18);
     await expect.poll(async () => (await state(page)).actions).toBe(2);
     await expect.poll(async () => (await state(friend)).actions).toBe(2);
+    const deploymentGroup =
+      nativeAudio.profiles[deployed].spawn.components[0].sound;
+    const deploymentFiles = nativeAudio.sounds[deploymentGroup]
+      .filter((voice: any) => voice.file)
+      .map((voice: any) => `/assets/audio/${voice.file}.ogg`);
+    for (const p of [page, friend])
+      await expect
+        .poll(
+          async () =>
+            (await playedCombatAudio(p, deploymentFiles)).some(
+              (entry: any) => entry.outcome === "playing",
+            ),
+          { timeout: 15000 },
+        )
+        .toBe(true);
     for (const p of [page, friend])
       await expect
         .poll(

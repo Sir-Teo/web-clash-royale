@@ -42,9 +42,55 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "knight_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_knight_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_knight_deploy_end",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_knight_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_knight_deploy_end",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Knight"
       }
     },
     "archers": {
@@ -101,9 +147,47 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "ArcherDeploy"
+        ],
+        "components": [
+          {
+            "sound": "Archer deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "Archer deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Archer"
       }
     },
     "giant": {
@@ -148,9 +232,47 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "giant_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_giant_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_giant_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Giant"
       }
     },
     "musketeer": {
@@ -208,9 +330,55 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "musketeer_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_musketeer_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_musketeer_deploy_end",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_musketeer_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_musketeer_deploy_end",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Musketeer"
       }
     },
     "mini-pekka": {
@@ -255,9 +423,55 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "mini_pekka_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_minipekka_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_minipekka_deploy_end",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_minipekka_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_minipekka_deploy_end",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "MiniPekka"
       }
     },
     "goblins": {
@@ -302,9 +516,47 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "goblins_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_goblins_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_goblins_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Goblins"
       }
     },
     "spear-goblins": {
@@ -361,9 +613,47 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "spear_goblin_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_spear_goblin_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_spear_goblin_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "SpearGoblins"
       }
     },
     "skeletons": {
@@ -408,9 +698,47 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "skeleton_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_skeleton_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_skeleton_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Skeletons"
       }
     },
     "skeleton-army": {
@@ -455,9 +783,47 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "skeleton_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_skeleton_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_skeleton_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "SkeletonArmy"
       }
     },
     "bomber": {
@@ -514,9 +880,55 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "bomber_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_bomber_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_bomber_deploy_end",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_bomber_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_bomber_deploy_end",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Bomber"
       }
     },
     "valkyrie": {
@@ -561,9 +973,55 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "valkyrie_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_valkyrie_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_valkyrie_deploy_end",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_valkyrie_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_valkyrie_deploy_end",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Valkyrie"
       }
     },
     "hog-rider": {
@@ -608,9 +1066,55 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "hog_rider_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_hog_rider_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_hog_rider_deploy_end",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_hog_rider_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_hog_rider_deploy_end",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "HogRider"
       }
     },
     "baby-dragon": {
@@ -667,9 +1171,55 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "baby_dragon_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_baby_dragon_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_baby_dragon_deploy_end",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_baby_dragon_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_baby_dragon_deploy_end",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "BabyDragon"
       }
     },
     "minions": {
@@ -726,9 +1276,47 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "minion_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_minion_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_minion_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Minions"
       }
     },
     "witch": {
@@ -782,9 +1370,59 @@
         ]
       },
       "cast": {
-        "sources": [],
-        "components": [],
-        "enemyComponents": []
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "witch_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_witch_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_witch_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [
+          "witch_deploy_skeleton"
+        ],
+        "components": [
+          {
+            "sound": "sound_witch_deploy_skeleton",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_witch_deploy_skeleton",
+            "delay": 0
+          }
+        ]
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Witch"
       }
     },
     "wizard": {
@@ -846,9 +1484,55 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "chr_wizard_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_chr_wizard_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_chr_wizard_deploy_end",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_chr_wizard_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_chr_wizard_deploy_end",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Wizard"
       }
     },
     "prince": {
@@ -893,9 +1577,55 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "prince_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_prince_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_prince_deploy_end",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_prince_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_prince_deploy_end",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Prince"
       }
     },
     "pekka": {
@@ -940,9 +1670,55 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "pekka_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_pekka_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_pekka_deploy_end",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_pekka_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_pekka_deploy_end",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Pekka"
       }
     },
     "balloon": {
@@ -987,9 +1763,47 @@
         ]
       },
       "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "balloon_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_balloon_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_balloon_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Balloon"
       }
     },
     "cannon": {
@@ -1024,9 +1838,47 @@
         "enemyComponents": []
       },
       "cast": {
+        "sources": [
+          "sound:SpellCasting"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "Cannon_deploy"
+        ],
+        "components": [
+          {
+            "sound": "Cannon Deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "Cannon Deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_buildings",
+        "row": "Cannon"
       }
     },
     "tesla": {
@@ -1071,9 +1923,47 @@
         ]
       },
       "cast": {
+        "sources": [
+          "sound:SpellCasting"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "tesla_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_tesla_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_tesla_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_buildings",
+        "row": "Tesla"
       }
     },
     "king-tower": {
@@ -1119,6 +2009,16 @@
         ]
       },
       "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "summon": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -1169,6 +2069,16 @@
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       }
     },
     "fireball": {
@@ -1216,6 +2126,20 @@
             "delay": 0
           }
         ]
+      },
+      "spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_other",
+        "row": "Fireball"
       }
     },
     "arrows": {
@@ -1272,6 +2196,20 @@
             "delay": 0
           }
         ]
+      },
+      "spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_other",
+        "row": "Arrows"
       }
     },
     "zap": {
@@ -1319,6 +2257,20 @@
             "delay": 0
           }
         ]
+      },
+      "spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_other",
+        "row": "Zap"
       }
     }
   },
@@ -1447,6 +2399,72 @@
         "padding": 0
       }
     ],
+    "CharacterDeploy": [
+      {
+        "sourceFile": "sfx/dummy_01.wav",
+        "file": "dummy_01",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 3,
+        "padding": 0
+      }
+    ],
+    "sound_knight_deploy": [
+      {
+        "sourceFile": "sfx/knight_deploy_31111.wav",
+        "file": "knight_deploy_31111",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_knight_deploy_end": [
+      {
+        "sourceFile": "sfx/knight_deploy_end_01.wav",
+        "file": "knight_deploy_end_01",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          1,
+          1
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
     "Archer attack start": [
       {
         "sourceFile": "sfx/target_01.wav",
@@ -1508,6 +2526,28 @@
           0
         ],
         "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "Archer deploy": [
+      {
+        "sourceFile": "sfx/clash_archer_deploy_01.wav",
+        "file": "clash_archer_deploy_01",
+        "volume": [
+          0.5,
+          0.5
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
         "repeat": 0,
         "priority": 1,
         "padding": 0
@@ -1597,6 +2637,28 @@
         "padding": 0
       }
     ],
+    "sound_giant_deploy": [
+      {
+        "sourceFile": "sfx/giant_deploy_01.wav",
+        "file": "giant_deploy_01",
+        "volume": [
+          0.9,
+          0.9
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
     "sound_musketeer_attack_start": [
       {
         "sourceFile": "",
@@ -1663,6 +2725,50 @@
         "padding": 0
       }
     ],
+    "sound_musketeer_deploy": [
+      {
+        "sourceFile": "sfx/musketeer_deploy_01.wav",
+        "file": "musketeer_deploy_01",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_musketeer_deploy_end": [
+      {
+        "sourceFile": "sfx/musketeer_reload_01.wav",
+        "file": "musketeer_reload_01",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          1.2,
+          1.2
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
     "sound_minipekka_attack_start": [
       {
         "sourceFile": "sfx/mini_pekka_atk_12.wav",
@@ -1700,6 +2806,50 @@
         "startDelay": [
           0,
           0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_minipekka_deploy": [
+      {
+        "sourceFile": "sfx/minipekka_deploy_01.wav",
+        "file": "minipekka_deploy_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_minipekka_deploy_end": [
+      {
+        "sourceFile": "sfx/mini_pekka_deploy_end_06.wav",
+        "file": "mini_pekka_deploy_end_06",
+        "volume": [
+          0.65,
+          0.65
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          1.1,
+          1.1
         ],
         "maximum": 3,
         "repeat": 0,
@@ -1851,6 +3001,28 @@
         "padding": 0
       }
     ],
+    "sound_goblins_deploy": [
+      {
+        "sourceFile": "sfx/goblin_deploy_14.wav",
+        "file": "goblin_deploy_14",
+        "volume": [
+          0.5,
+          0.5
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
     "sound_spear_goblin_attack_start": [
       {
         "sourceFile": "sfx/spear_gob_atk_swish_01.wav",
@@ -1954,6 +3126,28 @@
         "maximum": 4,
         "repeat": 0,
         "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_spear_goblin_deploy": [
+      {
+        "sourceFile": "sfx/spear_gob_dep_01v2.wav",
+        "file": "spear_gob_dep_01v2",
+        "volume": [
+          0.45,
+          0.45
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
         "padding": 0
       }
     ],
@@ -2061,6 +3255,28 @@
         "padding": 0
       }
     ],
+    "sound_skeleton_deploy": [
+      {
+        "sourceFile": "sfx/skeleton_deploy_03.wav",
+        "file": "skeleton_deploy_03",
+        "volume": [
+          0.55,
+          0.55
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0.5,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
     "sound_bomber_attack_start": [
       {
         "sourceFile": "sfx/bomb_skeleton_atk_04.wav",
@@ -2122,6 +3338,50 @@
           0
         ],
         "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_bomber_deploy": [
+      {
+        "sourceFile": "sfx/deploy_skeleton_01.wav",
+        "file": "deploy_skeleton_01",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_bomber_deploy_end": [
+      {
+        "sourceFile": "sfx/skeleton_deploy_end_01.wav",
+        "file": "skeleton_deploy_end_01",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          1,
+          1
+        ],
+        "maximum": 2,
         "repeat": 0,
         "priority": 1,
         "padding": 0
@@ -2311,6 +3571,50 @@
         "padding": 0
       }
     ],
+    "sound_valkyrie_deploy": [
+      {
+        "sourceFile": "sfx/valkyrie_deploy_02.wav",
+        "file": "valkyrie_deploy_02",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_valkyrie_deploy_end": [
+      {
+        "sourceFile": "sfx/valkyrie_deploy_end_02.wav",
+        "file": "valkyrie_deploy_end_02",
+        "volume": [
+          0.5,
+          0.5
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          1,
+          1
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
     "sound_hog_rider_attack_start": [
       {
         "sourceFile": "sfx/hogrider_atk_01.wav",
@@ -2351,6 +3655,90 @@
         ],
         "maximum": 3,
         "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_hog_rider_deploy": [
+      {
+        "sourceFile": "sfx/hogrider_deploy_01.wav",
+        "file": "hogrider_deploy_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_hog_rider_deploy_end": [
+      {
+        "sourceFile": "sfx/dummy_01.wav",
+        "file": "dummy_01",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          1,
+          1
+        ],
+        "maximum": 1,
+        "repeat": 9,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/hogrider_deploy_end_01.wav",
+        "file": "hogrider_deploy_end_01",
+        "volume": [
+          0.5,
+          0.5
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0.75,
+          0.75
+        ],
+        "maximum": 1,
+        "repeat": 9,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/dummy_01.wav",
+        "file": "dummy_01",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          1,
+          1
+        ],
+        "maximum": 1,
+        "repeat": 9,
         "priority": 1,
         "padding": 0
       }
@@ -2416,6 +3804,50 @@
           0
         ],
         "maximum": 4,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_baby_dragon_deploy": [
+      {
+        "sourceFile": "sfx/babydragon_deploy_01.wav",
+        "file": "babydragon_deploy_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_baby_dragon_deploy_end": [
+      {
+        "sourceFile": "sfx/baby_dragon_deploy_end_11.wav",
+        "file": "baby_dragon_deploy_end_11",
+        "volume": [
+          0.75,
+          0.75
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          1.1,
+          1.1
+        ],
+        "maximum": 1,
         "repeat": 0,
         "priority": 2,
         "padding": 0
@@ -2505,6 +3937,28 @@
         "padding": 0
       }
     ],
+    "sound_minion_deploy": [
+      {
+        "sourceFile": "sfx/minion_deploy_01.wav",
+        "file": "minion_deploy_01",
+        "volume": [
+          0.4,
+          0.4
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
     "sound_witch_attack_start": [
       {
         "sourceFile": "sfx/witch_attack_02.wav",
@@ -2567,6 +4021,50 @@
         ],
         "maximum": 1,
         "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_witch_deploy": [
+      {
+        "sourceFile": "sfx/summon_witch_01.wav",
+        "file": "summon_witch_01",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_witch_deploy_skeleton": [
+      {
+        "sourceFile": "sfx/witch_summon_02.wav",
+        "file": "witch_summon_02",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 1,
         "priority": 1,
         "padding": 0
       }
@@ -2719,6 +4217,90 @@
         "padding": 0
       }
     ],
+    "sound_chr_wizard_deploy": [
+      {
+        "sourceFile": "sfx/deploy_wizard_01.wav",
+        "file": "deploy_wizard_01",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_chr_wizard_deploy_end": [
+      {
+        "sourceFile": "sfx/dummy_01.wav",
+        "file": "dummy_01",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          1,
+          1
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/wiz_deploy_vo_01.wav",
+        "file": "wiz_deploy_vo_01",
+        "volume": [
+          0.55,
+          0.55
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 5,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/wiz_deploy_vo_02.wav",
+        "file": "wiz_deploy_vo_02",
+        "volume": [
+          0.55,
+          0.55
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          1,
+          1
+        ],
+        "maximum": 1,
+        "repeat": 5,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
     "sound_prince_attack_start": [
       {
         "sourceFile": "sfx/prince_andrew_use_04.wav",
@@ -2823,6 +4405,50 @@
         "padding": 0
       }
     ],
+    "sound_prince_deploy": [
+      {
+        "sourceFile": "sfx/prince_deploy_01.wav",
+        "file": "prince_deploy_01",
+        "volume": [
+          0.65,
+          0.65
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_prince_deploy_end": [
+      {
+        "sourceFile": "sfx/horse_blow_01.wav",
+        "file": "horse_blow_01",
+        "volume": [
+          0.65,
+          0.65
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          1,
+          1
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
     "sound_pekka_attack_start": [
       {
         "sourceFile": "sfx/pekka_atk_01.wav",
@@ -2860,6 +4486,50 @@
         "startDelay": [
           0,
           0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_pekka_deploy": [
+      {
+        "sourceFile": "sfx/pekka_deploy_01.wav",
+        "file": "pekka_deploy_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_pekka_deploy_end": [
+      {
+        "sourceFile": "sfx/pekka_deploy_end_03.wav",
+        "file": "pekka_deploy_end_03",
+        "volume": [
+          1,
+          1
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          3,
+          3
         ],
         "maximum": 3,
         "repeat": 0,
@@ -2911,6 +4581,28 @@
         "padding": 0
       }
     ],
+    "sound_balloon_deploy": [
+      {
+        "sourceFile": "sfx/deploy_balloon_06.wav",
+        "file": "deploy_balloon_06",
+        "volume": [
+          0.9,
+          0.9
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
     "Cannon Fire": [
       {
         "sourceFile": "sfx/cannon_fire_03.wav",
@@ -2922,6 +4614,50 @@
         "pitch": [
           0.96,
           1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "SpellCasting": [
+      {
+        "sourceFile": "sfx/spellcast01.wav",
+        "file": "spellcast01",
+        "volume": [
+          0.3,
+          0.35
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "Cannon Deploy": [
+      {
+        "sourceFile": "sfx/cannon_deploy_01.wav",
+        "file": "cannon_deploy_01",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          0.98,
+          1.02
         ],
         "startDelay": [
           0,
@@ -2966,6 +4702,28 @@
         "pitch": [
           0.95,
           1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_tesla_deploy": [
+      {
+        "sourceFile": "sfx/building_place_01.wav",
+        "file": "building_place_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
         ],
         "startDelay": [
           0,
@@ -3084,28 +4842,6 @@
         "maximum": 1,
         "repeat": 0,
         "priority": 2,
-        "padding": 0
-      }
-    ],
-    "SpellCasting": [
-      {
-        "sourceFile": "sfx/spellcast01.wav",
-        "file": "spellcast01",
-        "volume": [
-          0.3,
-          0.35
-        ],
-        "pitch": [
-          0.96,
-          1.04
-        ],
-        "startDelay": [
-          0,
-          0
-        ],
-        "maximum": 2,
-        "repeat": 0,
-        "priority": 1,
         "padding": 0
       }
     ],

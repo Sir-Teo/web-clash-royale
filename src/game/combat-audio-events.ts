@@ -3,7 +3,14 @@ import type { Entity, Team } from "./engine";
 
 export type AudioProfile = CardId | "king-tower" | "princess-tower";
 export type CombatAudioPhase =
-  "attack" | "launch" | "impact" | "cast" | "cancel";
+  | "attack"
+  | "launch"
+  | "impact"
+  | "cast"
+  | "cancel"
+  | "spawn"
+  | "summon"
+  | "death";
 export interface CombatAudioEvent {
   id: number;
   time: number;
@@ -21,3 +28,9 @@ export const audioProfile = (
       ? "king-tower"
       : "princess-tower"
     : entity.card;
+
+// Older browser clients only understand the original attack phases.
+export const isLifecycleAudio = (event: CombatAudioEvent) =>
+  event.phase === "spawn" ||
+  event.phase === "summon" ||
+  event.phase === "death";

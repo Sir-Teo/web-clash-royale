@@ -57,9 +57,10 @@ describe("native combat audio evidence", () => {
     const manifest = JSON.parse(
       readFileSync("reference/client/combat-audio-manifest.json", "utf8"),
     );
-    expect(manifest.audioFiles).toHaveLength(75);
+    expect(manifest.audioFiles).toHaveLength(107);
+    expect(manifest.sources).toHaveLength(11);
     expect(Object.keys(definitions.profiles)).toHaveLength(26);
-    expect(Object.keys(definitions.sounds)).toHaveLength(55);
+    expect(Object.keys(definitions.sounds)).toHaveLength(87);
     for (const file of [
       ...manifest.sources,
       ...manifest.audioFiles,
@@ -232,7 +233,9 @@ describe("canonical combat presentation events", () => {
     advanceUntil(battle, () =>
       battle.audioEvents.some((e) => e.phase === "impact"),
     );
-    const events = battle.audioEvents.filter((e) => e.actor === knight.id);
+    const events = battle.audioEvents.filter(
+      (e) => e.actor === knight.id && ["attack", "impact"].includes(e.phase),
+    );
     expect(events.map((e) => e.phase)).toEqual(["attack", "impact"]);
     expect(events[1].time - events[0].time).toBeCloseTo(
       combatTraits(knight).windup,
@@ -278,7 +281,9 @@ describe("canonical combat presentation events", () => {
     const knight = unit(battle, "knight", "blue", 4, 21);
     unit(battle, "giant", "red", 4, 20).active = false;
     battle.step();
-    const start = battle.audioEvents.find((e) => e.actor === knight.id)!;
+    const start = battle.audioEvents.find(
+      (e) => e.actor === knight.id && e.phase === "attack",
+    )!;
     battle.players.red.hand[0] = "zap";
     battle.players.red.elixir = 10;
     battle.play("red", 0, knight.x, knight.y);
@@ -323,4 +328,188 @@ describe("canonical combat presentation events", () => {
     applySnapshot(rendered, older, "blue");
     expect(rendered.audioEvents).toEqual([]);
   });
+});
+
+describe("native deployment and summoning audio", () => {
+  it("retains a briefly delayed deployment and its follow-up spacing without replaying stale attacks", () => {
+    const battle = arena();
+    battle.tick = 90;
+    battle.audioEvents = [
+      event(1, -2, "musketeer", "spawn"),
+      event(2, 0, "musketeer", "spawn"),
+      event(3, 0, "knight", "attack"),
+    ];
+    const wire = snapshot(battle);
+    expect(wire.audioEvents).toEqual([]);
+    expect(wire.lifecycleAudioEvents?.map((e) => e.id)).toEqual([2]);
+    const { audio, cues } = harness();
+    cues.consume(wire.lifecycleAudioEvents!, 29, battle.time);
+    cues.update(3, false, new Set([7]));
+    expect(audio.play.mock.calls.map((call) => call[0])).toEqual([
+      "musketeer_deploy_01",
+    ]);
+    cues.update(4, false, new Set([7]));
+    expect(audio.play).toHaveBeenCalledOnce();
+    cues.update(4.2, false, new Set([7]));
+    expect(audio.play.mock.calls.map((call) => call[0])).toEqual([
+      "musketeer_deploy_01",
+      "musketeer_reload_01",
+    ]);
+  });
+  it("suppresses an orphaned delayed voice even when a network snapshot has skipped its death event", () => {
+    const { audio, cues } = harness();
+    cues.consume([event(1, 0, "pekka", "spawn")], 29, 0);
+    cues.update(0, false, new Set([7]));
+    expect(audio.play).toHaveBeenCalledOnce();
+    cues.consume([event(10, 3, "musketeer", "impact")], 29, 3);
+    cues.update(3, false, new Set());
+    expect(audio.play.mock.calls.map((call) => call[0])).toEqual([
+      "pekka_deploy_01",
+      "musket_impact_01",
+    ]);
+  });
+  it("keeps distinct troop/building cues, authored follow-up delays and the bounded source correction", () => {
+    const files = (
+      profile: string,
+      phase: CombatAudioEvent["phase"],
+      team: Team = "blue",
+    ) => combatAudioPlan(profile, phase, 29, team).map((cue) => cue.file);
+    expect(files("spear-goblins", "spawn")).toEqual(["spear_gob_dep_01v2"]);
+    expect(files("bomber", "spawn")).toEqual([
+      "deploy_skeleton_01",
+      "skeleton_deploy_end_01",
+    ]);
+    expect(files("witch", "spawn")).toEqual(["summon_witch_01"]);
+    expect(files("witch", "summon")).toEqual(["witch_summon_02"]);
+    expect(files("cannon", "spawn")).toEqual(["cannon_deploy_01"]);
+    expect(files("tesla", "spawn")).toEqual(["building_place_01"]);
+    expect(files("cannon", "cast")).toEqual(["spellcast01"]);
+    expect(files("giant", "spawn", "red")).toEqual(["giant_deploy_01"]);
+    expect(files("king-tower", "spawn")).toEqual([]);
+    const musketeer = combatAudioPlan("musketeer", "spawn", 29);
+    expect(musketeer.map((cue) => [cue.file, cue.delay, cue.volume])).toEqual([
+      ["musketeer_deploy_01", 0, 0.7 * 0.35],
+      ["musketeer_reload_01", 1.2, 0.6 * 0.35],
+    ]);
+    expect(combatAudioPlan("knight", "spawn", 29)[1].delay).toBe(1);
+    expect(combatAudioPlan("pekka", "spawn", 29)[1].delay).toBe(3);
+    const manifest = JSON.parse(
+      readFileSync("reference/client/combat-audio-manifest.json", "utf8"),
+    );
+    expect(manifest.ignoredEnemyVersions).toHaveLength(1);
+    const correction = manifest.ignoredEnemyVersions[0];
+    const effects = csvGroups(
+      readFileSync("reference/client/effects.csv", "utf8"),
+    );
+    expect(effects[correction.effect][0].EnemyVersion).toBe(
+      correction.enemyVersion,
+    );
+    expect(
+      effects[correction.enemyVersion].some(
+        (row: any) => row.Effect === correction.effect,
+      ),
+    ).toBe(true);
+    expect(definitions.profiles["skeleton-army"].cardSource).toEqual({
+      table: "spells_characters",
+      row: "SkeletonArmy",
+    });
+    expect(combatAudioPlan("knight", "future-phase" as any, 29)).toEqual([]);
+  });
+  it("cancels only the dead troop's pending voices and preserves later projectile impact", () => {
+    const { audio, cues } = harness();
+    cues.consume(
+      [
+        event(1, 0, "musketeer", "spawn"),
+        { ...event(2, 0, "musketeer", "spawn"), actor: 8 },
+      ],
+      29,
+      0,
+    );
+    cues.update(0);
+    cues.consume(
+      [{ ...event(3, 0.2, "musketeer", "cancel"), attack: 99 }],
+      29,
+      0.2,
+    );
+    cues.consume(
+      [
+        event(4, 0.5, "musketeer", "death"),
+        event(5, 0.6, "musketeer", "impact"),
+      ],
+      29,
+      0.6,
+    );
+    cues.update(0.6);
+    cues.update(1.2, true);
+    expect(audio.play.mock.calls.map((call) => call[0])).toEqual([
+      "musketeer_deploy_01",
+      "musketeer_deploy_01",
+      "musket_impact_01",
+    ]);
+    cues.update(1.2);
+    expect(audio.play.mock.calls.at(-1)).toEqual([
+      "musketeer_reload_01",
+      0.6 * 0.35,
+      {
+        pitch: combatAudioPlan("musketeer", "spawn", 29 ^ 2)[1].pitch,
+        group: "sound_musketeer_deploy_end",
+        maximum: 3,
+      },
+    ]);
+    expect(audio.play).toHaveBeenCalledTimes(4);
+  });
+  it("transports a swarm once per entity without exposing new phases to old clients or overlapping Skeleton voices", () => {
+    const battle = arena();
+    battle.players.blue.hand[0] = "skeleton-army";
+    expect(battle.play("blue", 0, 4, 22).ok).toBe(true);
+    expect(battle.events[0].id).toBe(7);
+    const spawned = battle.entities.filter((e) => e.card === "skeleton-army");
+    const voices = battle.audioEvents.filter((e) => e.phase === "spawn");
+    expect(voices.map((e) => e.actor)).toEqual(spawned.map((e) => e.id));
+    expect(voices).toHaveLength(15);
+    const wire = snapshot(battle);
+    expect(wire.audioEvents?.map((e) => e.phase)).toEqual(["cast"]);
+    expect(wire.lifecycleAudioEvents).toHaveLength(15);
+    const rendered = arena();
+    applySnapshot(rendered, wire, "red");
+    expect(rendered.audioEvents.map((e) => e.id)).toEqual(
+      battle.audioEvents.map((e) => e.id),
+    );
+    expect(rendered.audioEvents.every((e) => e.team === "red")).toBe(true);
+    const { audio, cues } = harness();
+    cues.consume(rendered.audioEvents, battle.seed, 0);
+    cues.update(0);
+    expect(
+      audio.play.mock.calls.filter((call) => call[0] === "skeleton_deploy_03"),
+    ).toHaveLength(1);
+    delete wire.lifecycleAudioEvents;
+    applySnapshot(rendered, wire, "blue");
+    expect(rendered.audioEvents.map((e) => e.phase)).toEqual(["cast"]);
+  });
+  it.each([1, 5] as const)(
+    "emits one Witch summon cue per burst under version-%i combat",
+    (version) => {
+      const initial = arena();
+      const battle = new Battle({
+        replay: { ...initial.exportReplay(), version },
+      });
+      for (const tower of battle.entities) tower.active = false;
+      const witch = unit(battle, "witch", "blue", 4, 25);
+      advanceUntil(battle, () =>
+        battle.audioEvents.some((e) => e.phase === "summon"),
+      );
+      const summon = battle.audioEvents.find((e) => e.phase === "summon")!;
+      expect(summon.actor).toBe(witch.id);
+      expect(summon.profile).toBe("witch");
+      expect(
+        battle.audioEvents.filter((e) => e.phase === "summon"),
+      ).toHaveLength(1);
+      expect(
+        battle.audioEvents.filter(
+          (e) => e.phase === "spawn" && e.profile === "skeletons",
+        ),
+      ).toHaveLength(3);
+      expect(battle.actions).toHaveLength(1);
+    },
+  );
 });

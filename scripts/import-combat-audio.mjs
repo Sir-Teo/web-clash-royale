@@ -11,6 +11,8 @@ for (const [name, directory] of [
   ["characters", "logic"],
   ["buildings", "logic"],
   ["projectiles", "logic"],
+  ["spells_characters", "logic"],
+  ["spells_buildings", "logic"],
   ["spells_other", "logic"],
   ["area_effect_objects", "logic"],
 ]) {
@@ -29,7 +31,26 @@ for (const [name, directory] of [
 const profilesPath = "src/game/combat-data.json",
   profilesBytes = await readFile(profilesPath);
 sources.push({ path: profilesPath, sha256: hash(profilesBytes) });
+const cardBindingsPath = "public/assets/ui/cards/cards.json",
+  cardBindingsBytes = await readFile(cardBindingsPath),
+  cardBindings = JSON.parse(cardBindingsBytes).portraits;
+sources.push({ path: cardBindingsPath, sha256: hash(cardBindingsBytes) });
 const sounds = {};
+// This archived particle-only branch points back into a deployment tree,
+// creating a cycle and introducing an unrelated Giant Skeleton voice.
+const ignoredEnemyVersions = [
+  {
+    effect: "Deploy_ground_fx_largeSize",
+    enemyVersion: "giant_skeleton_deploy_enemy",
+    reason:
+      "Cyclic enemy substitution on a particle-only branch; preserve its own rows.",
+  },
+];
+for (const override of ignoredEnemyVersions)
+  if (
+    tables.effects[override.effect]?.[0].EnemyVersion !== override.enemyVersion
+  )
+    throw new Error(`Recheck historical effect correction: ${override.effect}`);
 function sound(name) {
   if (sounds[name]) return;
   const rows = tables.sounds[name];
@@ -71,7 +92,11 @@ function composition(name, team, delay = 0, ancestry = []) {
   }
   let rows = tables.effects[name];
   if (!rows) throw new Error(`Unknown effect ${name}`);
-  if (team === "red" && rows[0].EnemyVersion) {
+  if (
+    team === "red" &&
+    rows[0].EnemyVersion &&
+    !ignoredEnemyVersions.some((entry) => entry.effect === name)
+  ) {
     name = rows[0].EnemyVersion;
     rows = tables.effects[name];
   }
@@ -116,18 +141,22 @@ for (const [id, profile] of Object.entries(JSON.parse(profilesBytes))) {
   const projectile = profile.projectile
     ? tables.projectiles[profile.projectile.source]
     : null;
+  const binding = cardBindings[id],
+    card = binding ? tables[binding.table][binding.row] : null;
+  if (binding && !card) throw new Error(`Unknown card source ${id}`);
   profiles[id] = phases(profile.source, {
     attack: [row.AttackStartEffect],
     launch: [row.ProjectileEffect],
     impact: [row.DamageEffect, projectile?.HitEffect],
-    cast: [],
+    cast: [card?.CastSound && `sound:${card.CastSound}`, card?.Effect],
+    spawn: [row.SpawnEffect],
+    summon: [row.SpawnCharacterEffect],
   });
+  if (binding)
+    profiles[id].cardSource = { table: binding.table, row: binding.row };
 }
-for (const [id, name] of [
-  ["fireball", "Fireball"],
-  ["arrows", "Arrows"],
-  ["zap", "Zap"],
-]) {
+for (const [id, { table, row: name }] of Object.entries(cardBindings)) {
+  if (table !== "spells_other") continue;
   const row = tables.spells_other[name];
   const projectile =
     tables.projectiles[row.CustomFirstProjectile || row.Projectile];
@@ -137,7 +166,10 @@ for (const [id, name] of [
     launch: [],
     impact: [projectile?.HitEffect, area?.OneShotEffect],
     cast: [row.CastSound && `sound:${row.CastSound}`, row.Effect],
+    spawn: [],
+    summon: [],
   });
+  profiles[id].cardSource = { table, row: name };
 }
 const commit = "b4530a1043b213ee2baf9c50a3d0d7fae22c2313";
 const base = `https://raw.githubusercontent.com/RoyaleAPI/cr-api-assets/${commit}/`;
@@ -178,6 +210,7 @@ await writeFile(
       source: "https://github.com/smlbiobot/cr",
       commit: "7fc7687e6de74690e902543ee4b59f562121e225",
       sources,
+      ignoredEnemyVersions,
       audioSource: "https://github.com/RoyaleAPI/cr-api-assets",
       audioCommit: commit,
       audioFiles,

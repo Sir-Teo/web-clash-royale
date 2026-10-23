@@ -23,6 +23,14 @@
       "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
     },
     {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/spells_buildings.csv",
+      "sha256": "f302372ce1d0870e3edb37d0520be9164865eb207ea600910616b9cbf024f456"
+    },
+    {
       "path": "reference/logic/spells_other.csv",
       "sha256": "a50dcc87e6ee337537e2dcb00c6f4f3f81fc383685ce8e630b33c41f6c4e2dda"
     },
@@ -33,6 +41,17 @@
     {
       "path": "src/game/combat-data.json",
       "sha256": "bc8cad0c44c442dd2565641f0c8bcaca14f2d2e9ecb551a88b9cc67a9830ea66"
+    },
+    {
+      "path": "public/assets/ui/cards/cards.json",
+      "sha256": "f3f34870c2a4577d1122198d2c81018c6c27c327be32c40ef3b815d831385f5d"
+    }
+  ],
+  "ignoredEnemyVersions": [
+    {
+      "effect": "Deploy_ground_fx_largeSize",
+      "enemyVersion": "giant_skeleton_deploy_enemy",
+      "reason": "Cyclic enemy substitution on a particle-only branch; preserve its own rows."
     }
   ],
   "audioSource": "https://github.com/RoyaleAPI/cr-api-assets",
@@ -69,10 +88,22 @@
       "sha256": "556ee756ea723ef55ffa4fc02afa0e52f8961b7c3c8fb93edf533939b56086d0"
     },
     {
+      "path": "public/assets/audio/baby_dragon_deploy_end_11.ogg",
+      "source": "sfx/baby_dragon_deploy_end_11.ogg",
+      "bytes": 6613,
+      "sha256": "f045620264a2496d4884d86f7c5c6c17c85da6ea6a13064beac4300905ab1543"
+    },
+    {
       "path": "public/assets/audio/baby_dragon_fireball_08.ogg",
       "source": "sfx/baby_dragon_fireball_08.ogg",
       "bytes": 8080,
       "sha256": "7b5509d9c1e4fa66a7fce9e9f0c50bd461a136e852aa5818ae7b43a50cc23c5c"
+    },
+    {
+      "path": "public/assets/audio/babydragon_deploy_01.ogg",
+      "source": "sfx/babydragon_deploy_01.ogg",
+      "bytes": 8668,
+      "sha256": "4bb713adf208f815fd3688cc584a785868a5261f693e55724079a1276540b3fc"
     },
     {
       "path": "public/assets/audio/bomb_skeleton_atk_04.ogg",
@@ -87,10 +118,46 @@
       "sha256": "0fe352f18fb44498995ef979c5954e8fdf2dab668d26e1985d3fbce11a277d1e"
     },
     {
+      "path": "public/assets/audio/building_place_01.ogg",
+      "source": "sfx/building_place_01.ogg",
+      "bytes": 7351,
+      "sha256": "07a6b764df4d8a8e67b99413f0b8b2deb08b29913f3467b84b40357359bc5bea"
+    },
+    {
+      "path": "public/assets/audio/cannon_deploy_01.ogg",
+      "source": "sfx/cannon_deploy_01.ogg",
+      "bytes": 6493,
+      "sha256": "90c567439c614bc3485ac30fe4dc2191837fcc5feb7392d81be103a7a2ae73dc"
+    },
+    {
       "path": "public/assets/audio/cannon_fire_03.ogg",
       "source": "sfx/cannon_fire_03.ogg",
       "bytes": 9053,
       "sha256": "8b074ef91f3213f21bfa1b86d2fc808c1b876e98feac66c390670d688b3aa51d"
+    },
+    {
+      "path": "public/assets/audio/clash_archer_deploy_01.ogg",
+      "source": "sfx/clash_archer_deploy_01.ogg",
+      "bytes": 6736,
+      "sha256": "c9eb08a19d7db65972f866a8594d9ffa451b2f99e005f337766775202766f55c"
+    },
+    {
+      "path": "public/assets/audio/deploy_balloon_06.ogg",
+      "source": "sfx/deploy_balloon_06.ogg",
+      "bytes": 17505,
+      "sha256": "e23218067d2b99cc8d15ff6d758c2c2732f5e20e2cd6d601d833a6b530d10a1d"
+    },
+    {
+      "path": "public/assets/audio/deploy_skeleton_01.ogg",
+      "source": "sfx/deploy_skeleton_01.ogg",
+      "bytes": 6747,
+      "sha256": "1cf7cfde71abd955dcb36fadf0b2e0ce862e05701ad95e3a91e9afe36970ce27"
+    },
+    {
+      "path": "public/assets/audio/deploy_wizard_01.ogg",
+      "source": "sfx/deploy_wizard_01.ogg",
+      "bytes": 7707,
+      "sha256": "d192fee3449b7a76544bad25c02bb6285a14827c22aac09c9ca2142f802732b0"
     },
     {
       "path": "public/assets/audio/drop_bomb_03.ogg",
@@ -165,6 +232,12 @@
       "sha256": "6749c4b528db7f27c352e7b729f73e3f317c592d23e34ed12cf608d231f8460c"
     },
     {
+      "path": "public/assets/audio/giant_deploy_01.ogg",
+      "source": "sfx/giant_deploy_01.ogg",
+      "bytes": 11149,
+      "sha256": "a940d2a0708045e6886d33690a3c365f11d7af771d8a0d33953de00b93f60d01"
+    },
+    {
       "path": "public/assets/audio/giant_hit_01.ogg",
       "source": "sfx/giant_hit_01.ogg",
       "bytes": 7585,
@@ -189,6 +262,12 @@
       "sha256": "8fcc8eb8cb4aa8ab7855c66a3513cb8cf90a3b73d6850913ef08f853fcb6e9c8"
     },
     {
+      "path": "public/assets/audio/goblin_deploy_14.ogg",
+      "source": "sfx/goblin_deploy_14.ogg",
+      "bytes": 7801,
+      "sha256": "3d0f03976e8ec876b38f79b72b40402e552eb09926d74be6bec745d8e24d6482"
+    },
+    {
       "path": "public/assets/audio/hogrider_atk_01.ogg",
       "source": "sfx/hogrider_atk_01.ogg",
       "bytes": 6174,
@@ -199,6 +278,24 @@
       "source": "sfx/hogrider_atk_03.ogg",
       "bytes": 7518,
       "sha256": "3631d49e9152d1c061921a0e50a336a7afa364dc3aec3f9aa276468c88527510"
+    },
+    {
+      "path": "public/assets/audio/hogrider_deploy_01.ogg",
+      "source": "sfx/hogrider_deploy_01.ogg",
+      "bytes": 7527,
+      "sha256": "0edf727f05b0ff385ce04674dc38ab207db01f9cf406507ffdaccba6f087d3b3"
+    },
+    {
+      "path": "public/assets/audio/hogrider_deploy_end_01.ogg",
+      "source": "sfx/hogrider_deploy_end_01.ogg",
+      "bytes": 12245,
+      "sha256": "ab8e916df4661e060ccf9d938ddf2e937f892cf656434c0ae601242b9fb2673e"
+    },
+    {
+      "path": "public/assets/audio/horse_blow_01.ogg",
+      "source": "sfx/horse_blow_01.ogg",
+      "bytes": 7263,
+      "sha256": "3544538274674aa2853e75009bb91448c6bbde9c198b1735eb7168cb7707e147"
     },
     {
       "path": "public/assets/audio/king_fire_06.ogg",
@@ -243,6 +340,18 @@
       "sha256": "046bf244ce7033b6b06522b3982612698e6268f4e77542135646058166cc7d34"
     },
     {
+      "path": "public/assets/audio/knight_deploy_31111.ogg",
+      "source": "sfx/knight_deploy_31111.ogg",
+      "bytes": 7375,
+      "sha256": "a0b8a6f19895cec543204652dc23d53343bcadf6607fe62404f64e2da0f7a14b"
+    },
+    {
+      "path": "public/assets/audio/knight_deploy_end_01.ogg",
+      "source": "sfx/knight_deploy_end_01.ogg",
+      "bytes": 7603,
+      "sha256": "9b2ab7c47f1a52db91d511526940a05271944e31bfc130678189922698b37fe6"
+    },
+    {
       "path": "public/assets/audio/knight_hit_01.ogg",
       "source": "sfx/knight_hit_01.ogg",
       "bytes": 5449,
@@ -255,10 +364,28 @@
       "sha256": "faaba9c661b20f76d69f64cb1cc768c64c684efa973eb0cbc3bfff62447f2cd1"
     },
     {
+      "path": "public/assets/audio/mini_pekka_deploy_end_06.ogg",
+      "source": "sfx/mini_pekka_deploy_end_06.ogg",
+      "bytes": 11153,
+      "sha256": "23c4e798fff825b664a52030826532e6d52f885e357015cb741ec85bbe61367d"
+    },
+    {
       "path": "public/assets/audio/mini_pekka_hit_03.ogg",
       "source": "sfx/mini_pekka_hit_03.ogg",
       "bytes": 10613,
       "sha256": "cc303589a96a01ad87ee16b31ddda3df892d1d38fecf35867f1ef1777d019e41"
+    },
+    {
+      "path": "public/assets/audio/minion_deploy_01.ogg",
+      "source": "sfx/minion_deploy_01.ogg",
+      "bytes": 6457,
+      "sha256": "0d111cb411b364145895368547d15bc12786a7f8c8d5aeb1309925095b7aaf28"
+    },
+    {
+      "path": "public/assets/audio/minipekka_deploy_01.ogg",
+      "source": "sfx/minipekka_deploy_01.ogg",
+      "bytes": 8934,
+      "sha256": "50c996a28c2be9ce37b0fa81454274fa82c51b6260b054205f27ee2dda9288d2"
     },
     {
       "path": "public/assets/audio/musket_fire_02.ogg",
@@ -273,6 +400,18 @@
       "sha256": "c36fd74e2de20c1deb3c87878b78e6de25fe344c1e36da6d072eb3e4f2aaa5d0"
     },
     {
+      "path": "public/assets/audio/musketeer_deploy_01.ogg",
+      "source": "sfx/musketeer_deploy_01.ogg",
+      "bytes": 7768,
+      "sha256": "934298b8ebe02cc6012a541d9f05f050bc8fc1d3f16e4ff1f2b69f653a201ec1"
+    },
+    {
+      "path": "public/assets/audio/musketeer_reload_01.ogg",
+      "source": "sfx/musketeer_reload_01.ogg",
+      "bytes": 5190,
+      "sha256": "25aa7f82e849d7fc13602c14ec7a712014460dabe308f39d81cb275fccd89e57"
+    },
+    {
       "path": "public/assets/audio/pekka_atk_01.ogg",
       "source": "sfx/pekka_atk_01.ogg",
       "bytes": 8053,
@@ -283,6 +422,18 @@
       "source": "sfx/pekka_attack_hit_03.ogg",
       "bytes": 12241,
       "sha256": "3e998cbf21f4f0599756f29835e16abafe65f7e02aa8db1cbf3ef0ccbee70779"
+    },
+    {
+      "path": "public/assets/audio/pekka_deploy_01.ogg",
+      "source": "sfx/pekka_deploy_01.ogg",
+      "bytes": 14162,
+      "sha256": "2854dba802c9e5f5005395da64a117dc8fcfc96076b4b7e6e53b51c2b4219a72"
+    },
+    {
+      "path": "public/assets/audio/pekka_deploy_end_03.ogg",
+      "source": "sfx/pekka_deploy_end_03.ogg",
+      "bytes": 15975,
+      "sha256": "2b35457fd04d1917251f5f41f4f0abf12cca32b73188baac729e7a871f2bb518"
     },
     {
       "path": "public/assets/audio/prince_andrew_use_02.ogg",
@@ -309,6 +460,12 @@
       "sha256": "620524d0afac41cbf89819bea9051ca658129fcbebd8161c63e0871cb8b2e362"
     },
     {
+      "path": "public/assets/audio/prince_deploy_01.ogg",
+      "source": "sfx/prince_deploy_01.ogg",
+      "bytes": 9891,
+      "sha256": "e41767ef53a25a420661af91ac654fafe31bd54709efa029239ce15af62d2b1c"
+    },
+    {
       "path": "public/assets/audio/prince_hit_01.ogg",
       "source": "sfx/prince_hit_01.ogg",
       "bytes": 6259,
@@ -325,6 +482,18 @@
       "source": "sfx/skeleton_bomb_explo_01.ogg",
       "bytes": 9131,
       "sha256": "83f23cf3463c6a9f2852e6a584070d934ee6d418d9d348b4f8d29777c6a522e2"
+    },
+    {
+      "path": "public/assets/audio/skeleton_deploy_03.ogg",
+      "source": "sfx/skeleton_deploy_03.ogg",
+      "bytes": 8639,
+      "sha256": "5446501ce040ea292b57eb52fc52c5fecf534da91870c24bbedfbc9f149c2c8c"
+    },
+    {
+      "path": "public/assets/audio/skeleton_deploy_end_01.ogg",
+      "source": "sfx/skeleton_deploy_end_01.ogg",
+      "bytes": 7484,
+      "sha256": "01965b60e5bc2ccced1a19853c4c40f6add690ed0c1064839519ec509b6192c1"
     },
     {
       "path": "public/assets/audio/sound_fireball_hit_01.ogg",
@@ -363,10 +532,22 @@
       "sha256": "145096aaaf7a0ea4477181cf788a4080ac8e7310a2e3f9fef03aa631baa42510"
     },
     {
+      "path": "public/assets/audio/spear_gob_dep_01v2.ogg",
+      "source": "sfx/spear_gob_dep_01v2.ogg",
+      "bytes": 8194,
+      "sha256": "dd3f6f461bdc62c7d22fad97580544cba214950a44de03d4baea9305ce635930"
+    },
+    {
       "path": "public/assets/audio/spellcast01.ogg",
       "source": "sfx/spellcast01.ogg",
       "bytes": 10778,
       "sha256": "6ebb54420e0c3887e7f77871b8de5f17dc0aee2108261f1a96477511cec04aa8"
+    },
+    {
+      "path": "public/assets/audio/summon_witch_01.ogg",
+      "source": "sfx/summon_witch_01.ogg",
+      "bytes": 8595,
+      "sha256": "ed8f90fdf0afee9b2a50e6a916f977b9b3b155af5c43ae54fe2688808f97be2c"
     },
     {
       "path": "public/assets/audio/target_01.ogg",
@@ -441,6 +622,18 @@
       "sha256": "7c74a3736e0a88166e3fe26e533850b3eec2db333310d84679f82d35d3037e7d"
     },
     {
+      "path": "public/assets/audio/valkyrie_deploy_02.ogg",
+      "source": "sfx/valkyrie_deploy_02.ogg",
+      "bytes": 8215,
+      "sha256": "faa59af128455f61f8bf0980edc7203958b7ae3f3c336930febd7fb91f553538"
+    },
+    {
+      "path": "public/assets/audio/valkyrie_deploy_end_02.ogg",
+      "source": "sfx/valkyrie_deploy_end_02.ogg",
+      "bytes": 7653,
+      "sha256": "44255053ab16d7597c1bcffbd459e58bbcb2b2f9b8561f83b86ef0e3737b5f0c"
+    },
+    {
       "path": "public/assets/audio/valkyrie_hit_01.ogg",
       "source": "sfx/valkyrie_hit_01.ogg",
       "bytes": 6347,
@@ -451,6 +644,12 @@
       "source": "sfx/witch_attack_02.ogg",
       "bytes": 9364,
       "sha256": "5b8ff581929a5e8a4cee77ad9227f60fd3c5779d1304bdbf1113f829324b02e8"
+    },
+    {
+      "path": "public/assets/audio/witch_summon_02.ogg",
+      "source": "sfx/witch_summon_02.ogg",
+      "bytes": 8865,
+      "sha256": "636b741c93dd27836e8f73308a2b76681d57c09edc1d82e075538ef1fe25ddb6"
     },
     {
       "path": "public/assets/audio/wiz_atk_vo_01.ogg",
@@ -477,6 +676,18 @@
       "sha256": "1f29ce72a61a770bbcae43b4dfb7507e57d5b0a44a11fce05129c28bd9615579"
     },
     {
+      "path": "public/assets/audio/wiz_deploy_vo_01.ogg",
+      "source": "sfx/wiz_deploy_vo_01.ogg",
+      "bytes": 10815,
+      "sha256": "33f7209432457e6a74ad1618b929380cb7895c6ead080f132fd34747bb0df521"
+    },
+    {
+      "path": "public/assets/audio/wiz_deploy_vo_02.ogg",
+      "source": "sfx/wiz_deploy_vo_02.ogg",
+      "bytes": 8263,
+      "sha256": "e08cf90a76bb9c61a445595c6780f89ebbf0c87974826ed8fadeb37f765cca1d"
+    },
+    {
       "path": "public/assets/audio/wiz_fireball_01v9.ogg",
       "source": "sfx/wiz_fireball_01v9.ogg",
       "bytes": 13016,
@@ -491,6 +702,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "b224d29ec280f32e2bec108902f3f49f88535cc1312d3fd8aa5ca97f91cf362f"
+    "sha256": "b4ef3d3521b7072b27c5da7ec854008296d3f5a2c9cb1b92d79a3942224b1411"
   }
 }

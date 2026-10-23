@@ -335,8 +335,8 @@ export class Battle {
     p.queue.push(id);
     this.actions.push({ tick: this.tick, team, card: id, x, y });
     this.emit(c.kind === "spell" ? "spell" : "deploy", team, x, y, id);
+    this.emitAudio("cast", team, id);
     if (c.kind === "spell") {
-      this.emitAudio("cast", team, id);
       const origin = { x: 9, y: team === "blue" ? 30 : 2 };
       const modern = this.rulesVersion >= 2;
       const speed = id === "fireball" ? FIREBALL_SPEED : ARROWS_SPEED;
@@ -426,6 +426,7 @@ export class Battle {
         ? { burrow: { exposure: 0, idle: 0, phase: "hidden" as const } }
         : {}),
     });
+    this.emitAudio("spawn", team, id, this.entities.at(-1)!.id);
   }
   private emit(
     type: BattleEvent["type"],
@@ -601,6 +602,7 @@ export class Battle {
         e.spawnTimer -= STEP;
         if (e.spawnTimer <= 0) {
           e.spawnTimer = 7;
+          this.emitAudio("summon", e.team, audioProfile(e), e.id);
           for (let i = 0; i < 3; i++)
             this.spawn(
               "skeletons",
@@ -835,6 +837,7 @@ export class Battle {
         e.spawnTimer -= STEP;
         if (e.spawnTimer <= 0) {
           e.spawnTimer = 7;
+          this.emitAudio("summon", e.team, audioProfile(e), e.id);
           for (let i = 0; i < 3; i++)
             this.spawn(
               "skeletons",
@@ -1132,6 +1135,7 @@ export class Battle {
     if (e.hp > 0) return;
     e.hp = 0;
     this.cancelAudio(e);
+    this.emitAudio("death", e.team, audioProfile(e), e.id);
     this.emit("death", e.team, e.x, e.y, e.card);
     if (e.card === "balloon") {
       this.projectiles.push({

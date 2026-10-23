@@ -26,6 +26,7 @@ export interface BattleSnapshot {
   projectiles: Projectile[];
   events: BattleEvent[];
   audioEvents?: CombatAudioEvent[];
+  lifecycleAudioEvents?: CombatAudioEvent[];
   players: Record<Team, PlayerState>;
   winner: Team | "draw" | null;
   reason: string;
