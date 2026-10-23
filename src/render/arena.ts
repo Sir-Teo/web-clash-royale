@@ -24,6 +24,8 @@ import {
   rocketFlightPoint,
   logFlightPoint,
   curvedFlightPoint,
+  executionerFlightPoint,
+  executionerFlightSeconds,
   updateProjectile,
 } from "./projectiles";
 import type { ProjectileVisual } from "./projectiles";
@@ -1192,6 +1194,16 @@ export class Arena {
             age,
           );
         this.trailCycles.set(p.id, cycle);
+      }
+      if (p.style === "executioner" && p.speed && this.effects.asset &&
+          !this.trailCycles.has(p.id)) {
+        this.destruction.burstAlong(
+          "trail:executioner",
+          (seconds) => executionerFlightPoint(p, seconds),
+          executionerFlightSeconds(p),
+          0, b.seed ^ p.id, p.team, p.elapsed ?? 0,
+        );
+        this.trailCycles.set(p.id, 0);
       }
       if (p.style === "dart-goblin" && p.speed && this.effects.asset) {
         // The source emitter lays fifteen fragments across one short dart flight.

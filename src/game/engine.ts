@@ -31,6 +31,7 @@ import miner from "./miner-data.json" with { type: "json" };
 import bowler from "./bowler-data.json" with { type: "json" };
 import darkPrince from "./dark-prince-data.json" with { type: "json" };
 import battleRam from "./battle-ram-data.json" with { type: "json" };
+import executioner from "./executioner-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -116,6 +117,8 @@ export interface Projectile extends Point {
   knockback?: number;
   towerDamageFraction?: number;
   rollHits?: number[];
+  returning?: boolean;
+  turn?: Point;
 }
 export interface AreaEffect extends Point {
   id: number;
@@ -144,7 +147,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince";
+  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "axe-die";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -1475,6 +1478,36 @@ export class Battle {
   }
   private releaseAttack(e: Entity, target: Entity, damage: number) {
     this.audioAttacks.delete(e.id);
+    if (e.card === "executioner") {
+      const dx = target.x - e.x, dy = target.y - e.y;
+      const distance = Math.hypot(dx, dy) || 1;
+      const ux = dx / distance, uy = dy / distance;
+      // The retained minimum and maximum travel values bound the endpoint;
+      // the exact historical extension beyond the selected target is absent.
+      const reach = clamp(distance + 2, executioner.projectile.minDistance,
+        executioner.projectile.range);
+      const start = { x: e.x + ux * 0.6, y: e.y + uy * 0.6 };
+      const turn = {
+        x: clamp(e.x + ux * reach, 0.5, 17.5),
+        y: clamp(e.y + uy * reach, 0.6, 31.4),
+      };
+      const duration = Math.hypot(turn.x - start.x, turn.y - start.y) /
+        executioner.projectile.speed;
+      this.projectiles.push({
+        id: this.nextId++, team: e.team, x: e.x, y: e.y,
+        tx: turn.x, ty: turn.y, turn, target: null, damage,
+        remaining: duration, duration, splash: 0, air: true,
+        style: "executioner", stun: 0, source: e.id,
+        flight: start, speed: executioner.projectile.speed,
+        elapsed: 0, homing: false,
+        fromHeight: executioner.projectile.height,
+        toHeight: executioner.projectile.height,
+        arc: 0, rollHits: [], returning: false,
+      });
+      this.audioProjectiles.set(this.projectiles.at(-1)!.id, audioProfile(e));
+      this.emitAudio("launch", e.team, audioProfile(e), e.id, undefined, { x: e.x, y: e.y });
+      return;
+    }
     if (e.card === "battle-ram") {
       this.hurt(target, damage);
       this.emit("hit", e.team, target.x, target.y, "battle-ram", damage);
@@ -1643,7 +1676,8 @@ export class Battle {
       const target = this.entities.find(
         (e) => e.id === p.target && e.hp > 0 && !this.isHidden(e),
       );
-      const previousFlight = p.style === "log" || p.style === "bowler"
+      const previousFlight = p.style === "log" || p.style === "bowler" ||
+        p.style === "executioner"
         ? { ...p.flight! } : null;
       if (p.homing && target) {
         p.tx = target.x;
@@ -1786,6 +1820,42 @@ export class Battle {
         if (p.remaining <= 1e-8) {
           this.emit("hit", p.team, p.tx, p.ty, "bowler", 0, { effect: "hit:bowler" });
           this.projectileAudio(p);
+        }
+        continue;
+      }
+      if (p.style === "executioner") {
+        const from = previousFlight!, to = p.flight!;
+        const dx = to.x - from.x, dy = to.y - from.y;
+        const segment = dx * dx + dy * dy;
+        for (const victim of this.entities) {
+          if (victim.hp <= 0 || victim.team === p.team || this.isHidden(victim) ||
+              p.rollHits!.includes(victim.id)) continue;
+          const progress = segment > 0
+            ? clamp(((victim.x - from.x) * dx + (victim.y - from.y) * dy) / segment, 0, 1)
+            : 0;
+          const nearestX = from.x + dx * progress;
+          const nearestY = from.y + dy * progress;
+          if (Math.hypot(victim.x - nearestX, victim.y - nearestY) >
+              executioner.projectile.radius + victim.radius) continue;
+          p.rollHits!.push(victim.id);
+          this.hurt(victim, p.damage);
+          this.emit("hit", p.team, victim.x, victim.y, "executioner", p.damage);
+          this.emitAudio("impact", p.team, "executioner", p.source);
+        }
+        if (p.remaining <= 1e-8) {
+          if (!p.returning) {
+            p.returning = true;
+            p.rollHits = [];
+            p.tx = p.x;
+            p.ty = p.y;
+            p.remaining = Math.hypot(p.flight!.x - p.x, p.flight!.y - p.y) /
+              executioner.projectile.speed;
+            p.duration = p.elapsed! + p.remaining;
+          } else {
+            this.emit("hit", p.team, p.x, p.y, "executioner", 0,
+              { effect: "axe-die" });
+            p.remaining = 0;
+          }
         }
         continue;
       }

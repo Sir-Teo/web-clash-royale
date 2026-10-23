@@ -180,6 +180,18 @@ function setup() {
       target.hp = target.maxHp = 10000;
       target.lifetime = undefined;
     }
+  } else if (scenario === "executioner") {
+    const attacker = unit("executioner", "blue", 4, 21)[0];
+    attacker.speed = attacker.cooldown = 0;
+    for (const [card, y] of [["knight", 18], ["minions", 16.5]] as [CardId, number][]) {
+      for (const [index, target] of unit(card, "red", 4, y).entries()) {
+        target.x = index ? 14 : 4;
+        target.y = y;
+        target.active = false;
+        target.speed = target.damage = 0;
+        target.hp = target.maxHp = 10000;
+      }
+    }
   } else if (scenario === "attack-impacts") {
     const attacker = (
       document.querySelector("#attack-card") as HTMLSelectElement
@@ -487,6 +499,15 @@ function render(now: number) {
       knight: battle.entities.find((e) => e.team === "red" && e.card === "knight")?.hp,
       hits: battle.events.filter((event) => event.type === "hit" && event.card === "battle-ram" && event.value).length,
       deaths: battle.events.filter((event) => event.type === "death" && event.card === "battle-ram").length,
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.executioner =
+    JSON.stringify({
+      shots: battle.projectiles.filter((p) => p.style === "executioner")
+        .map((p) => ({ id: p.id, returning: p.returning, x: p.flight?.x, y: p.flight?.y })),
+      hits: battle.events.filter((event) => event.type === "hit" && event.card === "executioner" && event.value).length,
+      enemies: battle.entities.filter((e) => e.team === "red" && ["knight", "minions"].includes(e.card))
+        .map((e) => ({ card: e.card, x: e.x, hp: e.hp })),
+      visuals: arena.projectileState.filter((shot) => shot.sprites.some((sprite) => sprite.name === "executioner_projectile")),
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.darkPrince =
     JSON.stringify({

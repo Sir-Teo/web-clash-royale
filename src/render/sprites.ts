@@ -3,6 +3,7 @@ import type { CardId } from "../game/cards";
 import type { Entity } from "../game/engine";
 import darkPrince from "../game/dark-prince-data.json" with { type: "json" };
 import battleRam from "../game/battle-ram-data.json" with { type: "json" };
+import executioner from "../game/executioner-data.json" with { type: "json" };
 import { facing, selectClip, animationFrame } from "./animation";
 import { hasNativeDeployFilter } from "./deploy-filter";
 import type { AnimationClip } from "./animation";
@@ -76,6 +77,7 @@ const heights: Partial<Record<SpriteId, number>> = {
   "dark-prince": 2.1,
   "dark-prince-shield": 2.1,
   "battle-ram": 2.5,
+  executioner: 2.2,
   witch: 2.1,
   prince: 2.25,
   pekka: 2.7,
@@ -256,9 +258,10 @@ export class SpriteLibrary {
       sprite.facingY = e.team === "blue" ? -1 : 1;
     }
     const { direction, flip } = facing(sprite.facingX, sprite.facingY);
+    const attackAge = e.interval - e.attack;
     const kind =
       e.attack > 0 && !moving
-        ? "attack"
+        ? e.card === "executioner" && attackAge >= 1 ? "attacking" : "attack"
         : moving
           ? (e.card === "prince" && e.move > 2.3) ||
             (e.card === "dark-prince" && e.move > darkPrince.chargeRange)
@@ -267,9 +270,11 @@ export class SpriteLibrary {
             : "run"
           : "idle";
     const clip = selectClip(sprite.asset.data.clips, e.team, kind, direction);
-    const elapsed =
-      kind === "attack" ? e.interval - e.attack : time + e.id * 0.13;
-    const frame = animationFrame(clip, elapsed, kind === "attack", e.interval);
+    const elapsed = kind === "attack" ? attackAge :
+      kind === "attacking" ? attackAge - 1 : time + e.id * 0.13;
+    const frame = animationFrame(clip, elapsed,
+      kind === "attack" || kind === "attacking",
+      kind === "attacking" ? executioner.projectile.visualTime : e.interval);
     if (frame !== sprite.lastFrame) {
       sprite.mesh.geometry = spriteGeometry(sprite.asset, frame);
       sprite.lastFrame = frame;

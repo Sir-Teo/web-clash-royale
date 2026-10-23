@@ -26,6 +26,7 @@ export function perspective(s: BattleSnapshot, team: Team): BattleSnapshot {
       tx: 18 - p.tx,
       ty: 32 - p.ty,
       flight: p.flight ? rotatePoint(p.flight) : undefined,
+      turn: p.turn ? rotatePoint(p.turn) : undefined,
     })),
     areas: s.areas?.map((area) => ({
       ...rotatePoint(area),

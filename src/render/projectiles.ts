@@ -33,6 +33,24 @@ export function curvedFlightPoint(p: Projectile, seconds: number) {
     T.MathUtils.lerp(p.y, p.ty, t) - 16,
   );
 }
+export function executionerFlightSeconds(p: Projectile) {
+  if (!p.turn || !p.speed) return 0;
+  const distance = Math.hypot(p.turn.x - p.x, p.turn.y - p.y);
+  return (Math.max(0, distance - 0.6) + distance) / p.speed;
+}
+export function executionerFlightPoint(p: Projectile, seconds: number) {
+  const turn = p.turn ?? { x: p.tx, y: p.ty };
+  const distance = Math.hypot(turn.x - p.x, turn.y - p.y) || 1;
+  const ux = (turn.x - p.x) / distance, uy = (turn.y - p.y) / distance;
+  const away = Math.max(0, distance - 0.6) / (p.speed ?? 1);
+  const traveled = Math.max(0, seconds) * (p.speed ?? 1);
+  const remaining = Math.max(0, seconds - away) * (p.speed ?? 1);
+  const offset = seconds <= away
+    ? Math.min(distance, 0.6 + traveled)
+    : Math.max(0, distance - remaining);
+  return new T.Vector3(p.x + ux * offset - 9,
+    p.fromHeight ?? 3, p.y + uy * offset - 16);
+}
 export function projectileArt(p: Projectile) {
   if (["arrow", "arrows", "archers"].includes(p.style))
     return p.team === "blue"
@@ -57,6 +75,7 @@ export function projectileArt(p: Projectile) {
       ? "log_roll_projectile"
       : "log_roll_projectile_red";
   if (p.style === "bowler") return "bowler_projectile";
+  if (p.style === "executioner") return "executioner_projectile";
   if (p.style === "baby-dragon") return "dragon_projectile";
   if (p.style === "wizard") return "fireball_small";
   if (p.style === "witch" || p.style === "minions") return "Tower_projectile1";
@@ -89,6 +108,7 @@ export function makeProjectile(
     p.style === "goblin-barrel" ||
     p.style === "princess"
     || p.style === "bowler"
+    || p.style === "executioner"
   ) {
     const shadow = library.make(
       p.style === "rocket"
@@ -97,7 +117,7 @@ export function makeProjectile(
           ? "Barrel_shadow"
           : p.style === "princess"
             ? "projectile_arrow_shadow"
-            : p.style === "bowler"
+            : p.style === "bowler" || p.style === "executioner"
               ? "bowler_projectile_shadow"
             : "log_projectile_shadow",
     );
@@ -187,6 +207,9 @@ export function updateProjectile(
     } else if (sprite.name === "bowler_projectile") {
       library.animate(sprite, p.elapsed ?? 0, true);
       sprite.mesh.scale.setScalar(1.3);
+    } else if (sprite.name === "executioner_projectile") {
+      library.animate(sprite, p.elapsed ?? 0, true);
+      sprite.mesh.scale.setScalar(1.1);
     } else if (["fireball_small", "Tower_projectile1"].includes(sprite.name)) {
       library.animate(sprite, p.elapsed ?? progress * p.duration, true);
       sprite.mesh.rotateZ(angle);
