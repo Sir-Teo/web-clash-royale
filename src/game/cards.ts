@@ -24,6 +24,7 @@ import bowler from "./bowler-data.json" with { type: "json" };
 import darkPrince from "./dark-prince-data.json" with { type: "json" };
 import battleRam from "./battle-ram-data.json" with { type: "json" };
 import executioner from "./executioner-data.json" with { type: "json" };
+import sparky from "./sparky-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -49,6 +50,7 @@ export type CardId =
   | "dark-prince"
   | "battle-ram"
   | "executioner"
+  | "sparky"
   | "skeletons"
   | "skeleton-army"
   | "bomber"
@@ -620,6 +622,18 @@ export const CARDS: Card[] = [
     executioner.sourceHitSpeed + executioner.projectile.visualTime,
     "Throws an axe through ground and air enemies, striking again on its return.",
     { rarity: "Epic", hitsAir: true, splash: executioner.projectile.radius },
+  ),
+  troop(
+    "sparky",
+    "Sparky",
+    sparky.cost,
+    Math.round(sparky.sourceHitpoints * 1.1 ** 2),
+    Math.round(sparky.projectile.damage * 1.1 ** 2),
+    sparky.sourceSpeed / 60,
+    sparky.sourceRange,
+    sparky.sourceHitSpeed,
+    "Charges a powerful cannon blast that splashes ground enemies.",
+    { rarity: "Legendary", splash: sparky.projectile.radius },
   ),
   troop(
     "minion-horde",

@@ -76,6 +76,7 @@ const names = {
   "dark-prince": "DarkPrince",
   "battle-ram": "BattleRam",
   executioner: "AxeMan",
+  sparky: "ZapMachine",
   "spear-goblins": "SpearGoblin",
   skeletons: "Skeleton",
   "skeleton-army": "Skeleton",
