@@ -44,6 +44,7 @@ import { NativeChargeFilter } from "./charge-filter";
 import { NativeDeployFilter } from "./deploy-filter";
 import { NativeBatWiggle } from "./bat-wiggle";
 import { NativeBanditFilter } from "./bandit-filter";
+import { NativeBanditTrail } from "./bandit-trail";
 import { NativeColdFilter, NativeColdStructures } from "./cold-filter";
 import { NativeInfernoBeams } from "./inferno-beam";
 import { NativeMinerTrails } from "./miner-trails";
@@ -102,6 +103,7 @@ export class Arena {
   private deployFilter = new NativeDeployFilter(this.spriteFilters);
   private batWiggle = new NativeBatWiggle(this.spriteFilters);
   private banditFilter = new NativeBanditFilter(this.spriteFilters);
+  private banditTrail = new NativeBanditTrail(this.scene);
   private cloneFilter = new NativeCloneFilter(this.spriteFilters);
   private coldFilter = new NativeColdFilter(this.spriteFilters);
   private poisonFilter = new NativePoisonFilter(this.spriteFilters);
@@ -519,6 +521,7 @@ export class Arena {
     this.deployFilter.clear();
     this.batWiggle.clear();
     this.banditFilter.clear();
+    this.banditTrail.clear();
     this.cloneFilter.clear();
     this.coldFilter.clear();
     this.poisonFilter.clear();
@@ -663,6 +666,9 @@ export class Arena {
   }
   get banditFilterState() {
     return this.banditFilter.state;
+  }
+  get banditTrailState() {
+    return this.banditTrail.state;
   }
   get coldFilterState() {
     return this.coldFilter.state;
@@ -1654,6 +1660,8 @@ export class Arena {
     this.deployFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
     this.batWiggle.update(b.entities, (id) => this.units.get(id)?.sprite);
     this.banditFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
+    this.banditTrail.update(b.events, b.entities, b.time,
+      this.sprites.assets.get("bandit"), this.camera);
     this.cloneFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
     this.spellAreas.update(b.areas);
     this.chargeFilter.update(
@@ -1885,6 +1893,7 @@ export class Arena {
     this.deployFilter.clear();
     this.batWiggle.clear();
     this.banditFilter.clear();
+    this.banditTrail.clear();
     this.cloneFilter.clear();
     this.coldFilter.clear();
     this.poisonFilter.clear();

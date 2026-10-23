@@ -5,6 +5,7 @@ import { CARD_MAP, STARTER_DECK } from "../src/game/cards";
 import { Battle } from "../src/game/engine";
 import { combatAudioPlan } from "../src/game/combat-audio";
 import { perspective, snapshot } from "../src/network/perspective";
+import { banditAfterimages } from "../src/render/bandit-trail";
 import { destructionPlan } from "../src/render/destruction";
 import rules from "../src/game/bandit-data.json";
 
@@ -59,8 +60,14 @@ describe("archived Bandit", () => {
     expect(bandit.dash?.target).toBe(target.id);
     expect(game.audioEvents.some((event) => event.profile === "bandit" &&
       event.phase === "dash-travel")).toBe(true);
-    expect(perspective(snapshot(game), "red").entities.find((e) =>
+    const guest = perspective(snapshot(game), "red");
+    expect(guest.entities.find((e) =>
       e.card === "bandit")?.dash?.target).toBe(target.id);
+    const hostTrail = banditAfterimages(game.events, game.entities, game.time);
+    const guestTrail = banditAfterimages(guest.events, guest.entities, game.time);
+    expect(hostTrail).toHaveLength(guestTrail.length);
+    expect(hostTrail[0].x + guestTrail[0].x).toBeCloseTo(18);
+    expect(hostTrail[0].y + guestTrail[0].y).toBeCloseTo(32);
     const hp = bandit.hp;
     game.players.red.hand[0] = "zap";
     game.players.red.elixir = 10;

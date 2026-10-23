@@ -1479,7 +1479,7 @@ export class Battle {
           e.move = 0;
           this.emitAudio("dash-start", e.team, "bandit", e.id);
           this.emitAudio("dash-travel", e.team, "bandit", e.id);
-          this.emit("spell", e.team, e.x, e.y, "bandit", 0,
+          this.emit("spell", e.team, e.x, e.y, "bandit", e.id,
             { effect: "dash-start:bandit" });
           continue;
         }
@@ -1519,7 +1519,7 @@ export class Battle {
       e.cooldown = e.interval;
       e.move = 0;
       this.emitAudio("dash-end", e.team, "bandit", e.id);
-      this.emit("spell", e.team, e.x, e.y, "bandit", 0,
+      this.emit("spell", e.team, e.x, e.y, "bandit", e.id,
         { effect: "dash-end:bandit" });
       if (target && contact) {
         const damage = Math.round(bandit.dash.damage * 1.1 ** 2);

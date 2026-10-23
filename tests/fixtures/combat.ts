@@ -629,6 +629,7 @@ function render(now: number) {
       cues: battle.audioEvents.filter((e) => e.profile === "bandit" &&
         e.phase.startsWith("dash-")).map((e) => e.phase),
       filter: arena.banditFilterState,
+      trail: arena.banditTrailState,
       particles: arena.particleCount,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.darkPrince =
