@@ -44,6 +44,7 @@ const cards = [
   "barbarians",
   "elite-barbarians",
   "ice-spirit",
+  "fire-spirits",
   "royal-giant",
   "mega-minion",
   "dart-goblin",

@@ -274,6 +274,7 @@ const portraitNames = {
   barbarians: "Barbarians",
   "elite-barbarians": "AngryBarbarians",
   "ice-spirit": "IceSpirits",
+  "fire-spirits": "FireSpirits",
   "royal-giant": "RoyalGiant",
   "mega-minion": "MegaMinion",
   "dart-goblin": "BlowdartGoblin",

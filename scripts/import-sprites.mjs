@@ -18,6 +18,7 @@ const sources = {
   "dart-goblin": "goblin_blowdart",
   "ice-wizard": "ice_wizard",
   "ice-spirit": "ice_spirits",
+  "fire-spirits": "fire_firespirit",
   princess: "princess",
   "inferno-dragon": "baby_dragon",
   "electro-wizard": "electro_wizard",

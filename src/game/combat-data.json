@@ -144,6 +144,18 @@
       "gravity": 400
     }
   },
+  "fire-spirits": {
+    "source": "FireSpirits",
+    "windup": 0.2,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "FireSpiritsProjectile",
+      "speed": 6.666666666666667,
+      "homing": true,
+      "gravity": 400
+    }
+  },
   "princess": {
     "source": "Princess",
     "windup": 0.5,

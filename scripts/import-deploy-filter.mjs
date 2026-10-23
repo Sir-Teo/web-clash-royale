@@ -28,7 +28,7 @@ const cards = Object.entries(combat)
     );
   })
   .map(([id]) => id);
-if (cards.length !== 36 || !cards.includes("ice-spirit") || !cards.includes("elite-barbarians") || !cards.includes("bowler") || !cards.includes("dark-prince") || !cards.includes("battle-ram") || !cards.includes("executioner") || !cards.includes("bats") || !cards.includes("golem") || !cards.includes("golemite") || !cards.includes("lava-pup"))
+if (cards.length !== 37 || !cards.includes("fire-spirits") || !cards.includes("ice-spirit") || !cards.includes("elite-barbarians") || !cards.includes("bowler") || !cards.includes("dark-prince") || !cards.includes("battle-ram") || !cards.includes("executioner") || !cards.includes("bats") || !cards.includes("golem") || !cards.includes("golemite") || !cards.includes("lava-pup"))
   throw new Error(`Recheck source deploy filter bindings: ${cards.length}`);
 const clip = sc.clips[sc.names[name]];
 if (clip?.fps !== 60 || clip.frames.length !== 28)

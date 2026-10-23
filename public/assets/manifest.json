@@ -441,6 +441,12 @@
       "sha256": "ed03e02c470b63564f52aaafab99ac17eddf01ad55257815573ed7a05ad20082"
     },
     {
+      "path": "cards/fire-spirits.png",
+      "source": "cards/fire-spirits.png",
+      "bytes": 131487,
+      "sha256": "12fa2adbe28b57b8caa1d9bd7fa6d6c22e8e2f7196f1591fdbb00a8cdf0104b5"
+    },
+    {
       "path": "cards/fireball.png",
       "source": "cards/fireball.png",
       "bytes": 123797,

@@ -1869,6 +1869,121 @@
         "row": "IceSpirits"
       }
     },
+    "fire-spirits": {
+      "source": "FireSpirits",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [
+          "firespirit_attack"
+        ],
+        "components": [
+          {
+            "sound": "sound_firespirit_attack",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_firespirit_attack",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "firespirit_projectile_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_firespirit_projectile_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_firespirit_projectile_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "firespirit_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_firespirit_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_firespirit_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "FireSpirits"
+      }
+    },
     "princess": {
       "source": "Princess",
       "attack": {
@@ -9681,6 +9796,117 @@
       {
         "sourceFile": "sfx/ice_sp_deploy_01.wav",
         "file": "ice_sp_deploy_01",
+        "volume": [
+          0.5,
+          0.6
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_firespirit_attack": [
+      {
+        "sourceFile": "sfx/fire_spirit_attack_01.wav",
+        "file": "fire_spirit_attack_01",
+        "volume": [
+          0.5,
+          0.55
+        ],
+        "pitch": [
+          0.94,
+          1.06
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0.2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_firespirit_projectile_hit": [
+      {
+        "sourceFile": "sfx/sound_fireball_hit_01.wav",
+        "file": "sound_fireball_hit_01",
+        "volume": [
+          0.45,
+          0.55
+        ],
+        "pitch": [
+          0.7,
+          0.8
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 4,
+        "repeat": 0,
+        "loop": false,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_firespirit_deploy": [
+      {
+        "sourceFile": "sfx/fire_spirit_deploy_01.wav",
+        "file": "fire_spirit_deploy_01",
+        "volume": [
+          0.5,
+          0.6
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/fire_spirit_deploy_02.wav",
+        "file": "fire_spirit_deploy_02",
+        "volume": [
+          0.5,
+          0.6
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/fire_spirit_deploy_02.wav",
+        "file": "fire_spirit_deploy_02",
         "volume": [
           0.5,
           0.6

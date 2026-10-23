@@ -362,6 +362,11 @@
       "sha256": "886da748b4eb699d590570e4e9329d5a209c9bef010d6566eb37a8344351b635"
     },
     {
+      "file": "portrait-fire-spirits.webp",
+      "bytes": 39326,
+      "sha256": "48f79c156b55a2e8de8eb7afbe3490074d02f71adbf555c58db521cecf60f6ea"
+    },
+    {
       "file": "portrait-royal-giant.webp",
       "bytes": 41662,
       "sha256": "433cd4762b6de4533c1f44dafca45c14387c14da80e758ab2d3690dcce75cac9"
@@ -433,8 +438,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 104086,
-      "sha256": "b5fc465205e49b2c3f68142212e89c77ad400313c65d44790e1a3fa588e080ef"
+      "bytes": 104422,
+      "sha256": "a753affbf3817da4683be9b4de1ecb6951f7c642330f5a8658f7239f56922778"
     }
   ]
 }

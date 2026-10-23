@@ -54,6 +54,7 @@
     "assets:swarm-cards": "node scripts/import-swarm-cards.mjs",
     "assets:elite-barbarians": "node scripts/import-elite-barbarians.mjs",
     "assets:ice-spirit": "node scripts/import-ice-spirit.mjs",
+    "assets:fire-spirits": "node scripts/import-fire-spirits.mjs",
     "assets:goblin-gang": "node scripts/import-goblin-gang.mjs",
     "assets:barbarians": "node scripts/import-barbarians.mjs",
     "assets:royal-giant": "node scripts/import-royal-giant.mjs",

@@ -365,6 +365,29 @@
         }
       ]
     },
+    "fire-spirits": {
+      "source": "firespirit_die",
+      "components": [
+        {
+          "sound": "sound_firespirit_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_firespirit_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ]
+    },
     "princess": {
       "source": "princess_die",
       "components": [
@@ -1421,6 +1444,25 @@
       "padding": 3
     },
     "sound_icespirit_die": {
+      "sourceFiles": [],
+      "files": [],
+      "volume": [
+        0,
+        0
+      ],
+      "pitch": [
+        0,
+        0
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 0,
+      "priority": 0,
+      "padding": 0
+    },
+    "sound_firespirit_die": {
       "sourceFiles": [],
       "files": [],
       "volume": [

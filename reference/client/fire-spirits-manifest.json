@@ -1,0 +1,39 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_fire_firespirit",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "reference/sc/chr_fire_firespirit.bin",
+      "sha256": "c9ec75ebe062685e3a528e2ddd7018096263a36518037bf1c7865cba0cd4df20"
+    },
+    {
+      "path": "reference/sc/chr_fire_firespirit_tex.png",
+      "sha256": "2feba3029413964906edf96458edb5e698c110fce55ff706f86bbd9c4e8cc1d4"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    },
+    {
+      "path": "reference/sc/effects.bin",
+      "sha256": "1a9b0a2efe99578cd03fb9d8673ddb042aa067ba9f9fc0d3a253e15c2e9c7b7c"
+    }
+  ],
+  "output": {
+    "path": "src/game/fire-spirits-data.json",
+    "sha256": "5af6cc3b8fbab59cde1303ac62487e594705e395abf164a606045ecfdd3ea829"
+  }
+}

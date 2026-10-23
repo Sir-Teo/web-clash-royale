@@ -70,6 +70,7 @@ const names = {
   "dart-goblin": "BlowdartGoblin",
   "ice-wizard": "IceWizard",
   "ice-spirit": "IceSpirits",
+  "fire-spirits": "FireSpirits",
   princess: "Princess",
   "inferno-dragon": "InfernoDragon",
   "electro-wizard": "ElectroWizard",

@@ -140,6 +140,23 @@
       "uniqueFrames": 815
     },
     {
+      "id": "fire-spirits",
+      "source": "chr_fire_firespirit",
+      "metadataSha256": "c9ec75ebe062685e3a528e2ddd7018096263a36518037bf1c7865cba0cd4df20",
+      "dataSha256": "204777d80eb78bee5e30f528c0273c7f9a2ce9503ac66f3601ae09c6136df4b6",
+      "textures": [
+        {
+          "file": "fire-spirits-0.webp",
+          "sha256": "b615562ad83473d70b926fd7691af71668b1efe7303d720b2eea2924fddcd528",
+          "originalSha256": "2feba3029413964906edf96458edb5e698c110fce55ff706f86bbd9c4e8cc1d4"
+        }
+      ],
+      "shapes": 82,
+      "clips": 27,
+      "frames": 675,
+      "uniqueFrames": 423
+    },
+    {
       "id": "princess",
       "source": "chr_princess",
       "metadataSha256": "4efbc493b84ef3638642a2cacf21d63bfcb1a77927afae5719c56d64e3307db9",

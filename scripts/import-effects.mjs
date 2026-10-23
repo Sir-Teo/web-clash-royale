@@ -120,6 +120,7 @@ for (const resource of [
             "projectile_cannonball_small",
             "ice_wizard_projectile",
             "projectile_icespirit",
+            "projectile_firespirit",
             "projectile_princess",
             "projectile_arrow_shadow",
             "inferno_dragon_beam",
