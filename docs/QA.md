@@ -445,6 +445,12 @@ The source `prince_charge` effect reuses the already bundled `knight_deploy_dust
 
 ## Prince charge voice
 
-The archived `prince_charge` effect also binds `sound_prince_charge` to `rider_charge_03.ogg`. The browser schedules that voice from the same render-only charge crossing, with 70% source volume, the shared 0.35 mix gain, fixed pitch and a two-voice limit. It adds no simulation event IDs, replay fields or peer messages. Browser replays on desktop Chromium and phone WebKit play the voice exactly once at the charge, and all 112 imported combat/lifecycle OGGs decode in desktop Chromium. Source-hash and stale/pause/seek scheduling tests pass. The source `effect_charge` SWF marker and filter, and separate charge-hit voice, remain unrendered.
+The archived `prince_charge` effect also binds `sound_prince_charge` to `rider_charge_03.ogg`. The browser schedules that voice from the same render-only charge crossing, with 70% source volume, the shared 0.35 mix gain, fixed pitch and a two-voice limit. It adds no simulation event IDs, replay fields or peer messages. Browser replays on desktop Chromium and phone WebKit play the voice exactly once at the charge, and all 112 imported combat/lifecycle OGGs decode in desktop Chromium. Source-hash and stale/pause/seek scheduling tests pass. The source filter and separate charge-hit voice remain unrendered; the SWF text marker is added below.
 
 All 221 unit checks, type checking, the production build and offline reload pass; the cache includes 572 files (version `e49c04c5bd6d`) and 116 unique combat/death audio files. The new replay sound test is included in hosted desktop CI.
+
+## Native Prince charge callout
+
+The source `effect_charge` export is dynamic text, not bitmap artwork. The SC1 tag-7 text record names the Supercell Magic font, size 18, centered white outlined text, while `TID_CHARGE` supplies “Charge!”. The new importer retains its 43 composed affine/alpha frames at 30 FPS and hashes the source tables and bundled font. The browser places that animated callout above the moving Prince, ages it on the shared presentation clock, freezes it while paused and releases it after 1.43 seconds or a battle reset. The absent tag-7 outline color defaults to black; the separate source `filter_protection` row remains unrendered.
+
+All 222 unit checks, type checking, the production build and offline reload pass; the 572-file cache version is `c258cb33baa3`. Desktop Chromium and phone WebKit verify the callout's text, source frame progress, pause, expiry and reset. A phone WebKit frame is saved in `docs/screenshots/phone-native-prince-charge-callout.png`.

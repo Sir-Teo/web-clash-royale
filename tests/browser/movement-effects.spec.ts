@@ -45,9 +45,28 @@ test("Knight and Prince leave native ground dust while moving on desktop and pho
   expect(
     await page.locator("#destruction").getAttribute("data-charge-cues"),
   ).toBe("1");
+  const marker = page.locator('.charge-marker[data-source="effect_charge"]');
+  await expect(marker).toHaveCount(1);
+  for (
+    let i = 0;
+    i < 4 && Number(await marker.getAttribute("data-frame")) < 4;
+    i++
+  )
+    await step();
+  expect(
+    Number(await marker.getAttribute("data-frame")),
+  ).toBeGreaterThanOrEqual(4);
+  await expect(marker.locator("svg text")).toHaveText("Charge!");
   await page.screenshot({
-    path: info.outputPath("native-prince-charge.png"),
+    path: info.outputPath("native-prince-charge-callout.png"),
     fullPage: true,
   });
+  const frame = await marker.getAttribute("data-frame");
+  await page.waitForTimeout(180);
+  expect(await marker.getAttribute("data-frame")).toBe(frame);
+  for (let i = 0; i < 18 && (await marker.count()) > 0; i++) await step();
+  await expect(marker).toHaveCount(0);
+  await page.locator("#scenario").selectOption("deployment");
+  await expect(marker).toHaveCount(0);
   expect(errors).toEqual([]);
 });
