@@ -1003,7 +1003,15 @@ function showPeerMultiplayer() {
     content = `<div class="room-banner">${icon("users")}<span>${peer.setup === "gathering" ? "Preparing your connection…" : "Connecting to your friend…"}</span></div><p class="room-note" role="status">${peer.setup === "gathering" ? "This usually takes a few seconds." : "Keep this tab open on both devices."}</p>`;
   } else if (peer.setup === "offer" || peer.setup === "answer") {
     const hosting = peer.setup === "offer";
-    content = `<div class="room-banner">${icon("users")}<span>${hosting ? "1. Send your invite" : "2. Send your reply"}</span></div><p class="room-note">${hosting ? "Send this invite to your friend. They can open it or paste it into Play with a friend." : "Send this reply back to the player who invited you. Keep this tab open while they paste it."}</p><label class="field-label" for="peer-share">${hosting ? "INVITE LINK" : "CONNECTION REPLY"}</label><textarea id="peer-share" class="name-input peer-code" readonly rows="2" spellcheck="false">${esc(hosting ? signalLink(peer.signal) : peer.signal)}</textarea><button class="secondary-button" id="copy-peer">${hosting ? "Copy invite" : "Copy reply"}</button>${hosting ? `<div class="room-divider">2. CONNECT YOUR FRIEND</div><form id="peer-accept-form"><label class="field-label" for="peer-reply">PASTE THEIR REPLY</label><textarea id="peer-reply" class="name-input peer-code" rows="2" placeholder="CR1.…" spellcheck="false" required>${esc(peerReply)}</textarea><button class="primary-button" type="submit">Connect friend</button></form>` : '<p class="room-note" role="status">Waiting for your friend to connect…</p>'}`;
+    const localHost = ["localhost", "127.0.0.1", "::1", "[::1]"].includes(
+      location.hostname,
+    );
+    const shareValue = hosting
+      ? localHost
+        ? peer.signal
+        : signalLink(peer.signal)
+      : peer.signal;
+    content = `<div class="room-banner">${icon("users")}<span>${hosting ? "1. Send your invite" : "2. Send your reply"}</span></div><p class="room-note">${hosting ? (localHost ? "On the other phone, open this game at your computer's Wi-Fi address, then paste this invite code." : "Send this invite to your friend. They can open it or paste it into Play with a friend.") : "Send this reply back to the player who invited you. Keep this tab open while they paste it."}</p><label class="field-label" for="peer-share">${hosting ? (localHost ? "INVITE CODE" : "INVITE LINK") : "CONNECTION REPLY"}</label><textarea id="peer-share" class="name-input peer-code" readonly rows="2" spellcheck="false">${esc(shareValue)}</textarea><div class="peer-share-actions"><button class="secondary-button" id="copy-peer">${hosting ? "Copy invite" : "Copy reply"}</button>${typeof navigator.share === "function" ? `<button class="secondary-button" id="share-peer">${hosting ? "Share invite" : "Share reply"}</button>` : ""}</div>${hosting ? `<div class="room-divider">2. CONNECT YOUR FRIEND</div><form id="peer-accept-form"><label class="field-label" for="peer-reply">PASTE THEIR REPLY</label><textarea id="peer-reply" class="name-input peer-code" rows="2" placeholder="CR1.…" spellcheck="false" required>${esc(peerReply)}</textarea><button class="primary-button" type="submit">Connect friend</button></form>` : '<p class="room-note" role="status">Waiting for your friend to connect…</p>'}`;
   } else {
     content = `<div class="room-banner">${icon("users")}<span>Two players. One crown.</span></div><p class="room-note">Play directly between two browsers on Wi-Fi or online. Create an invite, then exchange one reply to connect.</p><button class="primary-button" id="create-peer">Create an invite</button><div class="room-divider">OR JOIN A FRIEND</div><form id="peer-join-form"><label class="field-label" for="peer-invite">PASTE THEIR INVITE</label><textarea id="peer-invite" class="name-input peer-code" rows="2" placeholder="Invite link or CR1.…" spellcheck="false" required>${esc(peerDraft)}</textarea><button class="secondary-button" type="submit">Join friend</button></form>`;
   }
@@ -1054,6 +1062,22 @@ function showPeerMultiplayer() {
         field.focus();
         field.select();
         toast("Select and copy the connection text.");
+      }
+    });
+  document
+    .querySelector<HTMLButtonElement>("#share-peer")
+    ?.addEventListener("click", async () => {
+      const value = $<HTMLTextAreaElement>("#peer-share").value;
+      try {
+        await navigator.share(
+          value.startsWith("http")
+            ? { title: "Clash Royale browser battle", url: value }
+            : { title: "Clash Royale browser battle", text: value },
+        );
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError")
+          return;
+        toast("Could not share. Copy the invite instead.");
       }
     });
   document

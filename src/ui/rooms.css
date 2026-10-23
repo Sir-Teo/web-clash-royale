@@ -254,6 +254,14 @@ body.in-battle {
   margin: 6px 0 12px;
   text-transform: none;
 }
+.peer-share-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+}
+.peer-share-actions button {
+  min-height: 48px;
+}
 #create-peer,
 #peer-accept-form button,
 #peer-join-form button {
