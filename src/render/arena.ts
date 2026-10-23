@@ -23,7 +23,7 @@ import {
   makeProjectile,
   rocketFlightPoint,
   logFlightPoint,
-  iceFlightPoint,
+  curvedFlightPoint,
   updateProjectile,
 } from "./projectiles";
 import type { ProjectileVisual } from "./projectiles";
@@ -1144,7 +1144,22 @@ export class Arena {
           const duration = Math.hypot(p.tx - p.x, p.ty - p.y) / p.speed;
           this.destruction.burstAlong(
             "trail:ice-wizard",
-            (seconds) => iceFlightPoint(p, seconds),
+            (seconds) => curvedFlightPoint(p, seconds),
+            duration,
+            0,
+            b.seed ^ p.id,
+            p.team,
+            p.elapsed ?? 0,
+          );
+          this.trailCycles.set(p.id, 0);
+        }
+      }
+      if (p.style === "princess" && p.speed && this.effects.asset) {
+        if (!this.trailCycles.has(p.id)) {
+          const duration = Math.hypot(p.tx - p.x, p.ty - p.y) / p.speed;
+          this.destruction.burstAlong(
+            "trail:princess",
+            (seconds) => curvedFlightPoint(p, seconds),
             duration,
             0,
             b.seed ^ p.id,

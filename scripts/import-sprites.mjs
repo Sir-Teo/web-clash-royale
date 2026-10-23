@@ -112,14 +112,11 @@ for (const [id, source] of Object.entries(sources)) {
     // This source also contains Inferno Dragon exports. Never overwrite Baby Dragon.
     if (id === "baby-dragon" && !exportName.startsWith("baby_dragon_"))
       continue;
-    if (id === "barbarians" && !exportName.startsWith("barbarian1_"))
-      continue;
+    if (id === "barbarians" && !exportName.startsWith("barbarian1_")) continue;
     if (id === "tower-princess" && !exportName.startsWith("princess_tower_"))
       continue;
-    if (id === "princess" && !exportName.startsWith("princess_"))
-      continue;
-    if (id === "princess" && exportName.startsWith("princess_tower_"))
-      continue;
+    if (id === "princess" && !exportName.startsWith("princess_")) continue;
+    if (id === "princess" && exportName.startsWith("princess_tower_")) continue;
     const direction = Number(match[3]);
     if (direction < 1 || direction > 9) continue;
     const hasExplicitBlue = Object.keys(data.names).some((name) =>
@@ -138,8 +135,12 @@ for (const [id, source] of Object.entries(sources)) {
       throw new Error(`Missing export ${exportName}`);
     // The archived blue Princess run direction 9 is an authored empty export.
     // Use adjacent direction 8 so the troop stays visible on that heading.
-    const emptyPrincessRun = id === "princess" && exportName === "princess_run1_9";
-    if (emptyPrincessRun && !sourceClip.frames.every((frame) => frame.length === 0))
+    const emptyPrincessRun =
+      id === "princess" && exportName === "princess_run1_9";
+    if (
+      emptyPrincessRun &&
+      !sourceClip.frames.every((frame) => frame.length === 0)
+    )
       throw new Error("Recheck empty archived Princess run direction 9");
     const drawnName = emptyPrincessRun ? "princess_run1_8" : exportName;
     const drawnRef = data.names[drawnName];
@@ -170,10 +171,10 @@ for (const [id, source] of Object.entries(sources)) {
     const original = await download(
       base,
       id === "tower-princess" ||
-      id === "princess" ||
-      id === "royal-giant" ||
-      id === "mega-minion" ||
-      id === "dart-goblin"
+        id === "princess" ||
+        id === "royal-giant" ||
+        id === "mega-minion" ||
+        id === "dart-goblin"
         ? `${name}_highres_tex.png`
         : `${name}_tex${"_".repeat(i)}.png`,
     );

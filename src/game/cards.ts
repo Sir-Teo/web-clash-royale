@@ -408,7 +408,11 @@ export const CARDS: Card[] = [
     iceWizard.sourceRange / 1000,
     iceWizard.sourceHitSpeed / 1000,
     "An icy mage whose splash attacks slow troops and towers for two seconds.",
-    { rarity: "Legendary", hitsAir: iceWizard.hitsAir, splash: iceWizard.projectileRadius },
+    {
+      rarity: "Legendary",
+      hitsAir: iceWizard.hitsAir,
+      splash: iceWizard.projectileRadius,
+    },
   ),
   troop(
     "princess",

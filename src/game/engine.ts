@@ -24,6 +24,7 @@ import graveyard from "./graveyard-data.json" with { type: "json" };
 import clone from "./clone-data.json" with { type: "json" };
 import mirror from "./mirror-data.json" with { type: "json" };
 import iceWizard from "./ice-wizard-data.json" with { type: "json" };
+import princess from "./princess-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -88,6 +89,7 @@ export interface Projectile extends Point {
   style: string;
   stun: number;
   slow?: number;
+  decorative?: boolean;
   source: number;
   flight?: Point;
   speed?: number;
@@ -721,6 +723,7 @@ export class Battle {
     this.audioAttacks.delete(e.id);
   }
   private projectileAudio(p: Projectile) {
+    if (p.decorative) return;
     const source = this.entities.find((e) => e.id === p.source);
     const profile =
       this.audioProjectiles.get(p.id) ??
@@ -1416,6 +1419,32 @@ export class Battle {
             : (p?.gravity ?? 0) / 100,
       });
       this.audioProjectiles.set(this.projectiles.at(-1)!.id, audioProfile(e));
+      if (e.card === "princess") {
+        // The archived character fires one damaging custom first projectile
+        // and four copies of PrincessProjectileDeco without damage.
+        const first = this.projectiles.at(-1)!;
+        for (const offset of [-2, -1, 1, 2]) {
+          const tx = clamp(target.x + offset * 0.38, 0.5, 17.5);
+          const ty = clamp(target.y + Math.abs(offset) * 0.14, 0.6, 31.4);
+          const duration = Math.max(
+            STEP,
+            dist(e, { x: tx, y: ty }) / (speed ?? 1),
+          );
+          this.projectiles.push({
+            ...first,
+            id: this.nextId++,
+            tx,
+            ty,
+            target: null,
+            damage: 0,
+            splash: 0,
+            remaining: duration,
+            duration,
+            flight: { x: e.x, y: e.y },
+            decorative: true,
+          });
+        }
+      }
       this.emitAudio("launch", e.team, audioProfile(e), e.id, undefined, {
         x: e.x,
         y: e.y,

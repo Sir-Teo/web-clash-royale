@@ -23,7 +23,7 @@ export function logFlightPoint(p: Projectile, seconds: number) {
   const t = T.MathUtils.clamp(seconds / p.duration, 0, 1);
   return new T.Vector3(p.x - 9, 0.45, T.MathUtils.lerp(p.y, p.ty, t) - 16);
 }
-export function iceFlightPoint(p: Projectile, seconds: number) {
+export function curvedFlightPoint(p: Projectile, seconds: number) {
   const duration = Math.hypot(p.tx - p.x, p.ty - p.y) / (p.speed ?? 1);
   const t = T.MathUtils.clamp(seconds / Math.max(duration, 1e-8), 0, 1);
   return new T.Vector3(
@@ -41,6 +41,7 @@ export function projectileArt(p: Projectile) {
   if (p.style === "spear-goblins") return "projectile_spear_360";
   if (p.style === "dart-goblin") return "projectile_arrow_basic";
   if (p.style === "ice-wizard") return "ice_wizard_projectile";
+  if (p.style === "princess") return "projectile_princess";
   if (p.style === "bomb") return `balloon_bomb_${p.team}`;
   if (["bomber", "balloon"].includes(p.style)) return "projectile_bomb";
   if (["cannon", "cannonball", "royal-giant"].includes(p.style))
@@ -84,14 +85,17 @@ export function makeProjectile(
   if (
     p.style === "rocket" ||
     p.style === "log-launch" ||
-    p.style === "goblin-barrel"
+    p.style === "goblin-barrel" ||
+    p.style === "princess"
   ) {
     const shadow = library.make(
       p.style === "rocket"
         ? "projectile_shadow_rocket"
         : p.style === "goblin-barrel"
           ? "Barrel_shadow"
-          : "log_projectile_shadow",
+          : p.style === "princess"
+            ? "projectile_arrow_shadow"
+            : "log_projectile_shadow",
     );
     if (shadow) {
       object.add(shadow.mesh);
@@ -139,7 +143,8 @@ export function updateProjectile(
     if (
       sprite.name === "projectile_shadow_rocket" ||
       sprite.name === "log_projectile_shadow" ||
-      sprite.name === "Barrel_shadow"
+      sprite.name === "Barrel_shadow" ||
+      sprite.name === "projectile_arrow_shadow"
     ) {
       sprite.mesh.position.set(0, -v.object.position.y + 0.045, 0);
       sprite.mesh.rotation.set(-Math.PI / 2, 0, 0);
@@ -182,6 +187,10 @@ export function updateProjectile(
       library.animate(sprite, p.elapsed ?? progress * p.duration, true);
       sprite.mesh.rotateZ(angle);
       sprite.mesh.scale.setScalar(0.65);
+    } else if (sprite.name === "projectile_princess") {
+      library.animate(sprite, p.elapsed ?? progress * p.duration, true);
+      sprite.mesh.rotateZ(angle);
+      sprite.mesh.scale.setScalar(0.8);
     } else if (sprite.name === "projectile_bomb") {
       sprite.mesh.rotateZ(p.style === "bomber" ? progress * Math.PI * 2 : 0);
       sprite.mesh.scale.setScalar(p.style === "balloon" ? 0.85 : 0.6);

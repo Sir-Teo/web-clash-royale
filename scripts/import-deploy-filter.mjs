@@ -35,33 +35,46 @@ if (clip?.fps !== 60 || clip.frames.length !== 28)
 const identity = [1, 0, 0, 1, 0, 0];
 const neutral = [0, 0, 0, 255, 255, 255, 255];
 function poses(clip, label) {
-return clip.frames.map((frame, i) => {
-  if (frame.length !== 1 || frame[0].id !== 592 || frame[0].blend !== 0)
-    throw new Error(`Recheck ${label} deploy filter frame ${i}`);
-  const matrix = sc.matrices[frame[0].matrix] ?? identity;
-  if (matrix[1] !== 0 || matrix[2] !== 0 || matrix[4] !== 0)
-    throw new Error(`Unsupported deploy filter affine at frame ${i}`);
-  return {
-    matrix,
-    color: sc.colors[frame[0].color] ?? neutral,
-  };
-});
+  return clip.frames.map((frame, i) => {
+    if (frame.length !== 1 || frame[0].id !== 592 || frame[0].blend !== 0)
+      throw new Error(`Recheck ${label} deploy filter frame ${i}`);
+    const matrix = sc.matrices[frame[0].matrix] ?? identity;
+    if (matrix[1] !== 0 || matrix[2] !== 0 || matrix[4] !== 0)
+      throw new Error(`Unsupported deploy filter affine at frame ${i}`);
+    return {
+      matrix,
+      color: sc.colors[frame[0].color] ?? neutral,
+    };
+  });
 }
 const frames = poses(clip, name);
 const legendaryClip = sc.clips[sc.names[legendaryName]];
 if (legendaryClip?.fps !== 60 || legendaryClip.frames.length !== 31)
   throw new Error("Recheck legendary deploy filter timeline");
 const legendaryCards = Object.entries(combat)
-  .filter(([, profile]) =>
-    characters.find((row) => row.Name === profile.source)?.DeployBaseAnimExportName === legendaryName,
+  .filter(
+    ([, profile]) =>
+      characters.find((row) => row.Name === profile.source)
+        ?.DeployBaseAnimExportName === legendaryName,
   )
   .map(([id]) => id);
-if (legendaryCards.length !== 2 || !legendaryCards.includes("ice-wizard") || !legendaryCards.includes("princess"))
+if (
+  legendaryCards.length !== 2 ||
+  !legendaryCards.includes("ice-wizard") ||
+  !legendaryCards.includes("princess")
+)
   throw new Error(`Recheck legendary deploy binding: ${legendaryCards}`);
 const data = {
-  source: name, fps: clip.fps, cards, frames,
-  legendary: { source: legendaryName, fps: legendaryClip.fps,
-    cards: legendaryCards, frames: poses(legendaryClip, legendaryName) },
+  source: name,
+  fps: clip.fps,
+  cards,
+  frames,
+  legendary: {
+    source: legendaryName,
+    fps: legendaryClip.fps,
+    cards: legendaryCards,
+    frames: poses(legendaryClip, legendaryName),
+  },
 };
 const path = "src/render/deploy-filter-data.json";
 const output = Buffer.from(JSON.stringify(data, null, 2) + "\n");
