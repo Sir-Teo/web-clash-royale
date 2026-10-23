@@ -20,7 +20,7 @@ Freeze costs four elixir and holds enemies within its three-tile circle for four
 
 Poison costs four elixir and damages enemies across an eight-second, 3.5-tile area. Its damage buff lingers briefly after a troop leaves, while buried Teslas remain immune. It uses the archived portrait, cast and impact cues, rising skull particles, team-colored ground rings and a 37-frame green color filter for troops, buildings and towers. Solo play, direct two-player matches and replays share the same fixed-step area rules.
 
-Rage costs two elixir and boosts friendly troops' movement, attack and summoning speeds by 35% in a five-tile area. Its six-second source area reapplies the buff to troops entering later; the brief remaining buff cannot outlive the area. It uses the original portrait, purple ground rings, sparkles, impact sound and 50-frame troop color filter. The same fixed-step rules run in solo play, direct matches and replays.
+Rage costs two elixir and boosts friendly troops' movement, attack and summoning speeds by 35% in a five-tile area. Its six-second source area reapplies the buff to troops entering later; the brief remaining buff cannot outlive the area. It uses the original portrait, purple ground rings, sparkles, impact sound, 50-frame troop color filter and 25% higher troop-sound pitch. The same fixed-step rules run in solo play, direct matches and replays.
 
 Musketeer and Cannon shots share the archived cannon impact; Bomber, Baby Dragon and Wizard projectiles use their own native sparks, smoke, flame and debris compositions. These hit effects stay separate from each troop's death effect.
 
