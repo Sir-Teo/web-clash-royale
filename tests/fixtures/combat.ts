@@ -76,6 +76,8 @@ function setup() {
     scenario !== "poison";
   (document.querySelector("#rage-cast") as HTMLElement).hidden =
     scenario !== "rage";
+  (document.querySelector("#tornado-cast") as HTMLElement).hidden =
+    scenario !== "tornado";
   (document.querySelector("#poison-towers") as HTMLElement).hidden =
     scenario !== "poison";
   (document.querySelector("#freeze-towers") as HTMLElement).hidden =
@@ -113,6 +115,12 @@ function setup() {
       entity.hp = entity.maxHp = 10000;
     }
     cast("log", "blue", 4, 22);
+  } else if (scenario === "tornado") {
+    for (const card of ["giant", "minions"] as CardId[])
+      for (const entity of unit(card, "red", 7, 11)) {
+        entity.active = false;
+        entity.hp = entity.maxHp = 10000;
+      }
   } else if (scenario === "spell-impacts") {
     cast("zap", "blue", 4, 13);
     cast("arrows", "red", 14, 19);
@@ -275,6 +283,9 @@ document.querySelector("#rage-cast")!.addEventListener("click", () => {
   cast("rage", "blue", 9, 20);
   cast("rage", "red", 9, 12);
 });
+document.querySelector("#tornado-cast")!.addEventListener("click", () => {
+  cast("tornado", "blue", 9, 14);
+});
 document.querySelector("#poison-towers")!.addEventListener("click", () => {
   for (const tower of battle.entities.filter(
     (entity) =>
@@ -388,6 +399,21 @@ function render(now: number) {
     JSON.stringify(destruction);
   (document.querySelector("#destruction") as HTMLElement).dataset.projectiles =
     JSON.stringify(arena.projectileState);
+  (document.querySelector("#destruction") as HTMLElement).dataset.tornadoAreas =
+    JSON.stringify(arena.tornadoAreaState);
+  (
+    document.querySelector("#destruction") as HTMLElement
+  ).dataset.tornadoEntities = JSON.stringify(
+    battle.entities
+      .filter((entity) => entity.card === "giant" || entity.card === "minions")
+      .map((entity) => ({
+        id: entity.id,
+        card: entity.card,
+        x: entity.x,
+        y: entity.y,
+        hp: entity.hp,
+      })),
+  );
   (document.querySelector("#destruction") as HTMLElement).dataset.chargeCues =
     String(chargeCues);
   (document.querySelector("#destruction") as HTMLElement).dataset.chargeFilter =
