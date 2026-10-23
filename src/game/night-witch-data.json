@@ -1,0 +1,30 @@
+{
+  "card": "DarkWitch",
+  "rarity": "Legendary",
+  "cost": 4,
+  "sourceHitpoints": 750,
+  "sourceDamage": 285,
+  "sourceSpeed": 60,
+  "sourceRange": 1.85,
+  "sourceHitSpeed": 1.5,
+  "sourceLoadTime": 0.9,
+  "hitsGround": true,
+  "hitsAir": false,
+  "spawn": {
+    "character": "Bat",
+    "count": 2,
+    "pause": 5,
+    "radius": 1.5,
+    "effect": "bat_dark_witch_spawn",
+    "effectDelay": 0.3
+  },
+  "deathSpawn": {
+    "character": "Bat",
+    "count": 4,
+    "radius": 2.5,
+    "angleShift": 90,
+    "pushback": true
+  },
+  "blueExport": "dark_witch",
+  "redExport": "dark_witch_red"
+}

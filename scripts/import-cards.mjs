@@ -265,6 +265,7 @@ const portraitNames = {
   mirror: "Mirror",
   "minion-horde": "MinionHorde",
   bats: "Bats",
+  "night-witch": "DarkWitch",
   "three-musketeers": "ThreeMusketeers",
   "goblin-gang": "GoblinGang",
   barbarians: "Barbarians",

@@ -27,6 +27,7 @@ import executioner from "./executioner-data.json" with { type: "json" };
 import sparky from "./sparky-data.json" with { type: "json" };
 import lumberjack from "./lumberjack-data.json" with { type: "json" };
 import bats from "./bats-data.json" with { type: "json" };
+import nightWitch from "./night-witch-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -62,6 +63,7 @@ export type CardId =
   | "baby-dragon"
   | "minions"
   | "bats"
+  | "night-witch"
   | "mega-minion"
   | "minion-horde"
   | "witch"
@@ -541,6 +543,18 @@ export const CARDS: Card[] = [
     bats.sourceHitSpeed,
     "Five fast flying Bats that can attack ground and air.",
     { air: true, hitsAir: true, count: bats.count, radius: bats.summonRadius },
+  ),
+  troop(
+    "night-witch",
+    "Night Witch",
+    nightWitch.cost,
+    Math.round(nightWitch.sourceHitpoints * 1.1 ** 2),
+    Math.round(nightWitch.sourceDamage * 1.1 ** 2),
+    nightWitch.sourceSpeed / 60,
+    nightWitch.sourceRange,
+    nightWitch.sourceHitSpeed,
+    "Summons Bats while alive and releases four more when defeated.",
+    { rarity: "Legendary", hitsAir: nightWitch.hitsAir },
   ),
   troop(
     "mega-minion",

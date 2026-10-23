@@ -1,0 +1,39 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_dark_witch",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/client/effects.csv",
+      "sha256": "22591ef669cb9af6535a10caae5b7f7f8b5b79c81630aeb3381a04bfef298985"
+    },
+    {
+      "path": "reference/client/particle_emitters.csv",
+      "sha256": "5d086e26d80b8a50be2c99b84c17057c25d402159d9721c9b256cc50f0c2e0f6"
+    },
+    {
+      "path": "reference/sc/chr_dark_witch.bin",
+      "sha256": "9a451b913c7ff7e89972406ea2da9cda80b5570e6d8b60c9434d2f989ebdfef8"
+    },
+    {
+      "path": "reference/sc/chr_dark_witch_highres_tex.png",
+      "sha256": "464fcc11d4897d797bb1ac038c54aa734144cfb361838789638e541f2e5ac862"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    }
+  ],
+  "output": {
+    "path": "src/game/night-witch-data.json",
+    "sha256": "09cf6dc1e93cd3a0fcf86100ec9aac122c3aba01caf9f2b2b77a289e1ce8ea54"
+  }
+}
