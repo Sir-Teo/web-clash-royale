@@ -816,6 +816,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "0555a90ad204cae955a0637cb42a38930a1ab474529442ec3bc881e6ed0f3387"
+    "sha256": "c710edc03904167b19da03cbfb1957a2d7fcfc169e6b307a2072b5da144bf0af"
   }
 }

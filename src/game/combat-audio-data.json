@@ -3961,9 +3961,21 @@
         "enemyComponents": []
       },
       "summon": {
-        "sources": [],
-        "components": [],
-        "enemyComponents": []
+        "sources": [
+          "Graveyard_appear"
+        ],
+        "components": [
+          {
+            "sound": "sound_skeleton_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_skeleton_deploy",
+            "delay": 0
+          }
+        ]
       },
       "appear": {
         "sources": [],

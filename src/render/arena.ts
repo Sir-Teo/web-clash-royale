@@ -666,6 +666,9 @@ export class Arena {
   get tornadoAreaState() {
     return this.spellAreas.state.filter((area) => area.card === "tornado");
   }
+  get graveyardAreaState() {
+    return this.spellAreas.state.filter((area) => area.card === "graveyard");
+  }
   get placementState() {
     return this.placement
       ? {
@@ -1188,6 +1191,22 @@ export class Arena {
       if (event.type === "spell" && event.card === "tornado")
         this.destruction.burst(
           "tornado",
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
+      if (event.type === "spell" && event.card === "graveyard")
+        this.destruction.burst(
+          "graveyard",
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
+      if (event.type === "deploy" && event.effect === "graveyard-appear")
+        this.destruction.burst(
+          "graveyard-appear",
           new T.Vector3(event.x - 9, 0.2, event.y - 16),
           b.seed ^ event.id,
           event.team,

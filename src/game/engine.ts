@@ -20,6 +20,7 @@ import lightning from "./lightning-data.json" with { type: "json" };
 import log from "./log-data.json" with { type: "json" };
 import tornado from "./tornado-data.json" with { type: "json" };
 import goblinBarrel from "./goblin-barrel-data.json" with { type: "json" };
+import graveyard from "./graveyard-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -97,7 +98,7 @@ export interface Projectile extends Point {
 export interface AreaEffect extends Point {
   id: number;
   team: Team;
-  card: "freeze" | "poison" | "rage" | "lightning" | "tornado";
+  card: "freeze" | "poison" | "rage" | "lightning" | "tornado" | "graveyard";
   radius: number;
   duration: number;
   remaining: number;
@@ -114,7 +115,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb" | "log-die";
+  effect?: "balloon-bomb" | "log-die" | "graveyard-appear";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -435,7 +436,8 @@ export class Battle {
         id === "poison" ||
         id === "rage" ||
         id === "lightning" ||
-        id === "tornado"
+        id === "tornado" ||
+        id === "graveyard"
       ) {
         const rules =
           id === "freeze"
@@ -446,7 +448,9 @@ export class Battle {
                 ? rage
                 : id === "lightning"
                   ? lightning
-                  : tornado;
+                  : id === "tornado"
+                    ? tornado
+                    : graveyard;
         this.areas.push({
           id: this.nextId++,
           team,
@@ -460,7 +464,9 @@ export class Battle {
             ? { hitAt: lightning.strikeInterval, struck: [] }
             : id === "tornado"
               ? { hitAt: 0, damageAt: tornado.damageInterval }
-              : {}),
+              : id === "graveyard"
+                ? { hitAt: graveyard.spawnInitialDelay }
+                : {}),
         });
         if (id === "poison" || id === "rage")
           this.emitAudio("impact", team, id);
@@ -530,7 +536,7 @@ export class Battle {
     }
     return { ok: true, reason: "" };
   }
-  private spawn(id: CardId, team: Team, x: number, y: number) {
+  private spawn(id: CardId, team: Team, x: number, y: number, audio = true) {
     const c = CARD_MAP[id];
     this.entities.push({
       id: this.nextId++,
@@ -568,10 +574,11 @@ export class Battle {
         ? { burrow: { exposure: 0, idle: 0, phase: "hidden" as const } }
         : {}),
     });
-    this.emitAudio("spawn", team, id, this.entities.at(-1)!.id, undefined, {
-      x,
-      y,
-    });
+    if (audio)
+      this.emitAudio("spawn", team, id, this.entities.at(-1)!.id, undefined, {
+        x,
+        y,
+      });
   }
   private emit(
     type: BattleEvent["type"],
@@ -734,6 +741,29 @@ export class Battle {
   private updateAreas() {
     for (const area of this.areas) {
       const age = area.duration - area.remaining;
+      if (area.card === "graveyard") {
+        if (age + 1e-8 >= (area.hitAt ?? graveyard.spawnInitialDelay)) {
+          area.hitAt =
+            (area.hitAt ?? graveyard.spawnInitialDelay) +
+            graveyard.spawnInterval;
+          // The source specifies a radius and cadence but leaves individual
+          // spawn coordinates to its native runtime. Use a seeded uniform
+          // area distribution so peers and replays agree on every Skeleton.
+          const angle = this.random() * Math.PI * 2;
+          const radius = Math.sqrt(this.random()) * area.radius;
+          const x = clamp(area.x + Math.cos(angle) * radius, 0.5, 17.5);
+          const y = clamp(area.y + Math.sin(angle) * radius, 0.7, 31.3);
+          this.spawn("skeletons", area.team, x, y, false);
+          this.entities.at(-1)!.deploy = graveyard.spawnDeployTime;
+          this.emit("deploy", area.team, x, y, "skeletons", 0, {
+            effect: "graveyard-appear",
+          });
+          this.emitAudio("summon", area.team, "graveyard");
+        }
+        area.remaining = Math.max(0, area.remaining - STEP);
+        if (area.remaining < 1e-8) area.remaining = 0;
+        continue;
+      }
       if (area.card === "lightning") {
         if (age + 1e-8 >= (area.hitAt ?? lightning.strikeInterval)) {
           area.hitAt =

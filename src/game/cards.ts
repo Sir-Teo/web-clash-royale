@@ -6,6 +6,7 @@ import lightning from "./lightning-data.json" with { type: "json" };
 import log from "./log-data.json" with { type: "json" };
 import tornado from "./tornado-data.json" with { type: "json" };
 import goblinBarrel from "./goblin-barrel-data.json" with { type: "json" };
+import graveyard from "./graveyard-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -39,7 +40,8 @@ export type CardId =
   | "lightning"
   | "log"
   | "tornado"
-  | "goblin-barrel";
+  | "goblin-barrel"
+  | "graveyard";
 export interface Card {
   id: CardId;
   name: string;
@@ -236,6 +238,18 @@ export const CARDS: Card[] = [
     1,
     "Flings a barrel across the arena, releasing three Goblins where it lands.",
     { kind: "spell", rarity: "Epic", radius: goblinBarrel.landingRadius },
+  ),
+  troop(
+    "graveyard",
+    "Graveyard",
+    graveyard.cost,
+    0,
+    0,
+    0,
+    0,
+    1,
+    "Summons Skeletons over time in a large area anywhere in the arena.",
+    { kind: "spell", rarity: "Legendary", radius: graveyard.radius },
   ),
   troop(
     "arrows",

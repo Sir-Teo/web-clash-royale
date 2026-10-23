@@ -186,7 +186,7 @@ for (const [id, { table, row: name }] of Object.entries(cardBindings)) {
       id === "tornado" || id === "graveyard" ? area?.ScaledEffect : null,
     ],
     spawn: [],
-    summon: [],
+    summon: [id === "graveyard" ? area?.SpawnEffect : null],
     appear: [],
     hide: [],
     "death-impact": [],

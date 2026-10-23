@@ -1953,6 +1953,10 @@ Object.defineProperty(window, "__arena", {
         poisonFilter: arena.poisonFilterState,
         rageAreas: arena.rageAreaState,
         tornadoAreas: arena.tornadoAreaState,
+        graveyardAreas: arena.graveyardAreaState,
+        graveyardBirths: battle.events.filter(
+          (event) => event.effect === "graveyard-appear",
+        ).length,
         lightningAreas: battle.areas
           .filter((area) => area.card === "lightning")
           .map((area) => ({

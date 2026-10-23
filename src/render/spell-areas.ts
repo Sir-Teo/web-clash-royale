@@ -37,31 +37,39 @@ export class NativeSpellAreas {
       if (visual?.team !== area.team || visual.card !== area.card) {
         if (visual) this.release(area.id, visual);
         const groundName =
-          area.card === "tornado"
-            ? null
-            : area.card === "freeze"
-              ? area.team === "blue"
-                ? "freeze_effect_ground"
-                : "freeze_effect_ground_red"
-              : area.card === "rage"
-                ? "rage_effect_ground"
-                : "Poison_radius";
-        const radiusName =
-          area.card === "tornado"
+          area.card === "graveyard"
             ? area.team === "blue"
-              ? "spell_tornado_radius_blue"
-              : "spell_tornado_radius_red"
-            : area.card === "freeze"
-              ? area.team === "blue"
-                ? "spell_freeze_radius_blue"
-                : "spell_freeze_radius_red"
-              : area.card === "rage"
+              ? "Graveyard_ground_area_blue"
+              : "Graveyard_ground_area_red"
+            : area.card === "tornado"
+              ? null
+              : area.card === "freeze"
                 ? area.team === "blue"
-                  ? "spell_rage_radius_blue"
-                  : "spell_rage_radius_red"
-                : area.team === "blue"
-                  ? "spell_poison_radius_blue"
-                  : "spell_poison_radius_red";
+                  ? "freeze_effect_ground"
+                  : "freeze_effect_ground_red"
+                : area.card === "rage"
+                  ? "rage_effect_ground"
+                  : "Poison_radius";
+        const radiusName =
+          area.card === "graveyard"
+            ? area.team === "blue"
+              ? "spell_graveyard_radius_blue"
+              : "spell_graveyard_radius_red"
+            : area.card === "tornado"
+              ? area.team === "blue"
+                ? "spell_tornado_radius_blue"
+                : "spell_tornado_radius_red"
+              : area.card === "freeze"
+                ? area.team === "blue"
+                  ? "spell_freeze_radius_blue"
+                  : "spell_freeze_radius_red"
+                : area.card === "rage"
+                  ? area.team === "blue"
+                    ? "spell_rage_radius_blue"
+                    : "spell_rage_radius_red"
+                  : area.team === "blue"
+                    ? "spell_poison_radius_blue"
+                    : "spell_poison_radius_red";
         const ground = groundName ? this.effects.make(groundName) : null;
         const radius = this.effects.make(radiusName);
         if ((groundName && !ground) || !radius) continue;
