@@ -45,6 +45,13 @@ test("Knight and Prince leave native ground dust while moving on desktop and pho
   expect(
     await page.locator("#destruction").getAttribute("data-charge-cues"),
   ).toBe("1");
+  const filter = async () =>
+    JSON.parse(
+      (await page.locator("#destruction").getAttribute("data-charge-filter"))!,
+    );
+  expect(await filter()).toEqual([
+    expect.objectContaining({ applied: true, frame: expect.any(Number) }),
+  ]);
   const marker = page.locator('.charge-marker[data-source="effect_charge"]');
   await expect(marker).toHaveCount(1);
   for (
@@ -56,16 +63,23 @@ test("Knight and Prince leave native ground dust while moving on desktop and pho
   expect(
     Number(await marker.getAttribute("data-frame")),
   ).toBeGreaterThanOrEqual(4);
+  expect((await filter())[0].color[0]).toBeGreaterThan(0);
   await expect(marker.locator("svg text")).toHaveText("Charge!");
+  for (let i = 0; i < 5 && (await filter())[0]?.frame < 24; i++)
+    await step();
+  expect((await filter())[0].color[0]).toBeGreaterThanOrEqual(62);
   await page.screenshot({
-    path: info.outputPath("native-prince-charge-callout.png"),
+    path: info.outputPath("native-prince-charge-filter.png"),
     fullPage: true,
   });
   const frame = await marker.getAttribute("data-frame");
+  const filterFrame = (await filter())[0].frame;
   await page.waitForTimeout(180);
   expect(await marker.getAttribute("data-frame")).toBe(frame);
+  expect((await filter())[0].frame).toBe(filterFrame);
   for (let i = 0; i < 18 && (await marker.count()) > 0; i++) await step();
   await expect(marker).toHaveCount(0);
+  expect(await filter()).toEqual([]);
   await page.locator("#scenario").selectOption("deployment");
   await expect(marker).toHaveCount(0);
   expect(errors).toEqual([]);

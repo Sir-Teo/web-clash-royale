@@ -309,6 +309,8 @@ function render(now: number) {
     JSON.stringify(destruction);
   (document.querySelector("#destruction") as HTMLElement).dataset.chargeCues =
     String(chargeCues);
+  (document.querySelector("#destruction") as HTMLElement).dataset.chargeFilter =
+    JSON.stringify(arena.chargeFilterState);
   (document.querySelector("#destruction") as HTMLElement).dataset.hogJump =
     JSON.stringify(
       battle.entities

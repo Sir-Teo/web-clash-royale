@@ -1907,6 +1907,7 @@ Object.defineProperty(window, "__arena", {
         announcement: announcements.state,
         loadedBuildings: arena.loadedBuildings,
         destruction: arena.destructionState,
+        chargeFilter: arena.chargeFilterState,
         shake: arena.shakeState,
         placement: arena.placementState,
         loadedAnimations: arena.loadedAnimations,
