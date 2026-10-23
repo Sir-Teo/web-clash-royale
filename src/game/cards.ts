@@ -3,6 +3,7 @@ import poison from "./poison-data.json" with { type: "json" };
 import rage from "./rage-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
 import lightning from "./lightning-data.json" with { type: "json" };
+import log from "./log-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -33,12 +34,13 @@ export type CardId =
   | "poison"
   | "rage"
   | "rocket"
-  | "lightning";
+  | "lightning"
+  | "log";
 export interface Card {
   id: CardId;
   name: string;
   cost: number;
-  rarity: "Common" | "Rare" | "Epic";
+  rarity: "Common" | "Rare" | "Epic" | "Legendary";
   kind: "troop" | "spell" | "building";
   hp: number;
   damage: number;
@@ -189,6 +191,18 @@ export const CARDS: Card[] = [
       radius: lightning.radius,
       hitsAir: lightning.hitsAir,
     },
+  ),
+  troop(
+    "log",
+    "The Log",
+    log.cost,
+    0,
+    Math.round((log.sourceDamage * 689) / 325),
+    0,
+    0,
+    1,
+    "Rolls through ground enemies, knocking them back as it goes.",
+    { kind: "spell", rarity: "Legendary", radius: log.collisionRadius },
   ),
   troop(
     "arrows",

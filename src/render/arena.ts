@@ -22,6 +22,7 @@ import type { EffectSprite } from "./effects";
 import {
   makeProjectile,
   rocketFlightPoint,
+  logFlightPoint,
   updateProjectile,
 } from "./projectiles";
 import type { ProjectileVisual } from "./projectiles";
@@ -1082,6 +1083,22 @@ export class Arena {
             "trail:rocket",
             (seconds) => rocketFlightPoint(p, seconds),
             duration,
+            i * 0.8,
+            b.seed ^ p.id ^ Math.imul(i, 0x9e3779b9),
+            p.team,
+            age,
+          );
+        this.rocketTrailCycles.set(p.id, cycle);
+      }
+      if (p.style === "log" && p.speed && this.effects.asset) {
+        const age = p.elapsed ?? 0;
+        const cycle = Math.floor((age + 1e-8) / 0.8);
+        const last = this.rocketTrailCycles.get(p.id) ?? -1;
+        for (let i = last + 1; i <= cycle; i++)
+          this.destruction.burstAlong(
+            "trail:log",
+            (seconds) => logFlightPoint(p, seconds),
+            p.duration,
             i * 0.8,
             b.seed ^ p.id ^ Math.imul(i, 0x9e3779b9),
             p.team,

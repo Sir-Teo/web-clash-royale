@@ -1046,6 +1046,9 @@ button:active {
 .game-card.epic {
   border-color: #ba7be8;
 }
+.game-card.legendary {
+  border-color: #e9b855;
+}
 .game-card:after {
   content: "";
   position: absolute;
@@ -1755,6 +1758,9 @@ kbd {
 .detail-art.epic {
   border-color: #be79e5;
 }
+.detail-art.legendary {
+  border-color: #e9b855;
+}
 .detail-art img {
   width: 100%;
   display: block;
@@ -1793,6 +1799,9 @@ kbd {
 }
 .rarity-label.epic {
   color: #cf9bea;
+}
+.rarity-label.legendary {
+  color: #f4c36a;
 }
 .level-pill {
   font-size: 7px;

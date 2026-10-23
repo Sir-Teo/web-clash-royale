@@ -19,6 +19,10 @@ export function rocketFlightPoint(p: Projectile, seconds: number) {
     T.MathUtils.lerp(p.y, p.ty, t) - 16,
   );
 }
+export function logFlightPoint(p: Projectile, seconds: number) {
+  const t = T.MathUtils.clamp(seconds / p.duration, 0, 1);
+  return new T.Vector3(p.x - 9, 0.45, T.MathUtils.lerp(p.y, p.ty, t) - 16);
+}
 export function projectileArt(p: Projectile) {
   if (["arrow", "arrows", "archers"].includes(p.style))
     return p.team === "blue"
@@ -32,6 +36,11 @@ export function projectileArt(p: Projectile) {
   if (p.style === "musketeer") return "projectile_cannonball_small";
   if (p.style === "fireball") return "fireball_projectile1";
   if (p.style === "rocket") return "projectile_rocket";
+  if (p.style === "log-launch") return "log_projectile";
+  if (p.style === "log")
+    return p.team === "blue"
+      ? "log_roll_projectile"
+      : "log_roll_projectile_red";
   if (p.style === "baby-dragon") return "dragon_projectile";
   if (p.style === "wizard") return "fireball_small";
   if (p.style === "witch" || p.style === "minions") return "Tower_projectile1";
@@ -58,8 +67,12 @@ export function makeProjectile(
       object.add(sprite.mesh);
       sprites.push(sprite);
     }
-  if (p.style === "rocket") {
-    const shadow = library.make("projectile_shadow_rocket");
+  if (p.style === "rocket" || p.style === "log-launch") {
+    const shadow = library.make(
+      p.style === "rocket"
+        ? "projectile_shadow_rocket"
+        : "log_projectile_shadow",
+    );
     if (shadow) {
       object.add(shadow.mesh);
       sprites.push(shadow);
@@ -103,7 +116,10 @@ export function updateProjectile(
   tangent.applyQuaternion(camera.quaternion.clone().invert());
   const angle = Math.atan2(tangent.y, tangent.x);
   for (const sprite of v.sprites) {
-    if (sprite.name === "projectile_shadow_rocket") {
+    if (
+      sprite.name === "projectile_shadow_rocket" ||
+      sprite.name === "log_projectile_shadow"
+    ) {
       sprite.mesh.position.set(0, -v.object.position.y + 0.045, 0);
       sprite.mesh.rotation.set(-Math.PI / 2, 0, 0);
       sprite.mesh.scale.setScalar(1.25);
@@ -126,6 +142,13 @@ export function updateProjectile(
       library.frame(sprite, 0);
       sprite.mesh.rotateZ(angle - Math.PI / 2);
       sprite.mesh.scale.setScalar(1.25);
+    } else if (sprite.name === "log_projectile") {
+      library.frame(sprite, 0);
+      sprite.mesh.rotateZ(angle - Math.PI / 2);
+      sprite.mesh.scale.setScalar(1.25);
+    } else if (sprite.name.startsWith("log_roll_projectile")) {
+      library.animate(sprite, p.elapsed ?? 0, true);
+      sprite.mesh.scale.setScalar(1.4);
     } else if (["fireball_small", "Tower_projectile1"].includes(sprite.name)) {
       library.animate(sprite, p.elapsed ?? progress * p.duration, true);
       sprite.mesh.rotateZ(angle);

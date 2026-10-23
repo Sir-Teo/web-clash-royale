@@ -17,6 +17,7 @@ import poison from "./poison-data.json" with { type: "json" };
 import rage from "./rage-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
 import lightning from "./lightning-data.json" with { type: "json" };
+import log from "./log-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -89,6 +90,7 @@ export interface Projectile extends Point {
   arc?: number;
   knockback?: number;
   towerDamageFraction?: number;
+  rollHits?: number[];
 }
 export interface AreaEffect extends Point {
   id: number;
@@ -109,7 +111,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb";
+  effect?: "balloon-bomb" | "log-die";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -303,7 +305,14 @@ export class Battle {
       return { ok: false, reason: "Place your card inside the arena." };
     const c = CARD_MAP[id];
     if (!c) return { ok: false, reason: "Unknown card." };
-    if (c.kind === "spell") return { ok: true, reason: "" };
+    if (c.kind === "spell") {
+      if (id === "log" && (team === "blue" ? y < 17.5 : y > 14.5))
+        return {
+          ok: false,
+          reason: "Deploy The Log on your side of the arena.",
+        };
+      return { ok: true, reason: "" };
+    }
     const lane = x < 9 ? "left" : "right";
     const enemyPrincess = this.entities.some(
       (e) =>
@@ -358,6 +367,34 @@ export class Battle {
     this.emit(c.kind === "spell" ? "spell" : "deploy", team, x, y, id);
     this.emitAudio("cast", team, id);
     if (c.kind === "spell") {
+      if (id === "log") {
+        const ty = y + (team === "blue" ? -1 : 1) * log.launchMinimumDistance;
+        const duration = log.launchMinimumDistance / log.launchSpeed;
+        this.projectiles.push({
+          id: this.nextId++,
+          team,
+          x,
+          y,
+          tx: x,
+          ty,
+          target: null,
+          damage: c.damage,
+          remaining: duration,
+          duration,
+          splash: 0,
+          air: false,
+          style: "log-launch",
+          stun: 0,
+          source: 0,
+          flight: { x, y },
+          speed: log.launchSpeed,
+          elapsed: 0,
+          fromHeight: 2.1,
+          toHeight: 0.35,
+          arc: 1.2,
+        });
+        return { ok: true, reason: "" };
+      }
       if (
         id === "freeze" ||
         id === "poison" ||
@@ -1173,6 +1210,7 @@ export class Battle {
       const target = this.entities.find(
         (e) => e.id === p.target && e.hp > 0 && !this.isHidden(e),
       );
+      const previousFlight = p.style === "log" ? { ...p.flight! } : null;
       if (p.homing && target) {
         p.tx = target.x;
         p.ty = target.y;
@@ -1197,6 +1235,87 @@ export class Battle {
           p.flight.x = p.x + (p.tx - p.x) * progress;
           p.flight.y = p.y + (p.ty - p.y) * progress;
         }
+      }
+      if (p.style === "log-launch") {
+        if (p.remaining <= 1e-8) {
+          const range = Math.min(
+            log.rollingRange,
+            p.team === "blue" ? p.ty - 0.6 : 31.4 - p.ty,
+          );
+          const ty = p.ty + (p.team === "blue" ? -range : range);
+          const duration = range / log.rollingSpeed;
+          this.projectiles.push({
+            id: this.nextId++,
+            team: p.team,
+            x: p.tx,
+            y: p.ty,
+            tx: p.tx,
+            ty,
+            target: null,
+            damage: p.damage,
+            remaining: duration,
+            duration,
+            splash: 0,
+            air: false,
+            style: "log",
+            stun: 0,
+            source: 0,
+            flight: { x: p.tx, y: p.ty },
+            speed: log.rollingSpeed,
+            elapsed: 0,
+            fromHeight: 0.45,
+            toHeight: 0.45,
+            arc: 0,
+            knockback: log.knockback,
+            towerDamageFraction: log.crownTowerDamageFraction,
+            rollHits: [],
+          });
+          this.emitAudio("launch", p.team, "log");
+          p.remaining = 0;
+        }
+        continue;
+      }
+      if (p.style === "log") {
+        if (
+          Math.floor((p.elapsed ?? 0) * 2) >
+          Math.floor(((p.elapsed ?? 0) - STEP) * 2)
+        )
+          this.emitAudio("launch", p.team, "log");
+        const oldY = previousFlight?.y ?? p.y;
+        const newY = p.flight?.y ?? p.ty;
+        for (const e of this.entities) {
+          if (
+            e.hp <= 0 ||
+            e.team === p.team ||
+            e.air ||
+            this.isHidden(e) ||
+            p.rollHits!.includes(e.id) ||
+            Math.abs(e.x - p.x) >= log.collisionHalfWidth + e.radius ||
+            e.y < Math.min(oldY, newY) - log.collisionRadius - e.radius ||
+            e.y > Math.max(oldY, newY) + log.collisionRadius + e.radius
+          )
+            continue;
+          p.rollHits!.push(e.id);
+          this.hurt(
+            e,
+            p.damage * (e.kind === "tower" ? log.crownTowerDamageFraction : 1),
+          );
+          this.emit("hit", p.team, e.x, e.y, "log", p.damage);
+          this.emitAudio("impact", p.team, "log");
+          if (e.hp > 0 && e.kind === "troop") {
+            this.knockback(
+              e,
+              { x: e.x, y: e.y + (p.team === "blue" ? 1 : -1) },
+              log.knockback,
+            );
+          }
+        }
+        if (p.remaining <= 1e-8) {
+          this.emit("hit", p.team, p.tx, p.ty, "log", 0, { effect: "log-die" });
+          this.emitAudio("impact-special", p.team, "log");
+          p.remaining = 0;
+        }
+        continue;
       }
       if (p.remaining > 1e-8) continue;
       p.remaining = 0;
