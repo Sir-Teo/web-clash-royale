@@ -1,0 +1,27 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_royal_giant",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "reference/sc/chr_royal_giant.bin",
+      "sha256": "a35000fedc4954ea95e34ce00286c9c591d929d753070b52bce497545502edaf"
+    }
+  ],
+  "output": {
+    "path": "src/game/royal-giant-data.json",
+    "sha256": "8367a873dcae846944d9eb4dc167bacc50d789430e1fbe86f6311882002df133"
+  }
+}
