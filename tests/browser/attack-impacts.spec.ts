@@ -41,12 +41,14 @@ test("seven attackers render their archived hit particles on desktop and phone",
     await expect
       .poll(async () => (await state()).clips[clip] ?? 0)
       .toBeGreaterThan(0);
+    if (card === "cannon")
+      expect((await state()).clips.fireplace_particle).toBeGreaterThan(0);
     const held = await state();
     expect(held.draws).toBeGreaterThan(0);
     expect(held.draws).toBeLessThan(80);
     await page.waitForTimeout(180);
     expect(await state()).toEqual(held);
-    if (["bomber", "wizard", "balloon", "tesla"].includes(card)) {
+    if (["bomber", "wizard", "cannon", "balloon", "tesla"].includes(card)) {
       await step();
       await page.screenshot({
         path: info.outputPath(`${card}-native-hit.png`),

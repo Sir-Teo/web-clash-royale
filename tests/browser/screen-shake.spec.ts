@@ -9,6 +9,7 @@ for (const perspective of ["blue", "red"] as const)
   test(`${perspective} replay impacts shift the arena with aligned picking, fixed controls and reduced-motion support`, async ({
     page,
   }, info) => {
+    test.setTimeout(180000);
     const path = info.outputPath("shake-rules.mjs");
     await build({
       stdin: {
@@ -127,7 +128,9 @@ for (const perspective of ["blue", "red"] as const)
                 s.destruction.tails.stretched > 0,
             ),
           ),
-        { timeout: 15000 },
+        // Hosted software WebGL can take longer than wall-clock replay time
+        // to reach the first frame containing all three effects.
+        { timeout: 45000 },
       )
       .toBe(true);
     await page
