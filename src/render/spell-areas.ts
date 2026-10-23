@@ -36,14 +36,26 @@ export class NativeSpellAreas {
       let visual = this.visuals.get(area.id);
       if (visual?.team !== area.team || visual.card !== area.card) {
         if (visual) this.release(area.id, visual);
-        const groundName = area.card === "freeze"
-          ? area.team === "blue" ? "freeze_effect_ground" : "freeze_effect_ground_red"
-          : area.card === "rage" ? "rage_effect_ground" : "Poison_radius";
-        const radiusName = area.card === "freeze"
-          ? area.team === "blue" ? "spell_freeze_radius_blue" : "spell_freeze_radius_red"
-          : area.card === "rage"
-            ? area.team === "blue" ? "spell_rage_radius_blue" : "spell_rage_radius_red"
-            : area.team === "blue" ? "spell_poison_radius_blue" : "spell_poison_radius_red";
+        const groundName =
+          area.card === "freeze"
+            ? area.team === "blue"
+              ? "freeze_effect_ground"
+              : "freeze_effect_ground_red"
+            : area.card === "rage"
+              ? "rage_effect_ground"
+              : "Poison_radius";
+        const radiusName =
+          area.card === "freeze"
+            ? area.team === "blue"
+              ? "spell_freeze_radius_blue"
+              : "spell_freeze_radius_red"
+            : area.card === "rage"
+              ? area.team === "blue"
+                ? "spell_rage_radius_blue"
+                : "spell_rage_radius_red"
+              : area.team === "blue"
+                ? "spell_poison_radius_blue"
+                : "spell_poison_radius_red";
         const ground = this.effects.make(groundName);
         const radius = this.effects.make(radiusName);
         if (!ground || !radius) continue;

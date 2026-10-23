@@ -1961,8 +1961,8 @@ Object.defineProperty(window, "__arena", {
             remaining: area.remaining,
             struck: area.struck?.length ?? 0,
           })),
-        lightningHits: battle.events.filter((event) =>
-          event.type === "hit" && event.card === "lightning",
+        lightningHits: battle.events.filter(
+          (event) => event.type === "hit" && event.card === "lightning",
         ).length,
         rageFilter: arena.rageFilterState,
         poisonStructures: arena.poisonStructureState,

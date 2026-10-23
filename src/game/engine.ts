@@ -358,10 +358,20 @@ export class Battle {
     this.emit(c.kind === "spell" ? "spell" : "deploy", team, x, y, id);
     this.emitAudio("cast", team, id);
     if (c.kind === "spell") {
-      if (id === "freeze" || id === "poison" || id === "rage" || id === "lightning") {
-        const rules = id === "freeze" ? freeze
-          : id === "poison" ? poison
-          : id === "rage" ? rage : lightning;
+      if (
+        id === "freeze" ||
+        id === "poison" ||
+        id === "rage" ||
+        id === "lightning"
+      ) {
+        const rules =
+          id === "freeze"
+            ? freeze
+            : id === "poison"
+              ? poison
+              : id === "rage"
+                ? rage
+                : lightning;
         this.areas.push({
           id: this.nextId++,
           team,
@@ -375,14 +385,18 @@ export class Battle {
             ? { hitAt: lightning.strikeInterval, struck: [] }
             : {}),
         });
-        if (id === "poison" || id === "rage") this.emitAudio("impact", team, id);
+        if (id === "poison" || id === "rage")
+          this.emitAudio("impact", team, id);
         return { ok: true, reason: "" };
       }
       const origin = { x: 9, y: team === "blue" ? 30 : 2 };
       const modern = this.rulesVersion >= 2;
-      const speed = id === "rocket"
-        ? rocket.speed
-        : id === "fireball" ? FIREBALL_SPEED : ARROWS_SPEED;
+      const speed =
+        id === "rocket"
+          ? rocket.speed
+          : id === "fireball"
+            ? FIREBALL_SPEED
+            : ARROWS_SPEED;
       const duration =
         id === "zap"
           ? 0.15
@@ -419,9 +433,12 @@ export class Battle {
                 fromHeight: id === "zap" ? 7 : 2.4,
                 toHeight: 0.2,
                 arc: id === "arrows" ? 9 : id === "zap" ? 0 : 6,
-                knockback: id === "rocket"
-                  ? rocket.knockback
-                  : id === "fireball" ? FIREBALL_KNOCKBACK : 0,
+                knockback:
+                  id === "rocket"
+                    ? rocket.knockback
+                    : id === "fireball"
+                      ? FIREBALL_KNOCKBACK
+                      : 0,
                 ...(id === "rocket"
                   ? { towerDamageFraction: rocket.crownTowerDamageFraction }
                   : {}),
@@ -521,9 +538,13 @@ export class Battle {
       profile,
       actor,
       attack,
-      ...(actor !== undefined && this.entities.find(
-        (entity) => entity.id === actor && entity.rage && entity.rage.remaining > 0,
-      ) ? { pitchMultiplier: rage.audioPitchMultiplier } : {}),
+      ...(actor !== undefined &&
+      this.entities.find(
+        (entity) =>
+          entity.id === actor && entity.rage && entity.rage.remaining > 0,
+      )
+        ? { pitchMultiplier: rage.audioPitchMultiplier }
+        : {}),
       ...(origin ? { origin } : {}),
     };
     this.audioEvents.push(event);
@@ -638,29 +659,43 @@ export class Battle {
       const age = area.duration - area.remaining;
       if (area.card === "lightning") {
         if (age + 1e-8 >= (area.hitAt ?? lightning.strikeInterval)) {
-          area.hitAt = (area.hitAt ?? lightning.strikeInterval) +
-            lightning.strikeInterval;
-          const struck = area.struck ??= [];
+          area.hitAt =
+            (area.hitAt ?? lightning.strikeInterval) + lightning.strikeInterval;
+          const struck = (area.struck ??= []);
           const target = this.entities
-            .filter((entity) =>
-              entity.hp > 0 && entity.team !== area.team &&
-              !this.isHidden(entity) && !struck.includes(entity.id) &&
-              dist(entity, area) < area.radius + entity.radius,
+            .filter(
+              (entity) =>
+                entity.hp > 0 &&
+                entity.team !== area.team &&
+                !this.isHidden(entity) &&
+                !struck.includes(entity.id) &&
+                dist(entity, area) < area.radius + entity.radius,
             )
             .sort((a, b) => b.hp - a.hp || a.id - b.id)[0];
           if (target) {
             struck.push(target.id);
-            const damage = CARD_MAP.lightning.damage *
-              (target.kind === "tower" ? lightning.crownTowerDamageFraction : 1);
+            const damage =
+              CARD_MAP.lightning.damage *
+              (target.kind === "tower"
+                ? lightning.crownTowerDamageFraction
+                : 1);
             this.hurt(target, damage);
             if (target.hp > 0) {
               target.stun = Math.max(target.stun, lightning.stunDuration);
               target.move = 0;
               this.cancelAttack(target);
             }
-            this.emit("hit", area.team, target.x, target.y, "lightning", damage, {
-              height: target.air ? 2.3 : target.kind === "tower" ? 1.8 : 0.6,
-            });
+            this.emit(
+              "hit",
+              area.team,
+              target.x,
+              target.y,
+              "lightning",
+              damage,
+              {
+                height: target.air ? 2.3 : target.kind === "tower" ? 1.8 : 0.6,
+              },
+            );
             this.emitAudio("impact", area.team, "lightning");
           }
         }
@@ -671,8 +706,11 @@ export class Battle {
       const periodic = area.card === "poison" || area.card === "rage";
       const areaHit = periodic && age + 1e-8 >= (area.hitAt ?? 0);
       if (areaHit)
-        area.hitAt = (area.hitAt ?? 0) +
-          (area.card === "poison" ? poison.areaHitInterval : rage.areaHitInterval);
+        area.hitAt =
+          (area.hitAt ?? 0) +
+          (area.card === "poison"
+            ? poison.areaHitInterval
+            : rage.areaHitInterval);
       for (const entity of this.entities) {
         if (
           entity.hp <= 0 ||
@@ -1175,9 +1213,10 @@ export class Battle {
             continue;
           this.hurt(
             e,
-            p.damage * (p.source === 0 && e.kind === "tower"
-              ? p.towerDamageFraction ?? 0.3
-              : 1),
+            p.damage *
+              (p.source === 0 && e.kind === "tower"
+                ? (p.towerDamageFraction ?? 0.3)
+                : 1),
           );
           if (e.hp <= 0) continue;
           if (p.stun) {
@@ -1270,7 +1309,9 @@ export class Battle {
       dy = y - e.y,
       d = Math.hypot(dx, dy);
     if (d < 0.001) return;
-    const speed = e.speed * (e.rage ? rage.speedMultiplier : 1) *
+    const speed =
+      e.speed *
+      (e.rage ? rage.speedMultiplier : 1) *
       (e.card === "prince" && e.move > 2.3 ? 1.8 : 1);
     const move = Math.min(d, speed * STEP);
     e.x = clamp(e.x + (dx / d) * move, 0.5, 17.5);
