@@ -28,7 +28,7 @@
     {
       "path": "src/game/combat-data.json",
       "source": "browser card-to-character mapping",
-      "sha256": "73abba769cce29ff8e22aa487d17126d1ad7e9a79d0a378c15ab5c8b2577b1df"
+      "sha256": "bf3cc57605de090249792e49f4c0e3e0ed7f220fde1e00467caf12edff4a1877"
     },
     {
       "path": "reference/logic/characters.csv",
@@ -175,14 +175,24 @@
       "sha256": "bf938a3d0c7ffb12804a7c3b18501c24d86460ec1888e9cacdea656e528a8056"
     },
     {
+      "file": "shape-4998-0.webp",
+      "bytes": 848,
+      "sha256": "bc59e88e57cbe00cfbcb0491a58b648a3bf058715f05fd7765df21741502dbf5"
+    },
+    {
+      "file": "shape-5008-0.webp",
+      "bytes": 688,
+      "sha256": "b6d698da17600fc9bb2e43751e16cc2c5563bb164e8ac7d38c0107c6202ded78"
+    },
+    {
       "file": "atlas.webp",
-      "bytes": 8532,
-      "sha256": "b8e8edc2575ba41ab65274deb174681082c98093dbffae27b372178f7bf1fb05"
+      "bytes": 10798,
+      "sha256": "0f077cc4a5af150172a9a98b90b475f3b68c664f1e33c33aa8bbcb95757f17c4"
     },
     {
       "file": "health.json",
-      "bytes": 312660,
-      "sha256": "15ec0bfd228331a213217921c01fddafd204b4095a433c18f84d612b51bce29e"
+      "bytes": 368484,
+      "sha256": "5bf432adb251d982d118a789e1aef75a309aafcef3b6f9889a090c5d7d6b0e00"
     }
   ]
 }

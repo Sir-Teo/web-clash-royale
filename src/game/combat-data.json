@@ -170,6 +170,13 @@
       "gravity": 0
     }
   },
+  "dark-prince": {
+    "source": "DarkPrince",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": true,
+    "projectile": null
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

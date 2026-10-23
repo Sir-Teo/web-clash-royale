@@ -372,9 +372,14 @@
       "sha256": "414071739c52b82eb00a597e4bd818b99c7896809de6951d07f8a34caf9a75fd"
     },
     {
+      "file": "portrait-dark-prince.webp",
+      "bytes": 36720,
+      "sha256": "cbf6865484444256daf3589b28ea39ffb02055b2c7b840971972133d4db15c9f"
+    },
+    {
       "file": "cards.json",
-      "bytes": 99568,
-      "sha256": "e427471067e0fccc405e90a780eea0f0d149431dde09a966f08805bbb0aee60a"
+      "bytes": 99898,
+      "sha256": "4c28e855151ecd72a2dd2c9521dfd7c189dd2bd534ba3fcdde584529c0c8b3ef"
     }
   ]
 }

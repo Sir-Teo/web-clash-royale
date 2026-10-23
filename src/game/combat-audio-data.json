@@ -2264,6 +2264,177 @@
         "row": "Bowler"
       }
     },
+    "dark-prince": {
+      "source": "DarkPrince",
+      "attack": {
+        "sources": [
+          "dark_prince_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_dark_prince_attack_start",
+            "delay": 0
+          },
+          {
+            "sound": "sound_dark_prince_attack_start_vo",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_dark_prince_attack_start",
+            "delay": 0
+          },
+          {
+            "sound": "sound_dark_prince_attack_start_vo",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [
+          "dark_prince_charge"
+        ],
+        "components": [
+          {
+            "sound": "sound_dark_prince_charge",
+            "delay": 0
+          },
+          {
+            "sound": "sound_dark_prince_charge_jing",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_dark_prince_charge",
+            "delay": 0
+          },
+          {
+            "sound": "sound_dark_prince_charge_jing",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "dark_prince_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_dark_prince_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_dark_prince_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [
+          "dark_prince_charge_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_dark_prince_charge_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_dark_prince_charge_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "dark_prince_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_dark_prince_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_dark_prince_deploy_vo",
+            "delay": 0
+          },
+          {
+            "sound": "sound_dark_prince_deploy_end",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_dark_prince_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_dark_prince_deploy_vo",
+            "delay": 0
+          },
+          {
+            "sound": "sound_dark_prince_deploy_end",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "DarkPrince"
+      }
+    },
     "spear-goblins": {
       "source": "SpearGoblin",
       "attack": {
@@ -8283,6 +8454,339 @@
         "repeat": 0,
         "loop": false,
         "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_dark_prince_attack_start": [
+      {
+        "sourceFile": "sfx/dark_prince_atk_01.wav",
+        "file": "dark_prince_atk_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.2,
+          0.2
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_dark_prince_attack_start_vo": [
+      {
+        "sourceFile": "sfx/b_knight_atk_04.wav",
+        "file": "b_knight_atk_04",
+        "volume": [
+          0.85,
+          0.85
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.15,
+          0.15
+        ],
+        "maximum": 3,
+        "repeat": 2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/b_knight_atk_01.wav",
+        "file": "b_knight_atk_01",
+        "volume": [
+          0.85,
+          0.85
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.15,
+          0.15
+        ],
+        "maximum": 3,
+        "repeat": 2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/b_knight_atk_03.wav",
+        "file": "b_knight_atk_03",
+        "volume": [
+          0.85,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.15,
+          0.15
+        ],
+        "maximum": 3,
+        "repeat": 2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/b_knight_atk_02.wav",
+        "file": "b_knight_atk_02",
+        "volume": [
+          0.85,
+          0.85
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.15,
+          0.15
+        ],
+        "maximum": 3,
+        "repeat": 2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_dark_prince_charge": [
+      {
+        "sourceFile": "sfx/b_knight_atk_charge_02.wav",
+        "file": "b_knight_atk_charge_02",
+        "volume": [
+          0.95,
+          0.95
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0.2,
+          0.2
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/b_knight_atk_charge_01.wav",
+        "file": "b_knight_atk_charge_01",
+        "volume": [
+          0.95,
+          0.95
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0.2,
+          0.2
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_dark_prince_charge_jing": [
+      {
+        "sourceFile": "sfx/dark_prince_charge_jing_02.wav",
+        "file": "dark_prince_charge_jing_02",
+        "volume": [
+          0.85,
+          0.85
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_dark_prince_hit": [
+      {
+        "sourceFile": "sfx/dark_prince_atk_hit_01.wav",
+        "file": "dark_prince_atk_hit_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_dark_prince_charge_hit": [
+      {
+        "sourceFile": "sfx/knighchargehit01.wav",
+        "file": "knighchargehit01",
+        "volume": [
+          0.9,
+          0.9
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_dark_prince_deploy": [
+      {
+        "sourceFile": "sfx/dark_prince_deploy_01.wav",
+        "file": "dark_prince_deploy_01",
+        "volume": [
+          0.9,
+          0.9
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_dark_prince_deploy_vo": [
+      {
+        "sourceFile": "sfx/b_knight_deploy_01.wav",
+        "file": "b_knight_deploy_01",
+        "volume": [
+          0.9,
+          0.9
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          1,
+          1
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 2,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/b_knight_deploy_02.wav",
+        "file": "b_knight_deploy_02",
+        "volume": [
+          0.9,
+          0.9
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          1,
+          1
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 2,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/b_knight_deploy_03.wav",
+        "file": "b_knight_deploy_03",
+        "volume": [
+          0.9,
+          0.9
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          1,
+          1
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_dark_prince_deploy_end": [
+      {
+        "sourceFile": "",
+        "file": null,
+        "volume": [
+          0,
+          0
+        ],
+        "pitch": [
+          0,
+          0
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 0,
+        "repeat": 0,
+        "loop": false,
+        "priority": 0,
         "padding": 0
       }
     ],

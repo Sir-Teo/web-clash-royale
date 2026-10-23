@@ -21,6 +21,8 @@ const sources = {
   "electro-wizard": "electro_wizard",
   miner: "miner",
   bowler: "bowler",
+  "dark-prince": "black_knight",
+  "dark-prince-shield": "black_knight",
   archers: "archer",
   giant: "giant",
   musketeer: "musketeer",
@@ -126,6 +128,8 @@ for (const [id, source] of Object.entries(sources)) {
       continue;
     if (id === "princess" && !exportName.startsWith("princess_")) continue;
     if (id === "princess" && exportName.startsWith("princess_tower_")) continue;
+    if (id === "dark-prince" && exportName.startsWith("BlackKnight_shield_")) continue;
+    if (id === "dark-prince-shield" && !exportName.startsWith("BlackKnight_shield_")) continue;
     const direction = Number(match[3]);
     if (direction < 1 || direction > 9) continue;
     const hasExplicitBlue = Object.keys(data.names).some((name) =>
@@ -186,6 +190,8 @@ for (const [id, source] of Object.entries(sources)) {
         id === "dart-goblin"
         || id === "electro-wizard"
         || id === "bowler"
+        || id === "dark-prince"
+        || id === "dark-prince-shield"
         ? `${name}_highres_tex.png`
         : `${name}_tex${"_".repeat(i)}.png`,
     );

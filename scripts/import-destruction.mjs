@@ -285,6 +285,15 @@ impacts["hit:bowler"] = {
   components: composition(boulder.DeathEffect, "blue"),
   enemyComponents: composition(boulder.DeathEffect, "red"),
 };
+const darkPrince = tables.characters.DarkPrince;
+if (darkPrince?.ShieldLostEffect !== "GuardShieldDown" ||
+    darkPrince.ChargeEffect !== "dark_prince_charge")
+  throw new Error("Recheck native Dark Prince effects");
+impacts["shield:dark-prince"] = {
+  source: darkPrince.ShieldLostEffect,
+  components: composition(darkPrince.ShieldLostEffect, "blue"),
+  enemyComponents: composition(darkPrince.ShieldLostEffect, "red"),
+};
 const tornadoArea = tables.area_effect_objects.Tornado;
 if (tornadoArea?.ScaledEffect !== "Spell_tornado_deploy")
   throw new Error("Recheck native Tornado visual binding");
@@ -369,6 +378,16 @@ charges.prince = {
   source: princeCharge,
   components: composition(princeCharge, "blue"),
   enemyComponents: composition(princeCharge, "red"),
+};
+charges["dark-prince"] = {
+  source: darkPrince.ChargeEffect,
+  components: composition(darkPrince.ChargeEffect, "blue"),
+  enemyComponents: composition(darkPrince.ChargeEffect, "red"),
+};
+movements["dark-prince"] = {
+  source: darkPrince.MoveEffect,
+  components: composition(darkPrince.MoveEffect, "blue"),
+  enemyComponents: composition(darkPrince.MoveEffect, "red"),
 };
 const hogLanding =
   tables.characters[profiles["hog-rider"].source].LandingEffect;

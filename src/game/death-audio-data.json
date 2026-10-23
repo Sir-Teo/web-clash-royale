@@ -434,6 +434,29 @@
         }
       ]
     },
+    "dark-prince": {
+      "source": "dark_prince_die",
+      "components": [
+        {
+          "sound": "sound_dark_prince_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_dark_prince_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -1233,6 +1256,29 @@
       ],
       "maximum": 0,
       "priority": 0,
+      "padding": 0
+    },
+    "sound_dark_prince_death": {
+      "sourceFiles": [
+        "sfx/dark_prince_death_01.wav"
+      ],
+      "files": [
+        "dark_prince_death_01"
+      ],
+      "volume": [
+        1,
+        1
+      ],
+      "pitch": [
+        1,
+        1
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 3,
+      "priority": 1,
       "padding": 0
     },
     "sound_bat_die": {

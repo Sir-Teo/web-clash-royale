@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "73abba769cce29ff8e22aa487d17126d1ad7e9a79d0a378c15ab5c8b2577b1df"
+      "sha256": "bf3cc57605de090249792e49f4c0e3e0ed7f220fde1e00467caf12edff4a1877"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "e427471067e0fccc405e90a780eea0f0d149431dde09a966f08805bbb0aee60a"
+      "sha256": "4c28e855151ecd72a2dd2c9521dfd7c189dd2bd534ba3fcdde584529c0c8b3ef"
     }
   ],
   "ignoredEnemyVersions": [
@@ -86,6 +86,60 @@
       "source": "sfx/arrow_norm_impact_06.ogg",
       "bytes": 6376,
       "sha256": "556ee756ea723ef55ffa4fc02afa0e52f8961b7c3c8fb93edf533939b56086d0"
+    },
+    {
+      "path": "public/assets/audio/b_knight_atk_01.ogg",
+      "source": "sfx/b_knight_atk_01.ogg",
+      "bytes": 5543,
+      "sha256": "182865225d990e66f081384b796aec7525776fd7e892642300c133dbccdee272"
+    },
+    {
+      "path": "public/assets/audio/b_knight_atk_02.ogg",
+      "source": "sfx/b_knight_atk_02.ogg",
+      "bytes": 7212,
+      "sha256": "d3ebca1bd2911b962b12a0d18fc1c7b66b613701d82a7a47d3cc9cfc25b1e900"
+    },
+    {
+      "path": "public/assets/audio/b_knight_atk_03.ogg",
+      "source": "sfx/b_knight_atk_03.ogg",
+      "bytes": 5751,
+      "sha256": "5b51454b1b2508183b2a4de817348bc65a23d0f6ee643b680121d24f1120958c"
+    },
+    {
+      "path": "public/assets/audio/b_knight_atk_04.ogg",
+      "source": "sfx/b_knight_atk_04.ogg",
+      "bytes": 7197,
+      "sha256": "245bb39d0b17cc1387a1b5cb95aed4482666dc914385b2fd31f3fac000c48c2f"
+    },
+    {
+      "path": "public/assets/audio/b_knight_atk_charge_01.ogg",
+      "source": "sfx/b_knight_atk_charge_01.ogg",
+      "bytes": 7213,
+      "sha256": "e77b56fb0f81475acd001c5b329e5fe7aa467ad2ce855d71fffade7c86d332c9"
+    },
+    {
+      "path": "public/assets/audio/b_knight_atk_charge_02.ogg",
+      "source": "sfx/b_knight_atk_charge_02.ogg",
+      "bytes": 7177,
+      "sha256": "eb9533e257f3fdb63aac527a6e19fa55ca9b9db25d8da81af35dfe6a096260db"
+    },
+    {
+      "path": "public/assets/audio/b_knight_deploy_01.ogg",
+      "source": "sfx/b_knight_deploy_01.ogg",
+      "bytes": 8353,
+      "sha256": "ec613036478b368c852d24093159023499afc573ce77cdb5bdcc4b32d753d7b0"
+    },
+    {
+      "path": "public/assets/audio/b_knight_deploy_02.ogg",
+      "source": "sfx/b_knight_deploy_02.ogg",
+      "bytes": 7473,
+      "sha256": "50787cf8803129f43801ea6de287c221ca8ebc3346ac31fde0d7f1f2ceb6a171"
+    },
+    {
+      "path": "public/assets/audio/b_knight_deploy_03.ogg",
+      "source": "sfx/b_knight_deploy_03.ogg",
+      "bytes": 7567,
+      "sha256": "edd814bd0313f619373fb2e365498ff2648c5b21c8546f7cb71bc86d1913594e"
     },
     {
       "path": "public/assets/audio/baby_dragon_deploy_end_11.ogg",
@@ -272,6 +326,30 @@
       "source": "sfx/clone_spell_01.ogg",
       "bytes": 9699,
       "sha256": "e0f210213f0570d9cc283cde9beddace16c4a3085fee01b895eae45894a61c33"
+    },
+    {
+      "path": "public/assets/audio/dark_prince_atk_01.ogg",
+      "source": "sfx/dark_prince_atk_01.ogg",
+      "bytes": 6309,
+      "sha256": "044c7fdc719e6b1eee8c4ce252aaa3a26e30d8ad071fcf0a4b54b2e5340d176d"
+    },
+    {
+      "path": "public/assets/audio/dark_prince_atk_hit_01.ogg",
+      "source": "sfx/dark_prince_atk_hit_01.ogg",
+      "bytes": 6062,
+      "sha256": "dbeb0eb9f3eb9387daeca253b08ff45f44c85550323a2f4de12b07ee47984d72"
+    },
+    {
+      "path": "public/assets/audio/dark_prince_charge_jing_02.ogg",
+      "source": "sfx/dark_prince_charge_jing_02.ogg",
+      "bytes": 7669,
+      "sha256": "72669d766ec2e5e9e10f088e75e1b56e6a22f93a7de31b8a748f5050de070619"
+    },
+    {
+      "path": "public/assets/audio/dark_prince_deploy_01.ogg",
+      "source": "sfx/dark_prince_deploy_01.ogg",
+      "bytes": 10635,
+      "sha256": "6ffaeeb087c83f582e6aa8b93d91e41f4174c98775ac4e605ad99efff03d3123"
     },
     {
       "path": "public/assets/audio/deploy_balloon_06.ogg",
@@ -560,6 +638,12 @@
       "source": "sfx/king_fire_06.ogg",
       "bytes": 8970,
       "sha256": "ca19a249c51d764b3ec3b458768c8dd5f41de81a363123a125197d2a96e354bb"
+    },
+    {
+      "path": "public/assets/audio/knighchargehit01.ogg",
+      "source": "sfx/knighchargehit01.ogg",
+      "bytes": 11231,
+      "sha256": "490b28c40aece246bf026b049a895d10d1c661699b918d8cce90406a1f4055e5"
     },
     {
       "path": "public/assets/audio/knight_attack_hack_01.ogg",
@@ -1182,6 +1266,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "c6c88ab5fca6d165f1a1462444aee14ad27d669805247523285e6605908014b5"
+    "sha256": "c455665612a4cb06f40c0ba66c16a141527a4c5bb9caab8866cd0bd6415a37fa"
   }
 }

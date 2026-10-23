@@ -191,6 +191,40 @@
       "uniqueFrames": 963
     },
     {
+      "id": "dark-prince",
+      "source": "chr_black_knight",
+      "metadataSha256": "8c7e05ad2c596fbb4748e127c941c384b8dc5c7a766a6a797eaa6af52ff0536e",
+      "dataSha256": "eefcef958b5ef6872ba2622fc94ef439fdd74857bc581414b06fba8500a13f50",
+      "textures": [
+        {
+          "file": "dark-prince-0.webp",
+          "sha256": "7d953bb2d327dbbd4aa62e446abf8f873698375458282df9ba02e497af24b46e",
+          "originalSha256": "2f6f290575cb560ee07dc48b83f9e1d9fbcc4e10b6e79b88465145bd7d5941f0"
+        }
+      ],
+      "shapes": 504,
+      "clips": 72,
+      "frames": 1152,
+      "uniqueFrames": 504
+    },
+    {
+      "id": "dark-prince-shield",
+      "source": "chr_black_knight",
+      "metadataSha256": "8c7e05ad2c596fbb4748e127c941c384b8dc5c7a766a6a797eaa6af52ff0536e",
+      "dataSha256": "6fad553b93a5427584abb1067f4d1cca73b8b2e0664ecb28ee42b73b133af9c4",
+      "textures": [
+        {
+          "file": "dark-prince-shield-0.webp",
+          "sha256": "7d953bb2d327dbbd4aa62e446abf8f873698375458282df9ba02e497af24b46e",
+          "originalSha256": "2f6f290575cb560ee07dc48b83f9e1d9fbcc4e10b6e79b88465145bd7d5941f0"
+        }
+      ],
+      "shapes": 512,
+      "clips": 72,
+      "frames": 1152,
+      "uniqueFrames": 512
+    },
+    {
       "id": "archers",
       "source": "chr_archer",
       "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",
