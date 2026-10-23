@@ -287,9 +287,14 @@
       "sha256": "d31a7ffc52272d8ae64f3bd3512814ff4bd8d15a42e67b4bf8aef18d3ef582de"
     },
     {
+      "file": "portrait-goblin-barrel.webp",
+      "bytes": 36428,
+      "sha256": "88e2c22112f766c9a6f9e91e75b603256eeae3d8cebcf5f57657697df52fafc5"
+    },
+    {
       "file": "cards.json",
-      "bytes": 93188,
-      "sha256": "a0ce09600c1354b0f0ff4542523ebbf6d91437c3681e6e7c1a8cd91b2ebcb5e2"
+      "bytes": 93527,
+      "sha256": "9f91b81db69aca62cb0e0d244ab8c331759ca0ed6291f89765c5b90f4c2288da"
     }
   ]
 }

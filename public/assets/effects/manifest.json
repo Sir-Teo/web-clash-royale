@@ -18,19 +18,24 @@
       "path": "reference/sc/chr_valkyrie.bin",
       "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/chr_valkyrie",
       "sha256": "5bb62da5ea8152f55125b75f2d80b5df27cee63e24df84d91b574f18463c9e08"
+    },
+    {
+      "path": "reference/sc/spell_goblin_barrel.bin",
+      "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/spell_goblin_barrel",
+      "sha256": "56f5e7445af53f3c50fbee58ae1f43434dcd1e380507b249ed583672c9f2b17d"
     }
   ],
   "inputs": [
     {
       "path": "src/render/destruction-data.json",
-      "sha256": "2e97500bb177a1e6a1c09eb2fa8c86b1c7eeed904de440a98abd73e53866f0ce"
+      "sha256": "15404766e963b347d5e9a7b49dc43cdb68c273531cb386cd8c1df9294e506c44"
     },
     {
       "path": "reference/logic/buildings.csv",
       "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
     }
   ],
-  "dataSha256": "02529911c6b523e689466ae0ec05906cc79b80e8a19f7c7f337557deee734298",
+  "dataSha256": "9fc30e579b5f31ae0dfb50e33c7b810c8253a1d84b685a2e52c4e91d4f5d0c35",
   "textures": [
     {
       "file": "effects-0.webp",
@@ -49,8 +54,14 @@
       "sha256": "c4bdd91d3c72eff1a85b7709213bac63b91f0cf2613ba306080236e9f91e1589",
       "originalSha256": "6102af34d83945f1688bf5660998c2921f76e995b172da7a27a12014888555ab",
       "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/chr_valkyrie_tex.png"
+    },
+    {
+      "file": "spell_goblin_barrel-0.webp",
+      "sha256": "7f7cec8a9f6f662b0e643dd201abe8513dee734c8481dd276015050576e61796",
+      "originalSha256": "acf64ac944ad01438a87e43642ffbe9cf6e25198cce7b8daa54a405f694f25e9",
+      "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/spell_goblin_barrel_tex.png"
     }
   ],
-  "clips": 121,
-  "frames": 6484
+  "clips": 123,
+  "frames": 6679
 }

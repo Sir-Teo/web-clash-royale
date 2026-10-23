@@ -259,6 +259,7 @@ const portraitNames = {
   lightning: "Lightning",
   log: "Log",
   tornado: "Tornado",
+  "goblin-barrel": "GoblinBarrel",
 };
 const sheets = [];
 for (const [name, cache, expected] of [

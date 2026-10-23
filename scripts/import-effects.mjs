@@ -42,7 +42,12 @@ const textures = [],
 const frames = [],
   frameLookup = new Map(),
   clips = {};
-for (const resource of ["effects", "building_mega_bomb", "chr_valkyrie"]) {
+for (const resource of [
+  "effects",
+  "building_mega_bomb",
+  "chr_valkyrie",
+  "spell_goblin_barrel",
+]) {
   const path = `reference/sc/${resource}.bin`,
     metadata = await readFile(path),
     data = parseSC(metadata);
@@ -145,7 +150,9 @@ for (const resource of ["effects", "building_mega_bomb", "chr_valkyrie"]) {
         ]
       : resource === "building_mega_bomb"
         ? [balloon.BlueExportName, balloon.RedExportName, ...emitterExports]
-        : emitterExports;
+        : resource === "spell_goblin_barrel"
+          ? ["spell_goblin_barrel_projectile", "Barrel_shadow"]
+          : emitterExports;
   for (const name of exports) {
     let ref = data.names[name],
       source = data.clips[ref];
@@ -158,7 +165,24 @@ for (const resource of ["effects", "building_mega_bomb", "chr_valkyrie"]) {
         throw new Error("Recheck native Tornado whirl wrapper");
       // Keep flattening through the wrapper to retain its 80% X scale and
       // authored offset; only the timing/length comes from the child.
-      source = { ...source, fps: data.clips[child].fps, frames: data.clips[child].frames };
+      source = {
+        ...source,
+        fps: data.clips[child].fps,
+        frames: data.clips[child].frames,
+      };
+    }
+    if (
+      resource === "spell_goblin_barrel" &&
+      name === "spell_goblin_barrel_projectile"
+    ) {
+      const child = source?.frames[0]?.[0]?.id;
+      if (child !== 15 || data.clips[child]?.frames.length !== 194)
+        throw new Error("Recheck native Goblin Barrel animation wrapper");
+      source = {
+        ...source,
+        fps: data.clips[child].fps,
+        frames: data.clips[child].frames,
+      };
     }
     if (!source?.frames.length) throw new Error(`Missing effect ${name}`);
     const sequence = source.frames.map((_, i) => {

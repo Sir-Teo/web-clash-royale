@@ -3796,6 +3796,106 @@
         "table": "spells_other",
         "row": "Tornado"
       }
+    },
+    "goblin-barrel": {
+      "source": "GoblinBarrel",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "goblin_barrel_explosion"
+        ],
+        "components": [
+          {
+            "sound": "sound_goblin_barrel_explosion",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_goblin_barrel_explosion",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "sound:sound_goblin_barrel_spawn",
+          "goblin_barrel_spawn"
+        ],
+        "components": [
+          {
+            "sound": "sound_goblin_barrel_spawn",
+            "delay": 0
+          },
+          {
+            "sound": "sound_goblin_barrel_spawn",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_goblin_barrel_spawn",
+            "delay": 0
+          },
+          {
+            "sound": "sound_goblin_barrel_spawn",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_other",
+        "row": "GoblinBarrel"
+      }
     }
   },
   "sounds": {
@@ -6920,6 +7020,52 @@
           0
         ],
         "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_goblin_barrel_explosion": [
+      {
+        "sourceFile": "sfx/barrel_explosion_02.wav",
+        "file": "barrel_explosion_02",
+        "volume": [
+          0.65,
+          0.7
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_goblin_barrel_spawn": [
+      {
+        "sourceFile": "sfx/barrel_drawback_14.wav",
+        "file": "barrel_drawback_14",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
         "repeat": 0,
         "loop": false,
         "priority": 1,

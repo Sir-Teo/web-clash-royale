@@ -375,6 +375,12 @@
       "sha256": "390277aa877d9b952d0b2c8843ee080b1fd5a40eb68acf8760ad18f106985367"
     },
     {
+      "path": "cards/goblin-barrel.png",
+      "source": "cards/goblin-barrel.png",
+      "bytes": 135753,
+      "sha256": "6d34267ad6f5d42a8e88f840e36d6a11e25f16f3d111c716bee2e31b03330c4c"
+    },
+    {
       "path": "cards/goblins.png",
       "source": "cards/goblins.png",
       "bytes": 126701,

@@ -2174,6 +2174,83 @@
         }
       ]
     },
+    "goblin-barrel": {
+      "source": "goblin_barrel_explosion",
+      "components": [
+        {
+          "emitter": "TargetDummy_planks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "BlueSparkEmitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_rock_Emitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TargetDummy_planks2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "TargetDummy_planks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "BlueSparkEmitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_rock_Emitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TargetDummy_planks2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ]
+    },
     "log-die": {
       "source": "log_die",
       "components": [
@@ -6666,6 +6743,152 @@
         "SteamSmall"
       ]
     },
+    "BlueSparkEmitter": {
+      "count": 10,
+      "emissionLife": [
+        0.15,
+        0.15
+      ],
+      "interval": [
+        0,
+        0.01
+      ],
+      "life": [
+        0.2,
+        0.35
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        16.666666666666668
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        6.666666666666667,
+        6.666666666666667
+      ],
+      "tailDelayMs": [
+        100,
+        300
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "SparkleBlue"
+      ]
+    },
+    "catapult_rock_Emitter": {
+      "count": 13,
+      "emissionLife": [
+        0.4,
+        0.4
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        0.8,
+        1.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        1.6666666666666667,
+        5
+      ],
+      "height": 0.6666666666666666,
+      "verticalSpeed": [
+        3.3333333333333335,
+        8.333333333333334
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -66.66666666666667,
+      "startScale": 1,
+      "endScale": 1.5,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Rock1Particle",
+        "Rock2Particle",
+        "Rock3Particle"
+      ]
+    },
+    "knight_deploy_dustPuff2": {
+      "count": 55,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.5,
+        0.6
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.1,
+        0.13333333333333333
+      ],
+      "speed": [
+        1.3333333333333333,
+        1.6666666666666667
+      ],
+      "height": 0.7,
+      "verticalSpeed": [
+        0.6666666666666666,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.8333333333333334,
+      "startScale": 0.8,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 3.3333333333333335,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "d3",
+        "d2",
+        "d3",
+        "d3_green_dark"
+      ]
+    },
     "Rocket_Emitter_Smoketrail": {
       "count": 55,
       "emissionLife": [
@@ -7581,55 +7804,6 @@
         "d3"
       ]
     },
-    "catapult_rock_Emitter": {
-      "count": 13,
-      "emissionLife": [
-        0.4,
-        0.4
-      ],
-      "interval": [
-        0,
-        0.005
-      ],
-      "life": [
-        0.8,
-        1.2
-      ],
-      "angle": [
-        0,
-        6.283185307179586
-      ],
-      "radius": [
-        0,
-        0
-      ],
-      "speed": [
-        1.6666666666666667,
-        5
-      ],
-      "height": 0.6666666666666666,
-      "verticalSpeed": [
-        3.3333333333333335,
-        8.333333333333334
-      ],
-      "tailDelayMs": [
-        0,
-        0
-      ],
-      "gravity": -66.66666666666667,
-      "startScale": 1,
-      "endScale": 1.5,
-      "fadeIn": 0,
-      "fadeOut": 0,
-      "inertia": 0,
-      "rotate": false,
-      "loop": false,
-      "clips": [
-        "Rock1Particle",
-        "Rock2Particle",
-        "Rock3Particle"
-      ]
-    },
     "catapult_hit_smoke": {
       "count": 12,
       "emissionLife": [
@@ -8337,103 +8511,6 @@
       "clips": [
         "d3",
         "d4"
-      ]
-    },
-    "knight_deploy_dustPuff2": {
-      "count": 55,
-      "emissionLife": [
-        0.001,
-        0.001
-      ],
-      "interval": [
-        0,
-        0
-      ],
-      "life": [
-        0.5,
-        0.6
-      ],
-      "angle": [
-        0,
-        6.283185307179586
-      ],
-      "radius": [
-        0.1,
-        0.13333333333333333
-      ],
-      "speed": [
-        1.3333333333333333,
-        1.6666666666666667
-      ],
-      "height": 0.7,
-      "verticalSpeed": [
-        0.6666666666666666,
-        0
-      ],
-      "tailDelayMs": [
-        0,
-        0
-      ],
-      "gravity": 0.8333333333333334,
-      "startScale": 0.8,
-      "endScale": 0.8,
-      "fadeIn": 0,
-      "fadeOut": 0.5,
-      "inertia": 3.3333333333333335,
-      "rotate": false,
-      "loop": false,
-      "clips": [
-        "d3",
-        "d2",
-        "d3",
-        "d3_green_dark"
-      ]
-    },
-    "BlueSparkEmitter": {
-      "count": 10,
-      "emissionLife": [
-        0.15,
-        0.15
-      ],
-      "interval": [
-        0,
-        0.01
-      ],
-      "life": [
-        0.2,
-        0.35
-      ],
-      "angle": [
-        0,
-        6.283185307179586
-      ],
-      "radius": [
-        0,
-        0
-      ],
-      "speed": [
-        0,
-        16.666666666666668
-      ],
-      "height": 0,
-      "verticalSpeed": [
-        6.666666666666667,
-        6.666666666666667
-      ],
-      "tailDelayMs": [
-        100,
-        300
-      ],
-      "gravity": 0,
-      "startScale": 1,
-      "endScale": 1,
-      "fadeIn": 0,
-      "fadeOut": 0,
-      "inertia": 0,
-      "rotate": false,
-      "loop": false,
-      "clips": [
-        "SparkleBlue"
       ]
     },
     "BombTower_hit_flame": {

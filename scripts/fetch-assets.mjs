@@ -34,6 +34,7 @@ const cards = [
   "lightning",
   "log",
   "tornado",
+  "goblin-barrel",
 ];
 const characters = [
   "knight",

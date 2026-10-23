@@ -44,7 +44,7 @@
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "a0ce09600c1354b0f0ff4542523ebbf6d91437c3681e6e7c1a8cd91b2ebcb5e2"
+      "sha256": "9f91b81db69aca62cb0e0d244ab8c331759ca0ed6291f89765c5b90f4c2288da"
     }
   ],
   "ignoredEnemyVersions": [
@@ -104,6 +104,18 @@
       "source": "sfx/babydragon_deploy_01.ogg",
       "bytes": 8668,
       "sha256": "4bb713adf208f815fd3688cc584a785868a5261f693e55724079a1276540b3fc"
+    },
+    {
+      "path": "public/assets/audio/barrel_drawback_14.ogg",
+      "source": "sfx/barrel_drawback_14.ogg",
+      "bytes": 19734,
+      "sha256": "9aa3d36b2c8300649b883d45bf81223ea404835c20b72e37c7c24566508edbca"
+    },
+    {
+      "path": "public/assets/audio/barrel_explosion_02.ogg",
+      "source": "sfx/barrel_explosion_02.ogg",
+      "bytes": 9555,
+      "sha256": "271eb95e9777e27fff39c16451046fd2d4fac4b3afb7085e4c7e3c7e445a3226"
     },
     {
       "path": "public/assets/audio/bomb_drop_01.ogg",
@@ -798,6 +810,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "4452339a44490990e12c24e999d8110085f6d74b45341f936ba594362b04ccb7"
+    "sha256": "8ae445c2965cb814c67ea67c541071d321bd4b63e41a9e724b27f4e9d7fafd14"
   }
 }

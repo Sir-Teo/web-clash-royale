@@ -174,6 +174,7 @@ for (const [id, expected] of Object.entries({
   rocket: "Rocket_explosion",
   lightning: "Spell_lightning_effect",
   log: "log_hit",
+  "goblin-barrel": "goblin_barrel_explosion",
 })) {
   const card = cards[id];
   const spell = tables[card.table][card.row];
