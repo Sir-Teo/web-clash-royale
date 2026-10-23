@@ -72,7 +72,8 @@
     "assets:lumberjack": "node scripts/import-lumberjack.mjs",
     "assets:bats": "node scripts/import-bats.mjs",
     "assets:bat-wiggle": "node scripts/import-bat-wiggle.mjs",
-    "assets:night-witch": "node scripts/import-night-witch.mjs"
+    "assets:night-witch": "node scripts/import-night-witch.mjs",
+    "assets:bandit": "node scripts/import-bandit.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",

@@ -58,6 +58,7 @@ const cards = [
   "lumberjack",
   "bats",
   "night-witch",
+  "bandit",
 ];
 const characters = [
   "knight",

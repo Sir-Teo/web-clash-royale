@@ -28,6 +28,7 @@ import sparky from "./sparky-data.json" with { type: "json" };
 import lumberjack from "./lumberjack-data.json" with { type: "json" };
 import bats from "./bats-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
+import bandit from "./bandit-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -64,6 +65,7 @@ export type CardId =
   | "minions"
   | "bats"
   | "night-witch"
+  | "bandit"
   | "mega-minion"
   | "minion-horde"
   | "witch"
@@ -555,6 +557,18 @@ export const CARDS: Card[] = [
     nightWitch.sourceHitSpeed,
     "Summons Bats while alive and releases four more when defeated.",
     { rarity: "Legendary", hitsAir: nightWitch.hitsAir },
+  ),
+  troop(
+    "bandit",
+    "Bandit",
+    bandit.cost,
+    Math.round(bandit.sourceHitpoints * 1.1 ** 2),
+    Math.round(bandit.sourceDamage * 1.1 ** 2),
+    bandit.sourceSpeed / 60,
+    bandit.sourceRange,
+    bandit.sourceHitSpeed,
+    "Dashes to distant targets for a heavy hit and cannot be touched mid-dash.",
+    { rarity: "Legendary", hitsAir: bandit.hitsAir },
   ),
   troop(
     "mega-minion",

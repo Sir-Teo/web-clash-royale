@@ -41,6 +41,7 @@ const sources = {
   minions: "minion",
   bats: "bats",
   "night-witch": "dark_witch",
+  bandit: "bandit",
   witch: "witch",
   prince: "prince",
   pekka: "pekka",
@@ -121,7 +122,7 @@ for (const [id, source] of Object.entries(sources)) {
   }
   for (const [exportName, ref] of Object.entries(data.names)) {
     const match = exportName.match(
-      /(?:^|_)(run|walk|attacking|attack|idle|hover|fly|charge|deploy)(\d*)_(\d+)$/i,
+      /(?:^|_)(run|walk|attacking|attack|idle|hover|fly|charge|dash|deploy)(\d*)_(\d+)$/i,
     );
     if (!match || Number(match[2] || 1) > 1) continue;
     if (match[1].toLowerCase() === "deploy" && id !== "lumberjack") continue;

@@ -1,0 +1,26 @@
+{
+  "card": "Assassin",
+  "rarity": "Legendary",
+  "cost": 3,
+  "sourceHitpoints": 750,
+  "sourceDamage": 160,
+  "sourceSpeed": 90,
+  "sourceRange": 0.75,
+  "sourceHitSpeed": 1,
+  "sourceLoadTime": 0.6,
+  "hitsGround": true,
+  "hitsAir": false,
+  "dash": {
+    "minimum": 4,
+    "maximum": 6,
+    "damage": 320,
+    "cooldown": 1,
+    "speed": 8.333333333333334,
+    "filter": "filter_bandit_charge",
+    "startEffect": "assassin_dash_start",
+    "travelEffect": "assassin_dashing",
+    "landingEffect": "assassin_dash_end"
+  },
+  "blueExport": "bandit",
+  "redExport": "bandit_red"
+}

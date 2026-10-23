@@ -266,6 +266,7 @@ const portraitNames = {
   "minion-horde": "MinionHorde",
   bats: "Bats",
   "night-witch": "DarkWitch",
+  bandit: "Assassin",
   "three-musketeers": "ThreeMusketeers",
   "goblin-gang": "GoblinGang",
   barbarians: "Barbarians",

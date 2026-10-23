@@ -89,6 +89,7 @@ const names = {
   "minion-horde": "Minion",
   bats: "Bat",
   "night-witch": "DarkWitch",
+  bandit: "Assassin",
   witch: "Witch",
   wizard: "Wizard",
   prince: "Prince",

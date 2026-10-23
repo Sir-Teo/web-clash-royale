@@ -1,0 +1,31 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_bandit",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/sc/chr_bandit.bin",
+      "sha256": "4da4adfd47514230cc5ef3f08d3005933a5e75086bbd05129e04c427b1122371"
+    },
+    {
+      "path": "reference/sc/chr_bandit_tex.png",
+      "sha256": "e7dc968be2cf844ec7268e19093a04896542ff2b3d4cf6c4d3d8173abad0417a"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    }
+  ],
+  "output": {
+    "path": "src/game/bandit-data.json",
+    "sha256": "f6b26da98613f0571ab86a45889aae70f3d27abe9037740149fc4e8db744173b"
+  }
+}
