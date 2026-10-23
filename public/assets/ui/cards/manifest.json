@@ -252,9 +252,14 @@
       "sha256": "0acff86dd7ba3d91c2d161b007f0b38e2e833c2bdce25c08545c1f0874bd14a4"
     },
     {
+      "file": "portrait-freeze.webp",
+      "bytes": 39066,
+      "sha256": "cbfc6f616e922c6b332fbd1b226d2ad7e92a3334bba8319c88110fa345f99206"
+    },
+    {
       "file": "cards.json",
-      "bytes": 90883,
-      "sha256": "f3f34870c2a4577d1122198d2c81018c6c27c327be32c40ef3b815d831385f5d"
+      "bytes": 91191,
+      "sha256": "09112ee9f18b278cfed78e449e6558d61cc5873a5a836976b4b50eebc67fc92a"
     }
   ]
 }
