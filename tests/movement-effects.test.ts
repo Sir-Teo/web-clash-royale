@@ -1,7 +1,11 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import type { Entity } from "../src/game/engine";
-import { destructionPlan, movementEffect } from "../src/render/destruction";
+import {
+  chargeEffect,
+  destructionPlan,
+  movementEffect,
+} from "../src/render/destruction";
 import { NativeMovementEffects } from "../src/render/movement-effects";
 import { Battle } from "../src/game/engine";
 import definitions from "../src/render/destruction-data.json";
@@ -67,6 +71,44 @@ describe("native footstep dust", () => {
     knight.y -= 0.8;
     knight.move = 1;
     expect(footsteps.consume([knight], 17, 0.3)).toHaveLength(1);
+  });
+
+  it("replays Prince's retained 12-particle charge dust once per charge threshold", async () => {
+    const { csvRows } = await import("../scripts/lib/csv.mjs");
+    const prince = csvRows(
+      readFileSync("reference/logic/characters.csv", "utf8"),
+    ).find((row: any) => row.Name === "Prince")!;
+    expect(prince.ChargeEffect).toBe(definitions.charges.prince.source);
+    expect(chargeEffect("prince")).toBe("charge:prince");
+    expect(chargeEffect("knight")).toBeUndefined();
+    const plan = destructionPlan("charge:prince", 42);
+    expect(plan).toHaveLength(12);
+    expect(plan.every((p) => ["d1", "d2", "d3", "d4"].includes(p.clip))).toBe(
+      true,
+    );
+    expect(destructionPlan("charge:prince", 42, "red")).toEqual(plan);
+
+    const rider = actor("prince", 14, 20);
+    rider.move = 2.25;
+    const effects = new NativeMovementEffects();
+    expect(effects.consume([rider], 17, 1)).toEqual([]);
+    rider.y = 19.6;
+    rider.move = 2.35;
+    const bursts = effects.consume([rider], 17, 1.1);
+    expect(bursts.filter((b) => b.effect === "charge:prince")).toMatchObject([
+      { origin: { x: 14, y: 19.8 }, team: "blue" },
+    ]);
+    expect(bursts[0].age).toBeCloseTo(0.05);
+    expect(effects.consume([rider], 17, 1.1)).toEqual([]);
+    rider.y = 19.2;
+    rider.move = 2.45;
+    expect(
+      effects
+        .consume([rider], 17, 1.2)
+        .filter((b) => b.effect === "charge:prince"),
+    ).toEqual([]);
+    effects.reset();
+    expect(effects.consume([rider], 17, 0)).toEqual([]);
   });
 
   it("samples footsteps during an actual Knight and Prince advance", () => {
