@@ -152,12 +152,23 @@ export const CARDS: Card[] = [
     { kind: "spell", rarity: "Rare", radius: 2.5, hitsAir: true },
   ),
   troop(
-    "rocket", "Rocket", rocket.cost, 0,
+    "rocket",
+    "Rocket",
+    rocket.cost,
+    0,
     // Normalize archived spell damage through the same level-11 Fireball
     // ratio used by this curated roster (source 325 -> playable 689).
-    Math.round(rocket.sourceDamage * 689 / 325), 0, 0, 1,
+    Math.round((rocket.sourceDamage * 689) / 325),
+    0,
+    0,
+    1,
     "A powerful, slow projectile that blasts a tight area and knocks enemies back.",
-    { kind: "spell", rarity: "Rare", radius: rocket.radius, hitsAir: rocket.hitsAir },
+    {
+      kind: "spell",
+      rarity: "Rare",
+      radius: rocket.radius,
+      hitsAir: rocket.hitsAir,
+    },
   ),
   troop(
     "arrows",
@@ -410,9 +421,21 @@ export const CARDS: Card[] = [
     },
   ),
   troop(
-    "rage", "Rage", rage.cost, 0, 0, 0, 0, 1,
+    "rage",
+    "Rage",
+    rage.cost,
+    0,
+    0,
+    0,
+    0,
+    1,
     "Speeds up friendly troops' movement, attacks and summoning inside its area.",
-    { kind: "spell", rarity: "Epic", radius: rage.radius, hitsAir: rage.hitsAir },
+    {
+      kind: "spell",
+      rarity: "Epic",
+      radius: rage.radius,
+      hitsAir: rage.hitsAir,
+    },
   ),
 ];
 export const CARD_MAP = Object.fromEntries(
