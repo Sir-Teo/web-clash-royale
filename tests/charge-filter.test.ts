@@ -74,4 +74,37 @@ describe("native Prince charge filter", () => {
     prince.mesh.geometry.dispose();
     original.forEach((material) => material.dispose());
   });
+
+  it("keeps simultaneous Princes on independent filter clocks", () => {
+    const filter = new NativeChargeFilter();
+    const first = sprite();
+    const second = {
+      ...first,
+      mesh: new T.Mesh(new T.BufferGeometry(), first.asset.materials),
+    };
+    const entities = [
+      { id: 1, hp: 100 },
+      { id: 2, hp: 100 },
+    ] as Entity[];
+    const spriteFor = (id: number) => (id === 1 ? first : second);
+    filter.burst(1, 0, 0);
+    filter.update(entities, 0.2, spriteFor);
+    expect(first.mesh.material).not.toBe(first.asset.materials);
+    expect(second.mesh.material).toBe(first.asset.materials);
+    filter.burst(2, 0.4, 0);
+    filter.update(entities, 0.5, spriteFor);
+    expect(second.mesh.material).not.toBe(first.asset.materials);
+    expect(second.mesh.material).not.toBe(first.mesh.material);
+    expect(filter.state.map((actor) => actor.frame)).toEqual([30, 5]);
+    filter.update(entities, 1, spriteFor);
+    expect(filter.state.map((actor) => actor.id)).toEqual([2]);
+    expect(first.mesh.material).toBe(first.asset.materials);
+    expect(second.mesh.material).not.toBe(first.asset.materials);
+    filter.update([{ id: 2, hp: 0 }] as Entity[], 1.1, spriteFor);
+    expect(filter.state).toEqual([]);
+    expect(second.mesh.material).toBe(first.asset.materials);
+    first.mesh.geometry.dispose();
+    second.mesh.geometry.dispose();
+    first.asset.materials.forEach((material) => material.dispose());
+  });
 });
