@@ -112,6 +112,8 @@ for (const resource of ["effects", "building_mega_bomb"]) {
             "Tower_projectile1",
             "fireball_small",
             "fireball_projectile1",
+            "projectile_rocket",
+            "projectile_shadow_rocket",
             "tesla_beam",
             "zap_bolt1",
             "lightning_bolt",

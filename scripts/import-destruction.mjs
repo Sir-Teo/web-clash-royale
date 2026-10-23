@@ -168,6 +168,7 @@ for (const [id, expected] of Object.entries({
   fireball: "Fireball_explosion",
   zap: "Spell_zap_effect",
   arrows: "ArrowHitGround",
+  rocket: "Rocket_explosion",
 })) {
   const card = cards[id];
   const spell = tables[card.table][card.row];

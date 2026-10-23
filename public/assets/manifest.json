@@ -435,6 +435,12 @@
       "sha256": "bfa631dd55d66fa19c585279ecc07ead74f0db65c1aa19566b98254a43f3880a"
     },
     {
+      "path": "cards/rocket.png",
+      "source": "cards/rocket.png",
+      "bytes": 126993,
+      "sha256": "4fc948e1cace137e9ef2828ebda5fdafe9b17c02c9ef6f8074770a2c65629c07"
+    },
+    {
       "path": "cards/skeleton-army.png",
       "source": "cards/skeleton-army.png",
       "bytes": 132165,

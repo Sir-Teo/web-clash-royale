@@ -3394,6 +3394,97 @@
         "table": "spells_other",
         "row": "Rage"
       }
+    },
+    "rocket": {
+      "source": "Rocket",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "Rocket_explosion"
+        ],
+        "components": [
+          {
+            "sound": "sound_rocket_explosion",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_rocket_explosion",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "sound:sound_rocket_spawn"
+        ],
+        "components": [
+          {
+            "sound": "sound_rocket_spawn",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_rocket_spawn",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_other",
+        "row": "Rocket"
+      }
     }
   },
   "sounds": {
@@ -6204,6 +6295,50 @@
           0
         ],
         "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_rocket_explosion": [
+      {
+        "sourceFile": "sfx/rocket_hit_01v2.wav",
+        "file": "rocket_hit_01v2",
+        "volume": [
+          0.75,
+          0.75
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_rocket_spawn": [
+      {
+        "sourceFile": "sfx/rocket_launch_02v2.wav",
+        "file": "rocket_launch_02v2",
+        "volume": [
+          0.75,
+          0.75
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
         "repeat": 0,
         "priority": 1,
         "padding": 0

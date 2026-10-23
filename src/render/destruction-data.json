@@ -1887,6 +1887,125 @@
         }
       ]
     },
+    "rocket": {
+      "source": "Rocket_explosion",
+      "components": [
+        {
+          "emitter": "Fireball_explosion_smoke",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Fireball_explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Fireball_explosion_sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_gradients",
+          "delay": 0.01,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "explosion_fire",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_continousFire",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Fireball_explosion_smoke",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Fireball_explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Fireball_explosion_sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_gradients",
+          "delay": 0.01,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "explosion_fire",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_continousFire",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
     "hit:giant": {
       "source": "giant_hit",
       "components": [

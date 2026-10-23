@@ -44,7 +44,7 @@
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "77bedfec954bf57691b1b92815ee3116de8c45ea19d73c9e12ddeaac8d7f32e6"
+      "sha256": "20269dcb63475f841d17b66895101679d87153f9fd686e23da470e86213063f3"
     }
   ],
   "ignoredEnemyVersions": [
@@ -514,6 +514,18 @@
       "sha256": "5c7fcd067ec33e464ddedff881a9e21e2ecbbe2e2b80077a046b3db1a1823141"
     },
     {
+      "path": "public/assets/audio/rocket_hit_01v2.ogg",
+      "source": "sfx/rocket_hit_01v2.ogg",
+      "bytes": 18735,
+      "sha256": "8ad66d937afff054919146ba342c9a2933f7e7cfc385a0f1c430e3277b6f395e"
+    },
+    {
+      "path": "public/assets/audio/rocket_launch_02v2.ogg",
+      "source": "sfx/rocket_launch_02v2.ogg",
+      "bytes": 24073,
+      "sha256": "5cc4fdf0a1841b25b9dffd390ef6a01bbcc946c637cdaf20ace06b3f868d7c5e"
+    },
+    {
       "path": "public/assets/audio/skeleton_atk_03.ogg",
       "source": "sfx/skeleton_atk_03.ogg",
       "bytes": 6200,
@@ -756,6 +768,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "7d706cf347699cb8ed78cd7c55e06e90b5c42ed9289ad12e84767159fdde6c66"
+    "sha256": "1145638fed46cf7f745a3e66b9ebe49f188acfd0b7634299cd07ee69d6e59f5d"
   }
 }
