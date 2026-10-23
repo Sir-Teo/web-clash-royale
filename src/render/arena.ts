@@ -597,6 +597,17 @@ export class Arena {
   get minerTrailState() {
     return this.minerTrails.state;
   }
+  get darkPrinceState() {
+    return this.battle?.entities.filter((e) => e.card === "dark-prince").map((e) => {
+      const visual = this.units.get(e.id);
+      return {
+        id: e.id, hp: e.hp, shield: e.shield ?? 0,
+        art: visual?.sprite?.asset === this.sprites.assets.get("dark-prince-shield")
+          ? "shielded" : "unshielded",
+        health: visual?.nativeHealth?.mesh.userData.health?.name,
+      };
+    }) ?? [];
+  }
   get loadedHealth() {
     return this.health.loaded;
   }
@@ -989,7 +1000,9 @@ export class Arena {
         else if (e.kind === "building")
           object = buildingModel(e.card as CardId, e.team);
         else {
-          sprite = this.sprites.make(e.card as CardId) ?? undefined;
+          sprite = this.sprites.make(
+            e.card === "dark-prince" && e.shield ? "dark-prince-shield" : e.card as CardId,
+          ) ?? undefined;
           if (sprite) {
             object = new T.Group();
             object.add(sprite.mesh);
@@ -1576,7 +1589,7 @@ export class Arena {
         this.chargeMarkers.burst(burst.actor, this.destruction.time, burst.age);
         this.chargeFilter.burst(burst.actor, this.destruction.time, burst.age);
         this.onCharge(burst);
-      }
+      } else if (burst.effect === "charge:dark-prince") this.onCharge(burst);
     }
     for (const burst of this.hogLandings.consume(b.entities, b.seed, b.time))
       this.destruction.burst(
@@ -1650,6 +1663,17 @@ export class Arena {
           ? Math.abs(Math.sin(time * 9 + e.id)) * 0.05
           : 0);
     if (v.sprite) {
+      if (e.card === "dark-prince") {
+        const source = e.shield ? "dark-prince-shield" : "dark-prince";
+        if (v.sprite.asset !== this.sprites.assets.get(source)) {
+          const next = this.sprites.make(source);
+          if (next) {
+            o.remove(v.sprite.mesh);
+            o.add(next.mesh);
+            v.sprite = next;
+          }
+        }
+      }
       v.sprite.mesh.position.y = jump;
       const target = this.battle?.entities.find((t) => t.id === e.target);
       this.sprites.update(v.sprite, e, target, moving, time, this.camera, {

@@ -1,6 +1,7 @@
 import * as T from "three";
 import type { CardId } from "../game/cards";
 import type { Entity } from "../game/engine";
+import darkPrince from "../game/dark-prince-data.json" with { type: "json" };
 import { facing, selectClip, animationFrame } from "./animation";
 import { hasNativeDeployFilter } from "./deploy-filter";
 import type { AnimationClip } from "./animation";
@@ -17,7 +18,7 @@ interface FramePart {
 }
 // SC1 DisplayObjectInstance values: normal, multiply, screen, additive.
 export const SPRITE_BLENDS = [0, 3, 4, 8] as const;
-export type SpriteId = CardId | "tower-princess";
+export type SpriteId = CardId | "tower-princess" | "dark-prince-shield";
 export interface SpriteData {
   version: 2;
   textures: { file: string; width: number; height: number }[];
@@ -71,6 +72,8 @@ const heights: Partial<Record<SpriteId, number>> = {
   "electro-wizard": 1.8,
   miner: 1.65,
   bowler: 2.4,
+  "dark-prince": 2.1,
+  "dark-prince-shield": 2.1,
   witch: 2.1,
   prince: 2.25,
   pekka: 2.7,
@@ -255,7 +258,8 @@ export class SpriteLibrary {
       e.attack > 0 && !moving
         ? "attack"
         : moving
-          ? e.card === "prince" && e.move > 2.3
+          ? (e.card === "prince" && e.move > 2.3) ||
+            (e.card === "dark-prince" && e.move > darkPrince.chargeRange)
             ? "charge"
             : "run"
           : "idle";

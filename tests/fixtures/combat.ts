@@ -68,6 +68,8 @@ function setup() {
     scenario !== "death" && scenario !== "deployment";
   (document.querySelector("#attack-config") as HTMLElement).hidden =
     scenario !== "attack-impacts";
+  (document.querySelector("#break-shield") as HTMLElement).hidden =
+    scenario !== "dark-prince";
   (document.querySelector("#spawn") as HTMLElement).hidden =
     scenario !== "deployment";
   (document.querySelector("#freeze-cast") as HTMLElement).hidden =
@@ -144,6 +146,20 @@ function setup() {
     attacker.speed = 0;
     for (const [card, y] of [["knight", 18], ["knight", 16], ["minions", 17]] as [CardId, number][]) {
       for (const target of unit(card, "red", 4, y)) {
+        target.active = false;
+        target.speed = 0;
+        target.damage = 0;
+        target.hp = target.maxHp = 10000;
+      }
+    }
+  } else if (scenario === "dark-prince") {
+    const attacker = unit("dark-prince", "blue", 4, 21)[0];
+    attacker.speed = 0;
+    attacker.move = 2.6;
+    for (const [card, x, y] of [
+      ["knight", 4, 19.9], ["knight", 4.85, 19.9], ["minions", 5, 19.8],
+    ] as [CardId, number, number][]) {
+      for (const target of unit(card, "red", x, y)) {
         target.active = false;
         target.speed = 0;
         target.damage = 0;
@@ -286,6 +302,8 @@ function setup() {
   arena.setBattle(battle);
 }
 document.querySelector("#scenario")!.addEventListener("change", setup);
+document.querySelector("#break-shield")!.addEventListener("click", () =>
+  cast("fireball", "red", 4, 21));
 document.querySelector("#death-card")!.addEventListener("change", setup);
 document.querySelector("#attack-card")!.addEventListener("change", setup);
 document.querySelector("#defeat")!.addEventListener("click", () => {
@@ -443,6 +461,14 @@ function render(now: number) {
       enemies: battle.entities.filter((e) => e.team === "red" && ["knight", "minions"].includes(e.card))
         .map((e) => ({ card: e.card, x: e.x, y: e.y, hp: e.hp })),
       visuals: arena.projectileState.filter((shot) => shot.sprites.some((sprite) => sprite.name === "bowler_projectile")),
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.darkPrince =
+    JSON.stringify({
+      units: arena.darkPrinceState,
+      hits: battle.events.filter((event) => event.type === "hit" && event.card === "dark-prince" && event.value).length,
+      shieldBreaks: battle.events.filter((event) => event.effect === "shield:dark-prince").length,
+      enemyHealth: battle.entities.filter((e) => e.team === "red" && ["knight", "minions"].includes(e.card))
+        .map((e) => ({ card: e.card, hp: e.hp })),
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.projectiles =
     JSON.stringify(arena.projectileState);

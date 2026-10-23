@@ -29,6 +29,7 @@ import infernoDragon from "./inferno-dragon-data.json" with { type: "json" };
 import electroWizard from "./electro-wizard-data.json" with { type: "json" };
 import miner from "./miner-data.json" with { type: "json" };
 import bowler from "./bowler-data.json" with { type: "json" };
+import darkPrince from "./dark-prince-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -49,6 +50,8 @@ export interface Entity extends Point {
   kind: "troop" | "building" | "tower";
   hp: number;
   maxHp: number;
+  shield?: number;
+  maxShield?: number;
   radius: number;
   air: boolean;
   damage: number;
@@ -140,7 +143,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler";
+  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -633,6 +636,10 @@ export class Battle {
       kind: c.kind === "building" ? "building" : "troop",
       hp: c.hp,
       maxHp: c.hp,
+      ...(id === "dark-prince" ? {
+        shield: Math.round(darkPrince.sourceShieldHitpoints * 1.1 ** 5),
+        maxShield: Math.round(darkPrince.sourceShieldHitpoints * 1.1 ** 5),
+      } : {}),
       radius:
         c.kind === "building"
           ? 0.8
@@ -726,7 +733,8 @@ export class Battle {
   }
   private emitImpactAudio(e: Entity, damage: number) {
     this.emitAudio(
-      e.card === "prince" && damage > e.damage ? "impact-special" : "impact",
+      (e.card === "prince" || e.card === "dark-prince") && damage > e.damage
+        ? "impact-special" : "impact",
       e.team,
       audioProfile(e),
       e.id,
@@ -862,6 +870,8 @@ export class Battle {
             y,
             hp: 1,
             maxHp: 1,
+            shield: 0,
+            maxShield: 0,
             target: null,
             age: 0,
             deploy: clone.buffDuration,
@@ -1380,8 +1390,9 @@ export class Battle {
       }
       if (this.inRange(e, target)) {
         if (e.cooldown <= 1e-8) {
-          const damage =
-            e.damage * (e.card === "prince" && e.move >= 2.3 ? 2 : 1);
+          const damage = e.card === "dark-prince" && e.move >= darkPrince.chargeRange
+            ? Math.round(darkPrince.sourceChargeDamage * 1.1 ** 5)
+            : e.damage * (e.card === "prince" && e.move >= 2.3 ? 2 : 1);
           e.move = 0;
           e.cooldown = e.interval;
           e.attack = e.interval;
@@ -1461,6 +1472,16 @@ export class Battle {
   }
   private releaseAttack(e: Entity, target: Entity, damage: number) {
     this.audioAttacks.delete(e.id);
+    if (e.card === "dark-prince") {
+      for (const victim of this.entities) {
+        if (!this.validTarget(e, victim) ||
+            dist(victim, target) > darkPrince.splash + victim.radius) continue;
+        this.hurt(victim, damage);
+        this.emit("hit", e.team, victim.x, victim.y, "dark-prince", damage);
+        this.emitImpactAudio(e, damage);
+      }
+      return;
+    }
     if (e.card === "bowler") {
       const dx = target.x - e.x, dy = target.y - e.y;
       const length = Math.hypot(dx, dy) || 1;
@@ -1897,7 +1918,9 @@ export class Battle {
       e.speed *
       (e.rage ? rage.speedMultiplier : 1) *
       (e.slow ? iceWizard.speedMultiplier : 1) *
-      (e.card === "prince" && e.move > 2.3 ? 1.8 : 1);
+      (e.card === "prince" && e.move > 2.3 ? 1.8 :
+        e.card === "dark-prince" && e.move > darkPrince.chargeRange
+          ? darkPrince.chargeSpeedMultiplier : 1);
     const move = Math.min(d, speed * STEP);
     e.x = clamp(e.x + (dx / d) * move, 0.5, 17.5);
     e.y = clamp(e.y + (dy / d) * move, 0.6, 31.4);
@@ -1945,6 +1968,12 @@ export class Battle {
   }
   private hurt(e: Entity, amount: number, decay = false) {
     if (e.hp <= 0 || (!decay && this.isHidden(e))) return;
+    if (e.shield && !decay) {
+      e.shield = Math.max(0, e.shield - amount);
+      if (e.shield === 0)
+        this.emit("hit", e.team, e.x, e.y, e.card, 0, { effect: "shield:dark-prince" });
+      return;
+    }
     e.hp -= amount;
     if (e.king) this.activateKing(e);
     if (e.hp > 0) return;

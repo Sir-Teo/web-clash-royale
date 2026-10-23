@@ -38,8 +38,8 @@ describe("native health HUD", () => {
     for (const f of manifest.files)
       expect(hash(`public/assets/ui/health/${f.file}`)).toBe(f.sha256);
     const source = parseSC(readFileSync("reference/sc/ui.bin"));
-    expect(Object.keys(data.clips)).toHaveLength(22);
-    expect(Object.keys(data.bars)).toHaveLength(10);
+    expect(Object.keys(data.clips)).toHaveLength(28);
+    expect(Object.keys(data.bars)).toHaveLength(12);
     for (const [name, c] of Object.entries(data.clips) as [string, any][]) {
       expect(c.frames).toHaveLength(source.clips[c.sourceId].frames.length);
       expect(c.fps).toBe(source.clips[c.sourceId].fps);
@@ -70,7 +70,7 @@ describe("native health HUD", () => {
       }
   });
   it("preserves source health sizes and offsets for the complete playable entity roster", () => {
-    expect(Object.keys(data.profiles)).toHaveLength(36);
+    expect(Object.keys(data.profiles)).toHaveLength(37);
     for (const p of Object.values(data.profiles)) {
       const row = csvRows(
         readFileSync(`reference/logic/${p.table}.csv`, "utf8"),

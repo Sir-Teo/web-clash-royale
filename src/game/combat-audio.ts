@@ -72,13 +72,15 @@ export class NativeCombatAudio {
   })[] = [];
   private lastPlayed = new Map<string, number>();
   constructor(private readonly audio: Pick<GameAudio, "enabled" | "play">) {}
-  queueCharge(seed: number, team: Team, time: number, age: number) {
-    // The 43-frame charge marker remains visible for 1.43 seconds. A slow
-    // renderer may first observe the crossing after the ordinary 0.5 s audio
-    // window, while the associated animation is still on screen.
+  queueCharge(
+    seed: number, team: Team, time: number, age: number,
+    profile: "prince" | "dark-prince" = "prince",
+  ) {
+    // Preserve a late charge cue while its source movement animation is still
+    // visible after a coalesced render or peer update.
     if (!this.audio.enabled || age >= 43 / 30) return;
     const origin = time + age;
-    for (const cue of combatAudioPlan("prince", "charge", seed, team))
+    for (const cue of combatAudioPlan(profile, "charge", seed, team))
       this.pending.push({ ...cue, time: origin + cue.delay });
     this.pending.sort((a, b) => a.time - b.time);
   }
