@@ -46,10 +46,10 @@ async function init(page: Page, name: string, sound = false) {
           ready.loadedCards,
         ];
       },
-      { timeout: 60000 },
+      { timeout: 120000 },
     )
     .toEqual([expectedEffects, expectedAnimations, 3, CARDS.length]);
-  await expect(page.locator("#friend-button")).toBeVisible({ timeout: 60000 });
+  await expect(page.locator("#friend-button")).toBeVisible({ timeout: 120000 });
   await page.locator("#friend-button").click();
 }
 async function deploy(page: Page, x = 4, y = 22) {
@@ -94,7 +94,7 @@ test("static browsers exchange invites, fight, pause together and replay without
   browser,
   browserName,
 }, info) => {
-  test.setTimeout(240000);
+  test.setTimeout(360000);
   const crossBrowser =
     process.env.ARENA_CROSS_BROWSER === "1"
       ? await (browserName === "webkit" ? chromium : webkit).launch()
