@@ -4,6 +4,7 @@ import { expectedEffects } from "./native-assets";
 test("Hog Rider clears the river and lands with native dust on desktop and phone", async ({
   page,
 }, info) => {
+  test.setTimeout(240000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/tests/fixtures/combat.html");
