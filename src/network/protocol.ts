@@ -16,6 +16,7 @@ export interface RoomState {
   code: string;
   phase: RoomPhase;
   mode: Mode;
+  paused?: boolean;
   players: { team: Team; name: string; ready: boolean; connected: boolean }[];
 }
 export interface BattleSnapshot {
