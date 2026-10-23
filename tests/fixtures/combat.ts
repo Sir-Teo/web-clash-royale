@@ -121,6 +121,8 @@ function setup() {
         entity.active = false;
         entity.hp = entity.maxHp = 10000;
       }
+  } else if (scenario === "goblin-barrel") {
+    cast("goblin-barrel", "blue", 4, 9);
   } else if (scenario === "spell-impacts") {
     cast("zap", "blue", 4, 13);
     cast("arrows", "red", 14, 19);
@@ -412,6 +414,18 @@ function render(now: number) {
         x: entity.x,
         y: entity.y,
         hp: entity.hp,
+      })),
+  );
+  (
+    document.querySelector("#destruction") as HTMLElement
+  ).dataset.barrelGoblins = JSON.stringify(
+    battle.entities
+      .filter((entity) => entity.card === "goblins" && entity.team === "blue")
+      .map((entity) => ({
+        id: entity.id,
+        x: entity.x,
+        y: entity.y,
+        deploy: entity.deploy,
       })),
   );
   (document.querySelector("#destruction") as HTMLElement).dataset.chargeCues =
