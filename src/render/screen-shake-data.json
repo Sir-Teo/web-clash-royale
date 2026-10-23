@@ -65,6 +65,27 @@
         ]
       }
     },
+    "bandit": {
+      "impact-special": {
+        "sources": [
+          "assassin_hit_special_red"
+        ],
+        "components": [
+          {
+            "effect": "assassin_hit_special_red",
+            "delay": 0,
+            "duration": 0.5
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "assassin_hit_special",
+            "delay": 0,
+            "duration": 0.5
+          }
+        ]
+      }
+    },
     "balloon": {
       "impact": {
         "sources": [

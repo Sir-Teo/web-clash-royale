@@ -160,6 +160,11 @@ for (const [id, profile] of Object.entries(JSON.parse(profilesBytes))) {
     hide: [row.HideEffect],
     "death-impact": [deathSpawn?.DeathEffect],
     "death-spawn": [deathSpawn?.SpawnEffect],
+    ...(id === "bandit" ? {
+      "dash-start": [row.DashStartEffect],
+      "dash-travel": [row.DashEffect],
+      "dash-end": [row.LandingEffect],
+    } : {}),
     ...(id === "sparky" ? {
       "load-1": [row.LoadAttackEffect1],
       "load-2": [row.LoadAttackEffect2],

@@ -531,6 +531,23 @@
       "uniqueFrames": 1242
     },
     {
+      "id": "bandit",
+      "source": "chr_bandit",
+      "metadataSha256": "4da4adfd47514230cc5ef3f08d3005933a5e75086bbd05129e04c427b1122371",
+      "dataSha256": "cee84cb7266e3349ac78e18903d4e060abfc9944c976766108de1d38b74c38b5",
+      "textures": [
+        {
+          "file": "bandit-0.webp",
+          "sha256": "3d0878ff9d35ba923e9928f40e0d6d17db214e2ac5620d47562fbf398be65718",
+          "originalSha256": "e7dc968be2cf844ec7268e19093a04896542ff2b3d4cf6c4d3d8173abad0417a"
+        }
+      ],
+      "shapes": 325,
+      "clips": 72,
+      "frames": 1800,
+      "uniqueFrames": 900
+    },
+    {
       "id": "witch",
       "source": "chr_witch",
       "metadataSha256": "162c723c4c17e1cb0fca5d361548ec46bd622cf1177b93bbf5b1d5308d299333",

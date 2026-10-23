@@ -317,6 +317,13 @@
     "ignoresKnockback": false,
     "projectile": null
   },
+  "bandit": {
+    "source": "Assassin",
+    "windup": 0.4,
+    "sight": 6,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
   "witch": {
     "source": "Witch",
     "windup": 0.5,

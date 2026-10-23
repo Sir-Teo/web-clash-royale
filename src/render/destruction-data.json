@@ -2487,6 +2487,69 @@
         }
       ]
     },
+    "bandit": {
+      "source": "assassin_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "witch": {
       "source": "witch_die",
       "components": [
@@ -4214,6 +4277,97 @@
           "delay": 0.3,
           "scale": 1,
           "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "dash-start:bandit": {
+      "source": "assassin_dash_start",
+      "components": [
+        {
+          "emitter": "assassin_buff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "assassin_buff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
+    "dash-end:bandit": {
+      "source": "assassin_dash_end",
+      "components": [
+        {
+          "emitter": "assassin_buff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "assassin_buff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
+    "hit-special:bandit": {
+      "source": "assassin_hit_special",
+      "components": [
+        {
+          "emitter": "assassin_hit_special_smoke",
+          "delay": 0.1,
+          "scale": 0.8,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "assassin_hit_special",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "assassin_hit_special_blue_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "assassin_hit_special_smoke",
+          "delay": 0.1,
+          "scale": 0.8,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "assassin_hit_special",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "assassin_hit_special_blue_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
           "ground": false
         }
       ]
@@ -7491,6 +7645,11 @@
           "ground": false
         }
       ]
+    },
+    "bandit": {
+      "source": "assassin_deploy",
+      "components": [],
+      "enemyComponents": []
     },
     "witch": {
       "source": "witch_deploy",
@@ -13162,6 +13321,199 @@
         "d2",
         "d1_white",
         "d3_green_dark"
+      ]
+    },
+    "assassin_buff": {
+      "count": 4,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        1,
+        1.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.1,
+        0.13333333333333333
+      ],
+      "speed": [
+        1.6666666666666667,
+        3.3333333333333335
+      ],
+      "height": 0.4666666666666667,
+      "verticalSpeed": [
+        0.3333333333333333,
+        2.6666666666666665
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.2,
+      "endScale": 0.4,
+      "fadeIn": 0.5,
+      "fadeOut": 0.5,
+      "inertia": 8.333333333333334,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Smoke_puff_01",
+        "Smoke_puff_02",
+        "Smoke_puff_03"
+      ]
+    },
+    "assassin_hit_special_smoke": {
+      "count": 12,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.8,
+        1.3
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0
+      ],
+      "speed": [
+        1.3333333333333333,
+        2.3333333333333335
+      ],
+      "height": 0.7,
+      "verticalSpeed": [
+        0.6666666666666666,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1.2,
+      "fadeIn": 1.6,
+      "fadeOut": 1.6,
+      "inertia": 3.3333333333333335,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "d1",
+        "d2",
+        "d3",
+        "d4"
+      ]
+    },
+    "assassin_hit_special": {
+      "count": 26,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0,
+        0.007
+      ],
+      "life": [
+        0.11,
+        0.15
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        10,
+        11.666666666666666
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        200,
+        500
+      ],
+      "gravity": 0,
+      "startScale": 0.1,
+      "endScale": 0.3,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "Death_blue_sparkle1"
+      ]
+    },
+    "assassin_hit_special_blue_puff": {
+      "count": 29,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.8,
+        1
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0.03333333333333333
+      ],
+      "speed": [
+        3.3333333333333335,
+        4.333333333333333
+      ],
+      "height": 0.1,
+      "verticalSpeed": [
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.8333333333333334,
+      "startScale": 0.2,
+      "endScale": 0.3,
+      "fadeIn": 0,
+      "fadeOut": 1.5,
+      "inertia": 11.666666666666666,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Death_blue_smoke"
       ]
     },
     "guard_shield_down": {

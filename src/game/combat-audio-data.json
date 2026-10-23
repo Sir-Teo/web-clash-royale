@@ -4445,6 +4445,184 @@
         "row": "DarkWitch"
       }
     },
+    "bandit": {
+      "source": "Assassin",
+      "attack": {
+        "sources": [
+          "assassin_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_assassin_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_assassin_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "assassin_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_assassin_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_assassin_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [
+          "assassin_hit_special_red"
+        ],
+        "components": [
+          {
+            "sound": "sound_assassin_hit_special",
+            "delay": 0.1
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_assassin_hit_special",
+            "delay": 0.1
+          }
+        ]
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "assassin_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_assassin_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_assassin_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "dash-start": {
+        "sources": [
+          "assassin_dash_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_assassin_charge",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_assassin_charge",
+            "delay": 0
+          }
+        ]
+      },
+      "dash-travel": {
+        "sources": [
+          "assassin_dashing"
+        ],
+        "components": [
+          {
+            "sound": "sound_assassin_dashing",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_assassin_dashing",
+            "delay": 0
+          }
+        ]
+      },
+      "dash-end": {
+        "sources": [
+          "assassin_dash_end"
+        ],
+        "components": [
+          {
+            "sound": "sound_assassin_dash_end",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_assassin_dash_end",
+            "delay": 0
+          }
+        ]
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Assassin"
+      }
+    },
     "witch": {
       "source": "Witch",
       "attack": {
@@ -11466,6 +11644,188 @@
         "repeat": 0,
         "loop": false,
         "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_assassin_attack_start": [
+      {
+        "sourceFile": "sfx/bandit_atk_vo_02.wav",
+        "file": "bandit_atk_vo_02",
+        "volume": [
+          0.35,
+          0.45
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0.3,
+          0.3
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/bandit_atk_vo_01.wav",
+        "file": "bandit_atk_vo_01",
+        "volume": [
+          0.35,
+          0.45
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0.3,
+          0.3
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_assassin_hit": [
+      {
+        "sourceFile": "sfx/bandit_bat_hit_01.wav",
+        "file": "bandit_bat_hit_01",
+        "volume": [
+          0.8,
+          0.85
+        ],
+        "pitch": [
+          0.94,
+          1.06
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 4,
+        "repeat": 0,
+        "loop": false,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_assassin_hit_special": [
+      {
+        "sourceFile": "sfx/bandit_slam_01.wav",
+        "file": "bandit_slam_01",
+        "volume": [
+          0.9,
+          0.9
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_assassin_deploy": [
+      {
+        "sourceFile": "sfx/bandit_deploy_01.wav",
+        "file": "bandit_deploy_01",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_assassin_charge": [
+      {
+        "sourceFile": "sfx/bandit_sneaky_laugh_05.wav",
+        "file": "bandit_sneaky_laugh_05",
+        "volume": [
+          0.4,
+          0.4
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_assassin_dashing": [
+      {
+        "sourceFile": "sfx/bandit_dash_03.wav",
+        "file": "bandit_dash_03",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_assassin_dash_end": [
+      {
+        "sourceFile": "sfx/p_archer_hit_01.wav",
+        "file": "p_archer_hit_01",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 2,
         "padding": 0
       }
     ],

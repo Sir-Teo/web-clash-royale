@@ -345,6 +345,12 @@
       "sha256": "81cedea30710838650fbc2dab748ffc6709707cdae2081c4831b255f0e33d96c"
     },
     {
+      "path": "cards/bandit.png",
+      "source": "cards/bandit.png",
+      "bytes": 120732,
+      "sha256": "c1695a9ef6889e932d0961308d79d1a2a33526cdf5198c212f7e1b84a38a9eed"
+    },
+    {
       "path": "cards/barbarians.png",
       "source": "cards/barbarians.png",
       "bytes": 114510,

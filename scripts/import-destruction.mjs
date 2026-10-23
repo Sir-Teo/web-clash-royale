@@ -338,6 +338,20 @@ impacts["summon:night-witch"] = {
   components: composition(nightWitch.SpawnCharacterEffect, "blue"),
   enemyComponents: composition(nightWitch.SpawnCharacterEffect, "red"),
 };
+const bandit = tables.characters.Assassin;
+if (bandit?.DashStartEffect !== "assassin_dash_start" ||
+    bandit.LandingEffect !== "assassin_dash_end" ||
+    bandit.DamageEffectSpecial !== "assassin_hit_special_red")
+  throw new Error("Recheck native Bandit dash and landing effects");
+for (const [key, source] of [
+  ["dash-start:bandit", bandit.DashStartEffect],
+  ["dash-end:bandit", bandit.LandingEffect],
+  ["hit-special:bandit", "assassin_hit_special"],
+]) impacts[key] = {
+  source,
+  components: composition(source, "blue"),
+  enemyComponents: composition(source, "red"),
+};
 const darkPrince = tables.characters.DarkPrince;
 if (darkPrince?.ShieldLostEffect !== "GuardShieldDown" ||
     darkPrince.ChargeEffect !== "dark_prince_charge")

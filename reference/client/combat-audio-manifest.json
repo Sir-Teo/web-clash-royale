@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "3795cb3c7961bb95327fb2e06a9f3197bd05c98d9b41f91c531b986c9ece04b8"
+      "sha256": "2c7d3876b5f9e03a4a7c4a5aab4f7f0bbcf5ae237bf773814c2a1cd47604f031"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "aee98a70e33891afd1ab2a7a9c2c92e2093574cdd35ed3ce321a77accbd83b7e"
+      "sha256": "8e593167e7130c61fef6767b7aa84a31c3a2cc3152765610c4fd5c5545da93a4"
     }
   ],
   "ignoredEnemyVersions": [
@@ -170,6 +170,48 @@
       "source": "sfx/babydragon_deploy_01.ogg",
       "bytes": 8668,
       "sha256": "4bb713adf208f815fd3688cc584a785868a5261f693e55724079a1276540b3fc"
+    },
+    {
+      "path": "public/assets/audio/bandit_atk_vo_01.ogg",
+      "source": "sfx/bandit_atk_vo_01.ogg",
+      "bytes": 4938,
+      "sha256": "b24d9c116c7d7c972e42b11c924cf9c7c67b03447a31bff3258b896d9771c858"
+    },
+    {
+      "path": "public/assets/audio/bandit_atk_vo_02.ogg",
+      "source": "sfx/bandit_atk_vo_02.ogg",
+      "bytes": 5468,
+      "sha256": "9f8ec9f02c736f0b0f686edd715201da0a452283876532accaa3a30fa7751bbf"
+    },
+    {
+      "path": "public/assets/audio/bandit_bat_hit_01.ogg",
+      "source": "sfx/bandit_bat_hit_01.ogg",
+      "bytes": 4616,
+      "sha256": "4b82721cc83c166a9f4ab2291c15b632225248a59abbc4a98c90a458a79bb2d7"
+    },
+    {
+      "path": "public/assets/audio/bandit_dash_03.ogg",
+      "source": "sfx/bandit_dash_03.ogg",
+      "bytes": 7765,
+      "sha256": "ae630ea3f54a2793f4320d566d309c8518f3a40c557b02e8294ec172b1d5d644"
+    },
+    {
+      "path": "public/assets/audio/bandit_deploy_01.ogg",
+      "source": "sfx/bandit_deploy_01.ogg",
+      "bytes": 8518,
+      "sha256": "45e58bb96a33a69ce5cb2673cb8b44c02e60191c8cb2b3c7c2464bdbc48e58ba"
+    },
+    {
+      "path": "public/assets/audio/bandit_slam_01.ogg",
+      "source": "sfx/bandit_slam_01.ogg",
+      "bytes": 7427,
+      "sha256": "9001877bdd2a0f4e3c94e6ec7037ec5bb971268d85b6a6c67a4751dde01ad87a"
+    },
+    {
+      "path": "public/assets/audio/bandit_sneaky_laugh_05.ogg",
+      "source": "sfx/bandit_sneaky_laugh_05.ogg",
+      "bytes": 6061,
+      "sha256": "e43a25b28535262ef821e533453f1d3e54a17e7041ba59a8d6bdb9c1f39fd482"
     },
     {
       "path": "public/assets/audio/barbarian_attack_02.ogg",
@@ -1410,6 +1452,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "d693fcead1bf22bff96e3c2ea9ae2af3bee42f91d77f8f58aed089e736ab109a"
+    "sha256": "128b56d6a8a53c16f178a505dfee7ae01adc2a57c54b17d6ac66b87565c775f4"
   }
 }
