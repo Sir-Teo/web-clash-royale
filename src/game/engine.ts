@@ -27,6 +27,7 @@ import iceWizard from "./ice-wizard-data.json" with { type: "json" };
 import princess from "./princess-data.json" with { type: "json" };
 import infernoDragon from "./inferno-dragon-data.json" with { type: "json" };
 import electroWizard from "./electro-wizard-data.json" with { type: "json" };
+import miner from "./miner-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -138,7 +139,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear";
+  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -355,8 +356,9 @@ export class Battle {
         e.hp > 0,
     );
     if (
-      (team === "blue" && y < (enemyPrincess ? 17.8 : 11.5)) ||
-      (team === "red" && y > (enemyPrincess ? 14.2 : 20.5))
+      id !== "miner" &&
+      ((team === "blue" && y < (enemyPrincess ? 17.8 : 11.5)) ||
+        (team === "red" && y > (enemyPrincess ? 14.2 : 20.5)))
     )
       return { ok: false, reason: "Deploy troops on your side of the arena." };
     if (y > 14.5 && y < 17.5)
@@ -410,14 +412,15 @@ export class Battle {
     p.queue.push(played);
     if (this.rulesVersion >= 5) p.lastPlayed = id;
     this.actions.push({ tick: this.tick, team, card: played, x, y });
-    this.emit(
-      c.kind === "spell" ? "spell" : "deploy",
-      team,
-      x,
-      y,
-      id,
-      played === "mirror" ? cost : undefined,
-    );
+    if (id !== "miner")
+      this.emit(
+        c.kind === "spell" ? "spell" : "deploy",
+        team,
+        x,
+        y,
+        id,
+        played === "mirror" ? cost : undefined,
+      );
     if (played === "mirror") this.emitAudio("cast", team, "mirror");
     this.emitAudio("cast", team, id);
     if (c.kind === "spell") {
@@ -583,6 +586,16 @@ export class Battle {
         });
         this.audioProjectiles.set(this.projectiles.at(-1)!.id, id);
       }
+    } else if (id === "miner") {
+      const origin = { x: 9, y: team === "blue" ? 29 : 3 };
+      const duration = Math.max(STEP, dist(origin, { x, y }) / miner.travelSpeed);
+      this.projectiles.push({
+        id: this.nextId++, team, x: origin.x, y: origin.y, tx: x, ty: y,
+        target: null, damage: 0, remaining: duration, duration,
+        splash: 0, air: false, style: "miner-travel", stun: 0, source: 0,
+        flight: { ...origin }, speed: miner.travelSpeed, elapsed: 0,
+      });
+      this.emit("spell", team, origin.x, origin.y, "miner", 0, { effect: "miner-travel" });
     } else {
       const unitId: CardId =
         id === "minion-horde"
@@ -1560,9 +1573,12 @@ export class Battle {
       this.emit("hit", e.team, e.x, e.y, e.card, damage);
       this.emitImpactAudio(e, damage);
     } else {
-      this.hurt(target, damage);
-      this.emit("hit", e.team, target.x, target.y, e.card, damage);
-      this.emitImpactAudio(e, damage);
+      const dealt = e.card === "miner" && target.kind === "tower"
+        ? Math.round(damage * miner.crownTowerDamageFraction)
+        : damage;
+      this.hurt(target, dealt);
+      this.emit("hit", e.team, target.x, target.y, e.card, dealt);
+      this.emitImpactAudio(e, dealt);
     }
   }
   private updateProjectiles() {
@@ -1599,6 +1615,13 @@ export class Battle {
           p.flight.x = p.x + (p.tx - p.x) * progress;
           p.flight.y = p.y + (p.ty - p.y) * progress;
         }
+      }
+      if (p.style === "miner-travel") {
+        if (p.remaining <= 1e-8) {
+          this.spawn("miner", p.team, p.tx, p.ty);
+          this.emit("deploy", p.team, p.tx, p.ty, "miner");
+        }
+        continue;
       }
       if (p.style === "log-launch") {
         if (p.remaining <= 1e-8) {

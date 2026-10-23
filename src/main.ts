@@ -1961,6 +1961,7 @@ Object.defineProperty(window, "__arena", {
         loadedEffects: arena.loadedEffects,
         projectileArtwork: arena.projectileState,
         infernoBeams: arena.infernoBeamState,
+        minerTrails: arena.minerTrailState,
         loadedAnnouncements: announcements.loaded,
         loadedIntros: intro.loaded,
         loadedElixir: elixir.loaded,

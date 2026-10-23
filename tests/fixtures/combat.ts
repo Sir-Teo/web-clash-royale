@@ -137,6 +137,8 @@ function setup() {
   } else if (scenario === "spell-impacts") {
     cast("zap", "blue", 4, 13);
     cast("arrows", "red", 14, 19);
+  } else if (scenario === "miner") {
+    cast("miner", "blue", 4, 8);
   } else if (scenario === "attack-impacts") {
     const attacker = (
       document.querySelector("#attack-card") as HTMLSelectElement
@@ -416,6 +418,13 @@ function render(now: number) {
     JSON.stringify(arena.impactSpriteState);
   (document.querySelector("#destruction") as HTMLElement).dataset.infernoBeams =
     JSON.stringify(arena.infernoBeamState);
+  (document.querySelector("#destruction") as HTMLElement).dataset.miner =
+    JSON.stringify({
+      trails: arena.minerTrailState,
+      traveling: battle.projectiles.filter((p) => p.style === "miner-travel").length,
+      units: battle.entities.filter((e) => e.card === "miner" && e.hp > 0).length,
+      arrivals: battle.events.filter((e) => e.type === "deploy" && e.card === "miner").length,
+    });
   (document.querySelector("#destruction") as HTMLElement).dataset.projectiles =
     JSON.stringify(arena.projectileState);
   (document.querySelector("#destruction") as HTMLElement).dataset.tornadoAreas =

@@ -42,6 +42,7 @@ import { NativeChargeFilter } from "./charge-filter";
 import { NativeDeployFilter } from "./deploy-filter";
 import { NativeColdFilter, NativeColdStructures } from "./cold-filter";
 import { NativeInfernoBeams } from "./inferno-beam";
+import { NativeMinerTrails } from "./miner-trails";
 import { NativePoisonFilter } from "./poison-filter";
 import { NativeRageFilter } from "./rage-filter";
 import { NativeCloneFilter } from "./clone-filter";
@@ -101,6 +102,7 @@ export class Arena {
   private rageFilter = new NativeRageFilter(this.spriteFilters);
   private coldStructures = new NativeColdStructures();
   private infernoBeams = new NativeInfernoBeams(this.scene, this.effects);
+  private minerTrails = new NativeMinerTrails(this.scene, this.effects);
   private spellAreas = new NativeSpellAreas(this.scene, this.effects);
   private hogLandings = new NativeHogLandings();
   private crowns = new CrownEffects(this.scene, this.effects);
@@ -515,6 +517,7 @@ export class Arena {
     this.rageFilter.clear();
     this.coldStructures.clear();
     this.infernoBeams.clear();
+    this.minerTrails.clear();
     this.spriteFilters.clear();
     this.spellAreas.clear();
     this.hogLandings.reset();
@@ -590,6 +593,9 @@ export class Arena {
   }
   get infernoBeamState() {
     return this.infernoBeams.state;
+  }
+  get minerTrailState() {
+    return this.minerTrails.state;
   }
   get loadedHealth() {
     return this.health.loaded;
@@ -1091,8 +1097,31 @@ export class Arena {
         this.units.delete(id);
       }
     this.infernoBeams.update(b.entities, this.camera);
+    this.minerTrails.update(b.projectiles, this.camera);
     const liveShots = new Set<number>();
     for (const p of b.projectiles) {
+      if (p.style === "miner-travel") {
+        if (!this.trailCycles.has(p.id) && this.effects.asset) {
+          this.destruction.burstAlong(
+            "trail:miner",
+            (seconds) => {
+              const progress = Math.min(1, seconds / p.duration);
+              return new T.Vector3(
+                p.x + (p.tx - p.x) * progress - 9,
+                0.2,
+                p.y + (p.ty - p.y) * progress - 16,
+              );
+            },
+            p.duration,
+            0,
+            b.seed ^ p.id,
+            p.team,
+            p.elapsed ?? 0,
+          );
+          this.trailCycles.set(p.id, 0);
+        }
+        continue;
+      }
       liveShots.add(p.id);
       let shot = this.shots.get(p.id);
       if (!shot) {
@@ -1204,11 +1233,22 @@ export class Arena {
         this.shots.delete(id);
         this.trailCycles.delete(id);
       }
+    const liveProjectiles = new Set(b.projectiles.map((projectile) => projectile.id));
+    for (const id of this.trailCycles.keys())
+      if (!liveProjectiles.has(id)) this.trailCycles.delete(id);
     for (const event of b.events) {
       if (event.id <= this.lastEvent) continue;
       this.lastEvent = event.id;
       const eventAge = Math.max(0, b.time - event.time);
       const pos = new T.Vector3(event.x - 9, 0.6, event.y - 16);
+      if (event.type === "spell" && event.effect === "miner-travel")
+        this.destruction.burst(
+          "miner-travel",
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
       if (event.type === "spell" && event.card === "freeze") {
         for (const effect of ["freeze", "freeze-loop"] as const)
           this.destruction.burst(
@@ -1755,6 +1795,7 @@ export class Arena {
     this.rageFilter.clear();
     this.coldStructures.clear();
     this.infernoBeams.clear();
+    this.minerTrails.clear();
     this.spriteFilters.clear();
     this.spellAreas.clear();
     this.placementFeedback.remove();
