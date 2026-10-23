@@ -37,6 +37,7 @@ import lumberjack from "./lumberjack-data.json" with { type: "json" };
 import bats from "./bats-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
+import golem from "./golem-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -261,7 +262,7 @@ export class Battle {
     if (
       deck.length !== 8 ||
       new Set(deck).size !== 8 ||
-      deck.some((id) => !CARD_MAP[id])
+      deck.some((id) => !CARD_MAP[id] || id === "golemite")
     )
       throw new Error("A deck must contain eight unique valid cards.");
   }
@@ -634,7 +635,8 @@ export class Battle {
           point.x,
           point.y,
           true,
-          id === "bats" ? 1 + bats.deployDelay : 1,
+          id === "bats" ? 1 + bats.deployDelay :
+            id === "golem" ? golem.golem.sourceDeployTime : 1,
         );
     }
     return { ok: true, reason: "" };
@@ -2233,6 +2235,27 @@ export class Battle {
     this.cancelAudio(e);
     this.emitAudio("death", e.team, audioProfile(e), e.id);
     this.emit("death", e.team, e.x, e.y, e.card);
+    if (e.card === "golem" || e.card === "golemite") {
+      const profile = e.card === "golem" ? golem.golem : golem.golemite;
+      const death = profile.death;
+      const damage = Math.round(death.damage * 1.1 ** 5);
+      // Snapshot victims before a chained death can add fresh Golemites.
+      for (const victim of [...this.entities]) {
+        if (victim.hp <= 0 || victim.team === e.team ||
+            (!death.hitsAir && victim.air) ||
+            dist(victim, e) >= death.radius + victim.radius) continue;
+        this.hurt(victim, damage);
+        if (victim.hp > 0 && !victim.dash)
+          this.knockback(victim, e, death.pushback);
+      }
+      if (e.card === "golem")
+        for (let i = 0; i < golem.golem.deathSpawn.count; i++) {
+          const side = i - (golem.golem.deathSpawn.count - 1) / 2;
+          this.spawn("golemite", e.team,
+            clamp(e.x + side * golem.golem.deathSpawn.radius, 0.6, 17.4),
+            clamp(e.y, 0.8, 31.2), true, golem.golemite.sourceDeployTime);
+        }
+    }
     if (e.card === "battle-ram") {
       this.emitAudio("death-spawn", e.team, "battle-ram", e.id);
       for (let i = 0; i < battleRam.deathSpawnCount; i++) {

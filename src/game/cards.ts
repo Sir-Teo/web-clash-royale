@@ -29,6 +29,7 @@ import lumberjack from "./lumberjack-data.json" with { type: "json" };
 import bats from "./bats-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
+import golem from "./golem-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -66,6 +67,8 @@ export type CardId =
   | "bats"
   | "night-witch"
   | "bandit"
+  | "golem"
+  | "golemite"
   | "mega-minion"
   | "minion-horde"
   | "witch"
@@ -183,6 +186,18 @@ export const CARDS: Card[] = [
     1.5,
     "Slow but durable, he only attacks buildings. Put a ranged troop behind him.",
     { rarity: "Rare", buildingsOnly: true },
+  ),
+  troop(
+    "golem",
+    "Golem",
+    golem.cost,
+    Math.round(golem.golem.sourceHitpoints * 1.1 ** 5),
+    Math.round(golem.golem.sourceDamage * 1.1 ** 5),
+    golem.golem.sourceSpeed / 60,
+    golem.golem.sourceRange,
+    golem.golem.sourceHitSpeed,
+    "A towering building hunter that explodes and splits into two Golemites.",
+    { rarity: "Epic", buildingsOnly: true },
   ),
   troop(
     "royal-giant",
@@ -851,9 +866,22 @@ export const CARDS: Card[] = [
     },
   ),
 ];
-export const CARD_MAP = Object.fromEntries(
-  CARDS.map((c) => [c.id, c]),
-) as Record<CardId, Card>;
+export const CARD_MAP = {
+  ...Object.fromEntries(CARDS.map((c) => [c.id, c])),
+  // Spawned by Golem; never offered as a deck card.
+  golemite: troop(
+    "golemite",
+    "Golemite",
+    0,
+    Math.round(golem.golemite.sourceHitpoints * 1.1 ** 5),
+    Math.round(golem.golemite.sourceDamage * 1.1 ** 5),
+    golem.golemite.sourceSpeed / 60,
+    golem.golemite.sourceRange,
+    golem.golemite.sourceHitSpeed,
+    "A fragment of Golem that targets buildings and explodes on defeat.",
+    { rarity: "Epic", buildingsOnly: true },
+  ),
+} as Record<CardId, Card>;
 export const STARTER_DECK: CardId[] = [
   "knight",
   "archers",

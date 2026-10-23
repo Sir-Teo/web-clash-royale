@@ -72,6 +72,8 @@ function setup() {
     scenario !== "dark-prince";
   (document.querySelector("#kill-night-witch") as HTMLElement).hidden =
     scenario !== "night-witch";
+  (document.querySelector("#kill-golem") as HTMLElement).hidden =
+    scenario !== "golem";
   (document.querySelector("#spawn") as HTMLElement).hidden =
     scenario !== "deployment";
   (document.querySelector("#freeze-cast") as HTMLElement).hidden =
@@ -248,6 +250,16 @@ function setup() {
       target.active = false;
       target.speed = target.damage = 0;
       target.hp = target.maxHp = 10000;
+    }
+  } else if (scenario === "golem") {
+    const golem = unit("golem", "blue", 4, 21)[0];
+    golem.speed = 0;
+    for (const [card, x] of [["knight", 4], ["minions", 4.5]] as [CardId, number][]) {
+      for (const target of unit(card, "red", x, 20)) {
+        target.active = false;
+        target.speed = target.damage = 0;
+        target.hp = target.maxHp = 10000;
+      }
     }
   } else if (scenario === "attack-impacts") {
     const attacker = (
@@ -488,6 +500,12 @@ document.querySelector("#kill-night-witch")!.addEventListener("click", () => {
   witch.hp = 1;
   cast("fireball", "red", witch.x, witch.y);
 });
+document.querySelector("#kill-golem")!.addEventListener("click", () => {
+  const golem = battle.entities.find((e) => e.team === "blue" && e.card === "golem" && e.hp > 0);
+  if (!golem) return;
+  golem.hp = 1;
+  cast("fireball", "red", golem.x, golem.y);
+});
 document.querySelector("#play")!.addEventListener("click", () => {
   playing = !playing;
   document.querySelector("#play")!.textContent = playing ? "Pause" : "Play";
@@ -630,6 +648,18 @@ function render(now: number) {
         e.phase.startsWith("dash-")).map((e) => e.phase),
       filter: arena.banditFilterState,
       trail: arena.banditTrailState,
+      particles: arena.particleCount,
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.golem =
+    JSON.stringify({
+      alive: battle.entities.some((e) => e.team === "blue" && e.card === "golem" && e.hp > 0),
+      children: battle.entities.filter((e) => e.team === "blue" && e.card === "golemite" && e.hp > 0)
+        .map((e) => ({ x: e.x, y: e.y, deploy: e.deploy, hp: e.hp })),
+      targets: battle.entities.filter((e) => e.team === "red" &&
+        (e.card === "knight" || e.card === "minions"))
+        .map((e) => ({ card: e.card, hp: e.hp, x: e.x, y: e.y })),
+      deaths: battle.events.filter((e) => e.type === "death" && e.card === "golem").length,
+      childCues: battle.audioEvents.filter((e) => e.phase === "spawn" && e.profile === "golemite").length,
       particles: arena.particleCount,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.darkPrince =
