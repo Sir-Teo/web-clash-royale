@@ -1,0 +1,18 @@
+{
+  "card": "Rage",
+  "area": "Rage",
+  "buff": "Rage",
+  "cost": 2,
+  "rarity": "Epic",
+  "radius": 5,
+  "duration": 6,
+  "areaHitInterval": 0.3,
+  "buffDuration": 2,
+  "capBuffToAreaTime": true,
+  "targets": "friendlyTroops",
+  "hitsGround": true,
+  "hitsAir": true,
+  "hitSpeedMultiplier": 1.35,
+  "speedMultiplier": 1.35,
+  "spawnSpeedMultiplier": 1.35
+}
