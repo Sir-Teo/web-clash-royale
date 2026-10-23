@@ -41,6 +41,7 @@ import { NativeChargeMarkers } from "./charge-marker";
 import { NativeChargeFilter } from "./charge-filter";
 import { NativeDeployFilter } from "./deploy-filter";
 import { NativeColdFilter, NativeColdStructures } from "./cold-filter";
+import { NativeInfernoBeams } from "./inferno-beam";
 import { NativePoisonFilter } from "./poison-filter";
 import { NativeRageFilter } from "./rage-filter";
 import { NativeCloneFilter } from "./clone-filter";
@@ -99,6 +100,7 @@ export class Arena {
   private poisonFilter = new NativePoisonFilter(this.spriteFilters);
   private rageFilter = new NativeRageFilter(this.spriteFilters);
   private coldStructures = new NativeColdStructures();
+  private infernoBeams = new NativeInfernoBeams(this.scene, this.effects);
   private spellAreas = new NativeSpellAreas(this.scene, this.effects);
   private hogLandings = new NativeHogLandings();
   private crowns = new CrownEffects(this.scene, this.effects);
@@ -512,6 +514,7 @@ export class Arena {
     this.poisonFilter.clear();
     this.rageFilter.clear();
     this.coldStructures.clear();
+    this.infernoBeams.clear();
     this.spriteFilters.clear();
     this.spellAreas.clear();
     this.hogLandings.reset();
@@ -584,6 +587,9 @@ export class Arena {
         frame: sprite.frame,
       })),
     }));
+  }
+  get infernoBeamState() {
+    return this.infernoBeams.state;
   }
   get loadedHealth() {
     return this.health.loaded;
@@ -1078,6 +1084,7 @@ export class Arena {
         if (v.nativeHealth) this.scene.remove(v.nativeHealth.mesh);
         this.units.delete(id);
       }
+    this.infernoBeams.update(b.entities, this.camera);
     const liveShots = new Set<number>();
     for (const p of b.projectiles) {
       liveShots.add(p.id);
@@ -1732,6 +1739,7 @@ export class Arena {
     this.poisonFilter.clear();
     this.rageFilter.clear();
     this.coldStructures.clear();
+    this.infernoBeams.clear();
     this.spriteFilters.clear();
     this.spellAreas.clear();
     this.placementFeedback.remove();

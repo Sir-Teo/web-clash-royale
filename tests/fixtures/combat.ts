@@ -410,6 +410,8 @@ function render(now: number) {
   const destruction = arena.destructionState;
   (document.querySelector("#destruction") as HTMLElement).dataset.state =
     JSON.stringify(destruction);
+  (document.querySelector("#destruction") as HTMLElement).dataset.infernoBeams =
+    JSON.stringify(arena.infernoBeamState);
   (document.querySelector("#destruction") as HTMLElement).dataset.projectiles =
     JSON.stringify(arena.projectileState);
   (document.querySelector("#destruction") as HTMLElement).dataset.tornadoAreas =

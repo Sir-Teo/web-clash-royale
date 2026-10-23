@@ -25,6 +25,7 @@ import clone from "./clone-data.json" with { type: "json" };
 import mirror from "./mirror-data.json" with { type: "json" };
 import iceWizard from "./ice-wizard-data.json" with { type: "json" };
 import princess from "./princess-data.json" with { type: "json" };
+import infernoDragon from "./inferno-dragon-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -60,6 +61,12 @@ export interface Entity extends Point {
   poison?: { remaining: number; elapsed: number };
   rage?: { remaining: number };
   slow?: { remaining: number };
+  inferno?: {
+    target: number;
+    elapsed: number;
+    hitTimer: number;
+    stage: 0 | 1 | 2;
+  };
   attack: number;
   move: number;
   king?: boolean;
@@ -1238,6 +1245,7 @@ export class Battle {
   private cancelAttack(e: Entity) {
     this.cancelAudio(e);
     e.pendingAttack = undefined;
+    e.inferno = undefined;
     e.attack = 0;
     e.cooldown = 0;
   }
@@ -1312,6 +1320,10 @@ export class Battle {
         continue;
       }
       if (e.burrow && !this.updateTesla(e)) continue;
+      if (e.card === "inferno-dragon") {
+        this.updateInfernoDragon(e, hitSpeed);
+        continue;
+      }
       if (e.card === "witch") {
         e.spawnTimer -=
           STEP *
@@ -1367,6 +1379,45 @@ export class Battle {
       } else if (e.kind === "troop") this.moveToward(e, target);
     }
     this.updateProjectiles();
+  }
+  private updateInfernoDragon(e: Entity, hitSpeed: number) {
+    const target = this.acquireTarget(e);
+    if (!target || !this.inRange(e, target)) {
+      this.cancelAttack(e);
+      if (target) this.moveToward(e, target);
+      else e.move = 0;
+      return;
+    }
+    if (!e.inferno || e.inferno.target !== target.id) {
+      this.cancelAttack(e);
+      e.inferno = {
+        target: target.id,
+        elapsed: 0,
+        hitTimer: e.interval,
+        stage: 0,
+      };
+      this.beginAudio(e);
+    }
+    const lock = e.inferno;
+    e.move = 0;
+    lock.elapsed += STEP;
+    lock.stage =
+      lock.elapsed >= infernoDragon.stageDurations[0] + infernoDragon.stageDurations[1]
+        ? 2
+        : lock.elapsed >= infernoDragon.stageDurations[0]
+          ? 1
+          : 0;
+    lock.hitTimer -= STEP * hitSpeed;
+    if (lock.hitTimer > 1e-8) return;
+    lock.hitTimer += e.interval;
+    e.attack = e.interval;
+    const damage = Math.round(infernoDragon.sourceDamage[lock.stage] * 1.1 ** 2);
+    this.hurt(target, damage);
+    this.emit("hit", e.team, target.x, target.y, "inferno-dragon", damage, {
+      height: target.air ? 2.3 : target.kind === "tower" ? 1.8 : 0.6,
+    });
+    this.emitImpactAudio(e, damage);
+    if (target.hp <= 0) this.cancelAttack(e);
   }
   private releaseAttack(e: Entity, target: Entity, damage: number) {
     this.audioAttacks.delete(e.id);

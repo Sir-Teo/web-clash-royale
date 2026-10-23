@@ -1960,6 +1960,7 @@ Object.defineProperty(window, "__arena", {
         drawCalls: arena.renderer.info.render.calls,
         loadedEffects: arena.loadedEffects,
         projectileArtwork: arena.projectileState,
+        infernoBeams: arena.infernoBeamState,
         loadedAnnouncements: announcements.loaded,
         loadedIntros: intro.loaded,
         loadedElixir: elixir.loaded,
