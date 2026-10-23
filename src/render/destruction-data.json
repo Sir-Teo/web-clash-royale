@@ -6309,6 +6309,72 @@
       "enemyComponents": []
     }
   },
+  "continuities": {
+    "golem": {
+      "source": "golem_cont_effect",
+      "cycle": 15,
+      "components": [
+        {
+          "emitter": "golem_firefly_trail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "golem_firefly_trail",
+          "delay": 3,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "golem_firefly_trail",
+          "delay": 9,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "golem_firefly_trail",
+          "delay": 12,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "golem_firefly_trail_red",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "golem_firefly_trail_red",
+          "delay": 3,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "golem_firefly_trail_red",
+          "delay": 9,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "golem_firefly_trail_red",
+          "delay": 12,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    }
+  },
   "charges": {
     "prince": {
       "source": "prince_charge",
@@ -15609,6 +15675,104 @@
         "d2",
         "d3",
         "d4"
+      ]
+    },
+    "golem_firefly_trail": {
+      "count": 1,
+      "emissionLife": [
+        1.2,
+        1.2
+      ],
+      "interval": [
+        0.1,
+        0.1
+      ],
+      "life": [
+        5.5,
+        7
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 1.5333333333333334,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.3,
+      "endScale": 0.6,
+      "fadeIn": 0,
+      "fadeOut": 5,
+      "inertia": 0,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "Golem_firefly_blue_particle1",
+        "Golem_firefly_blue_particle2",
+        "Golem_firefly_blue_particle2"
+      ]
+    },
+    "golem_firefly_trail_red": {
+      "count": 1,
+      "emissionLife": [
+        1.2,
+        1.2
+      ],
+      "interval": [
+        0.1,
+        0.1
+      ],
+      "life": [
+        5.5,
+        7
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 1.5333333333333334,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.35,
+      "endScale": 0.6,
+      "fadeIn": 0,
+      "fadeOut": 5,
+      "inertia": 0,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "Golem_firefly_red_particle1",
+        "Golem_firefly_red_particle2",
+        "Golem_firefly_red_particle2"
       ]
     },
     "knight_depoy_dustShadow": {

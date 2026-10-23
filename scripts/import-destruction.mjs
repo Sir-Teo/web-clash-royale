@@ -49,6 +49,7 @@ const effects = {},
   trails = {},
   launches = {},
   movements = {},
+  continuities = {},
   charges = {},
   landings = {},
   deployments = {},
@@ -450,6 +451,23 @@ for (const [id, expected] of Object.entries({
     enemyComponents: composition(source, "red"),
   };
 }
+const golemContinuous = tables.characters[profiles.golem.source].ContinuousEffect;
+const redFirefly = tables.particle_emitters.golem_firefly_trail?.[0].EnemyVersion;
+if (golemContinuous !== "golem_cont_effect" ||
+    redFirefly !== "golem_firefly_trail_red")
+  throw new Error("Recheck native Golem continuous fireflies");
+continuities.golem = {
+  source: golemContinuous,
+  // The source loops the four authored emissions at 0, 3, 9 and 12 seconds.
+  // Its runtime loop length is unavailable; retain a 15-second cycle.
+  cycle: 15,
+  components: composition(golemContinuous, "blue"),
+  enemyComponents: composition(golemContinuous, "red").map((component) => ({
+    ...component,
+    emitter: redFirefly,
+  })),
+};
+importEmitter(redFirefly);
 const princeCharge = tables.characters[profiles.prince.source].ChargeEffect;
 if (princeCharge !== "prince_charge")
   throw new Error(`Recheck native Prince charge effect: ${princeCharge}`);
@@ -589,6 +607,7 @@ const path = "src/render/destruction-data.json",
         trails,
         launches,
         movements,
+        continuities,
         charges,
         landings,
         deployments,
