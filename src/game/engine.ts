@@ -12,6 +12,7 @@ import {
 } from "./combat";
 import { TOWER_SITES } from "./arena-layout";
 import { audioProfile } from "./combat-audio-events";
+import flyingHeights from "./flight-heights.json" with { type: "json" };
 import freeze from "./freeze-data.json" with { type: "json" };
 import poison from "./poison-data.json" with { type: "json" };
 import rage from "./rage-data.json" with { type: "json" };
@@ -193,9 +194,13 @@ export interface EngineOptions {
 const dist = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
 const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
 export function entityVisualHeight(e: Pick<Entity, "card" | "air">): number {
-  if (e.card === "lava-hound") return lavaHound.hound.flyingHeight;
-  if (e.card === "lava-pup") return lavaHound.pup.flyingHeight;
-  return e.air ? 2.2 : 0.2;
+  if (!e.air) return 0.2;
+  return flyingHeights[e.card as keyof typeof flyingHeights]?.flyingHeight ?? 2.2;
+}
+export function entityProjectileStartHeight(e: Pick<Entity, "card" | "air">): number | null {
+  if (!e.air) return null;
+  const flight = flyingHeights[e.card as keyof typeof flyingHeights];
+  return flight ? flight.flyingHeight + flight.projectileStartZ : null;
 }
 export function projectileHitHeight(e: Pick<Entity, "card" | "air" | "kind">): number {
   return e.air ? entityVisualHeight(e) + 0.1 : e.kind === "tower" ? 1.8 : 0.6;
@@ -1752,11 +1757,7 @@ export class Battle {
                 : e.air
                   ? 2.3
                   : 0.8;
-      const fromHeight = e.card === "lava-hound"
-        ? lavaHound.hound.flyingHeight + lavaHound.hound.projectileStartZ
-        : e.card === "lava-pup"
-          ? lavaHound.pup.flyingHeight + lavaHound.pup.projectileStartZ
-          : defaultFromHeight;
+      const fromHeight = entityProjectileStartHeight(e) ?? defaultFromHeight;
       this.projectiles.push({
         id: this.nextId++,
         team: e.team,

@@ -1,0 +1,12 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "input": {
+    "path": "reference/logic/characters.csv",
+    "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+  },
+  "output": {
+    "path": "src/game/flight-heights.json",
+    "sha256": "b3dcc4a7c431b2b760e0e4f70ed709f9967b8270b0740732d60ece4617759bfd"
+  }
+}

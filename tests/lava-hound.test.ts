@@ -52,7 +52,7 @@ describe("archived Lava Hound", () => {
       air: true, hitsAir: true });
     expect(entityVisualHeight({ card: "lava-hound", air: true })).toBe(5);
     expect(entityVisualHeight({ card: "lava-pup", air: true })).toBe(3.5);
-    expect(entityVisualHeight({ card: "minions", air: true })).toBe(2.2);
+    expect(entityVisualHeight({ card: "minions", air: true })).toBe(1.5);
     expect(projectileHitHeight({ card: "lava-hound", air: true, kind: "troop" })).toBe(5.1);
     expect(projectileHitHeight({ card: "lava-pup", air: true, kind: "troop" })).toBe(3.6);
     const models = json("public/assets/animations/manifest.json").files;

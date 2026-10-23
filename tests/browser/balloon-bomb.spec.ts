@@ -147,7 +147,7 @@ for (const perspective of ["blue", "red"] as const)
     const shownBomb = () =>
       page.evaluate(
         (name) =>
-          (window as any).__arena.state.projectileArtwork.find((p: any) =>
+          (window as any).__arena?.state?.projectileArtwork?.find((p: any) =>
             p.sprites.some((s: any) => s.name === name),
           ),
         artName,

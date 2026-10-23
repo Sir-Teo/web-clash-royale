@@ -1,4 +1,5 @@
 import * as T from "three";
+import { entityProjectileStartHeight, projectileHitHeight } from "../game/engine";
 import type { Entity } from "../game/engine";
 import type { EffectLibrary, EffectSprite } from "./effects";
 
@@ -51,10 +52,10 @@ export class NativeInfernoBeams {
       }
       active.add(entity.id);
       actor.target = lock.target;
-      const source = new T.Vector3(entity.x - 9, 2.3, entity.y - 16);
+      const source = new T.Vector3(entity.x - 9, entityProjectileStartHeight(entity) ?? 2.3, entity.y - 16);
       const destination = new T.Vector3(
         target.x - 9,
-        target.air ? 2.3 : target.kind === "tower" ? 1.8 : 0.6,
+        projectileHitHeight(target),
         target.y - 16,
       );
       const projected = destination.clone().sub(source)

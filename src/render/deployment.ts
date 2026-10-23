@@ -1,6 +1,7 @@
 import * as T from "three";
 import { CARD_MAP } from "../game/cards";
 import type { CardId } from "../game/cards";
+import { entityVisualHeight } from "../game/engine";
 import type { Point } from "../game/engine";
 import { deploymentPositions } from "../game/deployment";
 import { troopModel } from "./models";
@@ -90,7 +91,7 @@ export class DeploymentPreview {
     this.units.forEach((unit, i) => {
       unit.object.position.set(
         points[i].x - 9,
-        CARD_MAP[id].air ? 2.2 : 0.2,
+        entityVisualHeight({ card: id, air: !!CARD_MAP[id].air }),
         points[i].y - 16,
       );
       Object.assign(unit.state, points[i]);

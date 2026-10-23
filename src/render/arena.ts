@@ -860,7 +860,9 @@ export class Arena {
     const p = this.screen(
       point.x,
       point.y,
-      CARD_MAP[this.placement!.card].air ? 5 : 3.2,
+      CARD_MAP[this.placement!.card].air
+        ? entityVisualHeight({ card: this.placement!.card, air: true }) + 3.2
+        : 3.2,
     );
     const x = T.MathUtils.clamp(p.x, 92, Math.max(92, this.width - 92));
     const labelHeight = this.placementFeedback.offsetHeight;
@@ -1550,8 +1552,8 @@ export class Arena {
             effect,
             new T.Vector3(
               event.x - 9,
-              event.card && event.card !== "tower" && CARD_MAP[event.card].air
-                ? 2.2
+              event.card && event.card !== "tower"
+                ? entityVisualHeight({ card: event.card, air: !!CARD_MAP[event.card].air })
                 : 0.2,
               event.y - 16,
             ),
