@@ -316,6 +316,7 @@ for (const [id, expected] of Object.entries({
   "baby-dragon": "dragon_hit",
   wizard: "chr_wizard_projectile_hit",
   cannon: "cannon_hit",
+  "royal-giant": "royal_giant_projectile_hit",
 })) {
   const profile = profiles[id];
   const actor =

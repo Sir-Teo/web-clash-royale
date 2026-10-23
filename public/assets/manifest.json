@@ -495,6 +495,12 @@
       "sha256": "4fc948e1cace137e9ef2828ebda5fdafe9b17c02c9ef6f8074770a2c65629c07"
     },
     {
+      "path": "cards/royal-giant.png",
+      "source": "cards/royal-giant.png",
+      "bytes": 131404,
+      "sha256": "e44b5250b97ffd4dd85c33fdc0d89a7d5bf737a667ef26a14851a65abdf08be0"
+    },
+    {
       "path": "cards/skeleton-army.png",
       "source": "cards/skeleton-army.png",
       "bytes": 132165,

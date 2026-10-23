@@ -1105,6 +1105,133 @@
         "row": "Barbarians"
       }
     },
+    "royal-giant": {
+      "source": "RoyalGiant",
+      "attack": {
+        "sources": [
+          "royal_giant_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_royal_giant_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_royal_giant_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [
+          "royal_giant_projectile_fx"
+        ],
+        "components": [
+          {
+            "sound": "sound_royal_giant_projectile_fx",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_royal_giant_projectile_fx",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "royal_giant_projectile_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_royal_giant_projectile_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_royal_giant_projectile_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "royal_giant_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_royal_giant_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_royal_giant_deploy_enemy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "RoyalGiant"
+      }
+    },
     "spear-goblins": {
       "source": "SpearGoblin",
       "attack": {
@@ -5639,6 +5766,205 @@
         "repeat": 0.5,
         "loop": false,
         "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_royal_giant_attack_start": [
+      {
+        "sourceFile": "sfx/royalgiant_fire_03.wav",
+        "file": "royalgiant_fire_03",
+        "volume": [
+          0.95,
+          0.95
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/royalgiant_fire_02.wav",
+        "file": "royalgiant_fire_02",
+        "volume": [
+          0.95,
+          0.95
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/royalgiant_fire_01.wav",
+        "file": "royalgiant_fire_01",
+        "volume": [
+          0.95,
+          0.95
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/royalgiant_fire_04.wav",
+        "file": "royalgiant_fire_04",
+        "volume": [
+          0.95,
+          0.95
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/royalgiant_fire_05.wav",
+        "file": "royalgiant_fire_05",
+        "volume": [
+          0.95,
+          0.95
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_royal_giant_projectile_fx": [
+      {
+        "sourceFile": "",
+        "file": null,
+        "volume": [
+          0,
+          0
+        ],
+        "pitch": [
+          0,
+          0
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 0,
+        "repeat": 0,
+        "loop": false,
+        "priority": 0,
+        "padding": 0
+      }
+    ],
+    "sound_royal_giant_projectile_hit": [
+      {
+        "sourceFile": "sfx/royal_giant_projectile_hit_01.wav",
+        "file": "royal_giant_projectile_hit_01",
+        "volume": [
+          0.3,
+          0.4
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0.2,
+        "loop": false,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_royal_giant_deploy": [
+      {
+        "sourceFile": "sfx/royal_giant_deploy_01.wav",
+        "file": "royal_giant_deploy_01",
+        "volume": [
+          1,
+          1
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_royal_giant_deploy_enemy": [
+      {
+        "sourceFile": "",
+        "file": null,
+        "volume": [
+          0,
+          0
+        ],
+        "pitch": [
+          0,
+          0
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 0,
+        "repeat": 0,
+        "loop": false,
+        "priority": 0,
         "padding": 0
       }
     ],

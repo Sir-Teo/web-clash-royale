@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "7086019785354c90de11615e690738db0ee1f943ecdada1ac79abaccb78cdd21"
+      "sha256": "e1c79abb2244236b77d9c9754ee7af6f26071cd510fa64b69db61a05abdb6f1a"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "ca5333b3c3a94850aebcb6b946a7b23ca8b4f31f8405a0f01cc5e6313336658e"
+      "sha256": "7dad2c550c8c80c7fa5a36548bedcba125180076bb2c332d07820a37d90ec808"
     }
   ],
   "ignoredEnemyVersions": [
@@ -622,10 +622,52 @@
       "sha256": "5cc4fdf0a1841b25b9dffd390ef6a01bbcc946c637cdaf20ace06b3f868d7c5e"
     },
     {
+      "path": "public/assets/audio/royal_giant_deploy_01.ogg",
+      "source": "sfx/royal_giant_deploy_01.ogg",
+      "bytes": 9525,
+      "sha256": "ccfbeb03457e50f172de3602323743871278fbdc8a0b6e4104fe510bf373d05c"
+    },
+    {
+      "path": "public/assets/audio/royal_giant_projectile_hit_01.ogg",
+      "source": "sfx/royal_giant_projectile_hit_01.ogg",
+      "bytes": 6065,
+      "sha256": "3ab88a9e77ab1ed6af54b0d26e764d8e543db9d791501b5cc0c4105e5626df3e"
+    },
+    {
       "path": "public/assets/audio/royale_tornado_01.ogg",
       "source": "sfx/royale_tornado_01.ogg",
       "bytes": 18757,
       "sha256": "b1e1195d9990ed3587dcef87b1daa4f3febf1079dbcf599803d85c392c51ae1d"
+    },
+    {
+      "path": "public/assets/audio/royalgiant_fire_01.ogg",
+      "source": "sfx/royalgiant_fire_01.ogg",
+      "bytes": 7144,
+      "sha256": "2c60e2bff7064d0fa3fa2ed85708e94306ed33bc7ddde800a83a02fd8490fd31"
+    },
+    {
+      "path": "public/assets/audio/royalgiant_fire_02.ogg",
+      "source": "sfx/royalgiant_fire_02.ogg",
+      "bytes": 7451,
+      "sha256": "df742846a7f6951631630fef16bfbf7a9f23220cf1834e2f9d6452ea55e2d403"
+    },
+    {
+      "path": "public/assets/audio/royalgiant_fire_03.ogg",
+      "source": "sfx/royalgiant_fire_03.ogg",
+      "bytes": 6541,
+      "sha256": "afa6891493f2df2104dc1a0251765db10c460080d0da3943e18ae134b53adf11"
+    },
+    {
+      "path": "public/assets/audio/royalgiant_fire_04.ogg",
+      "source": "sfx/royalgiant_fire_04.ogg",
+      "bytes": 7465,
+      "sha256": "7d17a17ba351e067426faab9f46d15a470e7fa35431618f957a02c604f0da675"
+    },
+    {
+      "path": "public/assets/audio/royalgiant_fire_05.ogg",
+      "source": "sfx/royalgiant_fire_05.ogg",
+      "bytes": 7261,
+      "sha256": "5c4ad5a2b66b638027d26beef26b115733b8afe46127071b52b23161360f5aef"
     },
     {
       "path": "public/assets/audio/skeleton_atk_03.ogg",
@@ -870,6 +912,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "a972ac74cf4f53741a2f068857c43464182771e868eec4b0dde0a7ce2b62f279"
+    "sha256": "8ea37a129e7830305c36adea6f7c2f4db89659df810ef708830053fb40a28157"
   }
 }

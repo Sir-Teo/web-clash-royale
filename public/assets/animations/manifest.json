@@ -38,6 +38,23 @@
       "uniqueFrames": 342
     },
     {
+      "id": "royal-giant",
+      "source": "chr_royal_giant",
+      "metadataSha256": "a35000fedc4954ea95e34ce00286c9c591d929d753070b52bce497545502edaf",
+      "dataSha256": "be38eb6b608b2d49f2eed21f4bdc7d8e6a9fe89da33661129809b316d918b3ad",
+      "textures": [
+        {
+          "file": "royal-giant-0.webp",
+          "sha256": "03101276c602ceda117b9f24ec8a0037411bff9a883e8a81b078267a56d7d2d5",
+          "originalSha256": "252446a18961f99c936f6b48cdacfe871df43e32fc0c8a0dcb6d2ce82bf2d584"
+        }
+      ],
+      "shapes": 477,
+      "clips": 54,
+      "frames": 2916,
+      "uniqueFrames": 1244
+    },
+    {
       "id": "archers",
       "source": "chr_archer",
       "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",

@@ -77,6 +77,18 @@
     "ignoresKnockback": false,
     "projectile": null
   },
+  "royal-giant": {
+    "source": "RoyalGiant",
+    "windup": 0.7,
+    "sight": 7.5,
+    "ignoresKnockback": true,
+    "projectile": {
+      "source": "RoyalGiantProjectile",
+      "speed": 16.666666666666668,
+      "homing": true,
+      "gravity": 0
+    }
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

@@ -267,6 +267,7 @@ const portraitNames = {
   "three-musketeers": "ThreeMusketeers",
   "goblin-gang": "GoblinGang",
   barbarians: "Barbarians",
+  "royal-giant": "RoyalGiant",
 };
 const sheets = [];
 for (const [name, cache, expected] of [

@@ -779,6 +779,69 @@
         }
       ]
     },
+    "royal-giant": {
+      "source": "royal_giant_die",
+      "components": [
+        {
+          "emitter": "giant_death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "giant_death_puff1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "giant_death_puff1_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "giant_death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "giant_death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "giant_death_puff1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "giant_death_puff1_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "giant_death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -3315,6 +3378,41 @@
         }
       ]
     },
+    "hit:royal-giant": {
+      "source": "royal_giant_projectile_hit",
+      "components": [
+        {
+          "emitter": "cannon_hit_rock_emiter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "cannon_hit_smokePuff",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "cannon_hit_rock_emiter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "cannon_hit_smokePuff",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
     "freeze": {
       "source": "Spell_freeze_ground",
       "components": [
@@ -4230,6 +4328,55 @@
           "scale": 0.6,
           "layer": "Object",
           "ground": false
+        }
+      ]
+    },
+    "royal-giant": {
+      "source": "royal_giant_deploy",
+      "components": [
+        {
+          "emitter": "giant_deploy_dustPuff",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "giant_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "giant_deploy_dustPuff_shadow",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "giant_deploy_dustPuff",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "giant_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "giant_deploy_dustPuff_shadow",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
         }
       ]
     },

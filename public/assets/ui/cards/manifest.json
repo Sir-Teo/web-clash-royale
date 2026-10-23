@@ -327,9 +327,14 @@
       "sha256": "2ea87c9a747fa34db38009fc4443fa7687b04c4c4056857a1eb32fc69b32a784"
     },
     {
+      "file": "portrait-royal-giant.webp",
+      "bytes": 41662,
+      "sha256": "433cd4762b6de4533c1f44dafca45c14387c14da80e758ab2d3690dcce75cac9"
+    },
+    {
       "file": "cards.json",
-      "bytes": 95930,
-      "sha256": "ca5333b3c3a94850aebcb6b946a7b23ca8b4f31f8405a0f01cc5e6313336658e"
+      "bytes": 96266,
+      "sha256": "7dad2c550c8c80c7fa5a36548bedcba125180076bb2c332d07820a37d90ec808"
     }
   ]
 }
