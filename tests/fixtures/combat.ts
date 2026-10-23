@@ -303,6 +303,12 @@ function setup() {
         target.active = false;
         target.hp = target.maxHp = 10000;
       }
+    if (attacker === "ice-spirit")
+      for (const target of unit("minions", "red", 9.8, 18)) {
+        target.active = false;
+        target.speed = target.damage = 0;
+        target.hp = target.maxHp = 10000;
+      }
   } else if (scenario === "footsteps") {
     for (const [card, x] of [
       ["knight", 4],
@@ -600,6 +606,22 @@ function render(now: number) {
       enemies: battle.entities.filter((e) => e.team === "red" && ["knight", "minions"].includes(e.card))
         .map((e) => ({ card: e.card, x: e.x, y: e.y, hp: e.hp })),
       visuals: arena.projectileState.filter((shot) => shot.sprites.some((sprite) => sprite.name === "bowler_projectile")),
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.iceSpirit =
+    JSON.stringify({
+      alive: battle.entities.some((e) =>
+        e.team === "blue" && e.card === "ice-spirit" && e.hp > 0),
+      shots: battle.projectiles.filter((p) => p.style === "ice-spirit")
+        .map((p) => ({ id: p.id, x: p.flight?.x, y: p.flight?.y })),
+      hits: battle.events.filter((e) =>
+        e.type === "hit" && e.card === "ice-spirit").length,
+      targets: battle.entities.filter((e) =>
+        e.team === "red" && ["giant", "minions"].includes(e.card))
+        .map((e) => ({ card: e.card, hp: e.hp, stun: e.stun, air: e.air })),
+      cold: arena.coldFilterState,
+      visuals: arena.projectileState.filter((p) =>
+        p.sprites.some((sprite) => sprite.name === "projectile_icespirit")),
+      particles: arena.particleCount,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.battleRam =
     JSON.stringify({
