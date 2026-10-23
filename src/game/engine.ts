@@ -19,6 +19,7 @@ import rocket from "./rocket-data.json" with { type: "json" };
 import lightning from "./lightning-data.json" with { type: "json" };
 import log from "./log-data.json" with { type: "json" };
 import tornado from "./tornado-data.json" with { type: "json" };
+import goblinBarrel from "./goblin-barrel-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -369,6 +370,38 @@ export class Battle {
     this.emit(c.kind === "spell" ? "spell" : "deploy", team, x, y, id);
     this.emitAudio("cast", team, id);
     if (c.kind === "spell") {
+      if (id === "goblin-barrel") {
+        const origin = { x: 9, y: team === "blue" ? 30 : 2 };
+        const duration = Math.max(
+          STEP,
+          dist(origin, { x, y }) / goblinBarrel.speed,
+        );
+        this.projectiles.push({
+          id: this.nextId++,
+          team,
+          x: origin.x,
+          y: origin.y,
+          tx: x,
+          ty: y,
+          target: null,
+          damage: 0,
+          remaining: duration,
+          duration,
+          splash: 0,
+          air: false,
+          style: id,
+          stun: 0,
+          source: 0,
+          flight: { ...origin },
+          speed: goblinBarrel.speed,
+          elapsed: 0,
+          fromHeight: 2.4,
+          toHeight: 0.25,
+          arc: 6,
+        });
+        this.audioProjectiles.set(this.projectiles.at(-1)!.id, id);
+        return { ok: true, reason: "" };
+      }
       if (id === "log") {
         const ty = y + (team === "blue" ? -1 : 1) * log.launchMinimumDistance;
         const duration = log.launchMinimumDistance / log.launchSpeed;
@@ -1358,6 +1391,26 @@ export class Battle {
         if (p.remaining <= 1e-8) {
           this.emit("hit", p.team, p.tx, p.ty, "log", 0, { effect: "log-die" });
           this.emitAudio("impact-special", p.team, "log");
+          p.remaining = 0;
+        }
+        continue;
+      }
+      if (p.style === "goblin-barrel") {
+        if (p.remaining <= 1e-8) {
+          for (let i = 0; i < goblinBarrel.spawnCount; i++) {
+            const angle =
+              -Math.PI / 2 + (i * Math.PI * 2) / goblinBarrel.spawnCount;
+            const spread = goblinBarrel.landingRadius / 3;
+            this.spawn(
+              goblinBarrel.spawnCard as CardId,
+              p.team,
+              clamp(p.tx + Math.cos(angle) * spread, 0.6, 17.4),
+              clamp(p.ty + Math.sin(angle) * spread, 0.8, 31.2),
+            );
+            this.entities.at(-1)!.deploy = goblinBarrel.spawnDeployTime;
+          }
+          this.emit("hit", p.team, p.tx, p.ty, "goblin-barrel", 0);
+          this.projectileAudio(p);
           p.remaining = 0;
         }
         continue;

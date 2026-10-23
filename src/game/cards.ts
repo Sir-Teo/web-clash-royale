@@ -5,6 +5,7 @@ import rocket from "./rocket-data.json" with { type: "json" };
 import lightning from "./lightning-data.json" with { type: "json" };
 import log from "./log-data.json" with { type: "json" };
 import tornado from "./tornado-data.json" with { type: "json" };
+import goblinBarrel from "./goblin-barrel-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -37,7 +38,8 @@ export type CardId =
   | "rocket"
   | "lightning"
   | "log"
-  | "tornado";
+  | "tornado"
+  | "goblin-barrel";
 export interface Card {
   id: CardId;
   name: string;
@@ -222,6 +224,18 @@ export const CARDS: Card[] = [
       radius: tornado.radius,
       hitsAir: tornado.hitsAir,
     },
+  ),
+  troop(
+    "goblin-barrel",
+    "Goblin Barrel",
+    goblinBarrel.cost,
+    0,
+    0,
+    0,
+    0,
+    1,
+    "Flings a barrel across the arena, releasing three Goblins where it lands.",
+    { kind: "spell", rarity: "Epic", radius: goblinBarrel.landingRadius },
   ),
   troop(
     "arrows",

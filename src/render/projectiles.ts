@@ -36,6 +36,7 @@ export function projectileArt(p: Projectile) {
   if (p.style === "musketeer") return "projectile_cannonball_small";
   if (p.style === "fireball") return "fireball_projectile1";
   if (p.style === "rocket") return "projectile_rocket";
+  if (p.style === "goblin-barrel") return "spell_goblin_barrel_projectile";
   if (p.style === "log-launch") return "log_projectile";
   if (p.style === "log")
     return p.team === "blue"
@@ -67,11 +68,17 @@ export function makeProjectile(
       object.add(sprite.mesh);
       sprites.push(sprite);
     }
-  if (p.style === "rocket" || p.style === "log-launch") {
+  if (
+    p.style === "rocket" ||
+    p.style === "log-launch" ||
+    p.style === "goblin-barrel"
+  ) {
     const shadow = library.make(
       p.style === "rocket"
         ? "projectile_shadow_rocket"
-        : "log_projectile_shadow",
+        : p.style === "goblin-barrel"
+          ? "Barrel_shadow"
+          : "log_projectile_shadow",
     );
     if (shadow) {
       object.add(shadow.mesh);
@@ -118,7 +125,8 @@ export function updateProjectile(
   for (const sprite of v.sprites) {
     if (
       sprite.name === "projectile_shadow_rocket" ||
-      sprite.name === "log_projectile_shadow"
+      sprite.name === "log_projectile_shadow" ||
+      sprite.name === "Barrel_shadow"
     ) {
       sprite.mesh.position.set(0, -v.object.position.y + 0.045, 0);
       sprite.mesh.rotation.set(-Math.PI / 2, 0, 0);
@@ -146,6 +154,10 @@ export function updateProjectile(
       library.frame(sprite, 0);
       sprite.mesh.rotateZ(angle - Math.PI / 2);
       sprite.mesh.scale.setScalar(1.25);
+    } else if (sprite.name === "spell_goblin_barrel_projectile") {
+      library.animate(sprite, p.elapsed ?? progress * p.duration, true);
+      sprite.mesh.rotateZ(angle - Math.PI / 2);
+      sprite.mesh.scale.setScalar(1.35);
     } else if (sprite.name.startsWith("log_roll_projectile")) {
       library.animate(sprite, p.elapsed ?? 0, true);
       sprite.mesh.scale.setScalar(1.4);
