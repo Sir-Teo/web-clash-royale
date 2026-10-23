@@ -43,6 +43,7 @@ import { NativeChargeMarkers } from "./charge-marker";
 import { NativeChargeFilter } from "./charge-filter";
 import { NativeDeployFilter } from "./deploy-filter";
 import { NativeBatWiggle } from "./bat-wiggle";
+import { NativeBanditFilter } from "./bandit-filter";
 import { NativeColdFilter, NativeColdStructures } from "./cold-filter";
 import { NativeInfernoBeams } from "./inferno-beam";
 import { NativeMinerTrails } from "./miner-trails";
@@ -100,6 +101,7 @@ export class Arena {
   private chargeFilter = new NativeChargeFilter(this.spriteFilters);
   private deployFilter = new NativeDeployFilter(this.spriteFilters);
   private batWiggle = new NativeBatWiggle(this.spriteFilters);
+  private banditFilter = new NativeBanditFilter(this.spriteFilters);
   private cloneFilter = new NativeCloneFilter(this.spriteFilters);
   private coldFilter = new NativeColdFilter(this.spriteFilters);
   private poisonFilter = new NativePoisonFilter(this.spriteFilters);
@@ -516,6 +518,7 @@ export class Arena {
     this.chargeFilter.clear();
     this.deployFilter.clear();
     this.batWiggle.clear();
+    this.banditFilter.clear();
     this.cloneFilter.clear();
     this.coldFilter.clear();
     this.poisonFilter.clear();
@@ -657,6 +660,9 @@ export class Arena {
   }
   get batWiggleState() {
     return this.batWiggle.state;
+  }
+  get banditFilterState() {
+    return this.banditFilter.state;
   }
   get coldFilterState() {
     return this.coldFilter.state;
@@ -1647,6 +1653,7 @@ export class Arena {
     this.chargeMarkers.update(b.entities, this.destruction.time, this.width);
     this.deployFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
     this.batWiggle.update(b.entities, (id) => this.units.get(id)?.sprite);
+    this.banditFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
     this.cloneFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
     this.spellAreas.update(b.areas);
     this.chargeFilter.update(
@@ -1877,6 +1884,7 @@ export class Arena {
     this.chargeFilter.clear();
     this.deployFilter.clear();
     this.batWiggle.clear();
+    this.banditFilter.clear();
     this.cloneFilter.clear();
     this.coldFilter.clear();
     this.poisonFilter.clear();

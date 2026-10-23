@@ -17,6 +17,7 @@ test("Bandit dashes with native blue art, effects and heavy landing hit", async 
   expect((await data()).unit.dash).toBeTruthy();
   expect((await data()).start).toBe(1);
   expect((await data()).cues).toContain("dash-travel");
+  expect((await data()).filter).toMatchObject([{ applied: true }]);
   await page.screenshot({ path: info.outputPath("bandit-dash.png"), fullPage: true });
   const second = await time();
   await page.locator("#second").click();
@@ -25,6 +26,7 @@ test("Bandit dashes with native blue art, effects and heavy landing hit", async 
   expect((await data()).target.hp).toBe(10000 - Math.round(320 * 1.1 ** 2));
   expect((await data()).end).toBe(1);
   expect((await data()).special).toBe(1);
+  expect((await data()).filter).toHaveLength(0);
   await page.screenshot({ path: info.outputPath("bandit-landing.png"), fullPage: true });
   expect(errors).toEqual([]);
 });
