@@ -482,6 +482,14 @@ export class Battle {
       this.audioEvents.splice(0, this.audioEvents.length - 256);
     return event.id;
   }
+  private emitImpactAudio(e: Entity, damage: number) {
+    this.emitAudio(
+      e.card === "prince" && damage > e.damage ? "impact-special" : "impact",
+      e.team,
+      audioProfile(e),
+      e.id,
+    );
+  }
   private beginAudio(e: Entity) {
     this.audioAttacks.set(
       e.id,
@@ -696,11 +704,11 @@ export class Battle {
               if (canAttack(v) && dist(v, e) <= card.splash + v.radius)
                 this.hurt(v, damage);
             this.emit("hit", e.team, e.x, e.y, e.card);
-            this.emitAudio("impact", e.team, audioProfile(e), e.id);
+            this.emitImpactAudio(e, damage);
           } else {
             this.hurt(target, damage);
             this.emit("hit", e.team, target.x, target.y, e.card, damage);
-            this.emitAudio("impact", e.team, audioProfile(e), e.id);
+            this.emitImpactAudio(e, damage);
           }
         }
       } else if (e.kind === "troop") this.moveToward(e, target);
@@ -972,11 +980,11 @@ export class Battle {
         if (this.validTarget(e, v) && dist(v, e) <= card.splash + v.radius)
           this.hurt(v, damage);
       this.emit("hit", e.team, e.x, e.y, e.card, damage);
-      this.emitAudio("impact", e.team, audioProfile(e), e.id);
+      this.emitImpactAudio(e, damage);
     } else {
       this.hurt(target, damage);
       this.emit("hit", e.team, target.x, target.y, e.card, damage);
-      this.emitAudio("impact", e.team, audioProfile(e), e.id);
+      this.emitImpactAudio(e, damage);
     }
   }
   private updateProjectiles() {

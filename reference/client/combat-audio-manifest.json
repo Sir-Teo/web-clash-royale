@@ -472,6 +472,12 @@
       "sha256": "620524d0afac41cbf89819bea9051ca658129fcbebd8161c63e0871cb8b2e362"
     },
     {
+      "path": "public/assets/audio/prince_charge_hit_01.ogg",
+      "source": "sfx/prince_charge_hit_01.ogg",
+      "bytes": 9967,
+      "sha256": "bec8b529f054c811284707a5013294379dd48b8a781ef6a57e4100439595992f"
+    },
+    {
       "path": "public/assets/audio/prince_deploy_01.ogg",
       "source": "sfx/prince_deploy_01.ogg",
       "bytes": 9891,
@@ -732,6 +738,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "26830f85bca99bde39a394c250cca1a0c1fa69f6f9da91101b846d7127d7f3a3"
+    "sha256": "599d02d6799281301e421bea826cc4bf68d0b2564a9a4df70cd42a702b87d80a"
   }
 }

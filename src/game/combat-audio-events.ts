@@ -6,6 +6,7 @@ export type CombatAudioPhase =
   | "attack"
   | "launch"
   | "impact"
+  | "impact-special"
   | "cast"
   | "cancel"
   | "spawn"
@@ -44,4 +45,5 @@ export const isLifecycleAudio = (event: CombatAudioEvent) =>
   event.phase === "hide" ||
   event.phase === "death-impact" ||
   event.phase === "death-spawn" ||
+  event.phase === "impact-special" ||
   event.phase === "death";

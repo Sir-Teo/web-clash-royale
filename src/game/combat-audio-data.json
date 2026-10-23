@@ -46,6 +46,11 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [
           "CharacterDeploy"
@@ -176,6 +181,11 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [
           "CharacterDeploy"
@@ -285,6 +295,11 @@
             "delay": 0
           }
         ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "cast": {
         "sources": [
@@ -409,6 +424,11 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [
           "CharacterDeploy"
@@ -527,6 +547,11 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [
           "CharacterDeploy"
@@ -644,6 +669,11 @@
             "delay": 0
           }
         ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "cast": {
         "sources": [
@@ -767,6 +797,11 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [
           "CharacterDeploy"
@@ -877,6 +912,11 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [
           "CharacterDeploy"
@@ -986,6 +1026,11 @@
             "delay": 0
           }
         ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "cast": {
         "sources": [
@@ -1109,6 +1154,11 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [
           "CharacterDeploy"
@@ -1227,6 +1277,11 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [
           "CharacterDeploy"
@@ -1344,6 +1399,11 @@
             "delay": 0
           }
         ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "cast": {
         "sources": [
@@ -1475,6 +1535,11 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [
           "CharacterDeploy"
@@ -1605,6 +1670,11 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [
           "CharacterDeploy"
@@ -1723,6 +1793,11 @@
             "delay": 0
           }
         ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "cast": {
         "sources": [
@@ -1863,6 +1938,11 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [
           "CharacterDeploy"
@@ -1993,6 +2073,23 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [
+          "prince_charge_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_prince_charge_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_prince_charge_hit",
+            "delay": 0
+          }
+        ]
+      },
       "cast": {
         "sources": [
           "CharacterDeploy"
@@ -2111,6 +2208,11 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [
           "CharacterDeploy"
@@ -2228,6 +2330,11 @@
             "delay": 0
           }
         ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "cast": {
         "sources": [
@@ -2353,6 +2460,11 @@
         "components": [],
         "enemyComponents": []
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [
           "sound:SpellCasting"
@@ -2462,6 +2574,11 @@
             "delay": 0
           }
         ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "cast": {
         "sources": [
@@ -2598,6 +2715,11 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [],
         "components": [],
@@ -2680,6 +2802,11 @@
           }
         ]
       },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cast": {
         "sources": [],
         "components": [],
@@ -2749,6 +2876,11 @@
             "delay": 0
           }
         ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "cast": {
         "sources": [
@@ -2835,6 +2967,11 @@
             "delay": 0
           }
         ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "cast": {
         "sources": [
@@ -2930,6 +3067,11 @@
             "delay": 0.15
           }
         ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "cast": {
         "sources": [
@@ -5132,6 +5274,28 @@
           0
         ],
         "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_prince_charge_hit": [
+      {
+        "sourceFile": "sfx/prince_charge_hit_01.wav",
+        "file": "prince_charge_hit_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
         "repeat": 0,
         "priority": 1,
         "padding": 0
