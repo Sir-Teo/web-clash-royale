@@ -39,6 +39,7 @@
     "assets:charge-filter": "node scripts/import-charge-filter.mjs",
     "assets:deploy-filter": "node scripts/import-deploy-filter.mjs",
     "assets:freeze": "node scripts/import-freeze.mjs",
+    "assets:poison": "node scripts/import-poison.mjs",
     "assets:cold-filter": "node scripts/import-cold-filter.mjs"
   },
   "dependencies": {

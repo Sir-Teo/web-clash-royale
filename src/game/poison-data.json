@@ -1,0 +1,19 @@
+{
+  "card": "Poison",
+  "area": "Poison",
+  "buff": "Poison",
+  "cost": 4,
+  "rarity": "Epic",
+  "radius": 3.5,
+  "duration": 8,
+  "areaHitInterval": 0.25,
+  "buffDuration": 1,
+  "damagePerSecond": 57,
+  "damageInterval": 1,
+  "crownTowerDamageFraction": 0.4,
+  "targets": "enemy",
+  "hitsGround": true,
+  "hitsAir": true,
+  "affectsBuildings": true,
+  "affectsHidden": false
+}
