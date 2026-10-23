@@ -21,6 +21,7 @@ export function projectileArt(p: Projectile) {
     return "projectile_cannonball_large";
   if (p.style === "musketeer") return "projectile_cannonball_small";
   if (p.style === "fireball") return "fireball_projectile1";
+  if (p.style === "rocket") return "projectile_rocket";
   if (p.style === "baby-dragon") return "dragon_projectile";
   if (p.style === "wizard") return "fireball_small";
   if (p.style === "witch" || p.style === "minions") return "Tower_projectile1";
@@ -47,6 +48,13 @@ export function makeProjectile(
       object.add(sprite.mesh);
       sprites.push(sprite);
     }
+  if (p.style === "rocket") {
+    const shadow = library.make("projectile_shadow_rocket");
+    if (shadow) {
+      object.add(shadow.mesh);
+      sprites.push(shadow);
+    }
+  }
   if (!sprites.length && !["zap", "tesla"].includes(p.style))
     sphere(object, 0, 0, 0, p.style === "fireball" ? 0.4 : 0.14, 0xffc561);
   return { object, sprites };
@@ -85,6 +93,12 @@ export function updateProjectile(
   tangent.applyQuaternion(camera.quaternion.clone().invert());
   const angle = Math.atan2(tangent.y, tangent.x);
   for (const sprite of v.sprites) {
+    if (sprite.name === "projectile_shadow_rocket") {
+      sprite.mesh.position.set(0, -v.object.position.y + 0.045, 0);
+      sprite.mesh.rotation.set(-Math.PI / 2, 0, 0);
+      sprite.mesh.scale.setScalar(1.25);
+      continue;
+    }
     sprite.mesh.quaternion.copy(camera.quaternion);
     if (sprite.name.includes("arrow_basic")) {
       library.frame(sprite, 7);
@@ -96,6 +110,12 @@ export function updateProjectile(
       library.frame(sprite, 7);
       sprite.mesh.rotateZ(angle);
       sprite.mesh.scale.setScalar(1.4);
+    } else if (sprite.name === "projectile_rocket") {
+      // The source's 60 frames turn the missile in 3D. Its first frame gives
+      // the clearest silhouette; align that nose with the projected flight.
+      library.frame(sprite, 0);
+      sprite.mesh.rotateZ(angle - Math.PI / 2);
+      sprite.mesh.scale.setScalar(1.25);
     } else if (["fireball_small", "Tower_projectile1"].includes(sprite.name)) {
       library.animate(sprite, p.elapsed ?? progress * p.duration, true);
       sprite.mesh.rotateZ(angle);

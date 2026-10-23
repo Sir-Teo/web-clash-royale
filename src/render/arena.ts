@@ -1070,13 +1070,13 @@ export class Arena {
         dt > 0 &&
         !b.winner &&
         shot.object.visible &&
-        ["fireball", "wizard", "baby-dragon"].includes(p.style) &&
+        ["fireball", "rocket", "wizard", "baby-dragon"].includes(p.style) &&
         Math.random() < 0.6
       )
         this.particle(
           shot.object.position,
           0xffab3d,
-          p.style === "fireball" ? 0.12 : 0.06,
+          p.style === "fireball" || p.style === "rocket" ? 0.12 : 0.06,
           0.3,
           0.4,
         );

@@ -1,6 +1,7 @@
 import freeze from "./freeze-data.json" with { type: "json" };
 import poison from "./poison-data.json" with { type: "json" };
 import rage from "./rage-data.json" with { type: "json" };
+import rocket from "./rocket-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -29,7 +30,8 @@ export type CardId =
   | "zap"
   | "freeze"
   | "poison"
-  | "rage";
+  | "rage"
+  | "rocket";
 export interface Card {
   id: CardId;
   name: string;
@@ -148,6 +150,14 @@ export const CARDS: Card[] = [
     1,
     "Incinerates a small area, dealing damage to troops and buildings. Reduced Crown Tower damage.",
     { kind: "spell", rarity: "Rare", radius: 2.5, hitsAir: true },
+  ),
+  troop(
+    "rocket", "Rocket", rocket.cost, 0,
+    // Normalize archived spell damage through the same level-11 Fireball
+    // ratio used by this curated roster (source 325 -> playable 689).
+    Math.round(rocket.sourceDamage * 689 / 325), 0, 0, 1,
+    "A powerful, slow projectile that blasts a tight area and knocks enemies back.",
+    { kind: "spell", rarity: "Rare", radius: rocket.radius, hitsAir: rocket.hitsAir },
   ),
   troop(
     "arrows",

@@ -15,6 +15,7 @@ import { audioProfile } from "./combat-audio-events";
 import freeze from "./freeze-data.json" with { type: "json" };
 import poison from "./poison-data.json" with { type: "json" };
 import rage from "./rage-data.json" with { type: "json" };
+import rocket from "./rocket-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -86,6 +87,7 @@ export interface Projectile extends Point {
   toHeight?: number;
   arc?: number;
   knockback?: number;
+  towerDamageFraction?: number;
 }
 export interface AreaEffect extends Point {
   id: number;
@@ -371,7 +373,9 @@ export class Battle {
       }
       const origin = { x: 9, y: team === "blue" ? 30 : 2 };
       const modern = this.rulesVersion >= 2;
-      const speed = id === "fireball" ? FIREBALL_SPEED : ARROWS_SPEED;
+      const speed = id === "rocket"
+        ? rocket.speed
+        : id === "fireball" ? FIREBALL_SPEED : ARROWS_SPEED;
       const duration =
         id === "zap"
           ? 0.15
@@ -408,7 +412,12 @@ export class Battle {
                 fromHeight: id === "zap" ? 7 : 2.4,
                 toHeight: 0.2,
                 arc: id === "arrows" ? 9 : id === "zap" ? 0 : 6,
-                knockback: id === "fireball" ? FIREBALL_KNOCKBACK : 0,
+                knockback: id === "rocket"
+                  ? rocket.knockback
+                  : id === "fireball" ? FIREBALL_KNOCKBACK : 0,
+                ...(id === "rocket"
+                  ? { towerDamageFraction: rocket.crownTowerDamageFraction }
+                  : {}),
               }
             : {}),
         });
@@ -1127,7 +1136,9 @@ export class Battle {
             continue;
           this.hurt(
             e,
-            p.damage * (p.source === 0 && e.kind === "tower" ? 0.3 : 1),
+            p.damage * (p.source === 0 && e.kind === "tower"
+              ? p.towerDamageFraction ?? 0.3
+              : 1),
           );
           if (e.hp <= 0) continue;
           if (p.stun) {
