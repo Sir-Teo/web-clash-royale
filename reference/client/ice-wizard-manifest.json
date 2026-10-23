@@ -1,0 +1,31 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_ice_wizard",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "reference/logic/character_buffs.csv",
+      "sha256": "fbcc636e6c8025ca0f36aab524b868806b2a6a8606186b622410a5f46fba9bbe"
+    },
+    {
+      "path": "reference/sc/chr_ice_wizard.bin",
+      "sha256": "7b1e93cd364b92477fc87f404920569accaac781d48e6a5d8ccef25faccfccd6"
+    }
+  ],
+  "output": {
+    "path": "src/game/ice-wizard-data.json",
+    "sha256": "1e93690a18032f81ea560d7088beca3ae2456dcf32c53c143038e5ab861537ac"
+  }
+}

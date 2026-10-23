@@ -56,6 +56,7 @@
     "assets:royal-giant": "node scripts/import-royal-giant.mjs",
     "assets:mega-minion": "node scripts/import-mega-minion.mjs",
     "assets:dart-goblin": "node scripts/import-dart-goblin.mjs",
+    "assets:ice-wizard": "node scripts/import-ice-wizard.mjs",
     "assets:clone-filter": "node scripts/import-clone-filter.mjs",
     "assets:poison-filter": "node scripts/import-poison-filter.mjs",
     "assets:cold-filter": "node scripts/import-cold-filter.mjs"
