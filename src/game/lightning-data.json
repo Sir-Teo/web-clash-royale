@@ -1,0 +1,22 @@
+{
+  "card": "Lightning",
+  "area": "Lightning",
+  "projectile": "LighningSpell",
+  "cost": 6,
+  "rarity": "Epic",
+  "radius": 3.5,
+  "duration": 1.5,
+  "strikeInterval": 0.46,
+  "targetPriority": "highestHp",
+  "sourceDamage": 650,
+  "projectileSpeed": 8.333333333333334,
+  "projectileStartHeight": 10,
+  "crownTowerDamageFraction": 0.4,
+  "stunDuration": 0.5,
+  "hitsGround": true,
+  "hitsAir": true,
+  "targets": "enemy",
+  "visual": {
+    "hit": "Spell_lightning_effect"
+  }
+}
