@@ -44,7 +44,7 @@
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "56d7fdd6697bba3cfc7f1dc80bc73e52b69e6db0e96d1a726c0068010b7eccda"
+      "sha256": "c306cbd9b263dcd197082c90363f4565bb13f21c908365a1acfba52ebc5de622"
     }
   ],
   "ignoredEnemyVersions": [
@@ -164,6 +164,12 @@
       "source": "sfx/clash_archer_deploy_01.ogg",
       "bytes": 6736,
       "sha256": "c9eb08a19d7db65972f866a8594d9ffa451b2f99e005f337766775202766f55c"
+    },
+    {
+      "path": "public/assets/audio/clone_spell_01.ogg",
+      "source": "sfx/clone_spell_01.ogg",
+      "bytes": 9699,
+      "sha256": "e0f210213f0570d9cc283cde9beddace16c4a3085fee01b895eae45894a61c33"
     },
     {
       "path": "public/assets/audio/deploy_balloon_06.ogg",
@@ -816,6 +822,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "c710edc03904167b19da03cbfb1957a2d7fcfc169e6b307a2072b5da144bf0af"
+    "sha256": "dba211b5b4f57d1628d2154c91c5f68c07ad315e95d54a1053bd13944a0ddfac"
   }
 }

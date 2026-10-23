@@ -261,6 +261,7 @@ const portraitNames = {
   tornado: "Tornado",
   "goblin-barrel": "GoblinBarrel",
   graveyard: "Graveyard",
+  clone: "Clone",
 };
 const sheets = [];
 for (const [name, cache, expected] of [

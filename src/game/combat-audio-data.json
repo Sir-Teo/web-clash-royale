@@ -4001,6 +4001,94 @@
         "table": "spells_other",
         "row": "Graveyard"
       }
+    },
+    "clone": {
+      "source": "Clone",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "sound:SpellCasting",
+          "spell_clone_ground"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          },
+          {
+            "sound": "sound_clone_spell",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          },
+          {
+            "sound": "sound_clone_spell",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_other",
+        "row": "Clone"
+      }
     }
   },
   "sounds": {
@@ -7184,6 +7272,29 @@
         "volume": [
           0.7,
           0.7
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_clone_spell": [
+      {
+        "sourceFile": "sfx/clone_spell_01.wav",
+        "file": "clone_spell_01",
+        "volume": [
+          0.8,
+          0.8
         ],
         "pitch": [
           1,

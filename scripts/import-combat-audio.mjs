@@ -183,7 +183,9 @@ for (const [id, { table, row: name }] of Object.entries(cardBindings)) {
     cast: [
       row.CastSound && `sound:${row.CastSound}`,
       row.Effect,
-      id === "tornado" || id === "graveyard" ? area?.ScaledEffect : null,
+      id === "tornado" || id === "graveyard" || id === "clone"
+        ? area?.ScaledEffect
+        : null,
     ],
     spawn: [],
     summon: [id === "graveyard" ? area?.SpawnEffect : null],

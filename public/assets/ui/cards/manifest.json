@@ -297,9 +297,14 @@
       "sha256": "2aa646750d0a102945036b40d48c6d6d2fad55a093354e1086d00cd1bf78b2e0"
     },
     {
+      "file": "portrait-clone.webp",
+      "bytes": 32098,
+      "sha256": "0fc3f802b1708059a7eda17cbe9f675b3e469234e64bd3246715035339fd29d1"
+    },
+    {
       "file": "cards.json",
-      "bytes": 93978,
-      "sha256": "56d7fdd6697bba3cfc7f1dc80bc73e52b69e6db0e96d1a726c0068010b7eccda"
+      "bytes": 94283,
+      "sha256": "c306cbd9b263dcd197082c90363f4565bb13f21c908365a1acfba52ebc5de622"
     }
   ]
 }

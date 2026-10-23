@@ -150,6 +150,11 @@ for (const resource of [
             "Graveyard_ground_area_red",
             "spell_graveyard_radius_blue",
             "spell_graveyard_radius_red",
+            "clone_effect_ground",
+            "spell_clone_radius_blue",
+            "spell_clone_radius_red",
+            "filter_hologram",
+            "filter_hologram_character",
           ]),
         ]
       : resource === "building_mega_bomb"

@@ -2587,6 +2587,27 @@
         }
       ]
     },
+    "clone": {
+      "source": "spell_clone_ground",
+      "components": [
+        {
+          "emitter": "clone_sparkle1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "clone_sparkle1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
     "hit:giant": {
       "source": "giant_hit",
       "components": [
@@ -8182,6 +8203,56 @@
       "clips": [
         "graveyard_ground",
         "graveyard_groundB"
+      ]
+    },
+    "clone_sparkle1": {
+      "count": 10,
+      "emissionLife": [
+        1.8,
+        2
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        0.3,
+        2.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.3333333333333333
+      ],
+      "speed": [
+        0,
+        1.1666666666666667
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        1.6666666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.16666666666666666,
+      "startScale": 0.4,
+      "endScale": 0.15,
+      "fadeIn": 0,
+      "fadeOut": 2,
+      "inertia": 0.8333333333333334,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "Death_blue_sparkle1",
+        "Death_blue_sparkle2",
+        "Death_blue_sparkle3",
+        "Death_blue_sparkle4"
       ]
     },
     "giant_hit_sparks": {

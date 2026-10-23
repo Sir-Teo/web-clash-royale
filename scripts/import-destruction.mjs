@@ -239,6 +239,14 @@ for (const [id, source] of [
     components: composition(source, "blue"),
     enemyComponents: composition(source, "red"),
   };
+const cloneArea = tables.area_effect_objects.Clone;
+if (cloneArea?.ScaledEffect !== "spell_clone_ground")
+  throw new Error("Recheck native Clone area visual binding");
+impacts.clone = {
+  source: cloneArea.ScaledEffect,
+  components: composition(cloneArea.ScaledEffect, "blue"),
+  enemyComponents: composition(cloneArea.ScaledEffect, "red"),
+};
 // These DamageEffect compositions contain authored impact layers at the
 // attack target: Giant's punch dust, Balloon's crater and Tesla's beam sparks.
 for (const [id, expected] of Object.entries({
