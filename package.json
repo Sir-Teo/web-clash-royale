@@ -35,7 +35,8 @@
     "assets:death-audio": "node scripts/import-death-audio.mjs",
     "assets:combat-audio": "node scripts/import-combat-audio.mjs",
     "assets:screen-shake": "node scripts/import-screen-shake.mjs",
-    "assets:charge-marker": "node scripts/import-charge-marker.mjs"
+    "assets:charge-marker": "node scripts/import-charge-marker.mjs",
+    "assets:charge-filter": "node scripts/import-charge-filter.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",
