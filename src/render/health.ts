@@ -29,14 +29,16 @@ export class HealthLibrary {
   private disposed = false;
   async load() {
     try {
-      const response = await fetch("/assets/ui/health/health.json");
+      const response = await fetch(
+        `${import.meta.env.BASE_URL}assets/ui/health/health.json`,
+      );
       if (!response.ok) throw new Error(`Health artwork: ${response.status}`);
       const data: HealthData = await response.json();
       const image = await new Promise<HTMLImageElement>((resolve, reject) => {
         const i = new Image();
         i.onload = () => resolve(i);
         i.onerror = () => reject(new Error("Health atlas unavailable"));
-        i.src = `/assets/ui/health/${data.atlas.file}`;
+        i.src = `${import.meta.env.BASE_URL}assets/ui/health/${data.atlas.file}`;
       });
       await Promise.all([
         document.fonts.load('14px "Supercell Magic"'),
@@ -48,7 +50,7 @@ export class HealthLibrary {
                 i.onload = () => resolve();
                 i.onerror = () =>
                   reject(new Error(`Health crop unavailable: ${p.file}`));
-                i.src = `/assets/ui/health/${p.file}`;
+                i.src = `${import.meta.env.BASE_URL}assets/ui/health/${p.file}`;
               }),
           ),
         ),
@@ -240,7 +242,7 @@ export class HealthLibrary {
       0,
       { level: "11", "hpNumber/txt": String(Math.ceil(e.hp)) },
       {
-        path: "/assets/ui/health",
+        path: `${import.meta.env.BASE_URL}assets/ui/health`,
         viewBox: healthBox(state.name),
         prefix: `health-tower-${++this.serial}`,
       },

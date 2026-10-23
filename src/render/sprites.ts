@@ -183,12 +183,16 @@ export class SpriteLibrary {
     await Promise.all(
       (Object.keys(heights) as SpriteId[]).map(async (id) => {
         try {
-          const response = await fetch(`/assets/animations/${id}.json`);
+          const response = await fetch(
+            `${import.meta.env.BASE_URL}assets/animations/${id}.json`,
+          );
           if (!response.ok) throw new Error(`Missing animation ${id}`);
           const data: SpriteData = await response.json();
           const textures = await Promise.all(
             data.textures.map((t) =>
-              this.loader.loadAsync(`/assets/animations/${t.file}`),
+              this.loader.loadAsync(
+                `${import.meta.env.BASE_URL}assets/animations/${t.file}`,
+              ),
             ),
           );
           for (const texture of textures) {

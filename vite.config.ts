@@ -3,6 +3,7 @@ import { lanOrigins } from "./server/lan";
 import { defineConfig } from "vite";
 import { attachRooms } from "./server/rooms";
 export default defineConfig({
+  base: process.env.VITE_BASE_PATH || "/",
   plugins:
     process.env.VITE_LEGACY_ROOMS === "1"
       ? [

@@ -30,7 +30,9 @@ export class NativeEnding {
   }
   private async load() {
     try {
-      const response = await fetch("/assets/ui/ending/ending.json");
+      const response = await fetch(
+        `${import.meta.env.BASE_URL}assets/ui/ending/ending.json`,
+      );
       if (!response.ok) throw new Error(`Native ending: ${response.status}`);
       const data: NativeData = await response.json();
       await document.fonts.load('59px "Supercell Magic"');
@@ -40,7 +42,7 @@ export class NativeEnding {
           .filter((s) => s.file)
           .map(async (s) => {
             const image = new Image();
-            image.src = `/assets/ui/ending/${s.file}`;
+            image.src = `${import.meta.env.BASE_URL}assets/ui/ending/${s.file}`;
             await image.decode();
           }),
       );
@@ -98,7 +100,7 @@ export class NativeEnding {
         "enemyName/txt": this.result.names.red,
       },
       {
-        path: "/assets/ui/ending",
+        path: `${import.meta.env.BASE_URL}assets/ui/ending`,
         viewBox: "-360 -260 720 520",
         prefix: "ending",
         fit: true,

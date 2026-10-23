@@ -447,6 +447,7 @@ export const PRESETS: { name: string; description: string; deck: CardId[] }[] =
       ],
     },
   ];
-export const cardArt = (id: CardId) => `/assets/cards/${id}.png`;
+export const cardArt = (id: CardId) =>
+  `${import.meta.env.BASE_URL}assets/cards/${id}.png`;
 export const averageCost = (deck: CardId[]) =>
   deck.reduce((n, id) => n + CARD_MAP[id].cost, 0) / deck.length;

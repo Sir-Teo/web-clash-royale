@@ -1,7 +1,11 @@
 import * as T from "three";
 import type { Entity } from "../game/engine";
 import type { AnimatedSprite } from "./sprites";
-import { composeFilterColors, filteredSpriteMaterials, SpriteFilterStack } from "./sprite-filter";
+import {
+  composeFilterColors,
+  filteredSpriteMaterials,
+  SpriteFilterStack,
+} from "./sprite-filter";
 import source from "./cold-filter-data.json";
 import poisonSource from "./poison-filter-data.json";
 import { poisonFilterFrame } from "./poison-filter";
@@ -83,21 +87,25 @@ export class NativeColdStructures {
   private actors = new Map<number, ColdStructure>();
 
   get state() {
-    return [...this.actors.entries()].filter(([, actor]) => actor.cold).map(([id, actor]) => ({
-      id,
-      frame: actor.cold!.frame,
-      parts: actor.parts.length,
-      color: source.colors[actor.cold!.frame],
-    }));
+    return [...this.actors.entries()]
+      .filter(([, actor]) => actor.cold)
+      .map(([id, actor]) => ({
+        id,
+        frame: actor.cold!.frame,
+        parts: actor.parts.length,
+        color: source.colors[actor.cold!.frame],
+      }));
   }
 
   get poisonState() {
-    return [...this.actors.entries()].filter(([, actor]) => actor.poison).map(([id, actor]) => ({
-      id,
-      frame: actor.poison!.frame,
-      parts: actor.parts.length,
-      color: poisonSource.frames[actor.poison!.frame].color,
-    }));
+    return [...this.actors.entries()]
+      .filter(([, actor]) => actor.poison)
+      .map(([id, actor]) => ({
+        id,
+        frame: actor.poison!.frame,
+        parts: actor.parts.length,
+        color: poisonSource.frames[actor.poison!.frame].color,
+      }));
   }
 
   update(
@@ -148,7 +156,9 @@ export class NativeColdStructures {
         actor.poison.frame = poisonFilterFrame(time - actor.poison.start);
       } else actor.poison = undefined;
       const colors = [
-        ...(actor.poison ? [poisonSource.frames[actor.poison.frame].color] : []),
+        ...(actor.poison
+          ? [poisonSource.frames[actor.poison.frame].color]
+          : []),
         ...(actor.cold ? [source.colors[actor.cold.frame]] : []),
       ];
       const color = composeFilterColors(colors);

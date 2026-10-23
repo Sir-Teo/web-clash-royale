@@ -74,7 +74,7 @@ export class NativeChargeMarkers {
           frame,
           {},
           {
-            path: "/assets/ui",
+            path: `${import.meta.env.BASE_URL}assets/ui`,
             viewBox: "-180 -60 360 120",
             prefix: `charge-${id}`,
             font: "Supercell Magic",

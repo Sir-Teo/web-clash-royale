@@ -11,12 +11,18 @@ export class EffectLibrary {
   asset: SpriteAsset | null = null;
   async load() {
     try {
-      const response = await fetch("/assets/effects/effects.json");
+      const response = await fetch(
+        `${import.meta.env.BASE_URL}assets/effects/effects.json`,
+      );
       if (!response.ok) throw new Error("Missing native effects");
       const data: SpriteData = await response.json();
       const loader = new T.TextureLoader();
       const textures = await Promise.all(
-        data.textures.map((t) => loader.loadAsync(`/assets/effects/${t.file}`)),
+        data.textures.map((t) =>
+          loader.loadAsync(
+            `${import.meta.env.BASE_URL}assets/effects/${t.file}`,
+          ),
+        ),
       );
       for (const texture of textures) {
         texture.colorSpace = T.SRGBColorSpace;

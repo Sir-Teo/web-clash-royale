@@ -36,11 +36,18 @@ export type SpriteFilterLayer = "deploy" | "charge" | "poison" | "cold";
 const layerOrder: SpriteFilterLayer[] = ["deploy", "charge", "poison", "cold"];
 
 export function composeFilterColors(colors: readonly (readonly number[])[]) {
-  let ar = 0, ag = 0, ab = 0;
-  let mr = 1, mg = 1, mb = 1, ma = 1;
+  let ar = 0,
+    ag = 0,
+    ab = 0;
+  let mr = 1,
+    mg = 1,
+    mb = 1,
+    ma = 1;
   for (const color of colors) {
     const [lr, lg, lb, la, lmr, lmg, lmb] = color;
-    const r = lmr / 255, g = lmg / 255, b = lmb / 255;
+    const r = lmr / 255,
+      g = lmg / 255,
+      b = lmb / 255;
     ar = ar * r + lr / 255;
     ag = ag * g + lg / 255;
     ab = ab * b + lb / 255;

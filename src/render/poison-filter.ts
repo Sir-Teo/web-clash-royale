@@ -10,7 +10,9 @@ interface PoisonActor {
 }
 
 export function poisonFilterFrame(age: number) {
-  return Math.floor(Math.max(0, age) * source.fps + 1e-6) % source.frames.length;
+  return (
+    Math.floor(Math.max(0, age) * source.fps + 1e-6) % source.frames.length
+  );
 }
 
 /** Archived Poison buff color and gentle squash/stretch on native troop art. */

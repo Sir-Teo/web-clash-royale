@@ -98,14 +98,16 @@ export class NativeAnnouncements {
   }
   private async load() {
     try {
-      const response = await fetch("/assets/ui/announcements.json");
+      const response = await fetch(
+        `${import.meta.env.BASE_URL}assets/ui/announcements.json`,
+      );
       if (!response.ok) throw new Error(`Native UI: ${response.status}`);
       const data: NativeData = await response.json();
       await document.fonts.load('40px "Supercell Magic"');
       await Promise.all(
         Object.values(data.shapes).map(async (shape) => {
           const image = new Image();
-          image.src = `/assets/ui/${shape.file}`;
+          image.src = `${import.meta.env.BASE_URL}assets/ui/${shape.file}`;
           await image.decode();
         }),
       );
@@ -146,7 +148,7 @@ export class NativeAnnouncements {
       selected.frame,
       selected.overrides,
       {
-        path: "/assets/ui",
+        path: `${import.meta.env.BASE_URL}assets/ui`,
         viewBox: "-360 -140 720 280",
         prefix: "announcement",
       },

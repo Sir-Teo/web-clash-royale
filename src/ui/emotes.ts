@@ -21,7 +21,7 @@ import {
 import { renderNativeFrame } from "./native";
 import "./emotes.css";
 
-const path = "/assets/ui/emotes";
+const path = `${import.meta.env.BASE_URL}assets/ui/emotes`;
 const chatFont = '"SC CCBackBeat",sans-serif';
 const fallback: Record<EmoteKind, string> = {
   laugh: "Ha ha!",

@@ -46,7 +46,9 @@ export class NativeCards {
   }
   private async load() {
     try {
-      const response = await fetch("/assets/ui/cards/cards.json");
+      const response = await fetch(
+        `${import.meta.env.BASE_URL}assets/ui/cards/cards.json`,
+      );
       if (!response.ok) throw new Error(`Card artwork: ${response.status}`);
       const data: CardData = await response.json();
       const files = new Set(
@@ -62,7 +64,7 @@ export class NativeCards {
               const img = new Image();
               img.onload = () => resolve();
               img.onerror = () => reject(new Error(`Card texture: ${file}`));
-              img.src = `/assets/ui/cards/${file}`;
+              img.src = `${import.meta.env.BASE_URL}assets/ui/cards/${file}`;
             }),
         ),
       ]);
@@ -142,7 +144,7 @@ export class NativeCards {
         card_level: "Level 11",
       },
       {
-        path: "/assets/ui/cards",
+        path: `${import.meta.env.BASE_URL}assets/ui/cards`,
         viewBox:
           variant === "cost"
             ? "-25 -27 50 54"

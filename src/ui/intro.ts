@@ -59,7 +59,9 @@ export class NativeIntro {
   }
   private async load() {
     try {
-      const r = await fetch("/assets/ui/intro/intro.json");
+      const r = await fetch(
+        `${import.meta.env.BASE_URL}assets/ui/intro/intro.json`,
+      );
       if (!r.ok) throw new Error(`Native intro: ${r.status}`);
       const data: NativeData = await r.json();
       await document.fonts.load('40px "Supercell Magic"');
@@ -69,7 +71,7 @@ export class NativeIntro {
           .filter((s) => s.file)
           .map(async (s) => {
             const image = new Image();
-            image.src = `/assets/ui/intro/${s.file}`;
+            image.src = `${import.meta.env.BASE_URL}assets/ui/intro/${s.file}`;
             await image.decode();
           }),
       );
@@ -105,7 +107,7 @@ export class NativeIntro {
     if (signature === this.signature) return;
     this.signature = signature;
     renderNativeFrame(this.host, this.data, this.name, frame, this.overrides, {
-      path: "/assets/ui/intro",
+      path: `${import.meta.env.BASE_URL}assets/ui/intro`,
       viewBox: "-360 -320 720 640",
       prefix: "intro",
       fit: true,

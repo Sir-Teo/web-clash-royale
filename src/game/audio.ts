@@ -27,7 +27,7 @@ export class GameAudio {
     try {
       let base = this.sounds.get(name);
       if (!base) {
-        base = new Audio(`/assets/audio/${name}.ogg`);
+        base = new Audio(`${import.meta.env.BASE_URL}assets/audio/${name}.ogg`);
         this.sounds.set(name, base);
       }
       const a = base.cloneNode() as HTMLAudioElement;
@@ -51,7 +51,9 @@ export class GameAudio {
   startMusic() {
     if (!this.musicEnabled || !this.enabled) return;
     if (!this.music) {
-      this.music = new Audio("/assets/audio/battle.ogg");
+      this.music = new Audio(
+        `${import.meta.env.BASE_URL}assets/audio/battle.ogg`,
+      );
       this.music.loop = true;
       this.music.volume = 0.12;
     }

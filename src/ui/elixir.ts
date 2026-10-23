@@ -44,7 +44,7 @@ export class ElixirFeedback {
   }
 }
 const options = {
-  path: "/assets/ui/elixir",
+  path: `${import.meta.env.BASE_URL}assets/ui/elixir`,
   viewBox: "-44 -27 454 62",
   prefix: "elixir",
 };
@@ -93,7 +93,9 @@ export class NativeElixir {
   }
   private async load() {
     try {
-      const r = await fetch("/assets/ui/elixir/elixir.json");
+      const r = await fetch(
+        `${import.meta.env.BASE_URL}assets/ui/elixir/elixir.json`,
+      );
       if (!r.ok) throw new Error(`Native elixir: ${r.status}`);
       const data: NativeData = await r.json();
       await document.fonts.load('40px "Supercell Magic"');

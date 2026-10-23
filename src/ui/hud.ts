@@ -47,7 +47,9 @@ export class NativeBattleHud {
   }
   private async load() {
     try {
-      const r = await fetch("/assets/ui/hud/hud.json");
+      const r = await fetch(
+        `${import.meta.env.BASE_URL}assets/ui/hud/hud.json`,
+      );
       if (!r.ok) throw new Error(`Native HUD: ${r.status}`);
       const data: HudData = await r.json();
       await Promise.all([
@@ -57,7 +59,7 @@ export class NativeBattleHud {
           .filter((p) => p.file)
           .map(async (p) => {
             const image = new Image();
-            image.src = `/assets/ui/hud/${p.file}`;
+            image.src = `${import.meta.env.BASE_URL}assets/ui/hud/${p.file}`;
             await image.decode();
           }),
       ]);
@@ -96,7 +98,7 @@ export class NativeBattleHud {
         clock.frame,
         { "timeLeft/txt": text },
         {
-          path: "/assets/ui/hud",
+          path: `${import.meta.env.BASE_URL}assets/ui/hud`,
           viewBox: "-104 -5 112 70",
           prefix: `hud-timer-${++this.serial}`,
         },
@@ -130,7 +132,7 @@ export class NativeBattleHud {
           "scoreEnemy/txt": String(counts.red),
         },
         {
-          path: "/assets/ui/hud",
+          path: `${import.meta.env.BASE_URL}assets/ui/hud`,
           viewBox: hudBox(state.landscape),
           prefix: `hud-score-${++this.serial}`,
           bind: true,

@@ -228,8 +228,8 @@ $("#app").innerHTML = `
   <div class="workspace">
    <aside class="left-sidebar">
     <section class="player-card"><div class="player-insignia">${icon("shield")}<span>1</span></div><div><span class="eyebrow">YOUR KINGDOM</span><h2 class="player-name">${esc(profile.name)}</h2><span class="player-status"><i></i> Ready for battle</span></div><button class="small-icon" data-settings aria-label="Edit profile">${icon("pencil")}</button></section>
-    <section class="journey panel"><div class="section-heading"><h3>Trophy road</h3>${icon("trophy")}</div><div class="trophy-total">${icon("trophy")}<b id="trophies">${fmt(profile.trophies)}</b><span>TROPHIES</span></div><div class="road-line"><span id="road-progress"></span><b>1</b><b>2</b></div><div class="road-caption"><span>Goblin Stadium</span><b id="road-count">0 / 300</b></div><div class="next-arena"><img src="/assets/arenas/arena2.png" alt="Bone Pit arena"/><div><small>NEXT MILESTONE</small><b>Bone Pit</b><span>300 trophies</span></div>${icon("lock-keyhole")}</div></section>
-    <section class="feature-card"><div class="feature-glow"></div><span class="eyebrow">A CROWN IS EARNED</span><h3>Small cards.<br>Big plays.</h3><p>Every elixir counts.<br>Make your next move matter.</p><img src="/assets/characters/knight.png" alt="Knight raising his sword"/><span class="feature-mark">${icon("swords")}</span></section>
+    <section class="journey panel"><div class="section-heading"><h3>Trophy road</h3>${icon("trophy")}</div><div class="trophy-total">${icon("trophy")}<b id="trophies">${fmt(profile.trophies)}</b><span>TROPHIES</span></div><div class="road-line"><span id="road-progress"></span><b>1</b><b>2</b></div><div class="road-caption"><span>Goblin Stadium</span><b id="road-count">0 / 300</b></div><div class="next-arena"><img src="${import.meta.env.BASE_URL}assets/arenas/arena2.png" alt="Bone Pit arena"/><div><small>NEXT MILESTONE</small><b>Bone Pit</b><span>300 trophies</span></div>${icon("lock-keyhole")}</div></section>
+    <section class="feature-card"><div class="feature-glow"></div><span class="eyebrow">A CROWN IS EARNED</span><h3>Small cards.<br>Big plays.</h3><p>Every elixir counts.<br>Make your next move matter.</p><img src="${import.meta.env.BASE_URL}assets/characters/knight.png" alt="Knight raising his sword"/><span class="feature-mark">${icon("swords")}</span></section>
     <div class="local-save">${icon("hard-drive-download")}<div><b>YOUR PROGRESS, SAVED</b><span>Stored on this browser</span></div><i></i></div>
    </aside>
    <main class="arena-panel">
@@ -385,7 +385,7 @@ function refreshProfile() {
   $("#chest-slots").innerHTML = Array.from({ length: 4 }, (_, i) => {
     const type = profile.chests[i];
     return type
-      ? `<button class="chest-slot filled ${type}" data-chest="${i}"><img src="/assets/chests/${type}.png" alt="${type} chest"/><span>OPEN CHEST</span><b>${type}</b></button>`
+      ? `<button class="chest-slot filled ${type}" data-chest="${i}"><img src="${import.meta.env.BASE_URL}assets/chests/${type}.png" alt="${type} chest"/><span>OPEN CHEST</span><b>${type}</b></button>`
       : `<div class="chest-slot empty">${icon(i === 0 ? "package-open" : "plus")}<b>${i === 0 ? "Win a battle" : "Empty slot"}</b><span>${i === 0 ? "Earn your next chest" : "Ready for a reward"}</span></div>`;
   }).join("");
   document
@@ -432,7 +432,7 @@ function claimChest(index: number) {
   refreshProfile();
   modal(
     "Victory tastes golden.",
-    `<div class="chest-reward"><div class="reward-rays"></div><img class="reward-chest" src="/assets/chests/${reward.type}.png" alt="Opened ${reward.type} chest"/><h3>${reward.type} chest</h3><p>A little something for your next victory.</p><div class="reward-items"><span>${icon("coins")}<b>+${reward.gold}</b><small>GOLD</small></span><span>${icon("crown")}<b>Well played!</b><small>REWARD CLAIMED</small></span></div><button class="primary-button" id="claim-done">Collect rewards ${icon("check")}</button></div>`,
+    `<div class="chest-reward"><div class="reward-rays"></div><img class="reward-chest" src="${import.meta.env.BASE_URL}assets/chests/${reward.type}.png" alt="Opened ${reward.type} chest"/><h3>${reward.type} chest</h3><p>A little something for your next victory.</p><div class="reward-items"><span>${icon("coins")}<b>+${reward.gold}</b><small>GOLD</small></span><span>${icon("crown")}<b>Well played!</b><small>REWARD CLAIMED</small></span></div><button class="primary-button" id="claim-done">Collect rewards ${icon("check")}</button></div>`,
     "chest",
   );
   $("#claim-done").onclick = closeModal;
@@ -789,7 +789,7 @@ function showResult() {
           : win
             ? "Victory is yours!"
             : "A crown to chase.",
-        `<div class="result-content ${win ? "victory" : "defeat"}"><div class="result-crown">${icon("crown")}</div><span class="eyebrow">${esc(battle.reason)}</span><div class="result-score"><span class="blue">${icon("crown")} ${battle.players.blue.crowns}</span><b>–</b><span class="red">${battle.players.red.crowns} ${icon("crown")}</span></div><p>${win ? "Your kingdom stands tall. Well played." : draw ? "An even battle. A rematch awaits." : "Every great king learns from a battle."}</p><div class="result-rewards"><div>${icon("trophy")}<b>${reward.trophies > 0 ? "+" : ""}${reward.trophies}</b><small>TROPHIES</small></div><div>${icon("coins")}<b>+${reward.gold}</b><small>GOLD</small></div>${reward.chest ? `<div><img src="/assets/chests/${reward.chest}.png" alt="${reward.chest} chest"/><b>+1</b><small>${reward.chest.toUpperCase()} CHEST</small></div>` : ""}</div><button class="primary-button" id="rematch">${icon("swords")} Battle again</button><div class="result-links"><button class="text-button" id="watch-replay">${icon("play")} Watch replay</button><button class="text-button" id="return-home">Back to arena ${icon("arrow-right")}</button></div></div>`,
+        `<div class="result-content ${win ? "victory" : "defeat"}"><div class="result-crown">${icon("crown")}</div><span class="eyebrow">${esc(battle.reason)}</span><div class="result-score"><span class="blue">${icon("crown")} ${battle.players.blue.crowns}</span><b>–</b><span class="red">${battle.players.red.crowns} ${icon("crown")}</span></div><p>${win ? "Your kingdom stands tall. Well played." : draw ? "An even battle. A rematch awaits." : "Every great king learns from a battle."}</p><div class="result-rewards"><div>${icon("trophy")}<b>${reward.trophies > 0 ? "+" : ""}${reward.trophies}</b><small>TROPHIES</small></div><div>${icon("coins")}<b>+${reward.gold}</b><small>GOLD</small></div>${reward.chest ? `<div><img src="${import.meta.env.BASE_URL}assets/chests/${reward.chest}.png" alt="${reward.chest} chest"/><b>+1</b><small>${reward.chest.toUpperCase()} CHEST</small></div>` : ""}</div><button class="primary-button" id="rematch">${icon("swords")} Battle again</button><div class="result-links"><button class="text-button" id="watch-replay">${icon("play")} Watch replay</button><button class="text-button" id="return-home">Back to arena ${icon("arrow-right")}</button></div></div>`,
         "result",
       );
       if (wasMultiplayer)
@@ -1620,7 +1620,16 @@ $("#replay-play").onclick = () => {
   else togglePause();
 };
 $("#replay-speed").onclick = () => {
-  speed = speed === 1 ? 2 : speed === 2 ? 4 : speed === 4 ? 0.5 : speed === 0.5 ? 0.25 : 1;
+  speed =
+    speed === 1
+      ? 2
+      : speed === 2
+        ? 4
+        : speed === 4
+          ? 0.5
+          : speed === 0.5
+            ? 0.25
+            : 1;
   audio.setRate(speed);
   $("#replay-speed").textContent = `${speed}×`;
 };
@@ -1963,7 +1972,9 @@ Object.defineProperty(window, "__arena", {
 
 if (import.meta.env.PROD && "serviceWorker" in navigator) {
   const install = () => {
-    void navigator.serviceWorker.register("/sw.js").catch(() => {});
+    void navigator.serviceWorker
+      .register(`${import.meta.env.BASE_URL}sw.js`)
+      .catch(() => {});
   };
   if (document.readyState === "complete") install();
   else window.addEventListener("load", install, { once: true });

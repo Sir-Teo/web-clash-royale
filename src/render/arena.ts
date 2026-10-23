@@ -261,7 +261,9 @@ export class Arena {
         "tesla-red",
       ].map(async (name) => {
         try {
-          const texture = await loader.loadAsync(`/assets/scenery/${name}.png`);
+          const texture = await loader.loadAsync(
+            `${import.meta.env.BASE_URL}assets/scenery/${name}.png`,
+          );
           texture.colorSpace = T.SRGBColorSpace;
           const anchorY = name.startsWith("balloon")
             ? 0.04
@@ -281,7 +283,7 @@ export class Arena {
     );
     try {
       const texture = await loader.loadAsync(
-        "/assets/scenery/goblin-field.png",
+        `${import.meta.env.BASE_URL}assets/scenery/goblin-field.png`,
       );
       texture.colorSpace = T.SRGBColorSpace;
       texture.anisotropy = Math.min(
@@ -295,9 +297,9 @@ export class Arena {
       floor.rotation.x = -Math.PI / 2;
       floor.position.y = 0.16;
       this.root.add(floor);
-      const layout = (await fetch("/assets/scenery/goblin-layout.json").then(
-        (r) => r.json(),
-      )) as {
+      const layout = (await fetch(
+        `${import.meta.env.BASE_URL}assets/scenery/goblin-layout.json`,
+      ).then((r) => r.json())) as {
         file: string;
         width: number;
         height: number;
@@ -306,7 +308,9 @@ export class Arena {
       }[];
       await Promise.all(
         layout.map(async (item) => {
-          const tex = await loader.loadAsync(`/assets/scenery/${item.file}`);
+          const tex = await loader.loadAsync(
+            `${import.meta.env.BASE_URL}assets/scenery/${item.file}`,
+          );
           tex.colorSpace = T.SRGBColorSpace;
           const material = new T.MeshBasicMaterial({
             map: tex,
@@ -1092,16 +1096,22 @@ export class Arena {
       if (event.type === "spell" && event.card === "poison") {
         const origin = new T.Vector3(event.x - 9, 0.2, event.y - 16);
         this.destruction.burst(
-          "poison", origin, b.seed ^ event.id, event.team, eventAge,
+          "poison",
+          origin,
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
         );
         // The archived loop emitter lasts three seconds; repeat it across the
         // eight-second area. Negative age schedules later cycles on the same
         // clock and also reconstructs them after a late snapshot or seek.
         for (const [index, offset] of [0, 3, 6].entries())
           this.destruction.burst(
-            "poison-loop", origin,
+            "poison-loop",
+            origin,
             b.seed ^ event.id ^ Math.imul(index, 0x9e3779b9),
-            event.team, eventAge - offset,
+            event.team,
+            eventAge - offset,
           );
       }
       if (event.type === "hit") {

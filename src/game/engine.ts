@@ -615,8 +615,8 @@ export class Battle {
   private updateAreas() {
     for (const area of this.areas) {
       const age = area.duration - area.remaining;
-      const poisonHit = area.card === "poison" &&
-        age + 1e-8 >= (area.hitAt ?? 0);
+      const poisonHit =
+        area.card === "poison" && age + 1e-8 >= (area.hitAt ?? 0);
       if (poisonHit) area.hitAt = (area.hitAt ?? 0) + poison.areaHitInterval;
       for (const entity of this.entities) {
         if (
@@ -629,8 +629,7 @@ export class Battle {
           continue;
         if (area.card === "freeze")
           entity.stun = Math.max(entity.stun, STEP * 2);
-        else
-          entity.poison ??= { remaining: 0, elapsed: 0 };
+        else entity.poison ??= { remaining: 0, elapsed: 0 };
         if (area.card === "poison" && entity.poison)
           entity.poison.remaining = poison.buffDuration;
       }
@@ -645,7 +644,8 @@ export class Battle {
       status.elapsed += STEP;
       if (status.elapsed + 1e-8 >= poison.damageInterval) {
         status.elapsed -= poison.damageInterval;
-        const damage = CARD_MAP.poison.damage *
+        const damage =
+          CARD_MAP.poison.damage *
           (entity.kind === "tower" ? poison.crownTowerDamageFraction : 1);
         this.hurt(entity, damage);
       }

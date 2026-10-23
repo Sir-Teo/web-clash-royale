@@ -29,12 +29,16 @@ export class BuildingLibrary {
     await Promise.all(
       ["cannon", "tesla", "king"].map(async (id) => {
         try {
-          const response = await fetch(`/assets/buildings/${id}.json`);
+          const response = await fetch(
+            `${import.meta.env.BASE_URL}assets/buildings/${id}.json`,
+          );
           if (!response.ok) throw new Error(`Missing building ${id}`);
           const data: SpriteData = await response.json();
           const textures = await Promise.all(
             data.textures.map((t) =>
-              loader.loadAsync(`/assets/buildings/${t.file}`),
+              loader.loadAsync(
+                `${import.meta.env.BASE_URL}assets/buildings/${t.file}`,
+              ),
             ),
           );
           for (const texture of textures) {

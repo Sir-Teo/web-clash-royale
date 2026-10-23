@@ -25,7 +25,9 @@ export class NativeConnectionWarning {
   }
   private async load() {
     try {
-      const response = await fetch("/assets/ui/connection/connection.json");
+      const response = await fetch(
+        `${import.meta.env.BASE_URL}assets/ui/connection/connection.json`,
+      );
       if (!response.ok)
         throw new Error(`Connection warning: ${response.status}`);
       const data: NativeData = await response.json();
@@ -35,7 +37,7 @@ export class NativeConnectionWarning {
           .filter((p) => p.file)
           .map(async (p) => {
             const image = new Image();
-            image.src = `/assets/ui/connection/${p.file}`;
+            image.src = `${import.meta.env.BASE_URL}assets/ui/connection/${p.file}`;
             await image.decode();
           }),
       );
@@ -88,7 +90,7 @@ export class NativeConnectionWarning {
       frame,
       {},
       {
-        path: "/assets/ui/connection",
+        path: `${import.meta.env.BASE_URL}assets/ui/connection`,
         viewBox: "-80 -80 160 160",
         prefix: "connection-warning",
       },

@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { Battle, STEP } from "../src/game/engine";
 import { CARD_MAP, STARTER_DECK } from "../src/game/cards";
 import { applySnapshot, perspective, snapshot } from "../src/network/perspective";
+import { PeerMatch } from "../src/network/peer-match";
+import type { ServerMessage } from "../src/network/protocol";
 import poison from "../src/game/poison-data.json";
 import audio from "../src/game/combat-audio-data.json";
 import effects from "../src/render/destruction-data.json";
@@ -128,5 +130,39 @@ describe("native Poison card", () => {
     });
     expect(replay.entities.find((entity) => entity.kind === "tower" && entity.team === "red" && entity.x === 4)?.hp).toBeCloseTo(tower.hp);
     expect(match.time).toBeCloseTo(30 * STEP);
+  });
+
+  it("accepts Poison through the browser peer host and shares its area with both players", () => {
+    const seed = Array.from({ length: 100 }, (_, i) => i + 1).find((value) =>
+      new Battle({ seed: value, ai: false, deck }).players.blue.hand.includes("poison"),
+    )!;
+    const messages: { team: "blue" | "red"; message: ServerMessage }[] = [];
+    const host = new PeerMatch(
+      "1234567890abcdef12345678", "classic", { name: "Blue", deck }, seed,
+      (team, message) => messages.push({ team, message: structuredClone(message) }),
+    );
+    expect(host.join({ name: "Red", deck })).toBe(true);
+    host.receive("blue", { type: "ready", ready: true });
+    host.receive("red", { type: "ready", ready: true });
+    for (let i = 0; i < 120; i++) host.advance(STEP);
+    expect(host.room.phase).toBe("playing");
+    host.receive("blue", { type: "play", seq: 1, card: "poison", x: 4, y: 22 });
+    expect(messages.findLast(({ team, message }) => team === "blue" && message.type === "ack")?.message)
+      .toMatchObject({ ok: true });
+    const states = messages.filter(({ message }) => message.type === "state");
+    for (const team of ["blue", "red"] as const) {
+      const latest = states.findLast((entry) => entry.team === team)!.message as Extract<ServerMessage, { type: "state" }>;
+      expect(latest.state.areas?.[0]).toMatchObject({
+        card: "poison", team: "blue", x: 4, y: 22,
+      });
+    }
+    const guest = states.findLast(({ team }) => team === "red")!.message as Extract<ServerMessage, { type: "state" }>;
+    expect(perspective(guest.state, "red").areas?.[0]).toMatchObject({
+      card: "poison", team: "red", x: 14, y: 10,
+    });
+    host.availability("red", false);
+    const remaining = host.battle!.areas[0].remaining;
+    for (let i = 0; i < 30; i++) host.advance(STEP);
+    expect(host.battle!.areas[0].remaining).toBe(remaining);
   });
 });

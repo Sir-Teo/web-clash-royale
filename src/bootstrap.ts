@@ -15,8 +15,7 @@ try {
   network.disconnect(false);
   const app = document.querySelector("#app")!;
   if (!app.querySelector(".webgl-error")) {
-    app.innerHTML =
-      '<div id="startup" role="status"><img src="/crown.svg" alt=""/><p>Couldn’t load the arena.</p><button type="button">Try again</button></div>';
+    app.innerHTML = `<div id="startup" role="status"><img src="${import.meta.env.BASE_URL}crown.svg" alt=""/><p>Couldn’t load the arena.</p><button type="button">Try again</button></div>`;
     app.querySelector("button")!.onclick = () => location.reload();
   }
   console.error("Arena startup failed", error);
