@@ -260,3 +260,13 @@ Two WebKit peers on this Mac currently fail to establish a direct route. A minim
 The production offline reload passes with the browser match worker and all native UI bundles in the 477-file cache (`44297b31a4bf`). AI battles, native reaction text/font/voice and the connection-warning assets load offline. The default app no longer makes the former optional LAN API request.
 
 The final solo regression passes 14 cases across desktop Chromium, phone Chromium and phone WebKit (the desktop touch-only case is skipped): deck persistence, deployment, settings/search, background suspension, old replay endings, six phone sizes, real touch input, rotation and slow-frame result presentation. A worker regression additionally verifies that a snapshot retained while the UI is busy owns its entity/player values instead of referencing a later simulation tick.
+
+CI run `39877310169` for frontend-only application commit `bd78dce` passed both the unit/build and production browser jobs.
+
+## Native death audio
+
+All 155 unit checks pass. New coverage verifies the five retained source inputs, 23 compositions, 22 sound groups, six pinned OGG hashes, nested and enemy-specific mappings, intentional empty sound groups, deterministic pitch/gain/delay ranges, pause/reset/mute scheduling, stale-event rejection and unchanged simulation state. Sixty simultaneous requests obey the shared voice cap; completion, errors and stopping release voices; replay speed preserves the selected source pitch factor.
+
+Nine production browser checks pass across desktop Chromium, phone Chromium and phone WebKit. All six files decode with finite positive durations. Real recorded deaths play the expected files, gains and rates from both replay perspectives, with successful media playback promises rather than request-only assertions. Pausing, seeking and saving muted settings produce no additional death cues. Guest-perspective replays now retain their original presentation seed. Browser decoding and playback are verified; physical phone speaker output remains unmeasured. The desktop cases are included in CI.
+
+The three existing desktop production regressions also pass: slow-frame result presentation, direct invite/reply pairing with shared pause and replay, and invalid-invite recovery. Production offline reload passes with all six death-audio files, the browser match worker and native UI/reaction assets in the 483-file cache (`b252c8362f36`).

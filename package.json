@@ -31,7 +31,8 @@
     "build:legacy": "VITE_LEGACY_ROOMS=1 npm run build && npm run build:server",
     "start:legacy": "node dist-server/index.js",
     "assets:ending": "node scripts/import-ending.mjs",
-    "assets:emotes": "node scripts/import-emotes.mjs"
+    "assets:emotes": "node scripts/import-emotes.mjs",
+    "assets:death-audio": "node scripts/import-death-audio.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",

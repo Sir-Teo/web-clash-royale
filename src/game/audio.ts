@@ -1,16 +1,29 @@
+export interface SoundOptions {
+  pitch?: number;
+  group?: string;
+  maximum?: number;
+}
+
 export class GameAudio {
   enabled = true;
   musicEnabled = false;
   private music: HTMLAudioElement | null = null;
   private sounds = new Map<string, HTMLAudioElement>();
   private last = new Map<string, number>();
-  private active = new Set<HTMLAudioElement>();
+  private active = new Map<HTMLAudioElement, SoundOptions>();
   private rate = 1;
-  play(name: string, volume = 0.45) {
+  play(name: string, volume = 0.45, options: SoundOptions = {}) {
     if (!this.enabled) return;
-    const now = performance.now();
-    if (now - (this.last.get(name) ?? -1000) < 80) return;
-    this.last.set(name, now);
+    if (options.group) {
+      const voices = [...this.active.values()].filter(
+        (voice) => voice.group === options.group,
+      ).length;
+      if (options.maximum && voices >= options.maximum) return;
+    } else {
+      const now = performance.now();
+      if (now - (this.last.get(name) ?? -1000) < 80) return;
+      this.last.set(name, now);
+    }
     try {
       let base = this.sounds.get(name);
       if (!base) {
@@ -18,11 +31,15 @@ export class GameAudio {
         this.sounds.set(name, base);
       }
       const a = base.cloneNode() as HTMLAudioElement;
-      a.volume = volume;
-      a.playbackRate = this.rate;
-      this.active.add(a);
-      a.addEventListener("ended", () => this.active.delete(a), { once: true });
-      void a.play().catch(() => this.active.delete(a));
+      a.volume = Math.max(0, Math.min(1, volume));
+      a.playbackRate = this.rate * (options.pitch ?? 1);
+      // Native pitch variation requires resampling instead of time stretching.
+      if (options.pitch !== undefined) a.preservesPitch = false;
+      this.active.set(a, options);
+      const release = () => this.active.delete(a);
+      a.addEventListener("ended", release, { once: true });
+      a.addEventListener("error", release, { once: true });
+      void a.play().catch(release);
       return () => {
         a.pause();
         this.active.delete(a);
@@ -44,12 +61,13 @@ export class GameAudio {
     this.music?.pause();
   }
   stopEffects() {
-    for (const sound of this.active) sound.pause();
+    for (const sound of this.active.keys()) sound.pause();
     this.active.clear();
   }
   setRate(rate: number) {
     this.rate = Math.max(0.25, Math.min(4, rate));
-    for (const sound of this.active) sound.playbackRate = this.rate;
+    for (const [sound, options] of this.active)
+      sound.playbackRate = this.rate * (options.pitch ?? 1);
   }
   setEnabled(enabled: boolean) {
     this.enabled = enabled;

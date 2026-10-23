@@ -5,6 +5,7 @@ class FakeAudio {
   volume = 1;
   playbackRate = 1;
   loop = false;
+  preservesPitch = true;
   listeners = new Map<string, () => void>();
   play = vi.fn(() => Promise.resolve());
   pause = vi.fn();
@@ -65,5 +66,32 @@ describe("battle cue audio", () => {
     one.listeners.get("ended")!();
     audio.stopEffects();
     expect(one.pause).not.toHaveBeenCalled();
+  });
+  it("limits native sound groups, releases failed voices and preserves source pitch at replay speed", () => {
+    const audio = new GameAudio();
+    const options = { group: "generic death", maximum: 3, pitch: 0.97 };
+    for (let i = 0; i < 60; i++) audio.play("npc_die_04", 0.14, options);
+    const voices = instances.filter((a) => a.play.mock.calls.length);
+    expect(voices).toHaveLength(3);
+    expect(
+      voices.every((a) => !a.preservesPitch && a.playbackRate === 0.97),
+    ).toBe(true);
+    audio.setRate(4);
+    expect(voices.every((a) => a.playbackRate === 3.88)).toBe(true);
+    voices[0].listeners.get("error")!();
+    audio.play("npc_die_04", 0.14, options);
+    expect(instances.at(-1)!.playbackRate).toBe(3.88);
+    expect(instances.filter((a) => a.play.mock.calls.length)).toHaveLength(4);
+    audio.stopEffects();
+    expect(voices[0].pause).not.toHaveBeenCalled();
+    audio.play("npc_die_04", 0.14, options);
+    expect(instances.filter((a) => a.play.mock.calls.length)).toHaveLength(5);
+  });
+  it("uses source groups independently when they share a file", () => {
+    const audio = new GameAudio();
+    audio.play("npc_die_02", 0.01, { group: "bat", maximum: 1 });
+    audio.play("npc_die_02", 0.01, { group: "skeleton", maximum: 1 });
+    audio.play("npc_die_02", 0.01, { group: "bat", maximum: 1 });
+    expect(instances.filter((a) => a.play.mock.calls.length)).toHaveLength(2);
   });
 });

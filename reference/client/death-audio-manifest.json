@@ -1,0 +1,70 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "sources": [
+    {
+      "path": "reference/client/effects.csv",
+      "sha256": "22591ef669cb9af6535a10caae5b7f7f8b5b79c81630aeb3381a04bfef298985"
+    },
+    {
+      "path": "reference/client/sounds.csv",
+      "sha256": "89136418aae9513b094b0f66b61c920a1df40347292aee5c28eefac13b13e3ca"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "src/game/combat-data.json",
+      "sha256": "bc8cad0c44c442dd2565641f0c8bcaca14f2d2e9ecb551a88b9cc67a9830ea66"
+    }
+  ],
+  "audioSource": "https://github.com/RoyaleAPI/cr-api-assets",
+  "audioCommit": "b4530a1043b213ee2baf9c50a3d0d7fae22c2313",
+  "audioFiles": [
+    {
+      "path": "public/assets/audio/boulder_impact_01.ogg",
+      "source": "sfx/boulder_impact_01.ogg",
+      "bytes": 13050,
+      "sha256": "0fe352f18fb44498995ef979c5954e8fdf2dab668d26e1985d3fbce11a277d1e"
+    },
+    {
+      "path": "public/assets/audio/building_destroyed_05.ogg",
+      "source": "sfx/building_destroyed_05.ogg",
+      "bytes": 16228,
+      "sha256": "548f9e71f8bb1c40ef72d3e9363eac9f1f97bafeff17d6b29b8aac0fcf51a93b"
+    },
+    {
+      "path": "public/assets/audio/dummy_01.ogg",
+      "source": "sfx/dummy_01.ogg",
+      "bytes": 3558,
+      "sha256": "fc41f7905e797f79d7d1a46801dc439dd1889459e3e2a62b938fcd5d04d4e696"
+    },
+    {
+      "path": "public/assets/audio/knight_death_01.ogg",
+      "source": "sfx/knight_death_01.ogg",
+      "bytes": 10537,
+      "sha256": "5b7419a8c3a90bbdd46131bfd3a1aad01ff51df46a4fa9f1becdd9e6600b4a33"
+    },
+    {
+      "path": "public/assets/audio/npc_die_02.ogg",
+      "source": "sfx/npc_die_02.ogg",
+      "bytes": 8823,
+      "sha256": "ca1525f4d64a20d1963aea03d937160277a30362bcc84d6e08328a5acd11b167"
+    },
+    {
+      "path": "public/assets/audio/npc_die_04.ogg",
+      "source": "sfx/npc_die_04.ogg",
+      "bytes": 7543,
+      "sha256": "32c3929456e38f7b82791af02bde01629920bfd4f3e8903a3bdc7f06af118df7"
+    }
+  ],
+  "output": {
+    "path": "src/game/death-audio-data.json",
+    "sha256": "0cc0223a3a3d71fd8a13bc577a4d10241c71e5b98280e6469f1d6ca65e06dfb0"
+  }
+}

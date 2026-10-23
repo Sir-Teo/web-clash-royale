@@ -132,6 +132,7 @@ import {
 } from "./game/profile";
 import type { RecordEntry } from "./game/profile";
 import { GameAudio } from "./game/audio";
+import { NativeDeathAudio } from "./game/death-audio";
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) =>
   document.querySelector<T>(s)!;
@@ -154,6 +155,7 @@ const clock = (seconds: number) =>
     .padStart(2, "0")}`;
 const profile = loadProfile(),
   audio = new GameAudio();
+const deathAudio = new NativeDeathAudio(audio);
 audio.enabled = profile.sound;
 audio.musicEnabled = profile.music;
 let initialized = false;
@@ -173,6 +175,7 @@ let screen: "lobby" | "battle" | "replay" = "lobby";
 let mode: Mode = "classic";
 let selected = -1;
 let paused = false;
+let soundPaused = false;
 let modalPausedBattle = false;
 let speed = 1;
 let accumulator = 0;
@@ -293,6 +296,7 @@ ending.onContinue = () => {
   if (pendingResult && arena.effectTime >= pendingResult.time) ending.skip();
 };
 function resetEnding() {
+  deathAudio.reset();
   connectionWarning.reset();
   emotes.reset();
   ending.reset();
@@ -741,6 +745,7 @@ function syncReplayControl() {
   refreshIcons();
 }
 function showResult() {
+  deathAudio.reset();
   startEnding();
   const completedBattle = battle;
   resultShown = true;
@@ -850,6 +855,7 @@ function createReplayBattle(replay: Replay) {
   replaySource = replay.perspective === "red" ? new Battle({ replay }) : null;
   battle = replaySource
     ? new Battle({
+        seed: replay.seed,
         ai: false,
         mode: replay.mode,
         deck: replay.enemyDeck,
@@ -1341,6 +1347,7 @@ function processEvents() {
   for (const ev of battle.events) {
     if (ev.id <= eventCursor) continue;
     eventCursor = ev.id;
+    deathAudio.queue(ev, battle.seed, battle.time);
     if (
       ev.team === "blue" &&
       (ev.type === "deploy" || ev.type === "spell") &&
@@ -1391,6 +1398,7 @@ function processEvents() {
     if (ev.type === "crown") {
       audio.play("1st_crown_01", 0.35);
     }
+    if (ev.type === "finish") deathAudio.reset();
     if (ev.type === "finish" && screen === "replay") {
       audio.stopEffects();
       announcements.cue("Gameend Horn");
@@ -1643,6 +1651,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 function suspendFrameLoop() {
+  deathAudio.reset();
   connectionWarning.suspend();
   cancelPointer();
   emotes.suspend();
@@ -1725,6 +1734,10 @@ function frame(now: number) {
   }
   if (multiplayer) processEvents();
   const presentationPaused = paused || (multiplayer && !!network.room?.paused);
+  if (presentationPaused && !soundPaused) audio.stopEffects();
+  soundPaused = presentationPaused;
+  if (screen !== "lobby" && !battle.winner)
+    deathAudio.update(battle.time, presentationPaused);
   const idle = screen === "lobby" || presentationPaused || !!battle.winner;
   if (!idle || now - lastRenderTime >= 1000 / 30 - 0.5) {
     const renderElapsed = Math.max(0, (now - lastRenderTime) / 1000);

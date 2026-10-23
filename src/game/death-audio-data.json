@@ -1,0 +1,975 @@
+{
+  "effects": {
+    "tower": {
+      "source": "TowerExplode",
+      "components": [],
+      "enemyComponents": []
+    },
+    "king": {
+      "source": "King_player_die",
+      "components": [
+        {
+          "sound": "sound_king_player_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_king_enemy_die",
+          "delay": 0
+        }
+      ]
+    },
+    "knight": {
+      "source": "knight_die",
+      "components": [
+        {
+          "sound": "sound_knight_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_knight_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ]
+    },
+    "archers": {
+      "source": "ArcherDie",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "Archer die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "Archer die",
+          "delay": 0
+        }
+      ]
+    },
+    "giant": {
+      "source": "giant_die",
+      "components": [
+        {
+          "sound": "sound_giant_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_giant_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ]
+    },
+    "musketeer": {
+      "source": "musketeer_die",
+      "components": [
+        {
+          "sound": "sound_musketeer_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_musketeer_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ]
+    },
+    "mini-pekka": {
+      "source": "mini_pekka_die",
+      "components": [
+        {
+          "sound": "sound_minipekka_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_pekka_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ]
+    },
+    "goblins": {
+      "source": "goblins_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_goblins_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_goblins_die",
+          "delay": 0
+        }
+      ]
+    },
+    "spear-goblins": {
+      "source": "spear_goblin_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_spear_goblin_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_spear_goblin_die",
+          "delay": 0
+        }
+      ]
+    },
+    "skeletons": {
+      "source": "skeleton_die",
+      "components": [
+        {
+          "sound": "sound_bat_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_skeleton_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_bat_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_skeleton_die",
+          "delay": 0
+        }
+      ]
+    },
+    "skeleton-army": {
+      "source": "skeleton_die",
+      "components": [
+        {
+          "sound": "sound_bat_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_skeleton_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_bat_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_skeleton_die",
+          "delay": 0
+        }
+      ]
+    },
+    "bomber": {
+      "source": "bomber_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_bomber_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_bomber_die",
+          "delay": 0
+        }
+      ]
+    },
+    "valkyrie": {
+      "source": "valkyrie_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_valkyrie_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_valkyrie_die",
+          "delay": 0
+        }
+      ]
+    },
+    "hog-rider": {
+      "source": "hog_rider_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_hog_rider_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_hog_rider_die",
+          "delay": 0
+        }
+      ]
+    },
+    "baby-dragon": {
+      "source": "baby_dragon_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_baby_dragon_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_baby_dragon_die",
+          "delay": 0
+        }
+      ]
+    },
+    "minions": {
+      "source": "minion_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_minion_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_minion_die",
+          "delay": 0
+        }
+      ]
+    },
+    "witch": {
+      "source": "witch_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_witch_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_witch_die",
+          "delay": 0
+        }
+      ]
+    },
+    "wizard": {
+      "source": "chr_wizard_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_chr_wizard_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_chr_wizard_die",
+          "delay": 0
+        }
+      ]
+    },
+    "prince": {
+      "source": "prince_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ]
+    },
+    "pekka": {
+      "source": "pekka_die",
+      "components": [
+        {
+          "sound": "sound_pekka_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_pekka_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ]
+    },
+    "balloon": {
+      "source": "balloon_die",
+      "components": [
+        {
+          "sound": "sound_balloon_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_balloon_die",
+          "delay": 0
+        }
+      ]
+    },
+    "cannon": {
+      "source": "Cannon_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "Boulder impact",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "Boulder impact",
+          "delay": 0
+        }
+      ]
+    },
+    "tesla": {
+      "source": "tesla_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "Boulder impact",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "Boulder impact",
+          "delay": 0
+        }
+      ]
+    }
+  },
+  "sounds": {
+    "sound_king_player_die": {
+      "sourceFiles": [],
+      "files": [],
+      "volume": [
+        0,
+        0
+      ],
+      "pitch": [
+        0,
+        0
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 0,
+      "priority": 0,
+      "padding": 0
+    },
+    "sound_king_enemy_die": {
+      "sourceFiles": [],
+      "files": [],
+      "volume": [
+        0,
+        0
+      ],
+      "pitch": [
+        0,
+        0
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 0,
+      "priority": 0,
+      "padding": 0
+    },
+    "sound_knight_die": {
+      "sourceFiles": [
+        "sfx/knight_death_01.wav"
+      ],
+      "files": [
+        "knight_death_01"
+      ],
+      "volume": [
+        0.6,
+        0.6
+      ],
+      "pitch": [
+        1,
+        1
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 1,
+      "priority": 3,
+      "padding": 0
+    },
+    "sound_generic_death": {
+      "sourceFiles": [
+        "sfx/npc_die_04.wav"
+      ],
+      "files": [
+        "npc_die_04"
+      ],
+      "volume": [
+        0.35,
+        0.45
+      ],
+      "pitch": [
+        0.95,
+        1.04
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 3,
+      "priority": 1,
+      "padding": 0
+    },
+    "Archer die": {
+      "sourceFiles": [
+        "sfx/npc_die_02.wav"
+      ],
+      "files": [
+        "npc_die_02"
+      ],
+      "volume": [
+        0.01,
+        0.01
+      ],
+      "pitch": [
+        0.97,
+        1.03
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 5,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_giant_die": {
+      "sourceFiles": [
+        "sfx/npc_die_02.wav"
+      ],
+      "files": [
+        "npc_die_02"
+      ],
+      "volume": [
+        0.01,
+        0.01
+      ],
+      "pitch": [
+        0.97,
+        1.03
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 5,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_musketeer_die": {
+      "sourceFiles": [],
+      "files": [],
+      "volume": [
+        0,
+        0
+      ],
+      "pitch": [
+        0,
+        0
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 0,
+      "priority": 0,
+      "padding": 0
+    },
+    "sound_minipekka_die": {
+      "sourceFiles": [
+        "sfx/npc_die_02.wav"
+      ],
+      "files": [
+        "npc_die_02"
+      ],
+      "volume": [
+        0.01,
+        0.01
+      ],
+      "pitch": [
+        0.97,
+        1.03
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 5,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_pekka_die": {
+      "sourceFiles": [
+        "sfx/npc_die_02.wav"
+      ],
+      "files": [
+        "npc_die_02"
+      ],
+      "volume": [
+        0.01,
+        0.01
+      ],
+      "pitch": [
+        0.97,
+        1.03
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 5,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_goblins_die": {
+      "sourceFiles": [
+        "sfx/npc_die_02.wav"
+      ],
+      "files": [
+        "npc_die_02"
+      ],
+      "volume": [
+        0.01,
+        0.01
+      ],
+      "pitch": [
+        0.97,
+        1.03
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 5,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_spear_goblin_die": {
+      "sourceFiles": [],
+      "files": [],
+      "volume": [
+        0,
+        0
+      ],
+      "pitch": [
+        0,
+        0
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 0,
+      "priority": 0,
+      "padding": 0
+    },
+    "sound_bat_die": {
+      "sourceFiles": [
+        "sfx/npc_die_02.wav"
+      ],
+      "files": [
+        "npc_die_02"
+      ],
+      "volume": [
+        0.01,
+        0.01
+      ],
+      "pitch": [
+        0.97,
+        1.03
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 5,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_skeleton_die": {
+      "sourceFiles": [
+        "sfx/npc_die_02.wav"
+      ],
+      "files": [
+        "npc_die_02"
+      ],
+      "volume": [
+        0.01,
+        0.01
+      ],
+      "pitch": [
+        0.97,
+        1.03
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 5,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_bomber_die": {
+      "sourceFiles": [],
+      "files": [],
+      "volume": [
+        0,
+        0
+      ],
+      "pitch": [
+        0,
+        0
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 0,
+      "priority": 0,
+      "padding": 0
+    },
+    "sound_valkyrie_die": {
+      "sourceFiles": [
+        "sfx/npc_die_02.wav"
+      ],
+      "files": [
+        "npc_die_02"
+      ],
+      "volume": [
+        0.01,
+        0.01
+      ],
+      "pitch": [
+        0.97,
+        1.03
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 5,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_hog_rider_die": {
+      "sourceFiles": [
+        "sfx/npc_die_02.wav"
+      ],
+      "files": [
+        "npc_die_02"
+      ],
+      "volume": [
+        0.01,
+        0.01
+      ],
+      "pitch": [
+        0.97,
+        1.03
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 5,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_baby_dragon_die": {
+      "sourceFiles": [],
+      "files": [],
+      "volume": [
+        0,
+        0
+      ],
+      "pitch": [
+        0,
+        0
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 0,
+      "priority": 0,
+      "padding": 0
+    },
+    "sound_minion_die": {
+      "sourceFiles": [
+        "sfx/npc_die_02.wav"
+      ],
+      "files": [
+        "npc_die_02"
+      ],
+      "volume": [
+        0.01,
+        0.01
+      ],
+      "pitch": [
+        0.97,
+        1.03
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 5,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_witch_die": {
+      "sourceFiles": [
+        "sfx/npc_die_02.wav"
+      ],
+      "files": [
+        "npc_die_02"
+      ],
+      "volume": [
+        0.01,
+        0.01
+      ],
+      "pitch": [
+        0.97,
+        1.03
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 5,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_chr_wizard_die": {
+      "sourceFiles": [
+        "sfx/dummy_01.wav"
+      ],
+      "files": [
+        "dummy_01"
+      ],
+      "volume": [
+        0.01,
+        0.01
+      ],
+      "pitch": [
+        1,
+        1
+      ],
+      "startDelay": [
+        5,
+        6
+      ],
+      "maximum": 1,
+      "priority": 1,
+      "padding": 3
+    },
+    "sound_balloon_die": {
+      "sourceFiles": [
+        "sfx/building_destroyed_05.wav"
+      ],
+      "files": [
+        "building_destroyed_05"
+      ],
+      "volume": [
+        0.4,
+        0.4
+      ],
+      "pitch": [
+        1,
+        1
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 3,
+      "priority": 1,
+      "padding": 0
+    },
+    "Boulder impact": {
+      "sourceFiles": [
+        "sfx/boulder_impact_01.wav"
+      ],
+      "files": [
+        "boulder_impact_01"
+      ],
+      "volume": [
+        0.8,
+        0.9
+      ],
+      "pitch": [
+        0.95,
+        1.05
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 2,
+      "priority": 1,
+      "padding": 0
+    }
+  }
+}
