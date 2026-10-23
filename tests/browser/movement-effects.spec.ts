@@ -42,6 +42,9 @@ test("Knight and Prince leave native ground dust while moving on desktop and pho
   const charge = await state();
   expect(charge.clips.d1).toBeGreaterThan(0);
   expect(charge.particles).toBeGreaterThanOrEqual(12);
+  expect(
+    await page.locator("#destruction").getAttribute("data-charge-cues"),
+  ).toBe("1");
   await page.screenshot({
     path: info.outputPath("native-prince-charge.png"),
     fullPage: true,

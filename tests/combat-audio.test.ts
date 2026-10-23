@@ -57,10 +57,10 @@ describe("native combat audio evidence", () => {
     const manifest = JSON.parse(
       readFileSync("reference/client/combat-audio-manifest.json", "utf8"),
     );
-    expect(manifest.audioFiles).toHaveLength(111);
+    expect(manifest.audioFiles).toHaveLength(112);
     expect(manifest.sources).toHaveLength(11);
     expect(Object.keys(definitions.profiles)).toHaveLength(26);
-    expect(Object.keys(definitions.sounds)).toHaveLength(91);
+    expect(Object.keys(definitions.sounds)).toHaveLength(92);
     for (const file of [
       ...manifest.sources,
       ...manifest.audioFiles,
@@ -102,10 +102,14 @@ describe("native combat audio evidence", () => {
     ).toHaveLength(2);
   });
   it("distinguishes swings, launch effects, impacts, tower weapons and spell casting", () => {
-    const files = (profile: string, phase: CombatAudioEvent["phase"]) =>
-      combatAudioPlan(profile, phase, 29).map((cue) => cue.file);
+    const files = (
+      profile: string,
+      phase: CombatAudioEvent["phase"] | "charge",
+    ) => combatAudioPlan(profile, phase, 29).map((cue) => cue.file);
     expect(files("knight", "impact")).toEqual(["knight_hit_01"]);
     expect(files("giant", "impact")).toEqual(["giant_hit_01"]);
+    expect(files("prince", "charge")).toEqual(["rider_charge_03"]);
+    expect(files("knight", "charge")).toEqual([]);
     expect(files("musketeer", "attack")).toEqual([]);
     expect(files("musketeer", "launch")).toEqual(["musket_fire_02"]);
     expect(files("musketeer", "impact")).toEqual(["musket_impact_01"]);
@@ -308,6 +312,23 @@ describe("combat audio timing and lifecycle", () => {
     ]);
     cues.consume([start, impact, cancel], 29, 0.4);
     cues.update(0.5);
+    expect(audio.play).toHaveBeenCalledTimes(1);
+  });
+  it("queues Prince's render-only charge voice on match time and drops stale crossings", () => {
+    const { audio, cues } = harness();
+    cues.queueCharge(29, "blue", 2.3, 0.05);
+    cues.update(2.35, true);
+    expect(audio.play).not.toHaveBeenCalled();
+    cues.update(2.35);
+    expect(audio.play.mock.calls.map((call) => call[0])).toEqual([
+      "rider_charge_03",
+    ]);
+    cues.queueCharge(30, "red", 3, 0.6);
+    cues.update(3.6);
+    expect(audio.play).toHaveBeenCalledTimes(1);
+    cues.queueCharge(31, "red", 4, 0);
+    cues.skip([]);
+    cues.update(4);
     expect(audio.play).toHaveBeenCalledTimes(1);
   });
   it("holds delays on pause, skips sought history and drops muted or stale cues", () => {

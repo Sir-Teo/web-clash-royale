@@ -4,6 +4,8 @@ import type { Team } from "../../src/game/engine";
 import type { CardId } from "../../src/game/cards";
 import { CARDS } from "../../src/game/cards";
 const arena = new Arena(document.querySelector("#arena")!);
+let chargeCues = 0;
+arena.onCharge = () => chargeCues++;
 arena.crownTarget = (team) => {
   const target = document
     .querySelector(`#crown-${team}`)!
@@ -46,6 +48,7 @@ function unit(id: CardId, team: Team, x: number, y: number) {
   return units;
 }
 function setup() {
+  chargeCues = 0;
   playing = false;
   elapsed = 0;
   renderedTime = 0;
@@ -304,6 +307,8 @@ function render(now: number) {
   const destruction = arena.destructionState;
   (document.querySelector("#destruction") as HTMLElement).dataset.state =
     JSON.stringify(destruction);
+  (document.querySelector("#destruction") as HTMLElement).dataset.chargeCues =
+    String(chargeCues);
   (document.querySelector("#destruction") as HTMLElement).dataset.hogJump =
     JSON.stringify(
       battle.entities

@@ -28,7 +28,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run build
-      - run: npx playwright test tests/browser/peer.spec.ts tests/browser/ending-performance.spec.ts tests/browser/death-audio.spec.ts tests/browser/combat-audio.spec.ts tests/browser/deployment-audio.spec.ts tests/browser/tesla-audio.spec.ts tests/browser/screen-shake.spec.ts tests/browser/balloon-bomb.spec.ts --project=desktop
+      - run: npx playwright test tests/browser/peer.spec.ts tests/browser/ending-performance.spec.ts tests/browser/death-audio.spec.ts tests/browser/combat-audio.spec.ts tests/browser/prince-charge-audio.spec.ts tests/browser/deployment-audio.spec.ts tests/browser/tesla-audio.spec.ts tests/browser/screen-shake.spec.ts tests/browser/balloon-bomb.spec.ts --project=desktop
         env:
           ARENA_PRODUCTION: "1"
       - run: npx playwright test tests/browser/effects.spec.ts tests/browser/spell-impacts.spec.ts tests/browser/attack-impacts.spec.ts tests/browser/movement-effects.spec.ts tests/browser/hog-jump.spec.ts --project=desktop

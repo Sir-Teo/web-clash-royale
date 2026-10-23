@@ -441,4 +441,10 @@ All 219 unit checks, type checking, production build and offline reload pass wit
 
 ## Prince charge dust
 
-The source `prince_charge` effect reuses the already bundled `knight_deploy_dustPuff1` emitter for twelve fragments. The renderer now emits it at the same 2.3-second movement threshold as Prince's charge animation, interpolates coalesced snapshots and clears its history on replay reset. All 220 unit checks, type checking, the production build and offline reload pass; the 571-file cache version is `3c9dda64697b`. Desktop Chromium and phone WebKit browser scenes pass, with a phone WebKit frame saved in `docs/screenshots/phone-native-prince-charge.png`. The source filter and SWF charge marker are outside this particle-only addition, as is the charge sound.
+The source `prince_charge` effect reuses the already bundled `knight_deploy_dustPuff1` emitter for twelve fragments. The renderer now emits it at the same 2.3-second movement threshold as Prince's charge animation, interpolates coalesced snapshots and clears its history on replay reset. All 220 unit checks, type checking, the production build and offline reload pass; the 571-file cache version is `3c9dda64697b`. Desktop Chromium and phone WebKit browser scenes pass, with a phone WebKit frame saved in `docs/screenshots/phone-native-prince-charge.png`. The source filter and SWF charge marker remain outside this addition; the voice is added below.
+
+## Prince charge voice
+
+The archived `prince_charge` effect also binds `sound_prince_charge` to `rider_charge_03.ogg`. The browser schedules that voice from the same render-only charge crossing, with 70% source volume, the shared 0.35 mix gain, fixed pitch and a two-voice limit. It adds no simulation event IDs, replay fields or peer messages. Browser replays on desktop Chromium and phone WebKit play the voice exactly once at the charge, and all 112 imported combat/lifecycle OGGs decode in desktop Chromium. Source-hash and stale/pause/seek scheduling tests pass. The source `effect_charge` SWF marker and filter, and separate charge-hit voice, remain unrendered.
+
+All 221 unit checks, type checking, the production build and offline reload pass; the cache includes 572 files (version `e49c04c5bd6d`) and 116 unique combat/death audio files. The new replay sound test is included in hosted desktop CI.
