@@ -500,7 +500,12 @@ export class Battle {
                 ? (p.style as CardId)
                 : null);
     if (profile)
-      this.emitAudio("impact", p.team, profile, p.source || undefined);
+      this.emitAudio(
+        p.style === "bomb" ? "death-impact" : "impact",
+        p.team,
+        profile,
+        p.source || undefined,
+      );
     this.audioProjectiles.delete(p.id);
   }
   step() {
@@ -1169,6 +1174,7 @@ export class Battle {
           : {}),
       });
       this.audioProjectiles.set(this.projectiles.at(-1)!.id, "balloon");
+      this.emitAudio("death-spawn", e.team, "balloon", e.id);
     }
     if (e.kind === "tower") {
       const enemy = other(e.team);

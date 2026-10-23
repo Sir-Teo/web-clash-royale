@@ -74,6 +74,14 @@ test("native crowns fly to scores, pause, resize and finish after a King win", a
   await second.click();
   await expect(page.locator("#status")).toContainText(endTime);
   await expect(page.locator("#crown-flights")).toHaveText("0 flying crowns");
+  const shake = async () =>
+    JSON.parse(
+      (await page.locator("#destruction").getAttribute("data-shake"))!,
+    );
+  expect((await shake()).remaining).toBeGreaterThan(0);
+  expect((await shake()).remaining).toBeLessThanOrEqual(2);
+  await second.click();
+  await expect.poll(async () => (await shake()).remaining).toBe(0);
   await page.locator("#reset").click();
   await page.locator("#destroy-king").click();
   for (let i = 0; i < 5; i++) await step.click();

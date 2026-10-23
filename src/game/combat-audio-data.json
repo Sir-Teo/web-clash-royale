@@ -98,6 +98,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Knight"
@@ -205,6 +215,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Archer"
@@ -296,6 +316,16 @@
         "enemyComponents": []
       },
       "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -416,6 +446,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Musketeer"
@@ -519,6 +559,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "MiniPekka"
@@ -610,6 +660,16 @@
         "enemyComponents": []
       },
       "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -721,6 +781,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "SpearGoblins"
@@ -816,6 +886,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Skeletons"
@@ -907,6 +987,16 @@
         "enemyComponents": []
       },
       "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -1026,6 +1116,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Bomber"
@@ -1129,6 +1229,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Valkyrie"
@@ -1228,6 +1338,16 @@
         "enemyComponents": []
       },
       "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -1347,6 +1467,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "BabyDragon"
@@ -1450,6 +1580,16 @@
         "enemyComponents": []
       },
       "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -1566,6 +1706,16 @@
         "enemyComponents": []
       },
       "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -1690,6 +1840,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Wizard"
@@ -1789,6 +1949,16 @@
         "enemyComponents": []
       },
       "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -1896,6 +2066,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Pekka"
@@ -1991,6 +2171,40 @@
         "components": [],
         "enemyComponents": []
       },
+      "death-impact": {
+        "sources": [
+          "MegaBombExplodeBalloon"
+        ],
+        "components": [
+          {
+            "sound": "sound_Balloon_Bomb_die",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_Balloon_Bomb_die",
+            "delay": 0
+          }
+        ]
+      },
+      "death-spawn": {
+        "sources": [
+          "Balloon_Bomb_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_Balloon_Bomb_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_Balloon_Bomb_deploy",
+            "delay": 0
+          }
+        ]
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Balloon"
@@ -2072,6 +2286,16 @@
         "enemyComponents": []
       },
       "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -2195,6 +2419,16 @@
           }
         ]
       },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_buildings",
         "row": "Tesla"
@@ -2266,6 +2500,16 @@
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       }
     },
     "princess-tower": {
@@ -2333,6 +2577,16 @@
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       }
     },
     "fireball": {
@@ -2397,6 +2651,16 @@
         "enemyComponents": []
       },
       "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -2481,6 +2745,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_other",
         "row": "Arrows"
@@ -2548,6 +2822,16 @@
         "enemyComponents": []
       },
       "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -4876,6 +5160,50 @@
         "pitch": [
           0.98,
           1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_Balloon_Bomb_die": [
+      {
+        "sourceFile": "sfx/explosion_01.wav",
+        "file": "explosion_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_Balloon_Bomb_deploy": [
+      {
+        "sourceFile": "sfx/bomb_drop_01.wav",
+        "file": "bomb_drop_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          1,
+          1
         ],
         "startDelay": [
           0,

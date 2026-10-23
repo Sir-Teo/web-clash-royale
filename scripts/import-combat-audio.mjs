@@ -143,6 +143,9 @@ for (const [id, profile] of Object.entries(JSON.parse(profilesBytes))) {
     : null;
   const binding = cardBindings[id],
     card = binding ? tables[binding.table][binding.row] : null;
+  const deathSpawn =
+    tables.characters[row.DeathSpawnCharacter] ??
+    tables.buildings[row.DeathSpawnCharacter];
   if (binding && !card) throw new Error(`Unknown card source ${id}`);
   profiles[id] = phases(profile.source, {
     attack: [row.AttackStartEffect],
@@ -153,6 +156,8 @@ for (const [id, profile] of Object.entries(JSON.parse(profilesBytes))) {
     summon: [row.SpawnCharacterEffect],
     appear: [row.AppearEffect],
     hide: [row.HideEffect],
+    "death-impact": [deathSpawn?.DeathEffect],
+    "death-spawn": [deathSpawn?.SpawnEffect],
   });
   if (binding)
     profiles[id].cardSource = { table: binding.table, row: binding.row };
@@ -172,6 +177,8 @@ for (const [id, { table, row: name }] of Object.entries(cardBindings)) {
     summon: [],
     appear: [],
     hide: [],
+    "death-impact": [],
+    "death-spawn": [],
   });
   profiles[id].cardSource = { table, row: name };
 }

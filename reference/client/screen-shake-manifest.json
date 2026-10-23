@@ -1,0 +1,54 @@
+{
+  "sources": [
+    {
+      "path": "reference/client/effects.csv",
+      "sha256": "22591ef669cb9af6535a10caae5b7f7f8b5b79c81630aeb3381a04bfef298985"
+    },
+    {
+      "path": "src/game/combat-audio-data.json",
+      "sha256": "891671880974c2f79b64e498d3cb39d425d6f9f1f178592c8e19741e33d9a22f"
+    },
+    {
+      "path": "src/game/death-audio-data.json",
+      "sha256": "0cc0223a3a3d71fd8a13bc577a4d10241c71e5b98280e6469f1d6ca65e06dfb0"
+    },
+    {
+      "path": "reference/client/combat-audio-manifest.json",
+      "sha256": "4ebd91ce8b79a09ff6c3aa6f3bef283c84cfe4e1c614e0ec9d9c9939bc6a48e2"
+    },
+    {
+      "path": "reference/client/screen-shake-layout.json",
+      "sha256": "243554c5b3983edabf4a8de6b0b57c77c1a09b93f16c03a42622606dc8fbbf53"
+    },
+    {
+      "path": "reference/client/screen-shake-native-probe.json",
+      "sha256": "4a5342709dc7dd265ed5f296c8d1a6b65f1fda0423d3702ed7a4c5af9505a48a"
+    },
+    {
+      "path": "reference/client/screen-shake-offset-probe.json",
+      "sha256": "9e130d1c822113628f7c1bf86ee2d761dc982d66df826e19c7f75352cfd111a0"
+    },
+    {
+      "path": "reference/client/screen-shake-scalar-probe.json",
+      "sha256": "87ac99fe562a404c4c2e7ccc5689db871eef1a180b34e5f67c497f6552ab2bac"
+    }
+  ],
+  "continuationScalars": [
+    {
+      "effect": "King_player_die",
+      "row": 1,
+      "milliseconds": 2000,
+      "reason": "Preserve the unique authored group duration from a continuation row; native blank normalization is not established."
+    },
+    {
+      "effect": "King_enemy_die",
+      "row": 1,
+      "milliseconds": 2000,
+      "reason": "Preserve the unique authored group duration from a continuation row; native blank normalization is not established."
+    }
+  ],
+  "output": {
+    "path": "src/render/screen-shake-data.json",
+    "sha256": "0367ea6fcd3e4bd45fa19c57358280aa27a11705314c9d33ec3bfd4c6dfdc3ca"
+  }
+}

@@ -33,7 +33,8 @@
     "assets:ending": "node scripts/import-ending.mjs",
     "assets:emotes": "node scripts/import-emotes.mjs",
     "assets:death-audio": "node scripts/import-death-audio.mjs",
-    "assets:combat-audio": "node scripts/import-combat-audio.mjs"
+    "assets:combat-audio": "node scripts/import-combat-audio.mjs",
+    "assets:screen-shake": "node scripts/import-screen-shake.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",

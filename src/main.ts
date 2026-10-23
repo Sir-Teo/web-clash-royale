@@ -1864,6 +1864,7 @@ Object.defineProperty(window, "__arena", {
         announcement: announcements.state,
         loadedBuildings: arena.loadedBuildings,
         destruction: arena.destructionState,
+        shake: arena.shakeState,
         placement: arena.placementState,
         loadedAnimations: arena.loadedAnimations,
         nativeTowerPrincesses: arena.nativeTowerPrincesses,
@@ -1876,6 +1877,7 @@ Object.defineProperty(window, "__arena", {
         r = arena.host.getBoundingClientRect();
       return { x: r.left + p.x, y: r.top + p.y };
     },
+    pick: (x: number, y: number) => arena.point(x, y),
   },
   writable: false,
 });

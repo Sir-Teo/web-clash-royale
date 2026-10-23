@@ -28,7 +28,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run build
-      - run: npx playwright test tests/browser/peer.spec.ts tests/browser/ending-performance.spec.ts tests/browser/death-audio.spec.ts tests/browser/combat-audio.spec.ts tests/browser/deployment-audio.spec.ts tests/browser/tesla-audio.spec.ts --project=desktop
+      - run: npx playwright test tests/browser/peer.spec.ts tests/browser/ending-performance.spec.ts tests/browser/death-audio.spec.ts tests/browser/combat-audio.spec.ts tests/browser/deployment-audio.spec.ts tests/browser/tesla-audio.spec.ts tests/browser/screen-shake.spec.ts tests/browser/balloon-bomb.spec.ts --project=desktop
         env:
           ARENA_PRODUCTION: "1"
       - uses: actions/upload-artifact@v7.0.2

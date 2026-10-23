@@ -57,10 +57,10 @@ describe("native combat audio evidence", () => {
     const manifest = JSON.parse(
       readFileSync("reference/client/combat-audio-manifest.json", "utf8"),
     );
-    expect(manifest.audioFiles).toHaveLength(109);
+    expect(manifest.audioFiles).toHaveLength(111);
     expect(manifest.sources).toHaveLength(11);
     expect(Object.keys(definitions.profiles)).toHaveLength(26);
-    expect(Object.keys(definitions.sounds)).toHaveLength(89);
+    expect(Object.keys(definitions.sounds)).toHaveLength(91);
     for (const file of [
       ...manifest.sources,
       ...manifest.audioFiles,
@@ -144,6 +144,60 @@ describe("native combat audio evidence", () => {
 });
 
 describe("combat audio timing and lifecycle", () => {
+  it("plays the Balloon's distinct death-bomb explosion after its owner has died", () => {
+    const battle = arena();
+    const balloon = unit(battle, "balloon", "blue", 4, 21);
+    balloon.hp = 1;
+    balloon.speed = 0;
+    battle.players.red.elixir = 10;
+    battle.players.red.hand[0] = "fireball";
+    expect(battle.play("red", 0, 4, 21).ok).toBe(true);
+    advanceUntil(battle, () =>
+      battle.audioEvents.some((e) => e.phase === "death-impact"),
+    );
+    const explosion = battle.audioEvents.find(
+      (e) => e.phase === "death-impact",
+    )!;
+    const death = battle.audioEvents.find(
+      (e) => e.phase === "death" && e.actor === balloon.id,
+    )!;
+    const dropped = battle.audioEvents.find((e) => e.phase === "death-spawn")!;
+    expect(dropped.actor).toBe(balloon.id);
+    expect(dropped.time).toBe(death.time);
+    expect(explosion.actor).toBe(balloon.id);
+    expect(explosion.time - death.time).toBeCloseTo(0.8, 1);
+    expect(battle.entities.some((e) => e.id === balloon.id)).toBe(false);
+    const plan = combatAudioPlan(
+      "balloon",
+      "death-impact",
+      battle.seed ^ explosion.id,
+    );
+    expect(plan).toHaveLength(1);
+    expect(plan[0].file).toBe("explosion_01");
+    expect(plan[0].volume).toBeCloseTo(0.8 * 0.35);
+    expect(plan[0].pitch).toBeGreaterThanOrEqual(0.97);
+    expect(plan[0].pitch).toBeLessThanOrEqual(1.03);
+    expect(plan[0].maximum).toBe(3);
+    expect(combatAudioPlan("balloon", "impact", 29)[0].file).not.toBe(
+      plan[0].file,
+    );
+    const wire = snapshot(battle);
+    expect(wire.audioEvents?.some((e) => e.phase === "death-impact")).toBe(
+      false,
+    );
+    expect(wire.lifecycleAudioEvents).toContainEqual(explosion);
+    const { audio, cues } = harness();
+    cues.consume([death, dropped], battle.seed, dropped.time);
+    cues.update(dropped.time, false, new Set());
+    expect(audio.play.mock.calls[0]).toEqual([
+      "bomb_drop_01",
+      0.8 * 0.35,
+      { pitch: 1, group: "sound_Balloon_Bomb_deploy", maximum: 2 },
+    ]);
+    cues.consume([death, explosion], battle.seed, battle.time);
+    cues.update(battle.time, false, new Set());
+    expect(audio.play.mock.calls[1][0]).toBe("explosion_01");
+  });
   it("uses the source Tesla opening and closing cues for both perspectives", () => {
     for (const team of ["blue", "red"] as const)
       for (const [phase, file, volume] of [

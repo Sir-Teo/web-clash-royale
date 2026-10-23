@@ -106,6 +106,12 @@
       "sha256": "4bb713adf208f815fd3688cc584a785868a5261f693e55724079a1276540b3fc"
     },
     {
+      "path": "public/assets/audio/bomb_drop_01.ogg",
+      "source": "sfx/bomb_drop_01.ogg",
+      "bytes": 8786,
+      "sha256": "8f99c1ee41b7a02337f6a75fd65e0db8f747715bd771a2e2eeae97d99beee6a7"
+    },
+    {
       "path": "public/assets/audio/bomb_skeleton_atk_04.ogg",
       "source": "sfx/bomb_skeleton_atk_04.ogg",
       "bytes": 9104,
@@ -170,6 +176,12 @@
       "source": "sfx/dummy_01.ogg",
       "bytes": 3558,
       "sha256": "fc41f7905e797f79d7d1a46801dc439dd1889459e3e2a62b938fcd5d04d4e696"
+    },
+    {
+      "path": "public/assets/audio/explosion_01.ogg",
+      "source": "sfx/explosion_01.ogg",
+      "bytes": 12667,
+      "sha256": "c30f5ef4ac666e1c7c61ee2e694642545f37b3f88ab8c15bbe92911be2add1a4"
     },
     {
       "path": "public/assets/audio/fire_ball_02.ogg",
@@ -714,6 +726,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "8a5881a6c23774ea57b567f3007b548ae93a0770d0459d9b7eb098450ddf42f7"
+    "sha256": "891671880974c2f79b64e498d3cb39d425d6f9f1f178592c8e19741e33d9a22f"
   }
 }

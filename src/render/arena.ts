@@ -28,6 +28,7 @@ import { destroyedTowerSites, TOWER_SITES } from "../game/arena-layout";
 import { DestructionEffects, deathEffect } from "./destruction";
 import { CrownEffects } from "./crowns";
 import { HealthLibrary, type HealthSprite } from "./health";
+import { NativeScreenShake } from "./screen-shake";
 interface Visual {
   object: T.Group;
   model?: Model;
@@ -58,6 +59,10 @@ export class Arena {
   private buildings = new BuildingLibrary();
   private health = new HealthLibrary();
   private healthPosition = new T.Vector3();
+  private shake = new NativeScreenShake();
+  private readonly reducedMotion = matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
   private destruction = new DestructionEffects(this.scene, this.effects);
   private crowns = new CrownEffects(this.scene, this.effects);
   private rubble = new Map<string, T.Mesh>();
@@ -451,6 +456,8 @@ export class Arena {
     batchGeometry(r, [...this.waters, ...this.flags]);
   }
   setBattle(battle: Battle) {
+    this.shake.reset(battle.audioEvents);
+    this.camera.clearViewOffset();
     this.destruction.clear();
     this.crowns.clear();
     for (const mesh of this.rubble.values()) this.scene.remove(mesh);
@@ -481,6 +488,13 @@ export class Arena {
   }
   get loadedAnimations() {
     return this.sprites.assets.size;
+  }
+  get shakeState() {
+    return {
+      ...this.shake.state,
+      reduced: this.reducedMotion.matches,
+      pixelsPerUnit: this.width / (this.camera.right - this.camera.left) / 30,
+    };
   }
   get nativeTowerPrincesses() {
     const asset = this.sprites.assets.get("tower-princess");
@@ -554,6 +568,7 @@ export class Arena {
     this.camera.right = w / 2;
     this.camera.top = h / 2;
     this.camera.bottom = -h / 2;
+    this.camera.clearViewOffset();
     this.camera.updateProjectionMatrix();
   }
   point(clientX: number, clientY: number): Point | null {
@@ -694,6 +709,22 @@ export class Arena {
     }
     const b = this.battle;
     if (!b) return;
+    this.shake.consume(b.audioEvents, b.seed, b.time);
+    const shake = this.shake.update(effectDelta, this.reducedMotion.matches);
+    // Native effect points share the renderer's existing 30-points-per-tile
+    // art scale. Projection shifts preserve ray picking and HUD crown anchors.
+    const pixelsPerUnit =
+      this.width / (this.camera.right - this.camera.left) / 30;
+    if (shake.x || shake.y)
+      this.camera.setViewOffset(
+        this.width,
+        this.height,
+        -shake.x * pixelsPerUnit,
+        -shake.y * pixelsPerUnit,
+        this.width,
+        this.height,
+      );
+    else if (this.camera.view?.enabled) this.camera.clearViewOffset();
     // Authored effects use elapsed presentation time. Movement and legacy
     // particle integration keep the bounded step supplied separately.
     this.destruction.update(effectDelta, this.camera);

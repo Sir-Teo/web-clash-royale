@@ -242,6 +242,8 @@ function render(now: number) {
   document.querySelector("#king-hits")!.textContent =
     `${battle.events.filter((e) => e.type === "hit" && e.card === undefined).length} tower hits`;
   const destruction = arena.destructionState;
+  (document.querySelector("#destruction") as HTMLElement).dataset.shake =
+    JSON.stringify(arena.shakeState);
   document.querySelector("#destruction")!.textContent =
     `${destruction.rubble} ruins · ${destruction.particles} debris · ${destruction.time.toFixed(1)}s visual`;
   document.querySelector("#result-state")!.textContent = battle.winner

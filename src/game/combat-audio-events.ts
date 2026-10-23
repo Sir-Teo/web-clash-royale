@@ -12,6 +12,8 @@ export type CombatAudioPhase =
   | "summon"
   | "appear"
   | "hide"
+  | "death-impact"
+  | "death-spawn"
   | "death";
 export interface CombatAudioEvent {
   id: number;
@@ -37,4 +39,6 @@ export const isLifecycleAudio = (event: CombatAudioEvent) =>
   event.phase === "summon" ||
   event.phase === "appear" ||
   event.phase === "hide" ||
+  event.phase === "death-impact" ||
+  event.phase === "death-spawn" ||
   event.phase === "death";

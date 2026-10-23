@@ -1,0 +1,130 @@
+{
+  "radiusFactor": 6,
+  "angleFactor": 0.0006283000111579895,
+  "profiles": {
+    "balloon": {
+      "impact": {
+        "sources": [
+          "balloon_hit"
+        ],
+        "components": [
+          {
+            "effect": "balloon_hit",
+            "delay": 0,
+            "duration": 0.35
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "balloon_hit",
+            "delay": 0,
+            "duration": 0.35
+          }
+        ]
+      },
+      "death-impact": {
+        "sources": [
+          "MegaBombExplodeBalloon"
+        ],
+        "components": [
+          {
+            "effect": "MegaBombExplodeBalloon",
+            "delay": 0,
+            "duration": 1
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "MegaBombExplodeBalloon",
+            "delay": 0,
+            "duration": 1
+          }
+        ]
+      }
+    },
+    "king-tower": {
+      "death": {
+        "sources": [
+          "King_player_die"
+        ],
+        "components": [
+          {
+            "effect": "King_player_die",
+            "delay": 0,
+            "duration": 2
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "King_enemy_die",
+            "delay": 0,
+            "duration": 2
+          }
+        ]
+      }
+    },
+    "princess-tower": {
+      "death": {
+        "sources": [
+          "TowerExplode"
+        ],
+        "components": [
+          {
+            "effect": "TowerExplode",
+            "delay": 0,
+            "duration": 1
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "TowerExplode",
+            "delay": 0,
+            "duration": 1
+          }
+        ]
+      }
+    },
+    "fireball": {
+      "impact": {
+        "sources": [
+          "Fireball_explosion"
+        ],
+        "components": [
+          {
+            "effect": "Fireball_explosion",
+            "delay": 0,
+            "duration": 0.8
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "Fireball_explosion",
+            "delay": 0,
+            "duration": 0.8
+          }
+        ]
+      }
+    },
+    "zap": {
+      "impact": {
+        "sources": [
+          "Spell_zap_effect"
+        ],
+        "components": [
+          {
+            "effect": "Spell_zap_effect",
+            "delay": 0,
+            "duration": 0.25
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "Spell_zap_effect",
+            "delay": 0,
+            "duration": 0.25
+          }
+        ]
+      }
+    }
+  }
+}
