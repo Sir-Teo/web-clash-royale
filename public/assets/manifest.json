@@ -159,6 +159,24 @@
       "sha256": "ac117bb5117b0214028edfe0d4bfb6a73f2654533eb56fda7a7775777d6fe1e1"
     },
     {
+      "path": "audio/battle-final-30.ogg",
+      "source": "music/30_sec_music_loop_01.ogg",
+      "bytes": 188531,
+      "sha256": "eecbaf31660dd7ae6a2abeea37e1e86d578ada78ada2ad59b8e6300a06647bc4"
+    },
+    {
+      "path": "audio/battle-last-minute.ogg",
+      "source": "music/60_sec_music_loop_01.ogg",
+      "bytes": 271192,
+      "sha256": "032494d3e6a1b18d693cb15e3decf48f03d4f0d467acfb8810aa5973c2b893b5"
+    },
+    {
+      "path": "audio/battle-sudden-death.ogg",
+      "source": "music/sudden_death_01.ogg",
+      "bytes": 339108,
+      "sha256": "d14a83aff4d55328c20f486e44c29f1fbb56ac69bf9b2400d350391c6af7649a"
+    },
+    {
       "path": "audio/battle.ogg",
       "source": "music/2min_loop_battle_01.ogg",
       "bytes": 705869,

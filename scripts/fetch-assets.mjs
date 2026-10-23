@@ -130,6 +130,9 @@ const files = [
     `chests/${n}.png`,
   ]),
   ["music/2min_loop_battle_01.ogg", "audio/battle.ogg"],
+  ["music/60_sec_music_loop_01.ogg", "audio/battle-last-minute.ogg"],
+  ["music/30_sec_music_loop_01.ogg", "audio/battle-final-30.ogg"],
+  ["music/sudden_death_01.ogg", "audio/battle-sudden-death.ogg"],
 ];
 const manifest = {
   source: "https://github.com/RoyaleAPI/cr-api-assets",
