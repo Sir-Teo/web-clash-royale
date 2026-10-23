@@ -1589,7 +1589,8 @@ export class Arena {
         this.chargeMarkers.burst(burst.actor, this.destruction.time, burst.age);
         this.chargeFilter.burst(burst.actor, this.destruction.time, burst.age);
         this.onCharge(burst);
-      } else if (burst.effect === "charge:dark-prince") this.onCharge(burst);
+      } else if (burst.effect === "charge:dark-prince" ||
+                 burst.effect === "charge:battle-ram") this.onCharge(burst);
     }
     for (const burst of this.hogLandings.consume(b.entities, b.seed, b.time))
       this.destruction.burst(

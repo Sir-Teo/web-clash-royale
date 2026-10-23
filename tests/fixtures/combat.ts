@@ -166,6 +166,20 @@ function setup() {
         target.hp = target.maxHp = 10000;
       }
     }
+  } else if (scenario === "battle-ram") {
+    const attacker = unit("battle-ram", "blue", 4, 23)[0];
+    attacker.cooldown = 0;
+    for (const target of unit("knight", "red", 4, 20)) {
+      target.active = false;
+      target.speed = target.damage = 0;
+      target.hp = target.maxHp = 10000;
+    }
+    for (const target of unit("cannon", "red", 4, 17.5)) {
+      target.active = false;
+      target.damage = 0;
+      target.hp = target.maxHp = 10000;
+      target.lifetime = undefined;
+    }
   } else if (scenario === "attack-impacts") {
     const attacker = (
       document.querySelector("#attack-card") as HTMLSelectElement
@@ -461,6 +475,18 @@ function render(now: number) {
       enemies: battle.entities.filter((e) => e.team === "red" && ["knight", "minions"].includes(e.card))
         .map((e) => ({ card: e.card, x: e.x, y: e.y, hp: e.hp })),
       visuals: arena.projectileState.filter((shot) => shot.sprites.some((sprite) => sprite.name === "bowler_projectile")),
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.battleRam =
+    JSON.stringify({
+      chargeCues,
+      rams: battle.entities.filter((e) => e.card === "battle-ram")
+        .map((e) => ({ x: e.x, y: e.y, move: e.move, hp: e.hp })),
+      barbarians: battle.entities.filter((e) => e.team === "blue" && e.card === "barbarians")
+        .map((e) => ({ x: e.x, y: e.y, deploy: e.deploy })),
+      cannon: battle.entities.find((e) => e.team === "red" && e.card === "cannon")?.hp,
+      knight: battle.entities.find((e) => e.team === "red" && e.card === "knight")?.hp,
+      hits: battle.events.filter((event) => event.type === "hit" && event.card === "battle-ram" && event.value).length,
+      deaths: battle.events.filter((event) => event.type === "death" && event.card === "battle-ram").length,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.darkPrince =
     JSON.stringify({

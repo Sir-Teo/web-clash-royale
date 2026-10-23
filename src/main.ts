@@ -1503,7 +1503,8 @@ try {
       burst.team,
       battle.time - burst.age,
       burst.age,
-      burst.effect === "charge:dark-prince" ? "dark-prince" : "prince",
+      burst.effect === "charge:dark-prince" ? "dark-prince" :
+        burst.effect === "charge:battle-ram" ? "battle-ram" : "prince",
     );
     // A slow render may advance match time before the next frame. Flush the
     // newly observed cue with its visible charge animation now.

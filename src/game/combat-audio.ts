@@ -74,7 +74,7 @@ export class NativeCombatAudio {
   constructor(private readonly audio: Pick<GameAudio, "enabled" | "play">) {}
   queueCharge(
     seed: number, team: Team, time: number, age: number,
-    profile: "prince" | "dark-prince" = "prince",
+    profile: "prince" | "dark-prince" | "battle-ram" = "prince",
   ) {
     // Preserve a late charge cue while its source movement animation is still
     // visible after a coalesced render or peer update.

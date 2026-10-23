@@ -30,6 +30,7 @@ import electroWizard from "./electro-wizard-data.json" with { type: "json" };
 import miner from "./miner-data.json" with { type: "json" };
 import bowler from "./bowler-data.json" with { type: "json" };
 import darkPrince from "./dark-prince-data.json" with { type: "json" };
+import battleRam from "./battle-ram-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -625,7 +626,7 @@ export class Battle {
     }
     return { ok: true, reason: "" };
   }
-  private spawn(id: CardId, team: Team, x: number, y: number, audio = true) {
+  private spawn(id: CardId, team: Team, x: number, y: number, audio = true, deploy = 1) {
     const c = CARD_MAP[id];
     this.entities.push({
       id: this.nextId++,
@@ -656,7 +657,7 @@ export class Battle {
       speed: c.speed,
       target: null,
       age: 0,
-      deploy: 1,
+      deploy,
       stun: 0,
       attack: 0,
       move: 0,
@@ -1390,7 +1391,9 @@ export class Battle {
       }
       if (this.inRange(e, target)) {
         if (e.cooldown <= 1e-8) {
-          const damage = e.card === "dark-prince" && e.move >= darkPrince.chargeRange
+          const damage = e.card === "battle-ram" && e.move >= battleRam.chargeRange
+            ? Math.round((battleRam.sourceChargeDamage * 218) / 100)
+            : e.card === "dark-prince" && e.move >= darkPrince.chargeRange
             ? Math.round(darkPrince.sourceChargeDamage * 1.1 ** 5)
             : e.damage * (e.card === "prince" && e.move >= 2.3 ? 2 : 1);
           e.move = 0;
@@ -1472,6 +1475,13 @@ export class Battle {
   }
   private releaseAttack(e: Entity, target: Entity, damage: number) {
     this.audioAttacks.delete(e.id);
+    if (e.card === "battle-ram") {
+      this.hurt(target, damage);
+      this.emit("hit", e.team, target.x, target.y, "battle-ram", damage);
+      this.emitImpactAudio(e, damage);
+      this.hurt(e, e.hp);
+      return;
+    }
     if (e.card === "dark-prince") {
       for (const victim of this.entities) {
         if (!this.validTarget(e, victim) ||
@@ -1920,7 +1930,9 @@ export class Battle {
       (e.slow ? iceWizard.speedMultiplier : 1) *
       (e.card === "prince" && e.move > 2.3 ? 1.8 :
         e.card === "dark-prince" && e.move > darkPrince.chargeRange
-          ? darkPrince.chargeSpeedMultiplier : 1);
+          ? darkPrince.chargeSpeedMultiplier :
+        e.card === "battle-ram" && e.move > battleRam.chargeRange
+          ? battleRam.chargeSpeedMultiplier : 1);
     const move = Math.min(d, speed * STEP);
     e.x = clamp(e.x + (dx / d) * move, 0.5, 17.5);
     e.y = clamp(e.y + (dy / d) * move, 0.6, 31.4);
@@ -1934,6 +1946,9 @@ export class Battle {
       for (let j = i + 1; j < units.length; j++) {
         const a = units[i],
           b = units[j];
+        // The archived ram has IgnorePushback: it must pass through defenders
+        // rather than become trapped behind one in front of its building.
+        if (a.card === "battle-ram" || b.card === "battle-ram") continue;
         if (a.air !== b.air) continue;
         const d = dist(a, b),
           min = (a.radius + b.radius) * 0.86;
@@ -1981,6 +1996,17 @@ export class Battle {
     this.cancelAudio(e);
     this.emitAudio("death", e.team, audioProfile(e), e.id);
     this.emit("death", e.team, e.x, e.y, e.card);
+    if (e.card === "battle-ram") {
+      this.emitAudio("death-spawn", e.team, "battle-ram", e.id);
+      for (let i = 0; i < battleRam.deathSpawnCount; i++) {
+        const side = i - (battleRam.deathSpawnCount - 1) / 2;
+        this.spawn(
+          "barbarians", e.team,
+          clamp(e.x + side * battleRam.deathSpawnRadius, 0.6, 17.4),
+          clamp(e.y, 0.8, 31.2), false, battleRam.deathSpawnDeployTime,
+        );
+      }
+    }
     if (e.card === "balloon") {
       this.projectiles.push({
         id: this.nextId++,

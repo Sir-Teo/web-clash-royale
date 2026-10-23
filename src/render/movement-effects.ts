@@ -2,6 +2,7 @@ import type { Entity, Point, Team } from "../game/engine";
 import { chargeEffect, movementEffect } from "./destruction";
 import type { ChargeEffect, MovementEffect } from "./destruction";
 import darkPrince from "../game/dark-prince-data.json" with { type: "json" };
+import battleRam from "../game/battle-ram-data.json" with { type: "json" };
 
 export interface MovementBurst {
   actor: number;
@@ -74,10 +75,11 @@ export class NativeMovementEffects {
         distance <= Math.max(2.5, elapsed * 4);
       // Charge animation begins when the movement timer passes its threshold.
       // A coalesced peer frame interpolates it along the path like footsteps.
-      const chargeAt = entity.card === "dark-prince" ? darkPrince.chargeRange : 2.3;
+      const chargeAt = entity.card === "dark-prince" ? darkPrince.chargeRange :
+        entity.card === "battle-ram" ? battleRam.chargeRange : 2.3;
       if (
         chargeTravel &&
-        (entity.card === "prince" || entity.card === "dark-prince") &&
+        (entity.card === "prince" || entity.card === "dark-prince" || entity.card === "battle-ram") &&
         previous.moved <= chargeAt &&
         entity.move > chargeAt
       ) {

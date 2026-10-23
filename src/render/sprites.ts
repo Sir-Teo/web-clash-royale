@@ -2,6 +2,7 @@ import * as T from "three";
 import type { CardId } from "../game/cards";
 import type { Entity } from "../game/engine";
 import darkPrince from "../game/dark-prince-data.json" with { type: "json" };
+import battleRam from "../game/battle-ram-data.json" with { type: "json" };
 import { facing, selectClip, animationFrame } from "./animation";
 import { hasNativeDeployFilter } from "./deploy-filter";
 import type { AnimationClip } from "./animation";
@@ -74,6 +75,7 @@ const heights: Partial<Record<SpriteId, number>> = {
   bowler: 2.4,
   "dark-prince": 2.1,
   "dark-prince-shield": 2.1,
+  "battle-ram": 2.5,
   witch: 2.1,
   prince: 2.25,
   pekka: 2.7,
@@ -260,6 +262,7 @@ export class SpriteLibrary {
         : moving
           ? (e.card === "prince" && e.move > 2.3) ||
             (e.card === "dark-prince" && e.move > darkPrince.chargeRange)
+            || (e.card === "battle-ram" && e.move > battleRam.chargeRange)
             ? "charge"
             : "run"
           : "idle";
