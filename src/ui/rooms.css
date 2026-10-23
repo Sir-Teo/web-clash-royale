@@ -243,3 +243,30 @@ body.in-battle {
     margin-top: 12px;
   }
 }
+
+.peer-code {
+  width: 100%;
+  min-height: 64px;
+  resize: vertical;
+  font: 12px/1.5 monospace;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+  margin: 6px 0 12px;
+  text-transform: none;
+}
+#create-peer,
+#peer-accept-form button,
+#peer-join-form button {
+  width: 100%;
+  min-height: 48px;
+}
+#cancel-peer {
+  display: block;
+  margin: 12px auto 0;
+  min-height: 44px;
+}
+@media (max-width: 480px) {
+  .peer-code {
+    font-size: 16px;
+  }
+}

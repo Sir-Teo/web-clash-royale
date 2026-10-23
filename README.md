@@ -1,6 +1,6 @@
 # Clash Royale · Browser Arena
 
-A private, independent browser fan game for Sir-Teo. Built with TypeScript, Three.js and Vite. AI battles work offline. Friendly two-player battles use the included room server.
+A private, independent browser fan game for Sir-Teo. Built with TypeScript, Three.js and Vite. AI battles work offline. Friendly two-player battles connect directly between browsers; the default build is front end only.
 
 Build an eight-card deck from 24 cards, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
 
@@ -8,9 +8,9 @@ Combat includes cancellable attack windups, defensive building pulls, homing sho
 
 Princess Towers preserve the original base and foreground battlements, with the animated character placed between them using her authored origin and the archived attachment height.
 
-Play against AI or challenge a friend in a private two-player room over Wi-Fi or a hosted HTTPS server. Room codes, invite links, ready checks, reconnects, emotes and both players’ replays are supported. The full live card roster and current balance parity are not implemented. See [multiplayer setup](docs/MULTIPLAYER.md) for Wi-Fi and remote hosting.
+Play against AI or challenge a friend over Wi-Fi or compatible remote networks. Exchange an invite and reply to connect the browsers directly, then use ready checks, emotes and both players’ replays. The full live card roster and current balance parity are not implemented. See [multiplayer setup](docs/MULTIPLAYER.md) for direct Wi-Fi play and static hosting.
 
-The four original King emotes use complete native expressions and speech-bubble animations, with 16 voice variations. Six original quick-chat phrases use their native text bubbles, wooden selector and archived chat font. Each player has an independent bubble, a server-enforced cooldown and a persistent local mute option. The selector works with touch, mouse and keyboard; reduced motion uses still artwork.
+The four original King emotes use complete native expressions and speech-bubble animations, with 16 voice variations. Six original quick-chat phrases use their native text bubbles, wooden selector and archived chat font. Each player has an independent bubble, a host-enforced cooldown and a persistent local mute option. The selector works with touch, mouse and keyboard; reduced motion uses still artwork.
 
 Destroyed towers leave native rubble for the rest of the battle. Their collapse uses original fire, smoke, flying plank and wall-fragment artwork. Debris pauses with the match and finishes settling after victory; replay seeking reconstructs the correct ruins.
 
@@ -69,7 +69,7 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 
 ## Phone play
 
-Open the Vite **Network** URL on a phone connected to the same Wi-Fi as the development computer. `localhost` on a phone refers to the phone itself. Portrait battles fill the available browser height; rotating into landscape moves the hand alongside the arena. Safe-area padding keeps controls away from display cutouts and the home indicator. Tap a card and then the arena, or drag a card onto the battlefield. Pause and settings use 44-pixel touch targets. AI battles pause when the browser goes into the background. Friendly battles keep running on the server; reconnect within 30 seconds after a connection loss.
+Open the Vite **Network** URL on a phone connected to the same Wi-Fi as the development computer. `localhost` on a phone refers to the phone itself. Portrait battles fill the available browser height; rotating into landscape moves the hand alongside the arena. Safe-area padding keeps controls away from display cutouts and the home indicator. Tap a card and then the arena, or drag a card onto the battlefield. Pause and settings use 44-pixel touch targets. AI battles pause when the browser goes into the background. Direct friendly battles pause when either player switches apps. Keep both tabs open; a reload requires a new invite.
 
 ## Controls
 

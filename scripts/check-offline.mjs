@@ -32,7 +32,7 @@ try {
       const cache = await caches.open(name);
       if (
         (await cache.keys()).some((request) =>
-          /\/assets\/transport-worker-[^/]+\.js$/.test(
+          /\/assets\/peer-host-worker-[^/]+\.js$/.test(
             new URL(request.url).pathname,
           ),
         )
@@ -42,7 +42,7 @@ try {
     return false;
   });
   if (!workerCached)
-    throw new Error("Network worker is missing from the offline cache");
+    throw new Error("Browser match worker is missing from the offline cache");
   await context.setOffline(true);
   await page.reload();
   await page.waitForFunction(
@@ -102,7 +102,7 @@ try {
     .waitFor();
   if (errors.length) throw new Error(errors.join("\n"));
   console.log(
-    "Production offline reload, battle start and native emote/voice/font/quick chat passed.",
+    "Production offline reload, browser match worker, battle start and native connection/emote/voice/font/quick chat passed.",
   );
 } finally {
   await browser.close();

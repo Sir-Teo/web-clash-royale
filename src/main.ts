@@ -15,9 +15,12 @@ import { isEmote } from "./game/emotes";
 import { endResult } from "./ui/ending-data";
 import {
   network,
+  peerNetwork,
+  legacyNetwork,
   startupRoomRequested,
   flushStartupRoom,
 } from "./network/session";
+import { signalLink } from "./network/peer-signaling";
 import { PROTOCOL } from "./network/protocol";
 import { applySnapshot, snapshot } from "./network/perspective";
 import { NativeIntro, INTRO_ACTION_TIME } from "./ui/intro";
@@ -586,7 +589,8 @@ function updateBattleUI(force = false) {
   document.querySelectorAll<HTMLElement>("[data-slot]").forEach((e, i) => {
     (e as HTMLButtonElement).disabled =
       intro.clock.blocking ||
-      (multiplayer && (!network.connected || network.pending));
+      (multiplayer &&
+        (!network.connected || network.pending || !!network.room?.paused));
     e.classList.toggle("unaffordable", CARD_MAP[p.hand[i]].cost > p.elixir);
     e.classList.toggle("selected", selected === i);
     e.setAttribute("aria-pressed", String(selected === i));
@@ -867,14 +871,22 @@ function updateConnection() {
   const opponent = network.room?.players.find((p) => p.team !== network.team);
   const status = $("#connection-status");
   const message = !network.connected
-    ? "Reconnecting… battle continues"
+    ? peerNetwork
+      ? "Reconnecting… battle paused"
+      : "Reconnecting… battle continues"
     : opponent && !opponent.connected
-      ? "Opponent reconnecting · 30s grace"
-      : `FRIENDLY · ${network.latency ? `${network.latency} ms` : "Connected"}`;
+      ? peerNetwork
+        ? "Friend disconnected · battle paused"
+        : "Opponent reconnecting · 30s grace"
+      : network.room?.paused
+        ? "Battle paused · return to both game tabs"
+        : `FRIENDLY · ${network.latency ? `${network.latency} ms` : "Connected"}`;
   if (status.textContent !== message) status.textContent = message;
   status.classList.toggle(
     "reconnecting",
-    !network.connected || (!!opponent && !opponent.connected),
+    !network.connected ||
+      !!network.room?.paused ||
+      (!!opponent && !opponent.connected),
   );
 }
 function roomLink(code: string) {
@@ -882,6 +894,10 @@ function roomLink(code: string) {
 }
 function showMultiplayer(code = "") {
   if (screen !== "lobby") return;
+  if (peerNetwork) {
+    showPeerMultiplayer();
+    return;
+  }
   const room = network.room;
   if (room) {
     modal(
@@ -928,7 +944,7 @@ function showMultiplayer(code = "") {
   );
   $("#create-room").onclick = () => {
     roomError = "";
-    network.connect({
+    legacyNetwork!.connect({
       type: "create",
       version: PROTOCOL,
       name: profile.name,
@@ -939,7 +955,7 @@ function showMultiplayer(code = "") {
   $("#join-room-form").onsubmit = (e) => {
     e.preventDefault();
     roomError = "";
-    network.connect({
+    legacyNetwork!.connect({
       type: "join",
       version: PROTOCOL,
       name: profile.name,
@@ -949,8 +965,107 @@ function showMultiplayer(code = "") {
   };
   document
     .querySelector<HTMLButtonElement>("#resume-room")
-    ?.addEventListener("click", () => network.resume());
+    ?.addEventListener("click", () => legacyNetwork!.resume());
 }
+let peerDraft = new URLSearchParams(location.hash.slice(1)).get("battle") ?? "";
+let peerReply = "";
+async function peerAction(action: () => Promise<void>) {
+  roomError = "";
+  try {
+    await action();
+  } catch (error) {
+    roomError =
+      error instanceof Error
+        ? error.message
+        : "Could not connect. Try a new invite.";
+    if (screen === "lobby" && modalKey === "room") showPeerMultiplayer();
+  }
+}
+function showPeerMultiplayer() {
+  const peer = peerNetwork!;
+  const room = peer.room;
+  const footnote =
+    '<p class="modal-footnote">Keep both game tabs open. Battles pause when either player switches apps. Some remote networks block direct play; try the same Wi-Fi if connecting fails.</p>';
+  let content = "";
+  if (room) {
+    content = `<div class="room-banner">${icon("swords")}<span>${modeNames[room.mode]} · Level 11</span></div><p class="room-note">Connected directly. Ready when you are.</p><div class="room-players">${room.players.map((p) => `<div class="room-player ${p.team}">${icon("shield")}<div><b>${esc(p.name)}</b><span>${p.ready ? "Ready for battle" : "Preparing deck"}</span></div>${icon(p.ready ? "check" : "swords")}</div>`).join("")}</div><button id="room-ready" class="primary-button" ${!peer.connected ? "disabled" : ""}>${room.players.find((p) => p.team === peer.team)?.ready ? "Cancel ready" : "Ready for battle"}</button>`;
+  } else if (peer.setup === "gathering" || peer.setup === "connecting") {
+    content = `<div class="room-banner">${icon("users")}<span>${peer.setup === "gathering" ? "Preparing your connection…" : "Connecting to your friend…"}</span></div><p class="room-note" role="status">${peer.setup === "gathering" ? "This usually takes a few seconds." : "Keep this tab open on both devices."}</p>`;
+  } else if (peer.setup === "offer" || peer.setup === "answer") {
+    const hosting = peer.setup === "offer";
+    content = `<div class="room-banner">${icon("users")}<span>${hosting ? "1. Send your invite" : "2. Send your reply"}</span></div><p class="room-note">${hosting ? "Send this invite to your friend. They can open it or paste it into Play with a friend." : "Send this reply back to the player who invited you. Keep this tab open while they paste it."}</p><label class="field-label" for="peer-share">${hosting ? "INVITE LINK" : "CONNECTION REPLY"}</label><textarea id="peer-share" class="name-input peer-code" readonly rows="2" spellcheck="false">${esc(hosting ? signalLink(peer.signal) : peer.signal)}</textarea><button class="secondary-button" id="copy-peer">${hosting ? "Copy invite" : "Copy reply"}</button>${hosting ? `<div class="room-divider">2. CONNECT YOUR FRIEND</div><form id="peer-accept-form"><label class="field-label" for="peer-reply">PASTE THEIR REPLY</label><textarea id="peer-reply" class="name-input peer-code" rows="2" placeholder="CR1.…" spellcheck="false" required>${esc(peerReply)}</textarea><button class="primary-button" type="submit">Connect friend</button></form>` : '<p class="room-note" role="status">Waiting for your friend to connect…</p>'}`;
+  } else {
+    content = `<div class="room-banner">${icon("users")}<span>Two players. One crown.</span></div><p class="room-note">Play directly between two browsers on Wi-Fi or online. Create an invite, then exchange one reply to connect.</p><button class="primary-button" id="create-peer">Create an invite</button><div class="room-divider">OR JOIN A FRIEND</div><form id="peer-join-form"><label class="field-label" for="peer-invite">PASTE THEIR INVITE</label><textarea id="peer-invite" class="name-input peer-code" rows="2" placeholder="Invite link or CR1.…" spellcheck="false" required>${esc(peerDraft)}</textarea><button class="secondary-button" type="submit">Join friend</button></form>`;
+  }
+  modal(
+    "Play with a friend",
+    `${content}<p class="room-error" role="status">${esc(roomError)}</p>${footnote}${peer.setup !== "idle" ? '<button id="cancel-peer" class="text-button">Leave connection</button>' : ""}`,
+    "room",
+  );
+  const player = () => ({ name: profile.name, deck: profile.deck });
+  document
+    .querySelector<HTMLButtonElement>("#create-peer")
+    ?.addEventListener("click", () => {
+      peerReply = "";
+      void peerAction(() =>
+        peer.offer(player(), mode === "double" ? "double" : "classic"),
+      );
+    });
+  document
+    .querySelector<HTMLTextAreaElement>("#peer-invite")
+    ?.addEventListener("input", (e) => {
+      peerDraft = (e.target as HTMLTextAreaElement).value;
+    });
+  document
+    .querySelector<HTMLTextAreaElement>("#peer-reply")
+    ?.addEventListener("input", (e) => {
+      peerReply = (e.target as HTMLTextAreaElement).value;
+    });
+  document
+    .querySelector<HTMLFormElement>("#peer-join-form")
+    ?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      void peerAction(() => peer.answer(peerDraft, player()));
+    });
+  document
+    .querySelector<HTMLFormElement>("#peer-accept-form")
+    ?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      void peerAction(() => peer.accept(peerReply));
+    });
+  document
+    .querySelector<HTMLButtonElement>("#copy-peer")
+    ?.addEventListener("click", async () => {
+      const field = $<HTMLTextAreaElement>("#peer-share");
+      try {
+        await navigator.clipboard.writeText(field.value);
+        toast("Copied. Send it to your friend.");
+      } catch {
+        field.focus();
+        field.select();
+        toast("Select and copy the connection text.");
+      }
+    });
+  document
+    .querySelector<HTMLButtonElement>("#cancel-peer")
+    ?.addEventListener("click", () => {
+      peer.leave();
+      roomError = "";
+      showPeerMultiplayer();
+    });
+  document
+    .querySelector<HTMLButtonElement>("#room-ready")
+    ?.addEventListener("click", () =>
+      peer.send({
+        type: "ready",
+        ready: !peer.room?.players.find((p) => p.team === peer.team)?.ready,
+      }),
+    );
+}
+if (peerNetwork)
+  peerNetwork.onSetup = () => {
+    if (screen === "lobby" && modalKey === "room") showPeerMultiplayer();
+  };
 network.onConnection = (status) => {
   connectionStatus =
     status === "connecting"
@@ -1468,7 +1583,7 @@ $("#replay-seek").addEventListener("input", () => {
 $("#about-button").onclick = () =>
   modal(
     "Made for the love of the game.",
-    `<div class="about-content"><span class="about-crown">${icon("crown")}</span><p>An independent browser fan project. Built with TypeScript and Three.js, with local saves and a deterministic battle simulation.</p><p>This project is not affiliated with, endorsed, sponsored, or specifically approved by Supercell. Clash Royale artwork, audio, and trademarks belong to Supercell.</p><p>Card art, renders, and audio sourced from <a href="https://github.com/RoyaleAPI/cr-api-assets" target="_blank" rel="noreferrer">RoyaleAPI's asset collection</a>. Original troop and building animations, projectile effects and scenery are reconstructed from archived game assets. Surrounding 3D geometry, particles and fallback models were created for this project.</p><small>24 curated cards · Classic rules · Level 11 standard · AI battles<br>Not a live balance replica. Friendly 1v1 rooms over Wi-Fi or a hosted server. No official game account connection.</small></div>`,
+    `<div class="about-content"><span class="about-crown">${icon("crown")}</span><p>An independent browser fan project. Built with TypeScript and Three.js, with local saves and a deterministic battle simulation.</p><p>This project is not affiliated with, endorsed, sponsored, or specifically approved by Supercell. Clash Royale artwork, audio, and trademarks belong to Supercell.</p><p>Card art, renders, and audio sourced from <a href="https://github.com/RoyaleAPI/cr-api-assets" target="_blank" rel="noreferrer">RoyaleAPI's asset collection</a>. Original troop and building animations, projectile effects and scenery are reconstructed from archived game assets. Surrounding 3D geometry, particles and fallback models were created for this project.</p><small>24 curated cards · Classic rules · Level 11 standard · AI battles<br>Not a live balance replica. Direct browser-to-browser friendly battles over Wi-Fi or compatible remote networks. No official game account connection.</small></div>`,
     "about",
   );
 document.addEventListener("keydown", (e) => {
@@ -1562,10 +1677,12 @@ const invitedRoom = new URL(location.href).searchParams.get("room");
 if (startupRoomRequested) {
   showMultiplayer();
   flushStartupRoom();
+} else if (peerNetwork && peerDraft) {
+  showPeerMultiplayer();
 } else if (invitedRoom && /^[a-z2-9]{6}$/i.test(invitedRoom)) {
   showMultiplayer(invitedRoom.toUpperCase());
 }
-if (["localhost", "127.0.0.1"].includes(location.hostname)) {
+if (legacyNetwork && ["localhost", "127.0.0.1"].includes(location.hostname)) {
   void fetch("/api/lan")
     .then((r) => r.json())
     .then((data) => {
@@ -1583,7 +1700,9 @@ function frame(now: number) {
   frameTime = now;
   if (screen !== "lobby" && !paused && !battle.winner) {
     const wasOpening = intro.clock.blocking;
-    accumulator += intro.clock.advance(delta * speed);
+    accumulator += intro.clock.advance(
+      multiplayer && network.room?.paused ? 0 : delta * speed,
+    );
     if (wasOpening && !intro.clock.blocking) {
       announcements.cue("match start");
       updateBattleUI(true);
@@ -1605,7 +1724,8 @@ function frame(now: number) {
     if (!multiplayer) processEvents();
   }
   if (multiplayer) processEvents();
-  const idle = screen === "lobby" || paused || !!battle.winner;
+  const presentationPaused = paused || (multiplayer && !!network.room?.paused);
+  const idle = screen === "lobby" || presentationPaused || !!battle.winner;
   if (!idle || now - lastRenderTime >= 1000 / 30 - 0.5) {
     const renderElapsed = Math.max(0, (now - lastRenderTime) / 1000);
     const renderDelta = Math.min(renderElapsed, 0.1);
@@ -1614,13 +1734,13 @@ function frame(now: number) {
     arena.render(
       screen === "lobby" || battle.winner
         ? renderDelta
-        : paused
+        : presentationPaused
           ? 0
           : renderDelta * speed,
       animationTime,
       screen === "lobby" || battle.winner
         ? renderElapsed
-        : paused
+        : presentationPaused
           ? 0
           : renderElapsed * speed,
     );

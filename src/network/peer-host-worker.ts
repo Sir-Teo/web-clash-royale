@@ -18,7 +18,9 @@ const inflight = { blue: false, red: false };
 function emit(team: Team, message: ServerMessage) {
   if (message.type === "state") {
     if (inflight[team]) {
-      pending[team] = message;
+      // The engine continues mutating entities after this tick. A retained
+      // snapshot must own those values until the UI acknowledges delivery.
+      pending[team] = structuredClone(message);
       return;
     }
     inflight[team] = true;

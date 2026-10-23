@@ -1,54 +1,48 @@
-# Friendly 1v1
+# Friendly 1v1 — front end only
 
-The same server supports phones and computers on Wi-Fi and remote HTTPS connections. Both players open the same address, choose **Play with a friend**, and create or join a six-character room. Share the invite link or enter the room code, then both press **Ready for battle**. Each player sees their own blue towers at the bottom. The chosen deck is locked when joining; leave the room to change it. Classic and Double elixir work in friendly rooms.
+The default game is a static browser app. Two players connect directly with WebRTC; there is no game server, account, signaling service or database to deploy. The browser that creates the invite runs the match in a worker. Both players see their own blue towers at the bottom.
 
-## Run on your Wi-Fi
+## Connect two players
+
+1. Open the game on both devices and choose **Play with a friend**.
+2. One player chooses **Create an invite** and sends the invite link to their friend.
+3. The friend opens the link (or pastes it into the join field), chooses **Join friend**, and sends the generated reply back.
+4. The inviting player pastes that reply and chooses **Connect friend**.
+5. Both choose **Ready for battle**.
+
+Keep the original tabs open during the exchange. Invites belong to that tab and expire when it closes or reloads. A reply only works with its matching invite. Copy controls fall back to selecting the text when clipboard access is unavailable. Choose the deck before connecting; leave the connection to change it.
+
+## Wi-Fi and static hosting
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Open the printed Network address on both devices, for example `http://10.0.0.15:5173`. The room screen opened on localhost offers an invite using the computer's network address. A phone's localhost points to the phone. Both devices must be able to reach the computer; guest Wi-Fi isolation can prevent this. Vite includes the multiplayer server and uses the same port as the game.
-
-For a production server:
+Open Vite's printed **Network** address on each phone. A phone's `localhost` refers to the phone itself; create the invitation from the shared Network address so the link works on both devices. Guest Wi-Fi isolation can prevent direct connections.
 
 ```sh
 npm run build
-npm start
+npm start -- --port 5189
 ```
 
-The server listens on `0.0.0.0`, using `PORT` or 5173. It serves the built game, `/health`, and the `/battle` WebSocket endpoint. `npm run preview` previews static assets only; use `npm start` for multiplayer.
+The build produces `dist/`, which any ordinary static HTTPS host can serve. `npm start` is a local static preview; no game backend runs. No remote site or paid hosting has been provisioned.
 
-## Remote hosting
-
-A remote deployment has not been provisioned automatically. `render.yaml` prepares a single Node web service: connect the private `Sir-Teo/web-clash-royale` repository in Render and create a Blueprint. The build is `npm ci --include=dev && npm run build`; the start command is `npm start`. Share the resulting HTTPS URL. The client automatically uses secure WebSockets on HTTPS.
-
-Render's [web service documentation](https://render.com/docs/web-services) and [WebSocket guide](https://render.com/docs/websocket) describe the shared HTTP/WebSocket port. The supplied free plan can sleep between sessions and rooms disappear on restart. For sustained play, use a continuously running service. No paid service is created by these files.
-
-A Docker build is also supplied for an existing host:
-
-```sh
-docker build -t browser-royale .
-docker run --rm -p 5173:5173 browser-royale
-```
-
-Put HTTPS in front of the container using a reverse proxy that forwards WebSocket upgrades. Keep the origin host intact, or set `PUBLIC_ORIGIN=https://your-game.example` to the exact public origin. Run one instance; room state is in process memory and is not distributed across replicas. Static-only hosting cannot run this server.
+Remote play uses Google's public STUN endpoint to discover routes, then carries match data directly between browsers. No TURN relay is configured. Some cellular, corporate and restrictive NAT networks cannot connect directly; use the same Wi-Fi or another network if the connection times out. This is a connectivity limitation, not a requirement to deploy the game server. See the [WebRTC peer connection guide](https://webrtc.org/getting-started/peer-connections).
 
 ## Match behavior
 
-- The server simulates combat at 30 Hz and broadcasts authoritative state at 15 Hz. It validates cards, elixir, placement, room membership and input sequence numbers. Clients cannot choose their team or advance time.
-- Only your own hand, queue and elixir are sent during play. The final replay reveals both decks and the complete action log.
-- The server uses canonical blue/red coordinates. Red's presentation rotates positions, projectile paths, events and lanes by 180 degrees, then swaps team colors. Replays retain canonical commands and a perspective flag, so their simulation is unchanged.
-- Menus and background tabs do not pause a friendly battle. Disconnections allow 30 seconds to reconnect, then the disconnected side loses. Refreshing the same tab reserves its saved seat through a small startup module before loading the graphics code. The socket and heartbeat run in a dedicated worker so graphics initialization can block the UI without starving the connection. The server keeps running while the arena loads, and the UI catches up to the newest snapshot when it becomes responsive. A reconnect button remains available when opening a different invitation. Session credentials stay in session storage; invite URLs contain only the room code.
-- Four animated King emotes with voices and six quick-chat phrases reach both players. Each player has one server-enforced cooldown shared by both reaction types. The emote menu includes a persistent local mute option. Both text and emotes are cleared when a tab is hidden and are not saved in replays. Surrender is resolved by the server.
-- Friendly battles save results and replays but award no trophies, gold or chests. Duplicate reconnects to a completed room do not record the match twice.
-- Waiting rooms expire after ten minutes; completed rooms remain resumable for two minutes. Server restarts clear rooms. There is no matchmaking, account identity, spectator mode or cross-server room discovery.
+- The inviting browser runs the 30-Hz simulation in a dedicated worker and sends snapshots at approximately 15 Hz. Both players' commands use the same elixir, placement and sequence validation. The host necessarily owns the complete state, so this is for friendly games rather than adversarial ranked play.
+- The guest's snapshots mask the opposing hand, queue and elixir. The final replay contains both decks and all accepted actions. Both perspectives reuse the existing canonical simulation and replay format.
+- Both game tabs must remain open. Hiding either tab pauses the shared match; returning resumes it. A temporary connection interruption pauses combat. If the data channel closes, the host reloads or ICE connectivity fails, create a fresh invite. There is no server-backed reload/rejoin.
+- Menus leave the match running while both tabs remain visible. Surrender produces the normal final result and replay. Friendly matches award no trophies, gold or chests.
+- Native King emotes and quick chat share a per-player cooldown enforced by the host. They remain transient and do not enter replay data.
+- Ordered data messages are split into bounded chunks for phone browsers. Slow recipients receive the latest state instead of an unbounded snapshot queue. The worker also pauses if the host UI stops responding.
 
-The transport uses bounded messages, rate limits, connection limits, heartbeat detection and backpressure limits. This is a private-room game server, not a distributed ranked service.
+## Verification and retained server experiments
 
-## Verification
+`tests/peer.test.ts` covers ready checks, deck and deployment validation, duplicate commands, private snapshots, pause/resume, reactions, replay equivalence and bounded signaling/data packets. `tests/browser/peer.spec.ts` uses two real browsers against static files, exchanges the actual invite and reply, deploys from both perspectives, shares reactions, pauses through visibility changes, surrenders and opens the replay. It also checks that the app makes no game WebSocket or `/api/` requests.
 
-`tests/network.test.ts` opens real WebSocket connections to an ephemeral server and checks synchronization, hidden hands, forged/duplicate moves, deck/version validation, multiple-room isolation, ready checks, reconnect credentials and disconnect forfeits. `tests/browser/multiplayer.spec.ts` plays with two browser contexts through the UI, checks both perspectives, reload/rejoin, surrender, friendly rewards and the red-side replay. It runs on desktop Chromium, phone Chromium and phone WebKit. `tests/browser/startup.spec.ts` also deliberately blocks the UI thread for 55 seconds while an independent socket watches connection status and match progression; the client must remain connected and catch up without a forfeit.
+The earlier server implementation remains in source history and in opt-in regression code. It is not part of the default runtime or deployment. To reproduce those historical checks only, use `npm run build:legacy`, then `VITE_LEGACY_ROOMS=1 ARENA_PRODUCTION=1 npx playwright test tests/browser/multiplayer.spec.ts tests/browser/startup.spec.ts tests/browser/connection.spec.ts --project=desktop`. `dev:legacy` and `start:legacy` are explicitly separate commands. Default browser tests select the new peer flow.
 
-For connection diagnosis, start the server with `ARENA_NETWORK_TRACE=1 npm start`. It logs canonical team, connection events, heartbeat/message age and buffered bytes; it does not log reconnect tokens or complete battle snapshots. The CI browser job enables this switch and saves a compact socket timeline alongside any failed test's trace.
+Known verification limit: two WebKit peers on this Mac expose only mDNS candidates and do not form a candidate pair, including in a minimal page outside the game. Chromium/WebKit pairs pass in both directions. Safari-to-Safari play and physical-device remote connectivity remain unverified; the default browser suite retains that failing case.
