@@ -435,6 +435,12 @@
       "sha256": "aa00d7b23fd564665c76aee4f03f508d0ce727f3c39cee306a98fa657e97f1f5"
     },
     {
+      "path": "cards/mirror.png",
+      "source": "cards/mirror.png",
+      "bytes": 92364,
+      "sha256": "7b3a3b042574ede94cbcdf321e3f963657cd8497a3aaa6fe7c272d4a86e2ee6e"
+    },
+    {
       "path": "cards/musketeer.png",
       "source": "cards/musketeer.png",
       "bytes": 138281,

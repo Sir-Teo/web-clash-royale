@@ -262,6 +262,7 @@ const portraitNames = {
   "goblin-barrel": "GoblinBarrel",
   graveyard: "Graveyard",
   clone: "Clone",
+  mirror: "Mirror",
 };
 const sheets = [];
 for (const [name, cache, expected] of [

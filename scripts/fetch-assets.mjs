@@ -37,6 +37,7 @@ const cards = [
   "goblin-barrel",
   "graveyard",
   "clone",
+  "mirror",
 ];
 const characters = [
   "knight",

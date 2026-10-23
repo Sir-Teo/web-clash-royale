@@ -302,9 +302,14 @@
       "sha256": "0fc3f802b1708059a7eda17cbe9f675b3e469234e64bd3246715035339fd29d1"
     },
     {
+      "file": "portrait-mirror.webp",
+      "bytes": 33746,
+      "sha256": "b8d0c774e62c3383cbeaa65696623af0a98e97640402e93e62e43352fac47057"
+    },
+    {
       "file": "cards.json",
-      "bytes": 94283,
-      "sha256": "c306cbd9b263dcd197082c90363f4565bb13f21c908365a1acfba52ebc5de622"
+      "bytes": 94583,
+      "sha256": "c3deaca47ce445611ca9838c0d993308965599d3493126efb86353dccf034c28"
     }
   ]
 }

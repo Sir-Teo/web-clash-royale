@@ -4089,6 +4089,85 @@
         "table": "spells_other",
         "row": "Clone"
       }
+    },
+    "mirror": {
+      "source": "Mirror",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "sound:SpellCasting"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_other",
+        "row": "Mirror"
+      }
     }
   },
   "sounds": {
