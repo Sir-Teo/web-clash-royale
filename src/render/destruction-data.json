@@ -1762,6 +1762,687 @@
       ]
     }
   },
+  "deployments": {
+    "knight": {
+      "source": "knight_deploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "archers": {
+      "source": "ArcherDeploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "giant": {
+      "source": "giant_deploy",
+      "components": [
+        {
+          "emitter": "giant_deploy_dustPuff",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "giant_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "giant_deploy_dustPuff_shadow",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "giant_deploy_dustPuff",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "giant_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "giant_deploy_dustPuff_shadow",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ]
+    },
+    "musketeer": {
+      "source": "musketeer_deploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "mini-pekka": {
+      "source": "mini_pekka_deploy",
+      "components": [
+        {
+          "emitter": "giant_deploy_dustPuff",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "giant_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "giant_deploy_dustPuff_shadow",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "giant_deploy_dustPuff",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "giant_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "giant_deploy_dustPuff_shadow",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ]
+    },
+    "goblins": {
+      "source": "goblins_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
+    "spear-goblins": {
+      "source": "spear_goblin_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
+    "skeletons": {
+      "source": "skeleton_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
+    "skeleton-army": {
+      "source": "skeleton_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
+    "bomber": {
+      "source": "bomber_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
+    "valkyrie": {
+      "source": "valkyrie_deploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "hog-rider": {
+      "source": "hog_rider_deploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "baby-dragon": {
+      "source": "baby_dragon_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
+    "minions": {
+      "source": "minion_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
+    "witch": {
+      "source": "witch_deploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "wizard": {
+      "source": "chr_wizard_deploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "prince": {
+      "source": "prince_deploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "pekka": {
+      "source": "pekka_deploy",
+      "components": [
+        {
+          "emitter": "giant_deploy_dustPuff",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "giant_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "giant_deploy_dustPuff_shadow",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ],
+      "enemyComponents": []
+    },
+    "balloon": {
+      "source": "balloon_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
+    "cannon": {
+      "source": "Cannon_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
+    "tesla": {
+      "source": "tesla_deploy",
+      "components": [],
+      "enemyComponents": []
+    }
+  },
   "emitters": {
     "TargetDummy_planks": {
       "count": 13,
@@ -3542,6 +4223,302 @@
       "loop": false,
       "clips": [
         "Deco_fireplace_glow"
+      ]
+    },
+    "knight_deploy_rocks_hitGround": {
+      "count": 13,
+      "emissionLife": [
+        0.4,
+        0.4
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        1.3,
+        2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.1,
+        0.1
+      ],
+      "speed": [
+        1,
+        1.6666666666666667
+      ],
+      "height": 0.6666666666666666,
+      "verticalSpeed": [
+        5,
+        16.666666666666668
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -66.66666666666667,
+      "startScale": 0.8,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 0.6,
+      "inertia": 1.6666666666666667,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Rock1Particle",
+        "Rock2Particle",
+        "Rock3Particle"
+      ]
+    },
+    "knight_depoy_dustShadow": {
+      "count": 3,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.9,
+        1.3
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0
+      ],
+      "speed": [
+        -1.3333333333333333,
+        -2.3333333333333335
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        -0.6666666666666666,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 2.3,
+      "endScale": 2.6,
+      "fadeIn": 0,
+      "fadeOut": 1,
+      "inertia": 3.3333333333333335,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "d3",
+        "d4"
+      ]
+    },
+    "knight_deploy_dustPuff2": {
+      "count": 55,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.5,
+        0.6
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.1,
+        0.13333333333333333
+      ],
+      "speed": [
+        1.3333333333333333,
+        1.6666666666666667
+      ],
+      "height": 0.7,
+      "verticalSpeed": [
+        0.6666666666666666,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.8333333333333334,
+      "startScale": 0.8,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 3.3333333333333335,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "d3",
+        "d2",
+        "d3",
+        "d3_green_dark"
+      ]
+    },
+    "giant_deploy_dustPuff": {
+      "count": 60,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.7,
+        0.75
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.13333333333333333,
+        0.13333333333333333
+      ],
+      "speed": [
+        2,
+        2.6666666666666665
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0.6666666666666666,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.8333333333333334,
+      "startScale": 0.9,
+      "endScale": 1.2,
+      "fadeIn": 0,
+      "fadeOut": 0.6,
+      "inertia": 4.166666666666667,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "d3",
+        "d2",
+        "d3",
+        "d3_green_dark"
+      ]
+    },
+    "giant_deploy_rocks_hitGround": {
+      "count": 13,
+      "emissionLife": [
+        0.4,
+        0.4
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        1.3,
+        2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.1,
+        0.2
+      ],
+      "speed": [
+        2,
+        2.6666666666666665
+      ],
+      "height": 0.6666666666666666,
+      "verticalSpeed": [
+        5,
+        16.666666666666668
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -66.66666666666667,
+      "startScale": 0.8,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 0.6,
+      "inertia": 1.3333333333333333,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Rock1Particle",
+        "Rock2Particle",
+        "Rock3Particle"
+      ]
+    },
+    "giant_deploy_dustPuff_shadow": {
+      "count": 60,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.7,
+        0.75
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.13333333333333333,
+        0.13333333333333333
+      ],
+      "speed": [
+        2,
+        2.6666666666666665
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0.6666666666666666,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.8333333333333334,
+      "startScale": 0.9,
+      "endScale": 1.2,
+      "fadeIn": 0,
+      "fadeOut": 0.7,
+      "inertia": 4.166666666666667,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "d3",
+        "d2",
+        "d3",
+        "d3_green_dark"
       ]
     }
   }

@@ -36,6 +36,7 @@ Remote play uses Google's public STUN endpoint to discover routes, then carries 
 - The guest's snapshots mask the opposing hand, queue and elixir. The final replay contains both decks and all accepted actions. Both perspectives reuse the existing canonical simulation and replay format.
 - Both game tabs must remain open. Hiding either tab pauses the shared match; returning resumes it. A temporary connection interruption pauses combat. If the data channel closes, the host reloads or ICE connectivity fails, create a fresh invite. There is no server-backed reload/rejoin.
 - Menus leave the match running while both tabs remain visible. Surrender produces the normal final result and replay. Friendly matches award no trophies, gold or chests.
+- Spawn lifecycle events carry an optional birth position for native deployment effects. Late snapshots retain that position after a troop moves or dies; the guest rotates it with the board. Older hosts remain compatible, with a still-deploying entity as the positional fallback.
 - Native King emotes and quick chat share a per-player cooldown enforced by the host. They remain transient and do not enter replay data.
 - Ordered data messages are split into bounded chunks for phone browsers. Slow recipients receive the latest state instead of an unbounded snapshot queue. The worker also pauses if the host UI stops responding.
 

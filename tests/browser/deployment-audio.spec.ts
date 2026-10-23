@@ -57,6 +57,24 @@ for (const perspective of ["blue", "red"] as const)
     ]);
     const files = expected.map((cue) => `/assets/audio/${cue.file}.ogg`);
     await observeCombatAudio(page);
+    await page.addInitScript(() => {
+      (window as any).__deploymentSamples = [];
+      let frame = -1;
+      const sample = () => {
+        const state = (window as any).__arena?.state;
+        if (state && state.renderedFrames !== frame) {
+          frame = state.renderedFrames;
+          (window as any).__deploymentSamples.push({
+            ...state.destruction,
+            time: state.time,
+          });
+          if ((window as any).__deploymentSamples.length > 900)
+            (window as any).__deploymentSamples.shift();
+        }
+        requestAnimationFrame(sample);
+      };
+      requestAnimationFrame(sample);
+    });
     await page.addInitScript(
       (saved) =>
         localStorage.setItem(
@@ -100,6 +118,9 @@ for (const perspective of ["blue", "red"] as const)
       ),
     );
     expect(await playedCombatAudio(page, files)).toEqual([]);
+    await page.evaluate(() => {
+      (window as any).__deploymentSamples.length = 0;
+    });
     await page
       .getByRole("button", { name: "Resume replay", exact: true })
       .click();
@@ -116,6 +137,17 @@ for (const perspective of ["blue", "red"] as const)
       .getByRole("button", { name: "Pause replay", exact: true })
       .click();
     const played = await playedCombatAudio(page, files);
+    const samples = await page.evaluate(
+      () => (window as any).__deploymentSamples,
+    );
+    expect(
+      samples.some(
+        (s: any) =>
+          s.time >= spawned.time &&
+          s.time < spawned.time + 1 &&
+          s.clips.d3_green_dark > 0,
+      ),
+    ).toBe(true);
     expect(played.slice(0, 2).map((entry: any) => entry.path)).toEqual(files);
     for (const [index, cue] of expected.entries()) {
       expect(played[index].outcome).toBe("playing");

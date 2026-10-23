@@ -8,8 +8,15 @@ import { particleTailPose, rotatedSpriteHeight } from "./particle-tail";
 type Emitter = (typeof definitions.emitters)[keyof typeof definitions.emitters];
 export type DeathEffect = keyof typeof definitions.effects;
 export type ImpactEffect = keyof typeof definitions.impacts;
-type NativeEffect = DeathEffect | ImpactEffect;
+type DeploymentCard = keyof typeof definitions.deployments;
+export type DeploymentEffect = `deploy:${DeploymentCard}`;
+type NativeEffect = DeathEffect | ImpactEffect | DeploymentEffect;
 const compositions = { ...definitions.effects, ...definitions.impacts };
+export function deploymentEffect(card: string): DeploymentEffect | undefined {
+  return Object.hasOwn(definitions.deployments, card)
+    ? `deploy:${card as DeploymentCard}`
+    : undefined;
+}
 export function impactEffect(card: string): ImpactEffect | undefined {
   return card in definitions.impacts ? (card as ImpactEffect) : undefined;
 }
@@ -56,8 +63,11 @@ export function destructionPlan(
   };
   const between = (range: number[]) =>
     range[0] + random() * (range[1] - range[0]);
+  const definition = effect.startsWith("deploy:")
+    ? definitions.deployments[effect.slice(7) as DeploymentCard]
+    : compositions[effect as DeathEffect | ImpactEffect];
   const components =
-    compositions[effect][team === "red" ? "enemyComponents" : "components"];
+    definition[team === "red" ? "enemyComponents" : "components"];
   return components.flatMap((component) => {
     const emitter =
       definitions.emitters[
@@ -318,14 +328,15 @@ export class DestructionEffects {
             ? index % clip.frames.length
             : Math.min(index, clip.frames.length - 1)
         ];
-      const order = p.plan.ground
-        ? p.plan.layer === "Shadow"
+      const order =
+        p.plan.layer === "Shadow"
           ? 0.1
-          : 0.2
-        : p.plan.layer === "Base"
-          ? 0.5
-          : 2;
-      const key = `${frame}:${order}`;
+          : p.plan.ground || p.plan.layer === "Ground"
+            ? 0.2
+            : p.plan.layer === "Base"
+              ? 0.5
+              : 2;
+      const key = `${frame}:${order}:${Number(p.plan.ground)}`;
       let group = groups.get(key);
       if (!group) {
         group = { frame, ground: p.plan.ground, order, instances: [] };

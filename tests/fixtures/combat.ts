@@ -61,6 +61,10 @@ function setup() {
   for (const id of ["death-config", "defeat", "death-stats"])
     (document.querySelector(`#${id}`) as HTMLElement).hidden =
       scenario !== "death";
+  (document.querySelector("#death-config") as HTMLElement).hidden =
+    scenario !== "death" && scenario !== "deployment";
+  (document.querySelector("#spawn") as HTMLElement).hidden =
+    scenario !== "deployment";
   for (const id of [
     "wake",
     "princess",
@@ -82,6 +86,9 @@ function setup() {
   } else if (scenario === "fireball") {
     cast("fireball", "blue", 4, 13);
     cast("fireball", "red", 14, 19);
+  } else if (scenario === "deployment") {
+    // Spawn through the normal engine after setBattle, so lifecycle events
+    // are fresh rather than treated as history by the renderer.
   } else if (scenario === "ranged") {
     for (const [id, x, y] of [
       ["archers", 3, 23],
@@ -149,6 +156,13 @@ document.querySelector("#death-card")!.addEventListener("change", setup);
 document.querySelector("#defeat")!.addEventListener("click", () => {
   for (const v of victims)
     cast("zap", v.team === "red" ? "blue" : "red", v.x, v.y);
+});
+document.querySelector("#spawn")!.addEventListener("click", () => {
+  const card = (document.querySelector("#death-card") as HTMLSelectElement)
+    .value as CardId;
+  cast(card, "blue", 9, 22);
+  cast(card, "red", 9, 10);
+  for (const e of battle.entities) if (e.kind !== "tower") e.active = false;
 });
 document.querySelector("#reset")!.addEventListener("click", setup);
 document.querySelector("#wake")!.addEventListener("click", () => {

@@ -1,5 +1,5 @@
 import type { CardId } from "./cards";
-import type { Entity, Team } from "./engine";
+import type { Entity, Point, Team } from "./engine";
 
 export type AudioProfile = CardId | "king-tower" | "princess-tower";
 export type CombatAudioPhase =
@@ -23,6 +23,9 @@ export interface CombatAudioEvent {
   profile: AudioProfile;
   actor?: number;
   attack?: number;
+  // Optional presentation metadata: birth dust stays at the original position
+  // even if a coalesced snapshot arrives after the actor has moved or died.
+  origin?: Point;
 }
 export const audioProfile = (
   entity: Pick<Entity, "card" | "king">,

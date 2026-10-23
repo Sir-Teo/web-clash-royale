@@ -32,10 +32,15 @@ export function perspective(s: BattleSnapshot, team: Team): BattleSnapshot {
       team: other(e.team),
       origin: e.origin ? rotatePoint(e.origin) : undefined,
     })),
-    audioEvents: s.audioEvents?.map((e) => ({ ...e, team: other(e.team) })),
+    audioEvents: s.audioEvents?.map((e) => ({
+      ...e,
+      team: other(e.team),
+      ...(e.origin ? { origin: rotatePoint(e.origin) } : {}),
+    })),
     lifecycleAudioEvents: s.lifecycleAudioEvents?.map((e) => ({
       ...e,
       team: other(e.team),
+      ...(e.origin ? { origin: rotatePoint(e.origin) } : {}),
     })),
   };
 }

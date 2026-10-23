@@ -26,6 +26,7 @@ import { BuildingLibrary } from "./buildings";
 import type { BuildingSprite } from "./buildings";
 import { destroyedTowerSites, TOWER_SITES } from "../game/arena-layout";
 import { DestructionEffects, deathEffect, impactEffect } from "./destruction";
+import { NativeDeploymentEffects } from "./deployment-effects";
 import { CrownEffects } from "./crowns";
 import { HealthLibrary, type HealthSprite } from "./health";
 import { NativeScreenShake } from "./screen-shake";
@@ -64,6 +65,7 @@ export class Arena {
     "(prefers-reduced-motion: reduce)",
   );
   private destruction = new DestructionEffects(this.scene, this.effects);
+  private deploymentEffects = new NativeDeploymentEffects();
   private crowns = new CrownEffects(this.scene, this.effects);
   private rubble = new Map<string, T.Mesh>();
   private impacts: { sprite: EffectSprite; start: number; life: number }[] = [];
@@ -456,6 +458,7 @@ export class Arena {
     batchGeometry(r, [...this.waters, ...this.flags]);
   }
   setBattle(battle: Battle) {
+    this.deploymentEffects.reset(battle.audioEvents);
     this.shake.reset(battle.audioEvents);
     this.camera.clearViewOffset();
     this.destruction.clear();
@@ -1098,7 +1101,7 @@ export class Arena {
             1,
             4,
           );
-      if (event.type === "deploy")
+      if (event.type === "deploy" && !this.effects.asset)
         for (let i = 0; i < 12; i++) this.particle(pos, 0xf2d09e, 0.08, 0.7, 2);
       if (event.type === "crown") {
         this.crowns.burst(
@@ -1146,6 +1149,19 @@ export class Arena {
       this.height,
       this.crownTarget,
     );
+    for (const burst of this.deploymentEffects.consume(
+      b.audioEvents,
+      b.entities,
+      b.seed,
+      b.time,
+    ))
+      this.destruction.burst(
+        burst.effect,
+        new T.Vector3(burst.origin.x - 9, 0.2, burst.origin.y - 16),
+        burst.seed,
+        burst.team,
+        burst.age,
+      );
     this.destruction.update(0, this.camera);
     this.deployment.render(time, this.camera);
     this.positionPlacementFeedback();

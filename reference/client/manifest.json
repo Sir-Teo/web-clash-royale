@@ -36,8 +36,15 @@
       "sha256": "f3f34870c2a4577d1122198d2c81018c6c27c327be32c40ef3b815d831385f5d"
     }
   ],
+  "ignoredEnemyVersions": [
+    {
+      "effect": "Deploy_ground_fx_largeSize",
+      "enemyVersion": "giant_skeleton_deploy_enemy",
+      "reason": "Cyclic enemy substitution on a particle-only branch; preserve its own rows."
+    }
+  ],
   "output": {
     "path": "src/render/destruction-data.json",
-    "sha256": "27569d3bca87a89eb42eb6b9ed520d232eae82960e79a9be35796fc5adf0ab86"
+    "sha256": "ccdbabb3900d6246f6723b6fb1f2d901c71b542185ebde8882b0493524e00033"
   }
 }

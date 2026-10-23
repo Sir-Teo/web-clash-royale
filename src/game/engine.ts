@@ -427,7 +427,10 @@ export class Battle {
         ? { burrow: { exposure: 0, idle: 0, phase: "hidden" as const } }
         : {}),
     });
-    this.emitAudio("spawn", team, id, this.entities.at(-1)!.id);
+    this.emitAudio("spawn", team, id, this.entities.at(-1)!.id, undefined, {
+      x,
+      y,
+    });
   }
   private emit(
     type: BattleEvent["type"],
@@ -458,6 +461,7 @@ export class Battle {
     profile: AudioProfile,
     actor?: number,
     attack?: number,
+    origin?: Point,
   ) {
     const event: CombatAudioEvent = {
       id: this.nextAudioId++,
@@ -467,6 +471,7 @@ export class Battle {
       profile,
       actor,
       attack,
+      ...(origin ? { origin } : {}),
     };
     this.audioEvents.push(event);
     if (this.audioEvents.length > 256)

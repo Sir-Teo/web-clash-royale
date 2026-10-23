@@ -45,7 +45,21 @@ sources["balloon-bomb"] =
   tables.buildings[balloon.DeathSpawnCharacter].DeathEffect;
 const effects = {},
   impacts = {},
+  deployments = {},
   emitters = {};
+// Same bounded source correction used by the audio importer: this particle
+// branch's enemy replacement recurses back into itself through Giant Skeleton.
+const ignoredEnemyVersions = [
+  {
+    effect: "Deploy_ground_fx_largeSize",
+    enemyVersion: "giant_skeleton_deploy_enemy",
+    reason:
+      "Cyclic enemy substitution on a particle-only branch; preserve its own rows.",
+  },
+];
+for (const entry of ignoredEnemyVersions)
+  if (tables.effects[entry.effect]?.[0].EnemyVersion !== entry.enemyVersion)
+    throw new Error(`Recheck historical effect correction: ${entry.effect}`);
 function importEmitter(name) {
   if (emitters[name]) return emitters[name];
   const group = tables.particle_emitters[name];
@@ -91,7 +105,11 @@ function importEmitter(name) {
 function composition(name, team, delay = 0, scale = 1, ancestry = []) {
   let rows = tables.effects[name];
   if (!rows) throw new Error(`Unknown effect ${name}`);
-  if (team === "red" && rows[0].EnemyVersion) {
+  if (
+    team === "red" &&
+    rows[0].EnemyVersion &&
+    !ignoredEnemyVersions.some((entry) => entry.effect === name)
+  ) {
     name = rows[0].EnemyVersion;
     rows = tables.effects[name];
   }
@@ -114,6 +132,12 @@ function composition(name, team, delay = 0, scale = 1, ancestry = []) {
     )
       return [];
     const emitter = importEmitter(row.ParticleEmitterName);
+    // Layer controls ordering, not flight. Deployment rocks start above the
+    // ground with upward velocity and gravity; preserve that ballistic path.
+    const ballistic =
+      emitter.height > 0 &&
+      emitter.gravity < 0 &&
+      emitter.verticalSpeed.some((speed) => speed > 0);
     return [
       {
         emitter: row.ParticleEmitterName,
@@ -122,7 +146,7 @@ function composition(name, team, delay = 0, scale = 1, ancestry = []) {
         layer: row.Layer || "Object",
         ground:
           row.Layer === "Shadow" ||
-          row.Layer === "Ground" ||
+          (row.Layer === "Ground" && !ballistic) ||
           emitter.clips.some((c) => c.startsWith("death_ground_")),
       },
     ];
@@ -143,10 +167,22 @@ impacts.fireball = {
   components: composition(fireballImpact, "blue"),
   enemyComponents: composition(fireballImpact, "red"),
 };
+for (const [id, profile] of Object.entries(profiles)) {
+  if (id.endsWith("-tower")) continue;
+  const source = (
+    tables.characters[profile.source] ?? tables.buildings[profile.source]
+  ).SpawnEffect;
+  deployments[id] = {
+    source,
+    components: source ? composition(source, "blue") : [],
+    enemyComponents: source ? composition(source, "red") : [],
+  };
+}
 effects.tower.rubble = "Tower_destroyed_ground1";
 effects.king.rubble = "Tower_destroyed_ground2";
 const path = "src/render/destruction-data.json",
-  bytes = JSON.stringify({ effects, impacts, emitters }, null, 2) + "\n";
+  bytes =
+    JSON.stringify({ effects, impacts, deployments, emitters }, null, 2) + "\n";
 await writeFile(path, bytes);
 await writeFile(
   "reference/client/manifest.json",
@@ -157,6 +193,7 @@ await writeFile(
       directory:
         "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/csv_client/",
       files,
+      ignoredEnemyVersions,
       output: { path, sha256: sha(bytes) },
     },
     null,
@@ -164,5 +201,5 @@ await writeFile(
   ) + "\n",
 );
 console.log(
-  `Imported ${Object.keys(effects).length} death compositions, ${Object.keys(impacts).length} impact compositions and ${Object.keys(emitters).length} emitters.`,
+  `Imported ${Object.keys(effects).length} death compositions, ${Object.keys(impacts).length} impact compositions, ${Object.keys(deployments).length} deployment compositions and ${Object.keys(emitters).length} emitters.`,
 );
