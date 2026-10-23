@@ -113,7 +113,7 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 
 `npm run assets:clone` pins the archived short area, own-troop targets and hologram binding; `npm run assets:clone-filter` retains both native color timelines. Shared imports provide the portrait, ground/radius effects, sparkles and sound.
 
-`npm run assets:golem` pins both source character profiles, the eight-elixir card, building targeting, deployment delay, death blasts and two-Golemite split. Shared imports provide the original portrait, 54 directional clips per character, blue/red art, dust and rock effects, death audio and health displays. `/tests/fixtures/combat.html` inspects the animated split.
+`npm run assets:golem` pins both source character profiles, the eight-elixir card, building targeting, deployment delay, death blasts and two-Golemite split. Shared imports provide the original portrait, 54 directional clips per character, blue/red art, dust and rock effects, death audio and health displays. Golem's four authored firefly emissions use their original blue/red animated particles and follow the unit through replay and peer snapshots; the client archive does not expose the loop period, so the browser repeats the 0/3/9/12-second pattern every 15 seconds. `/tests/fixtures/combat.html` inspects the animated split.
 
 `npm run assets:health` imports 12 native health displays and ten fill timelines. `/tests/fixtures/health.html` inspects the original artwork; `/tests/fixtures/health-arena.html` exercises damage, King activation, pause, death and renderer rebuilding in the arena.
 

@@ -11,6 +11,7 @@ export type ImpactEffect = keyof typeof definitions.impacts;
 export type TrailEffect = `trail:${keyof typeof definitions.trails}`;
 export type LaunchEffect = `launch:${keyof typeof definitions.launches}`;
 export type MovementEffect = `move:${keyof typeof definitions.movements}`;
+export type ContinuousEffect = `continuous:${keyof typeof definitions.continuities}`;
 export type ChargeEffect = `charge:${keyof typeof definitions.charges}`;
 export type LandingEffect = `land:${keyof typeof definitions.landings}`;
 type DeploymentCard = keyof typeof definitions.deployments;
@@ -21,6 +22,7 @@ type NativeEffect =
   | TrailEffect
   | LaunchEffect
   | MovementEffect
+  | ContinuousEffect
   | ChargeEffect
   | LandingEffect
   | DeploymentEffect;
@@ -49,6 +51,11 @@ export function movementEffect(card: string): MovementEffect | undefined {
     ? `move:${card as keyof typeof definitions.movements}`
     : undefined;
 }
+export function continuousEffect(card: string): ContinuousEffect | undefined {
+  return Object.hasOwn(definitions.continuities, card)
+    ? `continuous:${card as keyof typeof definitions.continuities}`
+    : undefined;
+}
 export function chargeEffect(card: string): ChargeEffect | undefined {
   return Object.hasOwn(definitions.charges, card)
     ? `charge:${card as keyof typeof definitions.charges}`
@@ -67,6 +74,7 @@ export function deathEffect(
   return key in definitions.effects ? (key as DeathEffect) : undefined;
 }
 export interface DebrisPlan {
+  component: number;
   emitter: Emitter;
   clip: string;
   delay: number;
@@ -114,6 +122,10 @@ export function destructionPlan(
           ? definitions.movements[
               effect.slice(5) as keyof typeof definitions.movements
             ]
+          : effect.startsWith("continuous:")
+            ? definitions.continuities[
+                effect.slice(11) as keyof typeof definitions.continuities
+              ]
           : effect.startsWith("charge:")
             ? definitions.charges[
                 effect.slice(7) as keyof typeof definitions.charges
@@ -125,7 +137,7 @@ export function destructionPlan(
               : compositions[effect as DeathEffect | ImpactEffect];
   const components =
     definition[team === "red" ? "enemyComponents" : "components"];
-  return components.flatMap((component) => {
+  return components.flatMap((component, componentIndex) => {
     const emitter =
       definitions.emitters[
         component.emitter as keyof typeof definitions.emitters
@@ -141,6 +153,7 @@ export function destructionPlan(
         speed = between(emitter.speed);
       if (i) delay += between(emitter.interval);
       return {
+        component: componentIndex,
         emitter,
         angle,
         ground: component.ground,
@@ -312,6 +325,33 @@ export class DestructionEffects {
         plan,
         origin: origin.clone(),
         start: this.clock - age + plan.delay,
+      });
+      this.dirty = true;
+    }
+  }
+  burstContinuous(
+    effect: ContinuousEffect,
+    component: number,
+    origin: T.Vector3,
+    seed: number,
+    team: Team,
+    age: number,
+  ) {
+    if (!this.library.asset) return;
+    const definition = definitions.continuities[
+      effect.slice(11) as keyof typeof definitions.continuities
+    ];
+    const sourceDelay = definition.components[component]?.delay;
+    if (sourceDelay === undefined) return;
+    for (const plan of destructionPlan(effect, seed, team)) {
+      if (plan.component !== component) continue;
+      if (this.particles.length >= MAX_NATIVE_PARTICLES) break;
+      const elapsed = age - (plan.delay - sourceDelay);
+      if (elapsed >= plan.life || !this.library.asset.data.clips[plan.clip]) continue;
+      this.particles.push({
+        plan,
+        origin: origin.clone(),
+        start: this.clock - age + plan.delay - sourceDelay,
       });
       this.dirty = true;
     }

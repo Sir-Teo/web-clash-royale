@@ -37,6 +37,7 @@ import { DestructionEffects, deathEffect, impactEffect } from "./destruction";
 import { NativeDeploymentEffects } from "./deployment-effects";
 import { NativeLaunchEffects } from "./launch-effects";
 import { NativeMovementEffects } from "./movement-effects";
+import { NativeContinuousEffects } from "./continuous-effects";
 import type { MovementBurst } from "./movement-effects";
 import { hogJumpHeight, NativeHogLandings } from "./hog-jump";
 import { NativeChargeMarkers } from "./charge-marker";
@@ -97,6 +98,7 @@ export class Arena {
   private deploymentEffects = new NativeDeploymentEffects();
   private launchEffects = new NativeLaunchEffects();
   private movementEffects = new NativeMovementEffects();
+  private continuousEffects = new NativeContinuousEffects();
   private chargeMarkers: NativeChargeMarkers;
   private spriteFilters = new SpriteFilterStack();
   private chargeFilter = new NativeChargeFilter(this.spriteFilters);
@@ -516,6 +518,7 @@ export class Arena {
     this.deploymentEffects.reset(battle.audioEvents);
     this.launchEffects.reset(battle.audioEvents);
     this.movementEffects.reset();
+    this.continuousEffects.reset();
     this.chargeMarkers.clear();
     this.chargeFilter.clear();
     this.deployFilter.clear();
@@ -1648,6 +1651,16 @@ export class Arena {
       } else if (burst.effect === "charge:dark-prince" ||
                  burst.effect === "charge:battle-ram") this.onCharge(burst);
     }
+    if (this.effects.asset)
+      for (const burst of this.continuousEffects.consume(b.entities, b.seed))
+        this.destruction.burstContinuous(
+          burst.effect,
+          burst.component,
+          new T.Vector3(burst.origin.x - 9, 0.12, burst.origin.y - 16),
+          burst.seed,
+          burst.team,
+          burst.age,
+        );
     for (const burst of this.hogLandings.consume(b.entities, b.seed, b.time))
       this.destruction.burst(
         burst.effect,

@@ -18,6 +18,11 @@ test("Golem uses native art and explodes into two Golemites on desktop and phone
   await expect.poll(async () => (await data()).alive).toBe(true);
   await page.locator("#second").click();
   await expect.poll(time).toBeGreaterThan(0.99);
+  await expect.poll(async () => (await data()).fireflies.reduce(
+    (sum: number, [, count]: [string, number]) => sum + count, 0,
+  )).toBeGreaterThan(0);
+  expect((await data()).fireflies.every(([clip]: [string, number]) =>
+    clip.startsWith("Golem_firefly_blue_"))).toBe(true);
   await page.screenshot({ path: info.outputPath("golem-original-model.png"), fullPage: true });
   await page.locator("#kill-golem").click();
   for (let i = 0; i < 30 && (await data()).alive; i++) await step();

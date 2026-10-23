@@ -254,6 +254,7 @@ function setup() {
   } else if (scenario === "golem") {
     const golem = unit("golem", "blue", 4, 21)[0];
     golem.speed = 0;
+    golem.age = 3;
     for (const [card, x] of [["knight", 4], ["minions", 4.5]] as [CardId, number][]) {
       for (const target of unit(card, "red", x, 20)) {
         target.active = false;
@@ -660,6 +661,8 @@ function render(now: number) {
         .map((e) => ({ card: e.card, hp: e.hp, x: e.x, y: e.y })),
       deaths: battle.events.filter((e) => e.type === "death" && e.card === "golem").length,
       childCues: battle.audioEvents.filter((e) => e.phase === "spawn" && e.profile === "golemite").length,
+      fireflies: Object.entries(arena.destructionState.clips)
+        .filter(([clip]) => clip.startsWith("Golem_firefly_")),
       particles: arena.particleCount,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.darkPrince =
