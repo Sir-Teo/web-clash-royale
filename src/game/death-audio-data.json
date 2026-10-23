@@ -112,6 +112,29 @@
         }
       ]
     },
+    "three-musketeers": {
+      "source": "musketeer_die",
+      "components": [
+        {
+          "sound": "sound_musketeer_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_musketeer_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ]
+    },
     "mini-pekka": {
       "source": "mini_pekka_die",
       "components": [
@@ -320,6 +343,29 @@
       ]
     },
     "minions": {
+      "source": "minion_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_minion_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_minion_die",
+          "delay": 0
+        }
+      ]
+    },
+    "minion-horde": {
       "source": "minion_die",
       "components": [
         {

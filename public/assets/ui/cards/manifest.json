@@ -307,9 +307,19 @@
       "sha256": "b8d0c774e62c3383cbeaa65696623af0a98e97640402e93e62e43352fac47057"
     },
     {
+      "file": "portrait-minion-horde.webp",
+      "bytes": 40674,
+      "sha256": "dbe54297bfb26d540599ff26a4a25cb169cfcd8c7d2247de258f91a220678791"
+    },
+    {
+      "file": "portrait-three-musketeers.webp",
+      "bytes": 45010,
+      "sha256": "d4fe5116f23ef9b6383380d637216fe676ea11cc54bbc1c3cb314e6c64fc182d"
+    },
+    {
       "file": "cards.json",
-      "bytes": 94583,
-      "sha256": "c3deaca47ce445611ca9838c0d993308965599d3493126efb86353dccf034c28"
+      "bytes": 95265,
+      "sha256": "067c705cdc3f195798ced7b6de712d82ba56cee3d72d39558e8be9c15bc38f7f"
     }
   ]
 }

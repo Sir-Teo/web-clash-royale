@@ -464,6 +464,69 @@
         }
       ]
     },
+    "three-musketeers": {
+      "source": "musketeer_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "mini-pekka": {
       "source": "mini_pekka_die",
       "components": [
@@ -1032,6 +1095,69 @@
       ]
     },
     "minions": {
+      "source": "minion_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
+    "minion-horde": {
       "source": "minion_die",
       "components": [
         {
@@ -3796,6 +3922,69 @@
         }
       ]
     },
+    "three-musketeers": {
+      "source": "musketeer_deploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
     "mini-pekka": {
       "source": "mini_pekka_deploy",
       "components": [
@@ -4002,6 +4191,11 @@
       "enemyComponents": []
     },
     "minions": {
+      "source": "minion_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
+    "minion-horde": {
       "source": "minion_deploy",
       "components": [],
       "enemyComponents": []

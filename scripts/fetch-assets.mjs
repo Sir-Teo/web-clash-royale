@@ -38,6 +38,8 @@ const cards = [
   "graveyard",
   "clone",
   "mirror",
+  "minion-horde",
+  "three-musketeers",
 ];
 const characters = [
   "knight",

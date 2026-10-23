@@ -263,6 +263,8 @@ const portraitNames = {
   graveyard: "Graveyard",
   clone: "Clone",
   mirror: "Mirror",
+  "minion-horde": "MinionHorde",
+  "three-musketeers": "ThreeMusketeers",
 };
 const sheets = [];
 for (const [name, cache, expected] of [

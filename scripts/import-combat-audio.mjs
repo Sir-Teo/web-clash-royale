@@ -165,6 +165,25 @@ for (const [id, profile] of Object.entries(JSON.parse(profilesBytes))) {
     profiles[id].cardSource = { table: binding.table, row: binding.row };
 }
 for (const [id, { table, row: name }] of Object.entries(cardBindings)) {
+  if (table === "spells_characters" && !profiles[id]) {
+    const row = tables.spells_characters[name];
+    if (!row) throw new Error(`Unknown card source ${name}`);
+    profiles[id] = phases(name, {
+      attack: [],
+      charge: [],
+      launch: [],
+      impact: [],
+      "impact-special": [],
+      cast: [row.CastSound && `sound:${row.CastSound}`, row.Effect],
+      spawn: [],
+      summon: [],
+      appear: [],
+      hide: [],
+      "death-impact": [],
+      "death-spawn": [],
+    });
+    profiles[id].cardSource = { table, row: name };
+  }
   if (table !== "spells_other") continue;
   const row = tables.spells_other[name];
   const area = tables.area_effect_objects[row.AreaEffectObject];
