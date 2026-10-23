@@ -184,6 +184,18 @@
     "ignoresKnockback": true,
     "projectile": null
   },
+  "executioner": {
+    "source": "AxeMan",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "AxeManProjectile",
+      "speed": 9.166666666666666,
+      "homing": false,
+      "gravity": 0
+    }
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

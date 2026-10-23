@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "503ec623726482009630ac7e511d0b9aabafb4d6d53c0eac0e105f270449e539"
+      "sha256": "25851798bc05a4752cfb10a379934762a8e1eef485c6e59ad36bab3beda003aa"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "cdbe21b73201200a7b0e15c8098ca3f47e3359153b2184bec5c54dfd672c9cb9"
+      "sha256": "f8dc655ed95ddc3a1f46be7d243ff9f490cca4b5da04785ef98236248ab1a0dc"
     }
   ],
   "ignoredEnemyVersions": [
@@ -86,6 +86,12 @@
       "source": "sfx/arrow_norm_impact_06.ogg",
       "bytes": 6376,
       "sha256": "556ee756ea723ef55ffa4fc02afa0e52f8961b7c3c8fb93edf533939b56086d0"
+    },
+    {
+      "path": "public/assets/audio/axe_impact_01.ogg",
+      "source": "sfx/axe_impact_01.ogg",
+      "bytes": 4999,
+      "sha256": "40cd5d17d554a1890bb084426914a39ae0d83acb73949c1ebcf6dc081e2e00ea"
     },
     {
       "path": "public/assets/audio/b_knight_atk_01.ogg",
@@ -374,6 +380,12 @@
       "source": "sfx/deploy_barbarians_01.ogg",
       "bytes": 8189,
       "sha256": "3c0e45c8f116da6426feba8670b5c43e8f2dbb59efa91d502432392bd80c628d"
+    },
+    {
+      "path": "public/assets/audio/deploy_executioner_01.ogg",
+      "source": "sfx/deploy_executioner_01.ogg",
+      "bytes": 8691,
+      "sha256": "4f4b1d5bb8967982b36db601ce87e5523dee93414124919a00c33e0376c2007e"
     },
     {
       "path": "public/assets/audio/deploy_skeleton_01.ogg",
@@ -1290,6 +1302,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "ef1a4cc2088bd44937b867030df8fb66d3bcd8a5c65449a726132ac8996fb43f"
+    "sha256": "71f97a90c939a5c1a940652ac33abf804d6b80b7bb5879fecb51faa5d1124ba2"
   }
 }

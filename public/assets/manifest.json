@@ -399,6 +399,12 @@
       "sha256": "f05db16d2920f2771c06bf99e3fdb5b4f0f37e5a412810798379fd45bfd8a395"
     },
     {
+      "path": "cards/executioner.png",
+      "source": "cards/executioner.png",
+      "bytes": 124677,
+      "sha256": "ed03e02c470b63564f52aaafab99ac17eddf01ad55257815573ed7a05ad20082"
+    },
+    {
       "path": "cards/fireball.png",
       "source": "cards/fireball.png",
       "bytes": 123797,

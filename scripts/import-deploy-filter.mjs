@@ -28,7 +28,7 @@ const cards = Object.entries(combat)
     );
   })
   .map(([id]) => id);
-if (cards.length !== 29 || !cards.includes("bowler") || !cards.includes("dark-prince") || !cards.includes("battle-ram"))
+if (cards.length !== 30 || !cards.includes("bowler") || !cards.includes("dark-prince") || !cards.includes("battle-ram") || !cards.includes("executioner"))
   throw new Error(`Recheck source deploy filter bindings: ${cards.length}`);
 const clip = sc.clips[sc.names[name]];
 if (clip?.fps !== 60 || clip.frames.length !== 28)

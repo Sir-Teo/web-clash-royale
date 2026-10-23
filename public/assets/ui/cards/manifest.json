@@ -382,9 +382,14 @@
       "sha256": "ab86564beb0131e9e1980528f3a4d4d4327ad05d0a8728dfd66ecc3e63fdf857"
     },
     {
+      "file": "portrait-executioner.webp",
+      "bytes": 35330,
+      "sha256": "a9efa37470a0268521d54c985ec5df5504c375996b41970eb2bcebee2c3fabb2"
+    },
+    {
       "file": "cards.json",
-      "bytes": 100226,
-      "sha256": "cdbe21b73201200a7b0e15c8098ca3f47e3359153b2184bec5c54dfd672c9cb9"
+      "bytes": 100556,
+      "sha256": "f8dc655ed95ddc3a1f46be7d243ff9f490cca4b5da04785ef98236248ab1a0dc"
     }
   ]
 }

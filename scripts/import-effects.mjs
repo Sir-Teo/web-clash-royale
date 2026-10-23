@@ -129,6 +129,7 @@ for (const resource of [
             "miner_trail",
             "bowler_projectile",
             "bowler_projectile_shadow",
+            "executioner_projectile",
             "dragon_projectile",
             "Tower_projectile1",
             "fireball_small",

@@ -1556,6 +1556,69 @@
         }
       ]
     },
+    "executioner": {
+      "source": "barbarian_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -3623,6 +3686,76 @@
         }
       ]
     },
+    "hit:executioner": {
+      "source": "axe_man_projectile_hit",
+      "components": [
+        {
+          "emitter": "axe_man_projectile_hit_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "axe_man_projectile_hit_sparks",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "axe_man_projectile_hit_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "axe_man_projectile_hit_sparks",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
+    "axe-die": {
+      "source": "axe_man_projectile_die",
+      "components": [
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.25,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "axeman_axe_particle",
+          "delay": -0.02,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.25,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "axeman_axe_particle",
+          "delay": -0.02,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
     "shield:dark-prince": {
       "source": "GuardShieldDown",
       "components": [
@@ -5171,6 +5304,27 @@
           "ground": true
         }
       ]
+    },
+    "executioner": {
+      "source": "AxeProjectileEmitter",
+      "components": [
+        {
+          "emitter": "Axe_man_projectile_emitter",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Axe_man_projectile_emitter",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
     }
   },
   "launches": {
@@ -6431,6 +6585,69 @@
         {
           "emitter": "knight_deploy_dustPuff2",
           "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "executioner": {
+      "source": "executioner_deploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
           "scale": 0.6,
           "layer": "Object",
           "ground": false
@@ -11504,6 +11721,194 @@
       "loop": false,
       "clips": [
         "bowler_hit_cloud_1"
+      ]
+    },
+    "Axe_man_projectile_emitter": {
+      "count": 10,
+      "emissionLife": [
+        0.01,
+        0.01
+      ],
+      "interval": [
+        0.005,
+        0.005
+      ],
+      "life": [
+        0.25,
+        0.3
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.7,
+      "endScale": 0.9,
+      "fadeIn": 0.05,
+      "fadeOut": 0.25,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "axe_speed_lines2"
+      ]
+    },
+    "axe_man_projectile_hit_puff": {
+      "count": 7,
+      "emissionLife": [
+        0.002,
+        0.002
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.3,
+        0.7
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0.3333333333333333,
+        0.8333333333333334
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -33.333333333333336,
+      "startScale": 1,
+      "endScale": 1.25,
+      "fadeIn": 0,
+      "fadeOut": 0.25,
+      "inertia": 0.3333333333333333,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "SteamSmall"
+      ]
+    },
+    "axe_man_projectile_hit_sparks": {
+      "count": 10,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0,
+        0.01
+      ],
+      "life": [
+        0.1,
+        0.1
+      ],
+      "angle": [
+        0.017453292519943295,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0.06666666666666667
+      ],
+      "speed": [
+        10,
+        11.666666666666666
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        2,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        500,
+        500
+      ],
+      "gravity": 0,
+      "startScale": 1.1,
+      "endScale": 1.5,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Sparkle"
+      ]
+    },
+    "axeman_axe_particle": {
+      "count": 1,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0.001
+      ],
+      "life": [
+        8,
+        12
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        3.3333333333333335,
+        5
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -100,
+      "startScale": 0.95,
+      "endScale": 0.95,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "axeman_axe_effect"
       ]
     },
     "guard_shield_down": {

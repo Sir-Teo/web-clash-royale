@@ -12,11 +12,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "503ec623726482009630ac7e511d0b9aabafb4d6d53c0eac0e105f270449e539"
+      "sha256": "25851798bc05a4752cfb10a379934762a8e1eef485c6e59ad36bab3beda003aa"
     }
   ],
   "output": {
     "path": "src/render/deploy-filter-data.json",
-    "sha256": "2f63576a8daa7cdb747fdf2ce8a5a6ad50ae2c7d0b34811b5b6dc0910d14244a"
+    "sha256": "5581689346419b8f5cab2ac92921a47e718a6e2535f307e936e2ce7e0d32785e"
   }
 }

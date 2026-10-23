@@ -286,6 +286,26 @@ impacts["hit:bowler"] = {
   components: composition(boulder.DeathEffect, "blue"),
   enemyComponents: composition(boulder.DeathEffect, "red"),
 };
+const axe = tables.projectiles.AxeManProjectile;
+if (axe?.TrailEffect !== "AxeProjectileEmitter" ||
+    axe.HitEffect !== "axe_man_projectile_hit" ||
+    axe.PingpongDeathEffect !== "axe_man_projectile_die")
+  throw new Error("Recheck native Executioner axe effects");
+trails.executioner = {
+  source: axe.TrailEffect,
+  components: composition(axe.TrailEffect, "blue"),
+  enemyComponents: composition(axe.TrailEffect, "red"),
+};
+impacts["hit:executioner"] = {
+  source: axe.HitEffect,
+  components: composition(axe.HitEffect, "blue"),
+  enemyComponents: composition(axe.HitEffect, "red"),
+};
+impacts["axe-die"] = {
+  source: axe.PingpongDeathEffect,
+  components: composition(axe.PingpongDeathEffect, "blue"),
+  enemyComponents: composition(axe.PingpongDeathEffect, "red"),
+};
 const darkPrince = tables.characters.DarkPrince;
 if (darkPrince?.ShieldLostEffect !== "GuardShieldDown" ||
     darkPrince.ChargeEffect !== "dark_prince_charge")

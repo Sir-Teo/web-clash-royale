@@ -242,6 +242,23 @@
       "uniqueFrames": 626
     },
     {
+      "id": "executioner",
+      "source": "chr_axe_man",
+      "metadataSha256": "2f6e9f63623dc0c0fcec9bfc10cbb84bda0ecc18d9da65c13ced1dbc436f76de",
+      "dataSha256": "2e2017c84a958a0f81bb80635bc1c9907483808b6f3518eba8a6f1cac42962fc",
+      "textures": [
+        {
+          "file": "executioner-0.webp",
+          "sha256": "1017eb49a5d7d8faf5e51c076a96c743320798c4222f4a2719a0c255e1233521",
+          "originalSha256": "ea014d99e48086cfe463cc09ba1d295ca41801e7957ae2d51e70ffd0ea913849"
+        }
+      ],
+      "shapes": 360,
+      "clips": 72,
+      "frames": 4048,
+      "uniqueFrames": 1872
+    },
+    {
       "id": "archers",
       "source": "chr_archer",
       "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",

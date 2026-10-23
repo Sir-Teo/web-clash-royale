@@ -24,6 +24,7 @@ const sources = {
   "dark-prince": "black_knight",
   "dark-prince-shield": "black_knight",
   "battle-ram": "battle_ram",
+  executioner: "axe_man",
   archers: "archer",
   giant: "giant",
   musketeer: "musketeer",
@@ -116,7 +117,7 @@ for (const [id, source] of Object.entries(sources)) {
   }
   for (const [exportName, ref] of Object.entries(data.names)) {
     const match = exportName.match(
-      /(?:^|_)(run|walk|attack|idle|hover|fly|charge)(\d*)_(\d+)$/i,
+      /(?:^|_)(run|walk|attacking|attack|idle|hover|fly|charge)(\d*)_(\d+)$/i,
     );
     if (!match || Number(match[2] || 1) > 1) continue;
     // This source also contains Inferno Dragon exports. Never overwrite Baby Dragon.
@@ -194,6 +195,7 @@ for (const [id, source] of Object.entries(sources)) {
         || id === "dark-prince"
         || id === "dark-prince-shield"
         || id === "battle-ram"
+        || id === "executioner"
         ? `${name}_highres_tex.png`
         : `${name}_tex${"_".repeat(i)}.png`,
     );
