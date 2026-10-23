@@ -151,6 +151,13 @@
     "ignoresKnockback": false,
     "projectile": null
   },
+  "miner": {
+    "source": "Miner",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

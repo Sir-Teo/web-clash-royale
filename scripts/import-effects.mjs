@@ -123,6 +123,7 @@ for (const resource of [
             "inferno_shoot_st2",
             "inferno_hit_lines",
             "electro_wiz_beam",
+            "miner_trail",
             "dragon_projectile",
             "Tower_projectile1",
             "fireball_small",

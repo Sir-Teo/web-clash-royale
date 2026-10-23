@@ -2030,6 +2030,137 @@
         "row": "ElectroWizard"
       }
     },
+    "miner": {
+      "source": "Miner",
+      "attack": {
+        "sources": [
+          "miner_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_miner_attack_start",
+            "delay": 0
+          },
+          {
+            "sound": "sound_miner_attack_start_vo",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_miner_attack_start",
+            "delay": 0
+          },
+          {
+            "sound": "sound_miner_attack_start_vo",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "miner_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_miner_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_miner_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "miner_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_miner_deploy_up",
+            "delay": 0
+          },
+          {
+            "sound": "sound_miner_deploy_vo",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_miner_deploy_up",
+            "delay": 0
+          },
+          {
+            "sound": "sound_miner_deploy_vo",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Miner"
+      }
+    },
     "spear-goblins": {
       "source": "SpearGoblin",
       "attack": {
@@ -7760,6 +7891,142 @@
         ],
         "maximum": 1,
         "repeat": 3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_miner_attack_start": [
+      {
+        "sourceFile": "sfx/miner_atk_01.wav",
+        "file": "miner_atk_01",
+        "volume": [
+          0.55,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.2,
+          0.2
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_miner_attack_start_vo": [
+      {
+        "sourceFile": "sfx/miner_atk_vo_01.wav",
+        "file": "miner_atk_vo_01",
+        "volume": [
+          0.4,
+          0.5
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/dummy_01.wav",
+        "file": "dummy_01",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_miner_hit": [
+      {
+        "sourceFile": "sfx/miner_hit_01.wav",
+        "file": "miner_hit_01",
+        "volume": [
+          0.4,
+          0.5
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0.2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_miner_deploy_up": [
+      {
+        "sourceFile": "sfx/miner_dig_up_01.wav",
+        "file": "miner_dig_up_01",
+        "volume": [
+          0.85,
+          0.85
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_miner_deploy_vo": [
+      {
+        "sourceFile": "sfx/miner_up_vo_01.wav",
+        "file": "miner_up_vo_01",
+        "volume": [
+          0.65,
+          0.7
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0.2,
+          1.1
+        ],
+        "maximum": 3,
+        "repeat": 0,
         "loop": false,
         "priority": 1,
         "padding": 0

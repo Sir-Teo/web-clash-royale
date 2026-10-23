@@ -258,6 +258,19 @@ impacts["hit:electro-wizard"] = {
   components: composition(electroHit, "blue"),
   enemyComponents: composition(electroHit, "red"),
 };
+const minerTravel = tables.characters.Miner?.SpawnPathfindEffect;
+if (minerTravel !== "miner_travel_effect")
+  throw new Error(`Recheck native Miner travel effect: ${minerTravel}`);
+impacts["miner-travel"] = {
+  source: minerTravel,
+  components: composition(minerTravel, "blue"),
+  enemyComponents: composition(minerTravel, "red"),
+};
+trails.miner = {
+  source: minerTravel,
+  components: composition(minerTravel, "blue"),
+  enemyComponents: composition(minerTravel, "red"),
+};
 const tornadoArea = tables.area_effect_objects.Tornado;
 if (tornadoArea?.ScaledEffect !== "Spell_tornado_deploy")
   throw new Error("Recheck native Tornado visual binding");

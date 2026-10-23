@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "49d92b62e4b5d81bb1eb3f313a0abfc0c89ab464c9c8a7ba48a456e7e10092f8"
+      "sha256": "350a70e62f436c04b45e90ebaac14931af64f764b9b13638a0cc87d61b86318e"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "5eac5a73e70e19fe3158434228c45a7bae95dad2e97a57af569798fb2b291638"
+      "sha256": "f439e12c68f409497af9db1693f635e6f2531d690d190bb22e115d5dd98e0e34"
     }
   ],
   "ignoredEnemyVersions": [
@@ -604,6 +604,36 @@
       "sha256": "06806f4c63073ff5eef209c02de5fbd211449dd800fb8237e0494c8c86b1f37d"
     },
     {
+      "path": "public/assets/audio/miner_atk_01.ogg",
+      "source": "sfx/miner_atk_01.ogg",
+      "bytes": 5535,
+      "sha256": "549fde840cc24bd7b6fd8ab1a1443e91563e406b4a999764697a7b062338a5f5"
+    },
+    {
+      "path": "public/assets/audio/miner_atk_vo_01.ogg",
+      "source": "sfx/miner_atk_vo_01.ogg",
+      "bytes": 6414,
+      "sha256": "657b46c841345ed6349c7c0bd0f93defc8c04cf8d6e02aeddb9542e082dbdf3b"
+    },
+    {
+      "path": "public/assets/audio/miner_dig_up_01.ogg",
+      "source": "sfx/miner_dig_up_01.ogg",
+      "bytes": 9848,
+      "sha256": "47425665bc83eac403476ab58aee790e3b766c4b71038774892f54ae91fae0fc"
+    },
+    {
+      "path": "public/assets/audio/miner_hit_01.ogg",
+      "source": "sfx/miner_hit_01.ogg",
+      "bytes": 4696,
+      "sha256": "594623d33d3a0d1f31c5f29c461613ef0a59ce9aa627942339d33ea25c3a37f8"
+    },
+    {
+      "path": "public/assets/audio/miner_up_vo_01.ogg",
+      "source": "sfx/miner_up_vo_01.ogg",
+      "bytes": 5235,
+      "sha256": "9923c9fc571a9563e06be9ab766699c1a31af352fea81776ac3131b5e88e85ee"
+    },
+    {
       "path": "public/assets/audio/mini_pekka_atk_12.ogg",
       "source": "sfx/mini_pekka_atk_12.ogg",
       "bytes": 7331,
@@ -1116,6 +1146,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "9a7e7ef767a59dd048236521290d00483b71eac22fe39227c1c038a10825c198"
+    "sha256": "06e05a1b3fb1efc5fe23b651a78384b951144f7a485d7488afbc6045090b3063"
   }
 }

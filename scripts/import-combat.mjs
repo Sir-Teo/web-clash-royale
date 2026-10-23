@@ -71,6 +71,7 @@ const names = {
   princess: "Princess",
   "inferno-dragon": "InfernoDragon",
   "electro-wizard": "ElectroWizard",
+  miner: "Miner",
   "spear-goblins": "SpearGoblin",
   skeletons: "Skeleton",
   "skeleton-army": "Skeleton",

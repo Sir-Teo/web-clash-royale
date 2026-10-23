@@ -157,6 +157,23 @@
       "uniqueFrames": 1827
     },
     {
+      "id": "miner",
+      "source": "chr_miner",
+      "metadataSha256": "05f63f618ee9e58ab5572cc9c2e93fe7f8264bc01d29f9f4f19c0f93be144284",
+      "dataSha256": "d24175241e1caceb0d15d637dfb5bee9980220b14389fbbc7d874078e4429cd5",
+      "textures": [
+        {
+          "file": "miner-0.webp",
+          "sha256": "209960a49c12348360fd356c77506436503d730d4064e13d08e3401351ffa132",
+          "originalSha256": "16bf805d19ff6701e2cc13226695b5ea47c423e04dc9fbf1e3eb3c87183c2df6"
+        }
+      ],
+      "shapes": 415,
+      "clips": 54,
+      "frames": 1476,
+      "uniqueFrames": 810
+    },
+    {
       "id": "archers",
       "source": "chr_archer",
       "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",

@@ -17,6 +17,7 @@ const characters = csvRows(files[inputs[1]].toString());
 const combat = JSON.parse(files[inputs[2]]);
 const name = "filter_deploy_unit_default";
 const legendaryName = "filter_deploy_unit_legendary";
+const minerName = "filter_deploy_unit_miner";
 const cards = Object.entries(combat)
   .filter(([id, profile]) => {
     const row = characters.find((c) => c.Name === profile.source);
@@ -66,6 +67,17 @@ if (
   !legendaryCards.includes("electro-wizard")
 )
   throw new Error(`Recheck legendary deploy binding: ${legendaryCards}`);
+const minerClip = sc.clips[sc.names[minerName]];
+if (minerClip?.fps !== 60 || minerClip.frames.length !== 45)
+  throw new Error("Recheck Miner deploy filter timeline");
+const minerCards = Object.entries(combat)
+  .filter(([, profile]) =>
+    characters.find((row) => row.Name === profile.source)
+      ?.DeployBaseAnimExportName === minerName,
+  )
+  .map(([id]) => id);
+if (minerCards.length !== 1 || minerCards[0] !== "miner")
+  throw new Error(`Recheck Miner deploy binding: ${minerCards}`);
 const data = {
   source: name,
   fps: clip.fps,
@@ -76,6 +88,12 @@ const data = {
     fps: legendaryClip.fps,
     cards: legendaryCards,
     frames: poses(legendaryClip, legendaryName),
+  },
+  miner: {
+    source: minerName,
+    fps: minerClip.fps,
+    cards: minerCards,
+    frames: poses(minerClip, minerName),
   },
 };
 const path = "src/render/deploy-filter-data.json";

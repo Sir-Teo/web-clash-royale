@@ -19,6 +19,7 @@ const sources = {
   princess: "princess",
   "inferno-dragon": "baby_dragon",
   "electro-wizard": "electro_wizard",
+  miner: "miner",
   archers: "archer",
   giant: "giant",
   musketeer: "musketeer",

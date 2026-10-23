@@ -23,6 +23,27 @@
         ]
       }
     },
+    "miner": {
+      "spawn": {
+        "sources": [
+          "miner_deploy"
+        ],
+        "components": [
+          {
+            "effect": "miner_deploy",
+            "delay": 0,
+            "duration": 0.5
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "miner_deploy",
+            "delay": 0,
+            "duration": 0.5
+          }
+        ]
+      }
+    },
     "balloon": {
       "impact": {
         "sources": [
