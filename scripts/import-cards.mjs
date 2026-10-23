@@ -278,6 +278,7 @@ const portraitNames = {
   bowler: "Bowler",
   "dark-prince": "DarkPrince",
   "battle-ram": "BattleRam",
+  executioner: "AxeMan",
 };
 const sheets = [];
 for (const [name, cache, expected] of [

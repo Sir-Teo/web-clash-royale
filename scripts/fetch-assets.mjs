@@ -53,6 +53,7 @@ const cards = [
   "bowler",
   "dark-prince",
   "battle-ram",
+  "executioner",
 ];
 const characters = [
   "knight",

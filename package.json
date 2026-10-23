@@ -64,6 +64,7 @@
     "assets:bowler": "node scripts/import-bowler.mjs",
     "assets:dark-prince": "node scripts/import-dark-prince.mjs",
     "assets:battle-ram": "node scripts/import-battle-ram.mjs",
+    "assets:executioner": "node scripts/import-executioner.mjs",
     "assets:clone-filter": "node scripts/import-clone-filter.mjs",
     "assets:poison-filter": "node scripts/import-poison-filter.mjs",
     "assets:cold-filter": "node scripts/import-cold-filter.mjs"

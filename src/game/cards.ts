@@ -23,6 +23,7 @@ import miner from "./miner-data.json" with { type: "json" };
 import bowler from "./bowler-data.json" with { type: "json" };
 import darkPrince from "./dark-prince-data.json" with { type: "json" };
 import battleRam from "./battle-ram-data.json" with { type: "json" };
+import executioner from "./executioner-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -47,6 +48,7 @@ export type CardId =
   | "bowler"
   | "dark-prince"
   | "battle-ram"
+  | "executioner"
   | "skeletons"
   | "skeleton-army"
   | "bomber"
@@ -606,6 +608,18 @@ export const CARDS: Card[] = [
     battleRam.sourceHitSpeed / 1000,
     "Charges buildings and releases two Barbarians when the ram breaks.",
     { rarity: "Rare", buildingsOnly: battleRam.targetsBuildings },
+  ),
+  troop(
+    "executioner",
+    "Executioner",
+    executioner.cost,
+    Math.round(executioner.sourceHitpoints * 1.1 ** 5),
+    Math.round(executioner.projectile.damage * 1.1 ** 5),
+    executioner.sourceSpeed / 60,
+    executioner.sourceRange,
+    executioner.sourceHitSpeed + executioner.projectile.visualTime,
+    "Throws an axe through ground and air enemies, striking again on its return.",
+    { rarity: "Epic", hitsAir: true, splash: executioner.projectile.radius },
   ),
   troop(
     "minion-horde",
