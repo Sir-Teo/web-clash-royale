@@ -19,6 +19,8 @@ test("native Freeze covers both teams, holds on pause and clears with the area",
     JSON.parse((await status.getAttribute("data-state"))!);
   const cold = async () =>
     JSON.parse((await status.getAttribute("data-cold-filter"))!);
+  const structures = async () =>
+    JSON.parse((await status.getAttribute("data-cold-structures"))!);
   await page.locator("#freeze-cast").click();
   await expect.poll(async () => (await areas()).length).toBe(2);
   expect((await areas()).map((area: { team: string }) => area.team)).toEqual([
@@ -38,6 +40,10 @@ test("native Freeze covers both teams, holds on pause and clears with the area",
     )
     .toEqual([30, 30]);
   await expect.poll(async () => (await cold()).length).toBe(2);
+  await expect.poll(async () => (await structures()).length).toBe(2);
+  expect(
+    (await structures()).map((actor: { parts: number }) => actor.parts),
+  ).toEqual([1, 1]);
   expect((await cold()).map((actor: { frame: number }) => actor.frame)).toEqual(
     [0, 0],
   );
@@ -63,7 +69,19 @@ test("native Freeze covers both teams, holds on pause and clears with the area",
   for (let i = 0; i < 5; i++) await page.locator("#second").click();
   expect((await state()).particles).toBe(0);
   expect(await cold()).toEqual([]);
+  expect(await structures()).toEqual([]);
+  await page.locator("#freeze-towers").click();
+  await page.locator("#step").click();
+  await expect.poll(async () => (await structures()).length).toBe(2);
+  expect(
+    (await structures()).every((actor: { parts: number }) => actor.parts >= 3),
+  ).toBe(true);
+  await page.screenshot({
+    path: info.outputPath("native-freeze-towers.png"),
+    fullPage: true,
+  });
   await page.locator("#reset").click();
-  expect(await areas()).toEqual([]);
+  await expect.poll(async () => (await areas()).length).toBe(0);
+  await expect.poll(async () => (await structures()).length).toBe(0);
   expect(errors).toEqual([]);
 });

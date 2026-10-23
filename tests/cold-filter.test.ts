@@ -8,7 +8,11 @@ import { makeMaterial } from "../src/render/sprites";
 import { SpriteFilterStack } from "../src/render/sprite-filter";
 import { NativeDeployFilter } from "../src/render/deploy-filter";
 import { NativeChargeFilter } from "../src/render/charge-filter";
-import { NativeColdFilter, coldFilterFrame } from "../src/render/cold-filter";
+import {
+  NativeColdFilter,
+  NativeColdStructures,
+  coldFilterFrame,
+} from "../src/render/cold-filter";
 import source from "../src/render/cold-filter-data.json";
 
 const hash = (path: string) =>
@@ -92,5 +96,41 @@ describe("native cold character filter", () => {
     expect(prince.mesh.material).toBe(original);
     prince.mesh.geometry.dispose();
     original.forEach((material) => material.dispose());
+  });
+
+  it("tints every native tower layer and restores their shared materials", () => {
+    const cold = new NativeColdStructures();
+    const base = sprite();
+    const front = new T.Mesh(new T.BufferGeometry(), base.asset.materials);
+    const princess = sprite();
+    const parts = [
+      { mesh: base.mesh, originals: base.asset.materials },
+      { mesh: front, originals: base.asset.materials },
+      { mesh: princess.mesh, originals: princess.asset.materials },
+    ];
+    const tower = { id: 3, kind: "tower", hp: 100, stun: 1 } as Entity;
+    cold.update([tower], 1, () => parts);
+    expect(cold.state).toEqual([
+      expect.objectContaining({ id: 3, frame: 0, parts: 3 }),
+    ]);
+    for (const part of parts)
+      expect(part.mesh.material).not.toBe(part.originals);
+    const material = base.mesh.material;
+    cold.update([tower], 1.1, () => parts);
+    expect(cold.state[0].frame).toBe(6);
+    expect(base.mesh.material).toBe(material);
+    tower.stun = 0;
+    cold.update([tower], 1.2, () => parts);
+    expect(cold.state).toEqual([]);
+    for (const part of parts) expect(part.mesh.material).toBe(part.originals);
+    tower.stun = 1;
+    cold.update([tower], 2, () => parts);
+    cold.clear();
+    for (const part of parts) expect(part.mesh.material).toBe(part.originals);
+    base.mesh.geometry.dispose();
+    front.geometry.dispose();
+    princess.mesh.geometry.dispose();
+    base.asset.materials.forEach((material) => material.dispose());
+    princess.asset.materials.forEach((material) => material.dispose());
   });
 });

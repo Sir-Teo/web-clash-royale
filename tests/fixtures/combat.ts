@@ -72,6 +72,8 @@ function setup() {
     scenario !== "deployment";
   (document.querySelector("#freeze-cast") as HTMLElement).hidden =
     scenario !== "freeze";
+  (document.querySelector("#freeze-towers") as HTMLElement).hidden =
+    scenario !== "freeze";
   for (const id of [
     "wake",
     "princess",
@@ -140,8 +142,10 @@ function setup() {
     for (const [team, y] of [
       ["red", 12],
       ["blue", 20],
-    ] as [Team, number][])
+    ] as [Team, number][]) {
       for (const entity of unit("knight", team, 9, y)) entity.active = false;
+      for (const entity of unit("tesla", team, 11.2, y)) entity.active = false;
+    }
   } else if (scenario === "ranged") {
     for (const [id, x, y] of [
       ["archers", 3, 23],
@@ -221,6 +225,13 @@ document.querySelector("#spawn")!.addEventListener("click", () => {
 document.querySelector("#freeze-cast")!.addEventListener("click", () => {
   cast("freeze", "blue", 9, 12);
   cast("freeze", "red", 9, 20);
+});
+document.querySelector("#freeze-towers")!.addEventListener("click", () => {
+  for (const tower of battle.entities.filter(
+    (entity) =>
+      entity.kind === "tower" && !entity.king && entity.lane === "left",
+  ))
+    cast("freeze", tower.team === "blue" ? "red" : "blue", tower.x, tower.y);
 });
 document.querySelector("#reset")!.addEventListener("click", setup);
 document.querySelector("#wake")!.addEventListener("click", () => {
@@ -327,6 +338,9 @@ function render(now: number) {
     JSON.stringify(arena.deployFilterState);
   (document.querySelector("#destruction") as HTMLElement).dataset.coldFilter =
     JSON.stringify(arena.coldFilterState);
+  (
+    document.querySelector("#destruction") as HTMLElement
+  ).dataset.coldStructures = JSON.stringify(arena.coldStructureState);
   (document.querySelector("#destruction") as HTMLElement).dataset.freezeAreas =
     JSON.stringify(arena.freezeAreaState);
   (document.querySelector("#destruction") as HTMLElement).dataset.hogJump =
