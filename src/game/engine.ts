@@ -34,6 +34,7 @@ import battleRam from "./battle-ram-data.json" with { type: "json" };
 import executioner from "./executioner-data.json" with { type: "json" };
 import sparky from "./sparky-data.json" with { type: "json" };
 import lumberjack from "./lumberjack-data.json" with { type: "json" };
+import bats from "./bats-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -628,6 +629,8 @@ export class Battle {
           team,
           point.x,
           point.y,
+          true,
+          id === "bats" ? 1 + bats.deployDelay : 1,
         );
     }
     return { ok: true, reason: "" };

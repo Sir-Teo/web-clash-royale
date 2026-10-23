@@ -42,6 +42,7 @@ import { hogJumpHeight, NativeHogLandings } from "./hog-jump";
 import { NativeChargeMarkers } from "./charge-marker";
 import { NativeChargeFilter } from "./charge-filter";
 import { NativeDeployFilter } from "./deploy-filter";
+import { NativeBatWiggle } from "./bat-wiggle";
 import { NativeColdFilter, NativeColdStructures } from "./cold-filter";
 import { NativeInfernoBeams } from "./inferno-beam";
 import { NativeMinerTrails } from "./miner-trails";
@@ -98,6 +99,7 @@ export class Arena {
   private spriteFilters = new SpriteFilterStack();
   private chargeFilter = new NativeChargeFilter(this.spriteFilters);
   private deployFilter = new NativeDeployFilter(this.spriteFilters);
+  private batWiggle = new NativeBatWiggle(this.spriteFilters);
   private cloneFilter = new NativeCloneFilter(this.spriteFilters);
   private coldFilter = new NativeColdFilter(this.spriteFilters);
   private poisonFilter = new NativePoisonFilter(this.spriteFilters);
@@ -513,6 +515,7 @@ export class Arena {
     this.chargeMarkers.clear();
     this.chargeFilter.clear();
     this.deployFilter.clear();
+    this.batWiggle.clear();
     this.cloneFilter.clear();
     this.coldFilter.clear();
     this.poisonFilter.clear();
@@ -651,6 +654,9 @@ export class Arena {
   }
   get deployFilterState() {
     return this.deployFilter.state;
+  }
+  get batWiggleState() {
+    return this.batWiggle.state;
   }
   get coldFilterState() {
     return this.coldFilter.state;
@@ -1623,6 +1629,7 @@ export class Arena {
       );
     this.chargeMarkers.update(b.entities, this.destruction.time, this.width);
     this.deployFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
+    this.batWiggle.update(b.entities, (id) => this.units.get(id)?.sprite);
     this.cloneFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
     this.spellAreas.update(b.areas);
     this.chargeFilter.update(
@@ -1696,6 +1703,7 @@ export class Arena {
           }
         }
       }
+      v.sprite.mesh.position.x = 0;
       v.sprite.mesh.position.y = jump;
       const target = this.battle?.entities.find((t) => t.id === e.target);
       this.sprites.update(v.sprite, e, target, moving, time, this.camera, {
@@ -1851,6 +1859,7 @@ export class Arena {
     this.chargeMarkers.destroy();
     this.chargeFilter.clear();
     this.deployFilter.clear();
+    this.batWiggle.clear();
     this.cloneFilter.clear();
     this.coldFilter.clear();
     this.poisonFilter.clear();

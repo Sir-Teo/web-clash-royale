@@ -3,6 +3,7 @@ import type { CardId } from "./cards";
 import type { Point } from "./engine";
 import type { Team } from "./engine";
 import goblinGang from "./goblin-gang-data.json" with { type: "json" };
+import bats from "./bats-data.json" with { type: "json" };
 
 export function deploymentPositions(
   id: CardId,
@@ -29,6 +30,16 @@ export function deploymentPositions(
         Math.min(31.2, point.y + (i < 3 ? forward : -forward) * 0.35),
       ),
     }));
+  }
+  if (id === "bats") {
+    return Array.from({ length: bats.count }, (_, i) => {
+      const angle = i * 2.39996;
+      const spread = Math.sqrt(i / (bats.count - 1)) * bats.summonRadius;
+      return {
+        x: Math.max(0.6, Math.min(17.4, point.x + Math.cos(angle) * spread)),
+        y: Math.max(0.8, Math.min(31.2, point.y + Math.sin(angle) * spread)),
+      };
+    });
   }
   const count = CARD_MAP[id].count;
   return Array.from({ length: count }, (_, i) => {

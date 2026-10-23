@@ -70,7 +70,7 @@ describe("native health HUD", () => {
       }
   });
   it("preserves source health sizes and offsets for the complete playable entity roster", () => {
-    expect(Object.keys(data.profiles)).toHaveLength(41);
+    expect(Object.keys(data.profiles)).toHaveLength(42);
     for (const p of Object.values(data.profiles)) {
       const row = csvRows(
         readFileSync(`reference/logic/${p.table}.csv`, "utf8"),

@@ -33,9 +33,10 @@ export function filteredSpriteMaterials(
 }
 
 export type SpriteFilterLayer =
-  "deploy" | "clone" | "charge" | "rage" | "poison" | "cold";
+  "deploy" | "wiggle" | "clone" | "charge" | "rage" | "poison" | "cold";
 const layerOrder: SpriteFilterLayer[] = [
   "deploy",
+  "wiggle",
   "clone",
   "charge",
   "rage",

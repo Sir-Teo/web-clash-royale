@@ -221,6 +221,17 @@ function setup() {
       }
     }
     cast("fireball", "red", 4, 21);
+  } else if (scenario === "bats") {
+    for (const bat of unit("bats", "blue", 4, 21)) {
+      bat.speed = 0;
+      bat.cooldown = 0;
+    }
+    for (const [index, target] of unit("minions", "red", 4, 19).entries()) {
+      target.x = index ? 14 : 4;
+      target.active = false;
+      target.speed = target.damage = 0;
+      target.hp = target.maxHp = 10000;
+    }
   } else if (scenario === "attack-impacts") {
     const attacker = (
       document.querySelector("#attack-card") as HTMLSelectElement
@@ -565,6 +576,15 @@ function render(now: number) {
       impactEvents: battle.events.filter((e) => e.effect === "bottle:lumberjack").map((e) => ({ id: e.id, time: e.time })),
       lumberjacks: battle.entities.filter((e) => e.card === "lumberjack").map((e) => ({ id: e.id, team: e.team, hp: e.hp })),
       rawAreas: battle.areas.filter((a) => a.card === "rage").map((a) => ({ id: a.id, team: a.team, remaining: a.remaining })),
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.bats =
+    JSON.stringify({
+      units: battle.entities.filter((e) => e.team === "blue" && e.card === "bats")
+        .map((e) => ({ id: e.id, air: e.air, hp: e.hp })),
+      wiggle: arena.batWiggleState,
+      airTargets: battle.entities.filter((e) => e.team === "red" && e.card === "minions")
+        .map((e) => ({ x: e.x, hp: e.hp })),
+      hits: battle.events.filter((e) => e.type === "hit" && e.card === "bats" && e.value).length,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.darkPrince =
     JSON.stringify({

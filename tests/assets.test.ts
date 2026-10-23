@@ -134,7 +134,7 @@ describe("bundled game artwork", () => {
   });
   it("preserves full source animations and every referenced UV polygon", () => {
     const manifest = json("public/assets/animations/manifest.json");
-    expect(manifest.files.length).toBe(35);
+    expect(manifest.files.length).toBe(36);
     let total = 0;
     for (const file of manifest.files) {
       const bytes = readFileSync(`public/assets/animations/${file.id}.json`);
@@ -188,7 +188,7 @@ describe("bundled game artwork", () => {
         expect(
           data.clips[`blue-run-${direction}`].frames.length,
         ).toBeGreaterThan(4);
-        if (file.id !== "skeletons")
+        if (file.id !== "skeletons" && file.id !== "bats")
           expect(
             data.clips[`red-run-${direction}`].frames.length,
           ).toBeGreaterThan(4);
