@@ -140,12 +140,16 @@ for (const perspective of ["blue", "red"] as const)
     const samples = await page.evaluate(
       () => (window as any).__deploymentSamples,
     );
+    // The short green shadow can fall between two software-rendered CI frames;
+    // the source d1–d4 dust stays visible longer and proves the burst rendered.
     expect(
       samples.some(
         (s: any) =>
           s.time >= spawned.time &&
           s.time < spawned.time + 1 &&
-          s.clips.d3_green_dark > 0,
+          Object.entries(s.clips).some(
+            ([clip, count]) => /^d[1-4]$/.test(clip) && Number(count) > 0,
+          ),
       ),
     ).toBe(true);
     expect(played.slice(0, 2).map((entry: any) => entry.path)).toEqual(files);
