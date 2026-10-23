@@ -1,8 +1,25 @@
 import { CARD_MAP } from "./cards";
 import type { CardId } from "./cards";
 import type { Point } from "./engine";
+import type { Team } from "./engine";
+import goblinGang from "./goblin-gang-data.json" with { type: "json" };
 
-export function deploymentPositions(id: CardId, point: Point): Point[] {
+export function deploymentPositions(
+  id: CardId,
+  point: Point,
+  team: Team = "blue",
+): Point[] {
+  if (id === "goblin-gang") {
+    const forward = team === "blue" ? -1 : 1;
+    const width = Math.sqrt(goblinGang.radius ** 2 - 0.35 ** 2);
+    return Array.from({ length: goblinGang.count }, (_, i) => ({
+      x: Math.max(0.6, Math.min(17.4, point.x + ((i % 3) - 1) * width)),
+      y: Math.max(
+        0.8,
+        Math.min(31.2, point.y + (i < 3 ? forward : -forward) * 0.35),
+      ),
+    }));
+  }
   const count = CARD_MAP[id].count;
   return Array.from({ length: count }, (_, i) => {
     const angle = i * 2.39996,

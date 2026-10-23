@@ -577,8 +577,21 @@ export class Battle {
           : id === "three-musketeers"
             ? "musketeer"
             : id;
-      for (const point of deploymentPositions(id, { x, y }))
-        this.spawn(unitId, team, point.x, point.y);
+      for (const [index, point] of deploymentPositions(
+        id,
+        { x, y },
+        team,
+      ).entries())
+        this.spawn(
+          id === "goblin-gang"
+            ? index < 3
+              ? "goblins"
+              : "spear-goblins"
+            : unitId,
+          team,
+          point.x,
+          point.y,
+        );
     }
     return { ok: true, reason: "" };
   }

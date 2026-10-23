@@ -10,6 +10,7 @@ import graveyard from "./graveyard-data.json" with { type: "json" };
 import clone from "./clone-data.json" with { type: "json" };
 import mirror from "./mirror-data.json" with { type: "json" };
 import swarms from "./swarm-cards-data.json" with { type: "json" };
+import goblinGang from "./goblin-gang-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -21,6 +22,7 @@ export type CardId =
   | "fireball"
   | "arrows"
   | "goblins"
+  | "goblin-gang"
   | "spear-goblins"
   | "skeletons"
   | "skeleton-army"
@@ -317,6 +319,18 @@ export const CARDS: Card[] = [
     1.1,
     "Four speedy melee attackers. Small, mean, green and very good value.",
     { count: 4 },
+  ),
+  troop(
+    "goblin-gang",
+    "Goblin Gang",
+    goblinGang.cost,
+    202,
+    120,
+    1.8,
+    0.55,
+    1.1,
+    "Three melee Goblins lead three Spear Goblins into battle.",
+    { count: goblinGang.count, radius: goblinGang.radius },
   ),
   troop(
     "spear-goblins",
