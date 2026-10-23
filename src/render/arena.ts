@@ -27,6 +27,7 @@ import type { BuildingSprite } from "./buildings";
 import { destroyedTowerSites, TOWER_SITES } from "../game/arena-layout";
 import { DestructionEffects, deathEffect, impactEffect } from "./destruction";
 import { NativeDeploymentEffects } from "./deployment-effects";
+import { NativeLaunchEffects } from "./launch-effects";
 import { arrowOffsets } from "./arrow-volley";
 import { CrownEffects } from "./crowns";
 import { HealthLibrary, type HealthSprite } from "./health";
@@ -67,6 +68,7 @@ export class Arena {
   );
   private destruction = new DestructionEffects(this.scene, this.effects);
   private deploymentEffects = new NativeDeploymentEffects();
+  private launchEffects = new NativeLaunchEffects();
   private crowns = new CrownEffects(this.scene, this.effects);
   private rubble = new Map<string, T.Mesh>();
   private impacts: { sprite: EffectSprite; start: number; life: number }[] = [];
@@ -460,6 +462,7 @@ export class Arena {
   }
   setBattle(battle: Battle) {
     this.deploymentEffects.reset(battle.audioEvents);
+    this.launchEffects.reset(battle.audioEvents);
     this.shake.reset(battle.audioEvents);
     this.camera.clearViewOffset();
     this.destruction.clear();
@@ -1176,6 +1179,18 @@ export class Arena {
       this.destruction.burst(
         burst.effect,
         new T.Vector3(burst.origin.x - 9, 0.2, burst.origin.y - 16),
+        burst.seed,
+        burst.team,
+        burst.age,
+      );
+    for (const burst of this.launchEffects.consume(
+      b.audioEvents,
+      b.seed,
+      b.time,
+    ))
+      this.destruction.burst(
+        burst.effect,
+        new T.Vector3(burst.origin.x - 9, 1.1, burst.origin.y - 16),
         burst.seed,
         burst.team,
         burst.age,

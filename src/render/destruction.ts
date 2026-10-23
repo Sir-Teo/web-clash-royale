@@ -8,9 +8,11 @@ import { particleTailPose, rotatedSpriteHeight } from "./particle-tail";
 type Emitter = (typeof definitions.emitters)[keyof typeof definitions.emitters];
 export type DeathEffect = keyof typeof definitions.effects;
 export type ImpactEffect = keyof typeof definitions.impacts;
+export type LaunchEffect = `launch:${keyof typeof definitions.launches}`;
 type DeploymentCard = keyof typeof definitions.deployments;
 export type DeploymentEffect = `deploy:${DeploymentCard}`;
-type NativeEffect = DeathEffect | ImpactEffect | DeploymentEffect;
+type NativeEffect =
+  DeathEffect | ImpactEffect | LaunchEffect | DeploymentEffect;
 const compositions = { ...definitions.effects, ...definitions.impacts };
 // Two native Zaps plus a full Skeleton Army swarm schedule 1,028 particles.
 // Keep the cap bounded while retaining every authored fragment in that scene.
@@ -24,6 +26,11 @@ export function impactEffect(card: string): ImpactEffect | undefined {
   const key = Object.hasOwn(definitions.impacts, card) ? card : `hit:${card}`;
   return Object.hasOwn(definitions.impacts, key)
     ? (key as ImpactEffect)
+    : undefined;
+}
+export function launchEffect(card: string): LaunchEffect | undefined {
+  return Object.hasOwn(definitions.launches, card)
+    ? `launch:${card as keyof typeof definitions.launches}`
     : undefined;
 }
 export function deathEffect(
@@ -71,7 +78,11 @@ export function destructionPlan(
     range[0] + random() * (range[1] - range[0]);
   const definition = effect.startsWith("deploy:")
     ? definitions.deployments[effect.slice(7) as DeploymentCard]
-    : compositions[effect as DeathEffect | ImpactEffect];
+    : effect.startsWith("launch:")
+      ? definitions.launches[
+          effect.slice(7) as keyof typeof definitions.launches
+        ]
+      : compositions[effect as DeathEffect | ImpactEffect];
   const components =
     definition[team === "red" ? "enemyComponents" : "components"];
   return components.flatMap((component) => {

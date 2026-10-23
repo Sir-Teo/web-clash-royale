@@ -23,8 +23,8 @@ export interface CombatAudioEvent {
   profile: AudioProfile;
   actor?: number;
   attack?: number;
-  // Optional presentation metadata: birth dust stays at the original position
-  // even if a coalesced snapshot arrives after the actor has moved or died.
+  // Optional presentation metadata anchors birth dust and muzzle effects even
+  // if a coalesced snapshot arrives after the actor has moved or died.
   origin?: Point;
 }
 export const audioProfile = (

@@ -687,7 +687,10 @@ export class Battle {
               this.projectiles.at(-1)!.id,
               audioProfile(e),
             );
-            this.emitAudio("launch", e.team, audioProfile(e), e.id);
+            this.emitAudio("launch", e.team, audioProfile(e), e.id, undefined, {
+              x: e.x,
+              y: e.y,
+            });
           } else if (card?.splash) {
             for (const v of this.entities)
               if (canAttack(v) && dist(v, e) <= card.splash + v.radius)
@@ -960,7 +963,10 @@ export class Battle {
             : (p?.gravity ?? 0) / 100,
       });
       this.audioProjectiles.set(this.projectiles.at(-1)!.id, audioProfile(e));
-      this.emitAudio("launch", e.team, audioProfile(e), e.id);
+      this.emitAudio("launch", e.team, audioProfile(e), e.id, undefined, {
+        x: e.x,
+        y: e.y,
+      });
     } else if (card?.splash) {
       for (const v of this.entities)
         if (this.validTarget(e, v) && dist(v, e) <= card.splash + v.radius)

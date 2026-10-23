@@ -46,6 +46,7 @@ sources["balloon-bomb"] =
   tables.buildings[balloon.DeathSpawnCharacter].DeathEffect;
 const effects = {},
   impacts = {},
+  launches = {},
   deployments = {},
   emitters = {};
 // Same bounded source correction used by the audio importer: this particle
@@ -199,6 +200,14 @@ for (const [id, expected] of Object.entries({
     enemyComponents: composition(expected, "red"),
   };
 }
+const cannonLaunch = tables.buildings[profiles.cannon.source].ProjectileEffect;
+if (cannonLaunch !== "cannon_fire_projectile")
+  throw new Error(`Recheck native Cannon launch effect: ${cannonLaunch}`);
+launches.cannon = {
+  source: cannonLaunch,
+  components: composition(cannonLaunch, "blue"),
+  enemyComponents: composition(cannonLaunch, "red"),
+};
 for (const [id, expected] of Object.entries({
   musketeer: "cannon_hit",
   bomber: "BombTower_projectile_hit",
@@ -233,7 +242,11 @@ effects.tower.rubble = "Tower_destroyed_ground1";
 effects.king.rubble = "Tower_destroyed_ground2";
 const path = "src/render/destruction-data.json",
   bytes =
-    JSON.stringify({ effects, impacts, deployments, emitters }, null, 2) + "\n";
+    JSON.stringify(
+      { effects, impacts, launches, deployments, emitters },
+      null,
+      2,
+    ) + "\n";
 await writeFile(path, bytes);
 await writeFile(
   "reference/client/manifest.json",
