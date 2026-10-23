@@ -2,6 +2,7 @@ import * as T from "three";
 import type { CardId } from "../game/cards";
 import type { Entity } from "../game/engine";
 import { facing, selectClip, animationFrame } from "./animation";
+import { hasNativeDeployFilter } from "./deploy-filter";
 import type { AnimationClip } from "./animation";
 interface Polygon {
   sheet: number;
@@ -253,7 +254,10 @@ export class SpriteLibrary {
       sprite.lastFrame = frame;
     }
     sprite.mesh.quaternion.copy(camera.quaternion);
-    const scale = e.deploy > 0 ? Math.max(0.05, 1 - e.deploy) : 1;
+    const scale =
+      e.deploy > 0 && !hasNativeDeployFilter(e.card)
+        ? Math.max(0.05, 1 - e.deploy)
+        : 1;
     sprite.mesh.scale.set(flip ? -scale : scale, scale, scale);
   }
   destroy() {

@@ -33,6 +33,7 @@ import type { MovementBurst } from "./movement-effects";
 import { hogJumpHeight, NativeHogLandings } from "./hog-jump";
 import { NativeChargeMarkers } from "./charge-marker";
 import { NativeChargeFilter } from "./charge-filter";
+import { NativeDeployFilter } from "./deploy-filter";
 import { arrowOffsets } from "./arrow-volley";
 import { CrownEffects } from "./crowns";
 import { HealthLibrary, type HealthSprite } from "./health";
@@ -77,6 +78,7 @@ export class Arena {
   private movementEffects = new NativeMovementEffects();
   private chargeMarkers: NativeChargeMarkers;
   private chargeFilter = new NativeChargeFilter();
+  private deployFilter = new NativeDeployFilter();
   private hogLandings = new NativeHogLandings();
   private crowns = new CrownEffects(this.scene, this.effects);
   private rubble = new Map<string, T.Mesh>();
@@ -479,6 +481,7 @@ export class Arena {
     this.movementEffects.reset();
     this.chargeMarkers.clear();
     this.chargeFilter.clear();
+    this.deployFilter.clear();
     this.hogLandings.reset();
     this.shake.reset(battle.audioEvents);
     this.camera.clearViewOffset();
@@ -581,6 +584,9 @@ export class Arena {
   }
   get chargeFilterState() {
     return this.chargeFilter.state;
+  }
+  get deployFilterState() {
+    return this.deployFilter.state;
   }
   get placementState() {
     return this.placement
@@ -1242,6 +1248,7 @@ export class Arena {
         burst.age,
       );
     this.chargeMarkers.update(b.entities, this.destruction.time, this.width);
+    this.deployFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
     this.chargeFilter.update(
       b.entities,
       this.destruction.time,
@@ -1438,6 +1445,7 @@ export class Arena {
     this.crowns.clear();
     this.chargeMarkers.destroy();
     this.chargeFilter.clear();
+    this.deployFilter.clear();
     this.placementFeedback.remove();
     this.sprites.destroy();
     this.effects.destroy();

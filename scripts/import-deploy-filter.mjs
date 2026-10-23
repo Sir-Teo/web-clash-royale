@@ -19,9 +19,11 @@ const name = "filter_deploy_unit_default";
 const cards = Object.entries(combat)
   .filter(([id, profile]) => {
     const row = characters.find((c) => c.Name === profile.source);
-    return row?.DeployBaseAnimExportName === name &&
+    return (
+      row?.DeployBaseAnimExportName === name &&
       id !== "king-tower" &&
-      id !== "princess-tower";
+      id !== "princess-tower"
+    );
   })
   .map(([id]) => id);
 if (cards.length !== 19)
@@ -34,8 +36,11 @@ const neutral = [0, 0, 0, 255, 255, 255, 255];
 const frames = clip.frames.map((frame, i) => {
   if (frame.length !== 1 || frame[0].id !== 592 || frame[0].blend !== 0)
     throw new Error(`Recheck deploy filter frame ${i}`);
+  const matrix = sc.matrices[frame[0].matrix] ?? identity;
+  if (matrix[1] !== 0 || matrix[2] !== 0 || matrix[4] !== 0)
+    throw new Error(`Unsupported deploy filter affine at frame ${i}`);
   return {
-    matrix: sc.matrices[frame[0].matrix] ?? identity,
+    matrix,
     color: sc.colors[frame[0].color] ?? neutral,
   };
 });
@@ -56,4 +61,6 @@ await writeFile(
     2,
   ) + "\n",
 );
-console.log(`Imported ${frames.length} deploy filter frames for ${cards.length} troop families.`);
+console.log(
+  `Imported ${frames.length} deploy filter frames for ${cards.length} troop families.`,
+);

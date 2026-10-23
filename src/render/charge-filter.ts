@@ -1,6 +1,7 @@
 import * as T from "three";
 import type { Entity } from "../game/engine";
 import type { AnimatedSprite } from "./sprites";
+import { filteredSpriteMaterials } from "./sprite-filter";
 import source from "./charge-filter-data.json";
 
 const life = source.colors.length / source.fps;
@@ -11,7 +12,7 @@ interface FilteredActor {
   sprite?: AnimatedSprite;
   materials?: T.MeshBasicMaterial[];
   add: T.Vector3;
-  multiply: T.Vector3;
+  multiply: T.Vector4;
 }
 
 export function chargeFilterFrame(age: number) {
@@ -23,30 +24,6 @@ export function chargeFilterFrame(age: number) {
 export function chargeFilterColor(age: number): Color | null {
   const frame = chargeFilterFrame(age);
   return frame < 0 ? null : source.colors[frame];
-}
-
-function filteredMaterial(
-  original: T.MeshBasicMaterial,
-  add: T.Vector3,
-  multiply: T.Vector3,
-) {
-  const material = original.clone();
-  material.onBeforeCompile = (shader, renderer) => {
-    original.onBeforeCompile(shader, renderer);
-    shader.uniforms.scFilterAdd = { value: add };
-    shader.uniforms.scFilterMultiply = { value: multiply };
-    const before = "sourceColor.a *= vScMultiply.a;";
-    if (!shader.fragmentShader.includes(before))
-      throw new Error("Missing SC color transform in Prince filter material");
-    shader.fragmentShader =
-      "uniform vec3 scFilterAdd; uniform vec3 scFilterMultiply;\n" +
-      shader.fragmentShader.replace(
-        before,
-        `sourceColor.rgb = clamp(sourceColor.rgb * scFilterMultiply + scFilterAdd, 0.0, 1.0);\n      ${before}`,
-      );
-  };
-  material.customProgramCacheKey = () => "sc1-charge-filter-v1";
-  return material;
 }
 
 /** The archived Filter clip supplies a color transform for the charged actor. */
@@ -73,7 +50,7 @@ export class NativeChargeFilter {
         start: time - age,
         frame: -1,
         add: new T.Vector3(),
-        multiply: new T.Vector3(1, 1, 1),
+        multiply: new T.Vector4(1, 1, 1, 1),
       });
   }
 
@@ -95,15 +72,16 @@ export class NativeChargeFilter {
       if (actor.sprite !== sprite) {
         this.release(actor);
         actor.sprite = sprite;
-        actor.materials = (sprite.mesh.material as T.MeshBasicMaterial[]).map(
-          (material) => filteredMaterial(material, actor.add, actor.multiply),
+        actor.materials = filteredSpriteMaterials(
+          sprite.mesh.material as T.MeshBasicMaterial[],
+          actor,
         );
         sprite.mesh.material = actor.materials;
       }
       if (frame === actor.frame) continue;
       const [ar, ag, ab, , mr, mg, mb] = source.colors[frame];
       actor.add.set(ar / 255, ag / 255, ab / 255);
-      actor.multiply.set(mr / 255, mg / 255, mb / 255);
+      actor.multiply.set(mr / 255, mg / 255, mb / 255, 1);
       actor.frame = frame;
     }
   }

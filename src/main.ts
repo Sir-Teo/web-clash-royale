@@ -1936,6 +1936,7 @@ Object.defineProperty(window, "__arena", {
         loadedBuildings: arena.loadedBuildings,
         destruction: arena.destructionState,
         chargeFilter: arena.chargeFilterState,
+        deployFilter: arena.deployFilterState,
         shake: arena.shakeState,
         placement: arena.placementState,
         loadedAnimations: arena.loadedAnimations,
