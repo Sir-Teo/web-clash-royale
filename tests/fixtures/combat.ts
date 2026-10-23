@@ -83,6 +83,8 @@ function setup() {
     scenario !== "night-witch";
   (document.querySelector("#kill-golem") as HTMLElement).hidden =
     scenario !== "golem";
+  (document.querySelector("#kill-ice-golem") as HTMLElement).hidden =
+    scenario !== "ice-golem";
   (document.querySelector("#kill-lava-hound") as HTMLElement).hidden =
     scenario !== "lava-hound";
   (document.querySelector("#spawn") as HTMLElement).hidden =
@@ -267,6 +269,17 @@ function setup() {
     golem.speed = 0;
     golem.age = 3;
     for (const [card, x] of [["knight", 4], ["minions", 4.5]] as [CardId, number][]) {
+      for (const target of unit(card, "red", x, 20)) {
+        target.active = false;
+        target.speed = target.damage = 0;
+        target.hp = target.maxHp = 10000;
+      }
+    }
+  } else if (scenario === "ice-golem") {
+    const golem = unit("ice-golem", "blue", 9, 21)[0];
+    golem.speed = 0;
+    golem.active = false;
+    for (const [card, x] of [["knight", 9], ["minions", 9.7]] as [CardId, number][]) {
       for (const target of unit(card, "red", x, 20)) {
         target.active = false;
         target.speed = target.damage = 0;
@@ -538,6 +551,13 @@ document.querySelector("#kill-golem")!.addEventListener("click", () => {
   golem.hp = 1;
   cast("fireball", "red", golem.x, golem.y);
 });
+document.querySelector("#kill-ice-golem")!.addEventListener("click", () => {
+  const golem = battle.entities.find((e) => e.team === "blue" && e.card === "ice-golem" && e.hp > 0);
+  if (!golem) return;
+  golem.hp = 1;
+  (battle as unknown as { hurt: (entity: typeof golem, amount: number) => void })
+    .hurt(golem, 1);
+});
 document.querySelector("#kill-lava-hound")!.addEventListener("click", () => {
   const hound = battle.entities.find((e) => e.team === "blue" && e.card === "lava-hound" && e.hp > 0);
   if (!hound) return;
@@ -731,6 +751,18 @@ function render(now: number) {
       childCues: battle.audioEvents.filter((e) => e.phase === "spawn" && e.profile === "golemite").length,
       fireflies: Object.entries(arena.destructionState.clips)
         .filter(([clip]) => clip.startsWith("Golem_firefly_")),
+      particles: arena.particleCount,
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.iceGolem =
+    JSON.stringify({
+      alive: battle.entities.some((e) => e.team === "blue" && e.card === "ice-golem" && e.hp > 0),
+      deaths: battle.events.filter((e) => e.type === "death" && e.card === "ice-golem").length,
+      area: battle.areas.find((area) => area.card === "ice-golem")?.remaining ?? 0,
+      targets: battle.entities.filter((e) => e.team === "red" &&
+        ["knight", "minions"].includes(e.card))
+        .map((e) => ({ card: e.card, hp: e.hp, air: e.air, slow: e.slow?.remaining ?? 0 })),
+      cold: arena.coldFilterState,
+      clips: arena.destructionState.clips,
       particles: arena.particleCount,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.lavaHound =

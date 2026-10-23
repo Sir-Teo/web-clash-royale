@@ -46,7 +46,7 @@ describe("archived Ice Spirit", () => {
     expect(continuousEffect("ice-spirit")).toBe("continuous:ice-spirit");
     expect(combatAudioPlan("ice-spirit", "spawn", 7).length).toBeGreaterThan(0);
     expect(combatAudioPlan("ice-spirit", "impact", 7).length).toBeGreaterThan(0);
-    expect(CARDS).toHaveLength(61);
+    expect(CARDS).toHaveLength(62);
   });
 
   it("spends one elixir and freezes a target after its one-use splash projectile", () => {
