@@ -571,8 +571,14 @@ export class Battle {
         this.audioProjectiles.set(this.projectiles.at(-1)!.id, id);
       }
     } else {
+      const unitId: CardId =
+        id === "minion-horde"
+          ? "minions"
+          : id === "three-musketeers"
+            ? "musketeer"
+            : id;
       for (const point of deploymentPositions(id, { x, y }))
-        this.spawn(id, team, point.x, point.y);
+        this.spawn(unitId, team, point.x, point.y);
     }
     return { ok: true, reason: "" };
   }

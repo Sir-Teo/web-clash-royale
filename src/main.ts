@@ -1945,16 +1945,14 @@ Object.defineProperty(window, "__arena", {
               transport: network.transport,
             }
           : null,
-        units: multiplayer
-          ? battle.entities.map((e) => ({
-              id: e.id,
-              team: e.team,
-              x: e.x,
-              y: e.y,
-              hp: e.hp,
-              card: e.card,
-            }))
-          : [],
+        units: battle.entities.map((e) => ({
+          id: e.id,
+          team: e.team,
+          x: e.x,
+          y: e.y,
+          hp: e.hp,
+          card: e.card,
+        })),
         fps,
         renderedFrames: frameCount,
         animationTime,

@@ -9,12 +9,14 @@ import goblinBarrel from "./goblin-barrel-data.json" with { type: "json" };
 import graveyard from "./graveyard-data.json" with { type: "json" };
 import clone from "./clone-data.json" with { type: "json" };
 import mirror from "./mirror-data.json" with { type: "json" };
+import swarms from "./swarm-cards-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
   | "archers"
   | "giant"
   | "musketeer"
+  | "three-musketeers"
   | "mini-pekka"
   | "fireball"
   | "arrows"
@@ -27,6 +29,7 @@ export type CardId =
   | "hog-rider"
   | "baby-dragon"
   | "minions"
+  | "minion-horde"
   | "witch"
   | "wizard"
   | "prince"
@@ -140,6 +143,18 @@ export const CARDS: Card[] = [
     1,
     "One shot, a whole lot of damage. A long-range defender against ground and air.",
     { rarity: "Rare", hitsAir: true },
+  ),
+  troop(
+    "three-musketeers",
+    "Three Musketeers",
+    swarms.ThreeMusketeers.cost,
+    720,
+    218,
+    1,
+    6,
+    1,
+    "Three long-range Musketeers enter together. Split their deployment across lanes.",
+    { rarity: "Rare", hitsAir: true, count: swarms.ThreeMusketeers.count },
   ),
   troop(
     "mini-pekka",
@@ -398,6 +413,18 @@ export const CARDS: Card[] = [
     1,
     "Three fast, flying attackers. A great way to deal with enemies that cannot hit air.",
     { air: true, hitsAir: true, count: 3 },
+  ),
+  troop(
+    "minion-horde",
+    "Minion Horde",
+    swarms.MinionHorde.cost,
+    230,
+    102,
+    1.6,
+    1,
+    1,
+    "Six flying Minions overwhelm targets that cannot fight back against air.",
+    { air: true, hitsAir: true, count: swarms.MinionHorde.count },
   ),
   troop(
     "witch",
