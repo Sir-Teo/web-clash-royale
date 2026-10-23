@@ -223,7 +223,7 @@ $("#app").innerHTML = `
   <header class="topbar">
    <a class="brand" href="#" aria-label="Clash Royale home"><span class="brand-shield">${icon("crown")}</span><span><b>CLASH <em>ROYALE</em></b><small>BROWSER ARENA</small></span></a>
    <nav class="primary-nav" aria-label="Main navigation"><button data-nav="battle" class="active">${icon("swords")}<span>Battle</span></button><button data-nav="cards">${icon("layers-2")}<span>Cards</span><b>${CARDS.length}</b></button><button data-nav="history">${icon("history")}<span>Battle log</span></button></nav>
-   <div class="top-actions"><div class="gold-wallet" title="Gold earned from battles and chests"><span class="coin">${icon("coins")}</span><b id="gold">${fmt(profile.gold)}</b><span class="wallet-label">GOLD</span></div><button class="icon-button sound-toggle" aria-label="Toggle sound">${icon(profile.sound ? "volume-2" : "volume-x")}</button><button class="avatar" data-settings aria-label="Player settings">T<span></span></button></div>
+   <div class="top-actions"><div class="gold-wallet" title="Gold earned from battles and chests"><span class="coin">${icon("coins")}</span><b id="gold">${fmt(profile.gold)}</b><span class="wallet-label">GOLD</span></div><button class="icon-button sound-toggle" aria-label="Toggle sound effects">${icon(profile.sound ? "volume-2" : "volume-x")}</button><button class="avatar" data-settings aria-label="Player settings">T<span></span></button></div>
   </header>
   <div class="workspace">
    <aside class="left-sidebar">
@@ -363,7 +363,7 @@ function closeModal() {
     modalPausedBattle = false;
     paused = false;
     accumulator = 0;
-    if (screen === "battle" && !battle.winner) audio.startMusic(battle.time);
+    if (screen !== "lobby" && !battle.winner) audio.startMusic(battle.time);
   }
   if (wasResult && screen === "battle" && battle.winner) {
     lobby();
@@ -748,6 +748,8 @@ function togglePause() {
     else audio.startMusic(battle.time);
   } else {
     syncReplayControl();
+    if (paused) audio.stopMusic();
+    else if (!battle.winner) audio.startMusic(battle.time);
   }
 }
 function syncReplayControl() {
@@ -1420,7 +1422,7 @@ function refreshSound() {
   $(".sound-toggle").innerHTML = icon(profile.sound ? "volume-2" : "volume-x");
   $(".sound-toggle").setAttribute(
     "aria-label",
-    profile.sound ? "Mute sound" : "Enable sound",
+    profile.sound ? "Mute sound effects" : "Enable sound effects",
   );
   refreshIcons();
 }
@@ -1631,7 +1633,6 @@ document.querySelectorAll<HTMLButtonElement>("[data-nav]").forEach(
 $(".sound-toggle").onclick = () => {
   profile.sound = !profile.sound;
   audio.setEnabled(profile.sound);
-  if (profile.sound && screen !== "lobby" && !paused) audio.startMusic(battle.time);
   saveProfile(profile);
   refreshSound();
   audio.play("button_click_02");

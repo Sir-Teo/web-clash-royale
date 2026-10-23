@@ -67,7 +67,22 @@ describe("battle cue audio", () => {
     expect(sudden.currentTime).toBe(23);
     expect(sudden.paused).toBe(false);
     audio.setEnabled(false);
+    expect(sudden.paused).toBe(false);
+    audio.stopMusic();
     expect(sudden.paused).toBe(true);
+  });
+  it("keeps selected battle music on when sound effects are disabled", () => {
+    const audio = new GameAudio();
+    audio.setEnabled(false);
+    audio.musicEnabled = true;
+    audio.startMusic(125);
+    const track = instances.at(-1)!;
+    expect(track.src).toContain("battle-last-minute.ogg");
+    expect(track.paused).toBe(false);
+    audio.play("fireball_hit_01");
+    expect(instances).toHaveLength(1);
+    audio.syncMusic(160, true);
+    expect(instances.at(-1)!.src).toContain("battle-final-30.ogg");
   });
   it("can stop an emote voice without silencing an active combat cue", () => {
     const audio = new GameAudio();

@@ -37,5 +37,12 @@ test("native battle music follows live replay phases on desktop and phone", asyn
   await page.getByRole("button", { name: "Resume replay", exact: true }).click();
   await expect.poll(async () => (await music())?.file).toBe("battle-sudden-death");
   await expect.poll(async () => (await music())?.paused).toBe(false);
+  await page.getByRole("button", { name: "Battle settings" }).click();
+  await page.locator("#sound-setting").uncheck();
+  await page.getByRole("button", { name: "Save settings" }).click();
+  await expect.poll(async () => (await music())?.paused).toBe(false);
+  await seek.fill("75");
+  await expect.poll(async () => (await music())?.file).toBe("battle-final-30");
+  await expect.poll(async () => (await music())?.paused).toBe(false);
   expect(errors).toEqual([]);
 });

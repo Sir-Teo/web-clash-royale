@@ -75,7 +75,7 @@ export class GameAudio {
     this.syncMusic(time, true, true);
   }
   syncMusic(time: number, active: boolean, seek = false) {
-    if (!active || !this.musicEnabled || !this.enabled) {
+    if (!active || !this.musicEnabled) {
       this.stopMusic();
       return;
     }
@@ -126,7 +126,6 @@ export class GameAudio {
   setEnabled(enabled: boolean) {
     this.enabled = enabled;
     if (!enabled) {
-      this.stopMusic();
       this.stopEffects();
     }
   }
