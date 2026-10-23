@@ -1,0 +1,51 @@
+{
+  "card": "Golem",
+  "rarity": "Epic",
+  "cost": 8,
+  "golem": {
+    "source": "Golem",
+    "sourceHitpoints": 3200,
+    "sourceDamage": 195,
+    "sourceSpeed": 45,
+    "sourceRange": 0.75,
+    "sourceHitSpeed": 2.5,
+    "sourceLoadTime": 1.5,
+    "sourceDeployTime": 3,
+    "targetsBuildings": true,
+    "ignoresPushback": true,
+    "death": {
+      "damage": 195,
+      "radius": 2,
+      "pushback": 1.8,
+      "hitsAir": true
+    },
+    "blueExport": "golem1",
+    "redExport": "golem1_red",
+    "deathSpawn": {
+      "character": "Golemite",
+      "count": 2,
+      "radius": 1.5,
+      "pushback": true
+    }
+  },
+  "golemite": {
+    "source": "Golemite",
+    "sourceHitpoints": 650,
+    "sourceDamage": 40,
+    "sourceSpeed": 45,
+    "sourceRange": 0.25,
+    "sourceHitSpeed": 2.5,
+    "sourceLoadTime": 1.5,
+    "sourceDeployTime": 1,
+    "targetsBuildings": true,
+    "ignoresPushback": false,
+    "death": {
+      "damage": 40,
+      "radius": 2,
+      "pushback": 1.8,
+      "hitsAir": true
+    },
+    "blueExport": "golemite",
+    "redExport": "golemite_red"
+  }
+}

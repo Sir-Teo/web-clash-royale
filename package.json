@@ -75,7 +75,8 @@
     "assets:night-witch": "node scripts/import-night-witch.mjs",
     "assets:bandit": "node scripts/import-bandit.mjs",
     "assets:bandit-filter": "node scripts/import-bandit-filter.mjs",
-    "assets:bandit-trail": "node scripts/import-bandit-trail.mjs"
+    "assets:bandit-trail": "node scripts/import-bandit-trail.mjs",
+    "assets:golem": "node scripts/import-golem.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",
