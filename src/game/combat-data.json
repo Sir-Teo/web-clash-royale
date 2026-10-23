@@ -144,6 +144,13 @@
     "ignoresKnockback": true,
     "projectile": null
   },
+  "electro-wizard": {
+    "source": "ElectroWizard",
+    "windup": 0.3,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

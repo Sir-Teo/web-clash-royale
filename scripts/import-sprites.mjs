@@ -18,6 +18,7 @@ const sources = {
   "ice-wizard": "ice_wizard",
   princess: "princess",
   "inferno-dragon": "baby_dragon",
+  "electro-wizard": "electro_wizard",
   archers: "archer",
   giant: "giant",
   musketeer: "musketeer",
@@ -86,6 +87,9 @@ for (const [id, source] of Object.entries(sources)) {
     usedShapes = new Set();
   function flatten(ref, frame, matrix = identity, color = neutral, depth = 0) {
     if (depth > 20) throw new Error(`Recursive SC display list ${name}`);
+    // The 1.8.1 Electro Wizard attack exports all reference an absent child 301.
+    // Its visible beam is a separate effect export imported below.
+    if (id === "electro-wizard" && ref === 301) return [];
     if (data.shapes[ref]) {
       usedShapes.add(ref);
       return [
@@ -178,6 +182,7 @@ for (const [id, source] of Object.entries(sources)) {
         id === "royal-giant" ||
         id === "mega-minion" ||
         id === "dart-goblin"
+        || id === "electro-wizard"
         ? `${name}_highres_tex.png`
         : `${name}_tex${"_".repeat(i)}.png`,
     );

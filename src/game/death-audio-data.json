@@ -365,6 +365,29 @@
         }
       ]
     },
+    "electro-wizard": {
+      "source": "electro_wizard_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_electro_wizard_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_electro_wizard_die",
+          "delay": 0
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -1104,6 +1127,29 @@
       "maximum": 0,
       "priority": 0,
       "padding": 0
+    },
+    "sound_electro_wizard_die": {
+      "sourceFiles": [
+        "sfx/dummy_01.wav"
+      ],
+      "files": [
+        "dummy_01"
+      ],
+      "volume": [
+        0.01,
+        0.01
+      ],
+      "pitch": [
+        0.98,
+        1.02
+      ],
+      "startDelay": [
+        5,
+        6
+      ],
+      "maximum": 1,
+      "priority": 1,
+      "padding": 3
     },
     "sound_bat_die": {
       "sourceFiles": [

@@ -59,10 +59,11 @@ const legendaryCards = Object.entries(combat)
   )
   .map(([id]) => id);
 if (
-  legendaryCards.length !== 3 ||
+  legendaryCards.length !== 4 ||
   !legendaryCards.includes("ice-wizard") ||
   !legendaryCards.includes("princess") ||
-  !legendaryCards.includes("inferno-dragon")
+  !legendaryCards.includes("inferno-dragon") ||
+  !legendaryCards.includes("electro-wizard")
 )
   throw new Error(`Recheck legendary deploy binding: ${legendaryCards}`);
 const data = {

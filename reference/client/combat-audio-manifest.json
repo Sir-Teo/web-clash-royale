@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "7ba19b150e73339e818dedc34e369bef9fc0901ebe2180aeaed8a267ce6c5156"
+      "sha256": "49d92b62e4b5d81bb1eb3f313a0abfc0c89ab464c9c8a7ba48a456e7e10092f8"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "671046fa66d72d3de26640db25342ff6ffc57d09cd2a59672f9090f9d9a42d7a"
+      "sha256": "5eac5a73e70e19fe3158434228c45a7bae95dad2e97a57af569798fb2b291638"
     }
   ],
   "ignoredEnemyVersions": [
@@ -272,6 +272,42 @@
       "source": "sfx/dummy_01.ogg",
       "bytes": 3558,
       "sha256": "fc41f7905e797f79d7d1a46801dc439dd1889459e3e2a62b938fcd5d04d4e696"
+    },
+    {
+      "path": "public/assets/audio/electro_wiz_atk_01.ogg",
+      "source": "sfx/electro_wiz_atk_01.ogg",
+      "bytes": 9439,
+      "sha256": "76ab3f764a93d0ac21062e77020a3c267f246532dca76cfc0d53e38c57bd106e"
+    },
+    {
+      "path": "public/assets/audio/electro_wiz_atk_02.ogg",
+      "source": "sfx/electro_wiz_atk_02.ogg",
+      "bytes": 8831,
+      "sha256": "d72665f5b4804c31ff9237a8227f5e98e60e5b17ff479b087b07284573ce62dd"
+    },
+    {
+      "path": "public/assets/audio/electro_wiz_atk_03.ogg",
+      "source": "sfx/electro_wiz_atk_03.ogg",
+      "bytes": 9181,
+      "sha256": "2b81966ad7f00d3b67346a41ca04e226c9c9c2f1142d1488b9a7879ee4b9e06a"
+    },
+    {
+      "path": "public/assets/audio/electro_wiz_atk_04.ogg",
+      "source": "sfx/electro_wiz_atk_04.ogg",
+      "bytes": 8084,
+      "sha256": "cd5be2c3f594831ee48032ac8aa5edd7247fc7dfefff662703d02b363b639d75"
+    },
+    {
+      "path": "public/assets/audio/electro_wiz_atk_05.ogg",
+      "source": "sfx/electro_wiz_atk_05.ogg",
+      "bytes": 7370,
+      "sha256": "e3d6a4262ae3f47a19518fa98cb16758237e0b625f4d6333c5471c27c571751d"
+    },
+    {
+      "path": "public/assets/audio/electro_wiz_deploy_01.ogg",
+      "source": "sfx/electro_wiz_deploy_01.ogg",
+      "bytes": 12277,
+      "sha256": "ec0ca1f292db7157c9f110e9eeaca957b80d770e255fd618f08f30bca89ddae5"
     },
     {
       "path": "public/assets/audio/explosion_01.ogg",
@@ -1070,10 +1106,16 @@
       "source": "sfx/zap_02.ogg",
       "bytes": 12938,
       "sha256": "252a588cf53af35d0c2edc639d76d52d224c202555ce205c5c248f43de48be6f"
+    },
+    {
+      "path": "public/assets/audio/zap_discarge_03.ogg",
+      "source": "sfx/zap_discarge_03.ogg",
+      "bytes": 15765,
+      "sha256": "bdcd21ed6e5870375bff3916d363c28d241a9d844728a4ada93ac05bcf3ffd13"
     }
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "7eaee3f8e01e3bccf215fb0b0600d883992d16fde97b319ec1a5a1b59eb7f2d6"
+    "sha256": "9a7e7ef767a59dd048236521290d00483b71eac22fe39227c1c038a10825c198"
   }
 }

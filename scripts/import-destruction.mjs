@@ -132,6 +132,8 @@ function composition(name, team, delay = 0, scale = 1, ancestry = []) {
     if (row.Type === "Effect")
       return composition(row.Effect, team, time, size, [...ancestry, name]);
     if (row.Type !== "ParticleEmitter") return [];
+    // Some effect heads carry a sound but no emitter; children hold the particles.
+    if (!row.ParticleEmitterName) return [];
     // Tower rubble persists from world state instead of occupying the transient pool.
     if (
       ["Tower_destroyed_ground", "KingTower_destroyed_ground"].includes(
@@ -247,6 +249,14 @@ impacts["hit:inferno-dragon"] = {
   source: infernoHit,
   components: composition(infernoHit, "blue"),
   enemyComponents: composition(infernoHit, "red"),
+};
+const electroHit = tables.characters.ElectroWizard?.DamageEffect;
+if (electroHit !== "electro_wizard_hit")
+  throw new Error(`Recheck native Electro Wizard hit: ${electroHit}`);
+impacts["hit:electro-wizard"] = {
+  source: electroHit,
+  components: composition(electroHit, "blue"),
+  enemyComponents: composition(electroHit, "red"),
 };
 const tornadoArea = tables.area_effect_objects.Tornado;
 if (tornadoArea?.ScaledEffect !== "Spell_tornado_deploy")

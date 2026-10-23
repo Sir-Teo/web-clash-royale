@@ -1199,6 +1199,69 @@
         }
       ]
     },
+    "electro-wizard": {
+      "source": "electro_wizard_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -3071,6 +3134,55 @@
         {
           "emitter": "inferno_dragon_glowTrail",
           "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
+    "hit:electro-wizard": {
+      "source": "electro_wizard_hit",
+      "components": [
+        {
+          "emitter": "electro_wizard_hit_burst",
+          "delay": -0.1,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "electro_wizard_hit_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "electro_wizard_electric_hit",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "electro_wizard_hit_burst",
+          "delay": -0.1,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "electro_wizard_hit_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "electro_wizard_electric_hit",
+          "delay": 0.1,
           "scale": 1,
           "layer": "Above",
           "ground": false
@@ -5227,6 +5339,41 @@
       "source": "inferno_dragon_deploy",
       "components": [],
       "enemyComponents": []
+    },
+    "electro-wizard": {
+      "source": "electro_wizard_deploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
     },
     "spear-goblins": {
       "source": "spear_goblin_deploy",
@@ -9469,6 +9616,152 @@
       "loop": false,
       "clips": [
         "fireball_trail3"
+      ]
+    },
+    "electro_wizard_hit_burst": {
+      "count": 11,
+      "emissionLife": [
+        0.07,
+        0.07
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        0.2,
+        0.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        0,
+        2.5
+      ],
+      "height": 0.8666666666666667,
+      "verticalSpeed": [
+        3.3333333333333335,
+        16.666666666666668
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -40,
+      "startScale": 0.3,
+      "endScale": 0.1,
+      "fadeIn": 0,
+      "fadeOut": 0.1,
+      "inertia": 1.6666666666666667,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "ice_particle1",
+        "ice_particle2",
+        "ice_particle3"
+      ]
+    },
+    "electro_wizard_hit_puff": {
+      "count": 12,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.8,
+        1.3
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0
+      ],
+      "speed": [
+        1.3333333333333333,
+        2.3333333333333335
+      ],
+      "height": 0.7,
+      "verticalSpeed": [
+        0.6666666666666666,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1.2,
+      "fadeIn": 1.6,
+      "fadeOut": 1.6,
+      "inertia": 3.3333333333333335,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "d1",
+        "d2",
+        "d3",
+        "d4"
+      ]
+    },
+    "electro_wizard_electric_hit": {
+      "count": 2,
+      "emissionLife": [
+        0.45,
+        0.45
+      ],
+      "interval": [
+        0.05,
+        0.075
+      ],
+      "life": [
+        0.4,
+        0.4
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.06666666666666667
+      ],
+      "speed": [
+        0.8333333333333334,
+        1
+      ],
+      "height": 0.7666666666666667,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.4,
+      "endScale": 0.3,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 6.666666666666667,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "electricity"
       ]
     },
     "tornado_rocks": {

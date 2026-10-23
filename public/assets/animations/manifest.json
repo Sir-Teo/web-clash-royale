@@ -140,6 +140,23 @@
       "uniqueFrames": 1117
     },
     {
+      "id": "electro-wizard",
+      "source": "chr_electro_wizard",
+      "metadataSha256": "07ffb1b1a89239a268e3e8c08034451110956e1a4ccd5ed7be58d83e7f0c3f45",
+      "dataSha256": "e77b84315c8d530a8c664d8c2eccbbd7a7ba1e914b58415c75dc6bdb7926c188",
+      "textures": [
+        {
+          "file": "electro-wizard-0.webp",
+          "sha256": "8b4bb0ecf76bab4709fda9d540fe1ba4527ba2d6f104e063cf9df0bec336c8cb",
+          "originalSha256": "daa5d899ec7e223edebd0029948917ab3dd4f2f0d0ca1214af19037ed1995e2e"
+        }
+      ],
+      "shapes": 301,
+      "clips": 54,
+      "frames": 2718,
+      "uniqueFrames": 1827
+    },
+    {
       "id": "archers",
       "source": "chr_archer",
       "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",
