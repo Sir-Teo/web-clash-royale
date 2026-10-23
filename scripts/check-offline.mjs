@@ -9,6 +9,9 @@ const combatAudioManifest = JSON.parse(
 const expectedEffects = JSON.parse(
   await readFile("public/assets/effects/manifest.json", "utf8"),
 ).clips;
+const expectedAnimations = JSON.parse(
+  await readFile("public/assets/animations/manifest.json", "utf8"),
+).files.length;
 const expectedCards = Object.keys(
   JSON.parse(await readFile("public/assets/ui/cards/cards.json", "utf8"))
     .portraits,
@@ -82,10 +85,10 @@ try {
       "Native combat/death audio is missing from the offline cache",
     );
   await page.waitForFunction(
-    ({ effects, cards }) =>
+    ({ effects, animations, cards }) =>
       window.__arena?.state.loadedEffects === effects &&
       window.__arena?.state.loadedBuildings === 3 &&
-      window.__arena?.state.loadedAnimations === 19 &&
+      window.__arena?.state.loadedAnimations === animations &&
       window.__arena?.state.loadedAnnouncements === 5 &&
       window.__arena?.state.loadedIntros === 2 &&
       window.__arena?.state.loadedElixir === 8 &&
@@ -99,7 +102,11 @@ try {
       document.fonts.check('22px "SC CCBackBeat"') &&
       window.__arena?.state.nativeTowerPrincesses === 4 &&
       window.__arena?.state.nativePrincessTowers === 4,
-    { effects: expectedEffects, cards: expectedCards },
+    {
+      effects: expectedEffects,
+      animations: expectedAnimations,
+      cards: expectedCards,
+    },
   );
   console.log(
     "Offline title:",

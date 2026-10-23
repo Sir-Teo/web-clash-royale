@@ -9,6 +9,16 @@ export function deploymentPositions(
   point: Point,
   team: Team = "blue",
 ): Point[] {
+  if (id === "barbarians") {
+    const forward = team === "blue" ? -1 : 1;
+    return Array.from({ length: 4 }, (_, i) => ({
+      x: Math.max(0.6, Math.min(17.4, point.x + (i % 2 === 0 ? -0.55 : 0.55))),
+      y: Math.max(
+        0.8,
+        Math.min(31.2, point.y + (i < 2 ? forward : -forward) * 0.48),
+      ),
+    }));
+  }
   if (id === "goblin-gang") {
     const forward = team === "blue" ? -1 : 1;
     const width = Math.sqrt(goblinGang.radius ** 2 - 0.35 ** 2);
