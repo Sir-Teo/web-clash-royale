@@ -1,0 +1,28 @@
+{
+  "card": "Log",
+  "launchProjectile": "LogProjectile",
+  "rollingProjectile": "LogProjectileRolling",
+  "cost": 2,
+  "rarity": "Legendary",
+  "launchSpeed": 6,
+  "launchMinimumDistance": 3,
+  "rollingSpeed": 3.3333333333333335,
+  "rollingRange": 11.1,
+  "collisionRadius": 1.95,
+  "collisionHalfWidth": 0.6,
+  "sourceDamage": 240,
+  "crownTowerDamageFraction": 0.4,
+  "knockback": 1,
+  "hitsGround": true,
+  "hitsAir": false,
+  "targets": "enemy",
+  "visual": {
+    "launch": "log_projectile",
+    "roll": "log_roll_projectile",
+    "rollRed": "log_roll_projectile_red",
+    "shadow": "log_projectile_shadow",
+    "hit": "log_hit",
+    "death": "log_die",
+    "trail": "log_emitter"
+  }
+}

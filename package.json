@@ -44,6 +44,7 @@
     "assets:rage-filter": "node scripts/import-rage-filter.mjs",
     "assets:rocket": "node scripts/import-rocket.mjs",
     "assets:lightning": "node scripts/import-lightning.mjs",
+    "assets:log": "node scripts/import-log.mjs",
     "assets:poison-filter": "node scripts/import-poison-filter.mjs",
     "assets:cold-filter": "node scripts/import-cold-filter.mjs"
   },
