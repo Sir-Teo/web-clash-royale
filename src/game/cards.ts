@@ -13,6 +13,7 @@ import swarms from "./swarm-cards-data.json" with { type: "json" };
 import goblinGang from "./goblin-gang-data.json" with { type: "json" };
 import barbarians from "./barbarians-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
+import megaMinion from "./mega-minion-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -35,6 +36,7 @@ export type CardId =
   | "hog-rider"
   | "baby-dragon"
   | "minions"
+  | "mega-minion"
   | "minion-horde"
   | "witch"
   | "wizard"
@@ -458,6 +460,19 @@ export const CARDS: Card[] = [
     1,
     "Three fast, flying attackers. A great way to deal with enemies that cannot hit air.",
     { air: true, hitsAir: true, count: 3 },
+  ),
+  troop(
+    "mega-minion",
+    "Mega Minion",
+    megaMinion.cost,
+    // Match this roster's level-11 Rare Musketeer normalization.
+    Math.round((megaMinion.sourceHitpoints * 720) / 340),
+    Math.round((megaMinion.sourceDamage * 218) / 100),
+    megaMinion.sourceSpeed / 60,
+    megaMinion.sourceRange / 1000,
+    megaMinion.sourceHitSpeed / 1000,
+    "An armored flying Minion that attacks ground and air targets.",
+    { rarity: "Rare", air: true, hitsAir: megaMinion.hitsAir },
   ),
   troop(
     "minion-horde",

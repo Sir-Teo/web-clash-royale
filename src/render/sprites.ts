@@ -63,6 +63,7 @@ const heights: Partial<Record<SpriteId, number>> = {
   "hog-rider": 2.1,
   "baby-dragon": 2.3,
   minions: 1.5,
+  "mega-minion": 2,
   witch: 2.1,
   prince: 2.25,
   pekka: 2.7,
