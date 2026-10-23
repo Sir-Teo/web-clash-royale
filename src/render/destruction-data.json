@@ -2445,6 +2445,29 @@
       ]
     }
   },
+  "charges": {
+    "prince": {
+      "source": "prince_charge",
+      "components": [
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    }
+  },
   "landings": {
     "hog-rider": {
       "source": "hog_rider_landing",

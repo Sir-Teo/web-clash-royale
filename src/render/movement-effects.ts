@@ -1,9 +1,9 @@
 import type { Entity, Point, Team } from "../game/engine";
-import { movementEffect } from "./destruction";
-import type { MovementEffect } from "./destruction";
+import { chargeEffect, movementEffect } from "./destruction";
+import type { ChargeEffect, MovementEffect } from "./destruction";
 
 export interface MovementBurst {
-  effect: MovementEffect;
+  effect: MovementEffect | ChargeEffect;
   origin: Point;
   team: Team;
   seed: number;
@@ -14,6 +14,7 @@ interface Track extends Point {
   moved: number;
   carried: number;
   step: number;
+  charge: number;
 }
 
 // The archive names the footstep art, but not the animation marker cadence.
@@ -44,6 +45,7 @@ export class NativeMovementEffects {
           moved: entity.move,
           carried: 0,
           step: 0,
+          charge: 0,
         });
         continue;
       }
@@ -54,13 +56,42 @@ export class NativeMovementEffects {
       // Render loops commonly draw several identical frames between match
       // ticks. Those frames must not erase the unspent travel distance.
       if (elapsed === 0 && distance < 1e-8) continue;
+      const validTravel =
+        entity.deploy <= 0 &&
+        entity.move > previous.moved &&
+        elapsed > 0 &&
+        elapsed <= 1 &&
+        distance > 0 &&
+        distance <= 2.5;
+      // Charge animation begins when the browser's source-backed Prince
+      // movement timer passes 2.3 s. A coalesced peer frame interpolates the
+      // threshold along the travel path, just like footsteps.
       if (
-        entity.deploy > 0 ||
-        entity.move <= previous.moved ||
-        elapsed <= 0 ||
-        elapsed > 1 ||
-        distance > 2.5
+        validTravel &&
+        entity.card === "prince" &&
+        previous.moved <= 2.3 &&
+        entity.move > 2.3
       ) {
+        const charge = chargeEffect(entity.card);
+        if (charge) {
+          const fraction = Math.min(
+            1,
+            (2.3 - previous.moved) / (entity.move - previous.moved),
+          );
+          previous.charge++;
+          bursts.push({
+            effect: charge,
+            origin: {
+              x: previous.x + dx * fraction,
+              y: previous.y + dy * fraction,
+            },
+            team: entity.team,
+            seed: seed ^ entity.id ^ Math.imul(previous.charge, 0x7f4a7c15),
+            age: elapsed * (1 - fraction),
+          });
+        }
+      }
+      if (!validTravel) {
         previous.carried = 0;
       } else if (distance > 0) {
         const total = previous.carried + distance;

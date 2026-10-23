@@ -48,6 +48,7 @@ const effects = {},
   impacts = {},
   launches = {},
   movements = {},
+  charges = {},
   landings = {},
   deployments = {},
   emitters = {};
@@ -224,6 +225,14 @@ for (const [id, expected] of Object.entries({
     enemyComponents: composition(source, "red"),
   };
 }
+const princeCharge = tables.characters[profiles.prince.source].ChargeEffect;
+if (princeCharge !== "prince_charge")
+  throw new Error(`Recheck native Prince charge effect: ${princeCharge}`);
+charges.prince = {
+  source: princeCharge,
+  components: composition(princeCharge, "blue"),
+  enemyComponents: composition(princeCharge, "red"),
+};
 const hogLanding =
   tables.characters[profiles["hog-rider"].source].LandingEffect;
 if (hogLanding !== "hog_rider_landing")
@@ -273,6 +282,7 @@ const path = "src/render/destruction-data.json",
         impacts,
         launches,
         movements,
+        charges,
         landings,
         deployments,
         emitters,
