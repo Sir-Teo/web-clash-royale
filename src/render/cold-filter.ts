@@ -22,7 +22,7 @@ export function coldFilterFrame(age: number) {
   );
 }
 
-/** Freeze and Zap share the archived filter_cold color timeline. */
+/** Freeze, Zap, and Ice Wizard's slow share the archived filter_cold timeline. */
 export class NativeColdFilter {
   private actors = new Map<number, ColdActor>();
 
@@ -44,7 +44,7 @@ export class NativeColdFilter {
   ) {
     const active = new Set<number>();
     for (const entity of entities) {
-      if (entity.hp <= 0 || entity.stun <= 0) continue;
+      if (entity.hp <= 0 || (entity.stun <= 0 && !entity.slow?.remaining)) continue;
       const sprite = spriteFor(entity.id);
       if (!sprite) continue;
       active.add(entity.id);
@@ -117,7 +117,7 @@ export class NativeColdStructures {
     for (const entity of entities) {
       if (
         entity.hp <= 0 ||
-        (entity.stun <= 0 && !entity.poison?.remaining) ||
+        (entity.stun <= 0 && !entity.slow?.remaining && !entity.poison?.remaining) ||
         (entity.kind !== "tower" && entity.kind !== "building")
       )
         continue;
@@ -147,7 +147,7 @@ export class NativeColdStructures {
         });
         this.actors.set(entity.id, actor);
       }
-      if (entity.stun > 0) {
+      if (entity.stun > 0 || entity.slow?.remaining) {
         actor.cold ??= { start: time, frame: 0 };
         actor.cold.frame = coldFilterFrame(time - actor.cold.start);
       } else actor.cold = undefined;

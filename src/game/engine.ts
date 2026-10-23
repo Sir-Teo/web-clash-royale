@@ -23,6 +23,7 @@ import goblinBarrel from "./goblin-barrel-data.json" with { type: "json" };
 import graveyard from "./graveyard-data.json" with { type: "json" };
 import clone from "./clone-data.json" with { type: "json" };
 import mirror from "./mirror-data.json" with { type: "json" };
+import iceWizard from "./ice-wizard-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -57,6 +58,7 @@ export interface Entity extends Point {
   clone?: boolean;
   poison?: { remaining: number; elapsed: number };
   rage?: { remaining: number };
+  slow?: { remaining: number };
   attack: number;
   move: number;
   king?: boolean;
@@ -85,6 +87,7 @@ export interface Projectile extends Point {
   air: boolean;
   style: string;
   stun: number;
+  slow?: number;
   source: number;
   flight?: Point;
   speed?: number;
@@ -681,12 +684,14 @@ export class Battle {
       profile,
       actor,
       attack,
-      ...(actor !== undefined &&
-      this.entities.find(
-        (entity) =>
-          entity.id === actor && entity.rage && entity.rage.remaining > 0,
-      )
-        ? { pitchMultiplier: rage.audioPitchMultiplier }
+      ...(actor !== undefined
+        ? (() => {
+            const entity = this.entities.find((entry) => entry.id === actor);
+            const pitchMultiplier =
+              (entity?.rage ? rage.audioPitchMultiplier : 1) *
+              (entity?.slow ? iceWizard.audioPitchMultiplier : 1);
+            return pitchMultiplier === 1 ? {} : { pitchMultiplier };
+          })()
         : {}),
       ...(origin ? { origin } : {}),
     };
@@ -998,6 +1003,10 @@ export class Battle {
         entity.rage.remaining = Math.max(0, entity.rage.remaining - STEP);
         if (entity.rage.remaining < 1e-8) entity.rage = undefined;
       }
+      if (entity.slow) {
+        entity.slow.remaining = Math.max(0, entity.slow.remaining - STEP);
+        if (entity.slow.remaining < 1e-8) entity.slow = undefined;
+      }
       const status = entity.poison;
       if (!status || entity.hp <= 0) continue;
       status.remaining = Math.max(0, status.remaining - STEP);
@@ -1269,7 +1278,9 @@ export class Battle {
   private updateCombat() {
     for (const e of [...this.entities]) {
       if (e.hp <= 0) continue;
-      const hitSpeed = e.rage ? rage.hitSpeedMultiplier : 1;
+      const hitSpeed =
+        (e.rage ? rage.hitSpeedMultiplier : 1) *
+        (e.slow ? iceWizard.hitSpeedMultiplier : 1);
       e.age += STEP;
       e.attack = Math.max(0, e.attack - STEP * hitSpeed);
       e.cooldown = Math.max(0, e.cooldown - STEP * hitSpeed);
@@ -1299,7 +1310,10 @@ export class Battle {
       }
       if (e.burrow && !this.updateTesla(e)) continue;
       if (e.card === "witch") {
-        e.spawnTimer -= STEP * (e.rage ? rage.spawnSpeedMultiplier : 1);
+        e.spawnTimer -=
+          STEP *
+          (e.rage ? rage.spawnSpeedMultiplier : 1) *
+          (e.slow ? iceWizard.spawnSpeedMultiplier : 1);
         if (e.spawnTimer <= 0) {
           e.spawnTimer = 7;
           this.emitAudio("summon", e.team, audioProfile(e), e.id);
@@ -1389,6 +1403,7 @@ export class Battle {
         style: e.kind === "tower" ? (e.king ? "cannonball" : "arrow") : e.card,
         stun: 0,
         source: e.id,
+        ...(e.card === "ice-wizard" ? { slow: iceWizard.slowDuration } : {}),
         flight: { x: e.x, y: e.y },
         speed,
         elapsed: 0,
@@ -1579,6 +1594,10 @@ export class Battle {
             this.cancelAttack(e);
             e.move = 0;
           }
+          if (p.slow) {
+            e.slow ??= { remaining: 0 };
+            e.slow.remaining = Math.max(e.slow.remaining, p.slow);
+          }
           if (p.knockback) this.knockback(e, point, p.knockback);
         }
       } else if (target) this.hurt(target, p.damage);
@@ -1667,6 +1686,7 @@ export class Battle {
     const speed =
       e.speed *
       (e.rage ? rage.speedMultiplier : 1) *
+      (e.slow ? iceWizard.speedMultiplier : 1) *
       (e.card === "prince" && e.move > 2.3 ? 1.8 : 1);
     const move = Math.min(d, speed * STEP);
     e.x = clamp(e.x + (dx / d) * move, 0.5, 17.5);

@@ -23,6 +23,16 @@ export function logFlightPoint(p: Projectile, seconds: number) {
   const t = T.MathUtils.clamp(seconds / p.duration, 0, 1);
   return new T.Vector3(p.x - 9, 0.45, T.MathUtils.lerp(p.y, p.ty, t) - 16);
 }
+export function iceFlightPoint(p: Projectile, seconds: number) {
+  const duration = Math.hypot(p.tx - p.x, p.ty - p.y) / (p.speed ?? 1);
+  const t = T.MathUtils.clamp(seconds / Math.max(duration, 1e-8), 0, 1);
+  return new T.Vector3(
+    T.MathUtils.lerp(p.x, p.tx, t) - 9,
+    T.MathUtils.lerp(p.fromHeight ?? 0.8, p.toHeight ?? 0.6, t) +
+      Math.sin(t * Math.PI) * (p.arc ?? 0),
+    T.MathUtils.lerp(p.y, p.ty, t) - 16,
+  );
+}
 export function projectileArt(p: Projectile) {
   if (["arrow", "arrows", "archers"].includes(p.style))
     return p.team === "blue"
@@ -30,6 +40,7 @@ export function projectileArt(p: Projectile) {
       : "projectile_arrow_basic_enemy";
   if (p.style === "spear-goblins") return "projectile_spear_360";
   if (p.style === "dart-goblin") return "projectile_arrow_basic";
+  if (p.style === "ice-wizard") return "ice_wizard_projectile";
   if (p.style === "bomb") return `balloon_bomb_${p.team}`;
   if (["bomber", "balloon"].includes(p.style)) return "projectile_bomb";
   if (["cannon", "cannonball", "royal-giant"].includes(p.style))
@@ -167,6 +178,10 @@ export function updateProjectile(
       library.animate(sprite, p.elapsed ?? progress * p.duration, true);
       sprite.mesh.rotateZ(angle);
       sprite.mesh.scale.setScalar(p.style === "minions" ? 0.22 : 0.45);
+    } else if (sprite.name === "ice_wizard_projectile") {
+      library.animate(sprite, p.elapsed ?? progress * p.duration, true);
+      sprite.mesh.rotateZ(angle);
+      sprite.mesh.scale.setScalar(0.65);
     } else if (sprite.name === "projectile_bomb") {
       sprite.mesh.rotateZ(p.style === "bomber" ? progress * Math.PI * 2 : 0);
       sprite.mesh.scale.setScalar(p.style === "balloon" ? 0.85 : 0.6);
