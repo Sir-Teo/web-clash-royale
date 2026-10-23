@@ -28,6 +28,7 @@ describe("archived Ice Wizard", () => {
     });
     expect(CARD_MAP["ice-wizard"]).toMatchObject({
       rarity: "Legendary", kind: "troop", cost: 3, hitsAir: true, splash: 1,
+      hp: 805, damage: 76,
     });
     expect(combatTraits({ card: "ice-wizard" }).projectile).toMatchObject({
       source: "ice_wizardProjectile", speed: 700 / 60, homing: true,

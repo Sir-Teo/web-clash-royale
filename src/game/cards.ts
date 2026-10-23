@@ -398,10 +398,10 @@ export const CARDS: Card[] = [
     "ice-wizard",
     "Ice Wizard",
     iceWizard.cost,
-    // Archived Legendary level-one values; approximate playable level-11
-    // progression with this roster's Rare Musketeer scaling.
-    Math.round((iceWizard.sourceHitpoints * 720) / 340),
-    Math.round((iceWizard.sourceDamage * 218) / 100),
+    // Archived Legendary level one maps to collection level nine. Two
+    // approximate 10% upgrades bring its baseline to the level-11 roster.
+    Math.round(iceWizard.sourceHitpoints * 1.1 ** 2),
+    Math.round(iceWizard.sourceDamage * 1.1 ** 2),
     iceWizard.sourceSpeed / 60,
     iceWizard.sourceRange / 1000,
     iceWizard.sourceHitSpeed / 1000,
