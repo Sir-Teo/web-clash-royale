@@ -130,7 +130,10 @@ export function destructionPlan(
       definitions.emitters[
         component.emitter as keyof typeof definitions.emitters
       ];
-    const duration = between(emitter.emissionLife);
+    const sampledDuration = between(emitter.emissionLife);
+    // A blank source emitter lifetime has no end time; its authored particle
+    // intervals still spread a finite ParticleCount across the flight.
+    const duration = sampledDuration > 0 ? sampledDuration : Infinity;
     let delay = 0;
     return Array.from({ length: emitter.count }, (_, i) => {
       const angle = between(emitter.angle),

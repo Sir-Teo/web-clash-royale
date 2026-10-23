@@ -68,7 +68,7 @@ function asymmetricLibrary() {
 }
 
 describe("native particle tails", () => {
-  it("retains all 20 source delay ranges in milliseconds, with stable integer samples", async () => {
+  it("retains all 21 source delay ranges in milliseconds, with stable integer samples", async () => {
     const { csvGroups } = await import("../scripts/lib/csv.mjs");
     const source = csvGroups(
       readFileSync("reference/client/particle_emitters.csv", "utf8"),
@@ -81,7 +81,7 @@ describe("native particle tails", () => {
       ]);
       if (emitter.tailDelayMs[1]) withTail++;
     }
-    expect(withTail).toBe(20);
+    expect(withTail).toBe(21);
     for (const effect of [
       "tower",
       "knight",
@@ -104,6 +104,11 @@ describe("native particle tails", () => {
         else expect(ms).toBe(0);
       }
     }
+    const poisonSkulls = destructionPlan("poison-loop", 42).filter(
+      (particle) => particle.emitter === definitions.emitters.Poison_big_skull,
+    );
+    expect(poisonSkulls).toHaveLength(9);
+    expect(poisonSkulls.at(-1)!.delay).toBeGreaterThan(0);
     expect(destructionPlan("tower", 42).map((p) => p.tailDelay)).not.toEqual(
       destructionPlan("tower", 43).map((p) => p.tailDelay),
     );
