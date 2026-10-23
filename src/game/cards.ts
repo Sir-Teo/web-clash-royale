@@ -16,6 +16,7 @@ import eliteBarbarians from "./elite-barbarians-data.json" with { type: "json" }
 import iceSpirit from "./ice-spirit-data.json" with { type: "json" };
 import fireSpirits from "./fire-spirits-data.json" with { type: "json" };
 import iceGolem from "./ice-golem-data.json" with { type: "json" };
+import giantSkeleton from "./giant-skeleton-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -43,6 +44,7 @@ export type CardId =
   | "ice-spirit"
   | "fire-spirits"
   | "ice-golem"
+  | "giant-skeleton"
   | "archers"
   | "giant"
   | "royal-giant"
@@ -245,6 +247,18 @@ export const CARDS: Card[] = [
     1.5,
     "Slow but durable, he only attacks buildings. Put a ranged troop behind him.",
     { rarity: "Rare", buildingsOnly: true },
+  ),
+  troop(
+    "giant-skeleton",
+    "Giant Skeleton",
+    giantSkeleton.cost,
+    Math.round(giantSkeleton.sourceHitpoints * 1.1 ** 5),
+    Math.round(giantSkeleton.sourceDamage * 1.1 ** 5),
+    giantSkeleton.sourceSpeed / 60,
+    giantSkeleton.sourceRange,
+    giantSkeleton.sourceHitSpeed,
+    "A huge melee fighter who drops a devastating timed bomb when defeated.",
+    { rarity: "Epic" },
   ),
   troop(
     "golem",

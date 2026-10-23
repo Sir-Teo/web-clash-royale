@@ -63,6 +63,8 @@ export function projectileArt(p: Projectile) {
   if (p.style === "fire-spirits") return "projectile_firespirit";
   if (p.style === "princess") return "projectile_princess";
   if (p.style === "bomb") return `balloon_bomb_${p.team}`;
+  if (p.style === "giant-skeleton-bomb")
+    return `giant_skeleton_bomb_${p.team}`;
   if (["bomber", "balloon"].includes(p.style)) return "projectile_bomb";
   if (["cannon", "cannonball", "royal-giant"].includes(p.style))
     return "projectile_cannonball_large";
@@ -158,6 +160,7 @@ export function updateProjectile(
     (p.flight?.y ?? T.MathUtils.lerp(p.y, ty, progress)) - 16,
   );
   if (v.sprites.some((sprite) => sprite.name.startsWith("balloon_bomb_") ||
+      sprite.name.startsWith("giant_skeleton_bomb_") ||
       sprite.name === "rage_bottle_fall"))
     // The native clip already contains the drop and landing. Anchor it on
     // the ground so the generic projectile arc doesn't move it a second time.
@@ -246,6 +249,9 @@ export function updateProjectile(
       // Native attack_start/attack_end spans 31 frames at 30 FPS. Play once
       // during the existing death-bomb flight; replay rules own its duration.
       library.animate(sprite, p.elapsed ?? progress * p.duration);
+    } else if (sprite.name.startsWith("giant_skeleton_bomb_")) {
+      library.animate(sprite, p.elapsed ?? progress * p.duration);
+      sprite.mesh.scale.setScalar(1.25);
     } else library.animate(sprite, p.elapsed ?? progress * p.duration, true);
   }
 }

@@ -40,6 +40,7 @@ import eliteBarbarians from "./elite-barbarians-data.json" with { type: "json" }
 import iceSpirit from "./ice-spirit-data.json" with { type: "json" };
 import fireSpirits from "./fire-spirits-data.json" with { type: "json" };
 import iceGolem from "./ice-golem-data.json" with { type: "json" };
+import giantSkeleton from "./giant-skeleton-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
 import golem from "./golem-data.json" with { type: "json" };
@@ -163,7 +164,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "axe-die" | "bottle:lumberjack" | "summon:night-witch" | "dash-start:bandit" | "dash-end:bandit" | "hit-special:bandit" | "ice-golem-slow";
+  effect?: "balloon-bomb" | "giant-skeleton-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "axe-die" | "bottle:lumberjack" | "summon:night-witch" | "dash-start:bandit" | "dash-end:bandit" | "hit-special:bandit" | "ice-golem-slow";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -2122,7 +2123,7 @@ export class Battle {
         p.team,
         point.x,
         point.y,
-        ["arrow", "cannonball", "bomb"].includes(p.style)
+        ["arrow", "cannonball", "bomb", "giant-skeleton-bomb"].includes(p.style)
           ? undefined
           : (p.style as CardId),
         p.damage,
@@ -2133,6 +2134,8 @@ export class Battle {
               : undefined,
           height: p.toHeight ?? 0.6,
           ...(p.style === "bomb" ? { effect: "balloon-bomb" as const } : {}),
+          ...(p.style === "giant-skeleton-bomb"
+            ? { effect: "giant-skeleton-bomb" as const } : {}),
           ...(p.style === "arrows"
             ? {
                 arrowVolley: {
@@ -2143,7 +2146,10 @@ export class Battle {
             : {}),
         },
       );
-      this.projectileAudio(p);
+      if (p.style === "giant-skeleton-bomb")
+        this.emitAudio("death-impact", p.team, "giant-skeleton", p.source,
+          undefined, point);
+      else this.projectileAudio(p);
     }
     this.projectiles = this.projectiles.filter((p) => p.remaining > 0);
   }
@@ -2271,6 +2277,23 @@ export class Battle {
     this.cancelAudio(e);
     this.emitAudio("death", e.team, audioProfile(e), e.id);
     this.emit("death", e.team, e.x, e.y, e.card);
+    if (e.card === "giant-skeleton") {
+      this.projectiles.push({
+        id: this.nextId++, team: e.team, x: e.x, y: e.y,
+        tx: e.x, ty: e.y, target: null,
+        damage: Math.round(giantSkeleton.bomb.sourceDamage * 1.1 ** 5),
+        remaining: giantSkeleton.bomb.deployTime,
+        duration: giantSkeleton.bomb.deployTime,
+        splash: giantSkeleton.bomb.radius,
+        air: giantSkeleton.bomb.hitsAir,
+        style: "giant-skeleton-bomb", stun: 0,
+        source: e.id, flight: { x: e.x, y: e.y }, elapsed: 0,
+        fromHeight: 0.2, toHeight: 0.2, arc: 0,
+        knockback: giantSkeleton.bomb.pushback,
+      });
+      this.emitAudio("death-spawn", e.team, "giant-skeleton", e.id,
+        undefined, { x: e.x, y: e.y });
+    }
     if (e.card === "ice-golem") {
       this.areas.push({
         id: this.nextId++, team: e.team, card: "ice-golem", x: e.x, y: e.y,
