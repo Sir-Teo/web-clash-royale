@@ -552,6 +552,7 @@ export class Arena {
       draws: this.destruction.drawCount,
       time: this.destruction.time,
       clips: this.destruction.activeClips,
+      tails: this.destruction.tailState,
     };
   }
   get placementState() {
@@ -739,7 +740,7 @@ export class Arena {
     else if (this.camera.view?.enabled) this.camera.clearViewOffset();
     // Authored effects use elapsed presentation time. Movement and legacy
     // particle integration keep the bounded step supplied separately.
-    this.destruction.update(effectDelta, this.camera);
+    this.destruction.advance(effectDelta);
     const ruins = destroyedTowerSites(b.entities);
     const ruinKeys = new Set(ruins.map((s) => `${s.team}-${s.x}`));
     for (const [key, mesh] of this.rubble)
@@ -1145,6 +1146,7 @@ export class Arena {
       this.height,
       this.crownTarget,
     );
+    this.destruction.update(0, this.camera);
     this.deployment.render(time, this.camera);
     this.positionPlacementFeedback();
     this.renderer.render(this.scene, this.camera);

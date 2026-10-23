@@ -141,6 +141,9 @@ for (const perspective of ["blue", "red"] as const)
     expect(
       moving.some((s: any) => s.destruction.clips.explosion_cloud_1 > 0),
     ).toBe(true);
+    expect(moving.some((s: any) => s.destruction.tails.stretched > 0)).toBe(
+      true,
+    );
     for (const sample of moving) {
       expect(sample.time).toBeGreaterThanOrEqual(impact.time);
       expect(Math.hypot(sample.x, sample.y)).toBeLessThanOrEqual(4.80001);

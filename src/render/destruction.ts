@@ -3,6 +3,7 @@ import definitions from "./destruction-data.json";
 import { makeMaterial, effectMaterials, spriteGeometry } from "./sprites";
 import type { EffectLibrary } from "./effects";
 import type { Team } from "../game/engine";
+import { particleTailPose, rotatedSpriteHeight } from "./particle-tail";
 
 type Emitter = (typeof definitions.emitters)[keyof typeof definitions.emitters];
 export type DeathEffect = keyof typeof definitions.effects;
@@ -29,6 +30,7 @@ export interface DebrisPlan {
   vx: number;
   vz: number;
   vy: number;
+  tailDelay: number;
   angle: number;
   ground: boolean;
   layer: string;
@@ -41,6 +43,13 @@ export function destructionPlan(
   team: Team = "blue",
 ): DebrisPlan[] {
   let state = seed | 0;
+  // A separate cosmetic stream preserves existing clip, lifetime and motion
+  // choices when adding source tails. Neither stream touches the combat RNG.
+  let tailState = (seed ^ 0x5bd1e995) | 0;
+  const tailRandom = () => {
+    tailState = (Math.imul(tailState, 1664525) + 1013904223) | 0;
+    return (tailState >>> 0) / 4294967296;
+  };
   const random = () => {
     state = (Math.imul(state, 1664525) + 1013904223) | 0;
     return (state >>> 0) / 4294967296;
@@ -75,6 +84,11 @@ export function destructionPlan(
         vx: Math.cos(angle) * speed,
         vz: Math.sin(angle) * speed,
         vy: between(emitter.verticalSpeed),
+        tailDelay:
+          Math.floor(
+            emitter.tailDelayMs[0] +
+              tailRandom() * (emitter.tailDelayMs[1] - emitter.tailDelayMs[0]),
+          ) / 1000,
       };
     });
   });
@@ -127,6 +141,8 @@ interface Debris {
   plan: DebrisPlan;
   origin: T.Vector3;
   start: number;
+  boundsFrame?: number;
+  boundsHeight?: number;
 }
 interface Batch {
   mesh: T.InstancedMesh<T.BufferGeometry, T.MeshBasicMaterial[]>;
@@ -138,6 +154,7 @@ interface Instance {
   position: T.Vector3;
   quaternion: T.Quaternion;
   scale: T.Vector3;
+  childAngle: number;
   opacity: number;
   depth: number;
 }
@@ -171,6 +188,7 @@ export class DestructionEffects {
   private clock = 0;
   private dirty = false;
   private viewQuaternion = new T.Quaternion();
+  private tails = { active: 0, stretched: 0, maxStretch: 1 };
   constructor(
     private scene: T.Scene,
     private library: EffectLibrary,
@@ -180,6 +198,17 @@ export class DestructionEffects {
   }
   get time() {
     return this.clock;
+  }
+  get tailState() {
+    return { ...this.tails };
+  }
+  // Advance before consuming this frame's events; upload after all bursts so
+  // new effects are visible in the same rendered frame, including on pause.
+  advance(dt: number) {
+    if (dt > 0) {
+      this.clock += dt;
+      this.dirty = true;
+    }
   }
   get groundCount() {
     return this.particles.filter((p) => p.plan.ground).length;
@@ -260,11 +289,12 @@ export class DestructionEffects {
     return batch;
   }
   update(dt: number, camera: T.Camera) {
-    this.clock += Math.max(0, dt);
+    this.advance(dt);
     if (!this.dirty && dt <= 0 && this.viewQuaternion.equals(camera.quaternion))
       return;
     this.dirty = false;
     this.viewQuaternion.copy(camera.quaternion);
+    this.tails = { active: 0, stretched: 0, maxStretch: 1 };
     if (!this.particles.length && !this.batches.size) return;
     this.particles = this.particles.filter(
       (p) => this.clock - p.start < p.plan.life,
@@ -301,7 +331,7 @@ export class DestructionEffects {
         group = { frame, ground: p.plan.ground, order, instances: [] };
         groups.set(key, group);
       }
-      const position = new T.Vector3(
+      let position = new T.Vector3(
         p.origin.x + pose.x,
         p.plan.ground ? 0.195 : p.origin.y + pose.y,
         p.origin.z + pose.z,
@@ -309,27 +339,59 @@ export class DestructionEffects {
       const quaternion = p.plan.ground
         ? new T.Quaternion().setFromEuler(new T.Euler(-Math.PI / 2, 0, 0))
         : camera.quaternion.clone();
-      if (p.plan.emitter.rotate)
-        quaternion.multiply(
-          new T.Quaternion().setFromAxisAngle(
-            new T.Vector3(0, 0, 1),
-            p.plan.angle,
-          ),
-        );
+      // spriteGeometry reflects native Y-down coordinates into local Y-up.
+      // Reflect the child's emission rotation too; it remains separate from
+      // the parent tail affine, whose nonuniform scale may produce shear.
+      const childAngle = p.plan.emitter.rotate ? -p.plan.angle : 0;
       const scale = new T.Vector3(
         pose.scale,
         pose.scale * (p.plan.ground ? groundScale : 1),
         pose.scale,
       );
+      if (p.plan.tailDelay > 0 && !p.plan.ground) {
+        if (p.boundsFrame !== frame) {
+          p.boundsHeight = rotatedSpriteHeight(
+            spriteGeometry(this.library.asset!, frame),
+            childAngle,
+          );
+          p.boundsFrame = frame;
+        }
+        // Evaluate both motion states by age, without a render-history buffer.
+        // The delayed state stays at birth until its sampled age offset elapses.
+        const delayed = debrisPose(p.plan, age - p.plan.tailDelay);
+        const tail = particleTailPose(
+          position,
+          new T.Vector3(
+            p.origin.x + delayed.x,
+            p.origin.y + delayed.y,
+            p.origin.z + delayed.z,
+          ),
+          camera.quaternion,
+          p.boundsHeight!,
+        );
+        position = tail.position;
+        quaternion.multiply(
+          new T.Quaternion().setFromAxisAngle(
+            new T.Vector3(0, 0, 1),
+            tail.angle,
+          ),
+        );
+        scale.x *= tail.stretch;
+        this.tails.active++;
+        if (tail.stretch > 1) this.tails.stretched++;
+        this.tails.maxStretch = Math.max(this.tails.maxStretch, tail.stretch);
+      }
       group.instances.push({
         position,
         quaternion,
         scale,
+        childAngle,
         opacity: pose.opacity,
         depth: position.dot(normal),
       });
     }
-    const matrix = new T.Matrix4();
+    const matrix = new T.Matrix4(),
+      childRotation = new T.Matrix4();
     for (const [key, group] of groups) {
       const batch = this.batch(
         key,
@@ -342,6 +404,8 @@ export class DestructionEffects {
       group.instances.sort((a, b) => a.depth - b.depth);
       group.instances.forEach((instance, i) => {
         matrix.compose(instance.position, instance.quaternion, instance.scale);
+        if (instance.childAngle)
+          matrix.multiply(childRotation.makeRotationZ(instance.childAngle));
         batch.mesh.setMatrixAt(i, matrix);
         batch.opacity.setX(i, instance.opacity);
       });
@@ -374,5 +438,6 @@ export class DestructionEffects {
     this.particles = [];
     this.clock = 0;
     this.dirty = false;
+    this.tails = { active: 0, stretched: 0, maxStretch: 1 };
   }
 }

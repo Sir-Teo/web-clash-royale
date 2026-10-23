@@ -32,6 +32,7 @@ test("both Fireballs produce their full native explosion, hold on pause and expi
     await advance();
   await expect(status).toHaveAttribute("data-impacts", "2");
   expect((await state()).particles).toBe(296);
+  expect((await state()).draws).toBeGreaterThan(0);
   // Ground fragments begin at 100 ms and finish their 1-ms stagger by 131 ms.
   await advance();
   await advance();
@@ -42,6 +43,9 @@ test("both Fireballs produce their full native explosion, hold on pause and expi
     Object.keys(early.clips).filter((name) => name.startsWith("particle_coal")),
   ).toHaveLength(10);
   expect(early.draws).toBeLessThan(130);
+  expect(early.tails.active).toBeGreaterThan(0);
+  expect(early.tails.stretched).toBeGreaterThan(0);
+  expect(early.tails.maxStretch).toBeGreaterThan(1);
   await page.screenshot({
     path: info.outputPath("native-fireball-impact.png"),
     fullPage: true,
@@ -57,5 +61,6 @@ test("both Fireballs produce their full native explosion, hold on pause and expi
   for (let i = 0; i < 6; i++) await advance("#second", 1);
   expect((await state()).particles).toBe(0);
   expect((await state()).draws).toBe(0);
+  expect((await state()).tails.active).toBe(0);
   expect(errors).toEqual([]);
 });

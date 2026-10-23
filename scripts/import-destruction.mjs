@@ -74,6 +74,8 @@ function importEmitter(name) {
     speed: pair("ParticleMinSpeed", "ParticleMaxSpeed", 30),
     height: Number(p.ParticleStartZ) / 30,
     verticalSpeed: pair("ParticleMinVelocityZ", "ParticleMaxVelocityZ", 30),
+    // Native TailLength is an integer age offset, not a spatial distance.
+    tailDelayMs: pair("ParticleMinTailLength", "ParticleMaxTailLength"),
     gravity: Number(p.ParticleGravity) / 30,
     startScale: p.StartScale ? Number(p.StartScale) / 100 : 1,
     endScale: p.EndScale ? Number(p.EndScale) / 100 : 1,

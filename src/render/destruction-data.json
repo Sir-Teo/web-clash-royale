@@ -1794,6 +1794,10 @@
         3.3333333333333335,
         10
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": -16.666666666666668,
       "startScale": 0.7,
       "endScale": 0.1,
@@ -1838,6 +1842,10 @@
       "verticalSpeed": [
         0.3333333333333333,
         5
+      ],
+      "tailDelayMs": [
+        60,
+        200
       ],
       "gravity": 0,
       "startScale": 1.1,
@@ -1884,6 +1892,10 @@
         1.6666666666666667,
         3
       ],
+      "tailDelayMs": [
+        0,
+        1000
+      ],
       "gravity": -0.6666666666666666,
       "startScale": 1.4,
       "endScale": 0.01,
@@ -1926,6 +1938,10 @@
       "verticalSpeed": [
         10,
         33.333333333333336
+      ],
+      "tailDelayMs": [
+        0,
+        0
       ],
       "gravity": -116.66666666666667,
       "startScale": 0.5,
@@ -1973,6 +1989,10 @@
         0,
         0
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": 0.5,
       "startScale": 0.8,
       "endScale": 0.8,
@@ -2016,6 +2036,10 @@
       "verticalSpeed": [
         13.333333333333334,
         23.333333333333332
+      ],
+      "tailDelayMs": [
+        0,
+        0
       ],
       "gravity": -40,
       "startScale": 0.7,
@@ -2062,6 +2086,10 @@
         0,
         20
       ],
+      "tailDelayMs": [
+        0,
+        100
+      ],
       "gravity": -56.666666666666664,
       "startScale": 1,
       "endScale": 0.4,
@@ -2106,6 +2134,10 @@
         0.6666666666666666,
         3
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": 1.1666666666666667,
       "startScale": 0.23,
       "endScale": 0.3,
@@ -2149,6 +2181,10 @@
         -0.6666666666666666,
         -3
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": -1.1666666666666667,
       "startScale": 0.25,
       "endScale": 0.4,
@@ -2189,6 +2225,10 @@
       ],
       "height": 0,
       "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
         0,
         0
       ],
@@ -2237,6 +2277,10 @@
         0.6666666666666666,
         0
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": 0,
       "startScale": 1.5,
       "endScale": 1.6,
@@ -2283,6 +2327,10 @@
         0,
         0
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": 0,
       "startScale": 1.05,
       "endScale": 1,
@@ -2325,6 +2373,10 @@
       "verticalSpeed": [
         0,
         20
+      ],
+      "tailDelayMs": [
+        0,
+        100
       ],
       "gravity": -56.666666666666664,
       "startScale": 1.2,
@@ -2370,6 +2422,10 @@
         0.6666666666666666,
         3
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": 1.1666666666666667,
       "startScale": 0.4,
       "endScale": 0.3,
@@ -2413,6 +2469,10 @@
         -0.6666666666666666,
         -3
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": -1.1666666666666667,
       "startScale": 0.25,
       "endScale": 0.4,
@@ -2453,6 +2513,10 @@
       ],
       "height": 0,
       "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
         0,
         0
       ],
@@ -2501,6 +2565,10 @@
         0,
         10
       ],
+      "tailDelayMs": [
+        0,
+        100
+      ],
       "gravity": -56.666666666666664,
       "startScale": 1,
       "endScale": 0.4,
@@ -2545,6 +2613,10 @@
         0.6666666666666666,
         3
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": 1.1666666666666667,
       "startScale": 0.23,
       "endScale": 0.3,
@@ -2585,6 +2657,10 @@
       ],
       "height": 0,
       "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
         0,
         0
       ],
@@ -2633,6 +2709,10 @@
         3.3333333333333335,
         4
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": 0.8333333333333334,
       "startScale": 1,
       "endScale": 1,
@@ -2676,6 +2756,10 @@
         1.6666666666666667,
         2
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": 1.6666666666666667,
       "startScale": 0.6,
       "endScale": 1.25,
@@ -2718,6 +2802,10 @@
       "verticalSpeed": [
         0.3333333333333333,
         5
+      ],
+      "tailDelayMs": [
+        60,
+        200
       ],
       "gravity": 0,
       "startScale": 1.1,
@@ -2765,6 +2853,10 @@
         3,
         3.3333333333333335
       ],
+      "tailDelayMs": [
+        0,
+        50
+      ],
       "gravity": 0,
       "startScale": 2,
       "endScale": 0.5,
@@ -2808,6 +2900,10 @@
         10,
         33.333333333333336
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": -116.66666666666667,
       "startScale": 0.8,
       "endScale": 0.9,
@@ -2848,6 +2944,10 @@
       ],
       "height": 0,
       "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
         0,
         0
       ],
@@ -2894,6 +2994,10 @@
         10,
         20
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": -33.333333333333336,
       "startScale": 0.8,
       "endScale": 0.8,
@@ -2935,6 +3039,10 @@
       ],
       "height": 0.36666666666666664,
       "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
         0,
         0
       ],
@@ -2980,6 +3088,10 @@
       "verticalSpeed": [
         0,
         1.6666666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
       ],
       "gravity": -116.66666666666667,
       "startScale": 1,
@@ -3033,6 +3145,10 @@
         0.6666666666666666,
         1
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": 0.3333333333333333,
       "startScale": 1,
       "endScale": 1.2,
@@ -3076,6 +3192,10 @@
         0.6666666666666666,
         3
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": 1.1666666666666667,
       "startScale": 0.23,
       "endScale": 0.3,
@@ -3118,6 +3238,10 @@
       "verticalSpeed": [
         16.666666666666668,
         30
+      ],
+      "tailDelayMs": [
+        0,
+        20
       ],
       "gravity": -66.66666666666667,
       "startScale": 1,
@@ -3167,6 +3291,10 @@
         26.666666666666668,
         30
       ],
+      "tailDelayMs": [
+        3,
+        15
+      ],
       "gravity": -100,
       "startScale": 1.2,
       "endScale": 0.2,
@@ -3207,6 +3335,10 @@
       ],
       "height": 0,
       "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
         0,
         0
       ],
@@ -3253,6 +3385,10 @@
         0,
         0
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": 0,
       "startScale": 1.5,
       "endScale": 1.5,
@@ -3295,6 +3431,10 @@
       "verticalSpeed": [
         3,
         3.3333333333333335
+      ],
+      "tailDelayMs": [
+        0,
+        0
       ],
       "gravity": 0,
       "startScale": 2,
@@ -3341,6 +3481,10 @@
         0,
         0
       ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
       "gravity": 10,
       "startScale": 2,
       "endScale": 0.01,
@@ -3381,6 +3525,10 @@
       ],
       "height": 0.8333333333333334,
       "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
         0,
         0
       ],
