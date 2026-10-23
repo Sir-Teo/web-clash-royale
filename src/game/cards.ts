@@ -1,4 +1,5 @@
 import freeze from "./freeze-data.json" with { type: "json" };
+import poison from "./poison-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -25,7 +26,8 @@ export type CardId =
   | "cannon"
   | "tesla"
   | "zap"
-  | "freeze";
+  | "freeze"
+  | "poison";
 export interface Card {
   id: CardId;
   name: string;
@@ -376,6 +378,23 @@ export const CARDS: Card[] = [
       rarity: "Epic",
       radius: freeze.radius,
       hitsAir: freeze.hitsAir,
+    },
+  ),
+  troop(
+    "poison",
+    "Poison",
+    poison.cost,
+    0,
+    121,
+    0,
+    0,
+    poison.damageInterval,
+    "Damages enemies in its lingering cloud. Troops leaving the cloud remain poisoned briefly.",
+    {
+      kind: "spell",
+      rarity: "Epic",
+      radius: poison.radius,
+      hitsAir: poison.hitsAir,
     },
   ),
 ];

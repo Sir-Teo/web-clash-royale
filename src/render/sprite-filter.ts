@@ -32,8 +32,8 @@ export function filteredSpriteMaterials(
   });
 }
 
-export type SpriteFilterLayer = "deploy" | "charge" | "cold";
-const layerOrder: SpriteFilterLayer[] = ["deploy", "charge", "cold"];
+export type SpriteFilterLayer = "deploy" | "charge" | "poison" | "cold";
+const layerOrder: SpriteFilterLayer[] = ["deploy", "charge", "poison", "cold"];
 
 interface FilteredSprite {
   sprite: AnimatedSprite;

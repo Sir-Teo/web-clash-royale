@@ -34,7 +34,7 @@ test("Freeze can be chosen and cast from the real phone and desktop hand", async
   const state = () => page.evaluate(() => (window as any).__arena?.state);
   await expect
     .poll(async () => (await state())?.loadedCards, { timeout: 60000 })
-    .toBe(25);
+    .toBe(26);
   await expect(
     page.locator('#deck-preview [data-card-info="freeze"]'),
   ).toBeVisible();

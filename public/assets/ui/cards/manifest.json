@@ -257,9 +257,14 @@
       "sha256": "cbfc6f616e922c6b332fbd1b226d2ad7e92a3334bba8319c88110fa345f99206"
     },
     {
+      "file": "portrait-poison.webp",
+      "bytes": 31180,
+      "sha256": "cc9591495b48e8ccf5fe280f9f271ca1b34de37936d516c40970cfb8654c276e"
+    },
+    {
       "file": "cards.json",
-      "bytes": 91191,
-      "sha256": "09112ee9f18b278cfed78e449e6558d61cc5873a5a836976b4b50eebc67fc92a"
+      "bytes": 91503,
+      "sha256": "4db0771cadc308b0ca7fb8650be5dedfd8dacbed0d16b86add0f353300445b58"
     }
   ]
 }

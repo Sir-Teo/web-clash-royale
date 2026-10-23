@@ -1,0 +1,18 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/sc/effects.bin",
+      "sha256": "1a9b0a2efe99578cd03fb9d8673ddb042aa067ba9f9fc0d3a253e15c2e9c7b7c"
+    },
+    {
+      "path": "reference/logic/character_buffs.csv",
+      "sha256": "fbcc636e6c8025ca0f36aab524b868806b2a6a8606186b622410a5f46fba9bbe"
+    }
+  ],
+  "output": {
+    "path": "src/render/poison-filter-data.json",
+    "sha256": "7d7acc2c0eb4512c9b0dd8bcc7db9ccceae8a71ef9bba4be006e1e5b377da7d0"
+  }
+}

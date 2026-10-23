@@ -28,6 +28,7 @@ const cards = [
   "tesla",
   "zap",
   "freeze",
+  "poison",
 ];
 const characters = [
   "knight",

@@ -6,10 +6,10 @@ test("native portraits use separate frames and the draw animation freezes and se
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/tests/fixtures/cards.html");
-  await expect(page.locator("#status")).toContainText("25 native portraits", {
+  await expect(page.locator("#status")).toContainText("26 native portraits", {
     timeout: 30000,
   });
-  await expect(page.locator("#gallery .native-card-ready")).toHaveCount(25);
+  await expect(page.locator("#gallery .native-card-ready")).toHaveCount(26);
   const knight = page.locator('#gallery [data-native-card="knight"]');
   await expect(knight.locator("text")).toHaveText(["3", "Knight", "Level 11"]);
   await knight.click();
@@ -45,7 +45,7 @@ test("card selection and deployment preserve readable costs and touch targets ac
       () => page.evaluate(() => (window as any).__arena?.state.loadedCards),
       { timeout: 30000 },
     )
-    .toBe(25);
+    .toBe(26);
   await expect(page.locator("#deck-preview .native-card-ready")).toHaveCount(8);
   await page.locator('#deck-preview [data-card-info="knight"]').click();
   await expect(page.locator(".detail-art.native-card-ready text")).toHaveText([

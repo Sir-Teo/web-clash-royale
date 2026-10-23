@@ -44,7 +44,7 @@
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "09112ee9f18b278cfed78e449e6558d61cc5873a5a836976b4b50eebc67fc92a"
+      "sha256": "4db0771cadc308b0ca7fb8650be5dedfd8dacbed0d16b86add0f353300445b58"
     }
   ],
   "ignoredEnemyVersions": [
@@ -454,6 +454,12 @@
       "sha256": "2b35457fd04d1917251f5f41f4f0abf12cca32b73188baac729e7a871f2bb518"
     },
     {
+      "path": "public/assets/audio/poison_spell_01.ogg",
+      "source": "sfx/poison_spell_01.ogg",
+      "bytes": 27116,
+      "sha256": "ea45d3491f2524dd89009fc5f485ff4a53900d2fdc8cb65cd023d2f384c7e9aa"
+    },
+    {
       "path": "public/assets/audio/prince_andrew_use_02.ogg",
       "source": "sfx/prince_andrew_use_02.ogg",
       "bytes": 6687,
@@ -744,6 +750,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "905bc4a61e4a7c95770d47dc0dbf60095335bf34aa0aa2c666ba811d2860c171"
+    "sha256": "d07a0571d45f06d6b5705c111a8028f49bb29f2733f3dbdc010728983a26f528"
   }
 }

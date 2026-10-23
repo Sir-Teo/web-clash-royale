@@ -290,6 +290,24 @@ for (const [id, source] of [
     components: composition(source, "blue"),
     enemyComponents: composition(source, "red"),
   };
+const poisonCard = cards.poison;
+const poisonSpell = tables[poisonCard.table][poisonCard.row];
+const poisonArea = tables.area_effect_objects[poisonSpell.AreaEffectObject];
+if (
+  poisonSpell.AreaEffectObject !== "Poison" ||
+  poisonArea.ScaledEffect !== "Spell_poison_ground" ||
+  poisonArea.OneShotEffect !== "Spell_poison_effect" ||
+  poisonArea.LoopingEffect !== "Spell_poison_loop"
+) throw new Error("Recheck native Poison area effect bindings");
+for (const [id, source] of [
+  ["poison", poisonArea.OneShotEffect],
+  ["poison-loop", poisonArea.LoopingEffect],
+])
+  impacts[id] = {
+    source,
+    components: composition(source, "blue"),
+    enemyComponents: composition(source, "red"),
+  };
 effects.tower.rubble = "Tower_destroyed_ground1";
 effects.king.rubble = "Tower_destroyed_ground2";
 const path = "src/render/destruction-data.json",

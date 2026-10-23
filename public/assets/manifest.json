@@ -417,6 +417,12 @@
       "sha256": "e00b43b02ae1a7b2c1517577f7bbaf96cd405f2ed549df195d6ed38beef90d45"
     },
     {
+      "path": "cards/poison.png",
+      "source": "cards/poison.png",
+      "bytes": 119225,
+      "sha256": "4f28bc86f2b1a236bc02e7abace6e4904c1a51773cc666eaa10618e450a91d35"
+    },
+    {
       "path": "cards/prince.png",
       "source": "cards/prince.png",
       "bytes": 146529,

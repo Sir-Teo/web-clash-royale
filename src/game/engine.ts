@@ -13,6 +13,7 @@ import {
 import { TOWER_SITES } from "./arena-layout";
 import { audioProfile } from "./combat-audio-events";
 import freeze from "./freeze-data.json" with { type: "json" };
+import poison from "./poison-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -44,6 +45,7 @@ export interface Entity extends Point {
   age: number;
   deploy: number;
   stun: number;
+  poison?: { remaining: number; elapsed: number };
   attack: number;
   move: number;
   king?: boolean;
@@ -86,10 +88,11 @@ export interface Projectile extends Point {
 export interface AreaEffect extends Point {
   id: number;
   team: Team;
-  card: "freeze";
+  card: "freeze" | "poison";
   radius: number;
   duration: number;
   remaining: number;
+  hitAt?: number;
 }
 export interface BattleEvent extends Point {
   id: number;
@@ -349,17 +352,19 @@ export class Battle {
     this.emit(c.kind === "spell" ? "spell" : "deploy", team, x, y, id);
     this.emitAudio("cast", team, id);
     if (c.kind === "spell") {
-      if (id === "freeze") {
+      if (id === "freeze" || id === "poison") {
+        const rules = id === "freeze" ? freeze : poison;
         this.areas.push({
           id: this.nextId++,
           team,
-          card: "freeze",
+          card: id,
           x,
           y,
-          radius: freeze.radius,
-          duration: freeze.duration,
-          remaining: freeze.duration,
+          radius: rules.radius,
+          duration: rules.duration,
+          remaining: rules.duration,
         });
+        if (id === "poison") this.emitAudio("impact", team, id);
         return { ok: true, reason: "" };
       }
       const origin = { x: 9, y: team === "blue" ? 30 : 2 };
@@ -609,19 +614,43 @@ export class Battle {
   }
   private updateAreas() {
     for (const area of this.areas) {
+      const age = area.duration - area.remaining;
+      const poisonHit = area.card === "poison" &&
+        age + 1e-8 >= (area.hitAt ?? 0);
+      if (poisonHit) area.hitAt = (area.hitAt ?? 0) + poison.areaHitInterval;
       for (const entity of this.entities) {
         if (
           entity.hp <= 0 ||
           entity.team === area.team ||
+          (area.card === "poison" && !poisonHit) ||
+          (area.card === "poison" && this.isHidden(entity)) ||
           dist(entity, area) >= area.radius + entity.radius
         )
           continue;
-        entity.stun = Math.max(entity.stun, STEP * 2);
+        if (area.card === "freeze")
+          entity.stun = Math.max(entity.stun, STEP * 2);
+        else
+          entity.poison ??= { remaining: 0, elapsed: 0 };
+        if (area.card === "poison" && entity.poison)
+          entity.poison.remaining = poison.buffDuration;
       }
       area.remaining = Math.max(0, area.remaining - STEP);
       if (area.remaining < 1e-8) area.remaining = 0;
     }
     this.areas = this.areas.filter((area) => area.remaining > 0);
+    for (const entity of this.entities) {
+      const status = entity.poison;
+      if (!status || entity.hp <= 0) continue;
+      status.remaining = Math.max(0, status.remaining - STEP);
+      status.elapsed += STEP;
+      if (status.elapsed + 1e-8 >= poison.damageInterval) {
+        status.elapsed -= poison.damageInterval;
+        const damage = CARD_MAP.poison.damage *
+          (entity.kind === "tower" ? poison.crownTowerDamageFraction : 1);
+        this.hurt(entity, damage);
+      }
+      if (status.remaining < 1e-8) entity.poison = undefined;
+    }
   }
   private resolveKingLosses() {
     const fallenKings = this.entities.filter((e) => e.king && e.hp <= 0);

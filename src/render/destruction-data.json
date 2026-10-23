@@ -2376,6 +2376,62 @@
           "ground": false
         }
       ]
+    },
+    "poison": {
+      "source": "Spell_poison_effect",
+      "components": [
+        {
+          "emitter": "Poison_skull1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Poison_skull1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "poison-loop": {
+      "source": "Spell_poison_loop",
+      "components": [
+        {
+          "emitter": "Poison_skull1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Poison_big_skull",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Poison_skull1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Poison_big_skull",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
     }
   },
   "launches": {
@@ -7240,6 +7296,100 @@
       "loop": true,
       "clips": [
         "snowflake_anim"
+      ]
+    },
+    "Poison_skull1": {
+      "count": 15,
+      "emissionLife": [
+        3,
+        3
+      ],
+      "interval": [
+        0.14,
+        0.3
+      ],
+      "life": [
+        1.5,
+        2.3
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.16666666666666666,
+        0.5
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0.6666666666666666
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.03333333333333333,
+      "startScale": 0.01,
+      "endScale": 1.5,
+      "fadeIn": 0,
+      "fadeOut": 1.5,
+      "inertia": 0,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "poison_skull"
+      ]
+    },
+    "Poison_big_skull": {
+      "count": 9,
+      "emissionLife": [
+        0,
+        0
+      ],
+      "interval": [
+        0.01,
+        0.05
+      ],
+      "life": [
+        1.5,
+        2.3
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.26666666666666666,
+        0.26666666666666666
+      ],
+      "speed": [
+        0.03333333333333333,
+        0.3333333333333333
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -23.333333333333332,
+      "startScale": 0.5,
+      "endScale": 2.8,
+      "fadeIn": 0,
+      "fadeOut": 4.5,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "poison_skull"
       ]
     }
   }

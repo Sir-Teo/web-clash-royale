@@ -253,6 +253,7 @@ const portraitNames = {
   tesla: "Tesla",
   zap: "Zap",
   freeze: "Freeze",
+  poison: "Poison",
 };
 const sheets = [];
 for (const [name, cache, expected] of [

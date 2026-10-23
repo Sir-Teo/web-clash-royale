@@ -1,0 +1,36 @@
+import { test, expect } from "@playwright/test";
+import { expectedEffects } from "./native-assets";
+
+test("native Poison damages both sides, animates on phones and clears after expiry", async ({ page }, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/tests/fixtures/combat.html");
+  await page.locator("#scenario").selectOption("poison");
+  await expect(page.locator("#status")).toContainText(`${expectedEffects} effects`, { timeout: 60000 });
+  const node = page.locator("#destruction");
+  const areas = async () => JSON.parse((await node.getAttribute("data-poison-areas"))!);
+  const entities = async () => JSON.parse((await node.getAttribute("data-poison-entities"))!);
+  const filter = async () => JSON.parse((await node.getAttribute("data-poison-filter"))!);
+  const particles = async () => JSON.parse((await node.getAttribute("data-state"))!).particles as number;
+  await page.locator("#poison-cast").click();
+  await expect.poll(async () => (await areas()).length).toBe(2);
+  expect((await areas()).map((area: { team: string }) => area.team)).toEqual(["blue", "red"]);
+  await page.locator("#second").click();
+  await expect.poll(async () => (await entities()).every((entity: { hp: number }) => entity.hp < 1666)).toBe(true);
+  await expect.poll(async () => (await filter()).length).toBe(2);
+  expect(await particles()).toBeGreaterThan(0);
+  const heldAreas = await areas();
+  const heldHp = await entities();
+  await page.waitForTimeout(180);
+  expect(await areas()).toEqual(heldAreas);
+  expect(await entities()).toEqual(heldHp);
+  await page.screenshot({ path: info.outputPath("native-poison-active.png"), fullPage: true });
+  for (let i = 0; i < 7; i++) await page.locator("#second").click();
+  await expect.poll(async () => (await areas()).length).toBe(0);
+  await page.locator("#second").click();
+  await expect.poll(async () => (await entities()).every((entity: { poison?: unknown }) => !entity.poison)).toBe(true);
+  await expect.poll(async () => (await filter()).length).toBe(0);
+  await page.locator("#reset").click();
+  await expect.poll(async () => (await areas()).length).toBe(0);
+  expect(errors).toEqual([]);
+});

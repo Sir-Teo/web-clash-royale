@@ -35,9 +35,10 @@ import { NativeChargeMarkers } from "./charge-marker";
 import { NativeChargeFilter } from "./charge-filter";
 import { NativeDeployFilter } from "./deploy-filter";
 import { NativeColdFilter, NativeColdStructures } from "./cold-filter";
+import { NativePoisonFilter } from "./poison-filter";
 import type { ColdStructurePart } from "./cold-filter";
 import { SpriteFilterStack } from "./sprite-filter";
-import { NativeFreezeAreas } from "./freeze-areas";
+import { NativeSpellAreas } from "./spell-areas";
 import { arrowOffsets } from "./arrow-volley";
 import { CrownEffects } from "./crowns";
 import { HealthLibrary, type HealthSprite } from "./health";
@@ -85,8 +86,9 @@ export class Arena {
   private chargeFilter = new NativeChargeFilter(this.spriteFilters);
   private deployFilter = new NativeDeployFilter(this.spriteFilters);
   private coldFilter = new NativeColdFilter(this.spriteFilters);
+  private poisonFilter = new NativePoisonFilter(this.spriteFilters);
   private coldStructures = new NativeColdStructures();
-  private freezeAreas = new NativeFreezeAreas(this.scene, this.effects);
+  private spellAreas = new NativeSpellAreas(this.scene, this.effects);
   private hogLandings = new NativeHogLandings();
   private crowns = new CrownEffects(this.scene, this.effects);
   private rubble = new Map<string, T.Mesh>();
@@ -491,9 +493,10 @@ export class Arena {
     this.chargeFilter.clear();
     this.deployFilter.clear();
     this.coldFilter.clear();
+    this.poisonFilter.clear();
     this.coldStructures.clear();
     this.spriteFilters.clear();
-    this.freezeAreas.clear();
+    this.spellAreas.clear();
     this.hogLandings.reset();
     this.shake.reset(battle.audioEvents);
     this.camera.clearViewOffset();
@@ -603,6 +606,9 @@ export class Arena {
   get coldFilterState() {
     return this.coldFilter.state;
   }
+  get poisonFilterState() {
+    return this.poisonFilter.state;
+  }
   get coldStructureState() {
     return this.coldStructures.state;
   }
@@ -629,7 +635,10 @@ export class Arena {
     return parts;
   }
   get freezeAreaState() {
-    return this.freezeAreas.state;
+    return this.spellAreas.state.filter((area) => area.card === "freeze");
+  }
+  get poisonAreaState() {
+    return this.spellAreas.state.filter((area) => area.card === "poison");
   }
   get placementState() {
     return this.placement
@@ -1077,6 +1086,21 @@ export class Arena {
             eventAge,
           );
       }
+      if (event.type === "spell" && event.card === "poison") {
+        const origin = new T.Vector3(event.x - 9, 0.2, event.y - 16);
+        this.destruction.burst(
+          "poison", origin, b.seed ^ event.id, event.team, eventAge,
+        );
+        // The archived loop emitter lasts three seconds; repeat it across the
+        // eight-second area. Negative age schedules later cycles on the same
+        // clock and also reconstructs them after a late snapshot or seek.
+        for (const [index, offset] of [0, 3, 6].entries())
+          this.destruction.burst(
+            "poison-loop", origin,
+            b.seed ^ event.id ^ Math.imul(index, 0x9e3779b9),
+            event.team, eventAge - offset,
+          );
+      }
       if (event.type === "hit") {
         const impactPosition = new T.Vector3(
           event.x - 9,
@@ -1302,13 +1326,18 @@ export class Arena {
       );
     this.chargeMarkers.update(b.entities, this.destruction.time, this.width);
     this.deployFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
-    this.freezeAreas.update(b.areas);
+    this.spellAreas.update(b.areas);
     this.chargeFilter.update(
       b.entities,
       this.destruction.time,
       (id) => this.units.get(id)?.sprite,
     );
     this.coldFilter.update(
+      b.entities,
+      this.destruction.time,
+      (id) => this.units.get(id)?.sprite,
+    );
+    this.poisonFilter.update(
       b.entities,
       this.destruction.time,
       (id) => this.units.get(id)?.sprite,
@@ -1509,9 +1538,10 @@ export class Arena {
     this.chargeFilter.clear();
     this.deployFilter.clear();
     this.coldFilter.clear();
+    this.poisonFilter.clear();
     this.coldStructures.clear();
     this.spriteFilters.clear();
-    this.freezeAreas.clear();
+    this.spellAreas.clear();
     this.placementFeedback.remove();
     this.sprites.destroy();
     this.effects.destroy();

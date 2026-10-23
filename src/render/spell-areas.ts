@@ -4,13 +4,14 @@ import type { EffectLibrary, EffectSprite } from "./effects";
 
 interface Visual {
   team: AreaEffect["team"];
+  card: AreaEffect["card"];
   ground: EffectSprite;
   radius: EffectSprite;
   frame: number;
 }
 
-/** The source Freeze ground and radius SWFs follow the active simulation area. */
-export class NativeFreezeAreas {
+/** Source ground and radius clips follow active persistent spell areas. */
+export class NativeSpellAreas {
   private visuals = new Map<number, Visual>();
 
   constructor(
@@ -22,6 +23,7 @@ export class NativeFreezeAreas {
     return [...this.visuals.entries()].map(([id, visual]) => ({
       id,
       team: visual.team,
+      card: visual.card,
       frame: visual.frame,
     }));
   }
@@ -29,20 +31,25 @@ export class NativeFreezeAreas {
   update(areas: readonly AreaEffect[]) {
     const active = new Set<number>();
     for (const area of areas) {
-      if (area.card !== "freeze") continue;
       active.add(area.id);
       let visual = this.visuals.get(area.id);
-      if (visual?.team !== area.team) {
+      if (visual?.team !== area.team || visual.card !== area.card) {
         if (visual) this.release(area.id, visual);
         const ground = this.effects.make(
-          area.team === "blue"
-            ? "freeze_effect_ground"
-            : "freeze_effect_ground_red",
+          area.card === "freeze"
+            ? area.team === "blue"
+              ? "freeze_effect_ground"
+              : "freeze_effect_ground_red"
+            : "Poison_radius",
         );
         const radius = this.effects.make(
-          area.team === "blue"
-            ? "spell_freeze_radius_blue"
-            : "spell_freeze_radius_red",
+          area.card === "freeze"
+            ? area.team === "blue"
+              ? "spell_freeze_radius_blue"
+              : "spell_freeze_radius_red"
+            : area.team === "blue"
+              ? "spell_poison_radius_blue"
+              : "spell_poison_radius_red",
         );
         if (!ground || !radius) continue;
         for (const [index, sprite] of [ground, radius].entries()) {
@@ -50,7 +57,7 @@ export class NativeFreezeAreas {
           sprite.mesh.renderOrder = 0.25 + index * 0.01;
           this.scene.add(sprite.mesh);
         }
-        visual = { team: area.team, ground, radius, frame: 0 };
+        visual = { team: area.team, card: area.card, ground, radius, frame: 0 };
         this.visuals.set(area.id, visual);
       }
       const age = Math.max(0, area.duration - area.remaining);

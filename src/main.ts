@@ -1940,6 +1940,8 @@ Object.defineProperty(window, "__arena", {
         coldFilter: arena.coldFilterState,
         coldStructures: arena.coldStructureState,
         freezeAreas: arena.freezeAreaState,
+        poisonAreas: arena.poisonAreaState,
+        poisonFilter: arena.poisonFilterState,
         shake: arena.shakeState,
         placement: arena.placementState,
         loadedAnimations: arena.loadedAnimations,
