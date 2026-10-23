@@ -445,7 +445,7 @@ The source `prince_charge` effect reuses the already bundled `knight_deploy_dust
 
 ## Prince charge voice
 
-The archived `prince_charge` effect also binds `sound_prince_charge` to `rider_charge_03.ogg`. The browser schedules that voice from the same render-only charge crossing, with 70% source volume, the shared 0.35 mix gain, fixed pitch and a two-voice limit. It adds no simulation event IDs, replay fields or peer messages. Browser replays on desktop Chromium and phone WebKit play the voice exactly once at the charge, and all 112 imported combat/lifecycle OGGs decode in desktop Chromium. Source-hash and stale/pause/seek scheduling tests pass. The source filter and separate charge-hit voice remain unrendered; the SWF text marker is added below.
+The archived `prince_charge` effect also binds `sound_prince_charge` to `rider_charge_03.ogg`. The browser schedules that voice from the same render-only charge crossing, with 70% source volume, the shared 0.35 mix gain, fixed pitch and a two-voice limit. It adds no simulation event IDs, replay fields or peer messages. Browser replays on desktop Chromium and phone WebKit play the voice exactly once at the charge, and all 112 imported combat/lifecycle OGGs decode in desktop Chromium. Source-hash and stale/pause/seek scheduling tests pass. The source filter remains unrendered; the SWF text marker and charged-hit cue are added below.
 
 All 221 unit checks, type checking, the production build and offline reload pass; the cache includes 572 files (version `e49c04c5bd6d`) and 116 unique combat/death audio files. The new replay sound test is included in hosted desktop CI.
 
@@ -456,3 +456,7 @@ The source `effect_charge` export is dynamic text, not bitmap artwork. The SC1 t
 All 222 unit checks, type checking, the production build and offline reload pass; the 572-file cache version is `c258cb33baa3`. Desktop Chromium and phone WebKit verify the callout's text, source frame progress, pause, expiry and reset. A phone WebKit frame is saved in `docs/screenshots/phone-native-prince-charge-callout.png`.
 
 An earlier hosted run of the Hog Rider visual suite completed eight of nine scenes but its Hog stepping loop hit the default 90-second browser-test limit on a slower runner. The test now allows four minutes while retaining the same state, jump and landing assertions.
+
+## Native Prince charged impact
+
+The archived Prince `DamageEffectSpecial` names `prince_charge_hit`, whose sole sound row resolves to `prince_charge_hit_01.ogg` at 80% source volume. The combat importer now preserves that branch. A double-damage Prince contact emits a dedicated audio phase, while an ordinary contact keeps `prince_hit`. The phase travels in the compatibility-safe presentation field of browser-to-browser snapshots and survives replay; older clients can ignore it. Unit checks cover both damage paths, the rotated guest snapshot and the exact sound plan. Desktop Chromium and phone WebKit production replays play the charge voice and charged-hit sound once. Desktop Chromium also decodes all 113 archived combat/lifecycle OGGs. The production build, offline reload and all 223 unit checks pass; the cache contains 573 files (version `a0d43e67ed0f`) and 117 unique combat/death audio files.

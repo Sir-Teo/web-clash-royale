@@ -2,9 +2,10 @@ import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
 import { observeCombatAudio, playedCombatAudio } from "./audio-helpers";
 
-test("Prince charge plays its archived voice once during a browser replay", async ({
+test("Prince charge and charged strike play their archived sounds once during a browser replay", async ({
   page,
 }) => {
+  test.setTimeout(120000);
   const replay = {
     version: 5,
     seed: 1,
@@ -82,4 +83,20 @@ test("Prince charge plays its archived voice once during a browser replay", asyn
   expect(played[0].volume).toBeCloseTo(0.245);
   expect(played[0].time).toBeGreaterThan(2);
   expect(played[0].time).toBeLessThan(4);
+  const chargedHit = "/assets/audio/prince_charge_hit_01.ogg";
+  await expect
+    .poll(async () => (await playedCombatAudio(page, [chargedHit])).length, {
+      timeout: 40000,
+    })
+    .toBe(1);
+  const hits = await playedCombatAudio(page, [chargedHit]);
+  expect(hits[0].volume).toBeCloseTo(0.28);
+  expect(hits[0].time).toBeGreaterThan(8);
+  expect(hits[0].time).toBeLessThan(10);
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__arena.state.time), {
+      timeout: 20000,
+    })
+    .toBeGreaterThan(11);
+  expect(await playedCombatAudio(page, [chargedHit])).toHaveLength(1);
 });

@@ -57,10 +57,10 @@ describe("native combat audio evidence", () => {
     const manifest = JSON.parse(
       readFileSync("reference/client/combat-audio-manifest.json", "utf8"),
     );
-    expect(manifest.audioFiles).toHaveLength(112);
+    expect(manifest.audioFiles).toHaveLength(113);
     expect(manifest.sources).toHaveLength(11);
     expect(Object.keys(definitions.profiles)).toHaveLength(26);
-    expect(Object.keys(definitions.sounds)).toHaveLength(92);
+    expect(Object.keys(definitions.sounds)).toHaveLength(93);
     for (const file of [
       ...manifest.sources,
       ...manifest.audioFiles,
@@ -412,6 +412,63 @@ describe("canonical combat presentation events", () => {
     );
     expect(events[1].time).toBe(
       battle.events.find((e) => e.type === "hit")!.time,
+    );
+  });
+  it("uses the archived special impact only for Prince's charged strike and preserves it for a peer", () => {
+    expect(combatAudioPlan("prince", "impact-special", 29)).toMatchObject([
+      {
+        group: "sound_prince_charge_hit",
+        file: "prince_charge_hit_01",
+        pitch: 1,
+        maximum: 3,
+      },
+    ]);
+    expect(
+      combatAudioPlan("prince", "impact-special", 29)[0].volume,
+    ).toBeCloseTo(0.28);
+    const battle = arena();
+    const prince = unit(battle, "prince", "blue", 4, 21);
+    const giant = unit(battle, "giant", "red", 4, 20);
+    giant.active = false;
+    prince.move = 2.4;
+    advanceUntil(battle, () =>
+      battle.audioEvents.some((e) => e.phase === "impact-special"),
+    );
+    const charged = battle.audioEvents.find(
+      (e) => e.phase === "impact-special",
+    )!;
+    expect(charged.actor).toBe(prince.id);
+    expect(battle.events.find((e) => e.type === "hit")?.value).toBe(
+      prince.damage * 2,
+    );
+    expect(snapshot(battle).lifecycleAudioEvents).toContainEqual(charged);
+    const guest = arena();
+    applySnapshot(guest, snapshot(battle), "red");
+    expect(guest.audioEvents.find((e) => e.id === charged.id)?.team).toBe(
+      "red",
+    );
+    const { audio, cues } = harness();
+    cues.consume(guest.audioEvents, guest.seed, guest.time);
+    cues.update(guest.time);
+    const specialCall = audio.play.mock.calls.find(
+      (call) => call[0] === "prince_charge_hit_01",
+    );
+    expect(specialCall?.[1]).toBeCloseTo(0.28);
+    expect(specialCall?.[2]).toMatchObject({
+      group: "sound_prince_charge_hit",
+    });
+
+    const ordinary = arena();
+    const normalPrince = unit(ordinary, "prince", "blue", 4, 21);
+    const normalTarget = unit(ordinary, "giant", "red", 4, 20);
+    normalTarget.active = false;
+    advanceUntil(ordinary, () =>
+      ordinary.audioEvents.some(
+        (e) => e.actor === normalPrince.id && e.phase === "impact",
+      ),
+    );
+    expect(ordinary.audioEvents.some((e) => e.phase === "impact-special")).toBe(
+      false,
     );
   });
   it("retains a projectile's weapon identity after its shooter dies", () => {
