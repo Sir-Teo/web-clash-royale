@@ -2,6 +2,7 @@ import freeze from "./freeze-data.json" with { type: "json" };
 import poison from "./poison-data.json" with { type: "json" };
 import rage from "./rage-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
+import lightning from "./lightning-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -31,7 +32,8 @@ export type CardId =
   | "freeze"
   | "poison"
   | "rage"
-  | "rocket";
+  | "rocket"
+  | "lightning";
 export interface Card {
   id: CardId;
   name: string;
@@ -168,6 +170,24 @@ export const CARDS: Card[] = [
       rarity: "Rare",
       radius: rocket.radius,
       hitsAir: rocket.hitsAir,
+    },
+  ),
+  troop(
+    "lightning",
+    "Lightning",
+    lightning.cost,
+    0,
+    // Match the curated level-11 Fireball ratio (source 325 -> 689).
+    Math.round((lightning.sourceDamage * 689) / 325),
+    0,
+    0,
+    1,
+    "Three bolts strike the strongest enemies in an area and briefly stun survivors.",
+    {
+      kind: "spell",
+      rarity: "Epic",
+      radius: lightning.radius,
+      hitsAir: lightning.hitsAir,
     },
   ),
   troop(

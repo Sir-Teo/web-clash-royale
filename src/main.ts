@@ -1952,6 +1952,18 @@ Object.defineProperty(window, "__arena", {
         poisonAreas: arena.poisonAreaState,
         poisonFilter: arena.poisonFilterState,
         rageAreas: arena.rageAreaState,
+        lightningAreas: battle.areas
+          .filter((area) => area.card === "lightning")
+          .map((area) => ({
+            team: area.team,
+            x: area.x,
+            y: area.y,
+            remaining: area.remaining,
+            struck: area.struck?.length ?? 0,
+          })),
+        lightningHits: battle.events.filter((event) =>
+          event.type === "hit" && event.card === "lightning",
+        ).length,
         rageFilter: arena.rageFilterState,
         poisonStructures: arena.poisonStructureState,
         shake: arena.shakeState,

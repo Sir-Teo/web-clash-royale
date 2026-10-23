@@ -16,6 +16,7 @@ import freeze from "./freeze-data.json" with { type: "json" };
 import poison from "./poison-data.json" with { type: "json" };
 import rage from "./rage-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
+import lightning from "./lightning-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -92,11 +93,12 @@ export interface Projectile extends Point {
 export interface AreaEffect extends Point {
   id: number;
   team: Team;
-  card: "freeze" | "poison" | "rage";
+  card: "freeze" | "poison" | "rage" | "lightning";
   radius: number;
   duration: number;
   remaining: number;
   hitAt?: number;
+  struck?: number[];
 }
 export interface BattleEvent extends Point {
   id: number;
@@ -356,8 +358,10 @@ export class Battle {
     this.emit(c.kind === "spell" ? "spell" : "deploy", team, x, y, id);
     this.emitAudio("cast", team, id);
     if (c.kind === "spell") {
-      if (id === "freeze" || id === "poison" || id === "rage") {
-        const rules = id === "freeze" ? freeze : id === "poison" ? poison : rage;
+      if (id === "freeze" || id === "poison" || id === "rage" || id === "lightning") {
+        const rules = id === "freeze" ? freeze
+          : id === "poison" ? poison
+          : id === "rage" ? rage : lightning;
         this.areas.push({
           id: this.nextId++,
           team,
@@ -367,6 +371,9 @@ export class Battle {
           radius: rules.radius,
           duration: rules.duration,
           remaining: rules.duration,
+          ...(id === "lightning"
+            ? { hitAt: lightning.strikeInterval, struck: [] }
+            : {}),
         });
         if (id === "poison" || id === "rage") this.emitAudio("impact", team, id);
         return { ok: true, reason: "" };
@@ -629,6 +636,38 @@ export class Battle {
   private updateAreas() {
     for (const area of this.areas) {
       const age = area.duration - area.remaining;
+      if (area.card === "lightning") {
+        if (age + 1e-8 >= (area.hitAt ?? lightning.strikeInterval)) {
+          area.hitAt = (area.hitAt ?? lightning.strikeInterval) +
+            lightning.strikeInterval;
+          const struck = area.struck ??= [];
+          const target = this.entities
+            .filter((entity) =>
+              entity.hp > 0 && entity.team !== area.team &&
+              !this.isHidden(entity) && !struck.includes(entity.id) &&
+              dist(entity, area) < area.radius + entity.radius,
+            )
+            .sort((a, b) => b.hp - a.hp || a.id - b.id)[0];
+          if (target) {
+            struck.push(target.id);
+            const damage = CARD_MAP.lightning.damage *
+              (target.kind === "tower" ? lightning.crownTowerDamageFraction : 1);
+            this.hurt(target, damage);
+            if (target.hp > 0) {
+              target.stun = Math.max(target.stun, lightning.stunDuration);
+              target.move = 0;
+              this.cancelAttack(target);
+            }
+            this.emit("hit", area.team, target.x, target.y, "lightning", damage, {
+              height: target.air ? 2.3 : target.kind === "tower" ? 1.8 : 0.6,
+            });
+            this.emitAudio("impact", area.team, "lightning");
+          }
+        }
+        area.remaining = Math.max(0, area.remaining - STEP);
+        if (area.remaining < 1e-8) area.remaining = 0;
+        continue;
+      }
       const periodic = area.card === "poison" || area.card === "rage";
       const areaHit = periodic && age + 1e-8 >= (area.hitAt ?? 0);
       if (areaHit)

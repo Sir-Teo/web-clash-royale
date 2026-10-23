@@ -31,6 +31,7 @@ export class NativeSpellAreas {
   update(areas: readonly AreaEffect[]) {
     const active = new Set<number>();
     for (const area of areas) {
+      if (area.card === "lightning") continue;
       active.add(area.id);
       let visual = this.visuals.get(area.id);
       if (visual?.team !== area.team || visual.card !== area.card) {
