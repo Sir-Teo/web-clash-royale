@@ -41,8 +41,6 @@ describe("native projectile hit compositions", () => {
       expect(impactEffect(card)).toBe(`hit:${card}`);
     }
     expect(impactEffect("giant")).toBeUndefined();
-    expect(impactEffect("balloon")).toBeUndefined();
-    expect(impactEffect("tesla")).toBeUndefined();
   });
 
   it("keeps death and hit compositions distinct while preserving source particle counts", () => {
@@ -66,5 +64,35 @@ describe("native projectile hit compositions", () => {
     expect(definitions.impacts["hit:bomber"].components).toHaveLength(5);
     expect(definitions.impacts["hit:baby-dragon"].components).toHaveLength(3);
     expect(definitions.impacts["hit:wizard"].components).toHaveLength(3);
+  });
+});
+
+describe("native damage impact compositions", () => {
+  it("binds Balloon's ground burst and Tesla's electrical hit to the attack target", async () => {
+    const { csvRows } = await import("../scripts/lib/csv.mjs");
+    const rows = (name: string) =>
+      Object.fromEntries(
+        csvRows(readFileSync(`reference/logic/${name}.csv`, "utf8"))
+          .filter((r: any) => r.Name)
+          .map((r: any) => [r.Name, r]),
+      );
+    const characters = rows("characters");
+    const buildings = rows("buildings");
+    for (const [card, source, count] of [
+      ["balloon", "balloon_hit", 48],
+      ["tesla", "tesla_hit_effect", 12],
+    ] as const) {
+      const actor =
+        characters[profiles[card].source] ?? buildings[profiles[card].source];
+      expect(actor.DamageEffect).toBe(source);
+      expect(definitions.impacts[`hit:${card}`].source).toBe(source);
+      expect(impactEffect(card)).toBe(`hit:${card}`);
+      const plan = destructionPlan(`hit:${card}`);
+      expect(plan).toHaveLength(count);
+      expect(plan.some((particle) => particle.ground)).toBe(true);
+      expect(destructionPlan(`hit:${card}`, 42, "red")).toEqual(
+        destructionPlan(`hit:${card}`, 42),
+      );
+    }
   });
 });

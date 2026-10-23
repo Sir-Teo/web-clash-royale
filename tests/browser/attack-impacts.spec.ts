@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
 
-test("five projectile cards render their archived hit particles on desktop and phone", async ({
+test("seven attackers render their archived hit particles on desktop and phone", async ({
   page,
 }, info) => {
   test.setTimeout(180000);
@@ -31,6 +31,8 @@ test("five projectile cards render their archived hit particles on desktop and p
     ["baby-dragon", "fireball_trail2"],
     ["wizard", "explosion_cloud_1"],
     ["cannon", "SteamSmall"],
+    ["balloon", "Rock2Particle"],
+    ["tesla", "Death_blue_sparkle2"],
   ] as const) {
     await page.locator("#attack-card").selectOption(card);
     await expect.poll(async () => (await state()).particles).toBe(0);
@@ -44,7 +46,7 @@ test("five projectile cards render their archived hit particles on desktop and p
     expect(held.draws).toBeLessThan(80);
     await page.waitForTimeout(180);
     expect(await state()).toEqual(held);
-    if (card === "bomber" || card === "wizard") {
+    if (["bomber", "wizard", "balloon", "tesla"].includes(card)) {
       await step();
       await page.screenshot({
         path: info.outputPath(`${card}-native-hit.png`),

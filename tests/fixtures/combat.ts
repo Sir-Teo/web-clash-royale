@@ -92,14 +92,16 @@ function setup() {
     cast("zap", "blue", 4, 13);
     cast("arrows", "red", 14, 19);
   } else if (scenario === "attack-impacts") {
-    unit(
-      (document.querySelector("#attack-card") as HTMLSelectElement)
-        .value as CardId,
-      "blue",
+    const attacker = (
+      document.querySelector("#attack-card") as HTMLSelectElement
+    ).value as CardId;
+    unit(attacker, "blue", 9, 21);
+    for (const target of unit(
+      attacker === "balloon" ? "cannon" : "giant",
+      "red",
       9,
-      21,
-    );
-    for (const target of unit("giant", "red", 9, 18)) {
+      18,
+    )) {
       target.active = false;
       target.hp = target.maxHp = 10000;
     }
