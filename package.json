@@ -50,6 +50,7 @@
     "assets:graveyard": "node scripts/import-graveyard.mjs",
     "assets:clone": "node scripts/import-clone.mjs",
     "assets:mirror": "node scripts/import-mirror.mjs",
+    "assets:swarm-cards": "node scripts/import-swarm-cards.mjs",
     "assets:clone-filter": "node scripts/import-clone-filter.mjs",
     "assets:poison-filter": "node scripts/import-poison-filter.mjs",
     "assets:cold-filter": "node scripts/import-cold-filter.mjs"

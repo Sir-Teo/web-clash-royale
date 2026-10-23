@@ -1,0 +1,14 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    }
+  ],
+  "output": {
+    "path": "src/game/swarm-cards-data.json",
+    "sha256": "8a90bcd42295fbb5cded12e0f8ee5aadb86abeeade4bd68779f5a9c3a794c31a"
+  }
+}
