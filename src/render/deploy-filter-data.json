@@ -30,6 +30,7 @@
     "bats",
     "golem",
     "golemite",
+    "lava-pup",
     "witch",
     "wizard",
     "prince",
@@ -580,7 +581,8 @@
       "electro-wizard",
       "sparky",
       "night-witch",
-      "bandit"
+      "bandit",
+      "lava-hound"
     ],
     "frames": [
       {

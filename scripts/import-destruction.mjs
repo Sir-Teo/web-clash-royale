@@ -239,6 +239,25 @@ trails["ice-wizard"] = {
   components: composition(iceTrail, "blue"),
   enemyComponents: composition(iceTrail, "red"),
 };
+for (const [id, projectile, expected] of [
+  ["lava-hound", "LavaHoundProjectile", "lava_hound_Emitter"],
+  ["lava-pup", "LavaPupProjectile", "lava_pups_emitter"],
+]) {
+  const source = tables.projectiles[projectile]?.TrailEffect;
+  if (source !== expected)
+    throw new Error(`Recheck native ${id} projectile trail: ${source}`);
+  trails[id] = {
+    source,
+    components: composition(source, "blue"),
+    enemyComponents: composition(source, "red"),
+  };
+  const hit = tables.projectiles[projectile].HitEffect;
+  impacts[`hit:${id}`] = {
+    source: hit,
+    components: composition(hit, "blue"),
+    enemyComponents: composition(hit, "red"),
+  };
+}
 const princessTrail = tables.projectiles.PrincessProjectile?.TrailEffect;
 if (princessTrail !== "PrincessArrowProjectileEmitter")
   throw new Error(`Recheck native Princess arrow trail: ${princessTrail}`);

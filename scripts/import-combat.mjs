@@ -92,6 +92,8 @@ const names = {
   bandit: "Assassin",
   golem: "Golem",
   golemite: "Golemite",
+  "lava-hound": "LavaHound",
+  "lava-pup": "LavaPups",
   witch: "Witch",
   wizard: "Wizard",
   prince: "Prince",

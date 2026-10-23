@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "d33f9826f7c70e08a7996999b9fe7c783523148065e4199d86ef60e6d1731ba4"
+      "sha256": "e8fb36ec388aaba0998c26b86c5521dba9773ea2fe7571325958cbf4af0bb656"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "1b24a6f94b47011f7bdc5ac35bb0eaeb3083f95c9f0dcc2fc6dc02396f2ecdf7"
+      "sha256": "a9d9b61b36fd2c15244339b9e64b975eedb0b6b51eb07a7e8be0e860db615354"
     }
   ],
   "ignoredEnemyVersions": [
@@ -448,6 +448,12 @@
       "sha256": "4f4b1d5bb8967982b36db601ce87e5523dee93414124919a00c33e0376c2007e"
     },
     {
+      "path": "public/assets/audio/deploy_lava_hound_02.ogg",
+      "source": "sfx/deploy_lava_hound_02.ogg",
+      "bytes": 9911,
+      "sha256": "1bdf0624e6eb2df02d75f0bc4aabc0ed8252cd07d0c9df37a77f309a898d7552"
+    },
+    {
       "path": "public/assets/audio/deploy_skeleton_01.ogg",
       "source": "sfx/deploy_skeleton_01.ogg",
       "bytes": 6747,
@@ -824,6 +830,36 @@
       "source": "sfx/laser_loop_02.ogg",
       "bytes": 13368,
       "sha256": "ebef2f3a2d60890134339e404b3bdf229f9ee26f650134425307466ec9b9dcd4"
+    },
+    {
+      "path": "public/assets/audio/lava_hound_deploy_01.ogg",
+      "source": "sfx/lava_hound_deploy_01.ogg",
+      "bytes": 10794,
+      "sha256": "a47ecb71157c094b195bf90028237cb0b9d2ace4b6928a59246acb460b31e03a"
+    },
+    {
+      "path": "public/assets/audio/lava_pup_atk_01.ogg",
+      "source": "sfx/lava_pup_atk_01.ogg",
+      "bytes": 8310,
+      "sha256": "c25888e522f3d17d8e30bac26d12ce7f5a7a607ab4b991182bfd8f79e104f91e"
+    },
+    {
+      "path": "public/assets/audio/lava_pups_appear_01.ogg",
+      "source": "sfx/lava_pups_appear_01.ogg",
+      "bytes": 9713,
+      "sha256": "2501f9eb35cc957207d07e0742fa8fcb708723b508902c54ff22b725c21a2254"
+    },
+    {
+      "path": "public/assets/audio/laval_hound_atk_02.ogg",
+      "source": "sfx/laval_hound_atk_02.ogg",
+      "bytes": 10722,
+      "sha256": "80956cb77053124d26108d061df17fd7c4b826a1897ebb417d6f3dea17e51195"
+    },
+    {
+      "path": "public/assets/audio/laval_hound_atk_03.ogg",
+      "source": "sfx/laval_hound_atk_03.ogg",
+      "bytes": 9604,
+      "sha256": "eee9a1131bff7783a584bcea23e2a28bc0db99ff7866e420653f429301d1e403"
     },
     {
       "path": "public/assets/audio/lightning_02.ogg",
@@ -1482,6 +1518,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "4e6bb47a4e24d302c45274f1475a53a1d5cbe3f3531e36dc9f16d860ca77daaf"
+    "sha256": "b9f530c2319ce59a6c74b8f2d49c2919135ff19d66cf29cf741f3104d6034284"
   }
 }

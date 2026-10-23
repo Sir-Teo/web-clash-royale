@@ -332,6 +332,11 @@
       "sha256": "5b12cbd0821adc2b0157739e99485237d038f3689aca8dce0584d78a1b85e164"
     },
     {
+      "file": "portrait-lava-hound.webp",
+      "bytes": 33530,
+      "sha256": "94eeccf3143b311d604a20b2a27f5ff06245d371403bf1baa0f55d70365a1020"
+    },
+    {
       "file": "portrait-three-musketeers.webp",
       "bytes": 45010,
       "sha256": "d4fe5116f23ef9b6383380d637216fe676ea11cc54bbc1c3cb314e6c64fc182d"
@@ -418,8 +423,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 102971,
-      "sha256": "1b24a6f94b47011f7bdc5ac35bb0eaeb3083f95c9f0dcc2fc6dc02396f2ecdf7"
+      "bytes": 103422,
+      "sha256": "a9d9b61b36fd2c15244339b9e64b975eedb0b6b51eb07a7e8be0e860db615354"
     }
   ]
 }

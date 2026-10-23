@@ -44,6 +44,8 @@ const sources = {
   bandit: "bandit",
   golem: "golem",
   golemite: "golemite",
+  "lava-hound": "lava_hound",
+  "lava-pup": "lava_pups",
   witch: "witch",
   prince: "prince",
   pekka: "pekka",

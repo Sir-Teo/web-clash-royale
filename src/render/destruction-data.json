@@ -2732,6 +2732,118 @@
         }
       ]
     },
+    "lava-hound": {
+      "source": "lava_hound_die",
+      "components": [
+        {
+          "emitter": "chr_wiz_hit_fire",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "lava_hound_die_sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "lavaHound_embers",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "chr_wiz_hit_fire",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "lava_hound_die_sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "lavaHound_embers",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "lava-pup": {
+      "source": "lava_pups_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "witch": {
       "source": "witch_die",
       "components": [
@@ -3977,6 +4089,90 @@
           "scale": 1,
           "layer": "Base",
           "ground": false
+        }
+      ]
+    },
+    "hit:lava-hound": {
+      "source": "lava_hound_projectile_hit",
+      "components": [
+        {
+          "emitter": "lava_hound_hit_sparks3",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "lava_hound_hit_sparks0",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "lava_hound_hit_sparks3",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "lava_hound_hit_sparks0",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        }
+      ]
+    },
+    "hit:lava-pup": {
+      "source": "lava_pups_projectile_hit",
+      "components": [
+        {
+          "emitter": "lavaPups_hit_drops",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "lavaPups_hit_drops2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "lavaPups_hit_drops3",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "lavaPups_hit_drops",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "lavaPups_hit_drops2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "lavaPups_hit_drops3",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
         }
       ]
     },
@@ -5970,6 +6166,104 @@
         }
       ]
     },
+    "lava-hound": {
+      "source": "lava_hound_Emitter",
+      "components": [
+        {
+          "emitter": "LavaHound_EmitterTrail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "LavaHound_EmitterTrail",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "LavaHound_EmitterTrail",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "LavaHound_EmitterTrail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "LavaHound_EmitterTrail",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "LavaHound_EmitterTrail",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "lava-pup": {
+      "source": "lava_pups_emitter",
+      "components": [
+        {
+          "emitter": "LavaPups_EmitterTrail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "LavaPups_EmitterTrail",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "LavaPups_EmitterTrail2",
+          "delay": 0.025,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "LavaPups_EmitterTrail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "LavaPups_EmitterTrail",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "LavaPups_EmitterTrail2",
+          "delay": 0.025,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
     "princess": {
       "source": "PrincessArrowProjectileEmitter",
       "components": [
@@ -7909,6 +8203,16 @@
       "components": [],
       "enemyComponents": []
     },
+    "lava-hound": {
+      "source": "lava_hound_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
+    "lava-pup": {
+      "source": "lava_pups_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
     "witch": {
       "source": "witch_deploy",
       "components": [
@@ -9633,6 +9937,154 @@
       "clips": [
         "big_rock_particle1",
         "big_rock_particle2"
+      ]
+    },
+    "chr_wiz_hit_fire": {
+      "count": 16,
+      "emissionLife": [
+        0.4,
+        0.4
+      ],
+      "interval": [
+        0.002,
+        0.006
+      ],
+      "life": [
+        0.5,
+        0.6
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.1,
+        0.13333333333333333
+      ],
+      "speed": [
+        0,
+        0.16666666666666666
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        1.6666666666666667,
+        6.666666666666667
+      ],
+      "tailDelayMs": [
+        1000,
+        1000
+      ],
+      "gravity": 41.666666666666664,
+      "startScale": 0.9,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0.4,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "FireParticle1",
+        "FireParticle2",
+        "FireParticle3"
+      ]
+    },
+    "lava_hound_die_sparks": {
+      "count": 23,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0,
+        0.002
+      ],
+      "life": [
+        0.15,
+        0.2
+      ],
+      "angle": [
+        0.017453292519943295,
+        6.283185307179586
+      ],
+      "radius": [
+        0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        6.666666666666667,
+        8.333333333333334
+      ],
+      "height": 1.3333333333333333,
+      "verticalSpeed": [
+        2,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        50,
+        100
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 3.3333333333333335,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Sparkle"
+      ]
+    },
+    "lavaHound_embers": {
+      "count": 22,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        0.8,
+        0.9
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        2.3333333333333335,
+        2.6666666666666665
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        16.666666666666668,
+        30
+      ],
+      "tailDelayMs": [
+        0,
+        20
+      ],
+      "gravity": -66.66666666666667,
+      "startScale": 1,
+      "endScale": 0.01,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "SparkleBlue",
+        "SparkleBlue",
+        "SparkleBlue",
+        "particle_coal4",
+        "particle_coal3",
+        "particle_coal2"
       ]
     },
     "balloon_die_puff": {
@@ -12182,6 +12634,393 @@
         "ice_particle1",
         "ice_particle2",
         "ice_particle3"
+      ]
+    },
+    "LavaHound_EmitterTrail": {
+      "count": 15,
+      "emissionLife": [
+        12,
+        12
+      ],
+      "interval": [
+        0.005,
+        0.007
+      ],
+      "life": [
+        0.4,
+        0.8
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0.03333333333333333
+      ],
+      "speed": [
+        0.3333333333333333,
+        0.6666666666666666
+      ],
+      "height": 0.5333333333333333,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -33.333333333333336,
+      "startScale": 0.4,
+      "endScale": 0.25,
+      "fadeIn": 0,
+      "fadeOut": 0.4,
+      "inertia": 3.3333333333333335,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "lava_drop1",
+        "lava_drop2"
+      ]
+    },
+    "lava_hound_hit_sparks3": {
+      "count": 6,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        1.2,
+        1.5
+      ],
+      "angle": [
+        0,
+        -6.283185307179586
+      ],
+      "radius": [
+        -0.1,
+        0.1
+      ],
+      "speed": [
+        2.6666666666666665,
+        3.3333333333333335
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        2.6666666666666665,
+        4.166666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -60,
+      "startScale": 0.2,
+      "endScale": 0.2,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 5,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "lava_drop1",
+        "lava_drop2"
+      ]
+    },
+    "lava_hound_hit_sparks0": {
+      "count": 7,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        0.8,
+        0.9
+      ],
+      "angle": [
+        0,
+        -6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.1
+      ],
+      "speed": [
+        1.3333333333333333,
+        2
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        10,
+        16.666666666666668
+      ],
+      "tailDelayMs": [
+        0,
+        20
+      ],
+      "gravity": -66.66666666666667,
+      "startScale": 0.6,
+      "endScale": 0.01,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "SparkleBlue",
+        "SparkleBlue",
+        "SparkleBlue",
+        "particle_coal2",
+        "particle_coal4",
+        "particle_coal1"
+      ]
+    },
+    "LavaPups_EmitterTrail": {
+      "count": 1,
+      "emissionLife": [
+        12,
+        12
+      ],
+      "interval": [
+        0.005,
+        0.007
+      ],
+      "life": [
+        0.2,
+        0.5
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0.03333333333333333
+      ],
+      "speed": [
+        0.16666666666666666,
+        0.5
+      ],
+      "height": 0.3333333333333333,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -33.333333333333336,
+      "startScale": 0.1,
+      "endScale": 0.05,
+      "fadeIn": 0,
+      "fadeOut": 0.25,
+      "inertia": 3.3333333333333335,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "lava_drop1",
+        "lava_drop2"
+      ]
+    },
+    "LavaPups_EmitterTrail2": {
+      "count": 1,
+      "emissionLife": [
+        12,
+        12
+      ],
+      "interval": [
+        0.005,
+        0.007
+      ],
+      "life": [
+        0.3,
+        0.4
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0.03333333333333333
+      ],
+      "speed": [
+        0.16666666666666666,
+        0.5
+      ],
+      "height": 0.3333333333333333,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -33.333333333333336,
+      "startScale": 0.15,
+      "endScale": 0.05,
+      "fadeIn": 0,
+      "fadeOut": 0.25,
+      "inertia": 3.3333333333333335,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "lava_drop1"
+      ]
+    },
+    "lavaPups_hit_drops": {
+      "count": 4,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        1.2,
+        1.5
+      ],
+      "angle": [
+        0,
+        -6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0.03333333333333333
+      ],
+      "speed": [
+        1,
+        1.6666666666666667
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        2.6666666666666665,
+        4.166666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -60,
+      "startScale": 0.4,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 3.3333333333333335,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "lava_drop1",
+        "lava_drop2"
+      ]
+    },
+    "lavaPups_hit_drops2": {
+      "count": 3,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        1.2,
+        1.5
+      ],
+      "angle": [
+        0,
+        -6.283185307179586
+      ],
+      "radius": [
+        -0.1,
+        0.1
+      ],
+      "speed": [
+        2,
+        2.6666666666666665
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        2.6666666666666665,
+        4.166666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -60,
+      "startScale": 0.2,
+      "endScale": 0.2,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 3.3333333333333335,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "lava_drop1",
+        "lava_drop2"
+      ]
+    },
+    "lavaPups_hit_drops3": {
+      "count": 6,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        1.2,
+        1.5
+      ],
+      "angle": [
+        0,
+        -6.283185307179586
+      ],
+      "radius": [
+        -0.1,
+        0.1
+      ],
+      "speed": [
+        2.6666666666666665,
+        3.3333333333333335
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        2.6666666666666665,
+        4.166666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -60,
+      "startScale": 0.1,
+      "endScale": 0.1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 5,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "lava_drop1",
+        "lava_drop2"
       ]
     },
     "Princess_arrow_emitter_small_zeroZ": {
@@ -16114,55 +16953,6 @@
         "particle_coal4",
         "particle_coal3",
         "particle_coal2"
-      ]
-    },
-    "chr_wiz_hit_fire": {
-      "count": 16,
-      "emissionLife": [
-        0.4,
-        0.4
-      ],
-      "interval": [
-        0.002,
-        0.006
-      ],
-      "life": [
-        0.5,
-        0.6
-      ],
-      "angle": [
-        0,
-        6.283185307179586
-      ],
-      "radius": [
-        -0.1,
-        0.13333333333333333
-      ],
-      "speed": [
-        0,
-        0.16666666666666666
-      ],
-      "height": 0,
-      "verticalSpeed": [
-        1.6666666666666667,
-        6.666666666666667
-      ],
-      "tailDelayMs": [
-        1000,
-        1000
-      ],
-      "gravity": 41.666666666666664,
-      "startScale": 0.9,
-      "endScale": 0.4,
-      "fadeIn": 0,
-      "fadeOut": 0.4,
-      "inertia": 0,
-      "rotate": true,
-      "loop": false,
-      "clips": [
-        "FireParticle1",
-        "FireParticle2",
-        "FireParticle3"
       ]
     },
     "chr_wiz_hit_smoke": {

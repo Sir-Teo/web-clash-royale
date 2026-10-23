@@ -845,6 +845,44 @@
         }
       ]
     },
+    "lava-hound": {
+      "source": "lava_hound_die",
+      "components": [
+        {
+          "sound": "sound_lava_hound_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_lava_hound_die",
+          "delay": 0
+        }
+      ]
+    },
+    "lava-pup": {
+      "source": "lava_pups_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_lava_pups_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_lava_pups_die",
+          "delay": 0
+        }
+      ]
+    },
     "witch": {
       "source": "witch_die",
       "components": [
@@ -1747,6 +1785,44 @@
       ],
       "maximum": 3,
       "priority": 1,
+      "padding": 0
+    },
+    "sound_lava_hound_die": {
+      "sourceFiles": [],
+      "files": [],
+      "volume": [
+        0,
+        0
+      ],
+      "pitch": [
+        0,
+        0
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 0,
+      "priority": 0,
+      "padding": 0
+    },
+    "sound_lava_pups_die": {
+      "sourceFiles": [],
+      "files": [],
+      "volume": [
+        0,
+        0
+      ],
+      "pitch": [
+        0,
+        0
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 0,
+      "priority": 0,
       "padding": 0
     },
     "sound_witch_die": {

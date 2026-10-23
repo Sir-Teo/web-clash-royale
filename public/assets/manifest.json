@@ -489,6 +489,12 @@
       "sha256": "bc85a17a817c5e29d0e12adc854499670b648e710985a8d05dea9ccfcaa95abe"
     },
     {
+      "path": "cards/lava-hound.png",
+      "source": "cards/lava-hound.png",
+      "bytes": 112152,
+      "sha256": "a060c867d885328462d29974de873a3e566ff7b51719398e918000514c9a7830"
+    },
+    {
       "path": "cards/lightning.png",
       "source": "cards/lightning.png",
       "bytes": 142331,

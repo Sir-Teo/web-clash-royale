@@ -338,6 +338,30 @@
     "ignoresKnockback": false,
     "projectile": null
   },
+  "lava-hound": {
+    "source": "LavaHound",
+    "windup": 1,
+    "sight": 5.5,
+    "ignoresKnockback": true,
+    "projectile": {
+      "source": "LavaHoundProjectile",
+      "speed": 6.666666666666667,
+      "homing": true,
+      "gravity": 250
+    }
+  },
+  "lava-pup": {
+    "source": "LavaPups",
+    "windup": 0.8,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "LavaPupProjectile",
+      "speed": 8.333333333333334,
+      "homing": true,
+      "gravity": 250
+    }
+  },
   "witch": {
     "source": "Witch",
     "windup": 0.5,

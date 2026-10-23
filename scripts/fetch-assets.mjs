@@ -60,6 +60,7 @@ const cards = [
   "night-witch",
   "bandit",
   "golem",
+  "lava-hound",
 ];
 const characters = [
   "knight",

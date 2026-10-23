@@ -28,7 +28,7 @@ const cards = Object.entries(combat)
     );
   })
   .map(([id]) => id);
-if (cards.length !== 33 || !cards.includes("bowler") || !cards.includes("dark-prince") || !cards.includes("battle-ram") || !cards.includes("executioner") || !cards.includes("bats") || !cards.includes("golem") || !cards.includes("golemite"))
+if (cards.length !== 34 || !cards.includes("bowler") || !cards.includes("dark-prince") || !cards.includes("battle-ram") || !cards.includes("executioner") || !cards.includes("bats") || !cards.includes("golem") || !cards.includes("golemite") || !cards.includes("lava-pup"))
   throw new Error(`Recheck source deploy filter bindings: ${cards.length}`);
 const clip = sc.clips[sc.names[name]];
 if (clip?.fps !== 60 || clip.frames.length !== 28)
@@ -60,14 +60,15 @@ const legendaryCards = Object.entries(combat)
   )
   .map(([id]) => id);
 if (
-  legendaryCards.length !== 7 ||
+  legendaryCards.length !== 8 ||
   !legendaryCards.includes("ice-wizard") ||
   !legendaryCards.includes("princess") ||
   !legendaryCards.includes("inferno-dragon") ||
   !legendaryCards.includes("electro-wizard") ||
   !legendaryCards.includes("sparky") ||
   !legendaryCards.includes("night-witch") ||
-  !legendaryCards.includes("bandit")
+  !legendaryCards.includes("bandit") ||
+  !legendaryCards.includes("lava-hound")
 )
   throw new Error(`Recheck legendary deploy binding: ${legendaryCards}`);
 const minerClip = sc.clips[sc.names[minerName]];
