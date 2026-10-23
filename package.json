@@ -45,6 +45,7 @@
     "assets:rocket": "node scripts/import-rocket.mjs",
     "assets:lightning": "node scripts/import-lightning.mjs",
     "assets:log": "node scripts/import-log.mjs",
+    "assets:tornado": "node scripts/import-tornado.mjs",
     "assets:poison-filter": "node scripts/import-poison-filter.mjs",
     "assets:cold-filter": "node scripts/import-cold-filter.mjs"
   },
