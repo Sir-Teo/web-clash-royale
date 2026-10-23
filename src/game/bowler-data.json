@@ -1,0 +1,27 @@
+{
+  "card": "Bowler",
+  "rarity": "Epic",
+  "cost": 5,
+  "sourceHitpoints": 1200,
+  "sourceSpeed": 45,
+  "sourceRange": 5000,
+  "sourceHitSpeed": 2500,
+  "projectile": {
+    "source": "BowlerProjectile",
+    "damage": 180,
+    "speed": 2.8333333333333335,
+    "range": 6,
+    "radius": 1.8,
+    "collisionRadius": 1,
+    "knockback": 1,
+    "groundOnly": true,
+    "onlyEnemies": true,
+    "export": "bowler_projectile",
+    "shadowExport": "bowler_projectile_shadow",
+    "trailEffect": "bowler_projectile_trail",
+    "deathEffect": "bowler_projectile_die"
+  },
+  "blueExport": "bowler_blue",
+  "redExport": "bowler_red",
+  "attackStartEffect": "bowler_attack_start"
+}

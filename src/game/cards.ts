@@ -20,6 +20,7 @@ import princess from "./princess-data.json" with { type: "json" };
 import infernoDragon from "./inferno-dragon-data.json" with { type: "json" };
 import electroWizard from "./electro-wizard-data.json" with { type: "json" };
 import miner from "./miner-data.json" with { type: "json" };
+import bowler from "./bowler-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -41,6 +42,7 @@ export type CardId =
   | "inferno-dragon"
   | "electro-wizard"
   | "miner"
+  | "bowler"
   | "skeletons"
   | "skeleton-army"
   | "bomber"
@@ -564,6 +566,18 @@ export const CARDS: Card[] = [
     miner.sourceHitSpeed / 1000,
     "Tunnels beneath the arena and emerges anywhere to attack ground targets.",
     { rarity: "Legendary" },
+  ),
+  troop(
+    "bowler",
+    "Bowler",
+    bowler.cost,
+    Math.round(bowler.sourceHitpoints * 1.1 ** 5),
+    Math.round(bowler.projectile.damage * 1.1 ** 5),
+    bowler.sourceSpeed / 60,
+    bowler.sourceRange / 1000,
+    bowler.sourceHitSpeed / 1000,
+    "Rolls a huge boulder through ground troops, damaging and pushing them back.",
+    { rarity: "Epic" },
   ),
   troop(
     "minion-horde",

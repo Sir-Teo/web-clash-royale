@@ -50,6 +50,7 @@ const cards = [
   "inferno-dragon",
   "electro-wizard",
   "miner",
+  "bowler",
 ];
 const characters = [
   "knight",
