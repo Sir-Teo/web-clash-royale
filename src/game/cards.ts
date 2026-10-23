@@ -25,6 +25,7 @@ import darkPrince from "./dark-prince-data.json" with { type: "json" };
 import battleRam from "./battle-ram-data.json" with { type: "json" };
 import executioner from "./executioner-data.json" with { type: "json" };
 import sparky from "./sparky-data.json" with { type: "json" };
+import lumberjack from "./lumberjack-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -51,6 +52,7 @@ export type CardId =
   | "battle-ram"
   | "executioner"
   | "sparky"
+  | "lumberjack"
   | "skeletons"
   | "skeleton-army"
   | "bomber"
@@ -634,6 +636,18 @@ export const CARDS: Card[] = [
     sparky.sourceHitSpeed,
     "Charges a powerful cannon blast that splashes ground enemies.",
     { rarity: "Legendary", hitsAir: false, splash: sparky.projectile.radius },
+  ),
+  troop(
+    "lumberjack",
+    "Lumberjack",
+    lumberjack.cost,
+    Math.round(lumberjack.sourceHitpoints * 1.1 ** 2),
+    Math.round(lumberjack.sourceDamage * 1.1 ** 2),
+    lumberjack.sourceSpeed / 60,
+    lumberjack.sourceRange,
+    lumberjack.sourceHitSpeed,
+    "A fast axe fighter who drops a Rage bottle when defeated.",
+    { rarity: "Legendary" },
   ),
   troop(
     "minion-horde",

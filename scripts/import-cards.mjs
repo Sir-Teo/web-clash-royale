@@ -280,6 +280,7 @@ const portraitNames = {
   "battle-ram": "BattleRam",
   executioner: "AxeMan",
   sparky: "ZapMachine",
+  lumberjack: "RageBarbarian",
 };
 const sheets = [];
 for (const [name, cache, expected] of [

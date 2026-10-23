@@ -68,7 +68,8 @@
     "assets:sparky": "node scripts/import-sparky.mjs",
     "assets:clone-filter": "node scripts/import-clone-filter.mjs",
     "assets:poison-filter": "node scripts/import-poison-filter.mjs",
-    "assets:cold-filter": "node scripts/import-cold-filter.mjs"
+    "assets:cold-filter": "node scripts/import-cold-filter.mjs",
+    "assets:lumberjack": "node scripts/import-lumberjack.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",

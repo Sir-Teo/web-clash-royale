@@ -1,0 +1,46 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySources": [
+    "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_rage_barbarian",
+    "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/building_rage_bottle"
+  ],
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/logic/area_effect_objects.csv",
+      "sha256": "f060f967d137942bd8d2e61edb1a96c4455bf833f7cab7187be3e391d352ec65"
+    },
+    {
+      "path": "reference/logic/character_buffs.csv",
+      "sha256": "fbcc636e6c8025ca0f36aab524b868806b2a6a8606186b622410a5f46fba9bbe"
+    },
+    {
+      "path": "reference/sc/chr_rage_barbarian.bin",
+      "sha256": "117dfde3149a52da77d07a35e941844dc64cba76c95ef0b3ac9a32eb1246fc50"
+    },
+    {
+      "path": "reference/sc/building_rage_bottle.bin",
+      "sha256": "794381d648adf26b8862326cc3cc02cc478d63e39b04c8ce32a5cce01a9e2f9e"
+    },
+    {
+      "path": "reference/sc/effects.bin",
+      "sha256": "1a9b0a2efe99578cd03fb9d8673ddb042aa067ba9f9fc0d3a253e15c2e9c7b7c"
+    }
+  ],
+  "output": {
+    "path": "src/game/lumberjack-data.json",
+    "sha256": "ed493370e10fe324e03074cabd0db2ecc1cc03f024ce234246760a32f171378a"
+  }
+}

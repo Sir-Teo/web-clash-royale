@@ -77,6 +77,7 @@ const names = {
   "battle-ram": "BattleRam",
   executioner: "AxeMan",
   sparky: "ZapMachine",
+  lumberjack: "RageBarbarian",
   "spear-goblins": "SpearGoblin",
   skeletons: "Skeleton",
   "skeleton-army": "Skeleton",
