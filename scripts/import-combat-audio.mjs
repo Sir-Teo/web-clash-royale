@@ -167,9 +167,11 @@ for (const [id, profile] of Object.entries(JSON.parse(profilesBytes))) {
 for (const [id, { table, row: name }] of Object.entries(cardBindings)) {
   if (table !== "spells_other") continue;
   const row = tables.spells_other[name];
-  const projectile =
-    tables.projectiles[row.CustomFirstProjectile || row.Projectile];
   const area = tables.area_effect_objects[row.AreaEffectObject];
+  const projectile =
+    tables.projectiles[
+      row.CustomFirstProjectile || row.Projectile || area?.Projectile
+    ];
   profiles[id] = phases(name, {
     attack: [],
     charge: [],

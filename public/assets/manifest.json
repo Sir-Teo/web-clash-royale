@@ -393,6 +393,12 @@
       "sha256": "bc85a17a817c5e29d0e12adc854499670b648e710985a8d05dea9ccfcaa95abe"
     },
     {
+      "path": "cards/lightning.png",
+      "source": "cards/lightning.png",
+      "bytes": 142331,
+      "sha256": "47c994fc25232801eed483458395ad9d73d2aa692d736d8fcc7a119ae61f4587"
+    },
+    {
       "path": "cards/mini-pekka.png",
       "source": "cards/mini-pekka.png",
       "bytes": 145092,

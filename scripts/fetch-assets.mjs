@@ -31,6 +31,7 @@ const cards = [
   "poison",
   "rage",
   "rocket",
+  "lightning",
 ];
 const characters = [
   "knight",

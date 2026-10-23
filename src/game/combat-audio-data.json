@@ -3485,6 +3485,97 @@
         "table": "spells_other",
         "row": "Rocket"
       }
+    },
+    "lightning": {
+      "source": "Lightning",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "Spell_lightning_effect"
+        ],
+        "components": [
+          {
+            "sound": "sound_lightning_1",
+            "delay": 0.2
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_lightning_1",
+            "delay": 0.2
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "sound:SpellCasting"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_other",
+        "row": "Lightning"
+      }
     }
   },
   "sounds": {
@@ -6339,6 +6430,28 @@
           0
         ],
         "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_lightning_1": [
+      {
+        "sourceFile": "sfx/lightning_02.wav",
+        "file": "lightning_02",
+        "volume": [
+          0.75,
+          0.75
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
         "repeat": 0,
         "priority": 1,
         "padding": 0

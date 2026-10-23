@@ -44,7 +44,7 @@
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "20269dcb63475f841d17b66895101679d87153f9fd686e23da470e86213063f3"
+      "sha256": "0e46666361da2e560e53b7e92da830ad903864d1f7673778b4b352c918f5e030"
     }
   ],
   "ignoredEnemyVersions": [
@@ -374,6 +374,12 @@
       "source": "sfx/knight_hit_01.ogg",
       "bytes": 5449,
       "sha256": "8d732d958cf7fe45ba250248ae771f988f4792e879a37289328158f667f36588"
+    },
+    {
+      "path": "public/assets/audio/lightning_02.ogg",
+      "source": "sfx/lightning_02.ogg",
+      "bytes": 12689,
+      "sha256": "178e16438ccef119ed84c454ffe806be7cd0f39e82d190762ceb6c399d1aa63e"
     },
     {
       "path": "public/assets/audio/mini_pekka_atk_12.ogg",
@@ -768,6 +774,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "1145638fed46cf7f745a3e66b9ebe49f188acfd0b7634299cd07ee69d6e59f5d"
+    "sha256": "e03058cc80a111f23cc80720eb7b6812537b9872563290653d0914d6944d96d9"
   }
 }

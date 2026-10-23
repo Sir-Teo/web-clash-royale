@@ -2006,6 +2006,139 @@
         }
       ]
     },
+    "lightning": {
+      "source": "Spell_lightning_effect",
+      "components": [
+        {
+          "emitter": "Spell_ligntning_smoke1",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_lightning_hitSpot",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Spell_lightning_hitSpot2",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_lightning_bolt",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_lightning_sparks",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_lightning_Flash",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Spell_lightning_Rock_debris",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_lightning_Rock_debris2",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_lightning_electric",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Spell_ligntning_smoke1",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_lightning_hitSpot",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Spell_lightning_hitSpot2",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_lightning_bolt",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_lightning_sparks",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_lightning_Flash",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Spell_lightning_Rock_debris",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_lightning_Rock_debris2",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "Spell_lightning_electric",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ]
+    },
     "hit:giant": {
       "source": "giant_hit",
       "components": [
@@ -5742,6 +5875,433 @@
         "Arrow_enemy_ground_anim_4",
         "Arrow_enemy_ground_anim_5",
         "Arrow_enemy_ground_anim_6"
+      ]
+    },
+    "Spell_ligntning_smoke1": {
+      "count": 16,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        1,
+        1.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.06666666666666667,
+        0.1
+      ],
+      "speed": [
+        1,
+        1.3333333333333333
+      ],
+      "height": 1.4,
+      "verticalSpeed": [
+        0.8333333333333334,
+        0.8333333333333334
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.35,
+      "endScale": 0.55,
+      "fadeIn": 0,
+      "fadeOut": 0.8,
+      "inertia": 0.3333333333333333,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Smoke_puff_01"
+      ]
+    },
+    "Spell_lightning_hitSpot": {
+      "count": 1,
+      "emissionLife": [
+        0,
+        0.1
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        1.5,
+        1.5
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 2,
+      "endScale": 2,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "SparkleBlue"
+      ]
+    },
+    "Spell_lightning_hitSpot2": {
+      "count": 1,
+      "emissionLife": [
+        0,
+        0.1
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        1.5,
+        1.5
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Deco_small_glow2"
+      ]
+    },
+    "Spell_lightning_bolt": {
+      "count": 1,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.3,
+        0.3
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.03333333333333333
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0.36666666666666664,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "lightning_bolt",
+        "lightning_bolt2"
+      ]
+    },
+    "Spell_lightning_sparks": {
+      "count": 10,
+      "emissionLife": [
+        0.3,
+        0.3
+      ],
+      "interval": [
+        0.01,
+        0.01
+      ],
+      "life": [
+        0.4,
+        0.6
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.03333333333333333
+      ],
+      "speed": [
+        2.6666666666666665,
+        5
+      ],
+      "height": 1.1666666666666667,
+      "verticalSpeed": [
+        5,
+        5
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.8,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0.25,
+      "inertia": 0.6666666666666666,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Sparkle"
+      ]
+    },
+    "Spell_lightning_Flash": {
+      "count": 1,
+      "emissionLife": [
+        0,
+        0.1
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        0.1,
+        0.15
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.8,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0.05,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "ExplosionGroundGlowBlue"
+      ]
+    },
+    "Spell_lightning_Rock_debris": {
+      "count": 10,
+      "emissionLife": [
+        0.4,
+        0.4
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        0.8,
+        1.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        2.6666666666666665,
+        3.3333333333333335
+      ],
+      "height": 0.3,
+      "verticalSpeed": [
+        6.666666666666667,
+        10
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -33.333333333333336,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Rock1Particle",
+        "Rock2Particle",
+        "Rock3Particle"
+      ]
+    },
+    "Spell_lightning_Rock_debris2": {
+      "count": 5,
+      "emissionLife": [
+        0.4,
+        0.4
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        0.8,
+        1.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        2.6666666666666665,
+        3.3333333333333335
+      ],
+      "height": 0.3,
+      "verticalSpeed": [
+        6.666666666666667,
+        10
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -83.33333333333333,
+      "startScale": 0.8,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "towerExplode_wall2",
+        "towerExplode_wall3"
+      ]
+    },
+    "Spell_lightning_electric": {
+      "count": 3,
+      "emissionLife": [
+        0.8,
+        1.2
+      ],
+      "interval": [
+        0.01,
+        0.05
+      ],
+      "life": [
+        0.15,
+        0.2
+      ],
+      "angle": [
+        -3.141592653589793,
+        0
+      ],
+      "radius": [
+        -0.2,
+        0.2
+      ],
+      "speed": [
+        0.3333333333333333,
+        1
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.6,
+      "endScale": 0.7,
+      "fadeIn": 0,
+      "fadeOut": 0.3,
+      "inertia": 1,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "electricity"
       ]
     },
     "Rocket_Emitter_Smoketrail": {

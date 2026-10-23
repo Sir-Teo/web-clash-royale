@@ -272,9 +272,14 @@
       "sha256": "d349ff0e03790573a49cd14551fd9630595b09c7de0f764b4333e16b6221936b"
     },
     {
+      "file": "portrait-lightning.webp",
+      "bytes": 39224,
+      "sha256": "f9f8050b1ad5718e72b2a0e761e2370dbf82b20ab1997c115366586c6fc17fee"
+    },
+    {
       "file": "cards.json",
-      "bytes": 92115,
-      "sha256": "20269dcb63475f841d17b66895101679d87153f9fd686e23da470e86213063f3"
+      "bytes": 92439,
+      "sha256": "0e46666361da2e560e53b7e92da830ad903864d1f7673778b4b352c918f5e030"
     }
   ]
 }

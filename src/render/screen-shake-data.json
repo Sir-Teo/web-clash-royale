@@ -146,6 +146,27 @@
           }
         ]
       }
+    },
+    "lightning": {
+      "impact": {
+        "sources": [
+          "Spell_lightning_effect"
+        ],
+        "components": [
+          {
+            "effect": "Spell_lightning_effect",
+            "delay": 0,
+            "duration": 1
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "Spell_lightning_effect",
+            "delay": 0,
+            "duration": 1
+          }
+        ]
+      }
     }
   }
 }

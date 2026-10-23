@@ -170,14 +170,18 @@ for (const [id, expected] of Object.entries({
   zap: "Spell_zap_effect",
   arrows: "ArrowHitGround",
   rocket: "Rocket_explosion",
+  lightning: "Spell_lightning_effect",
 })) {
   const card = cards[id];
   const spell = tables[card.table][card.row];
+  const area = tables.area_effect_objects[spell.AreaEffectObject];
   const projectile =
-    tables.projectiles[spell.CustomFirstProjectile || spell.Projectile];
+    tables.projectiles[
+      spell.CustomFirstProjectile || spell.Projectile || area?.Projectile
+    ];
   const source =
     projectile?.HitEffect ||
-    tables.area_effect_objects[spell.AreaEffectObject]?.OneShotEffect;
+    area?.OneShotEffect;
   if (source !== expected)
     throw new Error(`Recheck native ${id} impact binding: ${source}`);
   impacts[id] = {
