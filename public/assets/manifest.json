@@ -429,6 +429,12 @@
       "sha256": "2b4701fc766c9cf3f33e469638e7d00eb96daceec605b35739fff201c9b2bb2f"
     },
     {
+      "path": "cards/inferno-dragon.png",
+      "source": "cards/inferno-dragon.png",
+      "bytes": 129397,
+      "sha256": "09b3d010aaba0c5aa3d8d4df30b9c29d2dd51007c8702fb435133b57cc44e793"
+    },
+    {
       "path": "cards/knight.png",
       "source": "cards/knight.png",
       "bytes": 153676,

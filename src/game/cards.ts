@@ -17,6 +17,7 @@ import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
 import iceWizard from "./ice-wizard-data.json" with { type: "json" };
 import princess from "./princess-data.json" with { type: "json" };
+import infernoDragon from "./inferno-dragon-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -35,6 +36,7 @@ export type CardId =
   | "dart-goblin"
   | "ice-wizard"
   | "princess"
+  | "inferno-dragon"
   | "skeletons"
   | "skeleton-army"
   | "bomber"
@@ -522,6 +524,18 @@ export const CARDS: Card[] = [
     megaMinion.sourceHitSpeed / 1000,
     "An armored flying Minion that attacks ground and air targets.",
     { rarity: "Rare", air: true, hitsAir: megaMinion.hitsAir },
+  ),
+  troop(
+    "inferno-dragon",
+    "Inferno Dragon",
+    infernoDragon.cost,
+    Math.round(infernoDragon.sourceHitpoints * 1.1 ** 2),
+    Math.round(infernoDragon.sourceDamage[0] * 1.1 ** 2),
+    infernoDragon.sourceSpeed / 60,
+    infernoDragon.sourceRange / 1000,
+    infernoDragon.sourceHitSpeed / 1000,
+    "A flying dragon whose focused beam grows stronger the longer it stays locked on.",
+    { rarity: "Legendary", air: true, hitsAir: infernoDragon.hitsAir },
   ),
   troop(
     "minion-horde",

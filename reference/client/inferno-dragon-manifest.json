@@ -1,0 +1,22 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/sc/chr_baby_dragon.bin",
+      "sha256": "9d8d74eff5463e27df6bb4db13b9a93aeafb0bbba8f32b1ee582e526ce679190"
+    }
+  ],
+  "output": {
+    "path": "src/game/inferno-dragon-data.json",
+    "sha256": "70eeda13c3c2a3c0a9df64740411fd173ce88eb80ab1b8e26163429e343ba99c"
+  }
+}
