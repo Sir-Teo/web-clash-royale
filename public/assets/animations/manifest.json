@@ -72,6 +72,23 @@
       "uniqueFrames": 361
     },
     {
+      "id": "dart-goblin",
+      "source": "chr_goblin_blowdart",
+      "metadataSha256": "2a23a93af572dd11afedef93d0985efdaed2611137ee36663cd976b43f69aada",
+      "dataSha256": "46dd3544e33b5c5bd8687684228df84ff7f0f65db5da99ab22f35655e98bc19b",
+      "textures": [
+        {
+          "file": "dart-goblin-0.webp",
+          "sha256": "1f6fea4d7fbd806f40a48368ce51e7abe3ba935ff552159043033b6c32a7dd17",
+          "originalSha256": "6f8bef845487def195f26dfa8f4ebea1879d6b213164593cdeb66655781fc12f"
+        }
+      ],
+      "shapes": 252,
+      "clips": 54,
+      "frames": 1368,
+      "uniqueFrames": 918
+    },
+    {
       "id": "archers",
       "source": "chr_archer",
       "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",

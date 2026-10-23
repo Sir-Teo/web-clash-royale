@@ -101,6 +101,18 @@
       "gravity": 0
     }
   },
+  "dart-goblin": {
+    "source": "BlowdartGoblin",
+    "windup": 0.3,
+    "sight": 7.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "BlowdartGoblinProjectile",
+      "speed": 13.333333333333334,
+      "homing": true,
+      "gravity": 120
+    }
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

@@ -337,9 +337,14 @@
       "sha256": "f45adf72a81f5bce4235458725ce545b75e97d07cb64d9d9fa4f9a5473862395"
     },
     {
+      "file": "portrait-dart-goblin.webp",
+      "bytes": 37334,
+      "sha256": "704c0c66262d00727aaaf1fa2a0b284f8f68a04d0706802213e1bbe1ba755e0e"
+    },
+    {
       "file": "cards.json",
-      "bytes": 96588,
-      "sha256": "a9fca137011651d3d9a7d9180431aaaac9864d2b41dce4f1d159f3efbd12d5fa"
+      "bytes": 96932,
+      "sha256": "3aa21c0ddc31e0c5ea4bf9c39903e45bee49c8da496bc28f7df803b23e298892"
     }
   ]
 }

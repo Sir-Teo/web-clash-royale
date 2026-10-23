@@ -1359,6 +1359,139 @@
         "row": "MegaMinion"
       }
     },
+    "dart-goblin": {
+      "source": "BlowdartGoblin",
+      "attack": {
+        "sources": [
+          "blowdart_goblin_atk_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_blowdart_goblin_atk_start",
+            "delay": 0
+          },
+          {
+            "sound": "sound_blowdart_gob_jump",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_blowdart_goblin_atk_start",
+            "delay": 0
+          },
+          {
+            "sound": "sound_blowdart_gob_jump",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [
+          "blowdart_goblin_attack"
+        ],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "BlowdartArrowHit"
+        ],
+        "components": [
+          {
+            "sound": "sound_blowdart_hit",
+            "delay": 0
+          },
+          {
+            "sound": "sound_blowdart_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_blowdart_hit",
+            "delay": 0
+          },
+          {
+            "sound": "sound_blowdart_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "blowdart_goblin_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_blowdart_goblin_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_blowdart_goblin_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "BlowdartGoblin"
+      }
+    },
     "spear-goblins": {
       "source": "SpearGoblin",
       "attack": {
@@ -6158,6 +6291,98 @@
           0
         ],
         "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_blowdart_goblin_atk_start": [
+      {
+        "sourceFile": "sfx/blowdart_goblin_atk_02.wav",
+        "file": "blowdart_goblin_atk_02",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.51,
+          0.51
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_blowdart_gob_jump": [
+      {
+        "sourceFile": "sfx/blowdart_gob_jump_01.wav",
+        "file": "blowdart_gob_jump_01",
+        "volume": [
+          0.5,
+          0.55
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0.3,
+          0.3
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_blowdart_hit": [
+      {
+        "sourceFile": "sfx/blowdart_hit_01.wav",
+        "file": "blowdart_hit_01",
+        "volume": [
+          0.3,
+          0.35
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_blowdart_goblin_deploy": [
+      {
+        "sourceFile": "sfx/blowdart_deploy_01.wav",
+        "file": "blowdart_deploy_01",
+        "volume": [
+          0.9,
+          0.9
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
         "repeat": 0,
         "loop": false,
         "priority": 1,

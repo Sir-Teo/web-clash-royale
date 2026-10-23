@@ -26,7 +26,7 @@ const cards = Object.entries(combat)
     );
   })
   .map(([id]) => id);
-if (cards.length !== 25)
+if (cards.length !== 26)
   throw new Error(`Recheck source deploy filter bindings: ${cards.length}`);
 const clip = sc.clips[sc.names[name]];
 if (clip?.fps !== 60 || clip.frames.length !== 28)

@@ -66,6 +66,7 @@ const names = {
   barbarians: "Barbarian",
   "royal-giant": "RoyalGiant",
   "mega-minion": "MegaMinion",
+  "dart-goblin": "BlowdartGoblin",
   "spear-goblins": "SpearGoblin",
   skeletons: "Skeleton",
   "skeleton-army": "Skeleton",

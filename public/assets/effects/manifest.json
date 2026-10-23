@@ -28,14 +28,14 @@
   "inputs": [
     {
       "path": "src/render/destruction-data.json",
-      "sha256": "721a945f6ff026b58c29617ba1a87fdd049228a1713e7592351469b35dbe67bf"
+      "sha256": "e406e5ebf5105bde6923c780ac202de11fe3b6890451221f44a774f872dbf11f"
     },
     {
       "path": "reference/logic/buildings.csv",
       "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
     }
   ],
-  "dataSha256": "f8165467e44fb1f67233d472b883db95396c72696472fd291800212e62fc5587",
+  "dataSha256": "0d4040f5db7423e9010d4cd0c8eb80e98dcda1277d4faec7a7883be5e4c7726f",
   "textures": [
     {
       "file": "effects-0.webp",

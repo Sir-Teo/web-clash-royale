@@ -947,6 +947,69 @@
         }
       ]
     },
+    "dart-goblin": {
+      "source": "spear_goblin_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -3553,6 +3616,41 @@
         }
       ]
     },
+    "hit:dart-goblin": {
+      "source": "BlowdartArrowHit",
+      "components": [
+        {
+          "emitter": "blowdart_goblin_attack_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "blowdart_hit_sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "blowdart_goblin_attack_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "blowdart_hit_sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
     "freeze": {
       "source": "Spell_freeze_ground",
       "components": [
@@ -3845,6 +3943,27 @@
           "delay": 0,
           "scale": 1,
           "layer": "Base",
+          "ground": false
+        }
+      ]
+    },
+    "dart-goblin": {
+      "source": "BlowdartProjectileEmitter",
+      "components": [
+        {
+          "emitter": "Blowdart_arrow_emitter",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Blowdart_arrow_emitter",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Above",
           "ground": false
         }
       ]
@@ -4522,6 +4641,11 @@
     },
     "mega-minion": {
       "source": "royal_minion_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
+    "dart-goblin": {
+      "source": "blowdart_goblin_deploy",
       "components": [],
       "enemyComponents": []
     },
@@ -8383,6 +8507,56 @@
         "SparkleBlue"
       ]
     },
+    "Blowdart_arrow_emitter": {
+      "count": 15,
+      "emissionLife": [
+        0,
+        0
+      ],
+      "interval": [
+        0.025,
+        0.025
+      ],
+      "life": [
+        0.3,
+        0.6
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0.3333333333333333,
+        0.5
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0.16666666666666666,
+        0.3333333333333333
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.25,
+      "endScale": 0.6,
+      "fadeIn": 0.1,
+      "fadeOut": 0.8,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "d4",
+        "d2_white",
+        "d2_white",
+        "d3_white"
+      ]
+    },
     "tornado_rocks": {
       "count": 70,
       "emissionLife": [
@@ -10481,6 +10655,100 @@
       "loop": false,
       "clips": [
         "Smoke_puff_01"
+      ]
+    },
+    "blowdart_goblin_attack_puff": {
+      "count": 17,
+      "emissionLife": [
+        0.002,
+        0.002
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.5,
+        0.7
+      ],
+      "angle": [
+        0,
+        -6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        2.6666666666666665,
+        3.6666666666666665
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0.16666666666666666,
+        0.5
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.25,
+      "endScale": 0.6,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 13.333333333333334,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "SteamSmall"
+      ]
+    },
+    "blowdart_hit_sparks": {
+      "count": 10,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0,
+        0.01
+      ],
+      "life": [
+        0.1,
+        0.1
+      ],
+      "angle": [
+        0.017453292519943295,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0.06666666666666667
+      ],
+      "speed": [
+        10,
+        11.666666666666666
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        2,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        500,
+        500
+      ],
+      "gravity": 0,
+      "startScale": 1.1,
+      "endScale": 1.5,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Sparkle"
       ]
     },
     "knight_deploy_rocks_hitGround": {

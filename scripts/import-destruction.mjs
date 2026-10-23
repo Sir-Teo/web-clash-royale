@@ -216,6 +216,14 @@ trails.log = {
   components: composition(rollingLog.TrailEffect, "blue"),
   enemyComponents: composition(rollingLog.TrailEffect, "red"),
 };
+const dartTrail = tables.projectiles.BlowdartGoblinProjectile?.TrailEffect;
+if (dartTrail !== "BlowdartProjectileEmitter")
+  throw new Error(`Recheck native Dart Goblin trail: ${dartTrail}`);
+trails["dart-goblin"] = {
+  source: dartTrail,
+  components: composition(dartTrail, "blue"),
+  enemyComponents: composition(dartTrail, "red"),
+};
 const tornadoArea = tables.area_effect_objects.Tornado;
 if (tornadoArea?.ScaledEffect !== "Spell_tornado_deploy")
   throw new Error("Recheck native Tornado visual binding");
@@ -318,6 +326,7 @@ for (const [id, expected] of Object.entries({
   cannon: "cannon_hit",
   "royal-giant": "royal_giant_projectile_hit",
   "mega-minion": "mega_minion_hit",
+  "dart-goblin": "BlowdartArrowHit",
 })) {
   const profile = profiles[id];
   const actor =

@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "71d5d60dc5a53866119036a9334cb233fcbf62a3b6b53feffaf0aa411ade0c4d"
+      "sha256": "ec9b7c79000a33dc7cce870ef5d8d77f78007bac78dbd720ad3b53be1513c217"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "a9fca137011651d3d9a7d9180431aaaac9864d2b41dce4f1d159f3efbd12d5fa"
+      "sha256": "3aa21c0ddc31e0c5ea4bf9c39903e45bee49c8da496bc28f7df803b23e298892"
     }
   ],
   "ignoredEnemyVersions": [
@@ -158,6 +158,30 @@
       "source": "sfx/barrel_explosion_02.ogg",
       "bytes": 9555,
       "sha256": "271eb95e9777e27fff39c16451046fd2d4fac4b3afb7085e4c7e3c7e445a3226"
+    },
+    {
+      "path": "public/assets/audio/blowdart_deploy_01.ogg",
+      "source": "sfx/blowdart_deploy_01.ogg",
+      "bytes": 9121,
+      "sha256": "b8668c011c54e3f47767b554927d7df5fa459b4cc8fd392366a993c2e6126d8f"
+    },
+    {
+      "path": "public/assets/audio/blowdart_gob_jump_01.ogg",
+      "source": "sfx/blowdart_gob_jump_01.ogg",
+      "bytes": 4743,
+      "sha256": "405a3dfc37a1786c9b2ec627fa594bcff85f7e98ccff91283802c4244b90bc81"
+    },
+    {
+      "path": "public/assets/audio/blowdart_goblin_atk_02.ogg",
+      "source": "sfx/blowdart_goblin_atk_02.ogg",
+      "bytes": 5642,
+      "sha256": "f592c9e68a4e8e3ec13e789a7bae988267d117b22938978bd28b7109201578ae"
+    },
+    {
+      "path": "public/assets/audio/blowdart_hit_01.ogg",
+      "source": "sfx/blowdart_hit_01.ogg",
+      "bytes": 9050,
+      "sha256": "cad4888dbeed20be2bc431bd26848cd6395d0b455d91559199780db3b6225c6b"
     },
     {
       "path": "public/assets/audio/bomb_drop_01.ogg",
@@ -924,6 +948,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "bdbb5d1f2fd3ed8a10989bdf2611d110ff9ccbe62498f7327a3d4ef85779f985"
+    "sha256": "a8fabe991def19fab4c9a8281c10cb85f55cdeefa3259ed81aabdbfe5fe78f68"
   }
 }

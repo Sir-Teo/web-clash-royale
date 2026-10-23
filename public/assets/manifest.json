@@ -369,6 +369,12 @@
       "sha256": "f2f67ff3f60392cfcdfb419b8f495be4f4ba08c51e3f9a4b455d5b675acdf28c"
     },
     {
+      "path": "cards/dart-goblin.png",
+      "source": "cards/dart-goblin.png",
+      "bytes": 134883,
+      "sha256": "9635504b4b4c9d3ef1644793cdf1a79d1c68fc5cde9b6214d13fd58ec2c06bae"
+    },
+    {
       "path": "cards/fireball.png",
       "source": "cards/fireball.png",
       "bytes": 123797,
