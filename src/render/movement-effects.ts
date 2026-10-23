@@ -3,6 +3,7 @@ import { chargeEffect, movementEffect } from "./destruction";
 import type { ChargeEffect, MovementEffect } from "./destruction";
 
 export interface MovementBurst {
+  actor: number;
   effect: MovementEffect | ChargeEffect;
   origin: Point;
   team: Team;
@@ -80,6 +81,7 @@ export class NativeMovementEffects {
           );
           previous.charge++;
           bursts.push({
+            actor: entity.id,
             effect: charge,
             origin: {
               x: previous.x + dx * fraction,
@@ -106,6 +108,7 @@ export class NativeMovementEffects {
           );
           previous.step++;
           bursts.push({
+            actor: entity.id,
             effect,
             origin: {
               x: previous.x + dx * fraction,

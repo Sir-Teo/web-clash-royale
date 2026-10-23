@@ -42,7 +42,9 @@ export function parseSC(b) {
         b.readInt32LE(q + 16) / 20,
         b.readInt32LE(q + 20) / 20,
       ]);
-    if (tag === 25) {
+    // SC1 tag 7 is the older text record without device-font and outline
+    // color bytes; tag 25 extends the same fields with those values.
+    if (tag === 7 || tag === 25) {
       const string = () => {
         const size = b[q++];
         if (size === 255) return "";
@@ -69,9 +71,9 @@ export function parseSC(b) {
       });
       const outlined = !!b[q++],
         text = string();
-      const deviceFont = !!b[q++],
-        outlineColor = b.readUInt32LE(q);
-      q += 4;
+      const deviceFont = tag === 25 ? !!b[q++] : false,
+        outlineColor = tag === 25 ? b.readUInt32LE(q) : 0xff000000;
+      if (tag === 25) q += 4;
       if (q !== end) throw new Error(`SC text field size mismatch ${id}`);
       texts[id] = {
         font,

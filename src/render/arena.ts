@@ -31,6 +31,7 @@ import { NativeLaunchEffects } from "./launch-effects";
 import { NativeMovementEffects } from "./movement-effects";
 import type { MovementBurst } from "./movement-effects";
 import { hogJumpHeight, NativeHogLandings } from "./hog-jump";
+import { NativeChargeMarkers } from "./charge-marker";
 import { arrowOffsets } from "./arrow-volley";
 import { CrownEffects } from "./crowns";
 import { HealthLibrary, type HealthSprite } from "./health";
@@ -73,6 +74,7 @@ export class Arena {
   private deploymentEffects = new NativeDeploymentEffects();
   private launchEffects = new NativeLaunchEffects();
   private movementEffects = new NativeMovementEffects();
+  private chargeMarkers: NativeChargeMarkers;
   private hogLandings = new NativeHogLandings();
   private crowns = new CrownEffects(this.scene, this.effects);
   private rubble = new Map<string, T.Mesh>();
@@ -140,6 +142,9 @@ export class Arena {
     this.labels = document.createElement("div");
     this.labels.className = "tower-labels";
     host.append(this.labels);
+    this.chargeMarkers = new NativeChargeMarkers(host, (x, y, height) =>
+      this.screen(x, y, height),
+    );
     this.placementFeedback = document.createElement("div");
     this.placementFeedback.className = "placement-feedback hidden";
     this.placementFeedback.setAttribute("role", "status");
@@ -470,6 +475,7 @@ export class Arena {
     this.deploymentEffects.reset(battle.audioEvents);
     this.launchEffects.reset(battle.audioEvents);
     this.movementEffects.reset();
+    this.chargeMarkers.clear();
     this.hogLandings.reset();
     this.shake.reset(battle.audioEvents);
     this.camera.clearViewOffset();
@@ -1215,7 +1221,10 @@ export class Arena {
         burst.team,
         burst.age,
       );
-      if (burst.effect === "charge:prince") this.onCharge(burst);
+      if (burst.effect === "charge:prince") {
+        this.chargeMarkers.burst(burst.actor, this.destruction.time, burst.age);
+        this.onCharge(burst);
+      }
     }
     for (const burst of this.hogLandings.consume(b.entities, b.seed, b.time))
       this.destruction.burst(
@@ -1225,6 +1234,7 @@ export class Arena {
         burst.team,
         burst.age,
       );
+    this.chargeMarkers.update(b.entities, this.destruction.time, this.width);
     this.destruction.update(0, this.camera);
     this.deployment.render(time, this.camera);
     this.positionPlacementFeedback();
@@ -1414,6 +1424,7 @@ export class Arena {
     this.deployment.clear();
     this.destruction.clear();
     this.crowns.clear();
+    this.chargeMarkers.destroy();
     this.placementFeedback.remove();
     this.sprites.destroy();
     this.effects.destroy();
