@@ -31,7 +31,7 @@ export class NativeSpellAreas {
   update(areas: readonly AreaEffect[]) {
     const active = new Set<number>();
     for (const area of areas) {
-      if (area.card === "lightning") continue;
+      if (area.card === "lightning" || area.card === "ice-golem") continue;
       active.add(area.id);
       let visual = this.visuals.get(area.id);
       if (visual?.team !== area.team || visual.card !== area.card) {

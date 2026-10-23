@@ -15,6 +15,7 @@ import barbarians from "./barbarians-data.json" with { type: "json" };
 import eliteBarbarians from "./elite-barbarians-data.json" with { type: "json" };
 import iceSpirit from "./ice-spirit-data.json" with { type: "json" };
 import fireSpirits from "./fire-spirits-data.json" with { type: "json" };
+import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -41,6 +42,7 @@ export type CardId =
   | "elite-barbarians"
   | "ice-spirit"
   | "fire-spirits"
+  | "ice-golem"
   | "archers"
   | "giant"
   | "royal-giant"
@@ -207,6 +209,18 @@ export const CARDS: Card[] = [
     fireSpirits.sourceHitSpeed,
     "Three one-use attackers throw fiery splash projectiles at ground and air enemies.",
     { count: fireSpirits.count, hitsAir: true, splash: fireSpirits.splashRadius },
+  ),
+  troop(
+    "ice-golem",
+    "Ice Golem",
+    iceGolem.cost,
+    Math.round((iceGolem.sourceHitpoints * 720) / 340),
+    Math.round((iceGolem.sourceDamage * 218) / 100),
+    iceGolem.sourceSpeed / 60,
+    iceGolem.sourceRange,
+    iceGolem.sourceHitSpeed,
+    "A building hunter that bursts on defeat and slows nearby ground and air enemies.",
+    { rarity: "Rare", buildingsOnly: iceGolem.targetsBuildings, hitsAir: true },
   ),
   troop(
     "archers",

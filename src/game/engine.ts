@@ -39,6 +39,7 @@ import bats from "./bats-data.json" with { type: "json" };
 import eliteBarbarians from "./elite-barbarians-data.json" with { type: "json" };
 import iceSpirit from "./ice-spirit-data.json" with { type: "json" };
 import fireSpirits from "./fire-spirits-data.json" with { type: "json" };
+import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
 import golem from "./golem-data.json" with { type: "json" };
@@ -144,7 +145,8 @@ export interface AreaEffect extends Point {
     | "lightning"
     | "tornado"
     | "graveyard"
-    | "clone";
+    | "clone"
+    | "ice-golem";
   radius: number;
   duration: number;
   remaining: number;
@@ -161,7 +163,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "axe-die" | "bottle:lumberjack" | "summon:night-witch" | "dash-start:bandit" | "dash-end:bandit" | "hit-special:bandit";
+  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "axe-die" | "bottle:lumberjack" | "summon:night-witch" | "dash-start:bandit" | "dash-end:bandit" | "hit-special:bandit" | "ice-golem-slow";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -875,6 +877,17 @@ export class Battle {
   private updateAreas() {
     for (const area of this.areas) {
       const age = area.duration - area.remaining;
+      if (area.card === "ice-golem") {
+        for (const entity of this.entities) {
+          if (entity.hp <= 0 || entity.team === area.team || entity.dash ||
+              dist(entity, area) >= area.radius + entity.radius) continue;
+          entity.slow ??= { remaining: 0 };
+          entity.slow.remaining = Math.max(entity.slow.remaining,
+            iceGolem.slowDuration);
+        }
+        area.remaining = Math.max(0, area.remaining - STEP);
+        continue;
+      }
       if (area.card === "clone") {
         const cloned = (area.struck ??= []);
         for (const entity of [...this.entities]) {
@@ -2258,6 +2271,27 @@ export class Battle {
     this.cancelAudio(e);
     this.emitAudio("death", e.team, audioProfile(e), e.id);
     this.emit("death", e.team, e.x, e.y, e.card);
+    if (e.card === "ice-golem") {
+      this.areas.push({
+        id: this.nextId++, team: e.team, card: "ice-golem", x: e.x, y: e.y,
+        radius: iceGolem.deathRadius,
+        duration: iceGolem.deathAreaDuration,
+        remaining: iceGolem.deathAreaDuration,
+      });
+      this.emit("spell", e.team, e.x, e.y, "ice-golem", 0,
+        { effect: "ice-golem-slow" });
+      const damage = Math.round((iceGolem.deathDamage * 218) / 100);
+      for (const victim of [...this.entities]) {
+        if (victim.hp <= 0 || victim.team === e.team ||
+            dist(victim, e) >= iceGolem.deathRadius + victim.radius) continue;
+        this.hurt(victim, damage);
+        if (victim.hp > 0 && !victim.dash) {
+          victim.slow ??= { remaining: 0 };
+          victim.slow.remaining = Math.max(victim.slow.remaining,
+            iceGolem.slowDuration);
+        }
+      }
+    }
     if (e.card === "golem" || e.card === "golemite") {
       const profile = e.card === "golem" ? golem.golem : golem.golemite;
       const death = profile.death;

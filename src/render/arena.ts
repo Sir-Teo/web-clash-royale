@@ -1412,6 +1412,18 @@ export class Arena {
           event.team,
           eventAge,
         );
+      if (event.type === "spell" && event.card === "ice-golem") {
+        const origin = new T.Vector3(event.x - 9, 0.2, event.y - 16);
+        this.destruction.burst(
+          "ice-golem-slow", origin, b.seed ^ event.id, event.team, eventAge,
+        );
+        for (const [index, offset] of [0, 1].entries())
+          this.destruction.burst(
+            "ice-golem-ground", origin,
+            b.seed ^ event.id ^ Math.imul(index, 0x9e3779b9),
+            event.team, eventAge - offset,
+          );
+      }
       if (event.type === "spell" && event.effect === "summon:night-witch")
         this.destruction.burst(
           "summon:night-witch",
