@@ -1,0 +1,21 @@
+{
+  "card": "Rocket",
+  "projectile": "RocketSpell",
+  "cost": 6,
+  "rarity": "Rare",
+  "radius": 2,
+  "sourceDamage": 700,
+  "speed": 5.833333333333333,
+  "knockback": 1.8,
+  "crownTowerDamageFraction": 0.4,
+  "hitsGround": true,
+  "hitsAir": true,
+  "targets": "enemy",
+  "visual": {
+    "projectile": "projectile_rocket",
+    "shadow": "projectile_shadow_rocket",
+    "hit": "Rocket_explosion",
+    "trail": "Rocket_Emitter",
+    "directionalFrames": true
+  }
+}
