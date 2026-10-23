@@ -1,6 +1,7 @@
+import * as T from "three";
 import type { Entity } from "../game/engine";
 import type { AnimatedSprite } from "./sprites";
-import { SpriteFilterStack } from "./sprite-filter";
+import { filteredSpriteMaterials, SpriteFilterStack } from "./sprite-filter";
 import source from "./cold-filter-data.json";
 
 interface ColdActor {
@@ -59,5 +60,98 @@ export class NativeColdFilter {
   clear() {
     for (const id of this.actors.keys()) this.filters.remove(id, "cold");
     this.actors.clear();
+  }
+}
+
+export interface ColdStructurePart {
+  mesh: T.Mesh<T.BufferGeometry, T.MeshBasicMaterial[]>;
+  originals: T.MeshBasicMaterial[];
+}
+
+interface ColdStructure {
+  start: number;
+  frame: number;
+  add: T.Vector3;
+  multiply: T.Vector4;
+  parts: (ColdStructurePart & { materials: T.MeshBasicMaterial[] })[];
+}
+
+/** Apply the same archived buff to multipart buildings and tower characters. */
+export class NativeColdStructures {
+  private actors = new Map<number, ColdStructure>();
+
+  get state() {
+    return [...this.actors.entries()].map(([id, actor]) => ({
+      id,
+      frame: actor.frame,
+      parts: actor.parts.length,
+      color: source.colors[actor.frame],
+    }));
+  }
+
+  update(
+    entities: readonly Entity[],
+    time: number,
+    partsFor: (id: number) => readonly ColdStructurePart[],
+  ) {
+    const active = new Set<number>();
+    for (const entity of entities) {
+      if (
+        entity.hp <= 0 ||
+        entity.stun <= 0 ||
+        (entity.kind !== "tower" && entity.kind !== "building")
+      )
+        continue;
+      const parts = partsFor(entity.id);
+      if (!parts.length) continue;
+      active.add(entity.id);
+      let actor = this.actors.get(entity.id);
+      if (
+        actor &&
+        (actor.parts.length !== parts.length ||
+          actor.parts.some((part, i) => part.mesh !== parts[i].mesh))
+      ) {
+        this.release(actor);
+        this.actors.delete(entity.id);
+        actor = undefined;
+      }
+      if (!actor) {
+        actor = {
+          start: time,
+          frame: 0,
+          add: new T.Vector3(),
+          multiply: new T.Vector4(1, 1, 1, 1),
+          parts: [],
+        };
+        actor.parts = parts.map((part) => {
+          const materials = filteredSpriteMaterials(part.originals, actor!);
+          part.mesh.material = materials;
+          return { ...part, materials };
+        });
+        this.actors.set(entity.id, actor);
+      }
+      actor.frame = coldFilterFrame(time - actor.start);
+      const [ar, ag, ab, alpha, mr, mg, mb] = source.colors[actor.frame];
+      actor.add.set(ar / 255, ag / 255, ab / 255);
+      actor.multiply.set(mr / 255, mg / 255, mb / 255, alpha / 255);
+    }
+    for (const [id, actor] of this.actors)
+      if (!active.has(id)) {
+        this.release(actor);
+        this.actors.delete(id);
+      }
+  }
+
+  clear() {
+    for (const actor of this.actors.values()) this.release(actor);
+    this.actors.clear();
+  }
+
+  private release(actor: ColdStructure) {
+    for (const part of actor.parts) {
+      if (part.mesh.material === part.materials)
+        part.mesh.material = part.originals;
+      part.materials.forEach((material) => material.dispose());
+    }
   }
 }

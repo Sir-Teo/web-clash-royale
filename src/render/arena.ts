@@ -34,7 +34,8 @@ import { hogJumpHeight, NativeHogLandings } from "./hog-jump";
 import { NativeChargeMarkers } from "./charge-marker";
 import { NativeChargeFilter } from "./charge-filter";
 import { NativeDeployFilter } from "./deploy-filter";
-import { NativeColdFilter } from "./cold-filter";
+import { NativeColdFilter, NativeColdStructures } from "./cold-filter";
+import type { ColdStructurePart } from "./cold-filter";
 import { SpriteFilterStack } from "./sprite-filter";
 import { NativeFreezeAreas } from "./freeze-areas";
 import { arrowOffsets } from "./arrow-volley";
@@ -84,6 +85,7 @@ export class Arena {
   private chargeFilter = new NativeChargeFilter(this.spriteFilters);
   private deployFilter = new NativeDeployFilter(this.spriteFilters);
   private coldFilter = new NativeColdFilter(this.spriteFilters);
+  private coldStructures = new NativeColdStructures();
   private freezeAreas = new NativeFreezeAreas(this.scene, this.effects);
   private hogLandings = new NativeHogLandings();
   private crowns = new CrownEffects(this.scene, this.effects);
@@ -489,6 +491,7 @@ export class Arena {
     this.chargeFilter.clear();
     this.deployFilter.clear();
     this.coldFilter.clear();
+    this.coldStructures.clear();
     this.spriteFilters.clear();
     this.freezeAreas.clear();
     this.hogLandings.reset();
@@ -599,6 +602,31 @@ export class Arena {
   }
   get coldFilterState() {
     return this.coldFilter.state;
+  }
+  get coldStructureState() {
+    return this.coldStructures.state;
+  }
+
+  private coldStructureParts(id: number): ColdStructurePart[] {
+    const visual = this.units.get(id);
+    if (!visual) return [];
+    const parts: ColdStructurePart[] = [];
+    const building = visual.building;
+    if (building) {
+      for (const mesh of [
+        building.mesh,
+        building.princess?.front,
+        building.king?.turret,
+        building.king?.front,
+      ])
+        if (mesh) parts.push({ mesh, originals: building.asset.materials });
+    }
+    if (visual.archer)
+      parts.push({
+        mesh: visual.archer.mesh,
+        originals: visual.archer.asset.materials,
+      });
+    return parts;
   }
   get freezeAreaState() {
     return this.freezeAreas.state;
@@ -1285,6 +1313,9 @@ export class Arena {
       this.destruction.time,
       (id) => this.units.get(id)?.sprite,
     );
+    this.coldStructures.update(b.entities, this.destruction.time, (id) =>
+      this.coldStructureParts(id),
+    );
     this.destruction.update(0, this.camera);
     this.deployment.render(time, this.camera);
     this.positionPlacementFeedback();
@@ -1478,6 +1509,7 @@ export class Arena {
     this.chargeFilter.clear();
     this.deployFilter.clear();
     this.coldFilter.clear();
+    this.coldStructures.clear();
     this.spriteFilters.clear();
     this.freezeAreas.clear();
     this.placementFeedback.remove();
