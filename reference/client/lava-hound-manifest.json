@@ -1,0 +1,43 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "reference/sc/chr_lava_hound.bin",
+      "sha256": "99dda4d63debdd6071cf5e2542db8163f44b2224f2727abc8c53ffe4bb5f2a23"
+    },
+    {
+      "path": "reference/sc/chr_lava_hound_tex.png",
+      "sha256": "0ce67932f73f6491d558b43025921b569062489e5a14263cbb10a423c44742fc"
+    },
+    {
+      "path": "reference/sc/chr_lava_pups.bin",
+      "sha256": "678c500a4b529662eb8ebf73eeb977236930285b50864b14dc24503f3ba8ad86"
+    },
+    {
+      "path": "reference/sc/chr_lava_pups_tex.png",
+      "sha256": "07c15a098ce9d41373dff48d08a7f282ac10c62f933a6b0f1d68e21000bb578d"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    }
+  ],
+  "output": {
+    "path": "src/game/lava-hound-data.json",
+    "sha256": "57cf2c54e1556a4482f6f3ecf84b3842b437e2ec3116335e4c0a7b06adb90825"
+  }
+}

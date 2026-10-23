@@ -76,7 +76,8 @@
     "assets:bandit": "node scripts/import-bandit.mjs",
     "assets:bandit-filter": "node scripts/import-bandit-filter.mjs",
     "assets:bandit-trail": "node scripts/import-bandit-trail.mjs",
-    "assets:golem": "node scripts/import-golem.mjs"
+    "assets:golem": "node scripts/import-golem.mjs",
+    "assets:lava-hound": "node scripts/import-lava-hound.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",
