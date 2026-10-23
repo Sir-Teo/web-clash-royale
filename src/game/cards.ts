@@ -633,7 +633,7 @@ export const CARDS: Card[] = [
     sparky.sourceRange,
     sparky.sourceHitSpeed,
     "Charges a powerful cannon blast that splashes ground enemies.",
-    { rarity: "Legendary", splash: sparky.projectile.radius },
+    { rarity: "Legendary", hitsAir: false, splash: sparky.projectile.radius },
   ),
   troop(
     "minion-horde",

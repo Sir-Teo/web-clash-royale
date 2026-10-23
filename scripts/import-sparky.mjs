@@ -22,6 +22,7 @@ if (
   unit?.Hitpoints !== "1200" || unit.HitSpeed !== "5000" ||
   unit.LoadTime !== "4500" || unit.LoadFirstHit !== "true" ||
   unit.Speed !== "45" || unit.Range !== "4500" ||
+  unit.AttackPushBack !== "750" ||
   unit.Projectile !== "ZapMachineProjectile" || unit.AttacksGround !== "true" ||
   unit.AttacksAir === "true" || unit.IgnorePushback !== "true" ||
   unit.ProjectileStartRadius !== "1200" || unit.ProjectileStartZ !== "1800" ||
@@ -52,6 +53,7 @@ const output = Buffer.from(JSON.stringify({
   sourceLoadTime: Number(unit.LoadTime) / 1000,
   loadsBeforeFirstHit: unit.LoadFirstHit === "true",
   ignoresPushback: unit.IgnorePushback === "true",
+  pushback: Number(unit.AttackPushBack) / 1000,
   projectileStart: {
     radius: Number(unit.ProjectileStartRadius) / 1000,
     height: Number(unit.ProjectileStartZ) / 1000,

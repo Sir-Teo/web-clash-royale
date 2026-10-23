@@ -32,6 +32,7 @@ import bowler from "./bowler-data.json" with { type: "json" };
 import darkPrince from "./dark-prince-data.json" with { type: "json" };
 import battleRam from "./battle-ram-data.json" with { type: "json" };
 import executioner from "./executioner-data.json" with { type: "json" };
+import sparky from "./sparky-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -75,6 +76,7 @@ export interface Entity extends Point {
     hitTimer: number;
     stage: 0 | 1 | 2;
   };
+  sparkyCharge?: number;
   attack: number;
   move: number;
   king?: boolean;
@@ -655,7 +657,7 @@ export class Battle {
       air: !!c.air,
       damage: c.damage,
       range: c.range,
-      cooldown: 0.4,
+      cooldown: id === "sparky" ? sparky.sourceLoadTime + deploy : 0.4,
       interval: c.interval,
       speed: c.speed,
       target: null,
@@ -663,6 +665,7 @@ export class Battle {
       deploy,
       stun: 0,
       attack: 0,
+      ...(id === "sparky" ? { sparkyCharge: 0 } : {}),
       move: 0,
       active: true,
       lifetime: c.lifetime,
@@ -1345,12 +1348,27 @@ export class Battle {
       }
       if (e.stun > 0) {
         this.cancelAttack(e);
+        if (e.card === "sparky") {
+          e.sparkyCharge = 0;
+          e.cooldown = sparky.sourceLoadTime;
+        }
         e.move = 0;
         continue;
       }
       if (!e.active) {
         this.cancelAttack(e);
         continue;
+      }
+      if (e.card === "sparky") {
+        const before = e.sparkyCharge ?? 0;
+        e.sparkyCharge = Math.min(sparky.sourceLoadTime,
+          before + STEP * hitSpeed);
+        for (const [index, phase] of ["load-1", "load-2", "load-3", "load-ready"].entries()) {
+          const threshold = sparky.sourceLoadTime * (index + 1) / 4;
+          if (before < threshold && e.sparkyCharge >= threshold)
+            this.emitAudio(phase as "load-1" | "load-2" | "load-3" | "load-ready",
+              e.team, "sparky", e.id);
+        }
       }
       if (e.burrow && !this.updateTesla(e)) continue;
       if (e.card === "inferno-dragon") {
@@ -1478,6 +1496,31 @@ export class Battle {
   }
   private releaseAttack(e: Entity, target: Entity, damage: number) {
     this.audioAttacks.delete(e.id);
+    if (e.card === "sparky") {
+      e.sparkyCharge = 0;
+      const dx = target.x - e.x, dy = target.y - e.y;
+      const length = Math.hypot(dx, dy) || 1;
+      const start = {
+        x: e.x + dx / length * sparky.projectileStart.radius,
+        y: e.y + dy / length * sparky.projectileStart.radius,
+      };
+      const duration = Math.max(STEP, dist(start, target) / sparky.projectile.speed);
+      this.projectiles.push({
+        id: this.nextId++, team: e.team, x: e.x, y: e.y,
+        tx: target.x, ty: target.y, target: target.id, damage,
+        remaining: duration, duration, splash: sparky.projectile.radius,
+        air: false, style: "sparky", stun: 0, source: e.id,
+        knockback: sparky.pushback,
+        flight: start, speed: sparky.projectile.speed,
+        elapsed: 0, homing: true,
+        fromHeight: sparky.projectileStart.height,
+        toHeight: target.kind === "tower" ? 1.8 : 0.6, arc: 0,
+      });
+      this.audioProjectiles.set(this.projectiles.at(-1)!.id, audioProfile(e));
+      this.emitAudio("launch", e.team, "sparky", e.id, undefined,
+        { x: e.x, y: e.y });
+      return;
+    }
     if (e.card === "executioner") {
       const dx = target.x - e.x, dy = target.y - e.y;
       const distance = Math.hypot(dx, dy) || 1;

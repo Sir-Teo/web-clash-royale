@@ -78,6 +78,7 @@ const heights: Partial<Record<SpriteId, number>> = {
   "dark-prince-shield": 2.1,
   "battle-ram": 2.5,
   executioner: 2.2,
+  sparky: 2.3,
   witch: 2.1,
   prince: 2.25,
   pekka: 2.7,

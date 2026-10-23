@@ -26,10 +26,14 @@ export function combatAudioPlan(
     !Object.hasOwn(definitions.profiles, profile)
   )
     return [];
-  const components =
-    definitions.profiles[profile as Profile][phase]?.[
-      team === "red" ? "enemyComponents" : "components"
-    ];
+  const phases = definitions.profiles[profile as Profile] as unknown as Record<
+    string,
+    { components?: { sound: string; delay: number }[];
+      enemyComponents?: { sound: string; delay: number }[] }
+  >;
+  const components = phases[phase]?.[
+    team === "red" ? "enemyComponents" : "components"
+  ];
   if (!Array.isArray(components)) return [];
   let state = seed | 0;
   // Nearby event IDs must not select the same voice throughout a battle.
@@ -121,7 +125,7 @@ export class NativeCombatAudio {
           attack: event.phase === "attack" ? event.id : undefined,
           owner: ["attack", "spawn", "summon", "appear", "hide"].includes(
             event.phase,
-          )
+          ) || event.phase.startsWith("load-")
             ? event.actor
             : undefined,
         });

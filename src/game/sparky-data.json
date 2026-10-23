@@ -9,6 +9,7 @@
   "sourceLoadTime": 4.5,
   "loadsBeforeFirstHit": true,
   "ignoresPushback": true,
+  "pushback": 0.75,
   "projectileStart": {
     "radius": 1.2,
     "height": 1.8

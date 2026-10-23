@@ -1205,6 +1205,15 @@ export class Arena {
         );
         this.trailCycles.set(p.id, 0);
       }
+      if (p.style === "sparky" && p.speed && this.effects.asset &&
+          !this.trailCycles.has(p.id)) {
+        this.destruction.burstAlong(
+          "trail:sparky",
+          (seconds) => curvedFlightPoint(p, seconds),
+          p.duration, 0, b.seed ^ p.id, p.team, p.elapsed ?? 0,
+        );
+        this.trailCycles.set(p.id, 0);
+      }
       if (p.style === "dart-goblin" && p.speed && this.effects.asset) {
         // The source emitter lays fifteen fragments across one short dart flight.
         // Rebuilding a late snapshot retains only fragments still alive.

@@ -76,6 +76,7 @@ export function projectileArt(p: Projectile) {
       : "log_roll_projectile_red";
   if (p.style === "bowler") return "bowler_projectile";
   if (p.style === "executioner") return "executioner_projectile";
+  if (p.style === "sparky") return "zapMachine_projectile";
   if (p.style === "baby-dragon") return "dragon_projectile";
   if (p.style === "wizard") return "fireball_small";
   if (p.style === "witch" || p.style === "minions") return "Tower_projectile1";
@@ -209,6 +210,10 @@ export function updateProjectile(
       sprite.mesh.scale.setScalar(1.3);
     } else if (sprite.name === "executioner_projectile") {
       library.animate(sprite, p.elapsed ?? 0, true);
+      sprite.mesh.scale.setScalar(1.1);
+    } else if (sprite.name === "zapMachine_projectile") {
+      library.animate(sprite, p.elapsed ?? 0, true);
+      sprite.mesh.rotateZ(angle);
       sprite.mesh.scale.setScalar(1.1);
     } else if (["fireball_small", "Tower_projectile1"].includes(sprite.name)) {
       library.animate(sprite, p.elapsed ?? progress * p.duration, true);

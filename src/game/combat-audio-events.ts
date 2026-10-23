@@ -13,6 +13,10 @@ export type CombatAudioPhase =
   | "summon"
   | "appear"
   | "hide"
+  | "load-1"
+  | "load-2"
+  | "load-3"
+  | "load-ready"
   | "death-impact"
   | "death-spawn"
   | "death";

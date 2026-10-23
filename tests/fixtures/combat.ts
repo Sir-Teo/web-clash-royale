@@ -192,6 +192,18 @@ function setup() {
         target.hp = target.maxHp = 10000;
       }
     }
+  } else if (scenario === "sparky") {
+    const attacker = unit("sparky", "blue", 4, 21)[0];
+    attacker.speed = 0;
+    attacker.cooldown = 4.5;
+    for (const [card, x] of [["knight", 4], ["knight", 4.8], ["minions", 4.5]] as [CardId, number][]) {
+      for (const [index, target] of unit(card, "red", x, 18).entries()) {
+        target.x = index ? 14 : x;
+        target.active = false;
+        target.speed = target.damage = 0;
+        target.hp = target.maxHp = 10000;
+      }
+    }
   } else if (scenario === "attack-impacts") {
     const attacker = (
       document.querySelector("#attack-card") as HTMLSelectElement
@@ -508,6 +520,18 @@ function render(now: number) {
       enemies: battle.entities.filter((e) => e.team === "red" && ["knight", "minions"].includes(e.card))
         .map((e) => ({ card: e.card, x: e.x, hp: e.hp })),
       visuals: arena.projectileState.filter((shot) => shot.sprites.some((sprite) => sprite.name === "executioner_projectile")),
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.sparky =
+    JSON.stringify({
+      charge: battle.entities.find((e) => e.team === "blue" && e.card === "sparky")?.sparkyCharge,
+      shots: battle.projectiles.filter((p) => p.style === "sparky")
+        .map((p) => ({ id: p.id, x: p.flight?.x, y: p.flight?.y })),
+      hits: battle.events.filter((event) => event.type === "hit" && event.card === "sparky").length,
+      enemies: battle.entities.filter((e) => e.team === "red" && ["knight", "minions"].includes(e.card))
+        .map((e) => ({ card: e.card, x: e.x, hp: e.hp })),
+      loadCues: battle.audioEvents.filter((event) => event.profile === "sparky" && event.phase.startsWith("load-"))
+        .map((event) => event.phase),
+      visuals: arena.projectileState.filter((shot) => shot.sprites.some((sprite) => sprite.name === "zapMachine_projectile")),
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.darkPrince =
     JSON.stringify({

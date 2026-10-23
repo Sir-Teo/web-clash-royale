@@ -68,7 +68,7 @@ function asymmetricLibrary() {
 }
 
 describe("native particle tails", () => {
-  it("retains all 23 source delay ranges in milliseconds, with stable integer samples", async () => {
+  it("retains all 24 source delay ranges in milliseconds, with stable integer samples", async () => {
     const { csvGroups } = await import("../scripts/lib/csv.mjs");
     const source = csvGroups(
       readFileSync("reference/client/particle_emitters.csv", "utf8"),
@@ -81,7 +81,7 @@ describe("native particle tails", () => {
       ]);
       if (emitter.tailDelayMs[1]) withTail++;
     }
-    expect(withTail).toBe(23);
+    expect(withTail).toBe(24);
     for (const effect of [
       "tower",
       "knight",

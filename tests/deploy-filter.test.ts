@@ -28,7 +28,7 @@ function sprite(): AnimatedSprite {
 }
 
 describe("native troop deployment filter", () => {
-  it("pins the source matrix/color sequence and all 23 curated troop bindings", () => {
+  it("pins the source matrix/color sequence and all 30 curated troop bindings", () => {
     const manifest = JSON.parse(
       readFileSync("reference/client/deploy-filter-manifest.json", "utf8"),
     );
