@@ -123,6 +123,23 @@
       "uniqueFrames": 1230
     },
     {
+      "id": "inferno-dragon",
+      "source": "chr_baby_dragon",
+      "metadataSha256": "9d8d74eff5463e27df6bb4db13b9a93aeafb0bbba8f32b1ee582e526ce679190",
+      "dataSha256": "85c4f999de9c374a06df14984bceb8a8a1472752de8711f66f73c7301fd10540",
+      "textures": [
+        {
+          "file": "inferno-dragon-0.webp",
+          "sha256": "b49d1f374060d5e42445c257b76cf83f01f7b48f973948ed9edf6c9344fb7803",
+          "originalSha256": "88c172db5ebce4e847b4f341d7fc59b58de1bb2e8eb3b269a1d92fcdab927ca5"
+        }
+      ],
+      "shapes": 273,
+      "clips": 54,
+      "frames": 1296,
+      "uniqueFrames": 1117
+    },
+    {
       "id": "archers",
       "source": "chr_archer",
       "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",

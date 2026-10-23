@@ -240,6 +240,14 @@ trails.princess = {
   components: composition(princessTrail, "blue"),
   enemyComponents: composition(princessTrail, "red"),
 };
+const infernoHit = tables.characters.InfernoDragon?.DamageEffect;
+if (infernoHit !== "inferno_hit_effect")
+  throw new Error(`Recheck native Inferno Dragon hit: ${infernoHit}`);
+impacts["hit:inferno-dragon"] = {
+  source: infernoHit,
+  components: composition(infernoHit, "blue"),
+  enemyComponents: composition(infernoHit, "red"),
+};
 const tornadoArea = tables.area_effect_objects.Tornado;
 if (tornadoArea?.ScaledEffect !== "Spell_tornado_deploy")
   throw new Error("Recheck native Tornado visual binding");

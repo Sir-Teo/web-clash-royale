@@ -51,7 +51,8 @@ describe("combat timing and targeting", () => {
   it("has archival combat traits for every troop, building and tower", () => {
     for (const card of CARDS.filter((c) => c.kind !== "spell")) {
       const traits = combatTraits({ card: card.id });
-      expect(traits.windup).toBeGreaterThan(0);
+      expect(traits.windup).toBeGreaterThanOrEqual(0);
+      if (card.id === "inferno-dragon") expect(traits.windup).toBe(0);
       expect(traits.sight).toBeGreaterThan(0);
       if (traits.projectile) expect(traits.projectile.speed).toBeGreaterThan(0);
     }

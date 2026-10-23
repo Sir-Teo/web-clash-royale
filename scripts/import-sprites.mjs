@@ -17,6 +17,7 @@ const sources = {
   "dart-goblin": "goblin_blowdart",
   "ice-wizard": "ice_wizard",
   princess: "princess",
+  "inferno-dragon": "baby_dragon",
   archers: "archer",
   giant: "giant",
   musketeer: "musketeer",
@@ -111,6 +112,8 @@ for (const [id, source] of Object.entries(sources)) {
     if (!match || Number(match[2] || 1) > 1) continue;
     // This source also contains Inferno Dragon exports. Never overwrite Baby Dragon.
     if (id === "baby-dragon" && !exportName.startsWith("baby_dragon_"))
+      continue;
+    if (id === "inferno-dragon" && !exportName.startsWith("inferno_dragon_"))
       continue;
     if (id === "barbarians" && !exportName.startsWith("barbarian1_")) continue;
     if (id === "tower-princess" && !exportName.startsWith("princess_tower_"))

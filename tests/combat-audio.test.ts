@@ -59,8 +59,8 @@ describe("native combat audio evidence", () => {
     );
     expect(manifest.audioFiles).toHaveLength(169);
     expect(manifest.sources).toHaveLength(11);
-    expect(Object.keys(definitions.profiles)).toHaveLength(46);
-    expect(Object.keys(definitions.sounds)).toHaveLength(134);
+    expect(Object.keys(definitions.profiles)).toHaveLength(47);
+    expect(Object.keys(definitions.sounds)).toHaveLength(138);
     for (const file of [
       ...manifest.sources,
       ...manifest.audioFiles,

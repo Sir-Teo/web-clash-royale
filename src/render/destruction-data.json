@@ -1136,6 +1136,69 @@
         }
       ]
     },
+    "inferno-dragon": {
+      "source": "inferno_dragon_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -2947,6 +3010,69 @@
           "delay": 0,
           "scale": 1,
           "layer": "Base",
+          "ground": false
+        }
+      ]
+    },
+    "hit:inferno-dragon": {
+      "source": "inferno_hit_effect",
+      "components": [
+        {
+          "emitter": "inferno_hit_sparks",
+          "delay": 0,
+          "scale": 0.7,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "inferno_dragon_emitterTrail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "fireball_trial_spark",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "inferno_dragon_glowTrail",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "inferno_hit_sparks",
+          "delay": 0,
+          "scale": 0.7,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "inferno_dragon_emitterTrail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "fireball_trial_spark",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "inferno_dragon_glowTrail",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
           "ground": false
         }
       ]
@@ -5096,6 +5222,11 @@
           "ground": false
         }
       ]
+    },
+    "inferno-dragon": {
+      "source": "inferno_dragon_deploy",
+      "components": [],
+      "enemyComponents": []
     },
     "spear-goblins": {
       "source": "spear_goblin_deploy",
@@ -9149,6 +9280,195 @@
         "FireParticle1_small",
         "FireParticle2_small",
         "FireParticle3_small"
+      ]
+    },
+    "inferno_hit_sparks": {
+      "count": 10,
+      "emissionLife": [
+        0.15,
+        0
+      ],
+      "interval": [
+        0,
+        0.05
+      ],
+      "life": [
+        0.15,
+        0.25
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        3.3333333333333335,
+        6.666666666666667
+      ],
+      "height": 1.3333333333333333,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.05,
+      "endScale": 0.2,
+      "fadeIn": 0,
+      "fadeOut": 0.1,
+      "inertia": 0,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "sharp_spark"
+      ]
+    },
+    "inferno_dragon_emitterTrail": {
+      "count": 28,
+      "emissionLife": [
+        0.8,
+        0.8
+      ],
+      "interval": [
+        0.005,
+        0.01
+      ],
+      "life": [
+        0.6,
+        0.8
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        0.03333333333333333,
+        0.3333333333333333
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        1.6666666666666667,
+        6.666666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 1.1666666666666667,
+      "startScale": 0.35,
+      "endScale": 0.6,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0.03333333333333333,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "fireball_trail1",
+        "fireball_trail2"
+      ]
+    },
+    "fireball_trial_spark": {
+      "count": 16,
+      "emissionLife": [
+        0.8,
+        0.8
+      ],
+      "interval": [
+        0.005,
+        0.01
+      ],
+      "life": [
+        0.6,
+        0.8
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.13333333333333333,
+        0.13333333333333333
+      ],
+      "speed": [
+        0.5,
+        1
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        3.3333333333333335,
+        6.666666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 1.1666666666666667,
+      "startScale": 0.55,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0.03333333333333333,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Sparkle"
+      ]
+    },
+    "inferno_dragon_glowTrail": {
+      "count": 29,
+      "emissionLife": [
+        0.8,
+        0.8
+      ],
+      "interval": [
+        0.005,
+        0.01
+      ],
+      "life": [
+        0.6,
+        0.8
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        0.03333333333333333,
+        0.3333333333333333
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        1.6666666666666667,
+        6.666666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 1.1666666666666667,
+      "startScale": 0.4,
+      "endScale": 0.6,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0.03333333333333333,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "fireball_trail3"
       ]
     },
     "tornado_rocks": {

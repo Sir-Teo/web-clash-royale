@@ -28,14 +28,14 @@
   "inputs": [
     {
       "path": "src/render/destruction-data.json",
-      "sha256": "164ace6f8a12f2c8b1f78b24219aa75a6dafbb4e803731581f115a88a836f6ab"
+      "sha256": "6b6d5a45a52d2da0de95618502813319dd1ee4a80605304f16de32972b4ff52e"
     },
     {
       "path": "reference/logic/buildings.csv",
       "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
     }
   ],
-  "dataSha256": "95933b2342f538a37c4c130ddbaf8b0759c21d266db0b1fb6a289d3b2cfcc68e",
+  "dataSha256": "b30494b583402308f6ace433365fe4e270383106c3d4ce41b6c60407dd21c1bf",
   "textures": [
     {
       "file": "effects-0.webp",
@@ -62,6 +62,6 @@
       "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/spell_goblin_barrel_tex.png"
     }
   ],
-  "clips": 156,
-  "frames": 8461
+  "clips": 163,
+  "frames": 8795
 }

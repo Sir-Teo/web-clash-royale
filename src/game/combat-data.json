@@ -137,6 +137,13 @@
       "gravity": 90
     }
   },
+  "inferno-dragon": {
+    "source": "InfernoDragon",
+    "windup": 0,
+    "sight": 5.5,
+    "ignoresKnockback": true,
+    "projectile": null
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

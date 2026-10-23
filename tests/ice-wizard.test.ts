@@ -47,7 +47,7 @@ describe("archived Ice Wizard", () => {
     expect(destructionPlan("trail:ice-wizard", 5).length).toBe(95);
     expect(hasNativeDeployFilter("ice-wizard")).toBe(true);
     expect(deployFilter.legendary).toMatchObject({
-      source: "filter_deploy_unit_legendary", cards: ["ice-wizard", "princess"], fps: 60,
+      source: "filter_deploy_unit_legendary", cards: ["ice-wizard", "princess", "inferno-dragon"], fps: 60,
     });
     expect(deployFilter.legendary.frames).toHaveLength(31);
     expect(deployFilterFrame(30 / 60, true)).toBe(30);
