@@ -70,6 +70,13 @@
     "ignoresKnockback": false,
     "projectile": null
   },
+  "barbarians": {
+    "source": "Barbarian",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

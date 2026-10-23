@@ -990,6 +990,121 @@
         "row": "GoblinGang"
       }
     },
+    "barbarians": {
+      "source": "Barbarian",
+      "attack": {
+        "sources": [
+          "barbarian_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_barbarian_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_barbarian_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "barbarian_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_barbarian_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_barbarian_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "barbarian_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_barbarian_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_barbarian_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Barbarians"
+      }
+    },
     "spear-goblins": {
       "source": "SpearGoblin",
       "attack": {
@@ -5327,6 +5442,201 @@
         ],
         "maximum": 1,
         "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_barbarian_attack_start": [
+      {
+        "sourceFile": "sfx/barbarian_attack_02.wav",
+        "file": "barbarian_attack_02",
+        "volume": [
+          0.4,
+          0.4
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.3,
+          0.3
+        ],
+        "maximum": 2,
+        "repeat": 0.3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/barbarian_attack_03.wav",
+        "file": "barbarian_attack_03",
+        "volume": [
+          0.4,
+          0.4
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.3,
+          0.3
+        ],
+        "maximum": 2,
+        "repeat": 0.3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/barbarian_attack_04.wav",
+        "file": "barbarian_attack_04",
+        "volume": [
+          0.4,
+          0.4
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.3,
+          0.3
+        ],
+        "maximum": 2,
+        "repeat": 0.3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/barbarian_attack_05.wav",
+        "file": "barbarian_attack_05",
+        "volume": [
+          0.4,
+          0.4
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.3,
+          0.3
+        ],
+        "maximum": 2,
+        "repeat": 0.3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/barbarian_attack_06.wav",
+        "file": "barbarian_attack_06",
+        "volume": [
+          0.4,
+          0.4
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.3,
+          0.3
+        ],
+        "maximum": 2,
+        "repeat": 0.3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/barbarian_attack_07.wav",
+        "file": "barbarian_attack_07",
+        "volume": [
+          0.4,
+          0.4
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.3,
+          0.3
+        ],
+        "maximum": 2,
+        "repeat": 0.3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/barbarian_attack_08.wav",
+        "file": "barbarian_attack_08",
+        "volume": [
+          0.4,
+          0.4
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.3,
+          0.3
+        ],
+        "maximum": 2,
+        "repeat": 0.3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_barbarian_hit": [
+      {
+        "sourceFile": "sfx/knight_attack_hack_01.wav",
+        "file": "knight_attack_hack_01",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_barbarian_deploy": [
+      {
+        "sourceFile": "sfx/deploy_barbarians_01.wav",
+        "file": "deploy_barbarians_01",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0.5,
         "loop": false,
         "priority": 1,
         "padding": 0

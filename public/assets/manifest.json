@@ -345,6 +345,12 @@
       "sha256": "81cedea30710838650fbc2dab748ffc6709707cdae2081c4831b255f0e33d96c"
     },
     {
+      "path": "cards/barbarians.png",
+      "source": "cards/barbarians.png",
+      "bytes": 114510,
+      "sha256": "46198a754608d8086ec40aa01638da639257194c336adca0247b67f02e30d785"
+    },
+    {
       "path": "cards/bomber.png",
       "source": "cards/bomber.png",
       "bytes": 139334,

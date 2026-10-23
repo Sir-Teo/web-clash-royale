@@ -41,6 +41,7 @@ const cards = [
   "minion-horde",
   "three-musketeers",
   "goblin-gang",
+  "barbarians",
 ];
 const characters = [
   "knight",

@@ -266,6 +266,7 @@ const portraitNames = {
   "minion-horde": "MinionHorde",
   "three-musketeers": "ThreeMusketeers",
   "goblin-gang": "GoblinGang",
+  barbarians: "Barbarians",
 };
 const sheets = [];
 for (const [name, cache, expected] of [

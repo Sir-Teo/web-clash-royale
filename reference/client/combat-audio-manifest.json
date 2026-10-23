@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "32ed9974dd09e2215149cf16f7df4693320eaefd86e4b5b2095ede3dfcef4fea"
+      "sha256": "7086019785354c90de11615e690738db0ee1f943ecdada1ac79abaccb78cdd21"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "0fe417afd714286816a4775fa031b568f72ab55a3a8e9355b8d47cc803011b2d"
+      "sha256": "ca5333b3c3a94850aebcb6b946a7b23ca8b4f31f8405a0f01cc5e6313336658e"
     }
   ],
   "ignoredEnemyVersions": [
@@ -104,6 +104,48 @@
       "source": "sfx/babydragon_deploy_01.ogg",
       "bytes": 8668,
       "sha256": "4bb713adf208f815fd3688cc584a785868a5261f693e55724079a1276540b3fc"
+    },
+    {
+      "path": "public/assets/audio/barbarian_attack_02.ogg",
+      "source": "sfx/barbarian_attack_02.ogg",
+      "bytes": 6185,
+      "sha256": "26cadb451b60c87e81f9141b8683cb1281402cb09e5cf8926d78f929830a083b"
+    },
+    {
+      "path": "public/assets/audio/barbarian_attack_03.ogg",
+      "source": "sfx/barbarian_attack_03.ogg",
+      "bytes": 6846,
+      "sha256": "4317fb70efa3d7d9e70f863e4967787fe579be178ec896fe1516272c4e8a95fb"
+    },
+    {
+      "path": "public/assets/audio/barbarian_attack_04.ogg",
+      "source": "sfx/barbarian_attack_04.ogg",
+      "bytes": 7107,
+      "sha256": "8e882249a8d8f7c74e7c45e4d3f76934cce1531e08318209c6c0f8c28b368c32"
+    },
+    {
+      "path": "public/assets/audio/barbarian_attack_05.ogg",
+      "source": "sfx/barbarian_attack_05.ogg",
+      "bytes": 6470,
+      "sha256": "5464f7f6d2553c11d45b1dd9552adfccb028da5a2aa362a60d24198030cab422"
+    },
+    {
+      "path": "public/assets/audio/barbarian_attack_06.ogg",
+      "source": "sfx/barbarian_attack_06.ogg",
+      "bytes": 6691,
+      "sha256": "f5121d3fae67df65e0b4739f64a15c9156169c246f23ae834f9102eee226fc57"
+    },
+    {
+      "path": "public/assets/audio/barbarian_attack_07.ogg",
+      "source": "sfx/barbarian_attack_07.ogg",
+      "bytes": 6716,
+      "sha256": "cc7cc96627ff338317fe4a307ca747365bd311d8e320cdad8fdbcdcbae4b60b3"
+    },
+    {
+      "path": "public/assets/audio/barbarian_attack_08.ogg",
+      "source": "sfx/barbarian_attack_08.ogg",
+      "bytes": 7514,
+      "sha256": "196d8e4cb1f136f31685cba77f4c330e1ccc507a02d52e3a8ae4ebae65bf99c0"
     },
     {
       "path": "public/assets/audio/barrel_drawback_14.ogg",
@@ -176,6 +218,12 @@
       "source": "sfx/deploy_balloon_06.ogg",
       "bytes": 17505,
       "sha256": "e23218067d2b99cc8d15ff6d758c2c2732f5e20e2cd6d601d833a6b530d10a1d"
+    },
+    {
+      "path": "public/assets/audio/deploy_barbarians_01.ogg",
+      "source": "sfx/deploy_barbarians_01.ogg",
+      "bytes": 8189,
+      "sha256": "3c0e45c8f116da6426feba8670b5c43e8f2dbb59efa91d502432392bd80c628d"
     },
     {
       "path": "public/assets/audio/deploy_skeleton_01.ogg",
@@ -822,6 +870,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "a75a28b32545bb12405f9a2c64fa384261853229df208562fc545909c0c7e98c"
+    "sha256": "a972ac74cf4f53741a2f068857c43464182771e868eec4b0dde0a7ce2b62f279"
   }
 }

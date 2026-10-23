@@ -322,9 +322,14 @@
       "sha256": "fca2c252954e5340973f9848777c10ec53732c0c34bf091daf09c8eda4181710"
     },
     {
+      "file": "portrait-barbarians.webp",
+      "bytes": 34652,
+      "sha256": "2ea87c9a747fa34db38009fc4443fa7687b04c4c4056857a1eb32fc69b32a784"
+    },
+    {
       "file": "cards.json",
-      "bytes": 95597,
-      "sha256": "0fe417afd714286816a4775fa031b568f72ab55a3a8e9355b8d47cc803011b2d"
+      "bytes": 95930,
+      "sha256": "ca5333b3c3a94850aebcb6b946a7b23ca8b4f31f8405a0f01cc5e6313336658e"
     }
   ]
 }

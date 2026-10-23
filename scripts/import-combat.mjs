@@ -63,6 +63,7 @@ const names = {
   "mini-pekka": "MiniPekka",
   goblins: "Goblin",
   "goblin-gang": "Goblin",
+  barbarians: "Barbarian",
   "spear-goblins": "SpearGoblin",
   skeletons: "Skeleton",
   "skeleton-army": "Skeleton",
