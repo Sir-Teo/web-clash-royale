@@ -991,6 +991,37 @@ async function peerAction(action: () => Promise<void>) {
     if (screen === "lobby" && modalKey === "room") showPeerMultiplayer();
   }
 }
+function legacyCopyPeer(value: string) {
+  const field = document.createElement("textarea");
+  field.value = value;
+  field.setAttribute("aria-hidden", "true");
+  field.style.cssText =
+    "position:fixed;left:0;top:0;width:1px;height:1px;opacity:0;pointer-events:none;font-size:16px";
+  document.body.append(field);
+  field.focus({ preventScroll: true });
+  field.select();
+  let copied = false;
+  try {
+    copied = document.execCommand("copy");
+  } catch {
+    // The visible source field remains available for manual selection.
+  }
+  field.remove();
+  return copied;
+}
+async function copyPeerValue(field: HTMLTextAreaElement) {
+  if (navigator.clipboard?.writeText)
+    try {
+      await navigator.clipboard.writeText(field.value);
+      return true;
+    } catch {
+      // Some browsers expose the API but reject it on an HTTP LAN origin.
+    }
+  if (legacyCopyPeer(field.value)) return true;
+  field.focus();
+  field.select();
+  return false;
+}
 function showPeerMultiplayer() {
   const peer = peerNetwork!;
   const room = peer.room;
@@ -1055,14 +1086,11 @@ function showPeerMultiplayer() {
     .querySelector<HTMLButtonElement>("#copy-peer")
     ?.addEventListener("click", async () => {
       const field = $<HTMLTextAreaElement>("#peer-share");
-      try {
-        await navigator.clipboard.writeText(field.value);
-        toast("Copied. Send it to your friend.");
-      } catch {
-        field.focus();
-        field.select();
-        toast("Select and copy the connection text.");
-      }
+      toast(
+        (await copyPeerValue(field))
+          ? "Copied. Send it to your friend."
+          : "Selected. Use your browser’s Copy action.",
+      );
     });
   document
     .querySelector<HTMLButtonElement>("#share-peer")
