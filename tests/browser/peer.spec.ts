@@ -7,7 +7,7 @@ import {
   devices,
   type Page,
 } from "@playwright/test";
-import { CARD_MAP } from "../../src/game/cards";
+import { CARD_MAP, CARDS } from "../../src/game/cards";
 import { readFileSync } from "node:fs";
 import { observeCombatAudio, playedCombatAudio } from "./audio-helpers";
 const nativeAudio = JSON.parse(
@@ -48,7 +48,7 @@ async function init(page: Page, name: string, sound = false) {
       },
       { timeout: 60000 },
     )
-    .toEqual([expectedEffects, 19, 3, 25]);
+    .toEqual([expectedEffects, 19, 3, CARDS.length]);
   await expect(page.locator("#friend-button")).toBeVisible({ timeout: 60000 });
   await page.locator("#friend-button").click();
 }
