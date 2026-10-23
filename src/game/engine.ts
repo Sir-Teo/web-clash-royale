@@ -192,6 +192,14 @@ export interface EngineOptions {
 }
 const dist = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
 const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
+export function entityVisualHeight(e: Pick<Entity, "card" | "air">): number {
+  if (e.card === "lava-hound") return lavaHound.hound.flyingHeight;
+  if (e.card === "lava-pup") return lavaHound.pup.flyingHeight;
+  return e.air ? 2.2 : 0.2;
+}
+export function projectileHitHeight(e: Pick<Entity, "card" | "air" | "kind">): number {
+  return e.air ? entityVisualHeight(e) + 0.1 : e.kind === "tower" ? 1.8 : 0.6;
+}
 export class Battle {
   readonly seed: number;
   readonly mode: Mode;
@@ -966,7 +974,7 @@ export class Battle {
               "lightning",
               damage,
               {
-                height: target.air ? 2.3 : target.kind === "tower" ? 1.8 : 0.6,
+                height: projectileHitHeight(target),
               },
             );
             this.emitAudio("impact", area.team, "lightning");
@@ -1576,7 +1584,7 @@ export class Battle {
     const damage = Math.round(infernoDragon.sourceDamage[lock.stage] * 1.1 ** 2);
     this.hurt(target, damage);
     this.emit("hit", e.team, target.x, target.y, "inferno-dragon", damage, {
-      height: target.air ? 2.3 : target.kind === "tower" ? 1.8 : 0.6,
+      height: projectileHitHeight(target),
     });
     this.emitImpactAudio(e, damage);
     if (target.hp <= 0) this.cancelAttack(e);
@@ -1718,7 +1726,7 @@ export class Battle {
         }
         this.emit("hit", e.team, victim.x, victim.y, "electro-wizard", damage, {
           origin: { x: e.x, y: e.y, height: 1.5 },
-          height: victim.air ? 2.3 : victim.kind === "tower" ? 1.8 : 0.6,
+          height: projectileHitHeight(victim),
         });
         this.emitImpactAudio(e, damage);
       }
@@ -1730,7 +1738,7 @@ export class Battle {
     if (p || e.card === "balloon" || e.card === "tesla") {
       const speed = p?.speed ?? (e.card === "tesla" ? 1000 : undefined);
       const duration = speed ? Math.max(STEP, dist(e, target) / speed) : 0.35;
-      const fromHeight =
+      const defaultFromHeight =
         e.kind === "tower"
           ? e.king
             ? 3.1
@@ -1744,6 +1752,11 @@ export class Battle {
                 : e.air
                   ? 2.3
                   : 0.8;
+      const fromHeight = e.card === "lava-hound"
+        ? lavaHound.hound.flyingHeight + lavaHound.hound.projectileStartZ
+        : e.card === "lava-pup"
+          ? lavaHound.pup.flyingHeight + lavaHound.pup.projectileStartZ
+          : defaultFromHeight;
       this.projectiles.push({
         id: this.nextId++,
         team: e.team,
@@ -1766,7 +1779,7 @@ export class Battle {
         elapsed: 0,
         homing: p?.homing ?? true,
         fromHeight,
-        toHeight: target.air ? 2.3 : target.kind === "tower" ? 1.8 : 0.6,
+        toHeight: projectileHitHeight(target),
         arc:
           e.card === "balloon" || e.card === "tesla"
             ? 0
@@ -1833,7 +1846,7 @@ export class Battle {
       if (p.homing && target) {
         p.tx = target.x;
         p.ty = target.y;
-        p.toHeight = target.air ? 2.3 : target.kind === "tower" ? 1.8 : 0.6;
+        p.toHeight = projectileHitHeight(target);
       }
       p.elapsed = (p.elapsed ?? 0) + STEP;
       if (p.speed && p.flight) {

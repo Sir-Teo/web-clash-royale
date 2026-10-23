@@ -1,5 +1,5 @@
 import * as T from "three";
-import { Battle } from "../game/engine";
+import { Battle, entityVisualHeight } from "../game/engine";
 import type { Entity, Point, Team } from "../game/engine";
 import { CARD_MAP } from "../game/cards";
 import type { CardId } from "../game/cards";
@@ -1066,7 +1066,7 @@ export class Arena {
         }
         // Rebuilt/seeked entities may already be old while the clock is paused.
         // Initialize their actual position before any movement interpolation.
-        object.position.set(e.x - 9, e.air ? 2.2 : 0.2, e.y - 16);
+        object.position.set(e.x - 9, entityVisualHeight(e), e.y - 16);
         this.scene.add(object);
         v = {
           object,
@@ -1726,7 +1726,7 @@ export class Arena {
   }
   private updateUnit(v: Visual, e: Entity, dt: number, time: number) {
     const o = v.object;
-    const y = e.air ? 2.2 : 0.2;
+    const y = entityVisualHeight(e);
     const jump = hogJumpHeight(e);
     const oldX = o.position.x,
       oldZ = o.position.z;

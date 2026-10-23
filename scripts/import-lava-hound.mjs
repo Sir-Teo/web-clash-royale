@@ -54,6 +54,7 @@ const unit = (row, projectile) => ({
   hitsAir: row.AttacksAir === "true",
   ignoresPushback: row.IgnorePushback === "true",
   flyingHeight: Number(row.FlyingHeight) / 1000,
+  projectileStartZ: Number(row.ProjectileStartZ) / 1000,
   projectile: {
     source: projectile.Name,
     speed: Number(projectile.Speed) / 60,

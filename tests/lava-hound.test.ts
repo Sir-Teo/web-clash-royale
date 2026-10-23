@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { CARD_MAP, CARDS, STARTER_DECK } from "../src/game/cards";
-import { Battle } from "../src/game/engine";
+import { Battle, entityVisualHeight, projectileHitHeight } from "../src/game/engine";
 import type { Entity } from "../src/game/engine";
 import { combatAudioPlan } from "../src/game/combat-audio";
 import { deathAudioPlan } from "../src/game/death-audio";
@@ -35,12 +35,14 @@ describe("archived Lava Hound", () => {
     expect(rules).toMatchObject({ card: "LavaHound", rarity: "Legendary", cost: 7,
       hound: { sourceHitpoints: 3000, sourceDamage: 45, sourceSpeed: 45,
         sourceRange: 2, targetsBuildings: true, hitsAir: true, flyingHeight: 5,
+        projectileStartZ: 1.8,
         projectile: { source: "LavaHoundProjectile", speed: 400 / 60,
           homing: true, export: "particle_coal1", trail: "lava_hound_Emitter" },
         deathSpawn: { character: "LavaPups", count: 6, radius: 2.5,
           pushback: true } },
       pup: { sourceHitpoints: 179, sourceDamage: 45, sourceSpeed: 60,
-        flyingHeight: 3.5, projectile: { source: "LavaPupProjectile",
+        flyingHeight: 3.5, projectileStartZ: 0.1,
+        projectile: { source: "LavaPupProjectile",
           homing: true, export: "particle_coal1", trail: "lava_pups_emitter" } } });
     expect(CARDS).toHaveLength(58);
     expect(CARDS.some((card) => card.id === "lava-pup")).toBe(false);
@@ -48,6 +50,11 @@ describe("archived Lava Hound", () => {
       damage: 54, air: true, hitsAir: true, buildingsOnly: true });
     expect(CARD_MAP["lava-pup"]).toMatchObject({ hp: 217, damage: 54,
       air: true, hitsAir: true });
+    expect(entityVisualHeight({ card: "lava-hound", air: true })).toBe(5);
+    expect(entityVisualHeight({ card: "lava-pup", air: true })).toBe(3.5);
+    expect(entityVisualHeight({ card: "minions", air: true })).toBe(2.2);
+    expect(projectileHitHeight({ card: "lava-hound", air: true, kind: "troop" })).toBe(5.1);
+    expect(projectileHitHeight({ card: "lava-pup", air: true, kind: "troop" })).toBe(3.6);
     const models = json("public/assets/animations/manifest.json").files;
     for (const [id, source, clips] of [
       ["lava-hound", "chr_lava_hound", 54],
@@ -88,7 +95,7 @@ describe("archived Lava Hound", () => {
     expect(hound.target).toBe(tower.id);
     const shot = game.projectiles.find((p) => p.style === "lava-hound")!;
     expect(shot).toMatchObject({ damage: 54, air: true, homing: true,
-      speed: 400 / 60 });
+      speed: 400 / 60, fromHeight: 6.8, toHeight: 1.8 });
     expect(knight.hp).toBe(knight.maxHp);
   });
 
@@ -119,7 +126,7 @@ describe("archived Lava Hound", () => {
       speed: 0, cooldown: 0 });
     for (let i = 0; i < 40 && !game.projectiles.some((p) => p.style === "lava-pup"); i++)
       game.step();
-    expect(game.projectiles.some((p) => p.style === "lava-pup" && p.air && p.damage === 54))
+    expect(game.projectiles.some((p) => p.style === "lava-pup" && p.air && p.damage === 54 && p.fromHeight === 3.6))
       .toBe(true);
   });
 });

@@ -15,6 +15,7 @@
     "hitsAir": true,
     "ignoresPushback": true,
     "flyingHeight": 5,
+    "projectileStartZ": 1.8,
     "projectile": {
       "source": "LavaHoundProjectile",
       "speed": 6.666666666666667,
@@ -45,6 +46,7 @@
     "hitsAir": true,
     "ignoresPushback": false,
     "flyingHeight": 3.5,
+    "projectileStartZ": 0.1,
     "projectile": {
       "source": "LavaPupProjectile",
       "speed": 8.333333333333334,
