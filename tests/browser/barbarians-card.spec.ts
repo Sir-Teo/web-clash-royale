@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { CARDS, STARTER_DECK } from "../../src/game/cards";
+import { expectedAnimations } from "./native-assets";
 
 const deck = ["barbarians", ...STARTER_DECK.filter((id) => id !== "arrows")];
 
@@ -22,7 +23,7 @@ test("four native Barbarians deploy from the real desktop and phone hand", async
     .toBe(CARDS.length);
   await expect
     .poll(async () => (await state()).loadedAnimations, { timeout: 60000 })
-    .toBe(20);
+    .toBe(expectedAnimations);
   await page.locator('#deck-preview [data-card-info="barbarians"]').click();
   await expect(page.locator(".detail-art.native-card-ready text")).toHaveText([
     "5",

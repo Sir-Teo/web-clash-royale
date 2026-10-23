@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { expectedEffects } from "./native-assets";
+import { expectedAnimations, expectedEffects } from "./native-assets";
 import { readFileSync } from "node:fs";
 const replay = JSON.parse(
   readFileSync("tests/fixtures/combat-v4-replay.json", "utf8"),
@@ -232,15 +232,18 @@ test("live replay crown flights reach native counter artwork and seeking clears 
   await expect
     .poll(
       () =>
-        page.evaluate((count) => {
-          const s = (window as any).__arena.state;
-          return (
-            s.loadedEffects === count &&
-            s.loadedAnimations === 19 &&
-            s.loadedBuildings === 3 &&
-            s.loadedHealth === 22
-          );
-        }, expectedEffects),
+        page.evaluate(
+          ({ effects, animations }) => {
+            const s = (window as any).__arena.state;
+            return (
+              s.loadedEffects === effects &&
+              s.loadedAnimations === animations &&
+              s.loadedBuildings === 3 &&
+              s.loadedHealth === 22
+            );
+          },
+          { effects: expectedEffects, animations: expectedAnimations },
+        ),
       { timeout: 30000 },
     )
     .toBe(true);

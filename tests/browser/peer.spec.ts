@@ -1,4 +1,4 @@
-import { expectedEffects } from "./native-assets";
+import { expectedAnimations, expectedEffects } from "./native-assets";
 import {
   test,
   expect as baseExpect,
@@ -48,12 +48,14 @@ async function init(page: Page, name: string, sound = false) {
       },
       { timeout: 60000 },
     )
-    .toEqual([expectedEffects, 19, 3, CARDS.length]);
+    .toEqual([expectedEffects, expectedAnimations, 3, CARDS.length]);
   await expect(page.locator("#friend-button")).toBeVisible({ timeout: 60000 });
   await page.locator("#friend-button").click();
 }
 async function deploy(page: Page, x = 4, y = 22) {
-  await expect.poll(async () => (await state(page)).intro.blocking, { timeout: 60000 }).toBe(false);
+  await expect
+    .poll(async () => (await state(page)).intro.blocking, { timeout: 60000 })
+    .toBe(false);
   const before = await state(page);
   const slot = before.hand.findIndex(
     (id: keyof typeof CARD_MAP) =>

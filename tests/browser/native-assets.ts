@@ -5,3 +5,6 @@ import { readFileSync } from "node:fs";
 export const expectedEffects: number = JSON.parse(
   readFileSync("public/assets/effects/manifest.json", "utf8"),
 ).clips;
+export const expectedAnimations: number = JSON.parse(
+  readFileSync("public/assets/animations/manifest.json", "utf8"),
+).files.length;
