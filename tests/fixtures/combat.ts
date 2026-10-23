@@ -123,6 +123,10 @@ function setup() {
       }
   } else if (scenario === "goblin-barrel") {
     cast("goblin-barrel", "blue", 4, 9);
+  } else if (scenario === "graveyard") {
+    for (const tower of battle.entities) tower.hp = tower.maxHp = 100000;
+    cast("graveyard", "blue", 5, 13);
+    cast("graveyard", "red", 13, 19);
   } else if (scenario === "spell-impacts") {
     cast("zap", "blue", 4, 13);
     cast("arrows", "red", 14, 19);
@@ -403,6 +407,16 @@ function render(now: number) {
     JSON.stringify(arena.projectileState);
   (document.querySelector("#destruction") as HTMLElement).dataset.tornadoAreas =
     JSON.stringify(arena.tornadoAreaState);
+  (
+    document.querySelector("#destruction") as HTMLElement
+  ).dataset.graveyardAreas = JSON.stringify(arena.graveyardAreaState);
+  (
+    document.querySelector("#destruction") as HTMLElement
+  ).dataset.graveyardBirths = JSON.stringify(
+    battle.events
+      .filter((event) => event.effect === "graveyard-appear")
+      .map((event) => ({ team: event.team, x: event.x, y: event.y })),
+  );
   (
     document.querySelector("#destruction") as HTMLElement
   ).dataset.tornadoEntities = JSON.stringify(
