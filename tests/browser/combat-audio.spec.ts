@@ -9,7 +9,7 @@ import {
   replaySeekValue,
 } from "./audio-helpers";
 
-test("all 107 native combat and deployment sound files decode in the browser", async ({
+test("all 109 native combat and lifecycle sound files decode in the browser", async ({
   page,
 }, info) => {
   const manifest = JSON.parse(
@@ -22,7 +22,7 @@ test("all 107 native combat and deployment sound files decode in the browser", a
       file.path.replace(/^public/, ""),
     ),
   );
-  expect(decoded).toHaveLength(107);
+  expect(decoded).toHaveLength(109);
   expect(
     decoded.every(
       (sound) => Number.isFinite(sound.duration) && sound.duration > 0,

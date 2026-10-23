@@ -556,6 +556,18 @@
       "sha256": "6e71bb36d60fc04428680732eb5969a853e4df2f3ffa0adaad26dd81826ff104"
     },
     {
+      "path": "public/assets/audio/tesla_close_02.ogg",
+      "source": "sfx/tesla_close_02.ogg",
+      "bytes": 7685,
+      "sha256": "1e2aa0c744f363356aaff99b91814649b95527e06cabfae4fb196da26acfd42a"
+    },
+    {
+      "path": "public/assets/audio/tesla_open_02.ogg",
+      "source": "sfx/tesla_open_02.ogg",
+      "bytes": 8968,
+      "sha256": "31c35fdd0d8ff4eb3d791ba7fd075e2f6bd2439c166e2594d3a1908e166b266e"
+    },
+    {
       "path": "public/assets/audio/tesla_zap_01.ogg",
       "source": "sfx/tesla_zap_01.ogg",
       "bytes": 7272,
@@ -702,6 +714,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "b4ef3d3521b7072b27c5da7ec854008296d3f5a2c9cb1b92d79a3942224b1411"
+    "sha256": "8a5881a6c23774ea57b567f3007b548ae93a0770d0459d9b7eb098450ddf42f7"
   }
 }

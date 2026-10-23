@@ -88,6 +88,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Knight"
@@ -185,6 +195,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Archer"
@@ -266,6 +286,16 @@
         ]
       },
       "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -376,6 +406,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Musketeer"
@@ -469,6 +509,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "MiniPekka"
@@ -550,6 +600,16 @@
         ]
       },
       "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -651,6 +711,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "SpearGoblins"
@@ -736,6 +806,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Skeletons"
@@ -817,6 +897,16 @@
         ]
       },
       "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -926,6 +1016,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Bomber"
@@ -1019,6 +1119,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Valkyrie"
@@ -1108,6 +1218,16 @@
         ]
       },
       "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -1217,6 +1337,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "BabyDragon"
@@ -1310,6 +1440,16 @@
         ]
       },
       "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -1419,6 +1559,16 @@
             "delay": 0
           }
         ]
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "cardSource": {
         "table": "spells_characters",
@@ -1530,6 +1680,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Wizard"
@@ -1619,6 +1779,16 @@
         ]
       },
       "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -1716,6 +1886,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Pekka"
@@ -1801,6 +1981,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_characters",
         "row": "Balloon"
@@ -1872,6 +2062,16 @@
         ]
       },
       "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -1961,6 +2161,40 @@
         "components": [],
         "enemyComponents": []
       },
+      "appear": {
+        "sources": [
+          "tesla_up"
+        ],
+        "components": [
+          {
+            "sound": "sound_tesla_up",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_tesla_up",
+            "delay": 0
+          }
+        ]
+      },
+      "hide": {
+        "sources": [
+          "tesla_down"
+        ],
+        "components": [
+          {
+            "sound": "sound_tesla_down",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_tesla_down",
+            "delay": 0
+          }
+        ]
+      },
       "cardSource": {
         "table": "spells_buildings",
         "row": "Tesla"
@@ -2022,6 +2256,16 @@
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       }
     },
     "princess-tower": {
@@ -2079,6 +2323,16 @@
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       }
     },
     "fireball": {
@@ -2133,6 +2387,16 @@
         "enemyComponents": []
       },
       "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -2207,6 +2471,16 @@
         "components": [],
         "enemyComponents": []
       },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "cardSource": {
         "table": "spells_other",
         "row": "Arrows"
@@ -2264,6 +2538,16 @@
         "enemyComponents": []
       },
       "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -4730,6 +5014,50 @@
           0
         ],
         "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_tesla_up": [
+      {
+        "sourceFile": "sfx/tesla_open_02.wav",
+        "file": "tesla_open_02",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_tesla_down": [
+      {
+        "sourceFile": "sfx/tesla_close_02.wav",
+        "file": "tesla_close_02",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
         "repeat": 0,
         "priority": 1,
         "padding": 0

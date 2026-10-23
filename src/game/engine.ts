@@ -780,6 +780,8 @@ export class Battle {
     if (threat) {
       state.idle = 0;
       if (state.exposure < 1) {
+        if (state.phase !== "rising")
+          this.emitAudio("appear", e.team, audioProfile(e), e.id);
         state.phase = "rising";
         state.exposure = Math.min(1, state.exposure + STEP / 0.8);
         if (state.exposure >= 1 - 1e-8) state.exposure = 1;
@@ -794,6 +796,8 @@ export class Battle {
       this.cancelAttack(e);
       e.target = null;
       if (state.idle >= 0.8 && state.exposure > 0) {
+        if (state.phase !== "sinking")
+          this.emitAudio("hide", e.team, audioProfile(e), e.id);
         state.phase = "sinking";
         state.exposure = Math.max(0, state.exposure - STEP / 0.8);
         if (state.exposure < 1e-8) state.exposure = 0;

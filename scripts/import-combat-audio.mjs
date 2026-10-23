@@ -151,6 +151,8 @@ for (const [id, profile] of Object.entries(JSON.parse(profilesBytes))) {
     cast: [card?.CastSound && `sound:${card.CastSound}`, card?.Effect],
     spawn: [row.SpawnEffect],
     summon: [row.SpawnCharacterEffect],
+    appear: [row.AppearEffect],
+    hide: [row.HideEffect],
   });
   if (binding)
     profiles[id].cardSource = { table: binding.table, row: binding.row };
@@ -168,6 +170,8 @@ for (const [id, { table, row: name }] of Object.entries(cardBindings)) {
     cast: [row.CastSound && `sound:${row.CastSound}`, row.Effect],
     spawn: [],
     summon: [],
+    appear: [],
+    hide: [],
   });
   profiles[id].cardSource = { table, row: name };
 }

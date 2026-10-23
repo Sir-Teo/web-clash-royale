@@ -304,3 +304,11 @@ The final targeted runs pass 22 distinct production browser cases: six combat-au
 The corrected direct-peer case passes with two desktop Chromium browsers, a phone Chromium host with WebKit guest and a phone WebKit host with Chromium guest. Both players successfully play a native deployment cue and tower-fire audio. Ready checks, deployment, quick chat, shared pause, surrender and guest replay still work without game-server requests. The previously documented Safari-to-Safari route limitation and untested physical-device/remote-network cases remain.
 
 Production offline reload passes with all 111 unique combat/death sound files, the browser match worker and native UI assets in the 566-file cache (`b46d550b534c`).
+
+## Tesla transition audio
+
+All 176 unit checks, type checking and the production build pass. Three additional checks cover the source appearance/hiding sounds, a complete rise/retract/reverse lifecycle, optional network-field projection, deduplication, pause, stale delivery and missing/dead owners. Frozen version-1 through version-4 replay outcomes still pass. Every preceding audio profile/phase and all 87 prior sound groups were compared against the preceding commit and remain unchanged.
+
+Twelve production browser checks pass across desktop Chromium, phone Chromium and phone WebKit. All 109 combat/lifecycle files decode. Both replay perspectives play exactly one Tesla opening and closing cue at their actual transition times with the source gain, pitch and successful media-playback promises. Pause stops the media; timeline seeking does not replay old cues. The existing Musketeer launch/impact playback checks also pass on all three projects. Desktop Tesla checks are included in CI.
+
+Production offline reload passes with all 113 unique combat/death files, the browser match worker and native UI assets in the 568-file cache (`3129e2dc6977`). No game server, replay schema or combat rule change is involved. Physical-device speaker output and the previously documented remote-network/Safari-to-Safari limitations remain unverified.

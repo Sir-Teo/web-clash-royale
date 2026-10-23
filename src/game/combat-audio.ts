@@ -106,7 +106,9 @@ export class NativeCombatAudio {
           ...cue,
           time: origin + cue.delay,
           attack: event.phase === "attack" ? event.id : undefined,
-          owner: ["attack", "spawn", "summon"].includes(event.phase)
+          owner: ["attack", "spawn", "summon", "appear", "hide"].includes(
+            event.phase,
+          )
             ? event.actor
             : undefined,
         });

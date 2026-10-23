@@ -57,10 +57,10 @@ describe("native combat audio evidence", () => {
     const manifest = JSON.parse(
       readFileSync("reference/client/combat-audio-manifest.json", "utf8"),
     );
-    expect(manifest.audioFiles).toHaveLength(107);
+    expect(manifest.audioFiles).toHaveLength(109);
     expect(manifest.sources).toHaveLength(11);
     expect(Object.keys(definitions.profiles)).toHaveLength(26);
-    expect(Object.keys(definitions.sounds)).toHaveLength(87);
+    expect(Object.keys(definitions.sounds)).toHaveLength(89);
     for (const file of [
       ...manifest.sources,
       ...manifest.audioFiles,
@@ -144,6 +144,84 @@ describe("native combat audio evidence", () => {
 });
 
 describe("combat audio timing and lifecycle", () => {
+  it("uses the source Tesla opening and closing cues for both perspectives", () => {
+    for (const team of ["blue", "red"] as const)
+      for (const [phase, file, volume] of [
+        ["appear", "tesla_open_02", 0.8],
+        ["hide", "tesla_close_02", 0.7],
+      ] as const) {
+        const [cue] = combatAudioPlan("tesla", phase, 29, team);
+        expect(cue.file).toBe(file);
+        expect(cue.delay).toBe(0);
+        expect(cue.volume).toBeCloseTo(volume * 0.35);
+        expect(cue.pitch).toBeGreaterThanOrEqual(0.98);
+        expect(cue.pitch).toBeLessThanOrEqual(1.02);
+        expect(cue.maximum).toBe(3);
+        expect(combatAudioPlan("cannon", phase, 29, team)).toEqual([]);
+      }
+  });
+  it("sounds only Tesla transition starts, including reversal, and projects them through the optional lifecycle stream", () => {
+    const battle = arena();
+    const tesla = unit(battle, "tesla", "blue", 9, 21);
+    for (let i = 0; i < 30; i++) battle.step();
+    const transitions = () =>
+      battle.audioEvents.filter(
+        (e) => e.actor === tesla.id && ["appear", "hide"].includes(e.phase),
+      );
+    expect(transitions()).toEqual([]);
+    const enemy = unit(battle, "knight", "red", 9, 24);
+    enemy.speed = 0;
+    enemy.damage = 0;
+    enemy.hp = 10000;
+    for (let i = 0; i < 30; i++) battle.step();
+    expect(transitions().map((e) => e.phase)).toEqual(["appear"]);
+    enemy.y = 10;
+    advanceUntil(battle, () => tesla.burrow!.phase === "sinking");
+    expect(transitions().map((e) => e.phase)).toEqual(["appear", "hide"]);
+    enemy.y = 24;
+    battle.step();
+    expect(transitions().map((e) => e.phase)).toEqual([
+      "appear",
+      "hide",
+      "appear",
+    ]);
+    const wire = snapshot(battle);
+    expect(
+      wire.audioEvents?.some((e) => ["appear", "hide"].includes(e.phase)),
+    ).toBe(false);
+    const received = arena();
+    applySnapshot(received, wire, "red");
+    const projected = received.audioEvents.filter((e) =>
+      transitions().some((t) => t.id === e.id),
+    );
+    expect(projected).toEqual(
+      transitions().map((e) => ({ ...e, team: "red" })),
+    );
+    enemy.y = 10;
+    advanceUntil(battle, () => tesla.burrow!.phase === "hidden");
+    expect(transitions().map((e) => e.phase)).toEqual([
+      "appear",
+      "hide",
+      "appear",
+      "hide",
+    ]);
+  });
+  it("does not revive stale or dead Tesla transition audio after pause or snapshot catch-up", () => {
+    const { audio, cues } = harness();
+    const start = event(1, 0, "tesla", "appear");
+    cues.consume([start], 29, 0);
+    cues.update(0, true, new Set([7]));
+    expect(audio.play).not.toHaveBeenCalled();
+    cues.update(0, false, new Set([7]));
+    cues.consume([start], 29, 0);
+    cues.update(0);
+    expect(audio.play).toHaveBeenCalledOnce();
+    cues.consume([event(2, 1, "tesla", "hide")], 29, 1.6);
+    cues.update(1.6);
+    cues.consume([event(3, 2, "tesla", "appear")], 29, 2);
+    cues.update(2, false, new Set());
+    expect(audio.play).toHaveBeenCalledOnce();
+  });
   it("cancels only unreleased windup cues and deduplicates repeated snapshots", () => {
     const { audio, cues } = harness();
     const start = event(1, 0);

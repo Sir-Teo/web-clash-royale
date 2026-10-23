@@ -36,7 +36,7 @@ Troop deaths use source-specific elixir splashes, smoke, dust and ground marks. 
 
 Combat sound follows separate attack windups, projectile launches, impacts and spell casts. Native weapon sounds and voice variations use their archived delay, pitch and volume ranges. Interrupted attacks discard their pending windup cues; projectiles retain their sound even after the shooter dies. Audio follows replay speed, pause and both players' direct connection.
 
-Deployments use each troop or building's own cues, including the Musketeer's delayed reload and troop voice variations. The Witch plays her original skeleton-summoning cue. Swarm voices obey their source limits, and delayed voices stop when their owner dies.
+Deployments use each troop or building's own cues, including the Musketeer's delayed reload and troop voice variations. The Witch plays her original skeleton-summoning cue. Tesla plays its native opening and closing sounds as it rises and retracts. Swarm voices obey their source limits, and delayed voices stop when their owner dies.
 
 ## Development
 
@@ -57,7 +57,7 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 
 `npm run assets:death-audio` imports the corresponding native sound mappings and six pinned audio files, preserving nested effects, team variants, volume/pitch ranges and delays.
 
-`npm run assets:combat-audio` imports 26 troop/tower/spell sound profiles, 87 groups and 107 pinned audio files from the retained logic, effects and sound tables. Card sources come from the native portrait bindings. Source and output hashes are retained in the combat-audio manifest.
+`npm run assets:combat-audio` imports 26 troop/tower/spell sound profiles, 89 groups and 109 pinned audio files from the retained logic, effects and sound tables. Card sources come from the native portrait bindings. Source and output hashes are retained in the combat-audio manifest.
 
 `npm run assets:ui` imports five native battle announcement timelines, their text styles, font, elixir icon and sound mappings. `/tests/fixtures/timing.html` provides precise countdown/overtime inspection and is excluded from production.
 
