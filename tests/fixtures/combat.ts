@@ -116,6 +116,18 @@ function setup() {
         target.hp = target.maxHp = 10000;
       }
     }
+  } else if (scenario === "hog-jump") {
+    unit("hog-rider", "blue", 4, 23);
+    unit("hog-rider", "red", 14, 9);
+    for (const [team, x, y] of [
+      ["red", 4, 11],
+      ["blue", 14, 21],
+    ] as [Team, number, number][]) {
+      for (const target of unit("cannon", team, x, y)) {
+        target.active = false;
+        target.hp = target.maxHp = 10000;
+      }
+    }
   } else if (scenario === "deployment") {
     // Spawn through the normal engine after setBattle, so lifecycle events
     // are fresh rather than treated as history by the renderer.
@@ -292,6 +304,16 @@ function render(now: number) {
   const destruction = arena.destructionState;
   (document.querySelector("#destruction") as HTMLElement).dataset.state =
     JSON.stringify(destruction);
+  (document.querySelector("#destruction") as HTMLElement).dataset.hogJump =
+    JSON.stringify(
+      battle.entities
+        .filter((e) => e.card === "hog-rider")
+        .map((e) => ({
+          team: e.team,
+          y: e.y,
+          height: (arena as any).units.get(e.id)?.sprite?.mesh.position.y ?? 0,
+        })),
+    );
   (document.querySelector("#destruction") as HTMLElement).dataset.impacts =
     String(
       battle.events.filter((e) => e.type === "hit" && e.card === "fireball")

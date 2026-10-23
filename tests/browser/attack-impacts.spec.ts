@@ -4,7 +4,8 @@ import { expectedEffects } from "./native-assets";
 test("seven attackers render their archived hit particles on desktop and phone", async ({
   page,
 }, info) => {
-  test.setTimeout(180000);
+  // The seven scene rebuilds can take several minutes with CI's software WebGL.
+  test.setTimeout(360000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/tests/fixtures/combat.html");

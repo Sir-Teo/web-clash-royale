@@ -24,7 +24,9 @@ test("native Zap and 15-arrow volley render, pause, and clear on phone and deskt
       .poll(async () => (await state()).time)
       .toBeGreaterThan(before + seconds - 0.001);
   };
-  expect((await impacts()).arrowSprites).toEqual([5, 5, 5]);
+  await expect
+    .poll(async () => (await impacts()).arrowSprites, { timeout: 30000 })
+    .toEqual([5, 5, 5]);
   await advance();
   await advance();
   expect((await impacts()).zap).toBe(1);
