@@ -32,8 +32,16 @@ export function filteredSpriteMaterials(
   });
 }
 
-export type SpriteFilterLayer = "deploy" | "charge" | "rage" | "poison" | "cold";
-const layerOrder: SpriteFilterLayer[] = ["deploy", "charge", "rage", "poison", "cold"];
+export type SpriteFilterLayer =
+  "deploy" | "clone" | "charge" | "rage" | "poison" | "cold";
+const layerOrder: SpriteFilterLayer[] = [
+  "deploy",
+  "clone",
+  "charge",
+  "rage",
+  "poison",
+  "cold",
+];
 
 export function composeFilterColors(colors: readonly (readonly number[])[]) {
   let ar = 0,

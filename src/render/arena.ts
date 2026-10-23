@@ -42,6 +42,7 @@ import { NativeDeployFilter } from "./deploy-filter";
 import { NativeColdFilter, NativeColdStructures } from "./cold-filter";
 import { NativePoisonFilter } from "./poison-filter";
 import { NativeRageFilter } from "./rage-filter";
+import { NativeCloneFilter } from "./clone-filter";
 import type { ColdStructurePart } from "./cold-filter";
 import { SpriteFilterStack } from "./sprite-filter";
 import { NativeSpellAreas } from "./spell-areas";
@@ -92,6 +93,7 @@ export class Arena {
   private spriteFilters = new SpriteFilterStack();
   private chargeFilter = new NativeChargeFilter(this.spriteFilters);
   private deployFilter = new NativeDeployFilter(this.spriteFilters);
+  private cloneFilter = new NativeCloneFilter(this.spriteFilters);
   private coldFilter = new NativeColdFilter(this.spriteFilters);
   private poisonFilter = new NativePoisonFilter(this.spriteFilters);
   private rageFilter = new NativeRageFilter(this.spriteFilters);
@@ -504,6 +506,7 @@ export class Arena {
     this.chargeMarkers.clear();
     this.chargeFilter.clear();
     this.deployFilter.clear();
+    this.cloneFilter.clear();
     this.coldFilter.clear();
     this.poisonFilter.clear();
     this.rageFilter.clear();
@@ -668,6 +671,12 @@ export class Arena {
   }
   get graveyardAreaState() {
     return this.spellAreas.state.filter((area) => area.card === "graveyard");
+  }
+  get cloneFilterState() {
+    return this.cloneFilter.state;
+  }
+  get cloneAreaState() {
+    return this.spellAreas.state.filter((area) => area.card === "clone");
   }
   get placementState() {
     return this.placement
@@ -1204,10 +1213,26 @@ export class Arena {
           event.team,
           eventAge,
         );
+      if (event.type === "spell" && event.card === "clone")
+        this.destruction.burst(
+          "clone",
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
       if (event.type === "deploy" && event.effect === "graveyard-appear")
         this.destruction.burst(
           "graveyard-appear",
           new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
+      if (event.type === "deploy" && event.effect === "clone-appear")
+        this.destruction.burst(
+          "clone-appear",
+          new T.Vector3(event.x - 9, 0.35, event.y - 16),
           b.seed ^ event.id,
           event.team,
           eventAge,
@@ -1437,6 +1462,7 @@ export class Arena {
       );
     this.chargeMarkers.update(b.entities, this.destruction.time, this.width);
     this.deployFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
+    this.cloneFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
     this.spellAreas.update(b.areas);
     this.chargeFilter.update(
       b.entities,
@@ -1653,6 +1679,7 @@ export class Arena {
     this.chargeMarkers.destroy();
     this.chargeFilter.clear();
     this.deployFilter.clear();
+    this.cloneFilter.clear();
     this.coldFilter.clear();
     this.poisonFilter.clear();
     this.rageFilter.clear();

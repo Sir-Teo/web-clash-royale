@@ -1954,6 +1954,8 @@ Object.defineProperty(window, "__arena", {
         rageAreas: arena.rageAreaState,
         tornadoAreas: arena.tornadoAreaState,
         graveyardAreas: arena.graveyardAreaState,
+        cloneAreas: arena.cloneAreaState,
+        cloneFilter: arena.cloneFilterState,
         graveyardBirths: battle.events.filter(
           (event) => event.effect === "graveyard-appear",
         ).length,

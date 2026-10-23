@@ -21,6 +21,7 @@ import log from "./log-data.json" with { type: "json" };
 import tornado from "./tornado-data.json" with { type: "json" };
 import goblinBarrel from "./goblin-barrel-data.json" with { type: "json" };
 import graveyard from "./graveyard-data.json" with { type: "json" };
+import clone from "./clone-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -52,6 +53,7 @@ export interface Entity extends Point {
   age: number;
   deploy: number;
   stun: number;
+  clone?: boolean;
   poison?: { remaining: number; elapsed: number };
   rage?: { remaining: number };
   attack: number;
@@ -98,7 +100,14 @@ export interface Projectile extends Point {
 export interface AreaEffect extends Point {
   id: number;
   team: Team;
-  card: "freeze" | "poison" | "rage" | "lightning" | "tornado" | "graveyard";
+  card:
+    | "freeze"
+    | "poison"
+    | "rage"
+    | "lightning"
+    | "tornado"
+    | "graveyard"
+    | "clone";
   radius: number;
   duration: number;
   remaining: number;
@@ -115,7 +124,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb" | "log-die" | "graveyard-appear";
+  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -437,7 +446,8 @@ export class Battle {
         id === "rage" ||
         id === "lightning" ||
         id === "tornado" ||
-        id === "graveyard"
+        id === "graveyard" ||
+        id === "clone"
       ) {
         const rules =
           id === "freeze"
@@ -450,7 +460,9 @@ export class Battle {
                   ? lightning
                   : id === "tornado"
                     ? tornado
-                    : graveyard;
+                    : id === "graveyard"
+                      ? graveyard
+                      : clone;
         this.areas.push({
           id: this.nextId++,
           team,
@@ -741,6 +753,55 @@ export class Battle {
   private updateAreas() {
     for (const area of this.areas) {
       const age = area.duration - area.remaining;
+      if (area.card === "clone") {
+        const cloned = (area.struck ??= []);
+        for (const entity of [...this.entities]) {
+          if (
+            entity.hp <= 0 ||
+            entity.team !== area.team ||
+            entity.kind !== "troop" ||
+            entity.clone ||
+            cloned.includes(entity.id) ||
+            dist(entity, area) >= area.radius + entity.radius
+          )
+            continue;
+          cloned.push(entity.id);
+          // The archived area selects friendly troops but does not retain the
+          // native clone offset. Keep a small forward separation in this arena.
+          const x = clamp(
+            entity.x + (entity.x < area.x ? -0.25 : 0.25),
+            0.5,
+            17.5,
+          );
+          const y = clamp(
+            entity.y + (area.team === "blue" ? -0.65 : 0.65),
+            0.7,
+            31.3,
+          );
+          this.entities.push({
+            ...structuredClone(entity),
+            id: this.nextId++,
+            x,
+            y,
+            hp: 1,
+            maxHp: 1,
+            target: null,
+            age: 0,
+            deploy: clone.buffDuration,
+            cooldown: 0.4,
+            attack: 0,
+            move: 0,
+            pendingAttack: undefined,
+            clone: true,
+          });
+          this.emit("deploy", area.team, x, y, entity.card, 0, {
+            effect: "clone-appear",
+          });
+        }
+        area.remaining = Math.max(0, area.remaining - STEP);
+        if (area.remaining < 1e-8) area.remaining = 0;
+        continue;
+      }
       if (area.card === "graveyard") {
         if (age + 1e-8 >= (area.hitAt ?? graveyard.spawnInitialDelay)) {
           area.hitAt =

@@ -7,6 +7,7 @@ import log from "./log-data.json" with { type: "json" };
 import tornado from "./tornado-data.json" with { type: "json" };
 import goblinBarrel from "./goblin-barrel-data.json" with { type: "json" };
 import graveyard from "./graveyard-data.json" with { type: "json" };
+import clone from "./clone-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -41,7 +42,8 @@ export type CardId =
   | "log"
   | "tornado"
   | "goblin-barrel"
-  | "graveyard";
+  | "graveyard"
+  | "clone";
 export interface Card {
   id: CardId;
   name: string;
@@ -250,6 +252,18 @@ export const CARDS: Card[] = [
     1,
     "Summons Skeletons over time in a large area anywhere in the arena.",
     { kind: "spell", rarity: "Legendary", radius: graveyard.radius },
+  ),
+  troop(
+    "clone",
+    "Clone",
+    clone.cost,
+    0,
+    0,
+    0,
+    0,
+    1,
+    "Duplicates friendly troops in an area. The copies have one hitpoint.",
+    { kind: "spell", rarity: "Epic", radius: clone.radius },
   ),
   troop(
     "arrows",

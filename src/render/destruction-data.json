@@ -2608,6 +2608,27 @@
         }
       ]
     },
+    "clone-appear": {
+      "source": "hologram_loop",
+      "components": [
+        {
+          "emitter": "clone_emitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "clone_emitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
     "hit:giant": {
       "source": "giant_hit",
       "components": [
@@ -8253,6 +8274,53 @@
         "Death_blue_sparkle2",
         "Death_blue_sparkle3",
         "Death_blue_sparkle4"
+      ]
+    },
+    "clone_emitter": {
+      "count": 9,
+      "emissionLife": [
+        4,
+        4
+      ],
+      "interval": [
+        0.7,
+        0.7
+      ],
+      "life": [
+        2,
+        2
+      ],
+      "angle": [
+        4.71238898038469,
+        4.71238898038469
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0.6666666666666666,
+        0.8333333333333334
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0.16666666666666666,
+        0.16666666666666666
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.6666666666666666,
+      "startScale": 0.3,
+      "endScale": 0.2,
+      "fadeIn": 0.3,
+      "fadeOut": 0.3,
+      "inertia": 0,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "Death_blue_smoke"
       ]
     },
     "giant_hit_sparks": {

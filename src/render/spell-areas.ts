@@ -37,46 +37,55 @@ export class NativeSpellAreas {
       if (visual?.team !== area.team || visual.card !== area.card) {
         if (visual) this.release(area.id, visual);
         const groundName =
-          area.card === "graveyard"
-            ? area.team === "blue"
-              ? "Graveyard_ground_area_blue"
-              : "Graveyard_ground_area_red"
-            : area.card === "tornado"
-              ? null
-              : area.card === "freeze"
-                ? area.team === "blue"
-                  ? "freeze_effect_ground"
-                  : "freeze_effect_ground_red"
-                : area.card === "rage"
-                  ? "rage_effect_ground"
-                  : "Poison_radius";
-        const radiusName =
-          area.card === "graveyard"
-            ? area.team === "blue"
-              ? "spell_graveyard_radius_blue"
-              : "spell_graveyard_radius_red"
-            : area.card === "tornado"
+          area.card === "clone"
+            ? "clone_effect_ground"
+            : area.card === "graveyard"
               ? area.team === "blue"
-                ? "spell_tornado_radius_blue"
-                : "spell_tornado_radius_red"
-              : area.card === "freeze"
-                ? area.team === "blue"
-                  ? "spell_freeze_radius_blue"
-                  : "spell_freeze_radius_red"
-                : area.card === "rage"
+                ? "Graveyard_ground_area_blue"
+                : "Graveyard_ground_area_red"
+              : area.card === "tornado"
+                ? null
+                : area.card === "freeze"
                   ? area.team === "blue"
-                    ? "spell_rage_radius_blue"
-                    : "spell_rage_radius_red"
-                  : area.team === "blue"
-                    ? "spell_poison_radius_blue"
-                    : "spell_poison_radius_red";
+                    ? "freeze_effect_ground"
+                    : "freeze_effect_ground_red"
+                  : area.card === "rage"
+                    ? "rage_effect_ground"
+                    : "Poison_radius";
+        const radiusName =
+          area.card === "clone"
+            ? area.team === "blue"
+              ? "spell_clone_radius_blue"
+              : "spell_clone_radius_red"
+            : area.card === "graveyard"
+              ? area.team === "blue"
+                ? "spell_graveyard_radius_blue"
+                : "spell_graveyard_radius_red"
+              : area.card === "tornado"
+                ? area.team === "blue"
+                  ? "spell_tornado_radius_blue"
+                  : "spell_tornado_radius_red"
+                : area.card === "freeze"
+                  ? area.team === "blue"
+                    ? "spell_freeze_radius_blue"
+                    : "spell_freeze_radius_red"
+                  : area.card === "rage"
+                    ? area.team === "blue"
+                      ? "spell_rage_radius_blue"
+                      : "spell_rage_radius_red"
+                    : area.team === "blue"
+                      ? "spell_poison_radius_blue"
+                      : "spell_poison_radius_red";
         const ground = groundName ? this.effects.make(groundName) : null;
         const radius = this.effects.make(radiusName);
         if ((groundName && !ground) || !radius) continue;
         for (const [index, sprite] of [ground, radius]
           .filter((sprite) => sprite !== null)
           .entries()) {
-          sprite.mesh.rotation.x = -Math.PI / 2;
+          // Clone's 181-frame ground export includes a tall rising shaft;
+          // retain its upright SWF orientation instead of laying it flat.
+          sprite.mesh.rotation.x =
+            area.card === "clone" && index === 0 ? 0 : -Math.PI / 2;
           sprite.mesh.renderOrder = 0.25 + index * 0.01;
           this.scene.add(sprite.mesh);
         }

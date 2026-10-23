@@ -247,6 +247,11 @@ impacts.clone = {
   components: composition(cloneArea.ScaledEffect, "blue"),
   enemyComponents: composition(cloneArea.ScaledEffect, "red"),
 };
+impacts["clone-appear"] = {
+  source: "hologram_loop",
+  components: composition("hologram_loop", "blue"),
+  enemyComponents: composition("hologram_loop", "red"),
+};
 // These DamageEffect compositions contain authored impact layers at the
 // attack target: Giant's punch dust, Balloon's crater and Tesla's beam sparks.
 for (const [id, expected] of Object.entries({

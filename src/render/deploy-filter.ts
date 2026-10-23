@@ -45,6 +45,7 @@ export class NativeDeployFilter {
       if (
         entity.kind !== "troop" ||
         entity.hp <= 0 ||
+        entity.clone ||
         !hasNativeDeployFilter(entity.card) ||
         frame < 0
       )
