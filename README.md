@@ -131,13 +131,11 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 
 Open the Vite **Network** URL on a phone connected to the same Wi-Fi as the development computer. `localhost` on a phone refers to the phone itself. For a friendly match, use **Share invite** or **Share reply** when available, or the **Copy** buttons on an HTTP Wi-Fi address; a game opened at `localhost` shares a code that the other phone can paste after opening the Network URL. Portrait battles fill the available browser height; rotating into landscape moves the hand alongside the arena. Safe-area padding keeps controls away from display cutouts and the home indicator. Tap a card and then the arena, or drag a card onto the battlefield. Pause and settings use 44-pixel touch targets. AI battles pause when the browser goes into the background. Direct friendly battles pause when either player switches apps. Keep both tabs open; a reload requires a new invite.
 
-## GitHub Pages
+## Static hosting
 
-The private source repository deploys automatically on every push to `main` through `.github/workflows/pages.yml`. The published game is public at https://teozeng.dev/web-clash-royale/ (the account's GitHub Pages domain).
+The current game is live at https://sir-teo-clash.web.app/. It serves the front-end-only build from a dedicated Firebase Hosting site; the match still connects browser to browser. To publish the current checkout again, install the Firebase CLI and run `npm run deploy:hosting`. The command builds `dist/` with root-relative assets and publishes only that directory to the `sir-teo-clash` site in project `sincere-hybrid-203601`. Source, tests and reference files remain in the private repository.
 
-As of October 23, 2026, GitHub Actions is rejecting the build job before its first step because of an account billing or spending-limit issue ([affected Pages run](https://github.com/Sir-Teo/web-clash-royale/actions/runs/39988230555)). The private repository has newer game code than the published page. Once the account issue is resolved, the workflow can build and publish the current `main` branch.
-
-The workflow builds with `VITE_BASE_PATH=/web-clash-royale/`, including asset URLs and the offline service worker. Local development continues to use `/`. Only `dist/` is published; source, tests and reference files remain in the private repository.
+GitHub Pages is also configured to deploy on every push to `main` through `.github/workflows/pages.yml` at https://teozeng.dev/web-clash-royale/. As of October 23, 2026, GitHub Actions rejects its jobs before the first step because of an account billing or spending-limit issue ([affected Pages run](https://github.com/Sir-Teo/web-clash-royale/actions/runs/40034244242)); that URL has an older build. Once the account issue is resolved, Pages can build the current `main` branch with `VITE_BASE_PATH=/web-clash-royale/`.
 
 ## Controls
 
