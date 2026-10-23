@@ -3,6 +3,16 @@ import { readFile } from "node:fs/promises";
 const deathAudioManifest = JSON.parse(
   await readFile("reference/client/death-audio-manifest.json", "utf8"),
 );
+const combatAudioManifest = JSON.parse(
+  await readFile("reference/client/combat-audio-manifest.json", "utf8"),
+);
+const nativeAudioPaths = [
+  ...new Set(
+    [...deathAudioManifest.audioFiles, ...combatAudioManifest.audioFiles].map(
+      (file) => file.path.replace(/^public/, ""),
+    ),
+  ),
+];
 const browser = await chromium.launch({
   args: [
     "--enable-webgl",
@@ -49,24 +59,21 @@ try {
     throw new Error("Browser match worker is missing from the offline cache");
   await context.setOffline(true);
   await page.reload();
-  const offlineDeathAudio = await page.evaluate(
-    async (paths) => {
-      return Promise.all(
-        paths.map(async (path) => {
-          const response = await fetch(path);
-          const bytes = new Uint8Array(await response.arrayBuffer());
-          return (
-            response.ok && String.fromCharCode(...bytes.slice(0, 4)) === "OggS"
-          );
-        }),
-      );
-    },
-    deathAudioManifest.audioFiles.map((file) =>
-      file.path.replace(/^public/, ""),
-    ),
-  );
-  if (!offlineDeathAudio.every(Boolean))
-    throw new Error("Native death audio is missing from the offline cache");
+  const offlineNativeAudio = await page.evaluate(async (paths) => {
+    return Promise.all(
+      paths.map(async (path) => {
+        const response = await fetch(path);
+        const bytes = new Uint8Array(await response.arrayBuffer());
+        return (
+          response.ok && String.fromCharCode(...bytes.slice(0, 4)) === "OggS"
+        );
+      }),
+    );
+  }, nativeAudioPaths);
+  if (!offlineNativeAudio.every(Boolean))
+    throw new Error(
+      "Native combat/death audio is missing from the offline cache",
+    );
   await page.waitForFunction(
     () =>
       window.__arena?.state.loadedEffects === 45 &&
@@ -124,7 +131,7 @@ try {
     .waitFor();
   if (errors.length) throw new Error(errors.join("\n"));
   console.log(
-    "Production offline reload, browser match worker, battle start and native death audio/connection/emote/voice/font/quick chat passed.",
+    `Production offline reload, browser match worker, battle start, ${nativeAudioPaths.length} native combat/death audio files and connection/emote/voice/font/quick chat passed.`,
   );
 } finally {
   await browser.close();

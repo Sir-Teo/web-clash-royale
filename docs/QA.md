@@ -270,3 +270,19 @@ All 155 unit checks pass. New coverage verifies the five retained source inputs,
 Nine production browser checks pass across desktop Chromium, phone Chromium and phone WebKit. All six files decode with finite positive durations. Real recorded deaths play the expected files, gains and rates from both replay perspectives, with successful media playback promises rather than request-only assertions. Pausing, seeking and saving muted settings produce no additional death cues. Guest-perspective replays now retain their original presentation seed. Browser decoding and playback are verified; physical phone speaker output remains unmeasured. The desktop cases are included in CI.
 
 The three existing desktop production regressions also pass: slow-frame result presentation, direct invite/reply pairing with shared pause and replay, and invalid-invite recovery. Production offline reload passes with all six death-audio files, the browser match worker and native UI/reaction assets in the 483-file cache (`b252c8362f36`).
+
+CI run `39879333022` for native death-audio commit `2d67d41` passed both the unit/build and production browser jobs.
+
+## Native combat audio
+
+All 166 unit checks, type checking and the production build pass.
+
+Eleven new checks cover 26 sound profiles, 55 groups, all eight source hashes and 75 OGG hashes; authored variation rows, including duplicates; adjacent-event variation without battle RNG changes; melee windup/contact timing; projectile identity after the shooter dies; Zap interruption; three-wave Arrows; guest projection; old snapshots; deduplication; pause, mute and seek; Wizard voice repetition; and excluding expired network history without losing delayed live cues. The frozen version-1 through version-4 replay checks continue to pass with their original simulation IDs and outcomes.
+
+Sampling the retained combat replay with version-5 rules every two simulation ticks produced 1,368 snapshots. Sending only the last second of sound events reduced this field's mean JSON size from 18,468 to 683 bytes and its peak from 25,359 to 4,257 bytes. This measures the fixture's serialized audio field, not total network traffic or physical-device performance.
+
+Twenty-four distinct production browser cases pass: six combat-audio checks, nine death-audio regressions, three slow-frame ending checks and six direct-peer/invalid-invite cases. All 75 combat files decode in desktop Chromium, phone Chromium and phone WebKit. Recorded Musketeer launch and impact play the exact expected files, gain and pitch at 4× speed; real playback promises succeed, pause stops their media elements and seeking stays silent. The changed cosmetic seed selection was rechecked on all three browser projects.
+
+Both peers successfully play native tower-launch audio in desktop and phone Chromium pairs and a phone WebKit host with Chromium guest. These matches also verify deployment, shared pause, quick chat, surrender and replay without a game server. Desktop and phone Chromium pairing were rerun after limiting snapshot history. The existing Safari-to-Safari route limitation remains unresolved; physical phones and separate remote networks remain untested. The desktop combat-audio cases are now included in CI.
+
+Production offline reload passes with all 79 unique combat/death sound files, the browser match worker and native UI/reaction assets in the 549-file cache (`145aa901869d`). The cached game starts a battle without network access.

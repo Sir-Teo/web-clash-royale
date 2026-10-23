@@ -11,6 +11,12 @@ import {
   KING_ACTIVATION_TIME,
 } from "./combat";
 import { TOWER_SITES } from "./arena-layout";
+import { audioProfile } from "./combat-audio-events";
+import type {
+  AudioProfile,
+  CombatAudioEvent,
+  CombatAudioPhase,
+} from "./combat-audio-events";
 export type Team = "blue" | "red";
 export type Mode = "classic" | "training" | "double";
 export const STEP = 1 / 30;
@@ -127,6 +133,11 @@ export class Battle {
   entities: Entity[] = [];
   projectiles: Projectile[] = [];
   events: BattleEvent[] = [];
+  // Presentation IDs never consume simulation/entity IDs or the battle RNG.
+  audioEvents: CombatAudioEvent[] = [];
+  private nextAudioId = 1;
+  private audioAttacks = new Map<number, number>();
+  private audioProjectiles = new Map<number, AudioProfile>();
   actions: Action[] = [];
   players: Record<Team, PlayerState>;
   winner: Team | "draw" | null = null;
@@ -325,6 +336,7 @@ export class Battle {
     this.actions.push({ tick: this.tick, team, card: id, x, y });
     this.emit(c.kind === "spell" ? "spell" : "deploy", team, x, y, id);
     if (c.kind === "spell") {
+      this.emitAudio("cast", team, id);
       const origin = { x: 9, y: team === "blue" ? 30 : 2 };
       const modern = this.rulesVersion >= 2;
       const speed = id === "fireball" ? FIREBALL_SPEED : ARROWS_SPEED;
@@ -337,7 +349,7 @@ export class Battle {
               ? 0.65
               : 0.9;
       const waves = modern && id === "arrows" ? ARROWS_WAVES : 1;
-      for (let wave = 0; wave < waves; wave++)
+      for (let wave = 0; wave < waves; wave++) {
         this.projectiles.push({
           id: this.nextId++,
           team,
@@ -368,6 +380,8 @@ export class Battle {
               }
             : {}),
         });
+        this.audioProjectiles.set(this.projectiles.at(-1)!.id, id);
+      }
     } else {
       for (const point of deploymentPositions(id, { x, y }))
         this.spawn(id, team, point.x, point.y);
@@ -435,6 +449,58 @@ export class Battle {
     });
     if (this.events.length > 160)
       this.events.splice(0, this.events.length - 160);
+  }
+  private emitAudio(
+    phase: CombatAudioPhase,
+    team: Team,
+    profile: AudioProfile,
+    actor?: number,
+    attack?: number,
+  ) {
+    const event: CombatAudioEvent = {
+      id: this.nextAudioId++,
+      time: this.time,
+      phase,
+      team,
+      profile,
+      actor,
+      attack,
+    };
+    this.audioEvents.push(event);
+    if (this.audioEvents.length > 256)
+      this.audioEvents.splice(0, this.audioEvents.length - 256);
+    return event.id;
+  }
+  private beginAudio(e: Entity) {
+    this.audioAttacks.set(
+      e.id,
+      this.emitAudio("attack", e.team, audioProfile(e), e.id),
+    );
+  }
+  private cancelAudio(e: Entity) {
+    const attack = this.audioAttacks.get(e.id);
+    if (attack !== undefined)
+      this.emitAudio("cancel", e.team, audioProfile(e), e.id, attack);
+    this.audioAttacks.delete(e.id);
+  }
+  private projectileAudio(p: Projectile) {
+    const source = this.entities.find((e) => e.id === p.source);
+    const profile =
+      this.audioProjectiles.get(p.id) ??
+      (source
+        ? audioProfile(source)
+        : p.style === "arrow"
+          ? "princess-tower"
+          : p.style === "cannonball"
+            ? "king-tower"
+            : p.style === "bomb"
+              ? "balloon"
+              : Object.hasOwn(CARD_MAP, p.style)
+                ? (p.style as CardId)
+                : null);
+    if (profile)
+      this.emitAudio("impact", p.team, profile, p.source || undefined);
+    this.audioProjectiles.delete(p.id);
   }
   step() {
     if (this.winner) return;
@@ -579,6 +645,8 @@ export class Battle {
           e.move = 0;
           e.cooldown = e.interval;
           e.attack = e.interval;
+          this.beginAudio(e);
+          this.audioAttacks.delete(e.id);
           if (e.range > 2 || e.kind === "tower" || e.card === "balloon") {
             const duration = Math.max(0.1, distance / 18);
             this.projectiles.push({
@@ -598,14 +666,21 @@ export class Battle {
               stun: 0,
               source: e.id,
             });
+            this.audioProjectiles.set(
+              this.projectiles.at(-1)!.id,
+              audioProfile(e),
+            );
+            this.emitAudio("launch", e.team, audioProfile(e), e.id);
           } else if (card?.splash) {
             for (const v of this.entities)
               if (canAttack(v) && dist(v, e) <= card.splash + v.radius)
                 this.hurt(v, damage);
             this.emit("hit", e.team, e.x, e.y, e.card);
+            this.emitAudio("impact", e.team, audioProfile(e), e.id);
           } else {
             this.hurt(target, damage);
             this.emit("hit", e.team, target.x, target.y, e.card, damage);
+            this.emitAudio("impact", e.team, audioProfile(e), e.id);
           }
         }
       } else if (e.kind === "troop") this.moveToward(e, target);
@@ -641,6 +716,7 @@ export class Battle {
           : (p.style as CardId),
         p.damage,
       );
+      this.projectileAudio(p);
     }
     this.projectiles = this.projectiles.filter((p) => p.remaining > 0);
   }
@@ -686,6 +762,7 @@ export class Battle {
     return target;
   }
   private cancelAttack(e: Entity) {
+    this.cancelAudio(e);
     e.pendingAttack = undefined;
     e.attack = 0;
     e.cooldown = 0;
@@ -800,12 +877,14 @@ export class Battle {
             ),
             damage,
           };
+          this.beginAudio(e);
         }
       } else if (e.kind === "troop") this.moveToward(e, target);
     }
     this.updateProjectiles();
   }
   private releaseAttack(e: Entity, target: Entity, damage: number) {
+    this.audioAttacks.delete(e.id);
     const card = e.card === "tower" ? null : CARD_MAP[e.card];
     const traits = combatTraits(e);
     const p = traits.projectile;
@@ -853,14 +932,18 @@ export class Battle {
             ? 0
             : (p?.gravity ?? 0) / 100,
       });
+      this.audioProjectiles.set(this.projectiles.at(-1)!.id, audioProfile(e));
+      this.emitAudio("launch", e.team, audioProfile(e), e.id);
     } else if (card?.splash) {
       for (const v of this.entities)
         if (this.validTarget(e, v) && dist(v, e) <= card.splash + v.radius)
           this.hurt(v, damage);
       this.emit("hit", e.team, e.x, e.y, e.card, damage);
+      this.emitAudio("impact", e.team, audioProfile(e), e.id);
     } else {
       this.hurt(target, damage);
       this.emit("hit", e.team, target.x, target.y, e.card, damage);
+      this.emitAudio("impact", e.team, audioProfile(e), e.id);
     }
   }
   private updateProjectiles() {
@@ -940,6 +1023,7 @@ export class Battle {
           height: p.toHeight ?? 0.6,
         },
       );
+      this.projectileAudio(p);
     }
     this.projectiles = this.projectiles.filter((p) => p.remaining > 0);
   }
@@ -1047,8 +1131,9 @@ export class Battle {
     if (e.king) this.activateKing(e);
     if (e.hp > 0) return;
     e.hp = 0;
+    this.cancelAudio(e);
     this.emit("death", e.team, e.x, e.y, e.card);
-    if (e.card === "balloon")
+    if (e.card === "balloon") {
       this.projectiles.push({
         id: this.nextId++,
         team: e.team,
@@ -1075,6 +1160,8 @@ export class Battle {
             }
           : {}),
       });
+      this.audioProjectiles.set(this.projectiles.at(-1)!.id, "balloon");
+    }
     if (e.kind === "tower") {
       const enemy = other(e.team);
       const previousCrowns = this.players[enemy].crowns;

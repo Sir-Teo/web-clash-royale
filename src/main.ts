@@ -133,6 +133,7 @@ import {
 import type { RecordEntry } from "./game/profile";
 import { GameAudio } from "./game/audio";
 import { NativeDeathAudio } from "./game/death-audio";
+import { NativeCombatAudio } from "./game/combat-audio";
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) =>
   document.querySelector<T>(s)!;
@@ -156,6 +157,7 @@ const clock = (seconds: number) =>
 const profile = loadProfile(),
   audio = new GameAudio();
 const deathAudio = new NativeDeathAudio(audio);
+const combatAudio = new NativeCombatAudio(audio);
 audio.enabled = profile.sound;
 audio.musicEnabled = profile.music;
 let initialized = false;
@@ -297,6 +299,7 @@ ending.onContinue = () => {
 };
 function resetEnding() {
   deathAudio.reset();
+  combatAudio.reset();
   connectionWarning.reset();
   emotes.reset();
   ending.reset();
@@ -746,6 +749,7 @@ function syncReplayControl() {
 }
 function showResult() {
   deathAudio.reset();
+  combatAudio.skip(battle.audioEvents);
   startEnding();
   const completedBattle = battle;
   resultShown = true;
@@ -1112,14 +1116,17 @@ network.onMessage = (message) => {
       arena.setBattle(battle);
       if (battle.tick > 0) {
         eventCursor = battle.events.at(-1)?.id ?? 0;
+        combatAudio.skip(battle.audioEvents);
         intro.skip();
       }
       elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
       nativeCards.reset(battle.time, battle.players.blue.hand);
       matchHud.reset(arena.effectTime, crownCounts());
       updateBattleUI(true);
-    } else if (document.hidden)
+    } else if (document.hidden) {
       eventCursor = battle.events.at(-1)?.id ?? eventCursor;
+      combatAudio.skip(battle.audioEvents);
+    }
   }
   if (message.type === "ack" && !message.ok) toast(message.reason);
   if (message.type === "error") {
@@ -1344,6 +1351,7 @@ function showHelp() {
 }
 
 function processEvents() {
+  combatAudio.consume(battle.audioEvents, battle.seed, battle.time);
   for (const ev of battle.events) {
     if (ev.id <= eventCursor) continue;
     eventCursor = ev.id;
@@ -1378,27 +1386,13 @@ function processEvents() {
       };
       audio.play(voices[ev.card as CardId] ?? "button_click_02", 0.22);
     }
-    if (ev.type === "hit") {
-      const impacts: Partial<Record<CardId, string>> = {
-        fireball: "fireball_hit_01",
-        zap: "zap_02",
-        arrows: "arrow_hit_13",
-        knight: "axe_impact_01",
-        valkyrie: "axe_impact_01",
-        giant: "giant_attack_swing_01",
-        "mini-pekka": "mini_pekka_hit_03",
-        pekka: "mini_pekka_hit_03",
-        "baby-dragon": "baby_dragon_fireball_08",
-      };
-      audio.play(
-        impacts[ev.card as CardId] ?? "arrow_hit_13",
-        ev.card === "fireball" ? 0.35 : 0.12,
-      );
-    }
     if (ev.type === "crown") {
       audio.play("1st_crown_01", 0.35);
     }
-    if (ev.type === "finish") deathAudio.reset();
+    if (ev.type === "finish") {
+      deathAudio.reset();
+      combatAudio.skip(battle.audioEvents);
+    }
     if (ev.type === "finish" && screen === "replay") {
       audio.stopEffects();
       announcements.cue("Gameend Horn");
@@ -1581,6 +1575,7 @@ $("#replay-seek").addEventListener("input", () => {
   for (let i = 0; i < target && !battle.winner; i++) stepReplay();
   arena.setBattle(battle);
   eventCursor = battle.events.at(-1)?.id ?? 0;
+  combatAudio.skip(battle.audioEvents);
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
   nativeCards.reset(battle.time, battle.players.blue.hand);
   matchHud.reset(arena.effectTime, crownCounts());
@@ -1652,6 +1647,7 @@ document.addEventListener("keydown", (e) => {
 });
 function suspendFrameLoop() {
   deathAudio.reset();
+  combatAudio.skip(battle.audioEvents);
   connectionWarning.suspend();
   cancelPointer();
   emotes.suspend();
@@ -1736,8 +1732,10 @@ function frame(now: number) {
   const presentationPaused = paused || (multiplayer && !!network.room?.paused);
   if (presentationPaused && !soundPaused) audio.stopEffects();
   soundPaused = presentationPaused;
-  if (screen !== "lobby" && !battle.winner)
+  if (screen !== "lobby" && !battle.winner) {
+    combatAudio.update(battle.time, presentationPaused);
     deathAudio.update(battle.time, presentationPaused);
+  }
   const idle = screen === "lobby" || presentationPaused || !!battle.winner;
   if (!idle || now - lastRenderTime >= 1000 / 30 - 0.5) {
     const renderElapsed = Math.max(0, (now - lastRenderTime) / 1000);

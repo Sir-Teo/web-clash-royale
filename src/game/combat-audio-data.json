@@ -1,0 +1,3157 @@
+{
+  "profiles": {
+    "knight": {
+      "source": "Knight",
+      "attack": {
+        "sources": [
+          "knight_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_knight_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_knight_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "knight_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_knight_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_knight_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "archers": {
+      "source": "Archer",
+      "attack": {
+        "sources": [
+          "ArcherAttackStart"
+        ],
+        "components": [
+          {
+            "sound": "Archer attack start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "Archer attack start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [
+          "ArcherAttack"
+        ],
+        "components": [
+          {
+            "sound": "Archer attack",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "Archer attack",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "ArrowHit"
+        ],
+        "components": [
+          {
+            "sound": "Arrow hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "Arrow hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "giant": {
+      "source": "Giant",
+      "attack": {
+        "sources": [
+          "giant_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_giant_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_giant_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "giant_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_giant_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_giant_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "musketeer": {
+      "source": "Musketeer",
+      "attack": {
+        "sources": [
+          "musketeer_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_musketeer_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_musketeer_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [
+          "musketeer_attack"
+        ],
+        "components": [
+          {
+            "sound": "sound_musketeer_attack",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_musketeer_attack",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "musketeer_hit",
+          "cannon_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_musketeer_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_musketeer_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "mini-pekka": {
+      "source": "MiniPekka",
+      "attack": {
+        "sources": [
+          "mini_pekka_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_minipekka_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_minipekka_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "mini_pekka_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_minipekka_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_minipekka_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "goblins": {
+      "source": "Goblin",
+      "attack": {
+        "sources": [
+          "goblins_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_goblins_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_goblins_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "goblins_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_goblins_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_goblins_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "spear-goblins": {
+      "source": "SpearGoblin",
+      "attack": {
+        "sources": [
+          "spear_goblin_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_spear_goblin_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_spear_goblin_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [
+          "spear_goblin_attack"
+        ],
+        "components": [
+          {
+            "sound": "sound_spear_goblin_attack",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_spear_goblin_attack",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "spear_goblin_projectile_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_spear_goblin_projectile_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_spear_goblin_projectile_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "skeletons": {
+      "source": "Skeleton",
+      "attack": {
+        "sources": [
+          "skeleton_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_skeleton_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_skeleton_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "skeleton_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_skeleton_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_skeleton_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "skeleton-army": {
+      "source": "Skeleton",
+      "attack": {
+        "sources": [
+          "skeleton_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_skeleton_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_skeleton_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "skeleton_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_skeleton_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_skeleton_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "bomber": {
+      "source": "Bomber",
+      "attack": {
+        "sources": [
+          "bomber_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_bomber_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_bomber_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [
+          "bomber_attack"
+        ],
+        "components": [
+          {
+            "sound": "sound_bomber_attack",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_bomber_attack",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "BombTower_projectile_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_BombTower_projectile_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_BombTower_projectile_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "valkyrie": {
+      "source": "Valkyrie",
+      "attack": {
+        "sources": [
+          "valkyrie_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_valkyrie_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_valkyrie_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "valkyrie_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_valkyrie_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_valkyrie_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "hog-rider": {
+      "source": "HogRider",
+      "attack": {
+        "sources": [
+          "hog_rider_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_hog_rider_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_hog_rider_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "hog_rider_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_hog_rider_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_hog_rider_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "baby-dragon": {
+      "source": "BabyDragon",
+      "attack": {
+        "sources": [
+          "baby_dragon_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_baby_dragon_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_baby_dragon_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [
+          "dragon_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_dragon_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_dragon_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "dragon_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_dragon_projectile_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_dragon_projectile_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "minions": {
+      "source": "Minion",
+      "attack": {
+        "sources": [
+          "minion_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_minion_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_minion_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [
+          "minion_attack"
+        ],
+        "components": [
+          {
+            "sound": "sound_minion_attack",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_minion_attack",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "ArrowHit"
+        ],
+        "components": [
+          {
+            "sound": "Arrow hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "Arrow hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "witch": {
+      "source": "Witch",
+      "attack": {
+        "sources": [
+          "witch_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_witch_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_witch_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "witch_hit",
+          "WizardProjectileHit"
+        ],
+        "components": [
+          {
+            "sound": "sound_witch_hit",
+            "delay": 0
+          },
+          {
+            "sound": "WizardProjectileHit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_witch_hit",
+            "delay": 0
+          },
+          {
+            "sound": "WizardProjectileHit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "wizard": {
+      "source": "Wizard",
+      "attack": {
+        "sources": [
+          "chr_wizard_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_chr_wizard_attack_start",
+            "delay": 0
+          },
+          {
+            "sound": "sound_chr_wizard_attack_vo",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_chr_wizard_attack_start",
+            "delay": 0
+          },
+          {
+            "sound": "sound_chr_wizard_attack_vo",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "chr_wizard_hit",
+          "chr_wizard_projectile_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_chr_wizard_hit",
+            "delay": 0
+          },
+          {
+            "sound": "sound_chr_wizard_projectile_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_chr_wizard_hit",
+            "delay": 0
+          },
+          {
+            "sound": "sound_chr_wizard_projectile_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "prince": {
+      "source": "Prince",
+      "attack": {
+        "sources": [
+          "prince_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_prince_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_prince_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "prince_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_prince_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_prince_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "pekka": {
+      "source": "Pekka",
+      "attack": {
+        "sources": [
+          "pekka_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_pekka_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_pekka_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "pekka_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_pekka_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_pekka_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "balloon": {
+      "source": "Balloon",
+      "attack": {
+        "sources": [
+          "balloon_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_balloon_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_balloon_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "balloon_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_balloon_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_balloon_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "cannon": {
+      "source": "Cannon",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [
+          "cannon_fire_projectile"
+        ],
+        "components": [
+          {
+            "sound": "Cannon Fire",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "Cannon Fire",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "cannon_hit"
+        ],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "tesla": {
+      "source": "Tesla",
+      "attack": {
+        "sources": [
+          "Tesla_beam"
+        ],
+        "components": [
+          {
+            "sound": "sound_tesla_attack",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_tesla_attack",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "tesla_hit_effect"
+        ],
+        "components": [
+          {
+            "sound": "sound_tesla_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_tesla_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "king-tower": {
+      "source": "KingTower",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [
+          "King_attack"
+        ],
+        "components": [
+          {
+            "sound": "sound_king_attack",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_king_attack",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "musketeer_hit",
+          "cannon_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_musketeer_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_musketeer_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "princess-tower": {
+      "source": "PrincessTower",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [
+          "ArcherTowerAttack"
+        ],
+        "components": [
+          {
+            "sound": "ArcherTower attack",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "ArcherTower attack",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "ArrowHit"
+        ],
+        "components": [
+          {
+            "sound": "Arrow hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "Arrow hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
+    "fireball": {
+      "source": "Fireball",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "Fireball_explosion"
+        ],
+        "components": [
+          {
+            "sound": "Fire ball explo",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "Fire ball explo",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [
+          "sound:Fire ball"
+        ],
+        "components": [
+          {
+            "sound": "Fire ball",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "Fire ball",
+            "delay": 0
+          }
+        ]
+      }
+    },
+    "arrows": {
+      "source": "Arrows",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "ArrowHitGround"
+        ],
+        "components": [
+          {
+            "sound": "Arrow volley hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "Arrow volley hit",
+            "delay": 0
+          }
+        ]
+      },
+      "cast": {
+        "sources": [
+          "sound:SpellCasting",
+          "Cast_RainOfArrows"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          },
+          {
+            "sound": "Arrow fire",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          },
+          {
+            "sound": "Arrow fire",
+            "delay": 0
+          }
+        ]
+      }
+    },
+    "zap": {
+      "source": "Zap",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "Spell_zap_effect"
+        ],
+        "components": [
+          {
+            "sound": "sound_spell_zap",
+            "delay": 0.15
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_spell_zap",
+            "delay": 0.15
+          }
+        ]
+      },
+      "cast": {
+        "sources": [
+          "sound:SpellCasting"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ]
+      }
+    }
+  },
+  "sounds": {
+    "sound_knight_attack_start": [
+      {
+        "sourceFile": "sfx/knight_attack_start_05.wav",
+        "file": "knight_attack_start_05",
+        "volume": [
+          0.45,
+          0.55
+        ],
+        "pitch": [
+          0.97,
+          1.01
+        ],
+        "startDelay": [
+          0.36,
+          0.36
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/knight_attack_start_02.wav",
+        "file": "knight_attack_start_02",
+        "volume": [
+          0.45,
+          0.55
+        ],
+        "pitch": [
+          0.97,
+          1.01
+        ],
+        "startDelay": [
+          0.43,
+          0.43
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/knight_attack_start_03.wav",
+        "file": "knight_attack_start_03",
+        "volume": [
+          0.45,
+          0.55
+        ],
+        "pitch": [
+          0.97,
+          1.01
+        ],
+        "startDelay": [
+          0.32,
+          0.32
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/knight_attack_start_04.wav",
+        "file": "knight_attack_start_04",
+        "volume": [
+          0.45,
+          0.55
+        ],
+        "pitch": [
+          0.97,
+          1.01
+        ],
+        "startDelay": [
+          0.32,
+          0.32
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/knight_attack_start_01.wav",
+        "file": "knight_attack_start_01",
+        "volume": [
+          0.45,
+          0.55
+        ],
+        "pitch": [
+          0.97,
+          1.01
+        ],
+        "startDelay": [
+          0.3,
+          0.3
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_knight_hit": [
+      {
+        "sourceFile": "sfx/knight_hit_01.wav",
+        "file": "knight_hit_01",
+        "volume": [
+          0.3,
+          0.4
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "Archer attack start": [
+      {
+        "sourceFile": "sfx/target_01.wav",
+        "file": "target_01",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "Archer attack": [
+      {
+        "sourceFile": "sfx/archer_attack_07.wav",
+        "file": "archer_attack_07",
+        "volume": [
+          0.22,
+          0.32
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "Arrow hit": [
+      {
+        "sourceFile": "sfx/arrow_hit_13.wav",
+        "file": "arrow_hit_13",
+        "volume": [
+          0.2,
+          0.25
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_giant_attack_start": [
+      {
+        "sourceFile": "sfx/giant_attack_swing_01.wav",
+        "file": "giant_attack_swing_01",
+        "volume": [
+          0.65,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/giant_attack_swing_02.wav",
+        "file": "giant_attack_swing_02",
+        "volume": [
+          0.65,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/giant_attack_swing_03.wav",
+        "file": "giant_attack_swing_03",
+        "volume": [
+          0.65,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_giant_hit": [
+      {
+        "sourceFile": "sfx/giant_hit_01.wav",
+        "file": "giant_hit_01",
+        "volume": [
+          0.6,
+          0.7
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_musketeer_attack_start": [
+      {
+        "sourceFile": "",
+        "file": null,
+        "volume": [
+          0,
+          0
+        ],
+        "pitch": [
+          0,
+          0
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 0,
+        "repeat": 0,
+        "priority": 0,
+        "padding": 0
+      }
+    ],
+    "sound_musketeer_attack": [
+      {
+        "sourceFile": "sfx/musket_fire_02.wav",
+        "file": "musket_fire_02",
+        "volume": [
+          0.65,
+          0.75
+        ],
+        "pitch": [
+          0.94,
+          1.06
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 4,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_musketeer_hit": [
+      {
+        "sourceFile": "sfx/musket_impact_01.wav",
+        "file": "musket_impact_01",
+        "volume": [
+          0.4,
+          0.5
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_minipekka_attack_start": [
+      {
+        "sourceFile": "sfx/mini_pekka_atk_12.wav",
+        "file": "mini_pekka_atk_12",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0.1,
+          0.1
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_minipekka_hit": [
+      {
+        "sourceFile": "sfx/mini_pekka_hit_03.wav",
+        "file": "mini_pekka_hit_03",
+        "volume": [
+          0.6,
+          0.7
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_goblins_attack_start": [
+      {
+        "sourceFile": "sfx/gob_attack_01v2.wav",
+        "file": "gob_attack_01v2",
+        "volume": [
+          0.3,
+          0.4
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/gob_attack_02v2.wav",
+        "file": "gob_attack_02v2",
+        "volume": [
+          0.3,
+          0.4
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/gob_attack_03v2.wav",
+        "file": "gob_attack_03v2",
+        "volume": [
+          0.3,
+          0.4
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_goblins_hit": [
+      {
+        "sourceFile": "sfx/footman_attack_hit_01.wav",
+        "file": "footman_attack_hit_01",
+        "volume": [
+          0.1,
+          0.2
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/footman_attack_hit_02.wav",
+        "file": "footman_attack_hit_02",
+        "volume": [
+          0.1,
+          0.2
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/footman_attack_hit_03.wav",
+        "file": "footman_attack_hit_03",
+        "volume": [
+          0.1,
+          0.2
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/footman_attack_hit_04.wav",
+        "file": "footman_attack_hit_04",
+        "volume": [
+          0.1,
+          0.2
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_spear_goblin_attack_start": [
+      {
+        "sourceFile": "sfx/spear_gob_atk_swish_01.wav",
+        "file": "spear_gob_atk_swish_01",
+        "volume": [
+          0.55,
+          0.55
+        ],
+        "pitch": [
+          0.98,
+          1.08
+        ],
+        "startDelay": [
+          0.55,
+          0.55
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_spear_goblin_attack": [
+      {
+        "sourceFile": "sfx/spear_gob_atk_01.wav",
+        "file": "spear_gob_atk_01",
+        "volume": [
+          0.33,
+          0.33
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/spear_gob_atk_02.wav",
+        "file": "spear_gob_atk_02",
+        "volume": [
+          0.33,
+          0.33
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/spear_gob_atk_03.wav",
+        "file": "spear_gob_atk_03",
+        "volume": [
+          0.33,
+          0.33
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_spear_goblin_projectile_hit": [
+      {
+        "sourceFile": "sfx/spear_gob_atk_hit_01.wav",
+        "file": "spear_gob_atk_hit_01",
+        "volume": [
+          0.2,
+          0.2
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 4,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_skeleton_attack_start": [
+      {
+        "sourceFile": "sfx/skeleton_atk_03.wav",
+        "file": "skeleton_atk_03",
+        "volume": [
+          0.4,
+          0.5
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_skeleton_hit": [
+      {
+        "sourceFile": "sfx/footman_attack_hit_01.wav",
+        "file": "footman_attack_hit_01",
+        "volume": [
+          0.1,
+          0.2
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/footman_attack_hit_02.wav",
+        "file": "footman_attack_hit_02",
+        "volume": [
+          0.1,
+          0.2
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/footman_attack_hit_03.wav",
+        "file": "footman_attack_hit_03",
+        "volume": [
+          0.1,
+          0.2
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/footman_attack_hit_04.wav",
+        "file": "footman_attack_hit_04",
+        "volume": [
+          0.1,
+          0.2
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_bomber_attack_start": [
+      {
+        "sourceFile": "sfx/bomb_skeleton_atk_04.wav",
+        "file": "bomb_skeleton_atk_04",
+        "volume": [
+          0.75,
+          0.8
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_bomber_attack": [
+      {
+        "sourceFile": "",
+        "file": null,
+        "volume": [
+          0,
+          0
+        ],
+        "pitch": [
+          0,
+          0
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 0,
+        "repeat": 0,
+        "priority": 0,
+        "padding": 0
+      }
+    ],
+    "sound_BombTower_projectile_hit": [
+      {
+        "sourceFile": "sfx/skeleton_bomb_explo_01.wav",
+        "file": "skeleton_bomb_explo_01",
+        "volume": [
+          0.65,
+          0.7
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_valkyrie_attack_start": [
+      {
+        "sourceFile": "sfx/valkyrie_atk_04.wav",
+        "file": "valkyrie_atk_04",
+        "volume": [
+          0.6,
+          0.65
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/valkyrie_atk_05.wav",
+        "file": "valkyrie_atk_05",
+        "volume": [
+          0.6,
+          0.65
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/valkyrie_atk_04.wav",
+        "file": "valkyrie_atk_04",
+        "volume": [
+          0.6,
+          0.65
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/valkyrie_atk_06.wav",
+        "file": "valkyrie_atk_06",
+        "volume": [
+          0.6,
+          0.65
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/valkyrie_atk_07.wav",
+        "file": "valkyrie_atk_07",
+        "volume": [
+          0.6,
+          0.65
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/valkyrie_atk_08.wav",
+        "file": "valkyrie_atk_08",
+        "volume": [
+          0.6,
+          0.65
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/valkyrie_atk_09.wav",
+        "file": "valkyrie_atk_09",
+        "volume": [
+          0.6,
+          0.65
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/valkyrie_atk_10.wav",
+        "file": "valkyrie_atk_10",
+        "volume": [
+          0.6,
+          0.65
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_valkyrie_hit": [
+      {
+        "sourceFile": "sfx/valkyrie_hit_01.wav",
+        "file": "valkyrie_hit_01",
+        "volume": [
+          0.2,
+          0.35
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_hog_rider_attack_start": [
+      {
+        "sourceFile": "sfx/hogrider_atk_01.wav",
+        "file": "hogrider_atk_01",
+        "volume": [
+          0.5,
+          0.55
+        ],
+        "pitch": [
+          0.98,
+          1.05
+        ],
+        "startDelay": [
+          0.25,
+          0.25
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_hog_rider_hit": [
+      {
+        "sourceFile": "sfx/hogrider_atk_03.wav",
+        "file": "hogrider_atk_03",
+        "volume": [
+          0.5,
+          0.55
+        ],
+        "pitch": [
+          0.98,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_baby_dragon_attack_start": [
+      {
+        "sourceFile": "sfx/baby_dragon_fireball_08.wav",
+        "file": "baby_dragon_fireball_08",
+        "volume": [
+          0.65,
+          0.7
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.15,
+          0.15
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_dragon_attack_start": [
+      {
+        "sourceFile": "sfx/tinymite_attack_04.wav",
+        "file": "tinymite_attack_04",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_dragon_projectile_hit": [
+      {
+        "sourceFile": "sfx/sound_fireball_hit_01.wav",
+        "file": "sound_fireball_hit_01",
+        "volume": [
+          0.55,
+          0.65
+        ],
+        "pitch": [
+          0.93,
+          1.06
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 4,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_minion_attack_start": [
+      {
+        "sourceFile": "sfx/tinymite_attack_04.wav",
+        "file": "tinymite_attack_04",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_minion_attack": [
+      {
+        "sourceFile": "sfx/tinymite_attack_04.wav",
+        "file": "tinymite_attack_04",
+        "volume": [
+          0.5,
+          0.55
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/tinymite_attack_05.wav",
+        "file": "tinymite_attack_05",
+        "volume": [
+          0.5,
+          0.55
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/tinymite_attack_06.wav",
+        "file": "tinymite_attack_06",
+        "volume": [
+          0.5,
+          0.55
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_witch_attack_start": [
+      {
+        "sourceFile": "sfx/witch_attack_02.wav",
+        "file": "witch_attack_02",
+        "volume": [
+          0.35,
+          0.45
+        ],
+        "pitch": [
+          1.01,
+          0.99
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_witch_hit": [
+      {
+        "sourceFile": "sfx/knight_attack_hack_01.wav",
+        "file": "knight_attack_hack_01",
+        "volume": [
+          0.6,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "WizardProjectileHit": [
+      {
+        "sourceFile": "sfx/dummy_01.wav",
+        "file": "dummy_01",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_chr_wizard_attack_start": [
+      {
+        "sourceFile": "sfx/wiz_fireball_01v9.wav",
+        "file": "wiz_fireball_01v9",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_chr_wizard_attack_vo": [
+      {
+        "sourceFile": "sfx/wiz_atk_vo_01.wav",
+        "file": "wiz_atk_vo_01",
+        "volume": [
+          0.5,
+          0.5
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0.55,
+          0.55
+        ],
+        "maximum": 1,
+        "repeat": 7,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/wiz_atk_vo_02.wav",
+        "file": "wiz_atk_vo_02",
+        "volume": [
+          0.5,
+          0.6
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0.55,
+          0.55
+        ],
+        "maximum": 1,
+        "repeat": 7,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/wiz_atk_vo_03.wav",
+        "file": "wiz_atk_vo_03",
+        "volume": [
+          0.5,
+          0.6
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0.55,
+          0.55
+        ],
+        "maximum": 1,
+        "repeat": 7,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/wiz_atk_vo_04.wav",
+        "file": "wiz_atk_vo_04",
+        "volume": [
+          0.5,
+          0.6
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0.55,
+          0.55
+        ],
+        "maximum": 1,
+        "repeat": 7,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_chr_wizard_hit": [
+      {
+        "sourceFile": "sfx/dummy_01.wav",
+        "file": "dummy_01",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_chr_wizard_projectile_hit": [
+      {
+        "sourceFile": "sfx/fireball_hit_01.wav",
+        "file": "fireball_hit_01",
+        "volume": [
+          0.5,
+          0.5
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_prince_attack_start": [
+      {
+        "sourceFile": "sfx/prince_andrew_use_04.wav",
+        "file": "prince_andrew_use_04",
+        "volume": [
+          0.65,
+          0.65
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0.22,
+          0.22
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/prince_andrew_use_02.wav",
+        "file": "prince_andrew_use_02",
+        "volume": [
+          0.65,
+          0.65
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0.22,
+          0.22
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/prince_andrew_use_09.wav",
+        "file": "prince_andrew_use_09",
+        "volume": [
+          0.65,
+          0.65
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0.22,
+          0.22
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/prince_andrew_use_10.wav",
+        "file": "prince_andrew_use_10",
+        "volume": [
+          0.65,
+          0.65
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0.22,
+          0.22
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_prince_hit": [
+      {
+        "sourceFile": "sfx/prince_hit_01.wav",
+        "file": "prince_hit_01",
+        "volume": [
+          0.7,
+          0.75
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_pekka_attack_start": [
+      {
+        "sourceFile": "sfx/pekka_atk_01.wav",
+        "file": "pekka_atk_01",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_pekka_hit": [
+      {
+        "sourceFile": "sfx/pekka_attack_hit_03.wav",
+        "file": "pekka_attack_hit_03",
+        "volume": [
+          0.5,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_balloon_attack_start": [
+      {
+        "sourceFile": "sfx/drop_bomb_03.wav",
+        "file": "drop_bomb_03",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_balloon_hit": [
+      {
+        "sourceFile": "sfx/boulder_impact_01.wav",
+        "file": "boulder_impact_01",
+        "volume": [
+          0.8,
+          0.9
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "Cannon Fire": [
+      {
+        "sourceFile": "sfx/cannon_fire_03.wav",
+        "file": "cannon_fire_03",
+        "volume": [
+          0.35,
+          0.45
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_tesla_attack": [
+      {
+        "sourceFile": "sfx/tesla_zap_01.wav",
+        "file": "tesla_zap_01",
+        "volume": [
+          0.4,
+          0.4
+        ],
+        "pitch": [
+          0.96,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 5,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_tesla_hit": [
+      {
+        "sourceFile": "sfx/dummy_01.wav",
+        "file": "dummy_01",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_king_attack": [
+      {
+        "sourceFile": "sfx/king_fire_06.wav",
+        "file": "king_fire_06",
+        "volume": [
+          0.7,
+          0.75
+        ],
+        "pitch": [
+          0.96,
+          1.06
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 4,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "ArcherTower attack": [
+      {
+        "sourceFile": "sfx/archer_tower_fire_05.wav",
+        "file": "archer_tower_fire_05",
+        "volume": [
+          0.4,
+          0.5
+        ],
+        "pitch": [
+          0.96,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "Fire ball explo": [
+      {
+        "sourceFile": "sfx/fire_ball_explo_02.wav",
+        "file": "fire_ball_explo_02",
+        "volume": [
+          0.5,
+          0.6
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "Fire ball": [
+      {
+        "sourceFile": "sfx/fire_ball_02.wav",
+        "file": "fire_ball_02",
+        "volume": [
+          0.5,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "Arrow volley hit": [
+      {
+        "sourceFile": "sfx/arrow_norm_impact_06.wav",
+        "file": "arrow_norm_impact_06",
+        "volume": [
+          0.55,
+          0.6
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "SpellCasting": [
+      {
+        "sourceFile": "sfx/spellcast01.wav",
+        "file": "spellcast01",
+        "volume": [
+          0.3,
+          0.35
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "Arrow fire": [
+      {
+        "sourceFile": "sfx/archer_queen_attack_02.wav",
+        "file": "archer_queen_attack_02",
+        "volume": [
+          0.45,
+          0.5
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_spell_zap": [
+      {
+        "sourceFile": "sfx/zap_02.wav",
+        "file": "zap_02",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ]
+  }
+}

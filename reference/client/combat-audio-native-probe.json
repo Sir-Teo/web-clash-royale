@@ -1,0 +1,312 @@
+{
+  "artifacts": [
+    {
+      "architecture": "x86",
+      "digest": {
+        "sha256": "a7eb74c5b72770e39b8dc2c55e452fc11434f3df3efc46fd0ea13d28c1da9309"
+      },
+      "format": "elf"
+    }
+  ],
+  "captures": [],
+  "environments": [],
+  "providers": [
+    {
+      "id": "hopper",
+      "name": "Hopper Disassembler",
+      "version": "launcher-sha256:dad6f886261fad0d4cdd01aee6fcf57439c60d7b5c54e62fc97f0180116690e0"
+    }
+  ],
+  "records": [
+    {
+      "analysis_profile": {
+        "digest": "974620cd28d0531a9ab702ed16c91c524ed9cc3334cdbe59326c1fa74eb2244a",
+        "parameters": {
+          "architecture": "x86",
+          "available_architectures": [
+            "x86"
+          ],
+          "loader": {
+            "arguments": [
+              "-l",
+              "ELF",
+              "--intel-32"
+            ],
+            "source": "derived"
+          },
+          "target_format": "elf",
+          "target_kind": "executable"
+        },
+        "provider": {
+          "id": "hopper",
+          "name": "Hopper Disassembler",
+          "version": "launcher-sha256:dad6f886261fad0d4cdd01aee6fcf57439c60d7b5c54e62fc97f0180116690e0"
+        }
+      },
+      "authority": "shipped-artifact",
+      "confidence": "observed",
+      "environment": null,
+      "evidence_id": "ev_2362d57c9fda15ff93d214d1605ecb9e06db54ff296be9ae37b0b7f3010d42e0",
+      "evidence_links": [],
+      "limitations": [
+        "Results depend on Hopper's completed static analysis.",
+        "Regex mode uses ECMAScript Unicode semantics in a supervised worker with a five-second matching deadline. Cancellation or deadline failure stops matching without blocking Hopper; literal mode retains native casefold semantics.",
+        "String values cover native typed objects. Hopper may split long literals into adjacent unterminated fragments; string searches match each object independently.",
+        "Undecodable typed objects retain native display text with an explicit decoding unknown; these values do not establish decoded source literals.",
+        "Reported string encodings are inferred from typed bytes and native display; the original source's intended encoding is unknown."
+      ],
+      "locations": [],
+      "normalized_result": [],
+      "operation": "search_strings",
+      "parameters": {
+        "case_sensitive": false,
+        "mode": "regex",
+        "pattern": "^(DamageEffect|ProjectileEffect|AttackStartEffect|MaxRepeatMs)$"
+      },
+      "predicate_type": "rea.analysis",
+      "provider": {
+        "id": "hopper",
+        "name": "Hopper Disassembler",
+        "version": "launcher-sha256:dad6f886261fad0d4cdd01aee6fcf57439c60d7b5c54e62fc97f0180116690e0"
+      },
+      "raw_result": null,
+      "subject": {
+        "architecture": "x86",
+        "digest": {
+          "sha256": "a7eb74c5b72770e39b8dc2c55e452fc11434f3df3efc46fd0ea13d28c1da9309"
+        },
+        "format": "elf",
+        "local_path": "/private/tmp/royale-1.8.0-libg-x86.so",
+        "name": "royale-1.8.0-libg-x86.so"
+      }
+    },
+    {
+      "analysis_profile": {
+        "digest": "974620cd28d0531a9ab702ed16c91c524ed9cc3334cdbe59326c1fa74eb2244a",
+        "parameters": {
+          "architecture": "x86",
+          "available_architectures": [
+            "x86"
+          ],
+          "loader": {
+            "arguments": [
+              "-l",
+              "ELF",
+              "--intel-32"
+            ],
+            "source": "derived"
+          },
+          "target_format": "elf",
+          "target_kind": "executable"
+        },
+        "provider": {
+          "id": "hopper",
+          "name": "Hopper Disassembler",
+          "version": "launcher-sha256:dad6f886261fad0d4cdd01aee6fcf57439c60d7b5c54e62fc97f0180116690e0"
+        }
+      },
+      "authority": "shipped-artifact",
+      "confidence": "observed",
+      "environment": null,
+      "evidence_id": "ev_671cc098e6caebd94bb06ccd5cdfbd3e789525f1ed31c67aa60578635c2e8b00",
+      "evidence_links": [],
+      "limitations": [
+        "Results depend on Hopper's completed static analysis."
+      ],
+      "locations": [],
+      "normalized_result": [],
+      "operation": "xrefs",
+      "parameters": {
+        "address": "0x6136fd"
+      },
+      "predicate_type": "rea.analysis",
+      "provider": {
+        "id": "hopper",
+        "name": "Hopper Disassembler",
+        "version": "launcher-sha256:dad6f886261fad0d4cdd01aee6fcf57439c60d7b5c54e62fc97f0180116690e0"
+      },
+      "raw_result": null,
+      "subject": {
+        "architecture": "x86",
+        "digest": {
+          "sha256": "a7eb74c5b72770e39b8dc2c55e452fc11434f3df3efc46fd0ea13d28c1da9309"
+        },
+        "format": "elf",
+        "local_path": "/private/tmp/royale-1.8.0-libg-x86.so",
+        "name": "royale-1.8.0-libg-x86.so"
+      }
+    },
+    {
+      "analysis_profile": {
+        "digest": "974620cd28d0531a9ab702ed16c91c524ed9cc3334cdbe59326c1fa74eb2244a",
+        "parameters": {
+          "architecture": "x86",
+          "available_architectures": [
+            "x86"
+          ],
+          "loader": {
+            "arguments": [
+              "-l",
+              "ELF",
+              "--intel-32"
+            ],
+            "source": "derived"
+          },
+          "target_format": "elf",
+          "target_kind": "executable"
+        },
+        "provider": {
+          "id": "hopper",
+          "name": "Hopper Disassembler",
+          "version": "launcher-sha256:dad6f886261fad0d4cdd01aee6fcf57439c60d7b5c54e62fc97f0180116690e0"
+        }
+      },
+      "authority": "shipped-artifact",
+      "confidence": "observed",
+      "environment": null,
+      "evidence_id": "ev_6a890f70334dcecd4b351eb85cea64bdd70279478a12289efed3f91433b26f1b",
+      "evidence_links": [],
+      "limitations": [
+        "Results depend on Hopper's completed static analysis."
+      ],
+      "locations": [],
+      "normalized_result": [],
+      "operation": "xrefs",
+      "parameters": {
+        "address": "0x613802"
+      },
+      "predicate_type": "rea.analysis",
+      "provider": {
+        "id": "hopper",
+        "name": "Hopper Disassembler",
+        "version": "launcher-sha256:dad6f886261fad0d4cdd01aee6fcf57439c60d7b5c54e62fc97f0180116690e0"
+      },
+      "raw_result": null,
+      "subject": {
+        "architecture": "x86",
+        "digest": {
+          "sha256": "a7eb74c5b72770e39b8dc2c55e452fc11434f3df3efc46fd0ea13d28c1da9309"
+        },
+        "format": "elf",
+        "local_path": "/private/tmp/royale-1.8.0-libg-x86.so",
+        "name": "royale-1.8.0-libg-x86.so"
+      }
+    },
+    {
+      "analysis_profile": {
+        "digest": "974620cd28d0531a9ab702ed16c91c524ed9cc3334cdbe59326c1fa74eb2244a",
+        "parameters": {
+          "architecture": "x86",
+          "available_architectures": [
+            "x86"
+          ],
+          "loader": {
+            "arguments": [
+              "-l",
+              "ELF",
+              "--intel-32"
+            ],
+            "source": "derived"
+          },
+          "target_format": "elf",
+          "target_kind": "executable"
+        },
+        "provider": {
+          "id": "hopper",
+          "name": "Hopper Disassembler",
+          "version": "launcher-sha256:dad6f886261fad0d4cdd01aee6fcf57439c60d7b5c54e62fc97f0180116690e0"
+        }
+      },
+      "authority": "shipped-artifact",
+      "confidence": "observed",
+      "environment": null,
+      "evidence_id": "ev_a4c797685d2140a61611e558759b17f99fd91f382f28200d2762a102da7156f1",
+      "evidence_links": [],
+      "limitations": [
+        "Results depend on Hopper's completed static analysis."
+      ],
+      "locations": [],
+      "normalized_result": [],
+      "operation": "xrefs",
+      "parameters": {
+        "address": "0x6136ec"
+      },
+      "predicate_type": "rea.analysis",
+      "provider": {
+        "id": "hopper",
+        "name": "Hopper Disassembler",
+        "version": "launcher-sha256:dad6f886261fad0d4cdd01aee6fcf57439c60d7b5c54e62fc97f0180116690e0"
+      },
+      "raw_result": null,
+      "subject": {
+        "architecture": "x86",
+        "digest": {
+          "sha256": "a7eb74c5b72770e39b8dc2c55e452fc11434f3df3efc46fd0ea13d28c1da9309"
+        },
+        "format": "elf",
+        "local_path": "/private/tmp/royale-1.8.0-libg-x86.so",
+        "name": "royale-1.8.0-libg-x86.so"
+      }
+    },
+    {
+      "analysis_profile": {
+        "digest": "974620cd28d0531a9ab702ed16c91c524ed9cc3334cdbe59326c1fa74eb2244a",
+        "parameters": {
+          "architecture": "x86",
+          "available_architectures": [
+            "x86"
+          ],
+          "loader": {
+            "arguments": [
+              "-l",
+              "ELF",
+              "--intel-32"
+            ],
+            "source": "derived"
+          },
+          "target_format": "elf",
+          "target_kind": "executable"
+        },
+        "provider": {
+          "id": "hopper",
+          "name": "Hopper Disassembler",
+          "version": "launcher-sha256:dad6f886261fad0d4cdd01aee6fcf57439c60d7b5c54e62fc97f0180116690e0"
+        }
+      },
+      "authority": "shipped-artifact",
+      "confidence": "observed",
+      "environment": null,
+      "evidence_id": "ev_e1f084b02f8d7feb3d4304d4c39b31205c54acabf95bf99b43c7306b65c06ec9",
+      "evidence_links": [],
+      "limitations": [
+        "Results depend on Hopper's completed static analysis."
+      ],
+      "locations": [],
+      "normalized_result": [
+        "0x619863"
+      ],
+      "operation": "xrefs",
+      "parameters": {
+        "address": "0x619865"
+      },
+      "predicate_type": "rea.analysis",
+      "provider": {
+        "id": "hopper",
+        "name": "Hopper Disassembler",
+        "version": "launcher-sha256:dad6f886261fad0d4cdd01aee6fcf57439c60d7b5c54e62fc97f0180116690e0"
+      },
+      "raw_result": null,
+      "subject": {
+        "architecture": "x86",
+        "digest": {
+          "sha256": "a7eb74c5b72770e39b8dc2c55e452fc11434f3df3efc46fd0ea13d28c1da9309"
+        },
+        "format": "elf",
+        "local_path": "/private/tmp/royale-1.8.0-libg-x86.so",
+        "name": "royale-1.8.0-libg-x86.so"
+      }
+    }
+  ],
+  "scenarios": [],
+  "unknowns": []
+}

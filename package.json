@@ -32,7 +32,8 @@
     "start:legacy": "node dist-server/index.js",
     "assets:ending": "node scripts/import-ending.mjs",
     "assets:emotes": "node scripts/import-emotes.mjs",
-    "assets:death-audio": "node scripts/import-death-audio.mjs"
+    "assets:death-audio": "node scripts/import-death-audio.mjs",
+    "assets:combat-audio": "node scripts/import-combat-audio.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",

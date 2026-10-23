@@ -7,24 +7,25 @@ import {
   type Page,
 } from "@playwright/test";
 import { CARD_MAP } from "../../src/game/cards";
+import { observeCombatAudio, playedCombatAudio } from "./audio-helpers";
 const expect = baseExpect.configure({ timeout: 15000 });
 test.use({ serviceWorkers: "block", actionTimeout: 20000 });
 const state = (page: Page) =>
   page.evaluate(() => (window as any).__arena?.state ?? {});
-async function init(page: Page, name: string) {
+async function init(page: Page, name: string, sound = false) {
   await page.addInitScript(
-    (name) =>
+    ({ name, sound }) =>
       localStorage.setItem(
         "browser-royale.profile.v1",
         JSON.stringify({
           version: 1,
           name,
-          sound: false,
+          sound,
           music: false,
           seenTutorial: true,
         }),
       ),
-    name,
+    { name, sound },
   );
   await page.goto("/");
   await expect(page.locator("#friend-button")).toBeVisible({ timeout: 60000 });
@@ -71,6 +72,7 @@ test("static browsers exchange invites, fight, pause together and replay without
   const errors: string[] = [];
   const backendRequests: string[] = [];
   for (const p of [page, friend]) {
+    await observeCombatAudio(p);
     p.on("pageerror", (error) => errors.push(error.message));
     p.on("websocket", (socket) => {
       if (new URL(socket.url()).pathname === "/battle")
@@ -82,8 +84,8 @@ test("static browsers exchange invites, fight, pause together and replay without
     });
   }
   try {
-    await init(page, "Blue King");
-    await init(friend, "Red King");
+    await init(page, "Blue King", true);
+    await init(friend, "Red King", true);
     await page
       .getByRole("button", { name: "Create an invite", exact: true })
       .click();
@@ -122,10 +124,22 @@ test("static browsers exchange invites, fight, pause together and replay without
         .toBe("playing");
       expect((await state(p)).multiplayer.transport).toBe("peer");
     }
-    await deploy(page);
-    await deploy(friend);
+    await deploy(page, 4, 18);
+    await deploy(friend, 4, 18);
     await expect.poll(async () => (await state(page)).actions).toBe(2);
     await expect.poll(async () => (await state(friend)).actions).toBe(2);
+    for (const p of [page, friend])
+      await expect
+        .poll(
+          async () =>
+            (
+              await playedCombatAudio(p, [
+                "/assets/audio/archer_tower_fire_05.ogg",
+              ])
+            ).some((entry: any) => entry.outcome === "playing"),
+          { timeout: 30000 },
+        )
+        .toBe(true);
     await friend
       .getByRole("button", { name: "King emotes", exact: true })
       .click();

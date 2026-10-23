@@ -31,6 +31,7 @@ export function perspective(s: BattleSnapshot, team: Team): BattleSnapshot {
       team: other(e.team),
       origin: e.origin ? rotatePoint(e.origin) : undefined,
     })),
+    audioEvents: s.audioEvents?.map((e) => ({ ...e, team: other(e.team) })),
   };
 }
 export function snapshot(b: Battle): BattleSnapshot {
@@ -39,6 +40,9 @@ export function snapshot(b: Battle): BattleSnapshot {
     entities: b.entities,
     projectiles: b.projectiles,
     events: b.events,
+    // Older cues are already too late to play. Keep overlap for deduplication
+    // without retransmitting the full presentation history at 15 Hz.
+    audioEvents: b.audioEvents.filter((event) => event.time >= b.time - 1),
     players: b.players,
     winner: b.winner,
     reason: b.reason,
@@ -51,6 +55,7 @@ export function applySnapshot(b: Battle, s: BattleSnapshot, team: Team) {
   b.entities = view.entities;
   b.projectiles = view.projectiles;
   b.events = view.events;
+  b.audioEvents = view.audioEvents ?? [];
   b.players = view.players;
   b.winner = view.winner;
   b.reason = view.reason;

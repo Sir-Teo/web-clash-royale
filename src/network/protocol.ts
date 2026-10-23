@@ -1,5 +1,6 @@
 import type { CardId } from "../game/cards";
 import type { EmoteKind, QuickChatKind } from "../game/emotes";
+import type { CombatAudioEvent } from "../game/combat-audio-events";
 import type {
   BattleEvent,
   Entity,
@@ -24,6 +25,7 @@ export interface BattleSnapshot {
   entities: Entity[];
   projectiles: Projectile[];
   events: BattleEvent[];
+  audioEvents?: CombatAudioEvent[];
   players: Record<Team, PlayerState>;
   winner: Team | "draw" | null;
   reason: string;
