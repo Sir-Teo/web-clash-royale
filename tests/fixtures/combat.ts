@@ -4,6 +4,15 @@ import type { Team } from "../../src/game/engine";
 import type { CardId } from "../../src/game/cards";
 import { CARDS } from "../../src/game/cards";
 const arena = new Arena(document.querySelector("#arena")!);
+const unitPlanes = (id: number) => {
+  const visual = (arena as any).units.get(id);
+  if (!visual) return null;
+  return {
+    height: visual.object.position.y,
+    shadowHeight: visual.shadow ? visual.object.position.y + visual.shadow.position.y : null,
+    ringHeight: visual.ring ? visual.object.position.y + visual.ring.position.y : null,
+  };
+};
 let chargeCues = 0;
 arena.onCharge = () => chargeCues++;
 arena.crownTarget = (team) => {
@@ -692,11 +701,15 @@ function render(now: number) {
       alive: battle.entities.some((e) => e.team === "blue" && e.card === "lava-hound" && e.hp > 0),
       height: (() => {
         const hound = battle.entities.find((e) => e.team === "blue" && e.card === "lava-hound" && e.hp > 0);
-        return hound ? (arena as any).units.get(hound.id)?.object.position.y : null;
+        return hound ? unitPlanes(hound.id)?.height : null;
+      })(),
+      ground: (() => {
+        const hound = battle.entities.find((e) => e.team === "blue" && e.card === "lava-hound" && e.hp > 0);
+        return hound ? unitPlanes(hound.id) : null;
       })(),
       pups: battle.entities.filter((e) => e.team === "blue" && e.card === "lava-pup" && e.hp > 0)
         .map((e) => ({ x: e.x, y: e.y, hp: e.hp, air: e.air, deploy: e.deploy,
-          height: (arena as any).units.get(e.id)?.object.position.y })),
+          ...unitPlanes(e.id) })),
       coals: battle.projectiles.filter((p) => p.style === "lava-hound" || p.style === "lava-pup")
         .map((p) => ({ style: p.style, damage: p.damage, air: p.air })),
       deaths: battle.events.filter((e) => e.type === "death" && e.card === "lava-hound").length,

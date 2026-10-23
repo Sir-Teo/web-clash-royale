@@ -63,6 +63,8 @@ interface Visual {
   object: T.Group;
   model?: Model;
   sprite?: AnimatedSprite;
+  shadow?: T.Mesh;
+  ring?: T.Mesh;
   archer?: AnimatedSprite;
   building?: BuildingSprite;
   art?: T.Mesh;
@@ -955,6 +957,7 @@ export class Arena {
         let object: T.Group,
           model: Model | undefined,
           sprite: AnimatedSprite | undefined,
+          shadow: T.Mesh | undefined,
           towerArcher: AnimatedSprite | undefined,
           buildingSprite: BuildingSprite | undefined,
           art: T.Mesh | undefined;
@@ -1031,7 +1034,7 @@ export class Arena {
           if (sprite) {
             object = new T.Group();
             object.add(sprite.mesh);
-            const shadow = new T.Mesh(
+            shadow = new T.Mesh(
               new T.CircleGeometry(e.radius * 1.2, 16),
               new T.MeshBasicMaterial({
                 color: 0x173721,
@@ -1074,6 +1077,7 @@ export class Arena {
           object,
           model,
           sprite,
+          shadow,
           art,
           archer: towerArcher,
           building: buildingSprite,
@@ -1099,6 +1103,7 @@ export class Arena {
           ring.rotation.x = -Math.PI / 2;
           ring.position.y = 0.03;
           object.add(ring);
+          v.ring = ring;
           v.nativeHealth = this.health.make(e) ?? undefined;
           if (v.nativeHealth) this.scene.add(v.nativeHealth.mesh);
           else {
@@ -1747,6 +1752,9 @@ export class Arena {
         : moving && e.kind === "troop"
           ? Math.abs(Math.sin(time * 9 + e.id)) * 0.05
           : 0);
+    // Keep the original ground-unit marker plane as air units rise and bob.
+    if (v.shadow) v.shadow.position.y = 0.22 - o.position.y;
+    if (v.ring) v.ring.position.y = 0.23 - o.position.y;
     if (v.sprite) {
       if (e.card === "dark-prince") {
         const source = e.shield ? "dark-prince-shield" : "dark-prince";
