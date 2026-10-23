@@ -74,7 +74,8 @@
     "assets:bat-wiggle": "node scripts/import-bat-wiggle.mjs",
     "assets:night-witch": "node scripts/import-night-witch.mjs",
     "assets:bandit": "node scripts/import-bandit.mjs",
-    "assets:bandit-filter": "node scripts/import-bandit-filter.mjs"
+    "assets:bandit-filter": "node scripts/import-bandit-filter.mjs",
+    "assets:bandit-trail": "node scripts/import-bandit-trail.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",

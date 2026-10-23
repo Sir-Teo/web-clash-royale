@@ -1,0 +1,32 @@
+{
+  "source": "assassin_dashing",
+  "count": 8,
+  "interval": 0.025,
+  "life": [
+    0.3,
+    0.4
+  ],
+  "fadeOut": 0.5,
+  "blueExports": [
+    "bandit_dash1_1",
+    "bandit_dash1_2",
+    "bandit_dash1_3",
+    "bandit_dash1_4",
+    "bandit_dash1_5",
+    "bandit_dash1_6",
+    "bandit_dash1_7",
+    "bandit_dash1_8",
+    "bandit_dash1_9"
+  ],
+  "redExports": [
+    "bandit_red_dash1_1",
+    "bandit_red_dash1_2",
+    "bandit_red_dash1_3",
+    "bandit_red_dash1_4",
+    "bandit_red_dash1_5",
+    "bandit_red_dash1_6",
+    "bandit_red_dash1_7",
+    "bandit_red_dash1_8",
+    "bandit_red_dash1_9"
+  ]
+}
