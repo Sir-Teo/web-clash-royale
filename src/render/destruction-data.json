@@ -401,6 +401,69 @@
         }
       ]
     },
+    "giant-skeleton": {
+      "source": "giant_skeleton_die",
+      "components": [
+        {
+          "emitter": "giant_death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "giant_death_puff1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "giant_death_puff1_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "giant_death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "giant_death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "giant_death_puff1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "giant_death_puff1_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "giant_death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "musketeer": {
       "source": "musketeer_die",
       "components": [
@@ -3497,6 +3560,97 @@
     },
     "balloon-bomb": {
       "source": "MegaBombExplodeBalloon",
+      "components": [
+        {
+          "emitter": "MagaBomb_FireRing",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "MegaBomb_explode_smoke",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "MegaBomb_explode_debris",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "MegaBomb_destroyed_ground",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "MegaBomb_explode_debris2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "MegaBomb_explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "MagaBomb_FireRing",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "MegaBomb_explode_smoke",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "MegaBomb_explode_debris",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "MegaBomb_destroyed_ground",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "MegaBomb_explode_debris2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "MegaBomb_explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "giant-skeleton-bomb": {
+      "source": "MegaBombExplodeSkeleton",
       "components": [
         {
           "emitter": "MagaBomb_FireRing",
@@ -7532,6 +7686,55 @@
     },
     "giant": {
       "source": "giant_deploy",
+      "components": [
+        {
+          "emitter": "giant_deploy_dustPuff",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "giant_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "giant_deploy_dustPuff_shadow",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "giant_deploy_dustPuff",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "giant_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "giant_deploy_dustPuff_shadow",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ]
+    },
+    "giant-skeleton": {
+      "source": "giant_skeleton_deploy",
       "components": [
         {
           "emitter": "giant_deploy_dustPuff",

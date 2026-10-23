@@ -1,0 +1,43 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_giant_skeleton",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/client/effects.csv",
+      "sha256": "22591ef669cb9af6535a10caae5b7f7f8b5b79c81630aeb3381a04bfef298985"
+    },
+    {
+      "path": "reference/sc/chr_giant_skeleton.bin",
+      "sha256": "b74b822c5283b78d38969fb58c4dbb1418e4e38137c945214c2de7d076a70dda"
+    },
+    {
+      "path": "reference/sc/chr_giant_skeleton_tex.png",
+      "sha256": "84f28e7d70a8ef1afd01421cbeabf217270c042d6d8639eab11a8de586b41c9a"
+    },
+    {
+      "path": "reference/sc/building_mega_bomb.bin",
+      "sha256": "0f588b85ea10ddd26f3997f8a44ef8d6ae206f7dbfe09a45a8bd5eb445d0ce1c"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    }
+  ],
+  "output": {
+    "path": "src/game/giant-skeleton-data.json",
+    "sha256": "e16aef2e2a3dc1c7aa3deee080923c49af83a61c624d9392c14910335c561ee3"
+  }
+}

@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "e8b2014d675ec2c32ffb35636990d93a8612e642d9e3cf443332d08ac08679af"
+      "sha256": "ea92dc1d99144e298fce9f37aa7f3dc6a3e8ab752d9781948bf40efb06efe050"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "31f59bdf54748364cf4d50f854982bbfdb5e1457458a19d2b3ab56f853180683"
+      "sha256": "3612582f25573aae4d952efc7f340669f451db56fe6f76f57eaedc998789b768"
     }
   ],
   "ignoredEnemyVersions": [
@@ -290,6 +290,18 @@
       "source": "sfx/battleram_deploy_01.ogg",
       "bytes": 8611,
       "sha256": "e5f3dc09d76d9f62755dd28c2bcf88d8beb93a978c24e065b161b8688b08be6b"
+    },
+    {
+      "path": "public/assets/audio/big_skeleton_hit_01.ogg",
+      "source": "sfx/big_skeleton_hit_01.ogg",
+      "bytes": 8837,
+      "sha256": "560b3bf32f831430e5dca65a9553cc2d0e088a6c9f8f84c1fe9499fafaccf324"
+    },
+    {
+      "path": "public/assets/audio/big_skeleton_summon_01.ogg",
+      "source": "sfx/big_skeleton_summon_01.ogg",
+      "bytes": 9072,
+      "sha256": "8425c7b07fab07d3672bb10c1ed8d2e919e97c1cef1316cf499653542bcdf626"
     },
     {
       "path": "public/assets/audio/blowdart_deploy_01.ogg",
@@ -638,6 +650,12 @@
       "source": "sfx/giant_hit_01.ogg",
       "bytes": 7585,
       "sha256": "aaf37453b16f44d4338e2ec1dab80205d72a9ec4eed4cc41b1c7d9525dc734ee"
+    },
+    {
+      "path": "public/assets/audio/giant_skelly_dep_vo_01.ogg",
+      "source": "sfx/giant_skelly_dep_vo_01.ogg",
+      "bytes": 8685,
+      "sha256": "1c30594de654fd6e3c8ab3334d7ca81b9bea8ab038e62dcf2de1c437bb76a100"
     },
     {
       "path": "public/assets/audio/gob_attack_01v2.ogg",
@@ -1246,6 +1264,12 @@
       "sha256": "5c4ad5a2b66b638027d26beef26b115733b8afe46127071b52b23161360f5aef"
     },
     {
+      "path": "public/assets/audio/skeleton_arm_swing_02.ogg",
+      "source": "sfx/skeleton_arm_swing_02.ogg",
+      "bytes": 6469,
+      "sha256": "b26d51d9eaad96a6b50699e02a5c5b4f1a3b654fd68f3244d8e2acb0e34a09a7"
+    },
+    {
       "path": "public/assets/audio/skeleton_atk_03.ogg",
       "source": "sfx/skeleton_atk_03.ogg",
       "bytes": 6200,
@@ -1566,6 +1590,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "48a433d61cad53a660b44e86f6b53f542f02ad75f3a78f5be161baf8b5bc5a2a"
+    "sha256": "bfb71f7b30564eeacd30423df380125f4f8ec75cf599d6485a633cf4d57245df"
   }
 }

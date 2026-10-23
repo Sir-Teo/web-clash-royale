@@ -365,6 +365,153 @@
         "row": "Giant"
       }
     },
+    "giant-skeleton": {
+      "source": "GiantSkeleton",
+      "attack": {
+        "sources": [
+          "giant_skeleton_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_giant_skeleton_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_giant_skeleton_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "giant_skeleton_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_giant_skeleton_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_giant_skeleton_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "giant_skeleton_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_giant_skeleton_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_giant_deploy_vo",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_giant_skeleton_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_giant_deploy_vo",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [
+          "MegaBombExplodeSkeleton"
+        ],
+        "components": [
+          {
+            "sound": "sound_GiantSkeleton_bomb_die",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_GiantSkeleton_bomb_die",
+            "delay": 0
+          }
+        ]
+      },
+      "death-spawn": {
+        "sources": [
+          "GiantSkeleton_Bomb_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_GiantSkeleton_bomb_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_GiantSkeleton_bomb_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "GiantSkeleton"
+      }
+    },
     "musketeer": {
       "source": "Musketeer",
       "attack": {
@@ -8473,6 +8620,144 @@
         "padding": 0
       }
     ],
+    "sound_giant_skeleton_attack_start": [
+      {
+        "sourceFile": "sfx/skeleton_arm_swing_02.wav",
+        "file": "skeleton_arm_swing_02",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0.2,
+          0.2
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_giant_skeleton_hit": [
+      {
+        "sourceFile": "sfx/big_skeleton_hit_01.wav",
+        "file": "big_skeleton_hit_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_giant_skeleton_deploy": [
+      {
+        "sourceFile": "sfx/big_skeleton_summon_01.wav",
+        "file": "big_skeleton_summon_01",
+        "volume": [
+          0.9,
+          0.9
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_giant_deploy_vo": [
+      {
+        "sourceFile": "sfx/giant_skelly_dep_vo_01.wav",
+        "file": "giant_skelly_dep_vo_01",
+        "volume": [
+          0.9,
+          0.9
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.6,
+          0.6
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_GiantSkeleton_bomb_die": [
+      {
+        "sourceFile": "sfx/explosion_01.wav",
+        "file": "explosion_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_GiantSkeleton_bomb_deploy": [
+      {
+        "sourceFile": "sfx/bomb_drop_01.wav",
+        "file": "bomb_drop_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
     "sound_musketeer_attack_start": [
       {
         "sourceFile": "",
@@ -11938,29 +12223,6 @@
         "repeat": 0.3,
         "loop": false,
         "priority": 2,
-        "padding": 0
-      }
-    ],
-    "sound_GiantSkeleton_bomb_deploy": [
-      {
-        "sourceFile": "sfx/bomb_drop_01.wav",
-        "file": "bomb_drop_01",
-        "volume": [
-          0.8,
-          0.8
-        ],
-        "pitch": [
-          1,
-          1
-        ],
-        "startDelay": [
-          0,
-          0
-        ],
-        "maximum": 2,
-        "repeat": 0,
-        "loop": false,
-        "priority": 1,
         "padding": 0
       }
     ],

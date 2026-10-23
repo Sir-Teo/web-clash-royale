@@ -1,0 +1,30 @@
+{
+  "card": "GiantSkeleton",
+  "character": "GiantSkeleton",
+  "rarity": "Epic",
+  "cost": 6,
+  "count": 1,
+  "sourceHitpoints": 2000,
+  "sourceDamage": 130,
+  "sourceSpeed": 60,
+  "sourceRange": 0.8,
+  "sourceHitSpeed": 1.5,
+  "sourceLoadTime": 1,
+  "sourceDeployTime": 1,
+  "ignoresPushback": true,
+  "bomb": {
+    "source": "GiantSkeletonBomb",
+    "deployTime": 3,
+    "sourceDamage": 720,
+    "radius": 3,
+    "pushback": 1.8,
+    "hitsGround": true,
+    "hitsAir": true,
+    "blueExport": "giant_skeleton_bomb_blue",
+    "redExport": "giant_skeleton_bomb_red",
+    "spawnEffect": "GiantSkeleton_Bomb_deploy",
+    "deathEffect": "MegaBombExplodeSkeleton"
+  },
+  "blueExport": "giant_skeleton",
+  "redExport": "giant_skeleton_enemy"
+}

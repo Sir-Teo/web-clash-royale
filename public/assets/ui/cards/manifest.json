@@ -367,6 +367,11 @@
       "sha256": "48f79c156b55a2e8de8eb7afbe3490074d02f71adbf555c58db521cecf60f6ea"
     },
     {
+      "file": "portrait-giant-skeleton.webp",
+      "bytes": 38186,
+      "sha256": "c56f70f9e09447ac0043ab476b8afe6dc4e40fd85784ff402a14951e6a3963fd"
+    },
+    {
       "file": "portrait-ice-golem.webp",
       "bytes": 42180,
       "sha256": "10232266b9bb41fb68d24e232ebe20e6bdd799efdcdc61261957b7e05add5ff6"
@@ -443,8 +448,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 104753,
-      "sha256": "31f59bdf54748364cf4d50f854982bbfdb5e1457458a19d2b3ab56f853180683"
+      "bytes": 105101,
+      "sha256": "3612582f25573aae4d952efc7f340669f451db56fe6f76f57eaedc998789b768"
     }
   ]
 }

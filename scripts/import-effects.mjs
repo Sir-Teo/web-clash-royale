@@ -32,8 +32,15 @@ const buildingsBytes = await readFile("reference/logic/buildings.csv");
 const balloon = csvRows(buildingsBytes.toString()).find(
   (r) => r.Name === "BalloonBomb",
 );
+const giantSkeletonBomb = csvRows(buildingsBytes.toString()).find(
+  (r) => r.Name === "GiantSkeletonBomb",
+);
 if (balloon.FileName !== "sc/building_mega_bomb.sc")
   throw new Error("Unexpected Balloon bomb resource");
+if (giantSkeletonBomb?.FileName !== "sc/building_mega_bomb.sc" ||
+    giantSkeletonBomb.BlueExportName !== "giant_skeleton_bomb_blue" ||
+    giantSkeletonBomb.RedExportName !== "giant_skeleton_bomb_red")
+  throw new Error("Recheck Giant Skeleton bomb resource");
 const textures = [],
   hashes = [],
   sources = [],
@@ -180,7 +187,9 @@ for (const resource of [
           ]),
         ]
       : resource === "building_mega_bomb"
-        ? [balloon.BlueExportName, balloon.RedExportName, ...emitterExports]
+        ? [balloon.BlueExportName, balloon.RedExportName,
+            giantSkeletonBomb.BlueExportName, giantSkeletonBomb.RedExportName,
+            ...emitterExports]
         : resource === "spell_goblin_barrel"
           ? ["spell_goblin_barrel_projectile", "Barrel_shadow"]
           : resource === "building_rage_bottle"

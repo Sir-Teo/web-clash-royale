@@ -44,6 +44,12 @@ sources["skeleton-army"] = sources.skeletons;
 const balloon = tables.characters[profiles.balloon.source];
 sources["balloon-bomb"] =
   tables.buildings[balloon.DeathSpawnCharacter].DeathEffect;
+const giantSkeleton = tables.characters[profiles["giant-skeleton"].source];
+const giantSkeletonBomb = tables.buildings[giantSkeleton.DeathSpawnCharacter];
+if (giantSkeleton.DeathSpawnCount !== "1" ||
+    giantSkeletonBomb?.DeathEffect !== "MegaBombExplodeSkeleton")
+  throw new Error("Recheck Giant Skeleton death bomb effect");
+sources["giant-skeleton-bomb"] = giantSkeletonBomb.DeathEffect;
 const effects = {},
   impacts = {},
   trails = {},

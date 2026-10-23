@@ -2,6 +2,27 @@
   "radiusFactor": 6,
   "angleFactor": 0.0006283000111579895,
   "profiles": {
+    "giant-skeleton": {
+      "death-impact": {
+        "sources": [
+          "MegaBombExplodeSkeleton"
+        ],
+        "components": [
+          {
+            "effect": "MegaBombExplodeSkeleton",
+            "delay": 0,
+            "duration": 1
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "MegaBombExplodeSkeleton",
+            "delay": 0,
+            "duration": 1
+          }
+        ]
+      }
+    },
     "ice-wizard": {
       "spawn": {
         "sources": [

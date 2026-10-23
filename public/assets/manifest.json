@@ -459,6 +459,12 @@
       "sha256": "bcbccf3289dc362eaa9e553b886d59e2255c82d62abcfe8c2f8d83560b2ec58d"
     },
     {
+      "path": "cards/giant-skeleton.png",
+      "source": "cards/giant-skeleton.png",
+      "bytes": 157539,
+      "sha256": "70d69153dd8485a6a508e8d3a8753c57ec17a969530f9808d09cf0931c307af1"
+    },
+    {
       "path": "cards/giant.png",
       "source": "cards/giant.png",
       "bytes": 136801,

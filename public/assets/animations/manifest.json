@@ -395,6 +395,23 @@
       "uniqueFrames": 1016
     },
     {
+      "id": "giant-skeleton",
+      "source": "chr_giant_skeleton",
+      "metadataSha256": "b74b822c5283b78d38969fb58c4dbb1418e4e38137c945214c2de7d076a70dda",
+      "dataSha256": "148262c63d3c32178ffcbcbafe30ca6dd333c13c3d28b1895ae941db0905bfa6",
+      "textures": [
+        {
+          "file": "giant-skeleton-0.webp",
+          "sha256": "5ab938dd7d80c8b367a1edcc298b7bea3a39ed8f7692d58a7eff492d8e200eec",
+          "originalSha256": "84f28e7d70a8ef1afd01421cbeabf217270c042d6d8639eab11a8de586b41c9a"
+        }
+      ],
+      "shapes": 450,
+      "clips": 54,
+      "frames": 954,
+      "uniqueFrames": 459
+    },
+    {
       "id": "musketeer",
       "source": "chr_musketeer",
       "metadataSha256": "8ceb69fb0d485a971f2990081d8d88823beade5453183190d15ec45fe691f4ca",

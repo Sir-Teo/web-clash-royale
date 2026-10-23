@@ -33,6 +33,7 @@ const sources = {
   lumberjack: "rage_barbarian",
   archers: "archer",
   giant: "giant",
+  "giant-skeleton": "giant_skeleton",
   musketeer: "musketeer",
   "mini-pekka": "mini_pekka",
   goblins: "goblin",

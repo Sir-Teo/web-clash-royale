@@ -25,6 +25,13 @@
     "ignoresKnockback": true,
     "projectile": null
   },
+  "giant-skeleton": {
+    "source": "GiantSkeleton",
+    "windup": 0.5,
+    "sight": 5,
+    "ignoresKnockback": true,
+    "projectile": null
+  },
   "musketeer": {
     "source": "Musketeer",
     "windup": 0.5,
