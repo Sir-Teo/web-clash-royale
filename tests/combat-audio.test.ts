@@ -57,10 +57,10 @@ describe("native combat audio evidence", () => {
     const manifest = JSON.parse(
       readFileSync("reference/client/combat-audio-manifest.json", "utf8"),
     );
-    expect(manifest.audioFiles).toHaveLength(119);
+    expect(manifest.audioFiles).toHaveLength(122);
     expect(manifest.sources).toHaveLength(11);
-    expect(Object.keys(definitions.profiles)).toHaveLength(31);
-    expect(Object.keys(definitions.sounds)).toHaveLength(99);
+    expect(Object.keys(definitions.profiles)).toHaveLength(32);
+    expect(Object.keys(definitions.sounds)).toHaveLength(103);
     for (const file of [
       ...manifest.sources,
       ...manifest.audioFiles,
@@ -91,6 +91,7 @@ describe("native combat audio evidence", () => {
         ]);
         expect(sound.maximum).toBe(Number(row.MaximumByType));
         expect(sound.repeat).toBe(Number(row.MaxRepeatMs) / 1000);
+        expect(sound.loop).toBe(row.Loop?.toLowerCase() === "true");
         expect(sound.priority).toBe(Number(row.Priority));
         expect(sound.padding).toBe(Number(row.PadEmpyToEndMs) / 1000);
       }

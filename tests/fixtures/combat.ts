@@ -107,6 +107,12 @@ function setup() {
     for (const card of ["giant", "knight", "minions"] as CardId[])
       for (const entity of unit(card, "red", 4, 12)) entity.active = false;
     cast("lightning", "blue", 4, 12);
+  } else if (scenario === "log") {
+    for (const entity of unit("giant", "red", 4, 13)) {
+      entity.active = false;
+      entity.hp = entity.maxHp = 10000;
+    }
+    cast("log", "blue", 4, 22);
   } else if (scenario === "spell-impacts") {
     cast("zap", "blue", 4, 13);
     cast("arrows", "red", 14, 19);
