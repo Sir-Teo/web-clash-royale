@@ -5,8 +5,8 @@ The default game is a static browser app. Two players connect directly with WebR
 ## Connect two players
 
 1. Open the game on both devices and choose **Play with a friend**.
-2. One player chooses **Create an invite** and sends the invite link to their friend.
-3. The friend opens the link (or pastes it into the join field), chooses **Join friend**, and sends the generated reply back.
+2. One player chooses **Create an invite** and sends the invite through **Share invite** on a supported phone, or **Copy invite**. Hosted games send a link. A game opened at `localhost` sends an invite code because a `localhost` link would point back to the friend's device.
+3. The friend opens the link, or opens the game first and pastes the code into the join field, chooses **Join friend**, and sends the generated reply back with **Share reply** or **Copy reply**.
 4. The inviting player pastes that reply and chooses **Connect friend**.
 5. Both choose **Ready for battle**.
 
@@ -19,7 +19,7 @@ npm ci
 npm run dev
 ```
 
-Open Vite's printed **Network** address on each phone. A phone's `localhost` refers to the phone itself; create the invitation from the shared Network address so the link works on both devices. Guest Wi-Fi isolation can prevent direct connections.
+Open Vite's printed **Network** address on each phone. A phone's `localhost` refers to the phone itself. If the inviting browser is on `localhost`, the UI shares a portable code; open the Network address on the other phone before pasting it. Opening the game from the shared Network address on both devices lets the invite include a directly usable link. Guest Wi-Fi isolation can prevent direct connections.
 
 ```sh
 npm run build
@@ -42,7 +42,7 @@ Remote play uses Google's public STUN endpoint to discover routes, then carries 
 
 ## Verification and retained server experiments
 
-`tests/peer.test.ts` covers ready checks, deck and deployment validation, duplicate commands, private snapshots, pause/resume, reactions, replay equivalence and bounded signaling/data packets. `tests/browser/peer.spec.ts` uses two real browsers against static files, exchanges the actual invite and reply, deploys from both perspectives, shares reactions, pauses through visibility changes, surrenders and opens the replay. It also checks that the app makes no game WebSocket or `/api/` requests.
+`tests/peer.test.ts` covers ready checks, deck and deployment validation, duplicate commands, private snapshots, pause/resume, reactions, replay equivalence and bounded signaling/data packets. `tests/browser/peer.spec.ts` uses two real browsers against static files, exchanges the actual invite and reply, deploys from both perspectives, shares reactions, pauses through visibility changes, surrenders and opens the replay. `tests/browser/peer-share.spec.ts` verifies that a localhost game shares the usable code through the phone share API. The peer suite also checks that the app makes no game WebSocket or `/api/` requests.
 
 The earlier server implementation remains in source history and in opt-in regression code. It is not part of the default runtime or deployment. To reproduce those historical checks only, use `npm run build:legacy`, then `VITE_LEGACY_ROOMS=1 ARENA_PRODUCTION=1 npx playwright test tests/browser/multiplayer.spec.ts tests/browser/startup.spec.ts tests/browser/connection.spec.ts --project=desktop`. `dev:legacy` and `start:legacy` are explicitly separate commands. Default browser tests select the new peer flow.
 

@@ -127,7 +127,7 @@ test("static browsers exchange invites, fight, pause together and replay without
       .click();
     await expect(page.locator("#peer-share")).toBeVisible({ timeout: 20000 });
     const invite = await page.locator("#peer-share").inputValue();
-    expect(invite).toContain("#battle=CR1.");
+    expect(invite).toMatch(/^CR1\./);
     await friend.locator("#peer-invite").fill(invite);
     await friend
       .getByRole("button", { name: "Join friend", exact: true })
