@@ -11,6 +11,7 @@ test("native Poison damages both sides, animates on phones and clears after expi
   const areas = async () => JSON.parse((await node.getAttribute("data-poison-areas"))!);
   const entities = async () => JSON.parse((await node.getAttribute("data-poison-entities"))!);
   const filter = async () => JSON.parse((await node.getAttribute("data-poison-filter"))!);
+  const structures = async () => JSON.parse((await node.getAttribute("data-poison-structures"))!);
   const particles = async () => JSON.parse((await node.getAttribute("data-state"))!).particles as number;
   await page.locator("#poison-cast").click();
   await expect.poll(async () => (await areas()).length).toBe(2);
@@ -18,6 +19,8 @@ test("native Poison damages both sides, animates on phones and clears after expi
   await page.locator("#second").click();
   await expect.poll(async () => (await entities()).every((entity: { hp: number }) => entity.hp < 1666)).toBe(true);
   await expect.poll(async () => (await filter()).length).toBe(2);
+  await expect.poll(async () => (await structures()).length).toBe(2);
+  expect((await structures()).map((actor: { parts: number }) => actor.parts)).toEqual([1, 1]);
   expect(await particles()).toBeGreaterThan(0);
   const heldAreas = await areas();
   const heldHp = await entities();
@@ -30,7 +33,14 @@ test("native Poison damages both sides, animates on phones and clears after expi
   await page.locator("#second").click();
   await expect.poll(async () => (await entities()).every((entity: { poison?: unknown }) => !entity.poison)).toBe(true);
   await expect.poll(async () => (await filter()).length).toBe(0);
+  await expect.poll(async () => (await structures()).length).toBe(0);
+  await page.locator("#poison-towers").click();
+  await page.locator("#step").click();
+  await expect.poll(async () => (await structures()).length).toBe(2);
+  expect((await structures()).every((actor: { parts: number }) => actor.parts >= 3)).toBe(true);
+  await page.screenshot({ path: info.outputPath("native-poison-towers.png"), fullPage: true });
   await page.locator("#reset").click();
   await expect.poll(async () => (await areas()).length).toBe(0);
+  await expect.poll(async () => (await structures()).length).toBe(0);
   expect(errors).toEqual([]);
 });

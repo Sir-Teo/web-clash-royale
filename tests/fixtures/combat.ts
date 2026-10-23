@@ -74,6 +74,8 @@ function setup() {
     scenario !== "freeze";
   (document.querySelector("#poison-cast") as HTMLElement).hidden =
     scenario !== "poison";
+  (document.querySelector("#poison-towers") as HTMLElement).hidden =
+    scenario !== "poison";
   (document.querySelector("#freeze-towers") as HTMLElement).hidden =
     scenario !== "freeze";
   for (const id of [
@@ -152,8 +154,17 @@ function setup() {
     for (const [team, y] of [
       ["red", 12],
       ["blue", 20],
-    ] as [Team, number][])
+    ] as [Team, number][]) {
       for (const entity of unit("knight", team, 9, y)) entity.active = false;
+      for (const entity of unit("tesla", team, 11.2, y)) {
+        entity.active = false;
+        entity.lifetime = undefined;
+        if (entity.burrow) {
+          entity.burrow.phase = "exposed";
+          entity.burrow.exposure = 1;
+        }
+      }
+    }
   } else if (scenario === "ranged") {
     for (const [id, x, y] of [
       ["archers", 3, 23],
@@ -237,6 +248,12 @@ document.querySelector("#freeze-cast")!.addEventListener("click", () => {
 document.querySelector("#poison-cast")!.addEventListener("click", () => {
   cast("poison", "blue", 9, 12);
   cast("poison", "red", 9, 20);
+});
+document.querySelector("#poison-towers")!.addEventListener("click", () => {
+  for (const tower of battle.entities.filter(
+    (entity) => entity.kind === "tower" && !entity.king && entity.lane === "left",
+  ))
+    cast("poison", tower.team === "blue" ? "red" : "blue", tower.x, tower.y);
 });
 document.querySelector("#freeze-towers")!.addEventListener("click", () => {
   for (const tower of battle.entities.filter(
@@ -355,6 +372,8 @@ function render(now: number) {
   (
     document.querySelector("#destruction") as HTMLElement
   ).dataset.coldStructures = JSON.stringify(arena.coldStructureState);
+  (document.querySelector("#destruction") as HTMLElement).dataset.poisonStructures =
+    JSON.stringify(arena.poisonStructureState);
   (document.querySelector("#destruction") as HTMLElement).dataset.freezeAreas =
     JSON.stringify(arena.freezeAreaState);
   (document.querySelector("#destruction") as HTMLElement).dataset.poisonAreas =

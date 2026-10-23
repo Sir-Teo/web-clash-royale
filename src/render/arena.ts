@@ -612,6 +612,9 @@ export class Arena {
   get coldStructureState() {
     return this.coldStructures.state;
   }
+  get poisonStructureState() {
+    return this.coldStructures.poisonState;
+  }
 
   private coldStructureParts(id: number): ColdStructurePart[] {
     const visual = this.units.get(id);

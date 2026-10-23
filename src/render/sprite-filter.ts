@@ -35,6 +35,26 @@ export function filteredSpriteMaterials(
 export type SpriteFilterLayer = "deploy" | "charge" | "poison" | "cold";
 const layerOrder: SpriteFilterLayer[] = ["deploy", "charge", "poison", "cold"];
 
+export function composeFilterColors(colors: readonly (readonly number[])[]) {
+  let ar = 0, ag = 0, ab = 0;
+  let mr = 1, mg = 1, mb = 1, ma = 1;
+  for (const color of colors) {
+    const [lr, lg, lb, la, lmr, lmg, lmb] = color;
+    const r = lmr / 255, g = lmg / 255, b = lmb / 255;
+    ar = ar * r + lr / 255;
+    ag = ag * g + lg / 255;
+    ab = ab * b + lb / 255;
+    mr *= r;
+    mg *= g;
+    mb *= b;
+    ma *= la / 255;
+  }
+  return {
+    add: [ar, ag, ab] as [number, number, number],
+    multiply: [mr, mg, mb, ma] as [number, number, number, number],
+  };
+}
+
 interface FilteredSprite {
   sprite: AnimatedSprite;
   materials: T.MeshBasicMaterial[];
@@ -103,30 +123,14 @@ export class SpriteFilterStack {
   }
 
   private compose(filtered: FilteredSprite) {
-    let ar = 0,
-      ag = 0,
-      ab = 0;
-    let mr = 1,
-      mg = 1,
-      mb = 1,
-      ma = 1;
-    for (const layer of layerOrder) {
-      const color = filtered.layers.get(layer);
-      if (!color) continue;
-      const [lr, lg, lb, la, lmr, lmg, lmb] = color;
-      const r = lmr / 255,
-        g = lmg / 255,
-        b = lmb / 255;
-      ar = ar * r + lr / 255;
-      ag = ag * g + lg / 255;
-      ab = ab * b + lb / 255;
-      mr *= r;
-      mg *= g;
-      mb *= b;
-      ma *= la / 255;
-    }
-    filtered.add.set(ar, ag, ab);
-    filtered.multiply.set(mr, mg, mb, ma);
+    const color = composeFilterColors(
+      layerOrder.flatMap((layer) => {
+        const value = filtered.layers.get(layer);
+        return value ? [value] : [];
+      }),
+    );
+    filtered.add.set(...color.add);
+    filtered.multiply.set(...color.multiply);
   }
 
   private release(filtered: FilteredSprite) {

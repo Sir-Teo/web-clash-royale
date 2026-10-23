@@ -7,6 +7,7 @@ import type { AnimatedSprite, SpriteAsset } from "../src/render/sprites";
 import { makeMaterial } from "../src/render/sprites";
 import { SpriteFilterStack } from "../src/render/sprite-filter";
 import { NativeColdFilter } from "../src/render/cold-filter";
+import { NativeColdStructures } from "../src/render/cold-filter";
 import { NativePoisonFilter, poisonFilterFrame } from "../src/render/poison-filter";
 import source from "../src/render/poison-filter-data.json";
 
@@ -68,6 +69,48 @@ describe("native Poison filter", () => {
     expect(stack.state).toEqual([]);
     expect(sprite.mesh.material).toBe(originals);
     sprite.mesh.geometry.dispose();
+    originals.forEach((material) => material.dispose());
+  });
+
+  it("tints every native tower part and composes overlapping Freeze", () => {
+    const originals = [makeMaterial(new T.Texture())];
+    const parts = Array.from({ length: 3 }, () => ({
+      mesh: new T.Mesh(new T.BufferGeometry(), originals),
+      originals,
+    }));
+    const tower = {
+      id: 4,
+      kind: "tower",
+      hp: 100,
+      stun: 0,
+      poison: { remaining: 1, elapsed: 0.2 },
+    } as Entity;
+    const filters = new NativeColdStructures();
+    filters.update([tower], 0, () => parts);
+    expect(filters.poisonState).toEqual([
+      expect.objectContaining({ id: 4, frame: 0, parts: 3 }),
+    ]);
+    expect(filters.state).toEqual([]);
+    for (const part of parts) expect(part.mesh.material).not.toBe(originals);
+    const material = parts[0].mesh.material;
+    tower.stun = 1;
+    filters.update([tower], 0.1, () => parts);
+    expect(filters.poisonState[0].frame).toBe(6);
+    expect(filters.state[0].frame).toBe(0);
+    expect(parts[0].mesh.material).toBe(material);
+    tower.poison = undefined;
+    filters.update([tower], 0.2, () => parts);
+    expect(filters.poisonState).toEqual([]);
+    expect(filters.state).toHaveLength(1);
+    tower.stun = 0;
+    filters.update([tower], 0.3, () => parts);
+    for (const part of parts) expect(part.mesh.material).toBe(originals);
+    filters.update([{ ...tower, poison: { remaining: 1, elapsed: 0 } }], 1, () => parts);
+    filters.clear();
+    for (const part of parts) {
+      expect(part.mesh.material).toBe(originals);
+      part.mesh.geometry.dispose();
+    }
     originals.forEach((material) => material.dispose());
   });
 });

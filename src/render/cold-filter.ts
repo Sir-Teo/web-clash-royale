@@ -1,8 +1,10 @@
 import * as T from "three";
 import type { Entity } from "../game/engine";
 import type { AnimatedSprite } from "./sprites";
-import { filteredSpriteMaterials, SpriteFilterStack } from "./sprite-filter";
+import { composeFilterColors, filteredSpriteMaterials, SpriteFilterStack } from "./sprite-filter";
 import source from "./cold-filter-data.json";
+import poisonSource from "./poison-filter-data.json";
+import { poisonFilterFrame } from "./poison-filter";
 
 interface ColdActor {
   start: number;
@@ -69,23 +71,32 @@ export interface ColdStructurePart {
 }
 
 interface ColdStructure {
-  start: number;
-  frame: number;
+  cold?: { start: number; frame: number };
+  poison?: { start: number; frame: number };
   add: T.Vector3;
   multiply: T.Vector4;
   parts: (ColdStructurePart & { materials: T.MeshBasicMaterial[] })[];
 }
 
-/** Apply the same archived buff to multipart buildings and tower characters. */
+/** Compose archived buff colors across all native building and tower parts. */
 export class NativeColdStructures {
   private actors = new Map<number, ColdStructure>();
 
   get state() {
-    return [...this.actors.entries()].map(([id, actor]) => ({
+    return [...this.actors.entries()].filter(([, actor]) => actor.cold).map(([id, actor]) => ({
       id,
-      frame: actor.frame,
+      frame: actor.cold!.frame,
       parts: actor.parts.length,
-      color: source.colors[actor.frame],
+      color: source.colors[actor.cold!.frame],
+    }));
+  }
+
+  get poisonState() {
+    return [...this.actors.entries()].filter(([, actor]) => actor.poison).map(([id, actor]) => ({
+      id,
+      frame: actor.poison!.frame,
+      parts: actor.parts.length,
+      color: poisonSource.frames[actor.poison!.frame].color,
     }));
   }
 
@@ -98,7 +109,7 @@ export class NativeColdStructures {
     for (const entity of entities) {
       if (
         entity.hp <= 0 ||
-        entity.stun <= 0 ||
+        (entity.stun <= 0 && !entity.poison?.remaining) ||
         (entity.kind !== "tower" && entity.kind !== "building")
       )
         continue;
@@ -117,8 +128,6 @@ export class NativeColdStructures {
       }
       if (!actor) {
         actor = {
-          start: time,
-          frame: 0,
           add: new T.Vector3(),
           multiply: new T.Vector4(1, 1, 1, 1),
           parts: [],
@@ -130,10 +139,21 @@ export class NativeColdStructures {
         });
         this.actors.set(entity.id, actor);
       }
-      actor.frame = coldFilterFrame(time - actor.start);
-      const [ar, ag, ab, alpha, mr, mg, mb] = source.colors[actor.frame];
-      actor.add.set(ar / 255, ag / 255, ab / 255);
-      actor.multiply.set(mr / 255, mg / 255, mb / 255, alpha / 255);
+      if (entity.stun > 0) {
+        actor.cold ??= { start: time, frame: 0 };
+        actor.cold.frame = coldFilterFrame(time - actor.cold.start);
+      } else actor.cold = undefined;
+      if (entity.poison?.remaining) {
+        actor.poison ??= { start: time, frame: 0 };
+        actor.poison.frame = poisonFilterFrame(time - actor.poison.start);
+      } else actor.poison = undefined;
+      const colors = [
+        ...(actor.poison ? [poisonSource.frames[actor.poison.frame].color] : []),
+        ...(actor.cold ? [source.colors[actor.cold.frame]] : []),
+      ];
+      const color = composeFilterColors(colors);
+      actor.add.set(...color.add);
+      actor.multiply.set(...color.multiply);
     }
     for (const [id, actor] of this.actors)
       if (!active.has(id)) {
