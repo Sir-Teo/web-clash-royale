@@ -2,7 +2,7 @@
 
 A private, independent browser fan game for Sir-Teo. Built with TypeScript, Three.js and Vite. AI battles work offline. Friendly two-player battles connect directly between browsers; the default build is front end only.
 
-Build an eight-card deck from 37 cards, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
+Build an eight-card deck from 38 cards, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
 
 Combat includes cancellable attack windups, defensive building pulls, homing shots, ballistic bombs, Fireball travel and knockback, three-wave Arrows and Zap charge resets. Cannon uses its native aiming frames; Tesla hides underground, rises to attack and retracts when idle. Princess Towers use their dedicated native character animations. The King plays its original wake-up sequence and waits 3.3 seconds before aiming and attacking. Existing version-1 through version-4 replays retain their original rules; new matches record version-5 combat.
 
@@ -50,7 +50,7 @@ Battle countdowns and overtime notices use the original font, authored animation
 
 Battles open with the original animated arena title, crossed swords, red/blue player ribbons and FIGHT lettering. Combat, AI and elixir wait for the intro's authored action frame. The opening pauses with the game, fits long player names, adapts to phone rotation and plays when a replay restarts; seeking skips it.
 
-All 37 cards use original unframed portraits with native hand/deck frames, cost drops and text. Mirror repeats your previous card for one extra elixir; its hand and next-card costs update with the copied card. Minion Horde and Three Musketeers deploy six Minions and three Musketeers with the original unit animations. Selected cards show the original white outline, and newly drawn cards play the source reveal animation. The same artwork appears in the deck editor, details, next-card preview and drag controls; phone touch targets remain at least 44 pixels.
+All 38 cards use original unframed portraits with native hand/deck frames, cost drops and text. Mirror repeats your previous card for one extra elixir; its hand and next-card costs update with the copied card. Minion Horde and Three Musketeers deploy six Minions and three Musketeers; Goblin Gang sends three melee Goblins ahead of three Spear Goblins. Selected cards show the original white outline, and newly drawn cards play the source reveal animation. The same artwork appears in the deck editor, details, next-card preview and drag controls; phone touch targets remain at least 44 pixels.
 
 The match timer and vertical crown counters use the original HUD artwork and type. Overtime transitions into its native red panel, and each team's crown icon plays the source bounce when awarded crowns. Portrait and landscape use their separate archived layouts; crown flights land on the actual counter artwork.
 
@@ -83,7 +83,7 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 
 `npm run assets:death-audio` imports the corresponding native sound mappings and six pinned audio files, preserving nested effects, team variants, volume/pitch ranges and delays.
 
-`npm run assets:combat-audio` imports 39 troop/tower/spell sound profiles, 108 groups and 127 pinned audio files from the retained logic, effects and sound tables. Card sources come from the native portrait bindings. Source and output hashes are retained in the combat-audio manifest.
+`npm run assets:combat-audio` imports 40 troop/tower/spell sound profiles, 108 groups and 127 pinned audio files from the retained logic, effects and sound tables. Card sources come from the native portrait bindings. Source and output hashes are retained in the combat-audio manifest.
 
 `npm run assets:ui` imports five native battle announcement timelines, their text styles, font, elixir icon and sound mappings. `/tests/fixtures/timing.html` provides precise countdown/overtime inspection and is excluded from production.
 
