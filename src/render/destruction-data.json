@@ -2550,6 +2550,188 @@
         }
       ]
     },
+    "golem": {
+      "source": "golem_die",
+      "components": [
+        {
+          "emitter": "towerExplode_Smoke",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Small_rock_particle1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "towerExplode_Smoke",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Small_rock_particle1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
+    "golemite": {
+      "source": "small_golem_die",
+      "components": [
+        {
+          "emitter": "towerExplode_Smoke",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Small_rock_particle1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "towerExplode_Smoke",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Small_rock_particle1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "witch": {
       "source": "witch_die",
       "components": [
@@ -7651,6 +7833,16 @@
       "components": [],
       "enemyComponents": []
     },
+    "golem": {
+      "source": "golem_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
+    "golemite": {
+      "source": "small_golem_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
     "witch": {
       "source": "witch_deploy",
       "components": [
@@ -9280,6 +9472,101 @@
         "death_ground_elixir1",
         "death_ground_elixir2",
         "death_ground_elixir3"
+      ]
+    },
+    "towerExplode_Smoke": {
+      "count": 10,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.8,
+        1
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        2.3333333333333335,
+        2.5
+      ],
+      "height": 0.26666666666666666,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 1.6666666666666667,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 4.166666666666667,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "tower_destr_cloud_1"
+      ]
+    },
+    "Small_rock_particle1": {
+      "count": 8,
+      "emissionLife": [
+        0.18,
+        0.18
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        1.9,
+        1.9
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.06666666666666667
+      ],
+      "speed": [
+        0.8333333333333334,
+        1.1666666666666667
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.3333333333333333,
+      "startScale": 0.4,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0.3333333333333333,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "big_rock_particle1",
+        "big_rock_particle2"
       ]
     },
     "balloon_die_puff": {

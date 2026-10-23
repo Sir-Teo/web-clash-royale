@@ -267,6 +267,7 @@ const portraitNames = {
   bats: "Bats",
   "night-witch": "DarkWitch",
   bandit: "Assassin",
+  golem: "Golem",
   "three-musketeers": "ThreeMusketeers",
   "goblin-gang": "GoblinGang",
   barbarians: "Barbarians",

@@ -453,6 +453,12 @@
       "sha256": "c0bb707e824b63babb8890925ad889d50838e8c94dcaf567f3e8061bb2404f40"
     },
     {
+      "path": "cards/golem.png",
+      "source": "cards/golem.png",
+      "bytes": 118431,
+      "sha256": "3104284ac5620aa3fe11da23bf7b6676a138b7fba356a3a6ca4000c1542ef699"
+    },
+    {
       "path": "cards/graveyard.png",
       "source": "cards/graveyard.png",
       "bytes": 117357,

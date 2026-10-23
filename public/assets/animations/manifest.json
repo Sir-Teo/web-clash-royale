@@ -548,6 +548,40 @@
       "uniqueFrames": 900
     },
     {
+      "id": "golem",
+      "source": "chr_golem",
+      "metadataSha256": "9e6b93c2fbae2e2b2c78549989cbc51b808c408217aff1a1d1a4ba624adae69b",
+      "dataSha256": "17e46fac07d636f9ee154139050bd8d9d3a7c195b9d58287c5039431a2399bcc",
+      "textures": [
+        {
+          "file": "golem-0.webp",
+          "sha256": "162fecf36d586e2df878866d6cbb4e3be23df5d0427c3b59c41c0a4923415cf9",
+          "originalSha256": "f45b40ee9f6c80b41db1c087338f20f4ec4d78658dbbd0c8c09a7376dc6d937f"
+        }
+      ],
+      "shapes": 361,
+      "clips": 54,
+      "frames": 2232,
+      "uniqueFrames": 1440
+    },
+    {
+      "id": "golemite",
+      "source": "chr_golemite",
+      "metadataSha256": "2af5873112c212016c0e0ed7dea11ca8dc91a4ca5314dd12536f27a2617cec6c",
+      "dataSha256": "e18577965e757437063fb78b6b71e4ecc84ef0d4cd0b63f303907340f395533c",
+      "textures": [
+        {
+          "file": "golemite-0.webp",
+          "sha256": "1054267bc58ae3f78bab061b6d11a44cca4201040ec9cee8dae712f5c83edb0b",
+          "originalSha256": "366c5c8f18c9e13852ca53887d08b57a6e2556a1512328b591666329d17d8593"
+        }
+      ],
+      "shapes": 361,
+      "clips": 54,
+      "frames": 1628,
+      "uniqueFrames": 962
+    },
+    {
       "id": "witch",
       "source": "chr_witch",
       "metadataSha256": "162c723c4c17e1cb0fca5d361548ec46bd622cf1177b93bbf5b1d5308d299333",

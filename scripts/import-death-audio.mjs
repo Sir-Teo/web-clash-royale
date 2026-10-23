@@ -79,7 +79,7 @@ function composition(name, team, delay = 0, ancestry = []) {
       sound(row.Sound);
       cues.push({ sound: row.Sound, delay: time });
     }
-    if (row.Type === "Effect")
+    if (row.Type === "Effect" && row.Effect)
       cues.push(...composition(row.Effect, team, time, [...ancestry, name]));
     return cues;
   });

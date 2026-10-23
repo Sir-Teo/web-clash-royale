@@ -4623,6 +4623,260 @@
         "row": "Assassin"
       }
     },
+    "golem": {
+      "source": "Golem",
+      "attack": {
+        "sources": [
+          "golem_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_golem_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_golem_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "golem_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_golem_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_golem_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "golem_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_golem_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_golem_deploy_end",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_golem_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_golem_deploy_end",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [
+          "small_golem_die"
+        ],
+        "components": [
+          {
+            "sound": "sound_small_golem_die",
+            "delay": 0.2
+          },
+          {
+            "sound": "sound_generic_death",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_golem_die",
+            "delay": 0.2
+          },
+          {
+            "sound": "sound_generic_death",
+            "delay": 0
+          }
+        ]
+      },
+      "death-spawn": {
+        "sources": [
+          "small_golem_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_small_golem_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_small_golem_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Golem"
+      }
+    },
+    "golemite": {
+      "source": "Golemite",
+      "attack": {
+        "sources": [
+          "small_golem_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_small_golem_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_small_golem_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "small_golem_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_small_golem_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_small_golem_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "spawn": {
+        "sources": [
+          "small_golem_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_small_golem_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_small_golem_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      }
+    },
     "witch": {
       "source": "Witch",
       "attack": {
@@ -11826,6 +12080,213 @@
         "repeat": 0,
         "loop": false,
         "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_golem_attack_start": [
+      {
+        "sourceFile": "sfx/golem_atk_01.wav",
+        "file": "golem_atk_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_golem_hit": [
+      {
+        "sourceFile": "sfx/golem_atk_hit_01.wav",
+        "file": "golem_atk_hit_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_golem_deploy": [
+      {
+        "sourceFile": "sfx/golem_deploy_01.wav",
+        "file": "golem_deploy_01",
+        "volume": [
+          0.9,
+          0.9
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_golem_deploy_end": [
+      {
+        "sourceFile": "sfx/stone_golem_deploy_02.wav",
+        "file": "stone_golem_deploy_02",
+        "volume": [
+          0.98,
+          1.02
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          3,
+          3
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_small_golem_die": [
+      {
+        "sourceFile": "sfx/golem_die_01.wav",
+        "file": "golem_die_01",
+        "volume": [
+          0.65,
+          0.65
+        ],
+        "pitch": [
+          1.15,
+          1.25
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_golem_die": [
+      {
+        "sourceFile": "sfx/golem_die_01.wav",
+        "file": "golem_die_01",
+        "volume": [
+          0.9,
+          0.9
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_small_golem_deploy": [
+      {
+        "sourceFile": "sfx/stone_golem_deploy_02.wav",
+        "file": "stone_golem_deploy_02",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          1.65,
+          1.75
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_small_golem_attack_start": [
+      {
+        "sourceFile": "sfx/golem_atk_01.wav",
+        "file": "golem_atk_01",
+        "volume": [
+          0.65,
+          0.65
+        ],
+        "pitch": [
+          1.7,
+          1.8
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_small_golem_hit": [
+      {
+        "sourceFile": "sfx/golem_atk_hit_01.wav",
+        "file": "golem_atk_hit_01",
+        "volume": [
+          0.65,
+          0.65
+        ],
+        "pitch": [
+          1.7,
+          1.8
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
         "padding": 0
       }
     ],

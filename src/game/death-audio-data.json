@@ -799,6 +799,52 @@
         }
       ]
     },
+    "golem": {
+      "source": "golem_die",
+      "components": [
+        {
+          "sound": "sound_golem_die",
+          "delay": 0.2
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_golem_die",
+          "delay": 0.2
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ]
+    },
+    "golemite": {
+      "source": "small_golem_die",
+      "components": [
+        {
+          "sound": "sound_small_golem_die",
+          "delay": 0.2
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_golem_die",
+          "delay": 0.2
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ]
+    },
     "witch": {
       "source": "witch_die",
       "components": [
@@ -1654,6 +1700,52 @@
         0
       ],
       "maximum": 5,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_golem_die": {
+      "sourceFiles": [
+        "sfx/golem_die_01.wav"
+      ],
+      "files": [
+        "golem_die_01"
+      ],
+      "volume": [
+        0.9,
+        0.9
+      ],
+      "pitch": [
+        0.98,
+        1.02
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 3,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_small_golem_die": {
+      "sourceFiles": [
+        "sfx/golem_die_01.wav"
+      ],
+      "files": [
+        "golem_die_01"
+      ],
+      "volume": [
+        0.65,
+        0.65
+      ],
+      "pitch": [
+        1.15,
+        1.25
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 3,
       "priority": 1,
       "padding": 0
     },

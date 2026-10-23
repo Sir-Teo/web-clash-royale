@@ -57,6 +57,8 @@ const heights: Partial<Record<SpriteId, number>> = {
   princess: 1.7,
   archers: 1.55,
   giant: 2.7,
+  golem: 3.3,
+  golemite: 1.55,
   "royal-giant": 2.8,
   musketeer: 1.9,
   "mini-pekka": 1.75,

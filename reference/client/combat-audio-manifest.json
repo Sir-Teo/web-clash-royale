@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "2c7d3876b5f9e03a4a7c4a5aab4f7f0bbcf5ae237bf773814c2a1cd47604f031"
+      "sha256": "d33f9826f7c70e08a7996999b9fe7c783523148065e4199d86ef60e6d1731ba4"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "8e593167e7130c61fef6767b7aa84a31c3a2cc3152765610c4fd5c5545da93a4"
+      "sha256": "1b24a6f94b47011f7bdc5ac35bb0eaeb3083f95c9f0dcc2fc6dc02396f2ecdf7"
     }
   ],
   "ignoredEnemyVersions": [
@@ -626,6 +626,30 @@
       "source": "sfx/goblin_deploy_14.ogg",
       "bytes": 7801,
       "sha256": "3d0f03976e8ec876b38f79b72b40402e552eb09926d74be6bec745d8e24d6482"
+    },
+    {
+      "path": "public/assets/audio/golem_atk_01.ogg",
+      "source": "sfx/golem_atk_01.ogg",
+      "bytes": 8337,
+      "sha256": "992fa2a15e7d28e13f9d4184be5f52840d071520314064baab18e49bd20f3ee7"
+    },
+    {
+      "path": "public/assets/audio/golem_atk_hit_01.ogg",
+      "source": "sfx/golem_atk_hit_01.ogg",
+      "bytes": 9422,
+      "sha256": "921c75b33f97f55f73b90fb0b244040a32b1f42040ce723d16f31e15eb5b8014"
+    },
+    {
+      "path": "public/assets/audio/golem_deploy_01.ogg",
+      "source": "sfx/golem_deploy_01.ogg",
+      "bytes": 17088,
+      "sha256": "5e3abf6b6df78d64b6fb694e33989fc8bcb53f14678cf0618c66b75c4db7c24b"
+    },
+    {
+      "path": "public/assets/audio/golem_die_01.ogg",
+      "source": "sfx/golem_die_01.ogg",
+      "bytes": 16285,
+      "sha256": "c6040efec8f8f6e663612ddf92359e3d1d0b570bd5038751414eb84de8a0b5ab"
     },
     {
       "path": "public/assets/audio/hogrider_atk_01.ogg",
@@ -1210,6 +1234,12 @@
       "sha256": "6ebb54420e0c3887e7f77871b8de5f17dc0aee2108261f1a96477511cec04aa8"
     },
     {
+      "path": "public/assets/audio/stone_golem_deploy_02.ogg",
+      "source": "sfx/stone_golem_deploy_02.ogg",
+      "bytes": 9111,
+      "sha256": "a9c88d40b15eec71a178069fb5592939e35888664028fd89d6d1d5727426b8d9"
+    },
+    {
       "path": "public/assets/audio/summon_witch_01.ogg",
       "source": "sfx/summon_witch_01.ogg",
       "bytes": 8595,
@@ -1452,6 +1482,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "128b56d6a8a53c16f178a505dfee7ae01adc2a57c54b17d6ac66b87565c775f4"
+    "sha256": "4e6bb47a4e24d302c45274f1475a53a1d5cbe3f3531e36dc9f16d860ca77daaf"
   }
 }

@@ -28,7 +28,7 @@ function sprite(): AnimatedSprite {
 }
 
 describe("native troop deployment filter", () => {
-  it("pins the source matrix/color sequence and all 31 curated troop bindings", () => {
+  it("pins the source matrix/color sequence and all 33 curated troop bindings", () => {
     const manifest = JSON.parse(
       readFileSync("reference/client/deploy-filter-manifest.json", "utf8"),
     );
@@ -38,7 +38,7 @@ describe("native troop deployment filter", () => {
     expect(source.source).toBe("filter_deploy_unit_default");
     expect(source.fps).toBe(60);
     expect(source.frames).toHaveLength(28);
-    expect(source.cards).toHaveLength(31);
+    expect(source.cards).toHaveLength(33);
     expect(hasNativeDeployFilter("knight")).toBe(true);
     expect(hasNativeDeployFilter("prince")).toBe(true);
     expect(hasNativeDeployFilter("cannon")).toBe(false);

@@ -90,6 +90,8 @@ const names = {
   bats: "Bat",
   "night-witch": "DarkWitch",
   bandit: "Assassin",
+  golem: "Golem",
+  golemite: "Golemite",
   witch: "Witch",
   wizard: "Wizard",
   prince: "Prince",

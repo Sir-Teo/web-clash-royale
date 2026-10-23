@@ -28,7 +28,7 @@
     {
       "path": "src/game/combat-data.json",
       "source": "browser card-to-character mapping",
-      "sha256": "2c7d3876b5f9e03a4a7c4a5aab4f7f0bbcf5ae237bf773814c2a1cd47604f031"
+      "sha256": "d33f9826f7c70e08a7996999b9fe7c783523148065e4199d86ef60e6d1731ba4"
     },
     {
       "path": "reference/logic/characters.csv",
@@ -191,8 +191,8 @@
     },
     {
       "file": "health.json",
-      "bytes": 369233,
-      "sha256": "a2a6039fc44cb117c0b41e9c901bc61af78b34fb5475909a289b0457ad3fb1d1"
+      "bytes": 369437,
+      "sha256": "23eb804ad4bb219d682c9cfe1186778b8df1ad077c55981010826ce98dfc877c"
     }
   ]
 }

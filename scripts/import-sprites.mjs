@@ -42,6 +42,8 @@ const sources = {
   bats: "bats",
   "night-witch": "dark_witch",
   bandit: "bandit",
+  golem: "golem",
+  golemite: "golemite",
   witch: "witch",
   prince: "prince",
   pekka: "pekka",

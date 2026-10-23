@@ -327,6 +327,11 @@
       "sha256": "d0ead36bb195d306fe79d91da3f6d4a1abc981d7ad0652c424262589eabf646e"
     },
     {
+      "file": "portrait-golem.webp",
+      "bytes": 37404,
+      "sha256": "5b12cbd0821adc2b0157739e99485237d038f3689aca8dce0584d78a1b85e164"
+    },
+    {
       "file": "portrait-three-musketeers.webp",
       "bytes": 45010,
       "sha256": "d4fe5116f23ef9b6383380d637216fe676ea11cc54bbc1c3cb314e6c64fc182d"
@@ -413,8 +418,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 102656,
-      "sha256": "8e593167e7130c61fef6767b7aa84a31c3a2cc3152765610c4fd5c5545da93a4"
+      "bytes": 102971,
+      "sha256": "1b24a6f94b47011f7bdc5ac35bb0eaeb3083f95c9f0dcc2fc6dc02396f2ecdf7"
     }
   ]
 }

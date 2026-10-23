@@ -132,7 +132,9 @@ function composition(name, team, delay = 0, scale = 1, ancestry = []) {
         Number(row.RenderableScale || 100)) /
       100;
     if (row.Type === "Effect")
-      return composition(row.Effect, team, time, size, [...ancestry, name]);
+      return row.Effect
+        ? composition(row.Effect, team, time, size, [...ancestry, name])
+        : [];
     if (row.Type !== "ParticleEmitter") return [];
     // Some effect heads carry a sound but no emitter; children hold the particles.
     if (!row.ParticleEmitterName) return [];

@@ -324,6 +324,20 @@
     "ignoresKnockback": false,
     "projectile": null
   },
+  "golem": {
+    "source": "Golem",
+    "windup": 1,
+    "sight": 7,
+    "ignoresKnockback": true,
+    "projectile": null
+  },
+  "golemite": {
+    "source": "Golemite",
+    "windup": 1,
+    "sight": 7,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
   "witch": {
     "source": "Witch",
     "windup": 0.5,
