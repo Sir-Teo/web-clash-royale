@@ -12,12 +12,14 @@ import mirror from "./mirror-data.json" with { type: "json" };
 import swarms from "./swarm-cards-data.json" with { type: "json" };
 import goblinGang from "./goblin-gang-data.json" with { type: "json" };
 import barbarians from "./barbarians-data.json" with { type: "json" };
+import royalGiant from "./royal-giant-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
   | "barbarians"
   | "archers"
   | "giant"
+  | "royal-giant"
   | "musketeer"
   | "three-musketeers"
   | "mini-pekka"
@@ -149,6 +151,19 @@ export const CARDS: Card[] = [
     1.5,
     "Slow but durable, he only attacks buildings. Put a ranged troop behind him.",
     { rarity: "Rare", buildingsOnly: true },
+  ),
+  troop(
+    "royal-giant",
+    "Royal Giant",
+    royalGiant.cost,
+    // Normalize archival level-one values against this roster's Common Knight.
+    Math.round((royalGiant.sourceHitpoints * 1666) / 660),
+    Math.round((royalGiant.sourceDamage * 202) / 75),
+    royalGiant.sourceSpeed / 60,
+    royalGiant.sourceRange / 1000,
+    royalGiant.sourceHitSpeed / 1000,
+    "A cannon-toting giant who fires from afar and targets buildings.",
+    { buildingsOnly: royalGiant.buildingsOnly },
   ),
   troop(
     "musketeer",
