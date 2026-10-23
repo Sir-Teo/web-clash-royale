@@ -1,6 +1,57 @@
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
 
+test("native troop deployment filter follows the archived color and pose timeline on both sides", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/tests/fixtures/combat.html");
+  await page.locator("#scenario").selectOption("deployment");
+  await expect(page.locator("#status")).toContainText(
+    `${expectedEffects} effects`,
+    { timeout: 60000 },
+  );
+  await page.locator("#death-card").selectOption("knight");
+  await page.locator("#spawn").click();
+  const state = async () =>
+    JSON.parse(
+      (await page.locator("#destruction").getAttribute("data-deploy-filter"))!,
+    );
+  await expect.poll(async () => (await state()).length).toBe(2);
+  expect(
+    (await state()).map(
+      (actor: { frame: number; color: number[]; applied: boolean }) => [
+        actor.frame,
+        actor.color,
+        actor.applied,
+      ],
+    ),
+  ).toEqual([
+    [0, [150, 150, 150, 102, 255, 255, 255], true],
+    [0, [150, 150, 150, 102, 255, 255, 255], true],
+  ]);
+  await page.screenshot({
+    path: info.outputPath("native-troop-deployment-frame-0.png"),
+    fullPage: true,
+  });
+  await page.waitForTimeout(150);
+  expect(
+    (await state()).map((actor: { frame: number }) => actor.frame),
+  ).toEqual([0, 0]);
+  await page.locator("#step").click();
+  await expect
+    .poll(async () =>
+      (await state()).map((actor: { frame: number }) => actor.frame),
+    )
+    .toEqual([6, 6]);
+  await page.locator("#second").click();
+  await expect.poll(async () => (await state()).length).toBe(0);
+  await page.locator("#reset").click();
+  expect(await state()).toEqual([]);
+  expect(errors).toEqual([]);
+});
+
 test("native deployment dust follows per-unit source counts, timing, pause and cleanup", async ({
   page,
 }, info) => {
