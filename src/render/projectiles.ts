@@ -77,6 +77,7 @@ export function projectileArt(p: Projectile) {
   if (p.style === "bowler") return "bowler_projectile";
   if (p.style === "executioner") return "executioner_projectile";
   if (p.style === "sparky") return "zapMachine_projectile";
+  if (p.style === "rage-bottle") return "rage_bottle_fall";
   if (p.style === "baby-dragon") return "dragon_projectile";
   if (p.style === "wizard") return "fireball_small";
   if (p.style === "witch" || p.style === "minions") return "Tower_projectile1";
@@ -153,7 +154,8 @@ export function updateProjectile(
       Math.sin(progress * Math.PI) * arc,
     (p.flight?.y ?? T.MathUtils.lerp(p.y, ty, progress)) - 16,
   );
-  if (v.sprites.some((sprite) => sprite.name.startsWith("balloon_bomb_")))
+  if (v.sprites.some((sprite) => sprite.name.startsWith("balloon_bomb_") ||
+      sprite.name === "rage_bottle_fall"))
     // The native clip already contains the drop and landing. Anchor it on
     // the ground so the generic projectile arc doesn't move it a second time.
     v.object.position.y = 0.2;
@@ -215,6 +217,8 @@ export function updateProjectile(
       library.animate(sprite, p.elapsed ?? 0, true);
       sprite.mesh.rotateZ(angle);
       sprite.mesh.scale.setScalar(1.1);
+    } else if (sprite.name === "rage_bottle_fall") {
+      library.animate(sprite, p.elapsed ?? 0);
     } else if (["fireball_small", "Tower_projectile1"].includes(sprite.name)) {
       library.animate(sprite, p.elapsed ?? progress * p.duration, true);
       sprite.mesh.rotateZ(angle);

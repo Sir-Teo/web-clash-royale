@@ -79,6 +79,7 @@ const heights: Partial<Record<SpriteId, number>> = {
   "battle-ram": 2.5,
   executioner: 2.2,
   sparky: 2.3,
+  lumberjack: 2.1,
   witch: 2.1,
   prince: 2.25,
   pekka: 2.7,
@@ -261,6 +262,7 @@ export class SpriteLibrary {
     const { direction, flip } = facing(sprite.facingX, sprite.facingY);
     const attackAge = e.interval - e.attack;
     const kind =
+      e.card === "lumberjack" && e.deploy > 0 ? "deploy" :
       e.attack > 0 && !moving
         ? e.card === "executioner" && attackAge >= 1 ? "attacking" : "attack"
         : moving
@@ -271,18 +273,20 @@ export class SpriteLibrary {
             : "run"
           : "idle";
     const clip = selectClip(sprite.asset.data.clips, e.team, kind, direction);
-    const elapsed = kind === "attack" ? attackAge :
+    const elapsed = kind === "deploy" ? 1 - e.deploy :
+      kind === "attack" ? attackAge :
       kind === "attacking" ? attackAge - 1 : time + e.id * 0.13;
     const frame = animationFrame(clip, elapsed,
-      kind === "attack" || kind === "attacking",
-      kind === "attacking" ? executioner.projectile.visualTime : e.interval);
+      kind === "attack" || kind === "attacking" || kind === "deploy",
+      kind === "deploy" ? 1 :
+        kind === "attacking" ? executioner.projectile.visualTime : e.interval);
     if (frame !== sprite.lastFrame) {
       sprite.mesh.geometry = spriteGeometry(sprite.asset, frame);
       sprite.lastFrame = frame;
     }
     sprite.mesh.quaternion.copy(camera.quaternion);
     const scale =
-      e.deploy > 0 && !hasNativeDeployFilter(e.card)
+      e.deploy > 0 && !hasNativeDeployFilter(e.card) && e.card !== "lumberjack"
         ? Math.max(0.05, 1 - e.deploy)
         : 1;
     sprite.mesh.scale.set(flip ? -scale : scale, scale, scale);

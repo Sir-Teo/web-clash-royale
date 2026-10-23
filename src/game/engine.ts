@@ -33,6 +33,7 @@ import darkPrince from "./dark-prince-data.json" with { type: "json" };
 import battleRam from "./battle-ram-data.json" with { type: "json" };
 import executioner from "./executioner-data.json" with { type: "json" };
 import sparky from "./sparky-data.json" with { type: "json" };
+import lumberjack from "./lumberjack-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -149,7 +150,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "axe-die";
+  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "axe-die" | "bottle:lumberjack";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -777,7 +778,7 @@ export class Battle {
                 : null);
     if (profile)
       this.emitAudio(
-        p.style === "bomb" ? "death-impact" : "impact",
+        p.style === "bomb" || p.style === "rage-bottle" ? "death-impact" : "impact",
         p.team,
         profile,
         p.source || undefined,
@@ -1754,6 +1755,23 @@ export class Battle {
         }
         continue;
       }
+      if (p.style === "rage-bottle") {
+        if (p.remaining <= 1e-8) {
+          p.remaining = 0;
+          this.areas.push({
+            id: this.nextId++, team: p.team, card: "rage",
+            x: p.tx, y: p.ty,
+            radius: lumberjack.deathBottle.radius,
+            duration: lumberjack.deathBottle.duration,
+            remaining: lumberjack.deathBottle.duration,
+          });
+          this.emit("hit", p.team, p.tx, p.ty, "lumberjack", 0,
+            { effect: "bottle:lumberjack" });
+          this.emit("spell", p.team, p.tx, p.ty, "rage");
+          this.projectileAudio(p);
+        }
+        continue;
+      }
       if (p.style === "log-launch") {
         if (p.remaining <= 1e-8) {
           const range = Math.min(
@@ -2119,6 +2137,19 @@ export class Battle {
           clamp(e.y, 0.8, 31.2), false, battleRam.deathSpawnDeployTime,
         );
       }
+    }
+    if (e.card === "lumberjack") {
+      this.projectiles.push({
+        id: this.nextId++, team: e.team,
+        x: e.x, y: e.y, tx: e.x, ty: e.y,
+        target: null, damage: 0,
+        remaining: 0.5, duration: 0.5,
+        splash: 0, air: false, style: "rage-bottle", stun: 0,
+        source: e.id, flight: { x: e.x, y: e.y },
+        elapsed: 0, fromHeight: 0.2, toHeight: 0.2, arc: 0,
+      });
+      this.audioProjectiles.set(this.projectiles.at(-1)!.id, "lumberjack");
+      this.emitAudio("death-spawn", e.team, "lumberjack", e.id);
     }
     if (e.card === "balloon") {
       this.projectiles.push({

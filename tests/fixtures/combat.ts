@@ -204,6 +204,23 @@ function setup() {
         target.hp = target.maxHp = 10000;
       }
     }
+  } else if (scenario === "lumberjack") {
+    const attacker = unit("lumberjack", "blue", 4, 21)[0];
+    attacker.hp = 1;
+    attacker.active = false;
+    attacker.speed = 0;
+    for (const [card, team, x] of [
+      ["knight", "blue", 5],
+      ["minions", "blue", 6],
+      ["knight", "red", 9],
+    ] as [CardId, Team, number][]) {
+      for (const target of unit(card, team, x, 21)) {
+        target.active = false;
+        target.speed = target.damage = 0;
+        target.hp = target.maxHp = 10000;
+      }
+    }
+    cast("fireball", "red", 4, 21);
   } else if (scenario === "attack-impacts") {
     const attacker = (
       document.querySelector("#attack-card") as HTMLSelectElement
@@ -532,6 +549,22 @@ function render(now: number) {
       loadCues: battle.audioEvents.filter((event) => event.profile === "sparky" && event.phase.startsWith("load-"))
         .map((event) => event.phase),
       visuals: arena.projectileState.filter((shot) => shot.sprites.some((sprite) => sprite.name === "zapMachine_projectile")),
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.lumberjack =
+    JSON.stringify({
+      alive: battle.entities.some((e) => e.card === "lumberjack" && e.hp > 0),
+      bottles: battle.projectiles.filter((p) => p.style === "rage-bottle")
+        .map((p) => ({ id: p.id, remaining: p.remaining })),
+      visuals: arena.projectileState.filter((shot) => shot.sprites.some((sprite) => sprite.name === "rage_bottle_fall")),
+      areas: arena.rageAreaState,
+      friends: battle.entities.filter((e) => e.team === "blue" && ["knight", "minions"].includes(e.card))
+        .map((e) => ({ card: e.card, raged: !!e.rage && e.rage.remaining > 0 })),
+      enemies: battle.entities.filter((e) => e.team === "red" && e.card === "knight")
+        .map((e) => ({ card: e.card, raged: !!e.rage && e.rage.remaining > 0 })),
+      impacts: battle.events.filter((e) => e.effect === "bottle:lumberjack").length,
+      impactEvents: battle.events.filter((e) => e.effect === "bottle:lumberjack").map((e) => ({ id: e.id, time: e.time })),
+      lumberjacks: battle.entities.filter((e) => e.card === "lumberjack").map((e) => ({ id: e.id, team: e.team, hp: e.hp })),
+      rawAreas: battle.areas.filter((a) => a.card === "rage").map((a) => ({ id: a.id, team: a.team, remaining: a.remaining })),
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.darkPrince =
     JSON.stringify({
