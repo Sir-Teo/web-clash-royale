@@ -120,6 +120,7 @@ for (const resource of ["effects", "building_mega_bomb"]) {
             "effect_Hit1",
             "ExplosionGroundGlowBlue",
             "fireball_trail1",
+            "fireball_trail3",
             "explosion_cloud_1",
             "Smoke_puff_01",
             "crown_rotate_anim",

@@ -46,6 +46,7 @@ sources["balloon-bomb"] =
   tables.buildings[balloon.DeathSpawnCharacter].DeathEffect;
 const effects = {},
   impacts = {},
+  trails = {},
   launches = {},
   movements = {},
   charges = {},
@@ -185,6 +186,14 @@ for (const [id, expected] of Object.entries({
     enemyComponents: composition(source, "red"),
   };
 }
+const rocketTrail = tables.projectiles.RocketSpell?.TrailEffect;
+if (rocketTrail !== "Rocket_Emitter")
+  throw new Error(`Recheck native Rocket trail binding: ${rocketTrail}`);
+trails.rocket = {
+  source: rocketTrail,
+  components: composition(rocketTrail, "blue"),
+  enemyComponents: composition(rocketTrail, "red"),
+};
 // These DamageEffect compositions contain authored impact layers at the
 // attack target: Giant's punch dust, Balloon's crater and Tesla's beam sparks.
 for (const [id, expected] of Object.entries({
@@ -335,6 +344,7 @@ const path = "src/render/destruction-data.json",
       {
         effects,
         impacts,
+        trails,
         launches,
         movements,
         charges,

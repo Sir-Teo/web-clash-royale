@@ -2637,6 +2637,71 @@
       ]
     }
   },
+  "trails": {
+    "rocket": {
+      "source": "Rocket_Emitter",
+      "components": [
+        {
+          "emitter": "Rocket_Emitter_Smoketrail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Rocket_Emitter_Sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Rocket_Emitter_Glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Rocket_Emitter_Smoketrail",
+          "delay": 0.8,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Rocket_Emitter_Smoketrail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Rocket_Emitter_Sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Rocket_Emitter_Glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Rocket_Emitter_Smoketrail",
+          "delay": 0.8,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    }
+  },
   "launches": {
     "cannon": {
       "source": "cannon_fire_projectile",
@@ -5677,6 +5742,148 @@
         "Arrow_enemy_ground_anim_4",
         "Arrow_enemy_ground_anim_5",
         "Arrow_enemy_ground_anim_6"
+      ]
+    },
+    "Rocket_Emitter_Smoketrail": {
+      "count": 55,
+      "emissionLife": [
+        0.8,
+        0.8
+      ],
+      "interval": [
+        0.005,
+        0.01
+      ],
+      "life": [
+        1.8,
+        2
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 1.1666666666666667,
+      "startScale": 1.2,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0.6666666666666666,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "fireball_trail1",
+        "fireball_trail2"
+      ]
+    },
+    "Rocket_Emitter_Sparks": {
+      "count": 13,
+      "emissionLife": [
+        0.8,
+        0.8
+      ],
+      "interval": [
+        0,
+        0.01
+      ],
+      "life": [
+        0.6,
+        0.8
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.13333333333333333,
+        0.13333333333333333
+      ],
+      "speed": [
+        0.5,
+        10
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        1.6666666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 1.1666666666666667,
+      "startScale": 0.55,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0.6666666666666666,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Sparkle"
+      ]
+    },
+    "Rocket_Emitter_Glow": {
+      "count": 50,
+      "emissionLife": [
+        0.8,
+        0.8
+      ],
+      "interval": [
+        0.005,
+        0.01
+      ],
+      "life": [
+        0.8,
+        0.8
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.1,
+        0.1
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 1.1666666666666667,
+      "startScale": 1.5,
+      "endScale": 0.2,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0.03333333333333333,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "fireball_trail3"
       ]
     },
     "giant_hit_sparks": {
