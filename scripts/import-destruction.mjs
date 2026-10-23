@@ -47,6 +47,7 @@ sources["balloon-bomb"] =
 const effects = {},
   impacts = {},
   launches = {},
+  movements = {},
   deployments = {},
   emitters = {};
 // Same bounded source correction used by the audio importer: this particle
@@ -209,6 +210,19 @@ launches.cannon = {
   enemyComponents: composition(cannonLaunch, "red"),
 };
 for (const [id, expected] of Object.entries({
+  knight: "knight_steps",
+  prince: "prince_steps",
+})) {
+  const source = tables.characters[profiles[id].source].MoveEffect;
+  if (source !== expected)
+    throw new Error(`Recheck native ${id} movement effect: ${source}`);
+  movements[id] = {
+    source,
+    components: composition(source, "blue"),
+    enemyComponents: composition(source, "red"),
+  };
+}
+for (const [id, expected] of Object.entries({
   musketeer: "cannon_hit",
   bomber: "BombTower_projectile_hit",
   "baby-dragon": "dragon_hit",
@@ -243,7 +257,7 @@ effects.king.rubble = "Tower_destroyed_ground2";
 const path = "src/render/destruction-data.json",
   bytes =
     JSON.stringify(
-      { effects, impacts, launches, deployments, emitters },
+      { effects, impacts, launches, movements, deployments, emitters },
       null,
       2,
     ) + "\n";

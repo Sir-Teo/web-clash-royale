@@ -2352,6 +2352,50 @@
       ]
     }
   },
+  "movements": {
+    "knight": {
+      "source": "knight_steps",
+      "components": [
+        {
+          "emitter": "knight_speps_dust1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_speps_dust1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        }
+      ]
+    },
+    "prince": {
+      "source": "prince_steps",
+      "components": [
+        {
+          "emitter": "knight_speps_dust1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_speps_dust1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        }
+      ]
+    }
+  },
   "deployments": {
     "knight": {
       "source": "knight_deploy",
@@ -5856,6 +5900,55 @@
       "loop": true,
       "clips": [
         "smoke_cloud_1"
+      ]
+    },
+    "knight_speps_dust1": {
+      "count": 3,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.6,
+        1.1
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0.6666666666666666,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.6,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0.8,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "d2",
+        "d3",
+        "d4"
       ]
     },
     "cannon_hit_rock_emiter": {
