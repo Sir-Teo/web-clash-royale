@@ -58,7 +58,6 @@ function sound(name) {
   // Keep row order and duplicates: each row is a separately authored variant.
   sounds[name] = rows.map((row) => {
     for (const key of [
-      "Loop",
       "PlayVariationsInSequence",
       "PlayVariationsInSequenceManualReset",
     ])
@@ -79,6 +78,7 @@ function sound(name) {
       startDelay: pair("StartDelayMinMs", "StartDelayMaxMs", 1000),
       maximum: Number(row.MaximumByType),
       repeat: Number(row.MaxRepeatMs) / 1000,
+      loop: row.Loop?.toLowerCase() === "true",
       priority: Number(row.Priority),
       padding: Number(row.PadEmpyToEndMs) / 1000,
     };
@@ -172,12 +172,15 @@ for (const [id, { table, row: name }] of Object.entries(cardBindings)) {
     tables.projectiles[
       row.CustomFirstProjectile || row.Projectile || area?.Projectile
     ];
+  const rolling = id === "log"
+    ? tables.projectiles[projectile?.SpawnProjectile]
+    : null;
   profiles[id] = phases(name, {
     attack: [],
     charge: [],
-    launch: [],
+    launch: [rolling?.TrailEffect],
     impact: [projectile?.HitEffect, area?.OneShotEffect],
-    "impact-special": [],
+    "impact-special": [rolling?.DeathEffect],
     cast: [row.CastSound && `sound:${row.CastSound}`, row.Effect],
     spawn: [],
     summon: [],

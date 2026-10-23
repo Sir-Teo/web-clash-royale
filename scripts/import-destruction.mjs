@@ -171,6 +171,7 @@ for (const [id, expected] of Object.entries({
   arrows: "ArrowHitGround",
   rocket: "Rocket_explosion",
   lightning: "Spell_lightning_effect",
+  log: "log_hit",
 })) {
   const card = cards[id];
   const spell = tables[card.table][card.row];
@@ -197,6 +198,19 @@ trails.rocket = {
   source: rocketTrail,
   components: composition(rocketTrail, "blue"),
   enemyComponents: composition(rocketTrail, "red"),
+};
+const rollingLog = tables.projectiles.LogProjectileRolling;
+if (rollingLog?.DeathEffect !== "log_die" || rollingLog.TrailEffect !== "log_emitter")
+  throw new Error("Recheck native rolling Log effects");
+impacts["log-die"] = {
+  source: rollingLog.DeathEffect,
+  components: composition(rollingLog.DeathEffect, "blue"),
+  enemyComponents: composition(rollingLog.DeathEffect, "red"),
+};
+trails.log = {
+  source: rollingLog.TrailEffect,
+  components: composition(rollingLog.TrailEffect, "blue"),
+  enemyComponents: composition(rollingLog.TrailEffect, "red"),
 };
 // These DamageEffect compositions contain authored impact layers at the
 // attack target: Giant's punch dust, Balloon's crater and Tesla's beam sparks.

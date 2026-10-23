@@ -44,7 +44,7 @@
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "0e46666361da2e560e53b7e92da830ad903864d1f7673778b4b352c918f5e030"
+      "sha256": "4e31edc80db6c2121cb53b6531234b6f34532292d23ffba8a1e2c62a2ebbd2fa"
     }
   ],
   "ignoredEnemyVersions": [
@@ -380,6 +380,24 @@
       "source": "sfx/lightning_02.ogg",
       "bytes": 12689,
       "sha256": "178e16438ccef119ed84c454ffe806be7cd0f39e82d190762ceb6c399d1aa63e"
+    },
+    {
+      "path": "public/assets/audio/log_impact_01.ogg",
+      "source": "sfx/log_impact_01.ogg",
+      "bytes": 5723,
+      "sha256": "eff4a8671ad11d88bc2900008155b3199e6080208149201bfca8c71b7d1c1881"
+    },
+    {
+      "path": "public/assets/audio/log_vocal_01.ogg",
+      "source": "sfx/log_vocal_01.ogg",
+      "bytes": 10057,
+      "sha256": "856d792b6b28e4a0b8c0e2cf35f8a76ebf75b48a5957cd8337e598bcb0994325"
+    },
+    {
+      "path": "public/assets/audio/logroll01.ogg",
+      "source": "sfx/logroll01.ogg",
+      "bytes": 31860,
+      "sha256": "06806f4c63073ff5eef209c02de5fbd211449dd800fb8237e0494c8c86b1f37d"
     },
     {
       "path": "public/assets/audio/mini_pekka_atk_12.ogg",
@@ -774,6 +792,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "e03058cc80a111f23cc80720eb7b6812537b9872563290653d0914d6944d96d9"
+    "sha256": "859e03427ca70013c4620db7873947d6005c56b7146c7adbedbe0e7c4defa463"
   }
 }

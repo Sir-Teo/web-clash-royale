@@ -32,6 +32,7 @@ const cards = [
   "rage",
   "rocket",
   "lightning",
+  "log",
 ];
 const characters = [
   "knight",
@@ -89,7 +90,7 @@ const sounds = [
   "baby_dragon_fireball_08",
 ];
 const files = [
-  ...cards.map((n) => [`cards/${n}.png`, `cards/${n}.png`]),
+  ...cards.map((n) => [`cards/${n === "log" ? "the-log" : n}.png`, `cards/${n}.png`]),
   ...characters.map((n) => [`chr/${n}.png`, `characters/${n}.png`]),
   ...sounds.map((n) => [`sfx/${n}.ogg`, `audio/${n}.ogg`]),
   ...[0, 1, 2, 3, 4, 5, 6, 7, 8].map((n) => [
