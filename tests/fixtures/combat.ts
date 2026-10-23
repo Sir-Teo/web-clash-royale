@@ -127,6 +127,13 @@ function setup() {
     for (const tower of battle.entities) tower.hp = tower.maxHp = 100000;
     cast("graveyard", "blue", 5, 13);
     cast("graveyard", "red", 13, 19);
+  } else if (scenario === "clone") {
+    for (const card of ["knight", "minions"] as CardId[])
+      for (const entity of unit(card, "blue", card === "knight" ? 4 : 6, 22))
+        entity.active = false;
+    for (const entity of unit("knight", "red", 8, 22)) entity.active = false;
+    unit("cannon", "blue", 5, 22);
+    cast("clone", "blue", 5, 22);
   } else if (scenario === "spell-impacts") {
     cast("zap", "blue", 4, 13);
     cast("arrows", "red", 14, 19);
@@ -416,6 +423,17 @@ function render(now: number) {
     battle.events
       .filter((event) => event.effect === "graveyard-appear")
       .map((event) => ({ team: event.team, x: event.x, y: event.y })),
+  );
+  (document.querySelector("#destruction") as HTMLElement).dataset.cloneAreas =
+    JSON.stringify(arena.cloneAreaState);
+  (document.querySelector("#destruction") as HTMLElement).dataset.cloneFilter =
+    JSON.stringify(arena.cloneFilterState);
+  (
+    document.querySelector("#destruction") as HTMLElement
+  ).dataset.cloneEntities = JSON.stringify(
+    battle.entities
+      .filter((entity) => entity.clone)
+      .map((entity) => ({ id: entity.id, card: entity.card, hp: entity.hp })),
   );
   (
     document.querySelector("#destruction") as HTMLElement
