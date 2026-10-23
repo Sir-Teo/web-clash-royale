@@ -352,6 +352,11 @@
       "sha256": "2ea87c9a747fa34db38009fc4443fa7687b04c4c4056857a1eb32fc69b32a784"
     },
     {
+      "file": "portrait-elite-barbarians.webp",
+      "bytes": 39614,
+      "sha256": "77f824d3856cafd69ae76575269c9cc410999a86b0246c7af1402ca873524f2b"
+    },
+    {
       "file": "portrait-royal-giant.webp",
       "bytes": 41662,
       "sha256": "433cd4762b6de4533c1f44dafca45c14387c14da80e758ab2d3690dcce75cac9"
@@ -423,8 +428,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 103422,
-      "sha256": "a9d9b61b36fd2c15244339b9e64b975eedb0b6b51eb07a7e8be0e860db615354"
+      "bytes": 103765,
+      "sha256": "04d862a807780baa0f2f944b852548128333cc49d9834edc68bd95676508588a"
     }
   ]
 }

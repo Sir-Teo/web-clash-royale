@@ -429,6 +429,12 @@
       "sha256": "f05db16d2920f2771c06bf99e3fdb5b4f0f37e5a412810798379fd45bfd8a395"
     },
     {
+      "path": "cards/elite-barbarians.png",
+      "source": "cards/elite-barbarians.png",
+      "bytes": 131965,
+      "sha256": "8ea6b12aa61a277f5bba5c5b4ff2f1580bf181ffac74af58fa14bb2e03b955ca"
+    },
+    {
       "path": "cards/executioner.png",
       "source": "cards/executioner.png",
       "bytes": 124677,

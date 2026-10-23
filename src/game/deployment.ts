@@ -4,6 +4,7 @@ import type { Point } from "./engine";
 import type { Team } from "./engine";
 import goblinGang from "./goblin-gang-data.json" with { type: "json" };
 import bats from "./bats-data.json" with { type: "json" };
+import eliteBarbarians from "./elite-barbarians-data.json" with { type: "json" };
 
 export function deploymentPositions(
   id: CardId,
@@ -18,6 +19,12 @@ export function deploymentPositions(
         0.8,
         Math.min(31.2, point.y + (i < 2 ? forward : -forward) * 0.48),
       ),
+    }));
+  }
+  if (id === "elite-barbarians") {
+    return [-1, 1].map((side) => ({
+      x: Math.max(0.6, Math.min(17.4, point.x + side * eliteBarbarians.summonRadius)),
+      y: Math.max(0.8, Math.min(31.2, point.y)),
     }));
   }
   if (id === "goblin-gang") {

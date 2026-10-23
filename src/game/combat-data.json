@@ -77,6 +77,13 @@
     "ignoresKnockback": false,
     "projectile": null
   },
+  "elite-barbarians": {
+    "source": "AngryBarbarian",
+    "windup": 0.4,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
   "royal-giant": {
     "source": "RoyalGiant",
     "windup": 0.7,

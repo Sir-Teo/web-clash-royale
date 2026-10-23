@@ -12,6 +12,7 @@ import mirror from "./mirror-data.json" with { type: "json" };
 import swarms from "./swarm-cards-data.json" with { type: "json" };
 import goblinGang from "./goblin-gang-data.json" with { type: "json" };
 import barbarians from "./barbarians-data.json" with { type: "json" };
+import eliteBarbarians from "./elite-barbarians-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -35,6 +36,7 @@ import lavaHound from "./lava-hound-data.json" with { type: "json" };
 export type CardId =
   | "knight"
   | "barbarians"
+  | "elite-barbarians"
   | "archers"
   | "giant"
   | "royal-giant"
@@ -165,6 +167,18 @@ export const CARDS: Card[] = [
     barbarians.sourceHitSpeed / 1000,
     "Four sturdy melee fighters charge into battle together.",
     { count: barbarians.count },
+  ),
+  troop(
+    "elite-barbarians",
+    "Elite Barbarians",
+    eliteBarbarians.cost,
+    Math.round((eliteBarbarians.sourceHitpoints * 1666) / 660),
+    Math.round((eliteBarbarians.sourceDamage * 202) / 75),
+    eliteBarbarians.sourceSpeed / 60,
+    eliteBarbarians.sourceRange,
+    eliteBarbarians.sourceHitSpeed,
+    "Two swift elite fighters charge into battle together.",
+    { count: eliteBarbarians.count },
   ),
   troop(
     "archers",

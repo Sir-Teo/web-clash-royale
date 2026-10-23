@@ -52,6 +52,7 @@
     "assets:clone": "node scripts/import-clone.mjs",
     "assets:mirror": "node scripts/import-mirror.mjs",
     "assets:swarm-cards": "node scripts/import-swarm-cards.mjs",
+    "assets:elite-barbarians": "node scripts/import-elite-barbarians.mjs",
     "assets:goblin-gang": "node scripts/import-goblin-gang.mjs",
     "assets:barbarians": "node scripts/import-barbarians.mjs",
     "assets:royal-giant": "node scripts/import-royal-giant.mjs",

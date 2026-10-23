@@ -12,6 +12,7 @@ await mkdir(output, { recursive: true });
 const sources = {
   knight: "knight",
   barbarians: "barbarian",
+  "elite-barbarians": "barbarian",
   "royal-giant": "royal_giant",
   "mega-minion": "mega_minion",
   "dart-goblin": "goblin_blowdart",
@@ -136,6 +137,7 @@ for (const [id, source] of Object.entries(sources)) {
     if (id === "inferno-dragon" && !exportName.startsWith("inferno_dragon_"))
       continue;
     if (id === "barbarians" && !exportName.startsWith("barbarian1_")) continue;
+    if (id === "elite-barbarians" && !exportName.startsWith("angry_barbarian_")) continue;
     if (id === "tower-princess" && !exportName.startsWith("princess_tower_"))
       continue;
     if (id === "princess" && !exportName.startsWith("princess_")) continue;
@@ -214,8 +216,9 @@ for (const [id, source] of Object.entries(sources)) {
     const texture = await sharp(original)
       .webp({ lossless: true, effort: 6 })
       .toBuffer();
-    const file = `${id}-${i}.webp`;
-    await writeFile(`${output}/${file}`, texture);
+    // Both Barbarian characters share one archived atlas byte-for-byte.
+    const file = `${id === "elite-barbarians" ? "barbarians" : id}-${i}.webp`;
+    if (id !== "elite-barbarians") await writeFile(`${output}/${file}`, texture);
     const info = await sharp(texture).metadata();
     textures.push({ file, width: info.width, height: info.height });
     hashes.push({

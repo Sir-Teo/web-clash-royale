@@ -272,6 +272,7 @@ const portraitNames = {
   "three-musketeers": "ThreeMusketeers",
   "goblin-gang": "GoblinGang",
   barbarians: "Barbarians",
+  "elite-barbarians": "AngryBarbarians",
   "royal-giant": "RoyalGiant",
   "mega-minion": "MegaMinion",
   "dart-goblin": "BlowdartGoblin",

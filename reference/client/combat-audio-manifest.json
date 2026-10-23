@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "e8fb36ec388aaba0998c26b86c5521dba9773ea2fe7571325958cbf4af0bb656"
+      "sha256": "7df87f11b3d5062b32996fa15d6aa0801cb3969d3bbb33c6cdf2e5885ab63a8a"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "a9d9b61b36fd2c15244339b9e64b975eedb0b6b51eb07a7e8be0e860db615354"
+      "sha256": "04d862a807780baa0f2f944b852548128333cc49d9834edc68bd95676508588a"
     }
   ],
   "ignoredEnemyVersions": [
@@ -524,6 +524,12 @@
       "source": "sfx/electro_wiz_deploy_01.ogg",
       "bytes": 12277,
       "sha256": "ec0ca1f292db7157c9f110e9eeaca957b80d770e255fd618f08f30bca89ddae5"
+    },
+    {
+      "path": "public/assets/audio/elite_barbs_deploy_01.ogg",
+      "source": "sfx/elite_barbs_deploy_01.ogg",
+      "bytes": 10218,
+      "sha256": "05fc64dd6fb0931e4fa004d0955d58d21ba10525d622824ae1fe2237ca52f7b5"
     },
     {
       "path": "public/assets/audio/explosion_01.ogg",
@@ -1518,6 +1524,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "b9f530c2319ce59a6c74b8f2d49c2919135ff19d66cf29cf741f3104d6034284"
+    "sha256": "bebafbc802e0b695faf9ec6853dc94bb44518ad6824fb853d20de8254b2a9834"
   }
 }

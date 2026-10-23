@@ -42,6 +42,7 @@ const cards = [
   "three-musketeers",
   "goblin-gang",
   "barbarians",
+  "elite-barbarians",
   "royal-giant",
   "mega-minion",
   "dart-goblin",

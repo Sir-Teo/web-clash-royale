@@ -36,6 +36,7 @@ import executioner from "./executioner-data.json" with { type: "json" };
 import sparky from "./sparky-data.json" with { type: "json" };
 import lumberjack from "./lumberjack-data.json" with { type: "json" };
 import bats from "./bats-data.json" with { type: "json" };
+import eliteBarbarians from "./elite-barbarians-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
 import golem from "./golem-data.json" with { type: "json" };
@@ -650,6 +651,7 @@ export class Battle {
           point.y,
           true,
           id === "bats" ? 1 + bats.deployDelay :
+            id === "elite-barbarians" ? 1 + eliteBarbarians.deployDelay :
             id === "golem" ? golem.golem.sourceDeployTime : 1,
         );
     }

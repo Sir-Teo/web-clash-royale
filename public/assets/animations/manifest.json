@@ -38,6 +38,23 @@
       "uniqueFrames": 342
     },
     {
+      "id": "elite-barbarians",
+      "source": "chr_barbarian",
+      "metadataSha256": "5dd9558e9c001db44b5994c7115542064d7e5ea07b5e2fed5e418791481a1936",
+      "dataSha256": "be039ebd9697dab08be319ede99f5b567a362ebc980de9f97494476737f5d62c",
+      "textures": [
+        {
+          "file": "barbarians-0.webp",
+          "sha256": "d481d034c696f87b006febeeabc54e8dea8fe65efac80cf8a25a990ed7b0becb",
+          "originalSha256": "f9fe0cff5faf9779470fb4d7a972a4dadb084919cf7f97cb7bea4dba35d72da8"
+        }
+      ],
+      "shapes": 342,
+      "clips": 54,
+      "frames": 720,
+      "uniqueFrames": 342
+    },
+    {
       "id": "royal-giant",
       "source": "chr_royal_giant",
       "metadataSha256": "a35000fedc4954ea95e34ce00286c9c591d929d753070b52bce497545502edaf",
