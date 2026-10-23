@@ -39,6 +39,7 @@ describe("native impact shake", () => {
       for (const [profile, phase, duration] of [
         ["fireball", "impact", 0.8],
         ["zap", "impact", 0.25],
+        ["lightning", "impact", 1],
         ["balloon", "impact", 0.35],
         ["balloon", "death-impact", 1],
         ["princess-tower", "death", 1],

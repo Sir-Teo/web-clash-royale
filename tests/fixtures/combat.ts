@@ -103,6 +103,10 @@ function setup() {
     cast("fireball", "red", 14, 19);
   } else if (scenario === "rocket") {
     cast("rocket", "blue", 4, 13);
+  } else if (scenario === "lightning") {
+    for (const card of ["giant", "knight", "minions"] as CardId[])
+      for (const entity of unit(card, "red", 4, 12)) entity.active = false;
+    cast("lightning", "blue", 4, 12);
   } else if (scenario === "spell-impacts") {
     cast("zap", "blue", 4, 13);
     cast("arrows", "red", 14, 19);

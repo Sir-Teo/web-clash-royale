@@ -2,7 +2,7 @@
 
 A private, independent browser fan game for Sir-Teo. Built with TypeScript, Three.js and Vite. AI battles work offline. Friendly two-player battles connect directly between browsers; the default build is front end only.
 
-Build an eight-card deck from 28 cards, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
+Build an eight-card deck from 29 cards, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
 
 Combat includes cancellable attack windups, defensive building pulls, homing shots, ballistic bombs, Fireball travel and knockback, three-wave Arrows and Zap charge resets. Cannon uses its native aiming frames; Tesla hides underground, rises to attack and retracts when idle. Princess Towers use their dedicated native character animations. The King plays its original wake-up sequence and waits 3.3 seconds before aiming and attacking. Existing version-1 through version-4 replays retain their original rules; new matches record version-5 combat.
 
@@ -24,6 +24,8 @@ Rage costs two elixir and boosts friendly troops' movement, attack and summoning
 
 Rocket costs six elixir and flies at its archived speed before a two-tile explosion damages ground and air troops, knocks surviving troops back and deals 40% damage to Crown Towers. Its original portrait, missile, smoke/spark/glow trail, eight-part impact, sound and screen shake play in solo, direct matches and replays. The 700-point archived damage uses the roster's Fireball level-11 conversion; the missile's 3D orientation remains a visual approximation.
 
+Lightning costs six elixir and strikes the three highest-health enemies inside a 3.5-tile area at separate source-paced intervals. Each bolt damages and briefly stuns one target, with reduced Crown Tower damage. Its archived portrait, sky bolt, sparks, smoke, debris, audio and shake work in solo play, direct two-player matches and replays. Damage uses the roster's Fireball level-11 conversion; selecting a distinct target per pulse is the browser rules interpretation.
+
 Musketeer and Cannon shots share the archived cannon impact; Bomber, Baby Dragon and Wizard projectiles use their own native sparks, smoke, flame and debris compositions. These hit effects stay separate from each troop's death effect.
 
 Destroyed towers leave native rubble for the rest of the battle. Their collapse uses original fire, smoke, flying plank and wall-fragment artwork. Debris pauses with the match and finishes settling after victory; replay seeking reconstructs the correct ruins.
@@ -38,7 +40,7 @@ Battle countdowns and overtime notices use the original font, authored animation
 
 Battles open with the original animated arena title, crossed swords, red/blue player ribbons and FIGHT lettering. Combat, AI and elixir wait for the intro's authored action frame. The opening pauses with the game, fits long player names, adapts to phone rotation and plays when a replay restarts; seeking skips it.
 
-All 28 cards use original unframed portraits with native hand/deck frames, cost drops and text. Selected cards show the original white outline, and newly drawn cards play the source reveal animation. The same artwork appears in the deck editor, details, next-card preview and drag controls; phone touch targets remain at least 44 pixels.
+All 29 cards use original unframed portraits with native hand/deck frames, cost drops and text. Selected cards show the original white outline, and newly drawn cards play the source reveal animation. The same artwork appears in the deck editor, details, next-card preview and drag controls; phone touch targets remain at least 44 pixels.
 
 The match timer and vertical crown counters use the original HUD artwork and type. Overtime transitions into its native red panel, and each team's crown icon plays the source bounce when awarded crowns. Portrait and landscape use their separate archived layouts; crown flights land on the actual counter artwork.
 
@@ -71,7 +73,7 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 
 `npm run assets:death-audio` imports the corresponding native sound mappings and six pinned audio files, preserving nested effects, team variants, volume/pitch ranges and delays.
 
-`npm run assets:combat-audio` imports 30 troop/tower/spell sound profiles, 98 groups and 118 pinned audio files from the retained logic, effects and sound tables. Card sources come from the native portrait bindings. Source and output hashes are retained in the combat-audio manifest.
+`npm run assets:combat-audio` imports 31 troop/tower/spell sound profiles, 99 groups and 119 pinned audio files from the retained logic, effects and sound tables. Card sources come from the native portrait bindings. Source and output hashes are retained in the combat-audio manifest.
 
 `npm run assets:ui` imports five native battle announcement timelines, their text styles, font, elixir icon and sound mappings. `/tests/fixtures/timing.html` provides precise countdown/overtime inspection and is excluded from production.
 
@@ -79,7 +81,7 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 
 `npm run assets:elixir` imports eight native elixir HUD clips and their source geometry. `/tests/fixtures/elixir.html` provides amount, selected-cost, spending, regeneration and frame-step controls for visual inspection.
 
-`npm run assets:cards` imports native card layers and all 28 source portraits. `/tests/fixtures/cards.html` provides the full gallery, selection states and a frame-stepped hand reveal.
+`npm run assets:cards` imports native card layers and all 29 source portraits. `/tests/fixtures/cards.html` provides the full gallery, selection states and a frame-stepped hand reveal.
 
 `npm run assets:freeze` pins Freeze's archived cost, radius, duration and hidden-target rule. `npm run assets:destruction`, `npm run assets:effects` and `npm run assets:combat-audio` regenerate its original particles, ground/radius clips and cast sound. `npm run assets:cold-filter` imports the original character tint shared by Freeze and Zap.
 
@@ -88,6 +90,8 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 `npm run assets:rage` pins Rage's cost, radius, duration, buff interval and three speed multipliers. `npm run assets:rage-filter` imports the original 50-frame purple troop color timeline. The shared card, effect and audio imports include its portrait, sparkles, ground clips and sound.
 
 `npm run assets:rocket` pins Rocket's cost, radius, speed, damage, knockback and Crown Tower multiplier. The shared card, effect, impact and audio imports include its source portrait, 60-frame projectile, explosion and cues.
+
+`npm run assets:lightning` pins the archived cost, radius, 1.5-second area, 460-ms pulse, highest-health targeting, projectile damage and half-second stun. Shared imports provide its original portrait, nine-part impact and sound.
 
 `npm run assets:health` imports 12 native health displays and ten fill timelines. `/tests/fixtures/health.html` inspects the original artwork; `/tests/fixtures/health-arena.html` exercises damage, King activation, pause, death and renderer rebuilding in the arena.
 
