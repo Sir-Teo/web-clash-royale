@@ -3,6 +3,7 @@ import type { EmoteKind, QuickChatKind } from "../game/emotes";
 import type { CombatAudioEvent } from "../game/combat-audio-events";
 import type {
   BattleEvent,
+  AreaEffect,
   Entity,
   Mode,
   PlayerState,
@@ -24,6 +25,7 @@ export interface BattleSnapshot {
   tick: number;
   entities: Entity[];
   projectiles: Projectile[];
+  areas?: AreaEffect[];
   events: BattleEvent[];
   audioEvents?: CombatAudioEvent[];
   lifecycleAudioEvents?: CombatAudioEvent[];

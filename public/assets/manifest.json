@@ -363,6 +363,12 @@
       "sha256": "6bbe17a15330f6c0b9020f149023f728a97bffbd8a373d18a69ee09784ac571a"
     },
     {
+      "path": "cards/freeze.png",
+      "source": "cards/freeze.png",
+      "bytes": 136477,
+      "sha256": "bcbccf3289dc362eaa9e553b886d59e2255c82d62abcfe8c2f8d83560b2ec58d"
+    },
+    {
       "path": "cards/giant.png",
       "source": "cards/giant.png",
       "bytes": 136801,

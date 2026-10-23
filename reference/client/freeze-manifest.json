@@ -13,6 +13,6 @@
   ],
   "output": {
     "path": "src/game/freeze-data.json",
-    "sha256": "b835c1a04b7f5ed4910b4e6975d6d9193b4de978b8023f7e7c74ae95344eb09e"
+    "sha256": "37d35daed07cbe6bb38cba4240fcfc671ea78b7891e74fa6ac2387e7ba62ad99"
   }
 }

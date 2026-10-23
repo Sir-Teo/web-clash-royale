@@ -9,5 +9,6 @@
   "targets": "enemy",
   "hitsGround": true,
   "hitsAir": true,
-  "affectsBuildings": true
+  "affectsBuildings": true,
+  "affectsHidden": true
 }

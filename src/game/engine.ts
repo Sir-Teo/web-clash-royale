@@ -12,6 +12,7 @@ import {
 } from "./combat";
 import { TOWER_SITES } from "./arena-layout";
 import { audioProfile } from "./combat-audio-events";
+import freeze from "./freeze-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -82,6 +83,14 @@ export interface Projectile extends Point {
   arc?: number;
   knockback?: number;
 }
+export interface AreaEffect extends Point {
+  id: number;
+  team: Team;
+  card: "freeze";
+  radius: number;
+  duration: number;
+  remaining: number;
+}
 export interface BattleEvent extends Point {
   id: number;
   time: number;
@@ -134,6 +143,7 @@ export class Battle {
   tick = 0;
   entities: Entity[] = [];
   projectiles: Projectile[] = [];
+  areas: AreaEffect[] = [];
   events: BattleEvent[] = [];
   // Presentation IDs never consume simulation/entity IDs or the battle RNG.
   audioEvents: CombatAudioEvent[] = [];
@@ -339,6 +349,19 @@ export class Battle {
     this.emit(c.kind === "spell" ? "spell" : "deploy", team, x, y, id);
     this.emitAudio("cast", team, id);
     if (c.kind === "spell") {
+      if (id === "freeze") {
+        this.areas.push({
+          id: this.nextId++,
+          team,
+          card: "freeze",
+          x,
+          y,
+          radius: freeze.radius,
+          duration: freeze.duration,
+          remaining: freeze.duration,
+        });
+        return { ok: true, reason: "" };
+      }
       const origin = { x: 9, y: team === "blue" ? 30 : 2 };
       const modern = this.rulesVersion >= 2;
       const speed = id === "fireball" ? FIREBALL_SPEED : ARROWS_SPEED;
@@ -552,6 +575,7 @@ export class Battle {
         10,
         this.players[t].elixir + (STEP / 2.8) * this.multiplier,
       );
+    this.updateAreas();
     if (this.rulesVersion === 1) this.updateLegacyCombat();
     else this.updateCombat();
     if (this.rulesVersion >= 5) this.resolveKingLosses();
@@ -582,6 +606,22 @@ export class Battle {
         "Tiebreaker",
       );
     }
+  }
+  private updateAreas() {
+    for (const area of this.areas) {
+      for (const entity of this.entities) {
+        if (
+          entity.hp <= 0 ||
+          entity.team === area.team ||
+          dist(entity, area) >= area.radius + entity.radius
+        )
+          continue;
+        entity.stun = Math.max(entity.stun, STEP * 2);
+      }
+      area.remaining = Math.max(0, area.remaining - STEP);
+      if (area.remaining < 1e-8) area.remaining = 0;
+    }
+    this.areas = this.areas.filter((area) => area.remaining > 0);
   }
   private resolveKingLosses() {
     const fallenKings = this.entities.filter((e) => e.king && e.hp <= 0);

@@ -1,3 +1,5 @@
+import freeze from "./freeze-data.json" with { type: "json" };
+
 export type CardId =
   | "knight"
   | "archers"
@@ -22,7 +24,8 @@ export type CardId =
   | "balloon"
   | "cannon"
   | "tesla"
-  | "zap";
+  | "zap"
+  | "freeze";
 export interface Card {
   id: CardId;
   name: string;
@@ -357,6 +360,23 @@ export const CARDS: Card[] = [
     1,
     "A quick blast of electricity. Stuns enemies and resets their attacks.",
     { kind: "spell", radius: 2.5, hitsAir: true, stun: 0.5 },
+  ),
+  troop(
+    "freeze",
+    "Freeze",
+    freeze.cost,
+    0,
+    0,
+    0,
+    0,
+    1,
+    "Freezes enemies in an area, stopping their movement and attacks.",
+    {
+      kind: "spell",
+      rarity: "Epic",
+      radius: freeze.radius,
+      hitsAir: freeze.hitsAir,
+    },
   ),
 ];
 export const CARD_MAP = Object.fromEntries(

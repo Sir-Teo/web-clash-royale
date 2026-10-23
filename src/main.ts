@@ -222,7 +222,7 @@ $("#app").innerHTML = `
  <div class="app-shell">
   <header class="topbar">
    <a class="brand" href="#" aria-label="Clash Royale home"><span class="brand-shield">${icon("crown")}</span><span><b>CLASH <em>ROYALE</em></b><small>BROWSER ARENA</small></span></a>
-   <nav class="primary-nav" aria-label="Main navigation"><button data-nav="battle" class="active">${icon("swords")}<span>Battle</span></button><button data-nav="cards">${icon("layers-2")}<span>Cards</span><b>24</b></button><button data-nav="history">${icon("history")}<span>Battle log</span></button></nav>
+   <nav class="primary-nav" aria-label="Main navigation"><button data-nav="battle" class="active">${icon("swords")}<span>Battle</span></button><button data-nav="cards">${icon("layers-2")}<span>Cards</span><b>${CARDS.length}</b></button><button data-nav="history">${icon("history")}<span>Battle log</span></button></nav>
    <div class="top-actions"><div class="gold-wallet" title="Gold earned from battles and chests"><span class="coin">${icon("coins")}</span><b id="gold">${fmt(profile.gold)}</b><span class="wallet-label">GOLD</span></div><button class="icon-button sound-toggle" aria-label="Toggle sound">${icon(profile.sound ? "volume-2" : "volume-x")}</button><button class="avatar" data-settings aria-label="Player settings">T<span></span></button></div>
   </header>
   <div class="workspace">
@@ -1270,7 +1270,7 @@ function showDeckBuilder() {
 function renderDeckBuilder() {
   modal(
     "Build your winning eight",
-    `<div class="builder-top"><p>Choose a deck card, then select its replacement below.</p><span><i class="tiny-drop"></i> ${averageCost(profile.deck).toFixed(1)} average</span></div><div class="builder-deck">${profile.deck.map((id, i) => cardHTML(id, `data-edit-slot="${i}"`, editSlot === i ? "selected" : "")).join("")}</div><div class="builder-controls"><div class="collection-label"><h3>Card collection</h3><span>24 / 24 unlocked</span></div><label class="search-input">${icon("search")}<input id="card-search" placeholder="Find a card…" value="${esc(search)}" aria-label="Search cards"/></label><div class="filter-row">${["all", "troop", "spell", "building"].map((f) => `<button class="${filter === f ? "active" : ""}" data-filter="${f}">${f === "all" ? "All cards" : f === "troop" ? "Troops" : f === "spell" ? "Spells" : "Buildings"}</button>`).join("")}</div></div><div class="collection-grid" id="collection-grid"></div><div class="builder-footer"><span id="builder-hint">${editSlot < 0 ? "Select one of your eight cards to replace it." : `Replacing ${CARD_MAP[profile.deck[editSlot]].name} · Choose a card below.`}</span><button class="primary-button" id="deck-done">${icon("check")} Done</button></div>`,
+    `<div class="builder-top"><p>Choose a deck card, then select its replacement below.</p><span><i class="tiny-drop"></i> ${averageCost(profile.deck).toFixed(1)} average</span></div><div class="builder-deck">${profile.deck.map((id, i) => cardHTML(id, `data-edit-slot="${i}"`, editSlot === i ? "selected" : "")).join("")}</div><div class="builder-controls"><div class="collection-label"><h3>Card collection</h3><span>${CARDS.length} / ${CARDS.length} unlocked</span></div><label class="search-input">${icon("search")}<input id="card-search" placeholder="Find a card…" value="${esc(search)}" aria-label="Search cards"/></label><div class="filter-row">${["all", "troop", "spell", "building"].map((f) => `<button class="${filter === f ? "active" : ""}" data-filter="${f}">${f === "all" ? "All cards" : f === "troop" ? "Troops" : f === "spell" ? "Spells" : "Buildings"}</button>`).join("")}</div></div><div class="collection-grid" id="collection-grid"></div><div class="builder-footer"><span id="builder-hint">${editSlot < 0 ? "Select one of your eight cards to replace it." : `Replacing ${CARD_MAP[profile.deck[editSlot]].name} · Choose a card below.`}</span><button class="primary-button" id="deck-done">${icon("check")} Done</button></div>`,
     "deck",
     true,
   );
@@ -1650,7 +1650,7 @@ $("#replay-seek").addEventListener("input", () => {
 $("#about-button").onclick = () =>
   modal(
     "Made for the love of the game.",
-    `<div class="about-content"><span class="about-crown">${icon("crown")}</span><p>An independent browser fan project. Built with TypeScript and Three.js, with local saves and a deterministic battle simulation.</p><p>This project is not affiliated with, endorsed, sponsored, or specifically approved by Supercell. Clash Royale artwork, audio, and trademarks belong to Supercell.</p><p>Card art, renders, and audio sourced from <a href="https://github.com/RoyaleAPI/cr-api-assets" target="_blank" rel="noreferrer">RoyaleAPI's asset collection</a>. Original troop and building animations, projectile effects and scenery are reconstructed from archived game assets. Surrounding 3D geometry, particles and fallback models were created for this project.</p><small>24 curated cards · Classic rules · Level 11 standard · AI battles<br>Not a live balance replica. Direct browser-to-browser friendly battles over Wi-Fi or compatible remote networks. No official game account connection.</small></div>`,
+    `<div class="about-content"><span class="about-crown">${icon("crown")}</span><p>An independent browser fan project. Built with TypeScript and Three.js, with local saves and a deterministic battle simulation.</p><p>This project is not affiliated with, endorsed, sponsored, or specifically approved by Supercell. Clash Royale artwork, audio, and trademarks belong to Supercell.</p><p>Card art, renders, and audio sourced from <a href="https://github.com/RoyaleAPI/cr-api-assets" target="_blank" rel="noreferrer">RoyaleAPI's asset collection</a>. Original troop and building animations, projectile effects and scenery are reconstructed from archived game assets. Surrounding 3D geometry, particles and fallback models were created for this project.</p><small>${CARDS.length} curated cards · Classic rules · Level 11 standard · AI battles<br>Not a live balance replica. Direct browser-to-browser friendly battles over Wi-Fi or compatible remote networks. No official game account connection.</small></div>`,
     "about",
   );
 document.addEventListener("keydown", (e) => {
@@ -1937,6 +1937,7 @@ Object.defineProperty(window, "__arena", {
         destruction: arena.destructionState,
         chargeFilter: arena.chargeFilterState,
         deployFilter: arena.deployFilterState,
+        freezeAreas: arena.freezeAreaState,
         shake: arena.shakeState,
         placement: arena.placementState,
         loadedAnimations: arena.loadedAnimations,

@@ -34,6 +34,7 @@ import { hogJumpHeight, NativeHogLandings } from "./hog-jump";
 import { NativeChargeMarkers } from "./charge-marker";
 import { NativeChargeFilter } from "./charge-filter";
 import { NativeDeployFilter } from "./deploy-filter";
+import { NativeFreezeAreas } from "./freeze-areas";
 import { arrowOffsets } from "./arrow-volley";
 import { CrownEffects } from "./crowns";
 import { HealthLibrary, type HealthSprite } from "./health";
@@ -79,6 +80,7 @@ export class Arena {
   private chargeMarkers: NativeChargeMarkers;
   private chargeFilter = new NativeChargeFilter();
   private deployFilter = new NativeDeployFilter();
+  private freezeAreas = new NativeFreezeAreas(this.scene, this.effects);
   private hogLandings = new NativeHogLandings();
   private crowns = new CrownEffects(this.scene, this.effects);
   private rubble = new Map<string, T.Mesh>();
@@ -482,6 +484,7 @@ export class Arena {
     this.chargeMarkers.clear();
     this.chargeFilter.clear();
     this.deployFilter.clear();
+    this.freezeAreas.clear();
     this.hogLandings.reset();
     this.shake.reset(battle.audioEvents);
     this.camera.clearViewOffset();
@@ -587,6 +590,9 @@ export class Arena {
   }
   get deployFilterState() {
     return this.deployFilter.state;
+  }
+  get freezeAreaState() {
+    return this.freezeAreas.state;
   }
   get placementState() {
     return this.placement
@@ -1024,6 +1030,16 @@ export class Arena {
       this.lastEvent = event.id;
       const eventAge = Math.max(0, b.time - event.time);
       const pos = new T.Vector3(event.x - 9, 0.6, event.y - 16);
+      if (event.type === "spell" && event.card === "freeze") {
+        for (const effect of ["freeze", "freeze-loop"] as const)
+          this.destruction.burst(
+            effect,
+            new T.Vector3(event.x - 9, 0.2, event.y - 16),
+            b.seed ^ event.id,
+            event.team,
+            eventAge,
+          );
+      }
       if (event.type === "hit") {
         const impactPosition = new T.Vector3(
           event.x - 9,
@@ -1249,6 +1265,7 @@ export class Arena {
       );
     this.chargeMarkers.update(b.entities, this.destruction.time, this.width);
     this.deployFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
+    this.freezeAreas.update(b.areas);
     this.chargeFilter.update(
       b.entities,
       this.destruction.time,
@@ -1446,6 +1463,7 @@ export class Arena {
     this.chargeMarkers.destroy();
     this.chargeFilter.clear();
     this.deployFilter.clear();
+    this.freezeAreas.clear();
     this.placementFeedback.remove();
     this.sprites.destroy();
     this.effects.destroy();

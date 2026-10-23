@@ -22,6 +22,7 @@ if (
   area.Buff !== "Freeze" ||
   area.BuffTime !== "4000" ||
   area.OnlyEnemies !== "TRUE" ||
+  area.AffectsHidden !== "TRUE" ||
   area.HitsGround !== "TRUE" ||
   area.HitsAir !== "TRUE" ||
   area.IgnoreBuildings ||
@@ -40,6 +41,7 @@ const source = {
   hitsGround: true,
   hitsAir: true,
   affectsBuildings: true,
+  affectsHidden: true,
 };
 const path = "src/game/freeze-data.json";
 const output = Buffer.from(JSON.stringify(source, null, 2) + "\n");
