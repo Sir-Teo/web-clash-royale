@@ -172,16 +172,19 @@ for (const [id, { table, row: name }] of Object.entries(cardBindings)) {
     tables.projectiles[
       row.CustomFirstProjectile || row.Projectile || area?.Projectile
     ];
-  const rolling = id === "log"
-    ? tables.projectiles[projectile?.SpawnProjectile]
-    : null;
+  const rolling =
+    id === "log" ? tables.projectiles[projectile?.SpawnProjectile] : null;
   profiles[id] = phases(name, {
     attack: [],
     charge: [],
     launch: [rolling?.TrailEffect],
     impact: [projectile?.HitEffect, area?.OneShotEffect],
     "impact-special": [rolling?.DeathEffect],
-    cast: [row.CastSound && `sound:${row.CastSound}`, row.Effect],
+    cast: [
+      row.CastSound && `sound:${row.CastSound}`,
+      row.Effect,
+      id === "tornado" ? area?.ScaledEffect : null,
+    ],
     spawn: [],
     summon: [],
     appear: [],

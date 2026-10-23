@@ -13,19 +13,24 @@
       "path": "reference/sc/building_mega_bomb.bin",
       "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/building_mega_bomb",
       "sha256": "0f588b85ea10ddd26f3997f8a44ef8d6ae206f7dbfe09a45a8bd5eb445d0ce1c"
+    },
+    {
+      "path": "reference/sc/chr_valkyrie.bin",
+      "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/chr_valkyrie",
+      "sha256": "5bb62da5ea8152f55125b75f2d80b5df27cee63e24df84d91b574f18463c9e08"
     }
   ],
   "inputs": [
     {
       "path": "src/render/destruction-data.json",
-      "sha256": "941f4dca7f487f832ab6fa183af6d2fa19e00c22d962b0a99b6a70665f98eb2d"
+      "sha256": "2e97500bb177a1e6a1c09eb2fa8c86b1c7eeed904de440a98abd73e53866f0ce"
     },
     {
       "path": "reference/logic/buildings.csv",
       "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
     }
   ],
-  "dataSha256": "2e5fae89e07099f1058d1db0f7ca604e2a0dc7ac511aac0cadf0ffd046b80149",
+  "dataSha256": "02529911c6b523e689466ae0ec05906cc79b80e8a19f7c7f337557deee734298",
   "textures": [
     {
       "file": "effects-0.webp",
@@ -38,8 +43,14 @@
       "sha256": "baaa4852f8cdc44ce344712a1fbf6304d9263d11a9e9368f24f0f646c5fb792c",
       "originalSha256": "3773450459d47e12514fbfb2a26d40105d36e3aafddc02082f47331934fc56b9",
       "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/building_mega_bomb_tex.png"
+    },
+    {
+      "file": "chr_valkyrie-0.webp",
+      "sha256": "c4bdd91d3c72eff1a85b7709213bac63b91f0cf2613ba306080236e9f91e1589",
+      "originalSha256": "6102af34d83945f1688bf5660998c2921f76e995b172da7a27a12014888555ab",
+      "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/chr_valkyrie_tex.png"
     }
   ],
-  "clips": 118,
-  "frames": 6421
+  "clips": 121,
+  "frames": 6484
 }

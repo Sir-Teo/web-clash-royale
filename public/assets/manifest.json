@@ -477,6 +477,12 @@
       "sha256": "4dce8e5c833db04903b51b6495e774914ed3c7a8b0e26c14c1378bf6a18f5590"
     },
     {
+      "path": "cards/tornado.png",
+      "source": "cards/tornado.png",
+      "bytes": 130257,
+      "sha256": "1d7c4187b27b44fe16f4cb4664c128e02553961665d701b9c1295d5040c5f26d"
+    },
+    {
       "path": "cards/valkyrie.png",
       "source": "cards/valkyrie.png",
       "bytes": 148663,

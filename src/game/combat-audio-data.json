@@ -3708,6 +3708,94 @@
         "table": "spells_other",
         "row": "Log"
       }
+    },
+    "tornado": {
+      "source": "Tornado",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "sound:SpellCasting",
+          "Spell_tornado_deploy"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          },
+          {
+            "sound": "sound_tornado",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          },
+          {
+            "sound": "sound_tornado",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_other",
+        "row": "Tornado"
+      }
     }
   },
   "sounds": {
@@ -6810,6 +6898,29 @@
         ],
         "maximum": 1,
         "repeat": 8,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_tornado": [
+      {
+        "sourceFile": "sfx/royale_tornado_01.wav",
+        "file": "royale_tornado_01",
+        "volume": [
+          0.85,
+          0.85
+        ],
+        "pitch": [
+          0.75,
+          0.78
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
         "loop": false,
         "priority": 1,
         "padding": 0

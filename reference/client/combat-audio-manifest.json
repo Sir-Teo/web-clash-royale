@@ -44,7 +44,7 @@
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "4e31edc80db6c2121cb53b6531234b6f34532292d23ffba8a1e2c62a2ebbd2fa"
+      "sha256": "a0ce09600c1354b0f0ff4542523ebbf6d91437c3681e6e7c1a8cd91b2ebcb5e2"
     }
   ],
   "ignoredEnemyVersions": [
@@ -550,6 +550,12 @@
       "sha256": "5cc4fdf0a1841b25b9dffd390ef6a01bbcc946c637cdaf20ace06b3f868d7c5e"
     },
     {
+      "path": "public/assets/audio/royale_tornado_01.ogg",
+      "source": "sfx/royale_tornado_01.ogg",
+      "bytes": 18757,
+      "sha256": "b1e1195d9990ed3587dcef87b1daa4f3febf1079dbcf599803d85c392c51ae1d"
+    },
+    {
       "path": "public/assets/audio/skeleton_atk_03.ogg",
       "source": "sfx/skeleton_atk_03.ogg",
       "bytes": 6200,
@@ -792,6 +798,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "859e03427ca70013c4620db7873947d6005c56b7146c7adbedbe0e7c4defa463"
+    "sha256": "4452339a44490990e12c24e999d8110085f6d74b45341f936ba594362b04ccb7"
   }
 }

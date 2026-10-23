@@ -77,9 +77,11 @@ function importEmitter(name) {
   ];
   const clips = group
     .filter((r) =>
-      ["sc/effects.sc", "sc/building_mega_bomb.sc"].includes(
-        r.ParticleResource,
-      ),
+      [
+        "sc/effects.sc",
+        "sc/building_mega_bomb.sc",
+        "sc/chr_valkyrie.sc",
+      ].includes(r.ParticleResource),
     )
     .map((r) => r.ParticleExportName);
   if (!clips.length)
@@ -180,9 +182,7 @@ for (const [id, expected] of Object.entries({
     tables.projectiles[
       spell.CustomFirstProjectile || spell.Projectile || area?.Projectile
     ];
-  const source =
-    projectile?.HitEffect ||
-    area?.OneShotEffect;
+  const source = projectile?.HitEffect || area?.OneShotEffect;
   if (source !== expected)
     throw new Error(`Recheck native ${id} impact binding: ${source}`);
   impacts[id] = {
@@ -200,7 +200,10 @@ trails.rocket = {
   enemyComponents: composition(rocketTrail, "red"),
 };
 const rollingLog = tables.projectiles.LogProjectileRolling;
-if (rollingLog?.DeathEffect !== "log_die" || rollingLog.TrailEffect !== "log_emitter")
+if (
+  rollingLog?.DeathEffect !== "log_die" ||
+  rollingLog.TrailEffect !== "log_emitter"
+)
   throw new Error("Recheck native rolling Log effects");
 impacts["log-die"] = {
   source: rollingLog.DeathEffect,
@@ -211,6 +214,14 @@ trails.log = {
   source: rollingLog.TrailEffect,
   components: composition(rollingLog.TrailEffect, "blue"),
   enemyComponents: composition(rollingLog.TrailEffect, "red"),
+};
+const tornadoArea = tables.area_effect_objects.Tornado;
+if (tornadoArea?.ScaledEffect !== "Spell_tornado_deploy")
+  throw new Error("Recheck native Tornado visual binding");
+impacts.tornado = {
+  source: tornadoArea.ScaledEffect,
+  components: composition(tornadoArea.ScaledEffect, "blue"),
+  enemyComponents: composition(tornadoArea.ScaledEffect, "red"),
 };
 // These DamageEffect compositions contain authored impact layers at the
 // attack target: Giant's punch dust, Balloon's crater and Tesla's beam sparks.
@@ -326,7 +337,8 @@ if (
   poisonArea.ScaledEffect !== "Spell_poison_ground" ||
   poisonArea.OneShotEffect !== "Spell_poison_effect" ||
   poisonArea.LoopingEffect !== "Spell_poison_loop"
-) throw new Error("Recheck native Poison area effect bindings");
+)
+  throw new Error("Recheck native Poison area effect bindings");
 for (const [id, source] of [
   ["poison", poisonArea.OneShotEffect],
   ["poison-loop", poisonArea.LoopingEffect],
@@ -344,7 +356,8 @@ if (
   rageArea.ScaledEffect !== "Spell_rage_ground" ||
   rageArea.OneShotEffect !== "Spell_rage_effect" ||
   rageArea.LoopingEffect !== "Spell_rage_loop"
-) throw new Error("Recheck native Rage area effect bindings");
+)
+  throw new Error("Recheck native Rage area effect bindings");
 for (const [id, source] of [
   ["rage", rageArea.OneShotEffect],
   ["rage-loop", rageArea.LoopingEffect],

@@ -33,6 +33,7 @@ const cards = [
   "rocket",
   "lightning",
   "log",
+  "tornado",
 ];
 const characters = [
   "knight",

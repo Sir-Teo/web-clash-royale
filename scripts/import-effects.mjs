@@ -42,7 +42,7 @@ const textures = [],
 const frames = [],
   frameLookup = new Map(),
   clips = {};
-for (const resource of ["effects", "building_mega_bomb"]) {
+for (const resource of ["effects", "building_mega_bomb", "chr_valkyrie"]) {
   const path = `reference/sc/${resource}.bin`,
     metadata = await readFile(path),
     data = parseSC(metadata);
@@ -139,12 +139,27 @@ for (const resource of ["effects", "building_mega_bomb"]) {
             "rage_effect_ground",
             "spell_rage_radius_blue",
             "spell_rage_radius_red",
+            "spell_tornado_radius_blue",
+            "spell_tornado_radius_red",
           ]),
         ]
-      : [balloon.BlueExportName, balloon.RedExportName, ...emitterExports];
+      : resource === "building_mega_bomb"
+        ? [balloon.BlueExportName, balloon.RedExportName, ...emitterExports]
+        : emitterExports;
   for (const name of exports) {
-    const ref = data.names[name],
+    let ref = data.names[name],
       source = data.clips[ref];
+    // The Valkyrie whirl export is a one-frame wrapper around the actual
+    // 27-frame child. Flatten that child so the original visual animation is
+    // retained instead of an empty first frame.
+    if (resource === "chr_valkyrie" && name === "whirl_animation_fx") {
+      const child = source?.frames[0]?.[0]?.id;
+      if (child !== 434 || data.clips[child]?.frames.length !== 27)
+        throw new Error("Recheck native Tornado whirl wrapper");
+      // Keep flattening through the wrapper to retain its 80% X scale and
+      // authored offset; only the timing/length comes from the child.
+      source = { ...source, fps: data.clips[child].fps, frames: data.clips[child].frames };
+    }
     if (!source?.frames.length) throw new Error(`Missing effect ${name}`);
     const sequence = source.frames.map((_, i) => {
       const parts = flatten(ref, i),

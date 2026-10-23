@@ -282,9 +282,14 @@
       "sha256": "123a4788c6b8164c741e3cb0421afd90c7564b868d1d14188151cefbf081c50e"
     },
     {
+      "file": "portrait-tornado.webp",
+      "bytes": 35456,
+      "sha256": "d31a7ffc52272d8ae64f3bd3512814ff4bd8d15a42e67b4bf8aef18d3ef582de"
+    },
+    {
       "file": "cards.json",
-      "bytes": 92884,
-      "sha256": "4e31edc80db6c2121cb53b6531234b6f34532292d23ffba8a1e2c62a2ebbd2fa"
+      "bytes": 93188,
+      "sha256": "a0ce09600c1354b0f0ff4542523ebbf6d91437c3681e6e7c1a8cd91b2ebcb5e2"
     }
   ]
 }

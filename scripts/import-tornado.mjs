@@ -13,20 +13,34 @@ const spell = spells.find((row) => row.Name === "Tornado");
 const area = areas.find((row) => row.Name === spell?.AreaEffectObject);
 const buff = buffs.find((row) => row.Name === area?.Buff);
 if (
-  !spell || !area || !buff || spell.IconFile !== "tornado" ||
-  spell.Rarity !== "Epic" || spell.ManaCost !== "3" ||
-  spell.Radius !== "5500" || spell.SpellAsDeploy !== "true" ||
-  spell.OnlyEnemies !== "true" || spell.CanDeployOnEnemySide !== "true" ||
-  area.LifeDuration !== "3050" || area.Radius !== "5500" ||
-  area.HitSpeed !== "50" || area.BuffTime !== "500" ||
-  area.OnlyEnemies !== "TRUE" || area.IgnoreBuildings !== "TRUE" ||
-  area.HitsGround !== "TRUE" || area.HitsAir !== "TRUE" ||
-  area.ControlsBuff !== "TRUE" || area.AttractPercentage !== "220" ||
+  !spell ||
+  !area ||
+  !buff ||
+  spell.IconFile !== "tornado" ||
+  spell.Rarity !== "Epic" ||
+  spell.ManaCost !== "3" ||
+  spell.Radius !== "5500" ||
+  spell.SpellAsDeploy !== "true" ||
+  spell.OnlyEnemies !== "true" ||
+  spell.CanDeployOnEnemySide !== "true" ||
+  area.LifeDuration !== "3050" ||
+  area.Radius !== "5500" ||
+  area.HitSpeed !== "50" ||
+  area.BuffTime !== "500" ||
+  area.OnlyEnemies !== "TRUE" ||
+  area.IgnoreBuildings !== "TRUE" ||
+  area.HitsGround !== "TRUE" ||
+  area.HitsAir !== "TRUE" ||
+  area.ControlsBuff !== "TRUE" ||
+  area.AttractPercentage !== "220" ||
   area.ScaledEffect !== "Spell_tornado_deploy" ||
-  buff.DamagePerSecond !== "44" || buff.HitFrequency !== "500" ||
+  buff.DamagePerSecond !== "44" ||
+  buff.HitFrequency !== "500" ||
   buff.CrownTowerDamagePercent !== "-100" ||
-  buff.AttractPercentage !== "220" || buff.ControlledByParent !== "true"
-) throw new Error("Recheck archived Tornado spell, area and buff rules");
+  buff.AttractPercentage !== "220" ||
+  buff.ControlledByParent !== "true"
+)
+  throw new Error("Recheck archived Tornado spell, area and buff rules");
 
 const source = {
   card: spell.Name,
@@ -54,11 +68,18 @@ const sha256 = (data) => createHash("sha256").update(data).digest("hex");
 await writeFile(path, output);
 await writeFile(
   "reference/client/tornado-manifest.json",
-  JSON.stringify({
-    source: "https://github.com/smlbiobot/cr",
-    commit: "7fc7687e6de74690e902543ee4b59f562121e225",
-    inputs: paths.map((inputPath, i) => ({ path: inputPath, sha256: sha256(bytes[i]) })),
-    output: { path, sha256: sha256(output) },
-  }, null, 2) + "\n",
+  JSON.stringify(
+    {
+      source: "https://github.com/smlbiobot/cr",
+      commit: "7fc7687e6de74690e902543ee4b59f562121e225",
+      inputs: paths.map((inputPath, i) => ({
+        path: inputPath,
+        sha256: sha256(bytes[i]),
+      })),
+      output: { path, sha256: sha256(output) },
+    },
+    null,
+    2,
+  ) + "\n",
 );
 console.log("Imported archived Tornado spell, area and buff rules.");
