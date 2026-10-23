@@ -367,9 +367,14 @@
       "sha256": "2d038984258a976bf948fa741accaea61a8626ea86e6a655e880b6f0673ca392"
     },
     {
+      "file": "portrait-bowler.webp",
+      "bytes": 34124,
+      "sha256": "414071739c52b82eb00a597e4bd818b99c7896809de6951d07f8a34caf9a75fd"
+    },
+    {
       "file": "cards.json",
-      "bytes": 99251,
-      "sha256": "f439e12c68f409497af9db1693f635e6f2531d690d190bb22e115d5dd98e0e34"
+      "bytes": 99568,
+      "sha256": "e427471067e0fccc405e90a780eea0f0d149431dde09a966f08805bbb0aee60a"
     }
   ]
 }

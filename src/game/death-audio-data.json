@@ -411,6 +411,29 @@
         }
       ]
     },
+    "bowler": {
+      "source": "bowler_die",
+      "components": [
+        {
+          "sound": "sound_bowler_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_bowler_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -1175,6 +1198,25 @@
       "padding": 3
     },
     "sound_miner_die": {
+      "sourceFiles": [],
+      "files": [],
+      "volume": [
+        0,
+        0
+      ],
+      "pitch": [
+        0,
+        0
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 0,
+      "priority": 0,
+      "padding": 0
+    },
+    "sound_bowler_die": {
       "sourceFiles": [],
       "files": [],
       "volume": [

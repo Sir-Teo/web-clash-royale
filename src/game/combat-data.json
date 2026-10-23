@@ -158,6 +158,18 @@
     "ignoresKnockback": false,
     "projectile": null
   },
+  "bowler": {
+    "source": "Bowler",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": true,
+    "projectile": {
+      "source": "BowlerProjectile",
+      "speed": 2.8333333333333335,
+      "homing": false,
+      "gravity": 0
+    }
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

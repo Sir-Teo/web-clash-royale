@@ -271,6 +271,20 @@ trails.miner = {
   components: composition(minerTravel, "blue"),
   enemyComponents: composition(minerTravel, "red"),
 };
+const boulder = tables.projectiles.BowlerProjectile;
+if (boulder?.TrailEffect !== "bowler_projectile_trail" ||
+    boulder.DeathEffect !== "bowler_projectile_die")
+  throw new Error("Recheck native Bowler effects");
+trails.bowler = {
+  source: boulder.TrailEffect,
+  components: composition(boulder.TrailEffect, "blue"),
+  enemyComponents: composition(boulder.TrailEffect, "red"),
+};
+impacts["hit:bowler"] = {
+  source: boulder.DeathEffect,
+  components: composition(boulder.DeathEffect, "blue"),
+  enemyComponents: composition(boulder.DeathEffect, "red"),
+};
 const tornadoArea = tables.area_effect_objects.Tornado;
 if (tornadoArea?.ScaledEffect !== "Spell_tornado_deploy")
   throw new Error("Recheck native Tornado visual binding");

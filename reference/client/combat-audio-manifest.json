@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "350a70e62f436c04b45e90ebaac14931af64f764b9b13638a0cc87d61b86318e"
+      "sha256": "73abba769cce29ff8e22aa487d17126d1ad7e9a79d0a378c15ab5c8b2577b1df"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "f439e12c68f409497af9db1693f635e6f2531d690d190bb22e115d5dd98e0e34"
+      "sha256": "e427471067e0fccc405e90a780eea0f0d149431dde09a966f08805bbb0aee60a"
     }
   ],
   "ignoredEnemyVersions": [
@@ -200,6 +200,42 @@
       "source": "sfx/boulder_impact_01.ogg",
       "bytes": 13050,
       "sha256": "0fe352f18fb44498995ef979c5954e8fdf2dab668d26e1985d3fbce11a277d1e"
+    },
+    {
+      "path": "public/assets/audio/bowl_atk_01.ogg",
+      "source": "sfx/bowl_atk_01.ogg",
+      "bytes": 14998,
+      "sha256": "71d6766a3ce3e0532317c5fc190e1bbf6c032c3505fb137f93d5d33ce42012d5"
+    },
+    {
+      "path": "public/assets/audio/bowl_atk_02.ogg",
+      "source": "sfx/bowl_atk_02.ogg",
+      "bytes": 13205,
+      "sha256": "4b9267bdba73f03dfe14926cb2749aaff98804023d3557dacc09a7cadc19a209"
+    },
+    {
+      "path": "public/assets/audio/bowl_atk_03.ogg",
+      "source": "sfx/bowl_atk_03.ogg",
+      "bytes": 13314,
+      "sha256": "fb7abfed5ab7a1e165fabfbee3fc9a894480665ee5e4ec2a06c8521011e0b2f3"
+    },
+    {
+      "path": "public/assets/audio/bowl_atk_04.ogg",
+      "source": "sfx/bowl_atk_04.ogg",
+      "bytes": 13293,
+      "sha256": "c90fa7b5e6949c6679d6e5898f599bfa7d5ac37f140514db0ed8d4d41aa2c216"
+    },
+    {
+      "path": "public/assets/audio/bowl_atk_05.ogg",
+      "source": "sfx/bowl_atk_05.ogg",
+      "bytes": 12159,
+      "sha256": "3ba010ff06151c497030e8d36887c7906cf62458fac5b2139c2c01f040b9cc4d"
+    },
+    {
+      "path": "public/assets/audio/bowler_deploy_vo_01.ogg",
+      "source": "sfx/bowler_deploy_vo_01.ogg",
+      "bytes": 9796,
+      "sha256": "64d49c367519d240ea3f32a756c28e5ce9432f24d664b70bf3f779e00ba4503b"
     },
     {
       "path": "public/assets/audio/building_place_01.ogg",
@@ -1146,6 +1182,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "06e05a1b3fb1efc5fe23b651a78384b951144f7a485d7488afbc6045090b3063"
+    "sha256": "c6c88ab5fca6d165f1a1462444aee14ad27d669805247523285e6605908014b5"
   }
 }

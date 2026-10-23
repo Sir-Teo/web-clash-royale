@@ -20,6 +20,7 @@ const sources = {
   "inferno-dragon": "baby_dragon",
   "electro-wizard": "electro_wizard",
   miner: "miner",
+  bowler: "bowler",
   archers: "archer",
   giant: "giant",
   musketeer: "musketeer",
@@ -184,6 +185,7 @@ for (const [id, source] of Object.entries(sources)) {
         id === "mega-minion" ||
         id === "dart-goblin"
         || id === "electro-wizard"
+        || id === "bowler"
         ? `${name}_highres_tex.png`
         : `${name}_tex${"_".repeat(i)}.png`,
     );

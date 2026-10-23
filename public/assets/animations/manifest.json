@@ -174,6 +174,23 @@
       "uniqueFrames": 810
     },
     {
+      "id": "bowler",
+      "source": "chr_bowler",
+      "metadataSha256": "f057c9b308890b6b08ef1d814bb51c68441d89251411479c4fbb89697603514a",
+      "dataSha256": "60112ef05f1e067ad31262911f3babdfcecacc4479445fb24092aef1aafb5e95",
+      "textures": [
+        {
+          "file": "bowler-0.webp",
+          "sha256": "bc761db9ef5d22dbf30c8df041b330894bec24fa4a4acad95f300ccc9ee60133",
+          "originalSha256": "0695211ca59aefed5c5c45037de4bfe17d05dd841d8f7d69198aa8a8183ed8c7"
+        }
+      ],
+      "shapes": 486,
+      "clips": 54,
+      "frames": 1746,
+      "uniqueFrames": 963
+    },
+    {
       "id": "archers",
       "source": "chr_archer",
       "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",

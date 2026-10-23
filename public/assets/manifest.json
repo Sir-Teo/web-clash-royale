@@ -357,6 +357,12 @@
       "sha256": "aee0f0da304a067388f1203a931b8bc42e50cac923c1fa9b3eb7dfa4e78de9b0"
     },
     {
+      "path": "cards/bowler.png",
+      "source": "cards/bowler.png",
+      "bytes": 125281,
+      "sha256": "2f6c52a8628dded53ea6f6d0902d65b5c85e8e9ee20a094e2336fabea94b5929"
+    },
+    {
       "path": "cards/cannon.png",
       "source": "cards/cannon.png",
       "bytes": 126894,

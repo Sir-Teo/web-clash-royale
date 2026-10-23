@@ -2161,6 +2161,109 @@
         "row": "Miner"
       }
     },
+    "bowler": {
+      "source": "Bowler",
+      "attack": {
+        "sources": [
+          "bowler_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_bowler_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_bowler_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "bowler_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_bowler_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_bowler_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Bowler"
+      }
+    },
     "spear-goblins": {
       "source": "SpearGoblin",
       "attack": {
@@ -8026,6 +8129,157 @@
           1.1
         ],
         "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_bowler_attack_start": [
+      {
+        "sourceFile": "sfx/bowl_atk_01.wav",
+        "file": "bowl_atk_01",
+        "volume": [
+          0.85,
+          0.85
+        ],
+        "pitch": [
+          0.96,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/bowl_atk_02.wav",
+        "file": "bowl_atk_02",
+        "volume": [
+          0.85,
+          0.85
+        ],
+        "pitch": [
+          0.96,
+          1.03
+        ],
+        "startDelay": [
+          0.35,
+          0.35
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/bowl_atk_05.wav",
+        "file": "bowl_atk_05",
+        "volume": [
+          0.75,
+          0.75
+        ],
+        "pitch": [
+          0.92,
+          0.98
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/bowl_atk_03.wav",
+        "file": "bowl_atk_03",
+        "volume": [
+          0.85,
+          0.85
+        ],
+        "pitch": [
+          0.96,
+          1.03
+        ],
+        "startDelay": [
+          0.35,
+          0.35
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/bowl_atk_05.wav",
+        "file": "bowl_atk_05",
+        "volume": [
+          0.75,
+          0.75
+        ],
+        "pitch": [
+          0.92,
+          0.98
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/bowl_atk_04.wav",
+        "file": "bowl_atk_04",
+        "volume": [
+          0.85,
+          0.85
+        ],
+        "pitch": [
+          0.96,
+          1.03
+        ],
+        "startDelay": [
+          0.35,
+          0.35
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_bowler_deploy": [
+      {
+        "sourceFile": "sfx/bowler_deploy_vo_01.wav",
+        "file": "bowler_deploy_vo_01",
+        "volume": [
+          0.85,
+          0.85
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
         "repeat": 0,
         "loop": false,
         "priority": 1,
