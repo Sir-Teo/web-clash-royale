@@ -738,6 +738,21 @@
         }
       ]
     },
+    "bats": {
+      "source": "bat_die",
+      "components": [
+        {
+          "sound": "sound_bat_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_bat_die",
+          "delay": 0
+        }
+      ]
+    },
     "witch": {
       "source": "witch_die",
       "components": [

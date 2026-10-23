@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "11a0898ab6d71ab332b5c898916a5d99406e2650512f48c8c6be83ff1d55ddcb"
+      "sha256": "d58b64f55d85c0f24e3e52934373d14c4901653e369b88802ea3a53cc914745e"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "bd299fc0d462e19699c4e665ce8d6209c2e9c4d8be6a81e959722b933c51f01d"
+      "sha256": "0119103a91c29db9d2bec94d9b6665d2038e53bab6be33f1f21ca9e433fc06c4"
     }
   ],
   "ignoredEnemyVersions": [
@@ -224,6 +224,18 @@
       "source": "sfx/barrel_explosion_02.ogg",
       "bytes": 9555,
       "sha256": "271eb95e9777e27fff39c16451046fd2d4fac4b3afb7085e4c7e3c7e445a3226"
+    },
+    {
+      "path": "public/assets/audio/bat_atk_01.ogg",
+      "source": "sfx/bat_atk_01.ogg",
+      "bytes": 6417,
+      "sha256": "6aa2d4c34a17ff50cfc099136f0abd1103dab7418bd6ea372d33e580f00d22e9"
+    },
+    {
+      "path": "public/assets/audio/bat_deploy_01.ogg",
+      "source": "sfx/bat_deploy_01.ogg",
+      "bytes": 5797,
+      "sha256": "d010094b994731181025ff6dcaf8e170b9b35e14ef49275aeb001689642bc640"
     },
     {
       "path": "public/assets/audio/battleram_charge_01.ogg",
@@ -1386,6 +1398,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "982c260de10ab2ccf4ae37bd853c70ac202190bac80c250e9a081ed58f26b67d"
+    "sha256": "81d5fd2acc6b3585eff00758df3f3039a6a1bba4acd33c80036afa1a115cf071"
   }
 }

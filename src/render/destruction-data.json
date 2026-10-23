@@ -2361,6 +2361,69 @@
         }
       ]
     },
+    "bats": {
+      "source": "bat_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1_small",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff_small",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 0.25,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1_small",
+          "delay": 0,
+          "scale": 0.75,
+          "layer": "Ground",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1_small",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff_small",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 0.25,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1_small",
+          "delay": 0,
+          "scale": 0.75,
+          "layer": "Ground",
+          "ground": true
+        }
+      ]
+    },
     "witch": {
       "source": "witch_die",
       "components": [
@@ -7274,6 +7337,11 @@
     },
     "minion-horde": {
       "source": "minion_deploy",
+      "components": [],
+      "enemyComponents": []
+    },
+    "bats": {
+      "source": "bat_deploy",
       "components": [],
       "enemyComponents": []
     },

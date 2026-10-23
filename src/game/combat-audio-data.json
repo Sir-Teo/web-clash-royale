@@ -4179,6 +4179,121 @@
         "row": "MinionHorde"
       }
     },
+    "bats": {
+      "source": "Bat",
+      "attack": {
+        "sources": [
+          "bat_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_bat_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_bat_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "bat_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_bat_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_bat_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "bat_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_bat_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_bat_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Bats"
+      }
+    },
     "witch": {
       "source": "Witch",
       "attack": {
@@ -11014,6 +11129,75 @@
         ],
         "maximum": 1,
         "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_bat_attack_start": [
+      {
+        "sourceFile": "sfx/bat_atk_01.wav",
+        "file": "bat_atk_01",
+        "volume": [
+          0.3,
+          0.35
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_bat_hit": [
+      {
+        "sourceFile": "sfx/footman_attack_hit_01.wav",
+        "file": "footman_attack_hit_01",
+        "volume": [
+          0.1,
+          0.2
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_bat_deploy": [
+      {
+        "sourceFile": "sfx/bat_deploy_01.wav",
+        "file": "bat_deploy_01",
+        "volume": [
+          0.55,
+          0.55
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0.5,
         "loop": false,
         "priority": 1,
         "padding": 0

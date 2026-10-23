@@ -303,6 +303,13 @@
       "gravity": 0
     }
   },
+  "bats": {
+    "source": "Bat",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
   "witch": {
     "source": "Witch",
     "windup": 0.5,

@@ -351,6 +351,12 @@
       "sha256": "46198a754608d8086ec40aa01638da639257194c336adca0247b67f02e30d785"
     },
     {
+      "path": "cards/bats.png",
+      "source": "cards/bats.png",
+      "bytes": 126952,
+      "sha256": "f22cf5787dbb8cd32f3e4015766b64733f86ccedc5cb5be709b3ee06df400850"
+    },
+    {
       "path": "cards/battle-ram.png",
       "source": "cards/battle-ram.png",
       "bytes": 128980,

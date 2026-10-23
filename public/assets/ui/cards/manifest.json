@@ -312,6 +312,11 @@
       "sha256": "dbe54297bfb26d540599ff26a4a25cb169cfcd8c7d2247de258f91a220678791"
     },
     {
+      "file": "portrait-bats.webp",
+      "bytes": 34136,
+      "sha256": "5ef71077cb99111329bd653b0c430010f764bdc0236cf90d5ffa504b2173c14f"
+    },
+    {
       "file": "portrait-three-musketeers.webp",
       "bytes": 45010,
       "sha256": "d4fe5116f23ef9b6383380d637216fe676ea11cc54bbc1c3cb314e6c64fc182d"
@@ -398,8 +403,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 101478,
-      "sha256": "bd299fc0d462e19699c4e665ce8d6209c2e9c4d8be6a81e959722b933c51f01d"
+      "bytes": 101775,
+      "sha256": "0119103a91c29db9d2bec94d9b6665d2038e53bab6be33f1f21ca9e433fc06c4"
     }
   ]
 }
