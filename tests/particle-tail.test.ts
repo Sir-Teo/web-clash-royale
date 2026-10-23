@@ -81,7 +81,7 @@ describe("native particle tails", () => {
       ]);
       if (emitter.tailDelayMs[1]) withTail++;
     }
-    expect(withTail).toBe(24);
+    expect(withTail).toBe(25);
     for (const effect of [
       "tower",
       "knight",

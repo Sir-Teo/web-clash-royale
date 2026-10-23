@@ -17,6 +17,9 @@ export type CombatAudioPhase =
   | "load-2"
   | "load-3"
   | "load-ready"
+  | "dash-start"
+  | "dash-travel"
+  | "dash-end"
   | "death-impact"
   | "death-spawn"
   | "death";
@@ -51,4 +54,7 @@ export const isLifecycleAudio = (event: CombatAudioEvent) =>
   event.phase === "death-impact" ||
   event.phase === "death-spawn" ||
   event.phase === "impact-special" ||
+  event.phase === "dash-start" ||
+  event.phase === "dash-travel" ||
+  event.phase === "dash-end" ||
   event.phase === "death";

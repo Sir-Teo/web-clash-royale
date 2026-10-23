@@ -242,6 +242,13 @@ function setup() {
       target.speed = target.damage = 0;
       target.hp = target.maxHp = 10000;
     }
+  } else if (scenario === "bandit") {
+    unit("bandit", "blue", 4, 21);
+    for (const target of unit("knight", "red", 4, 16)) {
+      target.active = false;
+      target.speed = target.damage = 0;
+      target.hp = target.maxHp = 10000;
+    }
   } else if (scenario === "attack-impacts") {
     const attacker = (
       document.querySelector("#attack-card") as HTMLSelectElement
@@ -610,6 +617,17 @@ function render(now: number) {
       summons: battle.events.filter((e) => e.effect === "summon:night-witch").length,
       summonCues: battle.audioEvents.filter((e) => e.profile === "night-witch" && e.phase === "summon").length,
       deathCues: battle.audioEvents.filter((e) => e.profile === "night-witch" && e.phase === "death-spawn").length,
+      particles: arena.particleCount,
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.bandit =
+    JSON.stringify({
+      unit: battle.entities.find((e) => e.card === "bandit" && e.team === "blue"),
+      target: battle.entities.find((e) => e.card === "knight" && e.team === "red"),
+      start: battle.events.filter((e) => e.effect === "dash-start:bandit").length,
+      end: battle.events.filter((e) => e.effect === "dash-end:bandit").length,
+      special: battle.events.filter((e) => e.effect === "hit-special:bandit").length,
+      cues: battle.audioEvents.filter((e) => e.profile === "bandit" &&
+        e.phase.startsWith("dash-")).map((e) => e.phase),
       particles: arena.particleCount,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.darkPrince =

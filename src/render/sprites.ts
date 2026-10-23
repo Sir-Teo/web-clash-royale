@@ -47,7 +47,7 @@ export interface AnimatedSprite {
 }
 export type SpriteState = Pick<
   Entity,
-  "id" | "card" | "team" | "x" | "y" | "attack" | "interval" | "move" | "deploy"
+  "id" | "card" | "team" | "x" | "y" | "attack" | "interval" | "move" | "deploy" | "dash"
 >;
 const heights: Partial<Record<SpriteId, number>> = {
   knight: 1.65,
@@ -82,6 +82,7 @@ const heights: Partial<Record<SpriteId, number>> = {
   lumberjack: 2.1,
   bats: 1.15,
   "night-witch": 1.95,
+  bandit: 1.75,
   witch: 2.1,
   prince: 2.25,
   pekka: 2.7,
@@ -264,6 +265,7 @@ export class SpriteLibrary {
     const { direction, flip } = facing(sprite.facingX, sprite.facingY);
     const attackAge = e.interval - e.attack;
     const kind =
+      e.card === "bandit" && e.dash ? "dash" :
       e.card === "lumberjack" && e.deploy > 0 ? "deploy" :
       e.attack > 0 && !moving
         ? e.card === "executioner" && attackAge >= 1 ? "attacking" : "attack"
@@ -275,12 +277,13 @@ export class SpriteLibrary {
             : "run"
           : "idle";
     const clip = selectClip(sprite.asset.data.clips, e.team, kind, direction);
-    const elapsed = kind === "deploy" ? 1 - e.deploy :
+    const elapsed = kind === "dash" ? e.dash!.elapsed :
+      kind === "deploy" ? 1 - e.deploy :
       kind === "attack" ? attackAge :
       kind === "attacking" ? attackAge - 1 : time + e.id * 0.13;
     const frame = animationFrame(clip, elapsed,
-      kind === "attack" || kind === "attacking" || kind === "deploy",
-      kind === "deploy" ? 1 :
+      kind === "attack" || kind === "attacking" || kind === "deploy" || kind === "dash",
+      kind === "dash" ? 0.7 : kind === "deploy" ? 1 :
         kind === "attacking" ? executioner.projectile.visualTime : e.interval);
     if (frame !== sprite.lastFrame) {
       sprite.mesh.geometry = spriteGeometry(sprite.asset, frame);

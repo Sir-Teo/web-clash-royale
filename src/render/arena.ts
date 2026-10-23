@@ -1386,6 +1386,15 @@ export class Arena {
           event.team,
           eventAge,
         );
+      if (event.type === "spell" &&
+          (event.effect === "dash-start:bandit" || event.effect === "dash-end:bandit"))
+        this.destruction.burst(
+          event.effect,
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
       if (event.type === "deploy" && event.effect === "graveyard-appear")
         this.destruction.burst(
           "graveyard-appear",

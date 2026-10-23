@@ -245,7 +245,7 @@ test("settings and card search are usable without page overflow", async ({
     .getByRole("button", { name: "Save settings", exact: true })
     .click();
   await page.getByRole("button", { name: `Cards ${CARDS.length}`, exact: true }).click();
-  await page.getByLabel("Search cards", { exact: true }).fill("dragon");
+  await page.getByLabel("Search cards", { exact: true }).fill("baby dragon");
   await expect(page.locator("[data-collection]")).toHaveCount(1);
   await expect(page.locator("[data-collection]")).toHaveAttribute(
     "aria-label",

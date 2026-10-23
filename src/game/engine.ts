@@ -36,6 +36,7 @@ import sparky from "./sparky-data.json" with { type: "json" };
 import lumberjack from "./lumberjack-data.json" with { type: "json" };
 import bats from "./bats-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
+import bandit from "./bandit-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -80,6 +81,8 @@ export interface Entity extends Point {
     stage: 0 | 1 | 2;
   };
   sparkyCharge?: number;
+  dash?: { target: number; elapsed: number; remaining: number };
+  dashCooldown?: number;
   attack: number;
   move: number;
   king?: boolean;
@@ -152,7 +155,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "axe-die" | "bottle:lumberjack" | "summon:night-witch";
+  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "axe-die" | "bottle:lumberjack" | "summon:night-witch" | "dash-start:bandit" | "dash-end:bandit" | "hit-special:bandit";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -947,7 +950,7 @@ export class Battle {
                 ? lightning.crownTowerDamageFraction
                 : 1);
             this.hurt(target, damage);
-            if (target.hp > 0) {
+            if (target.hp > 0 && !target.dash) {
               target.stun = Math.max(target.stun, lightning.stunDuration);
               target.move = 0;
               this.cancelAttack(target);
@@ -1027,7 +1030,7 @@ export class Battle {
           dist(entity, area) >= area.radius + entity.radius
         )
           continue;
-        if (area.card === "freeze")
+        if (area.card === "freeze" && !entity.dash)
           entity.stun = Math.max(entity.stun, STEP * 2);
         else if (area.card === "poison")
           entity.poison ??= { remaining: 0, elapsed: 0 };
@@ -1237,8 +1240,10 @@ export class Battle {
               e,
               p.damage * (p.source === 0 && e.kind === "tower" ? 0.3 : 1),
             );
-            e.stun = Math.max(e.stun, p.stun);
-            if (p.stun) e.cooldown = e.interval;
+            if (!e.dash) {
+              e.stun = Math.max(e.stun, p.stun);
+              if (p.stun) e.cooldown = e.interval;
+            }
           }
       } else if (target) this.hurt(target, p.damage);
       this.emit(
@@ -1354,6 +1359,8 @@ export class Battle {
       e.age += STEP;
       e.attack = Math.max(0, e.attack - STEP * hitSpeed);
       e.cooldown = Math.max(0, e.cooldown - STEP * hitSpeed);
+      if (e.card === "bandit")
+        e.dashCooldown = Math.max(0, (e.dashCooldown ?? 0) - STEP);
       e.stun = Math.max(0, e.stun - STEP);
       if (e.deploy > 0) {
         e.deploy -= STEP;
@@ -1371,6 +1378,10 @@ export class Battle {
         e.activation = Math.max(0, e.activation! - STEP);
         if (e.activation < 1e-8) e.activation = 0;
         this.cancelAttack(e);
+        continue;
+      }
+      if (e.card === "bandit" && e.dash) {
+        this.advanceBanditDash(e);
         continue;
       }
       if (e.stun > 0) {
@@ -1459,6 +1470,20 @@ export class Battle {
         e.move = 0;
         continue;
       }
+      if (e.card === "bandit" && (e.dashCooldown ?? 0) <= 1e-8 &&
+          !e.pendingAttack && e.cooldown <= 1e-8) {
+        const distance = dist(e, target) - target.radius;
+        if (distance >= bandit.dash.minimum && distance <= bandit.dash.maximum) {
+          e.dash = { target: target.id, elapsed: 0,
+            remaining: bandit.dash.maximum / bandit.dash.speed + STEP };
+          e.move = 0;
+          this.emitAudio("dash-start", e.team, "bandit", e.id);
+          this.emitAudio("dash-travel", e.team, "bandit", e.id);
+          this.emit("spell", e.team, e.x, e.y, "bandit", 0,
+            { effect: "dash-start:bandit" });
+          continue;
+        }
+      }
       if (this.inRange(e, target)) {
         if (e.cooldown <= 1e-8) {
           const damage = e.card === "battle-ram" && e.move >= battleRam.chargeRange
@@ -1482,6 +1507,37 @@ export class Battle {
       } else if (e.kind === "troop") this.moveToward(e, target);
     }
     this.updateProjectiles();
+  }
+  private advanceBanditDash(e: Entity) {
+    const dash = e.dash!;
+    const target = this.entities.find((entry) =>
+      entry.id === dash.target && this.validTarget(e, entry));
+    const contact = target && this.inRange(e, target);
+    if (!target || contact || dash.remaining <= 1e-8) {
+      e.dash = undefined;
+      e.dashCooldown = bandit.dash.cooldown;
+      e.cooldown = e.interval;
+      e.move = 0;
+      this.emitAudio("dash-end", e.team, "bandit", e.id);
+      this.emit("spell", e.team, e.x, e.y, "bandit", 0,
+        { effect: "dash-end:bandit" });
+      if (target && contact) {
+        const damage = Math.round(bandit.dash.damage * 1.1 ** 2);
+        this.hurt(target, damage);
+        this.emit("hit", e.team, target.x, target.y, "bandit", damage,
+          { effect: "hit-special:bandit" });
+        this.emitAudio("impact-special", e.team, "bandit", e.id);
+      }
+      return;
+    }
+    const dx = target.x - e.x, dy = target.y - e.y;
+    const distance = Math.hypot(dx, dy) || 1;
+    const travel = Math.min(distance, bandit.dash.speed * STEP);
+    e.x = clamp(e.x + dx / distance * travel, 0.5, 17.5);
+    e.y = clamp(e.y + dy / distance * travel, 0.6, 31.4);
+    dash.elapsed += STEP;
+    dash.remaining -= STEP;
+    if (this.inRange(e, target)) this.advanceBanditDash(e);
   }
   private updateInfernoDragon(e: Entity, hitSpeed: number) {
     const target = this.acquireTarget(e);
@@ -1534,7 +1590,7 @@ export class Battle {
           dist(e, target) >= electroWizard.deployZap.radius + target.radius)
         continue;
       this.hurt(target, damage * (target.kind === "tower" ? 0.4 : 1));
-      if (target.hp > 0) {
+      if (target.hp > 0 && !target.dash) {
         target.stun = Math.max(target.stun, electroWizard.deployZap.stun);
         this.cancelAttack(target);
         target.move = 0;
@@ -1652,7 +1708,7 @@ export class Battle {
       ];
       for (const victim of targets) {
         this.hurt(victim, damage);
-        if (victim.hp > 0) {
+        if (victim.hp > 0 && !victim.dash) {
           victim.stun = Math.max(victim.stun, electroWizard.stun);
           this.cancelAttack(victim);
           victim.move = 0;
@@ -2011,7 +2067,7 @@ export class Battle {
                 : 1),
           );
           if (e.hp <= 0) continue;
-          if (p.stun) {
+          if (p.stun && !e.dash) {
             e.stun = Math.max(e.stun, p.stun);
             this.cancelAttack(e);
             e.move = 0;
@@ -2129,7 +2185,7 @@ export class Battle {
           b = units[j];
         // The archived ram has IgnorePushback: it must pass through defenders
         // rather than become trapped behind one in front of its building.
-        if (a.card === "battle-ram" || b.card === "battle-ram") continue;
+        if (a.card === "battle-ram" || b.card === "battle-ram" || a.dash || b.dash) continue;
         if (a.air !== b.air) continue;
         const d = dist(a, b),
           min = (a.radius + b.radius) * 0.86;
@@ -2147,7 +2203,7 @@ export class Battle {
       (e) => e.kind !== "troop" && e.hp > 0 && !this.isHidden(e),
     );
     for (const unit of units) {
-      if (unit.air) continue;
+      if (unit.air || unit.dash) continue;
       for (const building of buildings) {
         const d = dist(unit, building),
           min = unit.radius + building.radius;
@@ -2163,7 +2219,7 @@ export class Battle {
     }
   }
   private hurt(e: Entity, amount: number, decay = false) {
-    if (e.hp <= 0 || (!decay && this.isHidden(e))) return;
+    if (e.hp <= 0 || (!decay && (this.isHidden(e) || e.dash))) return;
     if (e.shield && !decay) {
       e.shield = Math.max(0, e.shield - amount);
       if (e.shield === 0)
