@@ -29,6 +29,7 @@ import { DestructionEffects, deathEffect, impactEffect } from "./destruction";
 import { NativeDeploymentEffects } from "./deployment-effects";
 import { NativeLaunchEffects } from "./launch-effects";
 import { NativeMovementEffects } from "./movement-effects";
+import type { MovementBurst } from "./movement-effects";
 import { hogJumpHeight, NativeHogLandings } from "./hog-jump";
 import { arrowOffsets } from "./arrow-volley";
 import { CrownEffects } from "./crowns";
@@ -108,6 +109,7 @@ export class Arena {
   private artwork: T.Mesh[] = [];
   private contextLost = false;
   onContextLost: () => void = () => {};
+  onCharge: (burst: MovementBurst) => void = () => {};
   crownTarget: (team: Team) => Point | null = () => null;
   constructor(readonly host: HTMLElement) {
     this.renderer = new T.WebGLRenderer({
@@ -1205,7 +1207,7 @@ export class Arena {
       b.entities,
       b.seed,
       b.time,
-    ))
+    )) {
       this.destruction.burst(
         burst.effect,
         new T.Vector3(burst.origin.x - 9, 0.06, burst.origin.y - 16),
@@ -1213,6 +1215,8 @@ export class Arena {
         burst.team,
         burst.age,
       );
+      if (burst.effect === "charge:prince") this.onCharge(burst);
+    }
     for (const burst of this.hogLandings.consume(b.entities, b.seed, b.time))
       this.destruction.burst(
         burst.effect,

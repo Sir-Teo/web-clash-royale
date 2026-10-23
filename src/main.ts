@@ -1410,6 +1410,21 @@ try {
     if (screen !== "lobby" && !paused) togglePause();
     toast("Graphics paused. Reload if the arena does not recover.");
   };
+  arena.onCharge = (burst) => {
+    if (
+      screen === "lobby" ||
+      paused ||
+      (multiplayer && network.room?.paused) ||
+      battle.winner
+    )
+      return;
+    combatAudio.queueCharge(
+      burst.seed,
+      burst.team,
+      battle.time - burst.age,
+      burst.age,
+    );
+  };
 } catch (error) {
   $("#arena-canvas").innerHTML =
     `<div class="webgl-error">${icon("monitor-x")}<h2>We need a little graphics power.</h2><p>Enable hardware acceleration or open this game in a browser with WebGL support.</p></div>`;

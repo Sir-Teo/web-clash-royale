@@ -16,7 +16,7 @@ export interface CombatCue {
 }
 export function combatAudioPlan(
   profile: string,
-  phase: CombatAudioPhase,
+  phase: CombatAudioPhase | "charge",
   seed: number,
   team: Team = "blue",
 ): CombatCue[] {
@@ -72,6 +72,12 @@ export class NativeCombatAudio {
   })[] = [];
   private lastPlayed = new Map<string, number>();
   constructor(private readonly audio: Pick<GameAudio, "enabled" | "play">) {}
+  queueCharge(seed: number, team: Team, time: number, age: number) {
+    if (!this.audio.enabled || age > 0.5) return;
+    for (const cue of combatAudioPlan("prince", "charge", seed, team))
+      this.pending.push({ ...cue, time: time + cue.delay });
+    this.pending.sort((a, b) => a.time - b.time);
+  }
   consume(events: readonly CombatAudioEvent[], seed: number, now: number) {
     for (const event of events) {
       if (event.id <= this.cursor) continue;

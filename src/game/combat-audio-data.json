@@ -19,6 +19,11 @@
           }
         ]
       },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "launch": {
         "sources": [],
         "components": [],
@@ -131,6 +136,11 @@
             "delay": 0
           }
         ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "launch": {
         "sources": [
@@ -249,6 +259,11 @@
           }
         ]
       },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "launch": {
         "sources": [],
         "components": [],
@@ -353,6 +368,11 @@
             "delay": 0
           }
         ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "launch": {
         "sources": [
@@ -480,6 +500,11 @@
           }
         ]
       },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "launch": {
         "sources": [],
         "components": [],
@@ -593,6 +618,11 @@
           }
         ]
       },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "launch": {
         "sources": [],
         "components": [],
@@ -697,6 +727,11 @@
             "delay": 0
           }
         ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "launch": {
         "sources": [
@@ -815,6 +850,11 @@
           }
         ]
       },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "launch": {
         "sources": [],
         "components": [],
@@ -920,6 +960,11 @@
           }
         ]
       },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "launch": {
         "sources": [],
         "components": [],
@@ -1024,6 +1069,11 @@
             "delay": 0
           }
         ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "launch": {
         "sources": [
@@ -1150,6 +1200,11 @@
           }
         ]
       },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "launch": {
         "sources": [],
         "components": [],
@@ -1263,6 +1318,11 @@
           }
         ]
       },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "launch": {
         "sources": [],
         "components": [],
@@ -1375,6 +1435,11 @@
             "delay": 0
           }
         ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "launch": {
         "sources": [
@@ -1501,6 +1566,11 @@
           }
         ]
       },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "launch": {
         "sources": [
           "minion_attack"
@@ -1617,6 +1687,11 @@
             "delay": 0
           }
         ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "launch": {
         "sources": [],
@@ -1752,6 +1827,11 @@
           }
         ]
       },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "launch": {
         "sources": [],
         "components": [],
@@ -1874,6 +1954,23 @@
           }
         ]
       },
+      "charge": {
+        "sources": [
+          "prince_charge"
+        ],
+        "components": [
+          {
+            "sound": "sound_prince_charge",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_prince_charge",
+            "delay": 0
+          }
+        ]
+      },
       "launch": {
         "sources": [],
         "components": [],
@@ -1987,6 +2084,11 @@
           }
         ]
       },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "launch": {
         "sources": [],
         "components": [],
@@ -2099,6 +2201,11 @@
             "delay": 0
           }
         ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "launch": {
         "sources": [],
@@ -2217,6 +2324,11 @@
         "components": [],
         "enemyComponents": []
       },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "launch": {
         "sources": [
           "cannon_fire_projectile"
@@ -2323,6 +2435,11 @@
             "delay": 0
           }
         ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
       },
       "launch": {
         "sources": [],
@@ -2441,6 +2558,11 @@
         "components": [],
         "enemyComponents": []
       },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "launch": {
         "sources": [
           "King_attack"
@@ -2515,6 +2637,11 @@
     "princess-tower": {
       "source": "PrincessTower",
       "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -2596,6 +2723,11 @@
         "components": [],
         "enemyComponents": []
       },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
       "launch": {
         "sources": [],
         "components": [],
@@ -2673,6 +2805,11 @@
     "arrows": {
       "source": "Arrows",
       "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -2763,6 +2900,11 @@
     "zap": {
       "source": "Zap",
       "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
         "sources": [],
         "components": [],
         "enemyComponents": []
@@ -4944,6 +5086,28 @@
         "startDelay": [
           0.22,
           0.22
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_prince_charge": [
+      {
+        "sourceFile": "sfx/rider_charge_03.wav",
+        "file": "rider_charge_03",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
         ],
         "maximum": 2,
         "repeat": 0,

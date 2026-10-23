@@ -484,6 +484,12 @@
       "sha256": "8a353b4cdc66c8309cc82d5ddc381caa5628f7a17ed5f704314112556b182437"
     },
     {
+      "path": "public/assets/audio/rider_charge_03.ogg",
+      "source": "sfx/rider_charge_03.ogg",
+      "bytes": 14319,
+      "sha256": "5c7fcd067ec33e464ddedff881a9e21e2ecbbe2e2b80077a046b3db1a1823141"
+    },
+    {
       "path": "public/assets/audio/skeleton_atk_03.ogg",
       "source": "sfx/skeleton_atk_03.ogg",
       "bytes": 6200,
@@ -726,6 +732,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "891671880974c2f79b64e498d3cb39d425d6f9f1f178592c8e19741e33d9a22f"
+    "sha256": "26830f85bca99bde39a394c250cca1a0c1fa69f6f9da91101b846d7127d7f3a3"
   }
 }

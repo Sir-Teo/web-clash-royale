@@ -149,6 +149,7 @@ for (const [id, profile] of Object.entries(JSON.parse(profilesBytes))) {
   if (binding && !card) throw new Error(`Unknown card source ${id}`);
   profiles[id] = phases(profile.source, {
     attack: [row.AttackStartEffect],
+    charge: [row.ChargeEffect],
     launch: [row.ProjectileEffect],
     impact: [row.DamageEffect, projectile?.HitEffect],
     cast: [card?.CastSound && `sound:${card.CastSound}`, card?.Effect],
@@ -170,6 +171,7 @@ for (const [id, { table, row: name }] of Object.entries(cardBindings)) {
   const area = tables.area_effect_objects[row.AreaEffectObject];
   profiles[id] = phases(name, {
     attack: [],
+    charge: [],
     launch: [],
     impact: [projectile?.HitEffect, area?.OneShotEffect],
     cast: [row.CastSound && `sound:${row.CastSound}`, row.Effect],
