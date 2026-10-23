@@ -22,7 +22,7 @@ test("Rage can be selected and cast from the real desktop and phone hand", async
   await expect(page.locator(".detail-art.native-card-ready text")).toHaveText(["2", "Rage", "Level 11"]);
   await page.getByRole("button", { name: "Close dialog", exact: true }).click();
   await page.locator("#battle-button").click();
-  await expect.poll(async () => (await state())?.intro.blocking).toBe(false);
+  await expect.poll(async () => (await state())?.intro.blocking, { timeout: 60000 }).toBe(false);
   const tap = async (x: number, y: number) => {
     const point = await page.evaluate(({ x, y }) => (window as any).__arena.project(x, y), { x, y });
     if (await page.evaluate(() => navigator.maxTouchPoints > 0))

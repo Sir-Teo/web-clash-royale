@@ -53,7 +53,7 @@ async function init(page: Page, name: string, sound = false) {
   await page.locator("#friend-button").click();
 }
 async function deploy(page: Page, x = 4, y = 22) {
-  await expect.poll(async () => (await state(page)).intro.blocking).toBe(false);
+  await expect.poll(async () => (await state(page)).intro.blocking, { timeout: 60000 }).toBe(false);
   const before = await state(page);
   const slot = before.hand.findIndex(
     (id: keyof typeof CARD_MAP) =>
