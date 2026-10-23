@@ -34,6 +34,8 @@ import { hogJumpHeight, NativeHogLandings } from "./hog-jump";
 import { NativeChargeMarkers } from "./charge-marker";
 import { NativeChargeFilter } from "./charge-filter";
 import { NativeDeployFilter } from "./deploy-filter";
+import { NativeColdFilter } from "./cold-filter";
+import { SpriteFilterStack } from "./sprite-filter";
 import { NativeFreezeAreas } from "./freeze-areas";
 import { arrowOffsets } from "./arrow-volley";
 import { CrownEffects } from "./crowns";
@@ -78,8 +80,10 @@ export class Arena {
   private launchEffects = new NativeLaunchEffects();
   private movementEffects = new NativeMovementEffects();
   private chargeMarkers: NativeChargeMarkers;
-  private chargeFilter = new NativeChargeFilter();
-  private deployFilter = new NativeDeployFilter();
+  private spriteFilters = new SpriteFilterStack();
+  private chargeFilter = new NativeChargeFilter(this.spriteFilters);
+  private deployFilter = new NativeDeployFilter(this.spriteFilters);
+  private coldFilter = new NativeColdFilter(this.spriteFilters);
   private freezeAreas = new NativeFreezeAreas(this.scene, this.effects);
   private hogLandings = new NativeHogLandings();
   private crowns = new CrownEffects(this.scene, this.effects);
@@ -484,6 +488,8 @@ export class Arena {
     this.chargeMarkers.clear();
     this.chargeFilter.clear();
     this.deployFilter.clear();
+    this.coldFilter.clear();
+    this.spriteFilters.clear();
     this.freezeAreas.clear();
     this.hogLandings.reset();
     this.shake.reset(battle.audioEvents);
@@ -590,6 +596,9 @@ export class Arena {
   }
   get deployFilterState() {
     return this.deployFilter.state;
+  }
+  get coldFilterState() {
+    return this.coldFilter.state;
   }
   get freezeAreaState() {
     return this.freezeAreas.state;
@@ -1271,6 +1280,11 @@ export class Arena {
       this.destruction.time,
       (id) => this.units.get(id)?.sprite,
     );
+    this.coldFilter.update(
+      b.entities,
+      this.destruction.time,
+      (id) => this.units.get(id)?.sprite,
+    );
     this.destruction.update(0, this.camera);
     this.deployment.render(time, this.camera);
     this.positionPlacementFeedback();
@@ -1463,6 +1477,8 @@ export class Arena {
     this.chargeMarkers.destroy();
     this.chargeFilter.clear();
     this.deployFilter.clear();
+    this.coldFilter.clear();
+    this.spriteFilters.clear();
     this.freezeAreas.clear();
     this.placementFeedback.remove();
     this.sprites.destroy();

@@ -1,7 +1,6 @@
-import * as T from "three";
 import type { Entity } from "../game/engine";
 import type { AnimatedSprite } from "./sprites";
-import { filteredSpriteMaterials } from "./sprite-filter";
+import { SpriteFilterStack } from "./sprite-filter";
 import source from "./charge-filter-data.json";
 
 const life = source.colors.length / source.fps;
@@ -10,9 +9,6 @@ interface FilteredActor {
   start: number;
   frame: number;
   sprite?: AnimatedSprite;
-  materials?: T.MeshBasicMaterial[];
-  add: T.Vector3;
-  multiply: T.Vector4;
 }
 
 export function chargeFilterFrame(age: number) {
@@ -30,12 +26,14 @@ export function chargeFilterColor(age: number): Color | null {
 export class NativeChargeFilter {
   private actors = new Map<number, FilteredActor>();
 
+  constructor(private filters = new SpriteFilterStack()) {}
+
   get state() {
     return [...this.actors.entries()].map(([id, actor]) => ({
       id,
       frame: actor.frame,
       color: source.colors[Math.max(0, actor.frame)],
-      applied: !!actor.materials,
+      applied: this.filters.has(id, "charge"),
     }));
   }
 
@@ -49,8 +47,6 @@ export class NativeChargeFilter {
       this.actors.set(id, {
         start: time - age,
         frame: -1,
-        add: new T.Vector3(),
-        multiply: new T.Vector4(1, 1, 1, 1),
       });
   }
 
@@ -63,40 +59,20 @@ export class NativeChargeFilter {
     for (const [id, actor] of this.actors) {
       const frame = chargeFilterFrame(time - actor.start);
       if (!alive.has(id) || frame < 0) {
-        this.release(actor);
+        this.filters.remove(id, "charge");
         this.actors.delete(id);
         continue;
       }
       const sprite = spriteFor(id);
       if (!sprite) continue;
-      if (actor.sprite !== sprite) {
-        this.release(actor);
-        actor.sprite = sprite;
-        actor.materials = filteredSpriteMaterials(
-          sprite.mesh.material as T.MeshBasicMaterial[],
-          actor,
-        );
-        sprite.mesh.material = actor.materials;
-      }
-      if (frame === actor.frame) continue;
-      const [ar, ag, ab, , mr, mg, mb] = source.colors[frame];
-      actor.add.set(ar / 255, ag / 255, ab / 255);
-      actor.multiply.set(mr / 255, mg / 255, mb / 255, 1);
+      this.filters.set(id, "charge", sprite, source.colors[frame]);
+      actor.sprite = sprite;
       actor.frame = frame;
     }
   }
 
   clear() {
-    for (const actor of this.actors.values()) this.release(actor);
+    for (const id of this.actors.keys()) this.filters.remove(id, "charge");
     this.actors.clear();
-  }
-
-  private release(actor: FilteredActor) {
-    if (actor.sprite && actor.materials) {
-      actor.sprite.mesh.material = actor.sprite.asset.materials;
-      actor.materials.forEach((material) => material.dispose());
-    }
-    actor.sprite = undefined;
-    actor.materials = undefined;
   }
 }

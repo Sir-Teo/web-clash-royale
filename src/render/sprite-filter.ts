@@ -1,4 +1,5 @@
 import * as T from "three";
+import type { AnimatedSprite } from "./sprites";
 
 export interface SpriteFilterColor {
   add: T.Vector3;
@@ -29,4 +30,108 @@ export function filteredSpriteMaterials(
     material.customProgramCacheKey = () => "sc1-sprite-filter-v1";
     return material;
   });
+}
+
+export type SpriteFilterLayer = "deploy" | "charge" | "cold";
+const layerOrder: SpriteFilterLayer[] = ["deploy", "charge", "cold"];
+
+interface FilteredSprite {
+  sprite: AnimatedSprite;
+  materials: T.MeshBasicMaterial[];
+  add: T.Vector3;
+  multiply: T.Vector4;
+  layers: Map<SpriteFilterLayer, readonly number[]>;
+}
+
+/** Compose simultaneous native color transforms without replacing each other's materials. */
+export class SpriteFilterStack {
+  private sprites = new Map<number, FilteredSprite>();
+
+  get state() {
+    return [...this.sprites.entries()].map(([id, sprite]) => ({
+      id,
+      layers: layerOrder.filter((layer) => sprite.layers.has(layer)),
+      add: sprite.add.toArray(),
+      multiply: sprite.multiply.toArray(),
+    }));
+  }
+
+  has(id: number, layer: SpriteFilterLayer) {
+    return this.sprites.get(id)?.layers.has(layer) ?? false;
+  }
+
+  set(
+    id: number,
+    layer: SpriteFilterLayer,
+    sprite: AnimatedSprite,
+    color: readonly number[],
+  ) {
+    let filtered = this.sprites.get(id);
+    if (filtered?.sprite !== sprite) {
+      if (filtered) this.release(filtered);
+      filtered = {
+        sprite,
+        materials: [],
+        add: new T.Vector3(),
+        multiply: new T.Vector4(1, 1, 1, 1),
+        layers: new Map(),
+      };
+      filtered.materials = filteredSpriteMaterials(
+        sprite.asset.materials,
+        filtered,
+      );
+      sprite.mesh.material = filtered.materials;
+      this.sprites.set(id, filtered);
+    }
+    filtered.layers.set(layer, color);
+    this.compose(filtered);
+  }
+
+  remove(id: number, layer: SpriteFilterLayer) {
+    const filtered = this.sprites.get(id);
+    if (!filtered?.layers.delete(layer)) return;
+    if (filtered.layers.size) this.compose(filtered);
+    else {
+      this.release(filtered);
+      this.sprites.delete(id);
+    }
+  }
+
+  clear() {
+    for (const filtered of this.sprites.values()) this.release(filtered);
+    this.sprites.clear();
+  }
+
+  private compose(filtered: FilteredSprite) {
+    let ar = 0,
+      ag = 0,
+      ab = 0;
+    let mr = 1,
+      mg = 1,
+      mb = 1,
+      ma = 1;
+    for (const layer of layerOrder) {
+      const color = filtered.layers.get(layer);
+      if (!color) continue;
+      const [lr, lg, lb, la, lmr, lmg, lmb] = color;
+      const r = lmr / 255,
+        g = lmg / 255,
+        b = lmb / 255;
+      ar = ar * r + lr / 255;
+      ag = ag * g + lg / 255;
+      ab = ab * b + lb / 255;
+      mr *= r;
+      mg *= g;
+      mb *= b;
+      ma *= la / 255;
+    }
+    filtered.add.set(ar, ag, ab);
+    filtered.multiply.set(mr, mg, mb, ma);
+  }
+
+  private release(filtered: FilteredSprite) {
+    if (filtered.sprite.mesh.material === filtered.materials)
+      filtered.sprite.mesh.material = filtered.sprite.asset.materials;
+    filtered.materials.forEach((material) => material.dispose());
+  }
 }
