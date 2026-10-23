@@ -1,0 +1,58 @@
+{
+  "source": "https://raw.githubusercontent.com/smlbiobot/cr/7fc7687e6de74690e902543ee4b59f562121e225/apk/1.8.0/com.supercell.clashroyale_1.8.0/lib/x86/libg.so",
+  "sha256": "a7eb74c5b72770e39b8dc2c55e452fc11434f3df3efc46fd0ea13d28c1da9309",
+  "bytes": 8646136,
+  "gotBase": "0x7b7a14",
+  "field": {
+    "name": "ShakeScreen",
+    "address": "0x615a48",
+    "fileOffset": 6380104,
+    "relativeReferences": [
+      {
+        "displacementAddress": "0x1eb3e4",
+        "instructionBytes": "8d8334e0e5ff"
+      }
+    ]
+  },
+  "constants": [
+    {
+      "name": "tableToSeconds",
+      "address": "0x5fe754",
+      "fileOffset": 6285140,
+      "value": 0.0010000000474974513
+    },
+    {
+      "name": "remainingTimeToRadiusFactor",
+      "address": "0x5fe780",
+      "fileOffset": 6285184,
+      "value": 0.5
+    },
+    {
+      "name": "randomIntegerToRadians",
+      "address": "0x5fe82c",
+      "fileOffset": 6285356,
+      "value": 0.0006283000111579895
+    }
+  ],
+  "scale": {
+    "pointerAddress": "0x7b759c",
+    "pointerFileOffset": 8086940,
+    "address": "0x63b840",
+    "value": 12
+  },
+  "imports": [
+    {
+      "address": "0x7b7a70",
+      "name": "cosf"
+    },
+    {
+      "address": "0x7b7a74",
+      "name": "sinf"
+    }
+  ],
+  "limitations": [
+    "Byte matches are candidates until confirmed by the retained Hopper disassembly.",
+    "The file-backed scene factor is 12; this probe does not establish every runtime writer or display-unit conversion.",
+    "No original executable was run. Frame cadence, reduced-motion policy and browser coordinate adaptation remain reconstruction choices."
+  ]
+}
