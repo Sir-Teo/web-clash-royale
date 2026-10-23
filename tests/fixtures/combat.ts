@@ -105,6 +105,17 @@ function setup() {
       target.active = false;
       target.hp = target.maxHp = 10000;
     }
+  } else if (scenario === "footsteps") {
+    for (const [card, x] of [
+      ["knight", 4],
+      ["prince", 14],
+    ] as [CardId, number][]) {
+      unit(card, "blue", x, 23);
+      for (const target of unit("giant", "red", x, 10)) {
+        target.active = false;
+        target.hp = target.maxHp = 10000;
+      }
+    }
   } else if (scenario === "deployment") {
     // Spawn through the normal engine after setBattle, so lifecycle events
     // are fresh rather than treated as history by the renderer.

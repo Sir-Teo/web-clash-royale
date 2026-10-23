@@ -60,17 +60,31 @@ async function deploy(page: Page, x = 4, y = 22) {
       CARD_MAP[id].cost <= before.elixir && CARD_MAP[id].kind === "troop",
   );
   expect(slot).toBeGreaterThanOrEqual(0);
-  await page.locator(`[data-slot="${slot}"]`).click();
-  const point = await page.evaluate(
-    ({ x, y }) => (window as any).__arena.project(x, y),
-    { x, y },
-  );
-  if (await page.evaluate(() => navigator.maxTouchPoints > 0))
-    await page.touchscreen.tap(point.x, point.y);
-  else await page.mouse.click(point.x, point.y);
-  await expect
-    .poll(async () => (await state(page)).actions)
-    .toBeGreaterThan(before.actions);
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await expect(page.locator("#connection-status")).toContainText("FRIENDLY", {
+      timeout: 30000,
+    });
+    await page.locator(`[data-slot="${slot}"]`).click();
+    const point = await page.evaluate(
+      ({ x, y }) => (window as any).__arena.project(x, y),
+      { x, y },
+    );
+    if (await page.evaluate(() => navigator.maxTouchPoints > 0))
+      await page.touchscreen.tap(point.x, point.y);
+    else await page.mouse.click(point.x, point.y);
+    try {
+      await expect
+        .poll(async () => (await state(page)).actions, { timeout: 10000 })
+        .toBeGreaterThan(before.actions);
+      return before.hand[slot];
+    } catch (error) {
+      // A transient WebRTC disconnect pauses the battle and drops that input.
+      // Wait for the browser's own reconnect state, then try the same card once.
+      if ((await state(page)).actions > before.actions)
+        return before.hand[slot];
+      if (attempt) throw error;
+    }
+  }
   return before.hand[slot];
 }
 test("static browsers exchange invites, fight, pause together and replay without a game server", async ({
