@@ -54,6 +54,7 @@
     "assets:goblin-gang": "node scripts/import-goblin-gang.mjs",
     "assets:barbarians": "node scripts/import-barbarians.mjs",
     "assets:royal-giant": "node scripts/import-royal-giant.mjs",
+    "assets:mega-minion": "node scripts/import-mega-minion.mjs",
     "assets:clone-filter": "node scripts/import-clone-filter.mjs",
     "assets:poison-filter": "node scripts/import-poison-filter.mjs",
     "assets:cold-filter": "node scripts/import-cold-filter.mjs"

@@ -1,0 +1,19 @@
+{
+  "card": "MegaMinion",
+  "character": "MegaMinion",
+  "projectile": "MegaMinionSpit",
+  "rarity": "Rare",
+  "cost": 3,
+  "sourceHitpoints": 395,
+  "sourceDamage": 147,
+  "sourceSpeed": 60,
+  "sourceRange": 2000,
+  "sourceHitSpeed": 1500,
+  "flyingHeight": 1500,
+  "hitsAir": true,
+  "projectileSpeed": 1000,
+  "projectileExport": "projectile_cannonball_small",
+  "projectileHitEffect": "mega_minion_hit",
+  "blueExport": "mega_minion",
+  "redExport": "mega_minion_red"
+}
