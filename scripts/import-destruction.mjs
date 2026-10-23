@@ -48,6 +48,7 @@ const effects = {},
   impacts = {},
   launches = {},
   movements = {},
+  landings = {},
   deployments = {},
   emitters = {};
 // Same bounded source correction used by the audio importer: this particle
@@ -222,6 +223,15 @@ for (const [id, expected] of Object.entries({
     enemyComponents: composition(source, "red"),
   };
 }
+const hogLanding =
+  tables.characters[profiles["hog-rider"].source].LandingEffect;
+if (hogLanding !== "hog_rider_landing")
+  throw new Error(`Recheck native Hog Rider landing: ${hogLanding}`);
+landings["hog-rider"] = {
+  source: hogLanding,
+  components: composition(hogLanding, "blue"),
+  enemyComponents: composition(hogLanding, "red"),
+};
 for (const [id, expected] of Object.entries({
   musketeer: "cannon_hit",
   bomber: "BombTower_projectile_hit",
@@ -257,7 +267,15 @@ effects.king.rubble = "Tower_destroyed_ground2";
 const path = "src/render/destruction-data.json",
   bytes =
     JSON.stringify(
-      { effects, impacts, launches, movements, deployments, emitters },
+      {
+        effects,
+        impacts,
+        launches,
+        movements,
+        landings,
+        deployments,
+        emitters,
+      },
       null,
       2,
     ) + "\n";

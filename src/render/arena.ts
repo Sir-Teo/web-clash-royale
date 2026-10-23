@@ -29,6 +29,7 @@ import { DestructionEffects, deathEffect, impactEffect } from "./destruction";
 import { NativeDeploymentEffects } from "./deployment-effects";
 import { NativeLaunchEffects } from "./launch-effects";
 import { NativeMovementEffects } from "./movement-effects";
+import { hogJumpHeight, NativeHogLandings } from "./hog-jump";
 import { arrowOffsets } from "./arrow-volley";
 import { CrownEffects } from "./crowns";
 import { HealthLibrary, type HealthSprite } from "./health";
@@ -71,6 +72,7 @@ export class Arena {
   private deploymentEffects = new NativeDeploymentEffects();
   private launchEffects = new NativeLaunchEffects();
   private movementEffects = new NativeMovementEffects();
+  private hogLandings = new NativeHogLandings();
   private crowns = new CrownEffects(this.scene, this.effects);
   private rubble = new Map<string, T.Mesh>();
   private impacts: { sprite: EffectSprite; start: number; life: number }[] = [];
@@ -466,6 +468,7 @@ export class Arena {
     this.deploymentEffects.reset(battle.audioEvents);
     this.launchEffects.reset(battle.audioEvents);
     this.movementEffects.reset();
+    this.hogLandings.reset();
     this.shake.reset(battle.audioEvents);
     this.camera.clearViewOffset();
     this.destruction.clear();
@@ -1210,6 +1213,14 @@ export class Arena {
         burst.team,
         burst.age,
       );
+    for (const burst of this.hogLandings.consume(b.entities, b.seed, b.time))
+      this.destruction.burst(
+        burst.effect,
+        new T.Vector3(burst.origin.x - 9, 0.06, burst.origin.y - 16),
+        burst.seed,
+        burst.team,
+        burst.age,
+      );
     this.destruction.update(0, this.camera);
     this.deployment.render(time, this.camera);
     this.positionPlacementFeedback();
@@ -1228,6 +1239,7 @@ export class Arena {
   private updateUnit(v: Visual, e: Entity, dt: number, time: number) {
     const o = v.object;
     const y = e.air ? 2.2 : 0.2;
+    const jump = hogJumpHeight(e);
     const oldX = o.position.x,
       oldZ = o.position.z;
     o.position.x = T.MathUtils.damp(o.position.x, e.x - 9, 25, dt);
@@ -1246,6 +1258,7 @@ export class Arena {
           ? Math.abs(Math.sin(time * 9 + e.id)) * 0.05
           : 0);
     if (v.sprite) {
+      v.sprite.mesh.position.y = jump;
       const target = this.battle?.entities.find((t) => t.id === e.target);
       this.sprites.update(v.sprite, e, target, moving, time, this.camera, {
         x: o.position.x - oldX,
@@ -1280,7 +1293,7 @@ export class Arena {
             offset * v.sprite.asset.scale * 0.5
           : 1.9;
       this.healthPosition.copy(o.position);
-      this.healthPosition.y += height;
+      this.healthPosition.y += height + jump;
       this.health.update(
         v.nativeHealth,
         e,
@@ -1293,13 +1306,14 @@ export class Arena {
       v.health.visible = e.hp < e.maxHp && e.deploy <= 0;
       v.health.position.set(
         0,
-        e.burrow
-          ? 0.65 + e.burrow.exposure * 2.05
-          : e.card === "giant" || e.card === "pekka"
-            ? 2.5
-            : e.card === "balloon"
-              ? 3.8
-              : 1.9,
+        jump +
+          (e.burrow
+            ? 0.65 + e.burrow.exposure * 2.05
+            : e.card === "giant" || e.card === "pekka"
+              ? 2.5
+              : e.card === "balloon"
+                ? 3.8
+                : 1.9),
         0,
       );
       v.health.quaternion.copy(this.camera.quaternion);

@@ -2396,6 +2396,57 @@
       ]
     }
   },
+  "landings": {
+    "hog-rider": {
+      "source": "hog_rider_landing",
+      "components": [
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    }
+  },
   "deployments": {
     "knight": {
       "source": "knight_deploy",
@@ -5951,6 +6002,104 @@
         "d4"
       ]
     },
+    "knight_depoy_dustShadow": {
+      "count": 3,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.9,
+        1.3
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0
+      ],
+      "speed": [
+        -1.3333333333333333,
+        -2.3333333333333335
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        -0.6666666666666666,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 2.3,
+      "endScale": 2.6,
+      "fadeIn": 0,
+      "fadeOut": 1,
+      "inertia": 3.3333333333333335,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "d3",
+        "d4"
+      ]
+    },
+    "knight_deploy_dustPuff2": {
+      "count": 55,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.5,
+        0.6
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.1,
+        0.13333333333333333
+      ],
+      "speed": [
+        1.3333333333333333,
+        1.6666666666666667
+      ],
+      "height": 0.7,
+      "verticalSpeed": [
+        0.6666666666666666,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.8333333333333334,
+      "startScale": 0.8,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 3.3333333333333335,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "d3",
+        "d2",
+        "d3",
+        "d3_green_dark"
+      ]
+    },
     "cannon_hit_rock_emiter": {
       "count": 4,
       "emissionLife": [
@@ -6530,104 +6679,6 @@
         "Rock1Particle",
         "Rock2Particle",
         "Rock3Particle"
-      ]
-    },
-    "knight_depoy_dustShadow": {
-      "count": 3,
-      "emissionLife": [
-        0.001,
-        0.001
-      ],
-      "interval": [
-        0,
-        0
-      ],
-      "life": [
-        0.9,
-        1.3
-      ],
-      "angle": [
-        0,
-        6.283185307179586
-      ],
-      "radius": [
-        -0.03333333333333333,
-        0
-      ],
-      "speed": [
-        -1.3333333333333333,
-        -2.3333333333333335
-      ],
-      "height": 0,
-      "verticalSpeed": [
-        -0.6666666666666666,
-        0
-      ],
-      "tailDelayMs": [
-        0,
-        0
-      ],
-      "gravity": 0,
-      "startScale": 2.3,
-      "endScale": 2.6,
-      "fadeIn": 0,
-      "fadeOut": 1,
-      "inertia": 3.3333333333333335,
-      "rotate": true,
-      "loop": false,
-      "clips": [
-        "d3",
-        "d4"
-      ]
-    },
-    "knight_deploy_dustPuff2": {
-      "count": 55,
-      "emissionLife": [
-        0.001,
-        0.001
-      ],
-      "interval": [
-        0,
-        0
-      ],
-      "life": [
-        0.5,
-        0.6
-      ],
-      "angle": [
-        0,
-        6.283185307179586
-      ],
-      "radius": [
-        0.1,
-        0.13333333333333333
-      ],
-      "speed": [
-        1.3333333333333333,
-        1.6666666666666667
-      ],
-      "height": 0.7,
-      "verticalSpeed": [
-        0.6666666666666666,
-        0
-      ],
-      "tailDelayMs": [
-        0,
-        0
-      ],
-      "gravity": 0.8333333333333334,
-      "startScale": 0.8,
-      "endScale": 0.8,
-      "fadeIn": 0,
-      "fadeOut": 0.5,
-      "inertia": 3.3333333333333335,
-      "rotate": false,
-      "loop": false,
-      "clips": [
-        "d3",
-        "d2",
-        "d3",
-        "d3_green_dark"
       ]
     },
     "giant_deploy_dustPuff": {

@@ -10,10 +10,16 @@ export type DeathEffect = keyof typeof definitions.effects;
 export type ImpactEffect = keyof typeof definitions.impacts;
 export type LaunchEffect = `launch:${keyof typeof definitions.launches}`;
 export type MovementEffect = `move:${keyof typeof definitions.movements}`;
+export type LandingEffect = `land:${keyof typeof definitions.landings}`;
 type DeploymentCard = keyof typeof definitions.deployments;
 export type DeploymentEffect = `deploy:${DeploymentCard}`;
 type NativeEffect =
-  DeathEffect | ImpactEffect | LaunchEffect | MovementEffect | DeploymentEffect;
+  | DeathEffect
+  | ImpactEffect
+  | LaunchEffect
+  | MovementEffect
+  | LandingEffect
+  | DeploymentEffect;
 const compositions = { ...definitions.effects, ...definitions.impacts };
 // Two native Zaps plus a full Skeleton Army swarm schedule 1,028 particles.
 // Keep the cap bounded while retaining every authored fragment in that scene.
@@ -37,6 +43,11 @@ export function launchEffect(card: string): LaunchEffect | undefined {
 export function movementEffect(card: string): MovementEffect | undefined {
   return Object.hasOwn(definitions.movements, card)
     ? `move:${card as keyof typeof definitions.movements}`
+    : undefined;
+}
+export function landingEffect(card: string): LandingEffect | undefined {
+  return Object.hasOwn(definitions.landings, card)
+    ? `land:${card as keyof typeof definitions.landings}`
     : undefined;
 }
 export function deathEffect(
@@ -92,7 +103,11 @@ export function destructionPlan(
         ? definitions.movements[
             effect.slice(5) as keyof typeof definitions.movements
           ]
-        : compositions[effect as DeathEffect | ImpactEffect];
+        : effect.startsWith("land:")
+          ? definitions.landings[
+              effect.slice(5) as keyof typeof definitions.landings
+            ]
+          : compositions[effect as DeathEffect | ImpactEffect];
   const components =
     definition[team === "red" ? "enemyComponents" : "components"];
   return components.flatMap((component) => {
