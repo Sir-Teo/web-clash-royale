@@ -1,0 +1,20 @@
+{
+  "card": "Graveyard",
+  "area": "Graveyard",
+  "cost": 5,
+  "rarity": "Legendary",
+  "radius": 5,
+  "duration": 10,
+  "spawnCharacter": "Skeleton",
+  "spawnInterval": 0.5,
+  "spawnInitialDelay": 1.5,
+  "spawnDeployTime": 0.4,
+  "spawnCharacterLevelIndex": 8,
+  "visual": {
+    "cast": "Spell_graveyard_cast",
+    "ground": "Spell_graveyard_ground",
+    "appear": "Graveyard_appear",
+    "deployFilter": "filter_deploy_unit_skeleton"
+  },
+  "castSound": "sound_graveyard_deploy"
+}
