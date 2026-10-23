@@ -60,12 +60,13 @@ const legendaryCards = Object.entries(combat)
   )
   .map(([id]) => id);
 if (
-  legendaryCards.length !== 5 ||
+  legendaryCards.length !== 6 ||
   !legendaryCards.includes("ice-wizard") ||
   !legendaryCards.includes("princess") ||
   !legendaryCards.includes("inferno-dragon") ||
   !legendaryCards.includes("electro-wizard") ||
-  !legendaryCards.includes("sparky")
+  !legendaryCards.includes("sparky") ||
+  !legendaryCards.includes("night-witch")
 )
   throw new Error(`Recheck legendary deploy binding: ${legendaryCards}`);
 const minerClip = sc.clips[sc.names[minerName]];

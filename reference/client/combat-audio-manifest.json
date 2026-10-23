@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "d58b64f55d85c0f24e3e52934373d14c4901653e369b88802ea3a53cc914745e"
+      "sha256": "3795cb3c7961bb95327fb2e06a9f3197bd05c98d9b41f91c531b986c9ece04b8"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "0119103a91c29db9d2bec94d9b6665d2038e53bab6be33f1f21ca9e433fc06c4"
+      "sha256": "aee98a70e33891afd1ab2a7a9c2c92e2093574cdd35ed3ce321a77accbd83b7e"
     }
   ],
   "ignoredEnemyVersions": [
@@ -428,6 +428,18 @@
       "source": "sfx/dummy_01.ogg",
       "bytes": 3558,
       "sha256": "fc41f7905e797f79d7d1a46801dc439dd1889459e3e2a62b938fcd5d04d4e696"
+    },
+    {
+      "path": "public/assets/audio/dw_atk_01.ogg",
+      "source": "sfx/dw_atk_01.ogg",
+      "bytes": 6859,
+      "sha256": "280707ec3888ca27922721e7e2a307fc6f94fefc89d25c58226ef1744a1833d6"
+    },
+    {
+      "path": "public/assets/audio/dw_deploy_01.ogg",
+      "source": "sfx/dw_deploy_01.ogg",
+      "bytes": 11357,
+      "sha256": "37ee556c6b5651c60c0cae6ee7b66bdc528b6169ac4916c3d8bac6cca0403bfd"
     },
     {
       "path": "public/assets/audio/electro_wiz_atk_01.ogg",
@@ -1398,6 +1410,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "81d5fd2acc6b3585eff00758df3f3039a6a1bba4acd33c80036afa1a115cf071"
+    "sha256": "d693fcead1bf22bff96e3c2ea9ae2af3bee42f91d77f8f58aed089e736ab109a"
   }
 }

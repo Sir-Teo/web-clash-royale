@@ -514,6 +514,23 @@
       "uniqueFrames": 90
     },
     {
+      "id": "night-witch",
+      "source": "chr_dark_witch",
+      "metadataSha256": "9a451b913c7ff7e89972406ea2da9cda80b5570e6d8b60c9434d2f989ebdfef8",
+      "dataSha256": "167d1ba0e122d486cf4ecd7295157072eb7baeb0d72afa484212fb39bdf3cdcd",
+      "textures": [
+        {
+          "file": "night-witch-0.webp",
+          "sha256": "dfc9b1c535a7f62a93eeedfff2870f57f326aa85fa69a546f96395d848c7531c",
+          "originalSha256": "464fcc11d4897d797bb1ac038c54aa734144cfb361838789638e541f2e5ac862"
+        }
+      ],
+      "shapes": 344,
+      "clips": 54,
+      "frames": 2692,
+      "uniqueFrames": 1242
+    },
+    {
       "id": "witch",
       "source": "chr_witch",
       "metadataSha256": "162c723c4c17e1cb0fca5d361548ec46bd622cf1177b93bbf5b1d5308d299333",

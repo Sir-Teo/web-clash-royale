@@ -6,15 +6,15 @@
     },
     {
       "path": "src/game/combat-audio-data.json",
-      "sha256": "81d5fd2acc6b3585eff00758df3f3039a6a1bba4acd33c80036afa1a115cf071"
+      "sha256": "d693fcead1bf22bff96e3c2ea9ae2af3bee42f91d77f8f58aed089e736ab109a"
     },
     {
       "path": "src/game/death-audio-data.json",
-      "sha256": "c265f24765b3a9e87f8e6f3c412388c10fadcb9c7bcff9547ebea7bda4bba278"
+      "sha256": "f2ea7b130a975aba7714196dccee232450f7051d32b48e62fff02640280ceaa9"
     },
     {
       "path": "reference/client/combat-audio-manifest.json",
-      "sha256": "c4b4197c9cad9d6d4cc89799954cc5b5a649076e53c8124ed9e8362aba3516df"
+      "sha256": "058222f856a5f21c64c3af50665df15880547bbeec0fc201b24f2307d019583a"
     },
     {
       "path": "reference/client/screen-shake-layout.json",

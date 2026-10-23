@@ -2424,6 +2424,69 @@
         }
       ]
     },
+    "night-witch": {
+      "source": "dark_witch_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "witch": {
       "source": "witch_die",
       "components": [
@@ -4131,6 +4194,27 @@
           "scale": 1,
           "layer": "Base",
           "ground": true
+        }
+      ]
+    },
+    "summon:night-witch": {
+      "source": "bat_dark_witch_spawn",
+      "components": [
+        {
+          "emitter": "bat_DW_spawn",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "bat_DW_spawn",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
         }
       ]
     },
@@ -7344,6 +7428,69 @@
       "source": "bat_deploy",
       "components": [],
       "enemyComponents": []
+    },
+    "night-witch": {
+      "source": "dark_witch_deploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
     },
     "witch": {
       "source": "witch_deploy",
@@ -12965,6 +13112,56 @@
         "death_ground_elixir1",
         "death_ground_elixir2",
         "death_ground_elixir3"
+      ]
+    },
+    "bat_DW_spawn": {
+      "count": 16,
+      "emissionLife": [
+        0.1,
+        0.2
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.4,
+        0.7
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0.03333333333333333
+      ],
+      "speed": [
+        0.6666666666666666,
+        1.3333333333333333
+      ],
+      "height": 0.7,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.3,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0.6,
+      "inertia": 1.6666666666666667,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "d3",
+        "d2",
+        "d1_white",
+        "d3_green_dark"
       ]
     },
     "guard_shield_down": {

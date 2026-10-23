@@ -537,6 +537,12 @@
       "sha256": "db28ed3c9eec23740bba7ae86cda7226479291c147f7453ccb3009f87e5d754b"
     },
     {
+      "path": "cards/night-witch.png",
+      "source": "cards/night-witch.png",
+      "bytes": 118623,
+      "sha256": "4d3b3a1cdf93fe3f8a67d959044bbdc91740a9e2c102bad0ed0633ad322b096f"
+    },
+    {
       "path": "cards/pekka.png",
       "source": "cards/pekka.png",
       "bytes": 125580,

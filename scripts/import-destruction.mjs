@@ -330,6 +330,14 @@ impacts["bottle:lumberjack"] = {
   components: composition(rageBottle.DeathEffect, "blue"),
   enemyComponents: composition(rageBottle.DeathEffect, "red"),
 };
+const nightWitch = tables.characters.DarkWitch;
+if (nightWitch?.SpawnCharacterEffect !== "bat_dark_witch_spawn")
+  throw new Error("Recheck native Night Witch Bat summon");
+impacts["summon:night-witch"] = {
+  source: nightWitch.SpawnCharacterEffect,
+  components: composition(nightWitch.SpawnCharacterEffect, "blue"),
+  enemyComponents: composition(nightWitch.SpawnCharacterEffect, "red"),
+};
 const darkPrince = tables.characters.DarkPrince;
 if (darkPrince?.ShieldLostEffect !== "GuardShieldDown" ||
     darkPrince.ChargeEffect !== "dark_prince_charge")

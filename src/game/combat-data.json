@@ -310,6 +310,13 @@
     "ignoresKnockback": false,
     "projectile": null
   },
+  "night-witch": {
+    "source": "DarkWitch",
+    "windup": 0.6,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
   "witch": {
     "source": "Witch",
     "windup": 0.5,

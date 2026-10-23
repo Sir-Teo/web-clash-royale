@@ -4294,6 +4294,157 @@
         "row": "Bats"
       }
     },
+    "night-witch": {
+      "source": "DarkWitch",
+      "attack": {
+        "sources": [
+          "dark_witch_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_dark_witch_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_dark_witch_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "dark_witch_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_dark_witch_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_dark_witch_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "dark_witch_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_dark_witch_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_dark_witch_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [
+          "bat_dark_witch_spawn"
+        ],
+        "components": [
+          {
+            "sound": "sound_dark_witch_deploy_bat",
+            "delay": 0.3
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_dark_witch_deploy_bat",
+            "delay": 0.3
+          }
+        ]
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [
+          "bat_die"
+        ],
+        "components": [
+          {
+            "sound": "sound_bat_die",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_bat_die",
+            "delay": 0
+          }
+        ]
+      },
+      "death-spawn": {
+        "sources": [
+          "bat_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_bat_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_bat_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "DarkWitch"
+      }
+    },
     "witch": {
       "source": "Witch",
       "attack": {
@@ -11198,6 +11349,121 @@
         ],
         "maximum": 1,
         "repeat": 0.5,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_dark_witch_attack_start": [
+      {
+        "sourceFile": "sfx/dw_atk_01.wav",
+        "file": "dw_atk_01",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.92,
+          0.96
+        ],
+        "startDelay": [
+          0.4,
+          0.4
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_dark_witch_hit": [
+      {
+        "sourceFile": "sfx/knight_attack_hack_01.wav",
+        "file": "knight_attack_hack_01",
+        "volume": [
+          0.6,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_dark_witch_deploy": [
+      {
+        "sourceFile": "sfx/dw_deploy_01.wav",
+        "file": "dw_deploy_01",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_dark_witch_deploy_bat": [
+      {
+        "sourceFile": "sfx/bat_deploy_01.wav",
+        "file": "bat_deploy_01",
+        "volume": [
+          0.65,
+          0.65
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0.5,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_bat_die": [
+      {
+        "sourceFile": "sfx/npc_die_02.wav",
+        "file": "npc_die_02",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 5,
+        "repeat": 0,
         "loop": false,
         "priority": 1,
         "padding": 0
