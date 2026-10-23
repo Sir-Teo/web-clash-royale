@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { expectedAnimations } from "./native-assets";
 const phoneSizes = [
   { width: 320, height: 568 },
   { width: 360, height: 640 },
@@ -34,7 +35,7 @@ test("phone controls fit six sizes, rotate during play, and accept real touch in
         page.evaluate(() => (window as any).__arena?.state.loadedAnimations),
       { timeout: 30000 },
     )
-    .toBe(19);
+    .toBe(expectedAnimations);
   await page.locator("#battle-button").click();
   await expect(page.locator("#hand .game-card")).toHaveCount(4);
   await expect
