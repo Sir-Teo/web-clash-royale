@@ -363,7 +363,7 @@ function closeModal() {
     modalPausedBattle = false;
     paused = false;
     accumulator = 0;
-    if (screen === "battle" && !battle.winner) audio.startMusic();
+    if (screen === "battle" && !battle.winner) audio.startMusic(battle.time);
   }
   if (wasResult && screen === "battle" && battle.winner) {
     lobby();
@@ -534,7 +534,7 @@ function startBattle(online = false) {
   nativeCards.reset(battle.time, battle.players.blue.hand);
   matchHud.reset(arena.effectTime, crownCounts());
   updateBattleUI(true);
-  audio.startMusic();
+  audio.startMusic(battle.time);
   if (!profile.seenTutorial) {
     profile.seenTutorial = true;
     saveProfile(profile);
@@ -745,7 +745,7 @@ function togglePause() {
   if (screen === "battle") {
     $(".pause-cover").classList.toggle("hidden", !paused);
     if (paused) audio.stopMusic();
-    else audio.startMusic();
+    else audio.startMusic(battle.time);
   } else {
     syncReplayControl();
   }
@@ -877,6 +877,7 @@ function playReplay(record: RecordEntry) {
   nativeCards.reset(battle.time, battle.players.blue.hand);
   matchHud.reset(arena.effectTime, crownCounts());
   updateBattleUI(true);
+  audio.startMusic(battle.time);
   refreshIcons();
 }
 function createReplayBattle(replay: Replay) {
@@ -1399,7 +1400,7 @@ function showSettings() {
     profile.music = ($("#music-setting") as HTMLInputElement).checked;
     audio.setEnabled(profile.sound);
     audio.musicEnabled = profile.music;
-    if (screen === "battle" && !paused) audio.startMusic();
+    if (screen !== "lobby" && !paused) audio.startMusic(battle.time);
     if (!profile.music) audio.stopMusic();
     saveProfile(profile);
     refreshProfile();
@@ -1630,7 +1631,7 @@ document.querySelectorAll<HTMLButtonElement>("[data-nav]").forEach(
 $(".sound-toggle").onclick = () => {
   profile.sound = !profile.sound;
   audio.setEnabled(profile.sound);
-  if (profile.sound && screen === "battle" && !paused) audio.startMusic();
+  if (profile.sound && screen !== "lobby" && !paused) audio.startMusic(battle.time);
   saveProfile(profile);
   refreshSound();
   audio.play("button_click_02");
@@ -1684,6 +1685,7 @@ $("#replay-seek").addEventListener("input", () => {
   matchHud.reset(arena.effectTime, crownCounts());
   accumulator = 0;
   updateBattleUI(true);
+  if (!paused && !battle.winner) audio.startMusic(battle.time);
   if (battle.winner) startEnding(true);
 });
 $("#about-button").onclick = () =>
@@ -1833,6 +1835,11 @@ function frame(now: number) {
   }
   if (multiplayer) processEvents();
   const presentationPaused = paused || (multiplayer && !!network.room?.paused);
+  audio.syncMusic(
+    battle.time,
+    screen !== "lobby" && !presentationPaused && !battle.winner &&
+      (!multiplayer || network.connected),
+  );
   if (presentationPaused && !soundPaused) audio.stopEffects();
   soundPaused = presentationPaused;
   if (screen !== "lobby" && !battle.winner) {
@@ -1928,6 +1935,7 @@ Object.defineProperty(window, "__arena", {
         winner: battle.winner,
         reason: battle.reason,
         loadedEmotes: emotes.loaded,
+        music: audio.musicState,
         emotes: emotes.state,
         elixir: battle.players.blue.elixir,
         hand: [...battle.players.blue.hand],

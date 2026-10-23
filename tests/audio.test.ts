@@ -1,14 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { GameAudio } from "../src/game/audio";
+import { GameAudio, battleMusicCue } from "../src/game/audio";
 const instances: FakeAudio[] = [];
 class FakeAudio {
   volume = 1;
   playbackRate = 1;
   loop = false;
+  paused = true;
+  currentTime = 0;
   preservesPitch = true;
   listeners = new Map<string, () => void>();
-  play = vi.fn(() => Promise.resolve());
-  pause = vi.fn();
+  play = vi.fn(() => { this.paused = false; return Promise.resolve(); });
+  pause = vi.fn(() => { this.paused = true; });
   constructor(readonly src: string) {
     instances.push(this);
   }
@@ -25,6 +27,48 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 describe("battle cue audio", () => {
+  it("uses the archived battle, final-minute, final-30, and sudden-death tracks", () => {
+    expect(battleMusicCue(0)).toEqual({ file: "battle", offset: 0 });
+    expect(battleMusicCue(119).file).toBe("battle");
+    expect(battleMusicCue(120)).toEqual({ file: "battle-last-minute", offset: 0 });
+    expect(battleMusicCue(149).file).toBe("battle-last-minute");
+    expect(battleMusicCue(150)).toEqual({ file: "battle-final-30", offset: 0 });
+    expect(battleMusicCue(179).file).toBe("battle-final-30");
+    expect(battleMusicCue(180)).toEqual({ file: "battle-sudden-death", offset: 0 });
+    expect(battleMusicCue(230)).toEqual({ file: "battle-sudden-death", offset: 2 });
+  });
+  it("switches music with match time and resumes the correct phase after pause or seek", () => {
+    const audio = new GameAudio();
+    audio.musicEnabled = true;
+    audio.startMusic(8);
+    const main = instances.at(-1)!;
+    expect(main.src).toContain("assets/audio/battle.ogg");
+    expect(main.currentTime).toBe(8);
+    expect(main.loop).toBe(true);
+    audio.syncMusic(125, true);
+    const minute = instances.at(-1)!;
+    expect(main.pause).toHaveBeenCalledOnce();
+    expect(minute.src).toContain("assets/audio/battle-last-minute.ogg");
+    expect(minute.currentTime).toBe(5);
+    audio.syncMusic(153, true);
+    const final = instances.at(-1)!;
+    expect(final.src).toContain("assets/audio/battle-final-30.ogg");
+    expect(final.currentTime).toBe(3);
+    audio.syncMusic(200, true);
+    const sudden = instances.at(-1)!;
+    expect(sudden.src).toContain("assets/audio/battle-sudden-death.ogg");
+    expect(sudden.currentTime).toBe(20);
+    audio.setRate(2);
+    expect(sudden.playbackRate).toBe(2);
+    audio.syncMusic(202, false);
+    expect(sudden.paused).toBe(true);
+    audio.startMusic(203);
+    expect(instances.at(-1)).toBe(sudden);
+    expect(sudden.currentTime).toBe(23);
+    expect(sudden.paused).toBe(false);
+    audio.setEnabled(false);
+    expect(sudden.paused).toBe(true);
+  });
   it("can stop an emote voice without silencing an active combat cue", () => {
     const audio = new GameAudio();
     audio.play("fireball_hit_01");

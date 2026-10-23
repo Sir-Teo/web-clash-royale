@@ -6,6 +6,9 @@ const deathAudioManifest = JSON.parse(
 const combatAudioManifest = JSON.parse(
   await readFile("reference/client/combat-audio-manifest.json", "utf8"),
 );
+const assetManifest = JSON.parse(
+  await readFile("public/assets/manifest.json", "utf8"),
+);
 const expectedEffects = JSON.parse(
   await readFile("public/assets/effects/manifest.json", "utf8"),
 ).clips;
@@ -21,9 +24,12 @@ const expectedHealth = Object.keys(JSON.parse(
 ).clips).length;
 const nativeAudioPaths = [
   ...new Set(
-    [...deathAudioManifest.audioFiles, ...combatAudioManifest.audioFiles].map(
-      (file) => file.path.replace(/^public/, ""),
-    ),
+    [
+      ...[...deathAudioManifest.audioFiles, ...combatAudioManifest.audioFiles]
+        .map((file) => file.path.replace(/^public/, "")),
+      ...assetManifest.files.filter((file) => file.source.startsWith("music/"))
+        .map((file) => `/assets/${file.path}`),
+    ],
   ),
 ];
 const browser = await chromium.launch({
@@ -84,9 +90,7 @@ try {
     );
   }, nativeAudioPaths);
   if (!offlineNativeAudio.every(Boolean))
-    throw new Error(
-      "Native combat/death audio is missing from the offline cache",
-    );
+    throw new Error("Native combat/death audio or battle music is missing from the offline cache");
   await page.waitForFunction(
     ({ effects, animations, cards, health }) =>
       window.__arena?.state.loadedEffects === effects &&
@@ -150,7 +154,7 @@ try {
     .waitFor();
   if (errors.length) throw new Error(errors.join("\n"));
   console.log(
-    `Production offline reload, browser match worker, battle start, ${nativeAudioPaths.length} native combat/death audio files and connection/emote/voice/font/quick chat passed.`,
+    `Production offline reload, browser match worker, battle start, ${nativeAudioPaths.length} native combat/death/music files and connection/emote/voice/font/quick chat passed.`,
   );
 } finally {
   await browser.close();
