@@ -377,9 +377,14 @@
       "sha256": "cbf6865484444256daf3589b28ea39ffb02055b2c7b840971972133d4db15c9f"
     },
     {
+      "file": "portrait-battle-ram.webp",
+      "bytes": 39230,
+      "sha256": "ab86564beb0131e9e1980528f3a4d4d4327ad05d0a8728dfd66ecc3e63fdf857"
+    },
+    {
       "file": "cards.json",
-      "bytes": 99898,
-      "sha256": "4c28e855151ecd72a2dd2c9521dfd7c189dd2bd534ba3fcdde584529c0c8b3ef"
+      "bytes": 100226,
+      "sha256": "cdbe21b73201200a7b0e15c8098ca3f47e3359153b2184bec5c54dfd672c9cb9"
     }
   ]
 }

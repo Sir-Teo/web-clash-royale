@@ -2435,6 +2435,173 @@
         "row": "DarkPrince"
       }
     },
+    "battle-ram": {
+      "source": "BattleRam",
+      "attack": {
+        "sources": [
+          "blowdart_goblin_atk_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_blowdart_goblin_atk_start",
+            "delay": 0
+          },
+          {
+            "sound": "sound_blowdart_gob_jump",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_blowdart_goblin_atk_start",
+            "delay": 0
+          },
+          {
+            "sound": "sound_blowdart_gob_jump",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [
+          "battleram_charge"
+        ],
+        "components": [
+          {
+            "sound": "sound_battleram_charge",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_battleram_charge",
+            "delay": 0
+          }
+        ]
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "battle_ram_hit_sfx"
+        ],
+        "components": [
+          {
+            "sound": "sound_battle_ram_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_battle_ram_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "battleram_deploy_nodelay"
+        ],
+        "components": [
+          {
+            "sound": "sound_battleram_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_battleram_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [
+          "barbarian_die"
+        ],
+        "components": [
+          {
+            "sound": "sound_generic_death",
+            "delay": 0
+          },
+          {
+            "sound": "sound_barbarian_die",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_generic_death",
+            "delay": 0
+          },
+          {
+            "sound": "sound_barbarian_die",
+            "delay": 0
+          }
+        ]
+      },
+      "death-spawn": {
+        "sources": [
+          "barbarian_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_barbarian_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_barbarian_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "BattleRam"
+      }
+    },
     "spear-goblins": {
       "source": "SpearGoblin",
       "attack": {
@@ -8787,6 +8954,121 @@
         "repeat": 0,
         "loop": false,
         "priority": 0,
+        "padding": 0
+      }
+    ],
+    "sound_battleram_charge": [
+      {
+        "sourceFile": "sfx/battleram_charge_01.wav",
+        "file": "battleram_charge_01",
+        "volume": [
+          0.75,
+          0.75
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_battle_ram_hit": [
+      {
+        "sourceFile": "sfx/prince_charge_hit_01.wav",
+        "file": "prince_charge_hit_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.7,
+          0.8
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_battleram_deploy": [
+      {
+        "sourceFile": "sfx/battleram_deploy_01.wav",
+        "file": "battleram_deploy_01",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.3,
+          0.3
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_generic_death": [
+      {
+        "sourceFile": "sfx/npc_die_04.wav",
+        "file": "npc_die_04",
+        "volume": [
+          0.35,
+          0.45
+        ],
+        "pitch": [
+          0.95,
+          1.04
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_barbarian_die": [
+      {
+        "sourceFile": "sfx/npc_die_02.wav",
+        "file": "npc_die_02",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 5,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
         "padding": 0
       }
     ],

@@ -457,6 +457,11 @@
         }
       ]
     },
+    "battle-ram": {
+      "source": "battle_ram_die",
+      "components": [],
+      "enemyComponents": []
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [

@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "bf3cc57605de090249792e49f4c0e3e0ed7f220fde1e00467caf12edff4a1877"
+      "sha256": "503ec623726482009630ac7e511d0b9aabafb4d6d53c0eac0e105f270449e539"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "4c28e855151ecd72a2dd2c9521dfd7c189dd2bd534ba3fcdde584529c0c8b3ef"
+      "sha256": "cdbe21b73201200a7b0e15c8098ca3f47e3359153b2184bec5c54dfd672c9cb9"
     }
   ],
   "ignoredEnemyVersions": [
@@ -212,6 +212,18 @@
       "source": "sfx/barrel_explosion_02.ogg",
       "bytes": 9555,
       "sha256": "271eb95e9777e27fff39c16451046fd2d4fac4b3afb7085e4c7e3c7e445a3226"
+    },
+    {
+      "path": "public/assets/audio/battleram_charge_01.ogg",
+      "source": "sfx/battleram_charge_01.ogg",
+      "bytes": 11026,
+      "sha256": "7eab86961ae50508d1839dd4fc2ca21b31056ff7db21fb9c1270559bcc46e7ac"
+    },
+    {
+      "path": "public/assets/audio/battleram_deploy_01.ogg",
+      "source": "sfx/battleram_deploy_01.ogg",
+      "bytes": 8611,
+      "sha256": "e5f3dc09d76d9f62755dd28c2bcf88d8beb93a978c24e065b161b8688b08be6b"
     },
     {
       "path": "public/assets/audio/blowdart_deploy_01.ogg",
@@ -808,6 +820,18 @@
       "sha256": "25aa7f82e849d7fc13602c14ec7a712014460dabe308f39d81cb275fccd89e57"
     },
     {
+      "path": "public/assets/audio/npc_die_02.ogg",
+      "source": "sfx/npc_die_02.ogg",
+      "bytes": 8823,
+      "sha256": "ca1525f4d64a20d1963aea03d937160277a30362bcc84d6e08328a5acd11b167"
+    },
+    {
+      "path": "public/assets/audio/npc_die_04.ogg",
+      "source": "sfx/npc_die_04.ogg",
+      "bytes": 7543,
+      "sha256": "32c3929456e38f7b82791af02bde01629920bfd4f3e8903a3bdc7f06af118df7"
+    },
+    {
       "path": "public/assets/audio/p_archer_dep_01.ogg",
       "source": "sfx/p_archer_dep_01.ogg",
       "bytes": 8347,
@@ -1266,6 +1290,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "c455665612a4cb06f40c0ba66c16a141527a4c5bb9caab8866cd0bd6415a37fa"
+    "sha256": "ef1a4cc2088bd44937b867030df8fb66d3bcd8a5c65449a726132ac8996fb43f"
   }
 }

@@ -81,6 +81,7 @@ function importEmitter(name) {
         "sc/effects.sc",
         "sc/building_mega_bomb.sc",
         "sc/chr_valkyrie.sc",
+        "sc/chr_battle_ram.sc",
       ].includes(r.ParticleResource),
     )
     .map((r) => r.ParticleExportName);
@@ -294,6 +295,16 @@ impacts["shield:dark-prince"] = {
   components: composition(darkPrince.ShieldLostEffect, "blue"),
   enemyComponents: composition(darkPrince.ShieldLostEffect, "red"),
 };
+const battleRam = tables.characters.BattleRam;
+if (battleRam?.TargetedHitEffect !== "battle_ram_hit" ||
+    battleRam.ChargeEffect !== "battleram_charge" ||
+    battleRam.DeathEffect !== "battle_ram_die")
+  throw new Error("Recheck native Battle Ram effects");
+impacts["hit:battle-ram"] = {
+  source: battleRam.TargetedHitEffect,
+  components: composition(battleRam.TargetedHitEffect, "blue"),
+  enemyComponents: composition(battleRam.TargetedHitEffect, "red"),
+};
 const tornadoArea = tables.area_effect_objects.Tornado;
 if (tornadoArea?.ScaledEffect !== "Spell_tornado_deploy")
   throw new Error("Recheck native Tornado visual binding");
@@ -388,6 +399,16 @@ movements["dark-prince"] = {
   source: darkPrince.MoveEffect,
   components: composition(darkPrince.MoveEffect, "blue"),
   enemyComponents: composition(darkPrince.MoveEffect, "red"),
+};
+charges["battle-ram"] = {
+  source: battleRam.ChargeEffect,
+  components: composition(battleRam.ChargeEffect, "blue"),
+  enemyComponents: composition(battleRam.ChargeEffect, "red"),
+};
+movements["battle-ram"] = {
+  source: battleRam.MoveEffect,
+  components: composition(battleRam.MoveEffect, "blue"),
+  enemyComponents: composition(battleRam.MoveEffect, "red"),
 };
 const hogLanding =
   tables.characters[profiles["hog-rider"].source].LandingEffect;

@@ -225,6 +225,23 @@
       "uniqueFrames": 512
     },
     {
+      "id": "battle-ram",
+      "source": "chr_battle_ram",
+      "metadataSha256": "caf3c5867408a06bbdbd2eb0b83baf914f3392a5d812a9b4dc0c842e702fde1c",
+      "dataSha256": "e8f1fa64aace61732429ca7863f2b1fe1abc81d48a17dfaf1606431f3fc99c3b",
+      "textures": [
+        {
+          "file": "battle-ram-0.webp",
+          "sha256": "2e6002d77cc4ef40b88f2bf3bd2ab070182e4c527f2c5ed423d6460a9ffe74ad",
+          "originalSha256": "88a5c6039ca9cc3c9b3299dfe77595b52152b1dfdf0fce4085e3fcf6c6204606"
+        }
+      ],
+      "shapes": 243,
+      "clips": 72,
+      "frames": 1296,
+      "uniqueFrames": 626
+    },
+    {
       "id": "archers",
       "source": "chr_archer",
       "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",

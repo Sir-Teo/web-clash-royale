@@ -1493,6 +1493,69 @@
         }
       ]
     },
+    "battle-ram": {
+      "source": "battle_ram_die",
+      "components": [
+        {
+          "emitter": "battle_ram_log_planks",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "battle_ram_log_planks2",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Battle_ram_die_smoke",
+          "delay": 0.15,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "battle_ram_log_drop_die",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "battle_ram_log_planks",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "battle_ram_log_planks2",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Battle_ram_die_smoke",
+          "delay": 0.15,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "battle_ram_log_drop_die",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -3595,6 +3658,111 @@
         }
       ]
     },
+    "hit:battle-ram": {
+      "source": "battle_ram_hit",
+      "components": [
+        {
+          "emitter": "zapmachine_spechit_smoke",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "battle_ram_log_drop",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "battle_ram_log_planks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "battle_ram_log_planks2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "zapMachine_smallHit",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "battle_ram_planks_inverse",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "Battle_ram_hit_debris",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "zapmachine_spechit_smoke",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "battle_ram_log_drop",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "battle_ram_log_planks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "battle_ram_log_planks2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "zapMachine_smallHit",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "battle_ram_planks_inverse",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "Battle_ram_hit_debris",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ]
+    },
     "tornado": {
       "source": "Spell_tornado_deploy",
       "components": [
@@ -5147,6 +5315,11 @@
           "ground": true
         }
       ]
+    },
+    "battle-ram": {
+      "source": "barbarian_steps",
+      "components": [],
+      "enemyComponents": []
     }
   },
   "charges": {
@@ -5197,6 +5370,27 @@
           "layer": "Object",
           "ground": false
         },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "battle-ram": {
+      "source": "battleram_charge",
+      "components": [
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
         {
           "emitter": "knight_deploy_dustPuff1",
           "delay": 0,
@@ -6174,6 +6368,69 @@
         {
           "emitter": "knight_deploy_dustPuff2",
           "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "battle-ram": {
+      "source": "battleram_deploy_nodelay",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0,
           "scale": 0.6,
           "layer": "Object",
           "ground": false
@@ -7537,6 +7794,198 @@
       "loop": false,
       "clips": [
         "stick_red_particle_01"
+      ]
+    },
+    "battle_ram_log_planks": {
+      "count": 3,
+      "emissionLife": [
+        0.13,
+        0.13
+      ],
+      "interval": [
+        0.002,
+        0.005
+      ],
+      "life": [
+        1.5,
+        2
+      ],
+      "angle": [
+        0,
+        3.141592653589793
+      ],
+      "radius": [
+        0,
+        0.03333333333333333
+      ],
+      "speed": [
+        0.3333333333333333,
+        1.6666666666666667
+      ],
+      "height": 1.8333333333333333,
+      "verticalSpeed": [
+        13.333333333333334,
+        23.333333333333332
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -40,
+      "startScale": 0.8,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0.6666666666666666,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "crate_particle_1",
+        "crate_particle_2",
+        "crate_particle_3"
+      ]
+    },
+    "battle_ram_log_planks2": {
+      "count": 18,
+      "emissionLife": [
+        0.13,
+        0.13
+      ],
+      "interval": [
+        0.002,
+        0.005
+      ],
+      "life": [
+        0.5,
+        1.2
+      ],
+      "angle": [
+        1.5707963267948966,
+        4.71238898038469
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.06666666666666667
+      ],
+      "speed": [
+        0.3333333333333333,
+        3.3333333333333335
+      ],
+      "height": 1.5,
+      "verticalSpeed": [
+        3.3333333333333335,
+        10
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -16.666666666666668,
+      "startScale": 0.25,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0.6666666666666666,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "crate_particle_1",
+        "crate_particle_2",
+        "crate_particle_3"
+      ]
+    },
+    "Battle_ram_die_smoke": {
+      "count": 38,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.8,
+        1.3
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.06666666666666667
+      ],
+      "speed": [
+        2.3333333333333335,
+        4
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        2.3333333333333335,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.9,
+      "endScale": 1.5,
+      "fadeIn": 0,
+      "fadeOut": 1.65,
+      "inertia": 6.666666666666667,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "SteamSmall"
+      ]
+    },
+    "battle_ram_log_drop_die": {
+      "count": 1,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0.001
+      ],
+      "life": [
+        0.4,
+        0.4
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.03333333333333333
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 3.6666666666666665,
+      "verticalSpeed": [
+        3.3333333333333335,
+        5
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -50,
+      "startScale": 1.1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0.2,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "battle_ram_log"
       ]
     },
     "Death_elixir_burst1_small": {
@@ -11150,6 +11599,247 @@
       "loop": false,
       "clips": [
         "SparkleBlue"
+      ]
+    },
+    "zapmachine_spechit_smoke": {
+      "count": 30,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        0.5,
+        0.9
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        1.1666666666666667,
+        1.6666666666666667
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1.2,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 0.8,
+      "inertia": 0.8333333333333334,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "d4",
+        "d3",
+        "d2",
+        "d1"
+      ]
+    },
+    "battle_ram_log_drop": {
+      "count": 1,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0.001
+      ],
+      "life": [
+        0.8,
+        0.8
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.03333333333333333
+      ],
+      "speed": [
+        1.6666666666666667,
+        2.5
+      ],
+      "height": 3.6666666666666665,
+      "verticalSpeed": [
+        11.666666666666666,
+        11.666666666666666
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -76.66666666666667,
+      "startScale": 1.1,
+      "endScale": 1.1,
+      "fadeIn": 0,
+      "fadeOut": 0.4,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "battle_ram_log"
+      ]
+    },
+    "zapMachine_smallHit": {
+      "count": 19,
+      "emissionLife": [
+        0.28,
+        0.28
+      ],
+      "interval": [
+        0,
+        0.01
+      ],
+      "life": [
+        0.35,
+        0.35
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.16666666666666666,
+        0.16666666666666666
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 4,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0.2,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Death_blue_sparkle1"
+      ]
+    },
+    "battle_ram_planks_inverse": {
+      "count": 8,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0.001
+      ],
+      "life": [
+        1,
+        1
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.16666666666666666
+      ],
+      "speed": [
+        2.5,
+        3.3333333333333335
+      ],
+      "height": 3.6666666666666665,
+      "verticalSpeed": [
+        11.666666666666666,
+        11.666666666666666
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -50,
+      "startScale": 0.01,
+      "endScale": 0.02,
+      "fadeIn": 0,
+      "fadeOut": 0.4,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "crate_particle_1",
+        "crate_particle_2",
+        "crate_particle_3"
+      ]
+    },
+    "Battle_ram_hit_debris": {
+      "count": 5,
+      "emissionLife": [
+        0.35,
+        0.35
+      ],
+      "interval": [
+        0,
+        0.01
+      ],
+      "life": [
+        0.6,
+        2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.06666666666666667,
+        0.13333333333333333
+      ],
+      "speed": [
+        1.6666666666666667,
+        3.3333333333333335
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        10,
+        20
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -66.66666666666667,
+      "startScale": 0.6,
+      "endScale": 0.6,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 1.6666666666666667,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "towerExplode_wall2",
+        "towerExplode_wall1"
       ]
     },
     "tornado_rocks": {

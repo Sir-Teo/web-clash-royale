@@ -177,6 +177,13 @@
     "ignoresKnockback": true,
     "projectile": null
   },
+  "battle-ram": {
+    "source": "BattleRam",
+    "windup": 0.35,
+    "sight": 5.5,
+    "ignoresKnockback": true,
+    "projectile": null
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

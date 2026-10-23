@@ -23,6 +23,7 @@ const sources = {
   bowler: "bowler",
   "dark-prince": "black_knight",
   "dark-prince-shield": "black_knight",
+  "battle-ram": "battle_ram",
   archers: "archer",
   giant: "giant",
   musketeer: "musketeer",
@@ -192,6 +193,7 @@ for (const [id, source] of Object.entries(sources)) {
         || id === "bowler"
         || id === "dark-prince"
         || id === "dark-prince-shield"
+        || id === "battle-ram"
         ? `${name}_highres_tex.png`
         : `${name}_tex${"_".repeat(i)}.png`,
     );

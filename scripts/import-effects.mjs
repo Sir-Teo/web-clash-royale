@@ -46,6 +46,7 @@ for (const resource of [
   "effects",
   "building_mega_bomb",
   "chr_valkyrie",
+  "chr_battle_ram",
   "spell_goblin_barrel",
 ]) {
   const path = `reference/sc/${resource}.bin`,
@@ -58,7 +59,9 @@ for (const resource of [
   const textureOffset = textures.length;
   sources.push({
     path,
-    source: `${directory}${resource}`,
+    source: `${resource === "chr_battle_ram"
+      ? "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/"
+      : directory}${resource}`,
     sha256: sha256(metadata),
   });
   function flatten(
@@ -248,14 +251,18 @@ for (const resource of [
     );
   }
   for (let i = 0; i < data.textures.length; i++) {
-    const name = `${resource}_tex${"_".repeat(i)}.png`,
+    const name = resource === "chr_battle_ram"
+      ? "chr_battle_ram_highres_tex.png"
+      : `${resource}_tex${"_".repeat(i)}.png`,
       path = `/tmp/browser-royale-sprites/${name}`;
     let original;
     try {
       original = await readFile(path);
     } catch {
       const r = await fetch(
-        `https://raw.githubusercontent.com/smlbiobot/cr/${commit}/${directory}${name}`,
+        `https://raw.githubusercontent.com/smlbiobot/cr/${commit}/${resource === "chr_battle_ram"
+          ? "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/"
+          : directory}${name}`,
       );
       if (!r.ok) throw new Error(`Missing effects texture ${r.status}`);
       original = Buffer.from(await r.arrayBuffer());
@@ -271,7 +278,9 @@ for (const resource of [
       file,
       sha256: sha256(texture),
       originalSha256: sha256(original),
-      source: `${directory}${name}`,
+      source: `${resource === "chr_battle_ram"
+        ? "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/"
+        : directory}${name}`,
     });
   }
   Object.assign(

@@ -20,6 +20,11 @@
       "sha256": "5bb62da5ea8152f55125b75f2d80b5df27cee63e24df84d91b574f18463c9e08"
     },
     {
+      "path": "reference/sc/chr_battle_ram.bin",
+      "source": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_battle_ram",
+      "sha256": "caf3c5867408a06bbdbd2eb0b83baf914f3392a5d812a9b4dc0c842e702fde1c"
+    },
+    {
       "path": "reference/sc/spell_goblin_barrel.bin",
       "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/spell_goblin_barrel",
       "sha256": "56f5e7445af53f3c50fbee58ae1f43434dcd1e380507b249ed583672c9f2b17d"
@@ -28,14 +33,14 @@
   "inputs": [
     {
       "path": "src/render/destruction-data.json",
-      "sha256": "6bbc97cc42d4e05589ecac2759c99c5208fd85cb98232c246f561b8a6ff64e02"
+      "sha256": "ffdb6d1cb2d7282763e8844ec60a6c4c95b4b2f53e903123cebbcd5ff7964e2a"
     },
     {
       "path": "reference/logic/buildings.csv",
       "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
     }
   ],
-  "dataSha256": "41a909b5a9ff90c873d841540350f0ccdefaaf6ce3c1561a1242f5e91c0b6742",
+  "dataSha256": "3d8109816bbd8077f746c5baaec4e6a1358201be21116968f4330859ba869efe",
   "textures": [
     {
       "file": "effects-0.webp",
@@ -56,12 +61,18 @@
       "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/chr_valkyrie_tex.png"
     },
     {
+      "file": "chr_battle_ram-0.webp",
+      "sha256": "2e6002d77cc4ef40b88f2bf3bd2ab070182e4c527f2c5ed423d6460a9ffe74ad",
+      "originalSha256": "88a5c6039ca9cc3c9b3299dfe77595b52152b1dfdf0fce4085e3fcf6c6204606",
+      "source": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_battle_ram_highres_tex.png"
+    },
+    {
       "file": "spell_goblin_barrel-0.webp",
       "sha256": "7f7cec8a9f6f662b0e643dd201abe8513dee734c8481dd276015050576e61796",
       "originalSha256": "acf64ac944ad01438a87e43642ffbe9cf6e25198cce7b8daa54a405f694f25e9",
       "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/spell_goblin_barrel_tex.png"
     }
   ],
-  "clips": 174,
-  "frames": 9299
+  "clips": 175,
+  "frames": 9315
 }
