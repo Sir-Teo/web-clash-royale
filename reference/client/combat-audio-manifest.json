@@ -44,7 +44,7 @@
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "f3f34870c2a4577d1122198d2c81018c6c27c327be32c40ef3b815d831385f5d"
+      "sha256": "09112ee9f18b278cfed78e449e6558d61cc5873a5a836976b4b50eebc67fc92a"
     }
   ],
   "ignoredEnemyVersions": [
@@ -224,6 +224,12 @@
       "source": "sfx/footman_attack_hit_04.ogg",
       "bytes": 5731,
       "sha256": "73a095b04ff7a0402674227ec02d7ac9ac3f8675db0a161db00187244e460f92"
+    },
+    {
+      "path": "public/assets/audio/freeze_04.ogg",
+      "source": "sfx/freeze_04.ogg",
+      "bytes": 26368,
+      "sha256": "56d458283376d0ed8b330836d76852862942d2a75c99c381d1427101819fcbe1"
     },
     {
       "path": "public/assets/audio/giant_attack_swing_01.ogg",
@@ -738,6 +744,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "599d02d6799281301e421bea826cc4bf68d0b2564a9a4df70cd42a702b87d80a"
+    "sha256": "905bc4a61e4a7c95770d47dc0dbf60095335bf34aa0aa2c666ba811d2860c171"
   }
 }
