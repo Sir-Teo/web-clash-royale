@@ -1,0 +1,13 @@
+{
+  "card": "Freeze",
+  "area": "Freeze",
+  "cost": 4,
+  "rarity": "Epic",
+  "radius": 3,
+  "duration": 4,
+  "buffDuration": 4,
+  "targets": "enemy",
+  "hitsGround": true,
+  "hitsAir": true,
+  "affectsBuildings": true
+}
