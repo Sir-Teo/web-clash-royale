@@ -183,9 +183,10 @@ for (const [id, expected] of Object.entries({
     enemyComponents: composition(source, "red"),
   };
 }
-// These DamageEffect compositions contain authored ground-level impact layers
-// (Balloon's crater debris and Tesla's beam sparks) at the attack target.
+// These DamageEffect compositions contain authored impact layers at the
+// attack target: Giant's punch dust, Balloon's crater and Tesla's beam sparks.
 for (const [id, expected] of Object.entries({
+  giant: "giant_hit",
   balloon: "balloon_hit",
   tesla: "tesla_hit_effect",
 })) {
