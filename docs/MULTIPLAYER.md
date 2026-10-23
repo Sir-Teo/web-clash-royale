@@ -10,7 +10,7 @@ The default game is a static browser app. Two players connect directly with WebR
 4. The inviting player pastes that reply and chooses **Connect friend**.
 5. Both choose **Ready for battle**.
 
-Keep the original tabs open during the exchange. Invites belong to that tab and expire when it closes or reloads. A reply only works with its matching invite. Copy controls fall back to selecting the text when clipboard access is unavailable. Choose the deck before connecting; leave the connection to change it.
+Keep the original tabs open during the exchange. Invites belong to that tab and expire when it closes or reloads. A reply only works with its matching invite. On an HTTP Wi-Fi address, browsers may hide the modern clipboard and share APIs. **Copy invite** and **Copy reply** then use a user-gesture copy command; if the browser refuses it, the code is selected for its manual Copy action. Choose the deck before connecting; leave the connection to change it.
 
 ## Wi-Fi and static hosting
 
