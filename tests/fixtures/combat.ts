@@ -74,6 +74,8 @@ function setup() {
     scenario !== "freeze";
   (document.querySelector("#poison-cast") as HTMLElement).hidden =
     scenario !== "poison";
+  (document.querySelector("#rage-cast") as HTMLElement).hidden =
+    scenario !== "rage";
   (document.querySelector("#poison-towers") as HTMLElement).hidden =
     scenario !== "poison";
   (document.querySelector("#freeze-towers") as HTMLElement).hidden =
@@ -165,6 +167,13 @@ function setup() {
         }
       }
     }
+  } else if (scenario === "rage") {
+    for (const [team, y] of [
+      ["blue", 20], ["red", 12],
+    ] as [Team, number][]) {
+      for (const entity of unit("knight", team, 9, y)) entity.active = false;
+      for (const entity of unit("witch", team, 11, y)) entity.active = false;
+    }
   } else if (scenario === "ranged") {
     for (const [id, x, y] of [
       ["archers", 3, 23],
@@ -248,6 +257,10 @@ document.querySelector("#freeze-cast")!.addEventListener("click", () => {
 document.querySelector("#poison-cast")!.addEventListener("click", () => {
   cast("poison", "blue", 9, 12);
   cast("poison", "red", 9, 20);
+});
+document.querySelector("#rage-cast")!.addEventListener("click", () => {
+  cast("rage", "blue", 9, 20);
+  cast("rage", "red", 9, 12);
 });
 document.querySelector("#poison-towers")!.addEventListener("click", () => {
   for (const tower of battle.entities.filter(
@@ -369,6 +382,8 @@ function render(now: number) {
     JSON.stringify(arena.coldFilterState);
   (document.querySelector("#destruction") as HTMLElement).dataset.poisonFilter =
     JSON.stringify(arena.poisonFilterState);
+  (document.querySelector("#destruction") as HTMLElement).dataset.rageFilter =
+    JSON.stringify(arena.rageFilterState);
   (
     document.querySelector("#destruction") as HTMLElement
   ).dataset.coldStructures = JSON.stringify(arena.coldStructureState);
@@ -378,6 +393,8 @@ function render(now: number) {
     JSON.stringify(arena.freezeAreaState);
   (document.querySelector("#destruction") as HTMLElement).dataset.poisonAreas =
     JSON.stringify(arena.poisonAreaState);
+  (document.querySelector("#destruction") as HTMLElement).dataset.rageAreas =
+    JSON.stringify(arena.rageAreaState);
   (document.querySelector("#destruction") as HTMLElement).dataset.poisonEntities =
     JSON.stringify(battle.entities.filter((entity) => entity.card === "knight")
       .map((entity) => ({ team: entity.team, hp: entity.hp, poison: entity.poison })));

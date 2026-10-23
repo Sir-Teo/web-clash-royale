@@ -36,6 +36,7 @@ import { NativeChargeFilter } from "./charge-filter";
 import { NativeDeployFilter } from "./deploy-filter";
 import { NativeColdFilter, NativeColdStructures } from "./cold-filter";
 import { NativePoisonFilter } from "./poison-filter";
+import { NativeRageFilter } from "./rage-filter";
 import type { ColdStructurePart } from "./cold-filter";
 import { SpriteFilterStack } from "./sprite-filter";
 import { NativeSpellAreas } from "./spell-areas";
@@ -87,6 +88,7 @@ export class Arena {
   private deployFilter = new NativeDeployFilter(this.spriteFilters);
   private coldFilter = new NativeColdFilter(this.spriteFilters);
   private poisonFilter = new NativePoisonFilter(this.spriteFilters);
+  private rageFilter = new NativeRageFilter(this.spriteFilters);
   private coldStructures = new NativeColdStructures();
   private spellAreas = new NativeSpellAreas(this.scene, this.effects);
   private hogLandings = new NativeHogLandings();
@@ -498,6 +500,7 @@ export class Arena {
     this.deployFilter.clear();
     this.coldFilter.clear();
     this.poisonFilter.clear();
+    this.rageFilter.clear();
     this.coldStructures.clear();
     this.spriteFilters.clear();
     this.spellAreas.clear();
@@ -613,6 +616,9 @@ export class Arena {
   get poisonFilterState() {
     return this.poisonFilter.state;
   }
+  get rageFilterState() {
+    return this.rageFilter.state;
+  }
   get coldStructureState() {
     return this.coldStructures.state;
   }
@@ -646,6 +652,9 @@ export class Arena {
   }
   get poisonAreaState() {
     return this.spellAreas.state.filter((area) => area.card === "poison");
+  }
+  get rageAreaState() {
+    return this.spellAreas.state.filter((area) => area.card === "rage");
   }
   get placementState() {
     return this.placement
@@ -1114,6 +1123,15 @@ export class Arena {
             eventAge - offset,
           );
       }
+      if (event.type === "spell" && event.card === "rage") {
+        const origin = new T.Vector3(event.x - 9, 0.2, event.y - 16);
+        this.destruction.burst("rage", origin, b.seed ^ event.id, event.team, eventAge);
+        for (const [index, offset] of [0, 3].entries())
+          this.destruction.burst(
+            "rage-loop", origin, b.seed ^ event.id ^ Math.imul(index, 0x9e3779b9),
+            event.team, eventAge - offset,
+          );
+      }
       if (event.type === "hit") {
         const impactPosition = new T.Vector3(
           event.x - 9,
@@ -1355,6 +1373,11 @@ export class Arena {
       this.destruction.time,
       (id) => this.units.get(id)?.sprite,
     );
+    this.rageFilter.update(
+      b.entities,
+      this.destruction.time,
+      (id) => this.units.get(id)?.sprite,
+    );
     this.coldStructures.update(b.entities, this.destruction.time, (id) =>
       this.coldStructureParts(id),
     );
@@ -1552,6 +1575,7 @@ export class Arena {
     this.deployFilter.clear();
     this.coldFilter.clear();
     this.poisonFilter.clear();
+    this.rageFilter.clear();
     this.coldStructures.clear();
     this.spriteFilters.clear();
     this.spellAreas.clear();

@@ -262,9 +262,14 @@
       "sha256": "cc9591495b48e8ccf5fe280f9f271ca1b34de37936d516c40970cfb8654c276e"
     },
     {
+      "file": "portrait-rage.webp",
+      "bytes": 28072,
+      "sha256": "0aa99d98429c43d3289cb0175501d96d07f51cf8efb49d04cb00790992ed9792"
+    },
+    {
       "file": "cards.json",
-      "bytes": 91503,
-      "sha256": "4db0771cadc308b0ca7fb8650be5dedfd8dacbed0d16b86add0f353300445b58"
+      "bytes": 91807,
+      "sha256": "77bedfec954bf57691b1b92815ee3116de8c45ea19d73c9e12ddeaac8d7f32e6"
     }
   ]
 }

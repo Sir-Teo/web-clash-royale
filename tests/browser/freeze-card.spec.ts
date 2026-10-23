@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { CARD_MAP } from "../../src/game/cards";
+import { CARD_MAP, CARDS } from "../../src/game/cards";
 import type { CardId } from "../../src/game/cards";
 
 test.use({ actionTimeout: 20000 });
@@ -34,7 +34,7 @@ test("Freeze can be chosen and cast from the real phone and desktop hand", async
   const state = () => page.evaluate(() => (window as any).__arena?.state);
   await expect
     .poll(async () => (await state())?.loadedCards, { timeout: 60000 })
-    .toBe(26);
+    .toBe(CARDS.length);
   await expect(
     page.locator('#deck-preview [data-card-info="freeze"]'),
   ).toBeVisible();

@@ -44,7 +44,7 @@
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "4db0771cadc308b0ca7fb8650be5dedfd8dacbed0d16b86add0f353300445b58"
+      "sha256": "77bedfec954bf57691b1b92815ee3116de8c45ea19d73c9e12ddeaac8d7f32e6"
     }
   ],
   "ignoredEnemyVersions": [
@@ -502,6 +502,12 @@
       "sha256": "8a353b4cdc66c8309cc82d5ddc381caa5628f7a17ed5f704314112556b182437"
     },
     {
+      "path": "public/assets/audio/rage_spell_01.ogg",
+      "source": "sfx/rage_spell_01.ogg",
+      "bytes": 23039,
+      "sha256": "f1330cec09cc17b94980fe8324e3a7b1523f5282b1d1e1046a3dd9a3d46e4f11"
+    },
+    {
       "path": "public/assets/audio/rider_charge_03.ogg",
       "source": "sfx/rider_charge_03.ogg",
       "bytes": 14319,
@@ -750,6 +756,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "d07a0571d45f06d6b5705c111a8028f49bb29f2733f3dbdc010728983a26f528"
+    "sha256": "7d706cf347699cb8ed78cd7c55e06e90b5c42ed9289ad12e84767159fdde6c66"
   }
 }

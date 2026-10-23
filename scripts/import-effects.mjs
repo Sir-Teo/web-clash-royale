@@ -129,6 +129,9 @@ for (const resource of ["effects", "building_mega_bomb"]) {
             "Poison_radius",
             "spell_poison_radius_blue",
             "spell_poison_radius_red",
+            "rage_effect_ground",
+            "spell_rage_radius_blue",
+            "spell_rage_radius_red",
           ]),
         ]
       : [balloon.BlueExportName, balloon.RedExportName, ...emitterExports];

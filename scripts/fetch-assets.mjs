@@ -29,6 +29,7 @@ const cards = [
   "zap",
   "freeze",
   "poison",
+  "rage",
 ];
 const characters = [
   "knight",

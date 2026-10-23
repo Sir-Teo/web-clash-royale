@@ -429,6 +429,12 @@
       "sha256": "0b35ecc5f4821656f8066cc8d6ea2f65fc8985b536c056ed0d63225676cdfa0a"
     },
     {
+      "path": "cards/rage.png",
+      "source": "cards/rage.png",
+      "bytes": 116774,
+      "sha256": "bfa631dd55d66fa19c585279ecc07ead74f0db65c1aa19566b98254a43f3880a"
+    },
+    {
       "path": "cards/skeleton-army.png",
       "source": "cards/skeleton-army.png",
       "bytes": 132165,

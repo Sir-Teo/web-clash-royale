@@ -14,6 +14,7 @@ import { TOWER_SITES } from "./arena-layout";
 import { audioProfile } from "./combat-audio-events";
 import freeze from "./freeze-data.json" with { type: "json" };
 import poison from "./poison-data.json" with { type: "json" };
+import rage from "./rage-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -46,6 +47,7 @@ export interface Entity extends Point {
   deploy: number;
   stun: number;
   poison?: { remaining: number; elapsed: number };
+  rage?: { remaining: number };
   attack: number;
   move: number;
   king?: boolean;
@@ -88,7 +90,7 @@ export interface Projectile extends Point {
 export interface AreaEffect extends Point {
   id: number;
   team: Team;
-  card: "freeze" | "poison";
+  card: "freeze" | "poison" | "rage";
   radius: number;
   duration: number;
   remaining: number;
@@ -352,8 +354,8 @@ export class Battle {
     this.emit(c.kind === "spell" ? "spell" : "deploy", team, x, y, id);
     this.emitAudio("cast", team, id);
     if (c.kind === "spell") {
-      if (id === "freeze" || id === "poison") {
-        const rules = id === "freeze" ? freeze : poison;
+      if (id === "freeze" || id === "poison" || id === "rage") {
+        const rules = id === "freeze" ? freeze : id === "poison" ? poison : rage;
         this.areas.push({
           id: this.nextId++,
           team,
@@ -364,7 +366,7 @@ export class Battle {
           duration: rules.duration,
           remaining: rules.duration,
         });
-        if (id === "poison") this.emitAudio("impact", team, id);
+        if (id === "poison" || id === "rage") this.emitAudio("impact", team, id);
         return { ok: true, reason: "" };
       }
       const origin = { x: 9, y: team === "blue" ? 30 : 2 };
@@ -615,29 +617,45 @@ export class Battle {
   private updateAreas() {
     for (const area of this.areas) {
       const age = area.duration - area.remaining;
-      const poisonHit =
-        area.card === "poison" && age + 1e-8 >= (area.hitAt ?? 0);
-      if (poisonHit) area.hitAt = (area.hitAt ?? 0) + poison.areaHitInterval;
+      const periodic = area.card === "poison" || area.card === "rage";
+      const areaHit = periodic && age + 1e-8 >= (area.hitAt ?? 0);
+      if (areaHit)
+        area.hitAt = (area.hitAt ?? 0) +
+          (area.card === "poison" ? poison.areaHitInterval : rage.areaHitInterval);
       for (const entity of this.entities) {
         if (
           entity.hp <= 0 ||
-          entity.team === area.team ||
-          (area.card === "poison" && !poisonHit) ||
+          (area.card === "rage"
+            ? entity.team !== area.team || entity.kind !== "troop"
+            : entity.team === area.team) ||
+          (periodic && !areaHit) ||
           (area.card === "poison" && this.isHidden(entity)) ||
           dist(entity, area) >= area.radius + entity.radius
         )
           continue;
         if (area.card === "freeze")
           entity.stun = Math.max(entity.stun, STEP * 2);
-        else entity.poison ??= { remaining: 0, elapsed: 0 };
+        else if (area.card === "poison")
+          entity.poison ??= { remaining: 0, elapsed: 0 };
         if (area.card === "poison" && entity.poison)
           entity.poison.remaining = poison.buffDuration;
+        if (area.card === "rage") {
+          entity.rage ??= { remaining: 0 };
+          entity.rage.remaining = Math.max(
+            entity.rage.remaining,
+            Math.min(rage.buffDuration, area.remaining),
+          );
+        }
       }
       area.remaining = Math.max(0, area.remaining - STEP);
       if (area.remaining < 1e-8) area.remaining = 0;
     }
     this.areas = this.areas.filter((area) => area.remaining > 0);
     for (const entity of this.entities) {
+      if (entity.rage) {
+        entity.rage.remaining = Math.max(0, entity.rage.remaining - STEP);
+        if (entity.rage.remaining < 1e-8) entity.rage = undefined;
+      }
       const status = entity.poison;
       if (!status || entity.hp <= 0) continue;
       status.remaining = Math.max(0, status.remaining - STEP);
@@ -909,9 +927,10 @@ export class Battle {
   private updateCombat() {
     for (const e of [...this.entities]) {
       if (e.hp <= 0) continue;
+      const hitSpeed = e.rage ? rage.hitSpeedMultiplier : 1;
       e.age += STEP;
-      e.attack = Math.max(0, e.attack - STEP);
-      e.cooldown = Math.max(0, e.cooldown - STEP);
+      e.attack = Math.max(0, e.attack - STEP * hitSpeed);
+      e.cooldown = Math.max(0, e.cooldown - STEP * hitSpeed);
       e.stun = Math.max(0, e.stun - STEP);
       if (e.deploy > 0) {
         e.deploy -= STEP;
@@ -938,7 +957,7 @@ export class Battle {
       }
       if (e.burrow && !this.updateTesla(e)) continue;
       if (e.card === "witch") {
-        e.spawnTimer -= STEP;
+        e.spawnTimer -= STEP * (e.rage ? rage.spawnSpeedMultiplier : 1);
         if (e.spawnTimer <= 0) {
           e.spawnTimer = 7;
           this.emitAudio("summon", e.team, audioProfile(e), e.id);
@@ -958,7 +977,7 @@ export class Battle {
         );
         if (!target || !this.inRange(e, target)) this.cancelAttack(e);
         else {
-          pending.remaining -= STEP;
+          pending.remaining -= STEP * hitSpeed;
           if (pending.remaining > 1e-8) continue;
           e.pendingAttack = undefined;
           this.releaseAttack(e, target, pending.damage);
@@ -1198,7 +1217,8 @@ export class Battle {
       dy = y - e.y,
       d = Math.hypot(dx, dy);
     if (d < 0.001) return;
-    const speed = e.speed * (e.card === "prince" && e.move > 2.3 ? 1.8 : 1);
+    const speed = e.speed * (e.rage ? rage.speedMultiplier : 1) *
+      (e.card === "prince" && e.move > 2.3 ? 1.8 : 1);
     const move = Math.min(d, speed * STEP);
     e.x = clamp(e.x + (dx / d) * move, 0.5, 17.5);
     e.y = clamp(e.y + (dy / d) * move, 0.6, 31.4);

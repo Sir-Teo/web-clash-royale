@@ -1951,6 +1951,8 @@ Object.defineProperty(window, "__arena", {
         freezeAreas: arena.freezeAreaState,
         poisonAreas: arena.poisonAreaState,
         poisonFilter: arena.poisonFilterState,
+        rageAreas: arena.rageAreaState,
+        rageFilter: arena.rageFilterState,
         poisonStructures: arena.poisonStructureState,
         shake: arena.shakeState,
         placement: arena.placementState,

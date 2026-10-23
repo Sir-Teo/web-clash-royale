@@ -308,6 +308,24 @@ for (const [id, source] of [
     components: composition(source, "blue"),
     enemyComponents: composition(source, "red"),
   };
+const rageCard = cards.rage;
+const rageSpell = tables[rageCard.table][rageCard.row];
+const rageArea = tables.area_effect_objects[rageSpell.AreaEffectObject];
+if (
+  rageSpell.AreaEffectObject !== "Rage" ||
+  rageArea.ScaledEffect !== "Spell_rage_ground" ||
+  rageArea.OneShotEffect !== "Spell_rage_effect" ||
+  rageArea.LoopingEffect !== "Spell_rage_loop"
+) throw new Error("Recheck native Rage area effect bindings");
+for (const [id, source] of [
+  ["rage", rageArea.OneShotEffect],
+  ["rage-loop", rageArea.LoopingEffect],
+])
+  impacts[id] = {
+    source,
+    components: composition(source, "blue"),
+    enemyComponents: composition(source, "red"),
+  };
 effects.tower.rubble = "Tower_destroyed_ground1";
 effects.king.rubble = "Tower_destroyed_ground2";
 const path = "src/render/destruction-data.json",
