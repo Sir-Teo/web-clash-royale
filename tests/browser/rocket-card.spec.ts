@@ -110,6 +110,12 @@ test("Rocket can be selected and cast from the real desktop and phone hand", asy
       { timeout: 15000 },
     )
     .toBe(true);
+  await expect
+    .poll(
+      async () => (await state()).destruction.clips.fireball_trail3 ?? 0,
+      { timeout: 15000 },
+    )
+    .toBeGreaterThan(0);
   await page.screenshot({
     path: info.outputPath("rocket-real-battle.png"),
     fullPage: true,
