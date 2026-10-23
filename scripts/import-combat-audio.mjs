@@ -160,6 +160,12 @@ for (const [id, profile] of Object.entries(JSON.parse(profilesBytes))) {
     hide: [row.HideEffect],
     "death-impact": [deathSpawn?.DeathEffect],
     "death-spawn": [deathSpawn?.SpawnEffect],
+    ...(id === "sparky" ? {
+      "load-1": [row.LoadAttackEffect1],
+      "load-2": [row.LoadAttackEffect2],
+      "load-3": [row.LoadAttackEffect3],
+      "load-ready": [row.LoadAttackEffectReady],
+    } : {}),
   });
   if (binding)
     profiles[id].cardSource = { table: binding.table, row: binding.row };

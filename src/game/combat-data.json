@@ -196,6 +196,18 @@
       "gravity": 0
     }
   },
+  "sparky": {
+    "source": "ZapMachine",
+    "windup": 0.5,
+    "sight": 5,
+    "ignoresKnockback": true,
+    "projectile": {
+      "source": "ZapMachineProjectile",
+      "speed": 23.333333333333332,
+      "homing": true,
+      "gravity": 0
+    }
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

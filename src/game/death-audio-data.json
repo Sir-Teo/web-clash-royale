@@ -485,6 +485,29 @@
         }
       ]
     },
+    "sparky": {
+      "source": "zapmachine_die",
+      "components": [
+        {
+          "sound": "sound_zapmachine_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_zapmachine_die_enemy",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -1307,6 +1330,48 @@
       ],
       "maximum": 3,
       "priority": 1,
+      "padding": 0
+    },
+    "sound_zapmachine_die": {
+      "sourceFiles": [
+        "sfx/building_destroyed_05.wav"
+      ],
+      "files": [
+        "building_destroyed_05"
+      ],
+      "volume": [
+        0.6,
+        0.6
+      ],
+      "pitch": [
+        0.95,
+        1.05
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 3,
+      "priority": 2,
+      "padding": 0
+    },
+    "sound_zapmachine_die_enemy": {
+      "sourceFiles": [],
+      "files": [],
+      "volume": [
+        0,
+        0
+      ],
+      "pitch": [
+        0,
+        0
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 0,
+      "priority": 0,
       "padding": 0
     },
     "sound_bat_die": {

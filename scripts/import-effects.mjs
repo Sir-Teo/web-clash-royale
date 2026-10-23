@@ -47,6 +47,7 @@ for (const resource of [
   "building_mega_bomb",
   "chr_valkyrie",
   "chr_battle_ram",
+  "chr_zap_machine",
   "spell_goblin_barrel",
 ]) {
   const path = `reference/sc/${resource}.bin`,
@@ -59,7 +60,7 @@ for (const resource of [
   const textureOffset = textures.length;
   sources.push({
     path,
-    source: `${resource === "chr_battle_ram"
+    source: `${["chr_battle_ram", "chr_zap_machine"].includes(resource)
       ? "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/"
       : directory}${resource}`,
     sha256: sha256(metadata),
@@ -130,6 +131,7 @@ for (const resource of [
             "bowler_projectile",
             "bowler_projectile_shadow",
             "executioner_projectile",
+            "zapMachine_projectile",
             "dragon_projectile",
             "Tower_projectile1",
             "fireball_small",
@@ -261,7 +263,7 @@ for (const resource of [
       original = await readFile(path);
     } catch {
       const r = await fetch(
-        `https://raw.githubusercontent.com/smlbiobot/cr/${commit}/${resource === "chr_battle_ram"
+        `https://raw.githubusercontent.com/smlbiobot/cr/${commit}/${["chr_battle_ram", "chr_zap_machine"].includes(resource)
           ? "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/"
           : directory}${name}`,
       );
@@ -279,7 +281,7 @@ for (const resource of [
       file,
       sha256: sha256(texture),
       originalSha256: sha256(original),
-      source: `${resource === "chr_battle_ram"
+      source: `${["chr_battle_ram", "chr_zap_machine"].includes(resource)
         ? "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/"
         : directory}${name}`,
     });

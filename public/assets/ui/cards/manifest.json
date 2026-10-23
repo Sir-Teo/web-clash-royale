@@ -387,9 +387,14 @@
       "sha256": "a9efa37470a0268521d54c985ec5df5504c375996b41970eb2bcebee2c3fabb2"
     },
     {
+      "file": "portrait-sparky.webp",
+      "bytes": 43396,
+      "sha256": "c522632c5cc5665d3ceac3d84f3d3d720a8024bfd66743494e1b0b2a724e18cf"
+    },
+    {
       "file": "cards.json",
-      "bytes": 100556,
-      "sha256": "f8dc655ed95ddc3a1f46be7d243ff9f490cca4b5da04785ef98236248ab1a0dc"
+      "bytes": 101025,
+      "sha256": "4bcfac812802f4b4575bf0cebff987308b49fcf5d415edd4c162e8bb15a4fb63"
     }
   ]
 }

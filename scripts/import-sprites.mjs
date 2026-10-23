@@ -25,6 +25,7 @@ const sources = {
   "dark-prince-shield": "black_knight",
   "battle-ram": "battle_ram",
   executioner: "axe_man",
+  sparky: "zap_machine",
   archers: "archer",
   giant: "giant",
   musketeer: "musketeer",

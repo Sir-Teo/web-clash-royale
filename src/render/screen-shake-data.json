@@ -44,6 +44,27 @@
         ]
       }
     },
+    "sparky": {
+      "impact": {
+        "sources": [
+          "zapmachine_projectile_hit"
+        ],
+        "components": [
+          {
+            "effect": "zapmachine_projectile_hit",
+            "delay": 0,
+            "duration": 0.8
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "zapmachine_projectile_hit",
+            "delay": 0,
+            "duration": 0.8
+          }
+        ]
+      }
+    },
     "balloon": {
       "impact": {
         "sources": [

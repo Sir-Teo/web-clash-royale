@@ -82,6 +82,7 @@ function importEmitter(name) {
         "sc/building_mega_bomb.sc",
         "sc/chr_valkyrie.sc",
         "sc/chr_battle_ram.sc",
+        "sc/chr_zap_machine.sc",
       ].includes(r.ParticleResource),
     )
     .map((r) => r.ParticleExportName);
@@ -305,6 +306,20 @@ impacts["axe-die"] = {
   source: axe.PingpongDeathEffect,
   components: composition(axe.PingpongDeathEffect, "blue"),
   enemyComponents: composition(axe.PingpongDeathEffect, "red"),
+};
+const zapMachine = tables.projectiles.ZapMachineProjectile;
+if (zapMachine?.TrailEffect !== "zapMachine_trail_emitter" ||
+    zapMachine.HitEffect !== "zapmachine_projectile_hit")
+  throw new Error("Recheck native Sparky cannon effects");
+trails.sparky = {
+  source: zapMachine.TrailEffect,
+  components: composition(zapMachine.TrailEffect, "blue"),
+  enemyComponents: composition(zapMachine.TrailEffect, "red"),
+};
+impacts["hit:sparky"] = {
+  source: zapMachine.HitEffect,
+  components: composition(zapMachine.HitEffect, "blue"),
+  enemyComponents: composition(zapMachine.HitEffect, "red"),
 };
 const darkPrince = tables.characters.DarkPrince;
 if (darkPrince?.ShieldLostEffect !== "GuardShieldDown" ||

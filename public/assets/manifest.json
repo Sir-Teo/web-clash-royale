@@ -579,6 +579,12 @@
       "sha256": "577c897f22f0270ed7f7297f9f8e52c72557b43e673e7ea2368e00309bdece6b"
     },
     {
+      "path": "cards/sparky.png",
+      "source": "cards/sparky.png",
+      "bytes": 137449,
+      "sha256": "e0e3db0f5f9ce635bd6a11c4fd2eeebe2a33499d1e1efa075e8f460dabc67102"
+    },
+    {
       "path": "cards/spear-goblins.png",
       "source": "cards/spear-goblins.png",
       "bytes": 147457,

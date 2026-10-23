@@ -2706,6 +2706,197 @@
         "row": "AxeMan"
       }
     },
+    "sparky": {
+      "source": "ZapMachine",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [
+          "zapmachine_attack"
+        ],
+        "components": [
+          {
+            "sound": "sound_zapmachine_attack",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_zapmachine_attack",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "zapmachine_projectile_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_zapmachine_projectile_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_zapmachine_projectile_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "zapmachine_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_zapmachine_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_zapmachine_deploy_end",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_zapmachine_deploy_enemy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_zapmachine_deploy_end_enemy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "load-1": {
+        "sources": [
+          "zapmachine_load_weapon_1"
+        ],
+        "components": [
+          {
+            "sound": "sound_zapmachine_load_1",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_zapmachine_load_1",
+            "delay": 0
+          }
+        ]
+      },
+      "load-2": {
+        "sources": [
+          "zapmachine_load_weapon_2"
+        ],
+        "components": [
+          {
+            "sound": "sound_zapmachine_load_2",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_zapmachine_load_2",
+            "delay": 0
+          }
+        ]
+      },
+      "load-3": {
+        "sources": [
+          "zapmachine_load_weapon_3"
+        ],
+        "components": [
+          {
+            "sound": "sound_zapmachine_load_3",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_zapmachine_load_3",
+            "delay": 0
+          }
+        ]
+      },
+      "load-ready": {
+        "sources": [
+          "zapmachine_load_weapon"
+        ],
+        "components": [
+          {
+            "sound": "sound_zapmachine_load_weapon",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_zapmachine_load_weapon",
+            "delay": 0
+          }
+        ]
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "ZapMachine"
+      }
+    },
     "spear-goblins": {
       "source": "SpearGoblin",
       "attack": {
@@ -9219,6 +9410,236 @@
         "repeat": 0.3,
         "loop": false,
         "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_zapmachine_attack": [
+      {
+        "sourceFile": "sfx/zappyshot_01.wav",
+        "file": "zappyshot_01",
+        "volume": [
+          0.65,
+          0.65
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_zapmachine_projectile_hit": [
+      {
+        "sourceFile": "sfx/zap_discarge_03.wav",
+        "file": "zap_discarge_03",
+        "volume": [
+          0.75,
+          0.75
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_zapmachine_deploy": [
+      {
+        "sourceFile": "sfx/zappy_drop_01.wav",
+        "file": "zappy_drop_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_zapmachine_deploy_end": [
+      {
+        "sourceFile": "",
+        "file": null,
+        "volume": [
+          0,
+          0
+        ],
+        "pitch": [
+          0,
+          0
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 0,
+        "repeat": 0,
+        "loop": false,
+        "priority": 0,
+        "padding": 0
+      }
+    ],
+    "sound_zapmachine_deploy_enemy": [
+      {
+        "sourceFile": "sfx/zappy_drop_01.wav",
+        "file": "zappy_drop_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_zapmachine_deploy_end_enemy": [
+      {
+        "sourceFile": "",
+        "file": null,
+        "volume": [
+          0,
+          0
+        ],
+        "pitch": [
+          0,
+          0
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 0,
+        "repeat": 0,
+        "loop": false,
+        "priority": 0,
+        "padding": 0
+      }
+    ],
+    "sound_zapmachine_load_1": [
+      {
+        "sourceFile": "sfx/zap_machine_charge_06.wav",
+        "file": "zap_machine_charge_06",
+        "volume": [
+          0.55,
+          0.55
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 3,
+        "padding": 0
+      }
+    ],
+    "sound_zapmachine_load_2": [
+      {
+        "sourceFile": "sfx/zap_machine_charge_06.wav",
+        "file": "zap_machine_charge_06",
+        "volume": [
+          0.5,
+          0.5
+        ],
+        "pitch": [
+          1.19,
+          1.19
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 3,
+        "padding": 0
+      }
+    ],
+    "sound_zapmachine_load_3": [
+      {
+        "sourceFile": "sfx/zap_machine_charge_06.wav",
+        "file": "zap_machine_charge_06",
+        "volume": [
+          0.5,
+          0.5
+        ],
+        "pitch": [
+          1.41,
+          1.41
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 3,
+        "padding": 0
+      }
+    ],
+    "sound_zapmachine_load_weapon": [
+      {
+        "sourceFile": "sfx/laser_loop_02.wav",
+        "file": "laser_loop_02",
+        "volume": [
+          0.25,
+          0.25
+        ],
+        "pitch": [
+          1.4,
+          1.4
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": true,
+        "priority": 2,
         "padding": 0
       }
     ],

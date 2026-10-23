@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "25851798bc05a4752cfb10a379934762a8e1eef485c6e59ad36bab3beda003aa"
+      "sha256": "1cfcb91b70e766cc4862564b18d7893154ec645e231b8ace60b52908e93abc0b"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "f8dc655ed95ddc3a1f46be7d243ff9f490cca4b5da04785ef98236248ab1a0dc"
+      "sha256": "4bcfac812802f4b4575bf0cebff987308b49fcf5d415edd4c162e8bb15a4fb63"
     }
   ],
   "ignoredEnemyVersions": [
@@ -724,6 +724,12 @@
       "sha256": "8d732d958cf7fe45ba250248ae771f988f4792e879a37289328158f667f36588"
     },
     {
+      "path": "public/assets/audio/laser_loop_02.ogg",
+      "source": "sfx/laser_loop_02.ogg",
+      "bytes": 13368,
+      "sha256": "ebef2f3a2d60890134339e404b3bdf229f9ee26f650134425307466ec9b9dcd4"
+    },
+    {
       "path": "public/assets/audio/lightning_02.ogg",
       "source": "sfx/lightning_02.ogg",
       "bytes": 12689,
@@ -1298,10 +1304,28 @@
       "source": "sfx/zap_discarge_03.ogg",
       "bytes": 15765,
       "sha256": "bdcd21ed6e5870375bff3916d363c28d241a9d844728a4ada93ac05bcf3ffd13"
+    },
+    {
+      "path": "public/assets/audio/zap_machine_charge_06.ogg",
+      "source": "sfx/zap_machine_charge_06.ogg",
+      "bytes": 10192,
+      "sha256": "b3220bff6db7cdd0beba03c279e74ae3aca116cb55ceff77e188bae9d27e03ef"
+    },
+    {
+      "path": "public/assets/audio/zappy_drop_01.ogg",
+      "source": "sfx/zappy_drop_01.ogg",
+      "bytes": 15538,
+      "sha256": "3ddd0d236e50716b8e833e316b822acd93c674c0bfc1c3a9dc21972faac7eb62"
+    },
+    {
+      "path": "public/assets/audio/zappyshot_01.ogg",
+      "source": "sfx/zappyshot_01.ogg",
+      "bytes": 9347,
+      "sha256": "fdf8599838e187b54a9fba69eebb604add51211b1e64c90ee5de3258e6d76638"
     }
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "71f97a90c939a5c1a940652ac33abf804d6b80b7bb5879fecb51faa5d1124ba2"
+    "sha256": "99b81030e2ddd948746d7be1502468e66510927716973f7bf58e8857b49f8b7b"
   }
 }

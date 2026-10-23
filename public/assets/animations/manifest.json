@@ -259,6 +259,23 @@
       "uniqueFrames": 1872
     },
     {
+      "id": "sparky",
+      "source": "chr_zap_machine",
+      "metadataSha256": "71c20b1e60d89e4f64aa8fae509cf377eb0de54f184a80386b9be6b998a3dfef",
+      "dataSha256": "13662e3bb9e058fbf4bd594333c2ab12fbae3fbc44fb36d6a8dc5c2b779af2f8",
+      "textures": [
+        {
+          "file": "sparky-0.webp",
+          "sha256": "b8c0d83eb6f6705235190addd2bf34b0d522b011b4d610afc12e1f3e1c05f785",
+          "originalSha256": "2a9b2afd6590c91a9f03afb1befa014dbc71dd22e6903d74b09911789b4f8f98"
+        }
+      ],
+      "shapes": 113,
+      "clips": 54,
+      "frames": 1098,
+      "uniqueFrames": 1030
+    },
+    {
       "id": "archers",
       "source": "chr_archer",
       "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",

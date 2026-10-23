@@ -1619,6 +1619,118 @@
         }
       ]
     },
+    "sparky": {
+      "source": "zapmachine_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        },
+        {
+          "emitter": "Goblin_hut_woodExplosion",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TargetDummy_planks2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TargetDummy_planks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        },
+        {
+          "emitter": "Goblin_hut_woodExplosion",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TargetDummy_planks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TargetDummy_planks2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "zapmachine_death_wheels",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -3756,6 +3868,97 @@
         }
       ]
     },
+    "hit:sparky": {
+      "source": "zapmachine_projectile_hit",
+      "components": [
+        {
+          "emitter": "Zap_hit_area",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "zapMachine_hit_sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "zapMachine_smallHit",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "zapmachine_hit_effect_particles",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "zap_hit_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "zapmachine_spechit_smoke",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Zap_hit_area",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "zapMachine_hit_sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "zapMachine_smallHit",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "zapmachine_hit_effect_particles",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "zap_hit_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "zapmachine_spechit_smoke",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ]
+    },
     "shield:dark-prince": {
       "source": "GuardShieldDown",
       "components": [
@@ -5325,6 +5528,41 @@
           "ground": false
         }
       ]
+    },
+    "sparky": {
+      "source": "zapMachine_trail_emitter",
+      "components": [
+        {
+          "emitter": "zapmachine_trail_electric",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "zapmachine_trail_electric",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "zapmachine_trail_electric",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "zapmachine_trail_electric",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
     }
   },
   "launches": {
@@ -6651,6 +6889,55 @@
           "scale": 0.6,
           "layer": "Object",
           "ground": false
+        }
+      ]
+    },
+    "sparky": {
+      "source": "zapmachine_deploy",
+      "components": [
+        {
+          "emitter": "giant_deploy_dustPuff",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "giant_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "giant_deploy_dustPuff_shadow",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "giant_deploy_dustPuff",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "giant_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "giant_deploy_dustPuff_shadow",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
         }
       ]
     },
@@ -8203,6 +8490,103 @@
       "loop": false,
       "clips": [
         "battle_ram_log"
+      ]
+    },
+    "Goblin_hut_woodExplosion": {
+      "count": 48,
+      "emissionLife": [
+        0.15,
+        0.15
+      ],
+      "interval": [
+        0.005,
+        0.01
+      ],
+      "life": [
+        1,
+        1.6
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0.06666666666666667
+      ],
+      "speed": [
+        1.6666666666666667,
+        2.6666666666666665
+      ],
+      "height": 1,
+      "verticalSpeed": [
+        10,
+        23.333333333333332
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -50,
+      "startScale": 1,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0.2,
+      "inertia": 0.8333333333333334,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "crate_particle_1",
+        "crate_particle_2",
+        "crate_particle_3"
+      ]
+    },
+    "zapmachine_death_wheels": {
+      "count": 1,
+      "emissionLife": [
+        0.201,
+        0.201
+      ],
+      "interval": [
+        0.05,
+        0.05
+      ],
+      "life": [
+        6.8,
+        8.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.1,
+        0.06666666666666667
+      ],
+      "speed": [
+        1.8333333333333333,
+        2.6666666666666665
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        1.6666666666666667,
+        2.6666666666666665
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -16.666666666666668,
+      "startScale": 0.65,
+      "endScale": 0.55,
+      "fadeIn": 0,
+      "fadeOut": 0.2,
+      "inertia": 3,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "zapMachine_deathWheel",
+        "zapMachine_deathWheel2"
       ]
     },
     "Death_elixir_burst1_small": {
@@ -11911,6 +12295,291 @@
         "axeman_axe_effect"
       ]
     },
+    "zapmachine_trail_electric": {
+      "count": 25,
+      "emissionLife": [
+        0.5,
+        0.5
+      ],
+      "interval": [
+        0,
+        0.025
+      ],
+      "life": [
+        0.25,
+        0.3
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        0.03333333333333333,
+        0.3333333333333333
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0.3333333333333333,
+        0.5
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.25,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0.03333333333333333,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "electricity"
+      ]
+    },
+    "zapMachine_hit_sparks": {
+      "count": 9,
+      "emissionLife": [
+        0,
+        0.1
+      ],
+      "interval": [
+        0,
+        0.002
+      ],
+      "life": [
+        0.2,
+        0.4
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0.16666666666666666
+      ],
+      "speed": [
+        3.3333333333333335,
+        10
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        2,
+        30
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -16.666666666666668,
+      "startScale": 0.7,
+      "endScale": 0.2,
+      "fadeIn": 0,
+      "fadeOut": 0.3,
+      "inertia": 1.6666666666666667,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "Death_blue_sparkle2"
+      ]
+    },
+    "zapMachine_smallHit": {
+      "count": 19,
+      "emissionLife": [
+        0.28,
+        0.28
+      ],
+      "interval": [
+        0,
+        0.01
+      ],
+      "life": [
+        0.35,
+        0.35
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.16666666666666666,
+        0.16666666666666666
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 4,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0.2,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Death_blue_sparkle1"
+      ]
+    },
+    "zapmachine_hit_effect_particles": {
+      "count": 26,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0,
+        0.007
+      ],
+      "life": [
+        0.11,
+        0.15
+      ],
+      "angle": [
+        0.017453292519943295,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0.3
+      ],
+      "speed": [
+        10,
+        11.666666666666666
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        20,
+        33.333333333333336
+      ],
+      "tailDelayMs": [
+        1000,
+        1500
+      ],
+      "gravity": 0,
+      "startScale": 0.9,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "Death_blue_sparkle1"
+      ]
+    },
+    "zap_hit_puff": {
+      "count": 25,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        0.3,
+        0.95
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.13333333333333333,
+        0.13333333333333333
+      ],
+      "speed": [
+        2,
+        3.3333333333333335
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0.3333333333333333,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.4,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0.2,
+      "inertia": 0.8333333333333334,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "Golem_firefly_blue_particle2"
+      ]
+    },
+    "zapmachine_spechit_smoke": {
+      "count": 30,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        0.5,
+        0.9
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        1.1666666666666667,
+        1.6666666666666667
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1.2,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 0.8,
+      "inertia": 0.8333333333333334,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "d4",
+        "d3",
+        "d2",
+        "d1"
+      ]
+    },
     "guard_shield_down": {
       "count": 1,
       "emissionLife": [
@@ -12006,56 +12675,6 @@
         "SparkleBlue"
       ]
     },
-    "zapmachine_spechit_smoke": {
-      "count": 30,
-      "emissionLife": [
-        0.19,
-        0.19
-      ],
-      "interval": [
-        0.001,
-        0.003
-      ],
-      "life": [
-        0.5,
-        0.9
-      ],
-      "angle": [
-        0,
-        6.283185307179586
-      ],
-      "radius": [
-        0.06666666666666667,
-        0.06666666666666667
-      ],
-      "speed": [
-        1.1666666666666667,
-        1.6666666666666667
-      ],
-      "height": 0,
-      "verticalSpeed": [
-        0,
-        0
-      ],
-      "tailDelayMs": [
-        0,
-        0
-      ],
-      "gravity": 0,
-      "startScale": 1.2,
-      "endScale": 0.5,
-      "fadeIn": 0,
-      "fadeOut": 0.8,
-      "inertia": 0.8333333333333334,
-      "rotate": true,
-      "loop": false,
-      "clips": [
-        "d4",
-        "d3",
-        "d2",
-        "d1"
-      ]
-    },
     "battle_ram_log_drop": {
       "count": 1,
       "emissionLife": [
@@ -12101,53 +12720,6 @@
       "loop": false,
       "clips": [
         "battle_ram_log"
-      ]
-    },
-    "zapMachine_smallHit": {
-      "count": 19,
-      "emissionLife": [
-        0.28,
-        0.28
-      ],
-      "interval": [
-        0,
-        0.01
-      ],
-      "life": [
-        0.35,
-        0.35
-      ],
-      "angle": [
-        0,
-        6.283185307179586
-      ],
-      "radius": [
-        -0.16666666666666666,
-        0.16666666666666666
-      ],
-      "speed": [
-        0,
-        0
-      ],
-      "height": 0,
-      "verticalSpeed": [
-        0,
-        3.3333333333333335
-      ],
-      "tailDelayMs": [
-        0,
-        0
-      ],
-      "gravity": 0,
-      "startScale": 4,
-      "endScale": 1,
-      "fadeIn": 0,
-      "fadeOut": 0.2,
-      "inertia": 0,
-      "rotate": true,
-      "loop": false,
-      "clips": [
-        "Death_blue_sparkle1"
       ]
     },
     "battle_ram_planks_inverse": {
