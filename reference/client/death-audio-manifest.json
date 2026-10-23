@@ -20,7 +20,7 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "e9b192a9b651a1a4a3c50e38c5213831f46a2d9ef7272cb13dfd4119a35901cc"
+      "sha256": "32ed9974dd09e2215149cf16f7df4693320eaefd86e4b5b2095ede3dfcef4fea"
     }
   ],
   "audioSource": "https://github.com/RoyaleAPI/cr-api-assets",
@@ -65,6 +65,6 @@
   ],
   "output": {
     "path": "src/game/death-audio-data.json",
-    "sha256": "0801bccfbc18c6d02f4fce0193a613d40dfa5cd6f6e2209dc391136c0f23c757"
+    "sha256": "66d79ab35e5180f09be4ca1ce357254c9cf4737fee23f5c0f5e409cf94369300"
   }
 }

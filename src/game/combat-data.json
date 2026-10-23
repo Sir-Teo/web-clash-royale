@@ -63,6 +63,13 @@
     "ignoresKnockback": false,
     "projectile": null
   },
+  "goblin-gang": {
+    "source": "Goblin",
+    "windup": 0.2,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

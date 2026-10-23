@@ -387,6 +387,12 @@
       "sha256": "6d34267ad6f5d42a8e88f840e36d6a11e25f16f3d111c716bee2e31b03330c4c"
     },
     {
+      "path": "cards/goblin-gang.png",
+      "source": "cards/goblin-gang.png",
+      "bytes": 156303,
+      "sha256": "6cf6e06d7c94ad938f94dfd57c0308b1d1081e898001b1df5963e42a5a990031"
+    },
+    {
       "path": "cards/goblins.png",
       "source": "cards/goblins.png",
       "bytes": 126701,
