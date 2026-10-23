@@ -111,6 +111,28 @@ describe("native footstep dust", () => {
     expect(effects.consume([rider], 17, 0)).toEqual([]);
   });
 
+  it("retains a Prince charge crossing across slow display frames without accepting teleports", () => {
+    const rider = actor("prince", 14, 20);
+    rider.move = 1.7;
+    const effects = new NativeMovementEffects();
+    expect(effects.consume([rider], 17, 1)).toEqual([]);
+    rider.y = 17.7;
+    rider.move = 3.1;
+    const bursts = effects.consume([rider], 17, 2.4);
+    const charge = bursts.find((burst) => burst.effect === "charge:prince");
+    expect(charge).toBeDefined();
+    expect(charge!.origin.y).toBeCloseTo(19.01, 1);
+    expect(charge!.age).toBeCloseTo(0.8);
+    expect(effects.consume([rider], 17, 2.4)).toEqual([]);
+
+    effects.reset();
+    rider.move = 2;
+    expect(effects.consume([rider], 17, 0)).toEqual([]);
+    rider.y = 6;
+    rider.move = 2.4;
+    expect(effects.consume([rider], 17, 0.1)).toEqual([]);
+  });
+
   it("samples footsteps during an actual Knight and Prince advance", () => {
     const battle = new Battle({ seed: 12, ai: false });
     for (const tower of battle.entities) tower.active = false;

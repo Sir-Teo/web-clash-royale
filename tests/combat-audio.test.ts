@@ -325,11 +325,14 @@ describe("combat audio timing and lifecycle", () => {
     ]);
     cues.queueCharge(30, "red", 3, 0.6);
     cues.update(3.6);
-    expect(audio.play).toHaveBeenCalledTimes(1);
+    expect(audio.play).toHaveBeenCalledTimes(2);
+    cues.queueCharge(32, "red", 3.7, 1.5);
+    cues.update(5.2);
+    expect(audio.play).toHaveBeenCalledTimes(2);
     cues.queueCharge(31, "red", 4, 0);
     cues.skip([]);
     cues.update(4);
-    expect(audio.play).toHaveBeenCalledTimes(1);
+    expect(audio.play).toHaveBeenCalledTimes(2);
   });
   it("holds delays on pause, skips sought history and drops muted or stale cues", () => {
     const { audio, cues } = harness();

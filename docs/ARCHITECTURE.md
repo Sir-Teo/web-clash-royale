@@ -76,6 +76,8 @@ The scheduler chooses one archived variation per sound group, retaining duplicat
 
 The renderer also queues Prince's retained charge voice from the cosmetic charge crossing, using match time and the same native sound planner. Stale crossings are dropped, and pause/seek discard pending cues. It uses no simulation event ID or network field.
 
+For slow display frames, the movement tracker accepts a bounded multi-frame charge crossing separately from its stricter footstep gate. A visible charge marker may begin late, so the voice is scheduled at the first observed frame and flushed alongside that marker; crossings older than the 43-frame marker are discarded. Teleports and replay seeks retain their guards.
+
 Prince's double-damage contact emits a separate `impact-special` presentation cue from the archived `DamageEffectSpecial` branch. Ordinary hits retain `impact`; the new cue rides the optional presentation stream so peers and replay hear the same charged strike while older clients can ignore it.
 
 The same stream now includes entity spawn, summoning, appearance, hiding and death notices. Card casting occurs once per accepted card, troop spawn cues once per created entity, and Witch summoning once per burst. Tesla appearance/hiding cues occur once when the transition starts, including a reversal. Spawn/summon/appearance/hiding cues retain an owner ID; death removes their pending voices without cancelling projectiles that are still flying. The scheduler also checks current living entities before releasing owned cues, covering coalesced network updates that skipped an older death event. Attack cancellation alone leaves deployment voices intact.
