@@ -113,7 +113,7 @@ test("a recorded Musketeer shot sounds at launch and impact, follows replay spee
       () => page.evaluate(() => (window as any).__arena?.state.loadedEffects),
       { timeout: 30000 },
     )
-    .toBe(45);
+    .toBe(50);
   await page.getByRole("button", { name: "Battle log", exact: true }).click();
   await page.locator('[data-replay="0"]').click();
   await page.getByRole("button", { name: "Pause replay", exact: true }).click();

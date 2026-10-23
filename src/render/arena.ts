@@ -514,6 +514,17 @@ export class Arena {
   get loadedEffects() {
     return Object.keys(this.effects.asset?.data.clips ?? {}).length;
   }
+  get projectileState() {
+    return [...this.shots.entries()].map(([id, shot]) => ({
+      id,
+      visible: shot.object.visible,
+      position: shot.object.position.toArray(),
+      sprites: shot.sprites.map((sprite) => ({
+        name: sprite.name,
+        frame: sprite.frame,
+      })),
+    }));
+  }
   get loadedHealth() {
     return this.health.loaded;
   }
@@ -540,6 +551,7 @@ export class Arena {
       ground: this.destruction.groundCount,
       draws: this.destruction.drawCount,
       time: this.destruction.time,
+      clips: this.destruction.activeClips,
     };
   }
   get placementState() {
@@ -984,6 +996,16 @@ export class Arena {
           event.height ?? 0.6,
           event.y - 16,
         );
+        if (event.effect === "balloon-bomb" && this.effects.asset) {
+          this.destruction.burst(
+            "balloon-bomb",
+            new T.Vector3(event.x - 9, 0.2, event.y - 16),
+            b.seed ^ event.id,
+            event.team,
+            eventAge,
+          );
+          continue;
+        }
         if (event.card === "tesla" && event.origin) {
           const origin = new T.Vector3(
             event.origin.x - 9,

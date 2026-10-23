@@ -76,7 +76,7 @@ try {
     );
   await page.waitForFunction(
     () =>
-      window.__arena?.state.loadedEffects === 45 &&
+      window.__arena?.state.loadedEffects === 50 &&
       window.__arena?.state.loadedBuildings === 3 &&
       window.__arena?.state.loadedAnimations === 19 &&
       window.__arena?.state.loadedAnnouncements === 5 &&

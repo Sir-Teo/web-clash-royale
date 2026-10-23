@@ -47,7 +47,7 @@ async function init(page: Page, name: string, sound = false) {
       },
       { timeout: 60000 },
     )
-    .toEqual([45, 19, 3, 24]);
+    .toEqual([50, 19, 3, 24]);
   await expect(page.locator("#friend-button")).toBeVisible({ timeout: 60000 });
   await page.locator("#friend-button").click();
 }

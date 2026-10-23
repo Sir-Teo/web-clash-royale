@@ -234,7 +234,7 @@ test("live replay crown flights reach native counter artwork and seeking clears 
         page.evaluate(() => {
           const s = (window as any).__arena.state;
           return (
-            s.loadedEffects === 45 &&
+            s.loadedEffects === 50 &&
             s.loadedAnimations === 19 &&
             s.loadedBuildings === 3 &&
             s.loadedHealth === 22

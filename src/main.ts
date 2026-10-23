@@ -1848,6 +1848,7 @@ Object.defineProperty(window, "__arena", {
         frameLoopRunning: frameHandle !== undefined,
         drawCalls: arena.renderer.info.render.calls,
         loadedEffects: arena.loadedEffects,
+        projectileArtwork: arena.projectileState,
         loadedAnnouncements: announcements.loaded,
         loadedIntros: intro.loaded,
         loadedElixir: elixir.loaded,

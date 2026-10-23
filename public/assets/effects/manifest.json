@@ -3,14 +3,43 @@
   "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
   "version": "1.8.0",
   "metadataSha256": "1a9b0a2efe99578cd03fb9d8673ddb042aa067ba9f9fc0d3a253e15c2e9c7b7c",
-  "dataSha256": "6db23ff0dae74b6d1dde9ec3c1c98c217818e1f154a5eeae18d3fd48021b8a35",
+  "sources": [
+    {
+      "path": "reference/sc/effects.bin",
+      "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/effects",
+      "sha256": "1a9b0a2efe99578cd03fb9d8673ddb042aa067ba9f9fc0d3a253e15c2e9c7b7c"
+    },
+    {
+      "path": "reference/sc/building_mega_bomb.bin",
+      "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/building_mega_bomb",
+      "sha256": "0f588b85ea10ddd26f3997f8a44ef8d6ae206f7dbfe09a45a8bd5eb445d0ce1c"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "src/render/destruction-data.json",
+      "sha256": "d639a6920f5ded7290c7a79b10f18c5a6e7a509c8fa582c15ed0ae5e611058d2"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    }
+  ],
+  "dataSha256": "5732454abb13efd31ae0b6af6681af2a20cccfc8c371ba50eb93f9d2515e333f",
   "textures": [
     {
       "file": "effects-0.webp",
       "sha256": "0b4d784591f0da43a278dcb1c4c971dc9f3cff4597553ed31716fa24569489d8",
-      "originalSha256": "9f59f5631c5dc7977fff2e45f8de84f9a55c4ff17903eea177e95d8161b3524c"
+      "originalSha256": "9f59f5631c5dc7977fff2e45f8de84f9a55c4ff17903eea177e95d8161b3524c",
+      "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/effects_tex.png"
+    },
+    {
+      "file": "building_mega_bomb-0.webp",
+      "sha256": "baaa4852f8cdc44ce344712a1fbf6304d9263d11a9e9368f24f0f646c5fb792c",
+      "originalSha256": "3773450459d47e12514fbfb2a26d40105d36e3aafddc02082f47331934fc56b9",
+      "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/building_mega_bomb_tex.png"
     }
   ],
-  "clips": 45,
-  "frames": 1811
+  "clips": 50,
+  "frames": 2035
 }

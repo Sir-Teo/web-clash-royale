@@ -1520,6 +1520,97 @@
           "ground": true
         }
       ]
+    },
+    "balloon-bomb": {
+      "source": "MegaBombExplodeBalloon",
+      "components": [
+        {
+          "emitter": "MagaBomb_FireRing",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "MegaBomb_explode_smoke",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "MegaBomb_explode_debris",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "MegaBomb_destroyed_ground",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "MegaBomb_explode_debris2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "MegaBomb_explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "MagaBomb_FireRing",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "MegaBomb_explode_smoke",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "MegaBomb_explode_debris",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "MegaBomb_destroyed_ground",
+          "delay": 0.1,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "MegaBomb_explode_debris2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "MegaBomb_explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
     }
   },
   "emitters": {
@@ -2446,6 +2537,268 @@
       "loop": true,
       "clips": [
         "smoke_cloud_1"
+      ]
+    },
+    "MagaBomb_FireRing": {
+      "count": 16,
+      "emissionLife": [
+        0.12,
+        0.25
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.2,
+        0.55
+      ],
+      "angle": [
+        1.7453292519943295,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0.06666666666666667
+      ],
+      "speed": [
+        2,
+        4
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0.3333333333333333,
+        5
+      ],
+      "gravity": 0,
+      "startScale": 1.1,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 0.05,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "FireParticle1",
+        "FireParticle2",
+        "fireball_trail2",
+        "fireball_trail2"
+      ]
+    },
+    "MegaBomb_explode_smoke": {
+      "count": 10,
+      "emissionLife": [
+        0.15,
+        0.2
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        1,
+        2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0.06666666666666667
+      ],
+      "speed": [
+        0.3333333333333333,
+        0.8333333333333334
+      ],
+      "height": 1.1,
+      "verticalSpeed": [
+        3,
+        3.3333333333333335
+      ],
+      "gravity": 0,
+      "startScale": 2,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 1.2,
+      "inertia": 0,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "smoke_cloud_1"
+      ]
+    },
+    "MegaBomb_explode_debris": {
+      "count": 14,
+      "emissionLife": [
+        0.35,
+        0.35
+      ],
+      "interval": [
+        0,
+        0.01
+      ],
+      "life": [
+        0.6,
+        2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.06666666666666667,
+        0.13333333333333333
+      ],
+      "speed": [
+        1.6666666666666667,
+        2
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        10,
+        33.333333333333336
+      ],
+      "gravity": -116.66666666666667,
+      "startScale": 0.8,
+      "endScale": 0.9,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Rock1Particle"
+      ]
+    },
+    "MegaBomb_destroyed_ground": {
+      "count": 1,
+      "emissionLife": [
+        0,
+        0
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        5,
+        5
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 1,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "bomb_destruction_state"
+      ]
+    },
+    "MegaBomb_explode_debris2": {
+      "count": 5,
+      "emissionLife": [
+        0.35,
+        0.35
+      ],
+      "interval": [
+        0,
+        0.01
+      ],
+      "life": [
+        0.6,
+        2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.06666666666666667,
+        0.13333333333333333
+      ],
+      "speed": [
+        1.6666666666666667,
+        2
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        10,
+        20
+      ],
+      "gravity": -33.333333333333336,
+      "startScale": 0.8,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "towerExplode_wall2",
+        "towerExplode_wall1"
+      ]
+    },
+    "MegaBomb_explosion_glow": {
+      "count": 8,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0.001,
+        0.001
+      ],
+      "life": [
+        0.45,
+        0.8
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.16666666666666666
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0.36666666666666664,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "gravity": 1.6666666666666667,
+      "startScale": 1.2,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 1,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Deco_fireplace_glow"
       ]
     }
   }

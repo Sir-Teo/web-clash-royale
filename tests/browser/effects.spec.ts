@@ -10,7 +10,7 @@ test("native crowns fly to scores, pause, resize and finish after a King win", a
   });
   await page.goto("/tests/fixtures/combat.html");
   await page.locator("#scenario").selectOption("king");
-  await expect(page.locator("#status")).toContainText("45 effects", {
+  await expect(page.locator("#status")).toContainText("50 effects", {
     timeout: 30000,
   });
   const step = page.locator("#step"),
@@ -102,7 +102,7 @@ test("native swarm deaths retain all particles with bounded draw calls and pause
   });
   await page.goto("/tests/fixtures/combat.html");
   await page.locator("#scenario").selectOption("death");
-  await expect(page.locator("#status")).toContainText("45 effects", {
+  await expect(page.locator("#status")).toContainText("50 effects", {
     timeout: 30000,
   });
   await page.locator("#defeat").click();
@@ -149,7 +149,7 @@ test("a paused Fireball does not keep emitting trail particles", async ({
   page,
 }) => {
   await page.goto("/tests/fixtures/combat.html");
-  await expect(page.locator("#status")).toContainText("45 effects", {
+  await expect(page.locator("#status")).toContainText("50 effects", {
     timeout: 30000,
   });
   await page.getByRole("button", { name: "Step 0.1s", exact: true }).click();
@@ -167,7 +167,7 @@ test("tower debris pauses, settles after victory, and rubble survives renderer r
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/tests/fixtures/combat.html");
   await page.locator("#scenario").selectOption("king");
-  await expect(page.locator("#status")).toContainText("45 effects", {
+  await expect(page.locator("#status")).toContainText("50 effects", {
     timeout: 30000,
   });
   await expect(page.locator("#status")).toContainText("3 buildings loaded");
@@ -221,7 +221,7 @@ test("simultaneous King losses show a draw with six crowns and persistent ruins"
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/tests/fixtures/combat.html");
   await page.locator("#scenario").selectOption("king");
-  await expect(page.locator("#status")).toContainText("45 effects", {
+  await expect(page.locator("#status")).toContainText("50 effects", {
     timeout: 30000,
   });
   await page.locator("#destroy-both-kings").click();

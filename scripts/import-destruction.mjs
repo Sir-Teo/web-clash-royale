@@ -34,6 +34,9 @@ for (const [id, profile] of Object.entries(profiles)) {
   ).DeathEffect;
 }
 sources["skeleton-army"] = sources.skeletons;
+const balloon = tables.characters[profiles.balloon.source];
+sources["balloon-bomb"] =
+  tables.buildings[balloon.DeathSpawnCharacter].DeathEffect;
 const effects = {},
   emitters = {};
 function importEmitter(name) {
@@ -46,7 +49,11 @@ function importEmitter(name) {
     Number(p[max]) / divisor,
   ];
   const clips = group
-    .filter((r) => r.ParticleResource === "sc/effects.sc")
+    .filter((r) =>
+      ["sc/effects.sc", "sc/building_mega_bomb.sc"].includes(
+        r.ParticleResource,
+      ),
+    )
     .map((r) => r.ParticleExportName);
   if (!clips.length)
     throw new Error(`Emitter ${name} has no supported native artwork`);

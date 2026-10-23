@@ -80,7 +80,18 @@ describe("bundled game artwork", () => {
     for (const t of manifest.textures)
       expect(digest(`public/assets/effects/${t.file}`)).toBe(t.sha256);
     const data = json("public/assets/effects/effects.json");
-    expect(Object.keys(data.clips)).toHaveLength(45);
+    expect(Object.keys(data.clips)).toHaveLength(50);
+    for (const source of [...manifest.sources, ...manifest.inputs])
+      expect(digest(source.path)).toBe(source.sha256);
+    for (const name of ["balloon_bomb_blue", "balloon_bomb_red"]) {
+      expect(data.clips[name].frames).toHaveLength(31);
+      expect(data.clips[name].fps).toBe(30);
+      expect(data.clips[name].labels).toEqual({
+        attack_start: 0,
+        attack_end: 30,
+      });
+    }
+    expect(data.clips.bomb_destruction_state.frames).toHaveLength(79);
     expect(data.clips.crown_rotate_anim.frames).toHaveLength(16);
     expect(data.clips.crown_rotate_anim.fps).toBe(30);
     for (const clip of Object.values(data.clips) as any[]) {

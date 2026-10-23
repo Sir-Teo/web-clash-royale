@@ -182,6 +182,23 @@ describe("combat audio timing and lifecycle", () => {
       plan[0].file,
     );
     const wire = snapshot(battle);
+    const impact = wire.events.filter((e) => e.effect === "balloon-bomb");
+    expect(impact).toHaveLength(1);
+    expect(impact[0]).toMatchObject({
+      time: explosion.time,
+      x: balloon.x,
+      y: balloon.y,
+      type: "hit",
+      team: "blue",
+    });
+    expect(
+      perspective(wire, "red").events.find((e) => e.id === impact[0].id),
+    ).toMatchObject({
+      effect: "balloon-bomb",
+      x: 18 - balloon.x,
+      y: 32 - balloon.y,
+      team: "red",
+    });
     expect(wire.audioEvents?.some((e) => e.phase === "death-impact")).toBe(
       false,
     );

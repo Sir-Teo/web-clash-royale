@@ -158,6 +158,13 @@ export class DestructionEffects {
   get groundCount() {
     return this.particles.filter((p) => p.plan.ground).length;
   }
+  get activeClips() {
+    const counts: Record<string, number> = {};
+    for (const particle of this.particles)
+      if (this.clock >= particle.start)
+        counts[particle.plan.clip] = (counts[particle.plan.clip] ?? 0) + 1;
+    return counts;
+  }
   get drawCount() {
     return [...this.batches.values()].reduce(
       (sum, b) => sum + (b.mesh.visible ? b.mesh.geometry.groups.length : 0),

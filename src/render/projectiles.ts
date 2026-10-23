@@ -14,7 +14,8 @@ export function projectileArt(p: Projectile) {
       ? "projectile_arrow_basic"
       : "projectile_arrow_basic_enemy";
   if (p.style === "spear-goblins") return "projectile_spear_360";
-  if (["bomber", "balloon", "bomb"].includes(p.style)) return "projectile_bomb";
+  if (p.style === "bomb") return `balloon_bomb_${p.team}`;
+  if (["bomber", "balloon"].includes(p.style)) return "projectile_bomb";
   if (["cannon", "cannonball"].includes(p.style))
     return "projectile_cannonball_large";
   if (p.style === "musketeer") return "projectile_cannonball_small";
@@ -74,6 +75,10 @@ export function updateProjectile(
       Math.sin(progress * Math.PI) * arc,
     (p.flight?.y ?? T.MathUtils.lerp(p.y, ty, progress)) - 16,
   );
+  if (v.sprites.some((sprite) => sprite.name.startsWith("balloon_bomb_")))
+    // The native clip already contains the drop and landing. Anchor it on
+    // the ground so the generic projectile arc doesn't move it a second time.
+    v.object.position.y = 0.2;
   const tangent = new T.Vector3(
     tx - p.x,
     toHeight - fromHeight + Math.cos(progress * Math.PI) * Math.PI * arc,
@@ -99,9 +104,11 @@ export function updateProjectile(
       sprite.mesh.scale.setScalar(p.style === "minions" ? 0.22 : 0.45);
     } else if (sprite.name === "projectile_bomb") {
       sprite.mesh.rotateZ(p.style === "bomber" ? progress * Math.PI * 2 : 0);
-      sprite.mesh.scale.setScalar(
-        p.style === "balloon" || p.style === "bomb" ? 0.85 : 0.6,
-      );
+      sprite.mesh.scale.setScalar(p.style === "balloon" ? 0.85 : 0.6);
+    } else if (sprite.name.startsWith("balloon_bomb_")) {
+      // Native attack_start/attack_end spans 31 frames at 30 FPS. Play once
+      // during the existing death-bomb flight; replay rules own its duration.
+      library.animate(sprite, p.elapsed ?? progress * p.duration);
     } else library.animate(sprite, p.elapsed ?? progress * p.duration, true);
   }
 }
