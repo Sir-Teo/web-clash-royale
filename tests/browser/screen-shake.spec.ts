@@ -113,6 +113,10 @@ for (const perspective of ["blue", "red"] as const)
     await page.evaluate(() => {
       (window as any).__shakeSamples.length = 0;
     });
+    // Slow motion gives software WebGL multiple render frames within the
+    // source's 0.8-second shake and particle overlap window.
+    for (let i = 0; i < 4; i++) await page.locator("#replay-speed").click();
+    await expect(page.locator("#replay-speed")).toHaveText("0.25×");
     await page
       .getByRole("button", { name: "Resume replay", exact: true })
       .click();
@@ -196,6 +200,8 @@ for (const perspective of ["blue", "red"] as const)
         ),
       )
       .toBe(0);
+    await page.locator("#replay-speed").click();
+    await expect(page.locator("#replay-speed")).toHaveText("1×");
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.evaluate(() => {
       (window as any).__shakeSamples.length = 0;

@@ -1620,7 +1620,7 @@ $("#replay-play").onclick = () => {
   else togglePause();
 };
 $("#replay-speed").onclick = () => {
-  speed = speed === 1 ? 2 : speed === 2 ? 4 : 1;
+  speed = speed === 1 ? 2 : speed === 2 ? 4 : speed === 4 ? 0.5 : speed === 0.5 ? 0.25 : 1;
   audio.setRate(speed);
   $("#replay-speed").textContent = `${speed}×`;
 };
