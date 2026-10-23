@@ -85,6 +85,8 @@ function setup() {
     scenario !== "golem";
   (document.querySelector("#kill-ice-golem") as HTMLElement).hidden =
     scenario !== "ice-golem";
+  (document.querySelector("#kill-giant-skeleton") as HTMLElement).hidden =
+    scenario !== "giant-skeleton";
   (document.querySelector("#kill-lava-hound") as HTMLElement).hidden =
     scenario !== "lava-hound";
   (document.querySelector("#spawn") as HTMLElement).hidden =
@@ -279,6 +281,17 @@ function setup() {
     const golem = unit("ice-golem", "blue", 9, 21)[0];
     golem.speed = 0;
     golem.active = false;
+    for (const [card, x] of [["knight", 9], ["minions", 9.7]] as [CardId, number][]) {
+      for (const target of unit(card, "red", x, 20)) {
+        target.active = false;
+        target.speed = target.damage = 0;
+        target.hp = target.maxHp = 10000;
+      }
+    }
+  } else if (scenario === "giant-skeleton") {
+    const skeleton = unit("giant-skeleton", "blue", 9, 21)[0];
+    skeleton.speed = 0;
+    skeleton.active = false;
     for (const [card, x] of [["knight", 9], ["minions", 9.7]] as [CardId, number][]) {
       for (const target of unit(card, "red", x, 20)) {
         target.active = false;
@@ -558,6 +571,13 @@ document.querySelector("#kill-ice-golem")!.addEventListener("click", () => {
   (battle as unknown as { hurt: (entity: typeof golem, amount: number) => void })
     .hurt(golem, 1);
 });
+document.querySelector("#kill-giant-skeleton")!.addEventListener("click", () => {
+  const skeleton = battle.entities.find((e) => e.team === "blue" && e.card === "giant-skeleton" && e.hp > 0);
+  if (!skeleton) return;
+  skeleton.hp = 1;
+  (battle as unknown as { hurt: (entity: typeof skeleton, amount: number) => void })
+    .hurt(skeleton, 1);
+});
 document.querySelector("#kill-lava-hound")!.addEventListener("click", () => {
   const hound = battle.entities.find((e) => e.team === "blue" && e.card === "lava-hound" && e.hp > 0);
   if (!hound) return;
@@ -762,6 +782,23 @@ function render(now: number) {
         ["knight", "minions"].includes(e.card))
         .map((e) => ({ card: e.card, hp: e.hp, air: e.air, slow: e.slow?.remaining ?? 0 })),
       cold: arena.coldFilterState,
+      clips: arena.destructionState.clips,
+      particles: arena.particleCount,
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.giantSkeleton =
+    JSON.stringify({
+      alive: battle.entities.some((e) => e.team === "blue" && e.card === "giant-skeleton" && e.hp > 0),
+      bombs: battle.projectiles.filter((p) => p.style === "giant-skeleton-bomb")
+        .map((p) => ({ id: p.id, remaining: p.remaining })),
+      visuals: arena.projectileState.filter((p) =>
+        p.sprites.some((sprite) => sprite.name === "giant_skeleton_bomb_blue")),
+      targets: battle.entities.filter((e) => e.team === "red" &&
+        ["knight", "minions"].includes(e.card))
+        .map((e) => ({ card: e.card, hp: e.hp, air: e.air, x: e.x, y: e.y })),
+      hits: battle.events.filter((e) => e.type === "hit" &&
+        e.effect === "giant-skeleton-bomb").length,
+      impactAudio: battle.audioEvents.filter((e) =>
+        e.phase === "death-impact" && e.profile === "giant-skeleton").length,
       clips: arena.destructionState.clips,
       particles: arena.particleCount,
     });
