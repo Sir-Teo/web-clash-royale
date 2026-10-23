@@ -567,7 +567,8 @@
     "source": "filter_deploy_unit_legendary",
     "fps": 60,
     "cards": [
-      "ice-wizard"
+      "ice-wizard",
+      "princess"
     ],
     "frames": [
       {

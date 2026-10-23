@@ -16,6 +16,7 @@ const sources = {
   "mega-minion": "mega_minion",
   "dart-goblin": "goblin_blowdart",
   "ice-wizard": "ice_wizard",
+  princess: "princess",
   archers: "archer",
   giant: "giant",
   musketeer: "musketeer",
@@ -115,6 +116,10 @@ for (const [id, source] of Object.entries(sources)) {
       continue;
     if (id === "tower-princess" && !exportName.startsWith("princess_tower_"))
       continue;
+    if (id === "princess" && !exportName.startsWith("princess_"))
+      continue;
+    if (id === "princess" && exportName.startsWith("princess_tower_"))
+      continue;
     const direction = Number(match[3]);
     if (direction < 1 || direction > 9) continue;
     const hasExplicitBlue = Object.keys(data.names).some((name) =>
@@ -131,8 +136,16 @@ for (const [id, source] of Object.entries(sources)) {
     const sourceClip = data.clips[ref];
     if (!sourceClip?.frames.length)
       throw new Error(`Missing export ${exportName}`);
-    const sequence = sourceClip.frames.map((_, index) => {
-      const parts = flatten(ref, index);
+    // The archived blue Princess run direction 9 is an authored empty export.
+    // Use adjacent direction 8 so the troop stays visible on that heading.
+    const emptyPrincessRun = id === "princess" && exportName === "princess_run1_9";
+    if (emptyPrincessRun && !sourceClip.frames.every((frame) => frame.length === 0))
+      throw new Error("Recheck empty archived Princess run direction 9");
+    const drawnName = emptyPrincessRun ? "princess_run1_8" : exportName;
+    const drawnRef = data.names[drawnName];
+    const drawnClip = data.clips[drawnRef];
+    const sequence = drawnClip.frames.map((_, index) => {
+      const parts = flatten(drawnRef, index);
       const key = JSON.stringify(parts);
       let frame = frameLookup.get(key);
       if (frame === undefined) {
@@ -145,9 +158,10 @@ for (const [id, source] of Object.entries(sources)) {
     if (clips[`${team}-${kind}-${direction}`])
       throw new Error(`Duplicate animation key ${id}: ${exportName}`);
     clips[`${team}-${kind}-${direction}`] = {
-      fps: sourceClip.fps,
+      fps: drawnClip.fps,
       frames: sequence,
-      source: exportName,
+      source: drawnName,
+      ...(emptyPrincessRun ? { emptySource: exportName } : {}),
     };
   }
   const textures = [],
@@ -156,6 +170,7 @@ for (const [id, source] of Object.entries(sources)) {
     const original = await download(
       base,
       id === "tower-princess" ||
+      id === "princess" ||
       id === "royal-giant" ||
       id === "mega-minion" ||
       id === "dart-goblin"

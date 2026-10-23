@@ -271,6 +271,7 @@ const portraitNames = {
   "mega-minion": "MegaMinion",
   "dart-goblin": "BlowdartGoblin",
   "ice-wizard": "IceWizard",
+  princess: "Princess",
 };
 const sheets = [];
 for (const [name, cache, expected] of [

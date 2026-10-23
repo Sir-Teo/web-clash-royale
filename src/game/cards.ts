@@ -16,6 +16,7 @@ import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
 import iceWizard from "./ice-wizard-data.json" with { type: "json" };
+import princess from "./princess-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -33,6 +34,7 @@ export type CardId =
   | "spear-goblins"
   | "dart-goblin"
   | "ice-wizard"
+  | "princess"
   | "skeletons"
   | "skeleton-army"
   | "bomber"
@@ -407,6 +409,18 @@ export const CARDS: Card[] = [
     iceWizard.sourceHitSpeed / 1000,
     "An icy mage whose splash attacks slow troops and towers for two seconds.",
     { rarity: "Legendary", hitsAir: iceWizard.hitsAir, splash: iceWizard.projectileRadius },
+  ),
+  troop(
+    "princess",
+    "Princess",
+    princess.cost,
+    Math.round(princess.sourceHitpoints * 1.1 ** 2),
+    Math.round(princess.sourceDamage * 1.1 ** 2),
+    princess.sourceSpeed / 60,
+    princess.sourceRange / 1000,
+    princess.sourceHitSpeed / 1000,
+    "A long-range archer whose flaming volley splashes ground and air targets.",
+    { rarity: "Legendary", hitsAir: princess.hitsAir, splash: princess.splash },
   ),
   troop(
     "skeletons",

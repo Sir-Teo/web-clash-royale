@@ -501,6 +501,12 @@
       "sha256": "0b35ecc5f4821656f8066cc8d6ea2f65fc8985b536c056ed0d63225676cdfa0a"
     },
     {
+      "path": "cards/princess.png",
+      "source": "cards/princess.png",
+      "bytes": 140042,
+      "sha256": "89a93eecf6caecd5734310221edd712b0e2c8a986cbab06d1276174708fe768e"
+    },
+    {
       "path": "cards/rage.png",
       "source": "cards/rage.png",
       "bytes": 116774,

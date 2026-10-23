@@ -56,7 +56,7 @@ const legendaryCards = Object.entries(combat)
     characters.find((row) => row.Name === profile.source)?.DeployBaseAnimExportName === legendaryName,
   )
   .map(([id]) => id);
-if (legendaryCards.length !== 1 || legendaryCards[0] !== "ice-wizard")
+if (legendaryCards.length !== 2 || !legendaryCards.includes("ice-wizard") || !legendaryCards.includes("princess"))
   throw new Error(`Recheck legendary deploy binding: ${legendaryCards}`);
 const data = {
   source: name, fps: clip.fps, cards, frames,

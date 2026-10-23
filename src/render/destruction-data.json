@@ -1073,6 +1073,69 @@
         }
       ]
     },
+    "princess": {
+      "source": "princess_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -3777,6 +3840,41 @@
         }
       ]
     },
+    "hit:princess": {
+      "source": "PrincessArrowHitGround",
+      "components": [
+        {
+          "emitter": "Princess_arrow_hit_ground",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Princess_arrow_hit_ground_loop",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Princess_arrow_hit_ground",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Princess_arrow_hit_ground_loop",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ]
+    },
     "freeze": {
       "source": "Spell_freeze_ground",
       "components": [
@@ -4124,6 +4222,27 @@
           "emitter": "ice_wiz_trail_shards",
           "delay": 0,
           "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
+    "princess": {
+      "source": "PrincessArrowProjectileEmitter",
+      "components": [
+        {
+          "emitter": "Princess_arrow_emitter_small_zeroZ",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Princess_arrow_emitter_small_zeroZ",
+          "delay": 0,
+          "scale": 0.5,
           "layer": "Above",
           "ground": false
         }
@@ -4908,6 +5027,69 @@
         },
         {
           "emitter": "ice_wizard_deploy_flakes",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
+    "princess": {
+      "source": "princess_deploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
           "delay": 0.3,
           "scale": 0.6,
           "layer": "Object",
@@ -8920,6 +9102,55 @@
         "ice_particle3"
       ]
     },
+    "Princess_arrow_emitter_small_zeroZ": {
+      "count": 10,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0.001,
+        0.05
+      ],
+      "life": [
+        0.2,
+        0.5
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        3,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "FireParticle1_small",
+        "FireParticle2_small",
+        "FireParticle3_small"
+      ]
+    },
     "tornado_rocks": {
       "count": 70,
       "emissionLife": [
@@ -11307,6 +11538,107 @@
       "loop": true,
       "clips": [
         "snowflake_anim"
+      ]
+    },
+    "Princess_arrow_hit_ground": {
+      "count": 1,
+      "emissionLife": [
+        0.001,
+        0.2
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        1.5,
+        1.9
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "Arrow_enemy_ground_anim_1",
+        "Arrow_enemy_ground_anim_2",
+        "Arrow_enemy_ground_anim_3",
+        "Arrow_enemy_ground_anim_4",
+        "Arrow_enemy_ground_anim_5",
+        "Arrow_enemy_ground_anim_6"
+      ]
+    },
+    "Princess_arrow_hit_ground_loop": {
+      "count": 30,
+      "emissionLife": [
+        1.2,
+        1.4
+      ],
+      "interval": [
+        0.01,
+        0.08
+      ],
+      "life": [
+        0.2,
+        0.6
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        1,
+        2
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 6.666666666666667,
+      "startScale": 0.9,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0.3,
+      "inertia": 0,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "FireParticle1_small",
+        "FireParticle2_small",
+        "FireParticle3_small"
       ]
     },
     "knight_deploy_rocks_hitGround": {

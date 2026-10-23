@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "1a2f1d15f0bcbd4d7f27c856ca66987218956c8de910c3cc2fca8a367265f478"
+      "sha256": "003a9e77b548b1a19ff944e607ce32595ec2a05e90038458f58be21633b49e4a"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "e4e5a630f4345ff7d9b7d2a4b9e9aafebcd4b61017c709f4ad6d1282885e4653"
+      "sha256": "cc90968353e3638468b12ff8af00a16af46a8e6a070b26bdaba575210cc1cf16"
     }
   ],
   "ignoredEnemyVersions": [
@@ -622,6 +622,24 @@
       "sha256": "25aa7f82e849d7fc13602c14ec7a712014460dabe308f39d81cb275fccd89e57"
     },
     {
+      "path": "public/assets/audio/p_archer_dep_01.ogg",
+      "source": "sfx/p_archer_dep_01.ogg",
+      "bytes": 8347,
+      "sha256": "40cfab10faacde467621cb40edee8f29bef392c29226e3560f2d2cc413679d1b"
+    },
+    {
+      "path": "public/assets/audio/p_archer_hit_01.ogg",
+      "source": "sfx/p_archer_hit_01.ogg",
+      "bytes": 7506,
+      "sha256": "a89bcac41813f91fb8c24b9d951425a21d47ab02f6eb256b96fe4da4d740616a"
+    },
+    {
+      "path": "public/assets/audio/p_flame_arrow_03.ogg",
+      "source": "sfx/p_flame_arrow_03.ogg",
+      "bytes": 9760,
+      "sha256": "aa8e19141b78c503ba506a8e9eaa1acf3f47b0c6ea0e2d65064b8387012da8ba"
+    },
+    {
       "path": "public/assets/audio/pekka_atk_01.ogg",
       "source": "sfx/pekka_atk_01.ogg",
       "bytes": 8053,
@@ -692,6 +710,42 @@
       "source": "sfx/prince_hit_01.ogg",
       "bytes": 6259,
       "sha256": "8a353b4cdc66c8309cc82d5ddc381caa5628f7a17ed5f704314112556b182437"
+    },
+    {
+      "path": "public/assets/audio/princess_archer_atk_vo_03.ogg",
+      "source": "sfx/princess_archer_atk_vo_03.ogg",
+      "bytes": 6524,
+      "sha256": "3cb4baa3493ade03031d0aaaaa13e89a83c7b65b75e12247dc0daa503a31f44a"
+    },
+    {
+      "path": "public/assets/audio/princess_archer_atk_vo_06.ogg",
+      "source": "sfx/princess_archer_atk_vo_06.ogg",
+      "bytes": 6687,
+      "sha256": "e4f2daad133c4c9b1ce61c3507c47434bd3491df6d50ad434dd1f824ddd63ced"
+    },
+    {
+      "path": "public/assets/audio/princess_archer_dep_vo_01.ogg",
+      "source": "sfx/princess_archer_dep_vo_01.ogg",
+      "bytes": 5980,
+      "sha256": "3b4d40666bb77825fcd6fd40505dfb5da3d8a1e377b79e2cb1eba7e550655138"
+    },
+    {
+      "path": "public/assets/audio/princess_archer_dep_vo_02.ogg",
+      "source": "sfx/princess_archer_dep_vo_02.ogg",
+      "bytes": 6959,
+      "sha256": "0ff5843632cf0f5168a57ad3b58ce8fec8583d077312cd677f556d63ea0282e3"
+    },
+    {
+      "path": "public/assets/audio/princess_archer_dep_vo_03.ogg",
+      "source": "sfx/princess_archer_dep_vo_03.ogg",
+      "bytes": 7360,
+      "sha256": "1f245a17b62e108c5a4d7d7ae87b3b7ac3a7d45590752211b12d1eb699b956d5"
+    },
+    {
+      "path": "public/assets/audio/princess_archer_dep_vo_04.ogg",
+      "source": "sfx/princess_archer_dep_vo_04.ogg",
+      "bytes": 7541,
+      "sha256": "eb2c46964db3f68ff1ab935623d941bfc70c054e1fe639923ffd90d7d805d7a3"
     },
     {
       "path": "public/assets/audio/rage_spell_01.ogg",
@@ -1020,6 +1074,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "74e51c6357326bea0c64ea0d362f987772013ecee466511a5a8d6db572503c11"
+    "sha256": "b9afed4edaec9d41850fe6726f682939da7778ea4c2e3e1588b307185300fb75"
   }
 }

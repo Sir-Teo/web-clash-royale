@@ -125,6 +125,18 @@
       "gravity": 50
     }
   },
+  "princess": {
+    "source": "Princess",
+    "windup": 0.5,
+    "sight": 9.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "PrincessProjectileDeco",
+      "speed": 7.5,
+      "homing": false,
+      "gravity": 90
+    }
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

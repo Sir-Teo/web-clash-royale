@@ -1631,6 +1631,149 @@
         "row": "IceWizard"
       }
     },
+    "princess": {
+      "source": "Princess",
+      "attack": {
+        "sources": [
+          "princess_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_princess_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_princess_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [
+          "princess_attack"
+        ],
+        "components": [
+          {
+            "sound": "sound_princess_attack",
+            "delay": 0
+          },
+          {
+            "sound": "sound_princess_atk_vo",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_princess_attack",
+            "delay": 0
+          },
+          {
+            "sound": "sound_princess_atk_vo",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "PrincessArrowHitGround"
+        ],
+        "components": [
+          {
+            "sound": "sound_PrincessArrowHitGround",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_PrincessArrowHitGround",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "princess_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_princess_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_princess_deploy_vo",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_princess_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_princess_deploy_vo",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "Princess"
+      }
+    },
     "spear-goblins": {
       "source": "SpearGoblin",
       "attack": {
@@ -6803,6 +6946,270 @@
         "startDelay": [
           0.3,
           0.3
+        ],
+        "maximum": 1,
+        "repeat": 3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_princess_attack_start": [
+      {
+        "sourceFile": "sfx/target_01.wav",
+        "file": "target_01",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_princess_attack": [
+      {
+        "sourceFile": "sfx/p_flame_arrow_03.wav",
+        "file": "p_flame_arrow_03",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_princess_atk_vo": [
+      {
+        "sourceFile": "sfx/princess_archer_atk_vo_06.wav",
+        "file": "princess_archer_atk_vo_06",
+        "volume": [
+          0.5,
+          0.5
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.15,
+          0.15
+        ],
+        "maximum": 1,
+        "repeat": 8,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/dummy_01.wav",
+        "file": "dummy_01",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 2,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/princess_archer_atk_vo_03.wav",
+        "file": "princess_archer_atk_vo_03",
+        "volume": [
+          0.5,
+          0.5
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.15,
+          0.15
+        ],
+        "maximum": 1,
+        "repeat": 8,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/dummy_01.wav",
+        "file": "dummy_01",
+        "volume": [
+          0.01,
+          0.01
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_PrincessArrowHitGround": [
+      {
+        "sourceFile": "sfx/p_archer_hit_01.wav",
+        "file": "p_archer_hit_01",
+        "volume": [
+          0.55,
+          0.6
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_princess_deploy": [
+      {
+        "sourceFile": "sfx/p_archer_dep_01.wav",
+        "file": "p_archer_dep_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_princess_deploy_vo": [
+      {
+        "sourceFile": "sfx/princess_archer_dep_vo_01.wav",
+        "file": "princess_archer_dep_vo_01",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          1,
+          1
+        ],
+        "maximum": 1,
+        "repeat": 3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/princess_archer_dep_vo_02.wav",
+        "file": "princess_archer_dep_vo_02",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          1,
+          1
+        ],
+        "maximum": 1,
+        "repeat": 3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/princess_archer_dep_vo_03.wav",
+        "file": "princess_archer_dep_vo_03",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          1,
+          1
+        ],
+        "maximum": 1,
+        "repeat": 3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/princess_archer_dep_vo_04.wav",
+        "file": "princess_archer_dep_vo_04",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0,
+          0
         ],
         "maximum": 1,
         "repeat": 3,
