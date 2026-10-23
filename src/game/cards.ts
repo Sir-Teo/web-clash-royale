@@ -30,6 +30,7 @@ import bats from "./bats-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
 import golem from "./golem-data.json" with { type: "json" };
+import lavaHound from "./lava-hound-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -69,6 +70,8 @@ export type CardId =
   | "bandit"
   | "golem"
   | "golemite"
+  | "lava-hound"
+  | "lava-pup"
   | "mega-minion"
   | "minion-horde"
   | "witch"
@@ -198,6 +201,18 @@ export const CARDS: Card[] = [
     golem.golem.sourceHitSpeed,
     "A towering building hunter that explodes and splits into two Golemites.",
     { rarity: "Epic", buildingsOnly: true },
+  ),
+  troop(
+    "lava-hound",
+    "Lava Hound",
+    lavaHound.cost,
+    Math.round(lavaHound.hound.sourceHitpoints * 1.1 ** 2),
+    Math.round(lavaHound.hound.sourceDamage * 1.1 ** 2),
+    lavaHound.hound.sourceSpeed / 60,
+    lavaHound.hound.sourceRange,
+    lavaHound.hound.sourceHitSpeed,
+    "A flying building hunter that splits into six Lava Pups when defeated.",
+    { rarity: "Legendary", air: true, hitsAir: true, buildingsOnly: true },
   ),
   troop(
     "royal-giant",
@@ -880,6 +895,19 @@ export const CARD_MAP = {
     golem.golemite.sourceHitSpeed,
     "A fragment of Golem that targets buildings and explodes on defeat.",
     { rarity: "Epic", buildingsOnly: true },
+  ),
+  // Spawned by Lava Hound; never offered as a deck card.
+  "lava-pup": troop(
+    "lava-pup",
+    "Lava Pup",
+    0,
+    Math.round(lavaHound.pup.sourceHitpoints * 1.1 ** 2),
+    Math.round(lavaHound.pup.sourceDamage * 1.1 ** 2),
+    lavaHound.pup.sourceSpeed / 60,
+    lavaHound.pup.sourceRange,
+    lavaHound.pup.sourceHitSpeed,
+    "A flying attacker released when Lava Hound is defeated.",
+    { rarity: "Legendary", air: true, hitsAir: true },
   ),
 } as Record<CardId, Card>;
 export const STARTER_DECK: CardId[] = [

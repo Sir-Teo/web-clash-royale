@@ -80,6 +80,7 @@ export function projectileArt(p: Projectile) {
   if (p.style === "rage-bottle") return "rage_bottle_fall";
   if (p.style === "baby-dragon") return "dragon_projectile";
   if (p.style === "wizard") return "fireball_small";
+  if (p.style === "lava-hound" || p.style === "lava-pup") return "particle_coal1";
   if (p.style === "witch" || p.style === "minions") return "Tower_projectile1";
   return null;
 }
@@ -234,6 +235,9 @@ export function updateProjectile(
     } else if (sprite.name === "projectile_bomb") {
       sprite.mesh.rotateZ(p.style === "bomber" ? progress * Math.PI * 2 : 0);
       sprite.mesh.scale.setScalar(p.style === "balloon" ? 0.85 : 0.6);
+    } else if (sprite.name === "particle_coal1") {
+      library.animate(sprite, p.elapsed ?? progress * p.duration, true);
+      sprite.mesh.scale.setScalar(p.style === "lava-hound" ? 0.7 : 0.45);
     } else if (sprite.name.startsWith("balloon_bomb_")) {
       // Native attack_start/attack_end spans 31 frames at 30 FPS. Play once
       // during the existing death-bomb flight; replay rules own its duration.

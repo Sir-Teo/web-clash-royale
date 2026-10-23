@@ -74,6 +74,8 @@ function setup() {
     scenario !== "night-witch";
   (document.querySelector("#kill-golem") as HTMLElement).hidden =
     scenario !== "golem";
+  (document.querySelector("#kill-lava-hound") as HTMLElement).hidden =
+    scenario !== "lava-hound";
   (document.querySelector("#spawn") as HTMLElement).hidden =
     scenario !== "deployment";
   (document.querySelector("#freeze-cast") as HTMLElement).hidden =
@@ -261,6 +263,20 @@ function setup() {
         target.speed = target.damage = 0;
         target.hp = target.maxHp = 10000;
       }
+    }
+  } else if (scenario === "lava-hound") {
+    const hound = unit("lava-hound", "blue", 4, 12)[0];
+    hound.speed = 0;
+    for (const target of unit("cannon", "red", 4, 9.5)) {
+      target.active = false;
+      target.damage = 0;
+      target.hp = target.maxHp = 10000;
+      target.lifetime = undefined;
+    }
+    for (const target of unit("minions", "red", 7, 12.5)) {
+      target.active = false;
+      target.speed = target.damage = 0;
+      target.hp = target.maxHp = 10000;
     }
   } else if (scenario === "attack-impacts") {
     const attacker = (
@@ -507,6 +523,12 @@ document.querySelector("#kill-golem")!.addEventListener("click", () => {
   golem.hp = 1;
   cast("fireball", "red", golem.x, golem.y);
 });
+document.querySelector("#kill-lava-hound")!.addEventListener("click", () => {
+  const hound = battle.entities.find((e) => e.team === "blue" && e.card === "lava-hound" && e.hp > 0);
+  if (!hound) return;
+  hound.hp = 1;
+  cast("fireball", "red", hound.x, hound.y);
+});
 document.querySelector("#play")!.addEventListener("click", () => {
   playing = !playing;
   document.querySelector("#play")!.textContent = playing ? "Pause" : "Play";
@@ -664,6 +686,18 @@ function render(now: number) {
       fireflies: Object.entries(arena.destructionState.clips)
         .filter(([clip]) => clip.startsWith("Golem_firefly_")),
       particles: arena.particleCount,
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.lavaHound =
+    JSON.stringify({
+      alive: battle.entities.some((e) => e.team === "blue" && e.card === "lava-hound" && e.hp > 0),
+      pups: battle.entities.filter((e) => e.team === "blue" && e.card === "lava-pup" && e.hp > 0)
+        .map((e) => ({ x: e.x, y: e.y, hp: e.hp, air: e.air, deploy: e.deploy })),
+      coals: battle.projectiles.filter((p) => p.style === "lava-hound" || p.style === "lava-pup")
+        .map((p) => ({ style: p.style, damage: p.damage, air: p.air })),
+      deaths: battle.events.filter((e) => e.type === "death" && e.card === "lava-hound").length,
+      pupCues: battle.audioEvents.filter((e) => e.phase === "spawn" && e.profile === "lava-pup").length,
+      particles: arena.particleCount,
+      clips: arena.destructionState.clips,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.darkPrince =
     JSON.stringify({

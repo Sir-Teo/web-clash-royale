@@ -38,6 +38,7 @@ import bats from "./bats-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
 import golem from "./golem-data.json" with { type: "json" };
+import lavaHound from "./lava-hound-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -262,7 +263,7 @@ export class Battle {
     if (
       deck.length !== 8 ||
       new Set(deck).size !== 8 ||
-      deck.some((id) => !CARD_MAP[id] || id === "golemite")
+      deck.some((id) => !CARD_MAP[id] || id === "golemite" || id === "lava-pup")
     )
       throw new Error("A deck must contain eight unique valid cards.");
   }
@@ -2256,6 +2257,15 @@ export class Battle {
             clamp(e.y, 0.8, 31.2), true, golem.golemite.sourceDeployTime);
         }
     }
+    if (e.card === "lava-hound")
+      for (let i = 0; i < lavaHound.hound.deathSpawn.count; i++) {
+        const angle = (i * Math.PI * 2) / lavaHound.hound.deathSpawn.count;
+        const radius = lavaHound.hound.deathSpawn.radius;
+        this.spawn("lava-pup", e.team,
+          clamp(e.x + Math.cos(angle) * radius, 0.6, 17.4),
+          clamp(e.y + Math.sin(angle) * radius, 0.8, 31.2),
+          true, lavaHound.pup.sourceDeployTime);
+      }
     if (e.card === "battle-ram") {
       this.emitAudio("death-spawn", e.team, "battle-ram", e.id);
       for (let i = 0; i < battleRam.deathSpawnCount; i++) {

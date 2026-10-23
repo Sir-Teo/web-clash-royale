@@ -1267,6 +1267,15 @@ export class Arena {
           this.trailCycles.set(p.id, 0);
         }
       }
+      if ((p.style === "lava-hound" || p.style === "lava-pup") &&
+          p.speed && this.effects.asset && !this.trailCycles.has(p.id)) {
+        this.destruction.burstAlong(
+          p.style === "lava-hound" ? "trail:lava-hound" : "trail:lava-pup",
+          (seconds) => curvedFlightPoint(p, seconds),
+          p.duration, 0, b.seed ^ p.id, p.team, p.elapsed ?? 0,
+        );
+        this.trailCycles.set(p.id, 0);
+      }
       if (p.style === "princess" && p.speed && this.effects.asset) {
         if (!this.trailCycles.has(p.id)) {
           const duration = Math.hypot(p.tx - p.x, p.ty - p.y) / p.speed;
