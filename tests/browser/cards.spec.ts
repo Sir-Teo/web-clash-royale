@@ -35,6 +35,28 @@ test("native portraits use separate frames and the draw animation freezes and se
   expect(errors).toEqual([]);
 });
 
+test("deck builder hydrates every collection card after opening and searching", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/");
+  await expect.poll(
+    () => page.evaluate(() => (window as any).__arena?.state.loadedCards),
+    { timeout: 30000 },
+  ).toBe(CARDS.length);
+  await page.locator("#edit-deck").click();
+  await expect(page.locator("#collection-grid [data-collection]"))
+    .toHaveCount(CARDS.length);
+  await expect(page.locator("#collection-grid .native-card-ready"))
+    .toHaveCount(CARDS.length);
+  await expect(page.locator('#collection-grid [data-collection="ice-spirit"]'))
+    .toHaveClass(/native-card-ready/);
+  await page.locator("#card-search").fill("Ice Spirit");
+  await expect(page.locator("#collection-grid [data-collection]")).toHaveCount(1);
+  await expect(page.locator('#collection-grid [data-collection="ice-spirit"]'))
+    .toHaveClass(/native-card-ready/);
+  expect(errors).toEqual([]);
+});
+
 test("card selection and deployment preserve readable costs and touch targets across phone rotations", async ({
   page,
 }, info) => {

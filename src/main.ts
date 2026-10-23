@@ -1346,6 +1346,7 @@ function renderCollection() {
         .map((s) => `<div>${s}</div>`)
         .join("")
     : '<p class="empty-state">No cards match your search.</p>';
+  nativeCards.hydrate($("#collection-grid"));
   document.querySelectorAll<HTMLButtonElement>("[data-collection]").forEach(
     (e) =>
       (e.onclick = () => {
