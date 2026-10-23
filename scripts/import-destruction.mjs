@@ -180,6 +180,25 @@ for (const [id, expected] of Object.entries({
     enemyComponents: composition(source, "red"),
   };
 }
+for (const [id, expected] of Object.entries({
+  musketeer: "cannon_hit",
+  bomber: "BombTower_projectile_hit",
+  "baby-dragon": "dragon_hit",
+  wizard: "chr_wizard_projectile_hit",
+  cannon: "cannon_hit",
+})) {
+  const profile = profiles[id];
+  const actor =
+    tables.characters[profile.source] ?? tables.buildings[profile.source];
+  const source = tables.projectiles[actor.Projectile]?.HitEffect;
+  if (source !== expected)
+    throw new Error(`Recheck native ${id} attack impact binding: ${source}`);
+  impacts[`hit:${id}`] = {
+    source,
+    components: composition(source, "blue"),
+    enemyComponents: composition(source, "red"),
+  };
+}
 for (const [id, profile] of Object.entries(profiles)) {
   if (id.endsWith("-tower")) continue;
   const source = (

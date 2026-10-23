@@ -63,6 +63,8 @@ function setup() {
       scenario !== "death";
   (document.querySelector("#death-config") as HTMLElement).hidden =
     scenario !== "death" && scenario !== "deployment";
+  (document.querySelector("#attack-config") as HTMLElement).hidden =
+    scenario !== "attack-impacts";
   (document.querySelector("#spawn") as HTMLElement).hidden =
     scenario !== "deployment";
   for (const id of [
@@ -89,6 +91,18 @@ function setup() {
   } else if (scenario === "spell-impacts") {
     cast("zap", "blue", 4, 13);
     cast("arrows", "red", 14, 19);
+  } else if (scenario === "attack-impacts") {
+    unit(
+      (document.querySelector("#attack-card") as HTMLSelectElement)
+        .value as CardId,
+      "blue",
+      9,
+      21,
+    );
+    for (const target of unit("giant", "red", 9, 18)) {
+      target.active = false;
+      target.hp = target.maxHp = 10000;
+    }
   } else if (scenario === "deployment") {
     // Spawn through the normal engine after setBattle, so lifecycle events
     // are fresh rather than treated as history by the renderer.
@@ -156,6 +170,7 @@ function setup() {
 }
 document.querySelector("#scenario")!.addEventListener("change", setup);
 document.querySelector("#death-card")!.addEventListener("change", setup);
+document.querySelector("#attack-card")!.addEventListener("change", setup);
 document.querySelector("#defeat")!.addEventListener("click", () => {
   for (const v of victims)
     cast("zap", v.team === "red" ? "blue" : "red", v.x, v.y);
@@ -282,6 +297,17 @@ function render(now: number) {
         .filter((p) => p.sprites[0]?.name.includes("arrow_basic"))
         .map((p) => p.sprites.length),
     });
+  (
+    document.querySelector("#destruction") as HTMLElement
+  ).dataset.attackImpacts = JSON.stringify(
+    battle.events
+      .filter((e) => e.type === "hit")
+      .reduce((counts: Record<string, number>, event) => {
+        const card = event.card ?? "tower";
+        counts[card] = (counts[card] ?? 0) + 1;
+        return counts;
+      }, {}),
+  );
   document.querySelector("#destruction")!.textContent =
     `${destruction.rubble} ruins · ${destruction.particles} debris · ${destruction.time.toFixed(1)}s visual`;
   document.querySelector("#result-state")!.textContent = battle.winner

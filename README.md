@@ -16,6 +16,8 @@ Fireball impacts use the original layered smoke, glowing fragments, sparks, flam
 
 Zap impacts use the archived bolt, electricity, smoke, sparks and ground glow composition. Arrows fly as 15 visible sprites across three waves and leave 15 native ground marks. Their source artwork and particle timing work in solo play, replays and browser-to-browser matches on desktop and phone.
 
+Musketeer and Cannon shots share the archived cannon impact; Bomber, Baby Dragon and Wizard projectiles use their own native sparks, smoke, flame and debris compositions. These hit effects stay separate from each troop's death effect.
+
 Destroyed towers leave native rubble for the rest of the battle. Their collapse uses original fire, smoke, flying plank and wall-fragment artwork. Debris pauses with the match and finishes settling after victory; replay seeking reconstructs the correct ruins.
 
 Earned crowns spin out of destroyed towers and fly to the matching score counter. A King Tower awards the remaining crowns to reach three. The flights follow pause and replay speed, adapt when a phone rotates, and finish before the result panel appears.

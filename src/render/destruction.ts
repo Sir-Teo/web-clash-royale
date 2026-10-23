@@ -21,7 +21,10 @@ export function deploymentEffect(card: string): DeploymentEffect | undefined {
     : undefined;
 }
 export function impactEffect(card: string): ImpactEffect | undefined {
-  return card in definitions.impacts ? (card as ImpactEffect) : undefined;
+  const key = Object.hasOwn(definitions.impacts, card) ? card : `hit:${card}`;
+  return Object.hasOwn(definitions.impacts, key)
+    ? (key as ImpactEffect)
+    : undefined;
 }
 export function deathEffect(
   card: string,
