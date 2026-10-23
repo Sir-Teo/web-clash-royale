@@ -80,7 +80,7 @@ describe("bundled game artwork", () => {
     for (const t of manifest.textures)
       expect(digest(`public/assets/effects/${t.file}`)).toBe(t.sha256);
     const data = json("public/assets/effects/effects.json");
-    expect(Object.keys(data.clips)).toHaveLength(190);
+    expect(Object.keys(data.clips)).toHaveLength(191);
     for (const source of [...manifest.sources, ...manifest.inputs])
       expect(digest(source.path)).toBe(source.sha256);
     for (const name of ["balloon_bomb_blue", "balloon_bomb_red"]) {
@@ -134,7 +134,7 @@ describe("bundled game artwork", () => {
   });
   it("preserves full source animations and every referenced UV polygon", () => {
     const manifest = json("public/assets/animations/manifest.json");
-    expect(manifest.files.length).toBe(43);
+    expect(manifest.files.length).toBe(44);
     let total = 0;
     for (const file of manifest.files) {
       const bytes = readFileSync(`public/assets/animations/${file.id}.json`);
@@ -188,7 +188,7 @@ describe("bundled game artwork", () => {
         expect(
           data.clips[`blue-run-${direction}`].frames.length,
         ).toBeGreaterThan(4);
-        if (file.id !== "skeletons" && file.id !== "bats" && file.id !== "lava-pup")
+        if (!["skeletons", "bats", "lava-pup", "ice-spirit"].includes(file.id))
           expect(
             data.clips[`red-run-${direction}`].frames.length,
           ).toBeGreaterThan(4);

@@ -239,6 +239,15 @@ trails["ice-wizard"] = {
   components: composition(iceTrail, "blue"),
   enemyComponents: composition(iceTrail, "red"),
 };
+const iceSpiritProjectile = tables.projectiles.IceSpiritsProjectile;
+if (iceSpiritProjectile?.TrailEffect !== "ice_wiz_emitter" ||
+    iceSpiritProjectile.HitEffect !== "icespirit_projectile_hit")
+  throw new Error("Recheck native Ice Spirit projectile effects");
+trails["ice-spirit"] = {
+  source: iceSpiritProjectile.TrailEffect,
+  components: composition(iceSpiritProjectile.TrailEffect, "blue"),
+  enemyComponents: composition(iceSpiritProjectile.TrailEffect, "red"),
+};
 for (const [id, projectile, expected] of [
   ["lava-hound", "LavaHoundProjectile", "lava_hound_Emitter"],
   ["lava-pup", "LavaPupProjectile", "lava_pups_emitter"],
@@ -486,6 +495,15 @@ continuities.golem = {
     emitter: redFirefly,
   })),
 };
+const iceSpiritContinuous = tables.characters.IceSpirits?.ContinuousEffect;
+if (iceSpiritContinuous !== "icespirit_continuous_fx")
+  throw new Error("Recheck native Ice Spirit continuous effect");
+continuities["ice-spirit"] = {
+  source: iceSpiritContinuous,
+  cycle: 1,
+  components: composition(iceSpiritContinuous, "blue"),
+  enemyComponents: composition(iceSpiritContinuous, "red"),
+};
 importEmitter(redFirefly);
 const princeCharge = tables.characters[profiles.prince.source].ChargeEffect;
 if (princeCharge !== "prince_charge")
@@ -534,6 +552,7 @@ for (const [id, expected] of Object.entries({
   "mega-minion": "mega_minion_hit",
   "dart-goblin": "BlowdartArrowHit",
   "ice-wizard": "ice_wizard_hit",
+  "ice-spirit": "icespirit_projectile_hit",
   princess: "PrincessArrowHitGround",
 })) {
   const profile = profiles[id];

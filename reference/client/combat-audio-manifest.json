@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "7df87f11b3d5062b32996fa15d6aa0801cb3969d3bbb33c6cdf2e5885ab63a8a"
+      "sha256": "8311f85e66bc6ce585db9276e3e9c558758ebf280010597bc57896121597c5a8"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "04d862a807780baa0f2f944b852548128333cc49d9834edc68bd95676508588a"
+      "sha256": "b5fc465205e49b2c3f68142212e89c77ad400313c65d44790e1a3fa588e080ef"
     }
   ],
   "ignoredEnemyVersions": [
@@ -550,6 +550,12 @@
       "sha256": "f4eb0012b52f0b4a142770d69d2caac2ccbcaedf4ddf3a336ce4f94dfed63ed8"
     },
     {
+      "path": "public/assets/audio/fire_spirit_attack_01.ogg",
+      "source": "sfx/fire_spirit_attack_01.ogg",
+      "bytes": 7258,
+      "sha256": "04fb825d9edcdb7d10f2893dc96e57e75c7fa9eed2c35b1bc2283cb9215ef790"
+    },
+    {
       "path": "public/assets/audio/fireball_hit_01.ogg",
       "source": "sfx/fireball_hit_01.ogg",
       "bytes": 9553,
@@ -698,6 +704,18 @@
       "source": "sfx/ice_mage_impact_02.ogg",
       "bytes": 7979,
       "sha256": "afc08e6947ff598ea6743ed69d2c2071273af0d88d16cf328128a023aced9c01"
+    },
+    {
+      "path": "public/assets/audio/ice_sp_deploy_01.ogg",
+      "source": "sfx/ice_sp_deploy_01.ogg",
+      "bytes": 10030,
+      "sha256": "934a08d5bf2162f3b402a1d3a2f0eb26f912bc890918014817e0ff574d8dbabb"
+    },
+    {
+      "path": "public/assets/audio/ice_sp_deploy_02.ogg",
+      "source": "sfx/ice_sp_deploy_02.ogg",
+      "bytes": 10367,
+      "sha256": "a59c6d3053356cd6d9be25be9ce739c49d453c5e14df598d97030e507e19c6c5"
     },
     {
       "path": "public/assets/audio/ice_wiz_atk_01.ogg",
@@ -1524,6 +1542,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "bebafbc802e0b695faf9ec6853dc94bb44518ad6824fb853d20de8254b2a9834"
+    "sha256": "c08ee77c3196dddf4bd847cb3e29c81786d558624fcce1ab517a2235959765a9"
   }
 }

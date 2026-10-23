@@ -123,6 +123,23 @@
       "uniqueFrames": 1260
     },
     {
+      "id": "ice-spirit",
+      "source": "chr_ice_spirits",
+      "metadataSha256": "4c22eda6f327dbc047e8154342407637c667d3a049d3e7ad877b9a4cc7cb4f57",
+      "dataSha256": "5420b7cdf1bd21c3d8ae02dad6bb5de18f1ff274653f7085c017f5d66f6b8fe8",
+      "textures": [
+        {
+          "file": "ice-spirit-0.webp",
+          "sha256": "dd19ab0949f67c9f30d8598571c5e7455926968c5e5a5e6830b3470e32ff79f4",
+          "originalSha256": "a7cc49ca99653071f3aeffbe6364045faee5f6aa09d662b9eeba3a65bdbe7b7c"
+        }
+      ],
+      "shapes": 82,
+      "clips": 27,
+      "frames": 935,
+      "uniqueFrames": 815
+    },
+    {
       "id": "princess",
       "source": "chr_princess",
       "metadataSha256": "4efbc493b84ef3638642a2cacf21d63bfcb1a77927afae5719c56d64e3307db9",

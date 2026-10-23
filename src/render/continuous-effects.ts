@@ -1,5 +1,6 @@
 import type { Entity, Point, Team } from "../game/engine";
 import golem from "../game/golem-data.json" with { type: "json" };
+import iceSpirit from "../game/ice-spirit-data.json" with { type: "json" };
 import definitions from "./destruction-data.json";
 import { continuousEffect } from "./destruction";
 import type { ContinuousEffect } from "./destruction";
@@ -15,8 +16,8 @@ export interface ContinuousBurst {
 }
 interface Track extends Point { activeAge: number }
 
-// The authored Golem effect repeats four particle emissions. Follow the actor
-// instead of anchoring its delayed particles at the original deploy position.
+// Follow authored continuous emissions as each actor moves; rebuild only
+// particles still alive when a late peer snapshot first reaches the renderer.
 export class NativeContinuousEffects {
   private tracks = new Map<number, Track>();
   reset() { this.tracks.clear(); }
@@ -27,8 +28,11 @@ export class NativeContinuousEffects {
       const effect = continuousEffect(entity.card);
       if (!effect || entity.hp <= 0 || entity.deploy > 1e-8) continue;
       live.add(entity.id);
-      const definition = definitions.continuities[entity.card as "golem"];
-      const activeAge = Math.max(0, entity.age - golem.golem.sourceDeployTime);
+      const definition = definitions.continuities[entity.card as
+        keyof typeof definitions.continuities];
+      const deployTime = entity.card === "ice-spirit"
+        ? 1 + iceSpirit.deployDelay : golem.golem.sourceDeployTime;
+      const activeAge = Math.max(0, entity.age - deployTime);
       const previous = this.tracks.get(entity.id);
       // At a late peer snapshot, reconstruct only particles whose native life
       // can still overlap the current frame. Earlier positions are unknown.

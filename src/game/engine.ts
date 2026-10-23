@@ -37,6 +37,7 @@ import sparky from "./sparky-data.json" with { type: "json" };
 import lumberjack from "./lumberjack-data.json" with { type: "json" };
 import bats from "./bats-data.json" with { type: "json" };
 import eliteBarbarians from "./elite-barbarians-data.json" with { type: "json" };
+import iceSpirit from "./ice-spirit-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
 import golem from "./golem-data.json" with { type: "json" };
@@ -652,6 +653,7 @@ export class Battle {
           true,
           id === "bats" ? 1 + bats.deployDelay :
             id === "elite-barbarians" ? 1 + eliteBarbarians.deployDelay :
+            id === "ice-spirit" ? 1 + iceSpirit.deployDelay :
             id === "golem" ? golem.golem.sourceDeployTime : 1,
         );
     }
@@ -1774,7 +1776,7 @@ export class Battle {
         splash: card?.splash ?? 0,
         air: e.kind === "tower" || !!card?.hitsAir,
         style: e.kind === "tower" ? (e.king ? "cannonball" : "arrow") : e.card,
-        stun: 0,
+        stun: e.card === "ice-spirit" ? iceSpirit.freezeDuration : 0,
         source: e.id,
         ...(e.card === "ice-wizard" ? { slow: iceWizard.slowDuration } : {}),
         flight: { x: e.x, y: e.y },
@@ -1789,6 +1791,7 @@ export class Battle {
             : (p?.gravity ?? 0) / 100,
       });
       this.audioProjectiles.set(this.projectiles.at(-1)!.id, audioProfile(e));
+      if (e.card === "ice-spirit") this.hurt(e, e.hp);
       if (e.card === "princess") {
         // The archived character fires one damaging custom first projectile
         // and four copies of PrincessProjectileDeco without damage.

@@ -55,6 +55,7 @@ const heights: Partial<Record<SpriteId, number>> = {
   "elite-barbarians": 1.75,
   wizard: 1.8,
   "ice-wizard": 1.8,
+  "ice-spirit": 1.05,
   princess: 1.7,
   archers: 1.55,
   giant: 2.7,

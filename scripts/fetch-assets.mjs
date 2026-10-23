@@ -43,6 +43,7 @@ const cards = [
   "goblin-gang",
   "barbarians",
   "elite-barbarians",
+  "ice-spirit",
   "royal-giant",
   "mega-minion",
   "dart-goblin",

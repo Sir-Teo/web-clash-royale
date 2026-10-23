@@ -1259,11 +1259,12 @@ export class Arena {
           this.trailCycles.set(p.id, 0);
         }
       }
-      if (p.style === "ice-wizard" && p.speed && this.effects.asset) {
+      if ((p.style === "ice-wizard" || p.style === "ice-spirit") &&
+          p.speed && this.effects.asset) {
         if (!this.trailCycles.has(p.id)) {
           const duration = Math.hypot(p.tx - p.x, p.ty - p.y) / p.speed;
           this.destruction.burstAlong(
-            "trail:ice-wizard",
+            p.style === "ice-spirit" ? "trail:ice-spirit" : "trail:ice-wizard",
             (seconds) => curvedFlightPoint(p, seconds),
             duration,
             0,

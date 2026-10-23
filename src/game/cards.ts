@@ -13,6 +13,7 @@ import swarms from "./swarm-cards-data.json" with { type: "json" };
 import goblinGang from "./goblin-gang-data.json" with { type: "json" };
 import barbarians from "./barbarians-data.json" with { type: "json" };
 import eliteBarbarians from "./elite-barbarians-data.json" with { type: "json" };
+import iceSpirit from "./ice-spirit-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -37,6 +38,7 @@ export type CardId =
   | "knight"
   | "barbarians"
   | "elite-barbarians"
+  | "ice-spirit"
   | "archers"
   | "giant"
   | "royal-giant"
@@ -179,6 +181,18 @@ export const CARDS: Card[] = [
     eliteBarbarians.sourceHitSpeed,
     "Two swift elite fighters charge into battle together.",
     { count: eliteBarbarians.count },
+  ),
+  troop(
+    "ice-spirit",
+    "Ice Spirit",
+    iceSpirit.cost,
+    Math.round((iceSpirit.sourceHitpoints * 1666) / 660),
+    Math.round((iceSpirit.sourceProjectileDamage * 202) / 75),
+    iceSpirit.sourceSpeed / 60,
+    iceSpirit.sourceRange,
+    iceSpirit.sourceHitSpeed,
+    "A tiny one-use attacker that freezes ground and air enemies in a splash.",
+    { hitsAir: true, splash: iceSpirit.splashRadius },
   ),
   troop(
     "archers",

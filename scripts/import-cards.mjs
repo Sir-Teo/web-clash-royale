@@ -273,6 +273,7 @@ const portraitNames = {
   "goblin-gang": "GoblinGang",
   barbarians: "Barbarians",
   "elite-barbarians": "AngryBarbarians",
+  "ice-spirit": "IceSpirits",
   "royal-giant": "RoyalGiant",
   "mega-minion": "MegaMinion",
   "dart-goblin": "BlowdartGoblin",

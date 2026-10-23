@@ -132,6 +132,18 @@
       "gravity": 50
     }
   },
+  "ice-spirit": {
+    "source": "IceSpirits",
+    "windup": 0.2,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "IceSpiritsProjectile",
+      "speed": 6.666666666666667,
+      "homing": true,
+      "gravity": 400
+    }
+  },
   "princess": {
     "source": "Princess",
     "windup": 0.5,

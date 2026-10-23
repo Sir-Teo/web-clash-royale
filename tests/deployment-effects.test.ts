@@ -36,7 +36,7 @@ describe("native deployment effects", () => {
     const rows = ["characters", "buildings"].flatMap((name) =>
       csvRows(readFileSync(`reference/logic/${name}.csv`, "utf8")),
     );
-    expect(Object.keys(definitions.deployments)).toHaveLength(47);
+    expect(Object.keys(definitions.deployments)).toHaveLength(48);
     for (const card of CARDS) {
       const effect = deploymentEffect(card.id);
       if (card.kind === "spell") {
