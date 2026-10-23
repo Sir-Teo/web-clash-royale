@@ -26,6 +26,7 @@ import battleRam from "./battle-ram-data.json" with { type: "json" };
 import executioner from "./executioner-data.json" with { type: "json" };
 import sparky from "./sparky-data.json" with { type: "json" };
 import lumberjack from "./lumberjack-data.json" with { type: "json" };
+import bats from "./bats-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -60,6 +61,7 @@ export type CardId =
   | "hog-rider"
   | "baby-dragon"
   | "minions"
+  | "bats"
   | "mega-minion"
   | "minion-horde"
   | "witch"
@@ -527,6 +529,18 @@ export const CARDS: Card[] = [
     1,
     "Three fast, flying attackers. A great way to deal with enemies that cannot hit air.",
     { air: true, hitsAir: true, count: 3 },
+  ),
+  troop(
+    "bats",
+    "Bats",
+    bats.cost,
+    Math.round(bats.sourceHitpoints * 1.1 ** 10),
+    Math.round(bats.sourceDamage * 1.1 ** 10),
+    bats.sourceSpeed / 60,
+    bats.sourceRange,
+    bats.sourceHitSpeed,
+    "Five fast flying Bats that can attack ground and air.",
+    { air: true, hitsAir: true, count: bats.count, radius: bats.summonRadius },
   ),
   troop(
     "mega-minion",

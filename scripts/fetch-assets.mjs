@@ -56,6 +56,7 @@ const cards = [
   "executioner",
   "sparky",
   "lumberjack",
+  "bats",
 ];
 const characters = [
   "knight",

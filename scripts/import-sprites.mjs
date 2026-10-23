@@ -39,6 +39,7 @@ const sources = {
   "hog-rider": "hog_rider",
   "baby-dragon": "baby_dragon",
   minions: "minion",
+  bats: "bats",
   witch: "witch",
   prince: "prince",
   pekka: "pekka",

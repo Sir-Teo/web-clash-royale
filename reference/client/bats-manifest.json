@@ -1,0 +1,31 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_bats",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/sc/chr_bats.bin",
+      "sha256": "68bb1fd803d00d48eff37987f6781b312567d98870ecf667cbc81359e577034d"
+    },
+    {
+      "path": "reference/sc/chr_bats_tex.png",
+      "sha256": "18e6337faada1c32b602fb899968b79ccdccd6611684b63972211d4f4e1496fd"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    }
+  ],
+  "output": {
+    "path": "src/game/bats-data.json",
+    "sha256": "377bbff9ed9f0a45938e62b110de80b39c06730005a0ede47c4e38e9ac2b7014"
+  }
+}

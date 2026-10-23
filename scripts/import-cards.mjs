@@ -264,6 +264,7 @@ const portraitNames = {
   clone: "Clone",
   mirror: "Mirror",
   "minion-horde": "MinionHorde",
+  bats: "Bats",
   "three-musketeers": "ThreeMusketeers",
   "goblin-gang": "GoblinGang",
   barbarians: "Barbarians",

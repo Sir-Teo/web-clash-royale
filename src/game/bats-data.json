@@ -1,0 +1,20 @@
+{
+  "card": "Bats",
+  "source": "Bat",
+  "rarity": "Common",
+  "cost": 2,
+  "count": 5,
+  "summonRadius": 0.75,
+  "sourceHitpoints": 32,
+  "sourceDamage": 32,
+  "sourceSpeed": 120,
+  "sourceHitSpeed": 1,
+  "sourceLoadTime": 0.5,
+  "sourceRange": 1.2,
+  "flyingHeight": 2,
+  "attackDashTime": 0.15,
+  "deployDelay": 0.4,
+  "loopingFilter": "filter_wiggle",
+  "blueExport": "bat",
+  "redExport": "bat"
+}

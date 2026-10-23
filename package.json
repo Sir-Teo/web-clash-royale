@@ -69,7 +69,9 @@
     "assets:clone-filter": "node scripts/import-clone-filter.mjs",
     "assets:poison-filter": "node scripts/import-poison-filter.mjs",
     "assets:cold-filter": "node scripts/import-cold-filter.mjs",
-    "assets:lumberjack": "node scripts/import-lumberjack.mjs"
+    "assets:lumberjack": "node scripts/import-lumberjack.mjs",
+    "assets:bats": "node scripts/import-bats.mjs",
+    "assets:bat-wiggle": "node scripts/import-bat-wiggle.mjs"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",
