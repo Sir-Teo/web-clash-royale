@@ -70,6 +70,8 @@ function setup() {
     scenario !== "attack-impacts";
   (document.querySelector("#break-shield") as HTMLElement).hidden =
     scenario !== "dark-prince";
+  (document.querySelector("#kill-night-witch") as HTMLElement).hidden =
+    scenario !== "night-witch";
   (document.querySelector("#spawn") as HTMLElement).hidden =
     scenario !== "deployment";
   (document.querySelector("#freeze-cast") as HTMLElement).hidden =
@@ -228,6 +230,14 @@ function setup() {
     }
     for (const [index, target] of unit("minions", "red", 4, 19).entries()) {
       target.x = index ? 14 : 4;
+      target.active = false;
+      target.speed = target.damage = 0;
+      target.hp = target.maxHp = 10000;
+    }
+  } else if (scenario === "night-witch") {
+    const witch = unit("night-witch", "blue", 4, 21)[0];
+    witch.speed = 0;
+    for (const target of unit("knight", "red", 4, 17.5)) {
       target.active = false;
       target.speed = target.damage = 0;
       target.hp = target.maxHp = 10000;
@@ -465,6 +475,12 @@ function advance(ticks: number) {
 }
 document.querySelector("#step")!.addEventListener("click", () => advance(3));
 document.querySelector("#second")!.addEventListener("click", () => advance(30));
+document.querySelector("#kill-night-witch")!.addEventListener("click", () => {
+  const witch = battle.entities.find((e) => e.team === "blue" && e.card === "night-witch" && e.hp > 0);
+  if (!witch) return;
+  witch.hp = 1;
+  cast("fireball", "red", witch.x, witch.y);
+});
 document.querySelector("#play")!.addEventListener("click", () => {
   playing = !playing;
   document.querySelector("#play")!.textContent = playing ? "Pause" : "Play";
@@ -585,6 +601,16 @@ function render(now: number) {
       airTargets: battle.entities.filter((e) => e.team === "red" && e.card === "minions")
         .map((e) => ({ x: e.x, hp: e.hp })),
       hits: battle.events.filter((e) => e.type === "hit" && e.card === "bats" && e.value).length,
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.nightWitch =
+    JSON.stringify({
+      alive: battle.entities.some((e) => e.team === "blue" && e.card === "night-witch" && e.hp > 0),
+      bats: battle.entities.filter((e) => e.team === "blue" && e.card === "bats" && e.hp > 0)
+        .map((e) => ({ id: e.id, x: e.x, y: e.y, deploy: e.deploy })),
+      summons: battle.events.filter((e) => e.effect === "summon:night-witch").length,
+      summonCues: battle.audioEvents.filter((e) => e.profile === "night-witch" && e.phase === "summon").length,
+      deathCues: battle.audioEvents.filter((e) => e.profile === "night-witch" && e.phase === "death-spawn").length,
+      particles: arena.particleCount,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.darkPrince =
     JSON.stringify({

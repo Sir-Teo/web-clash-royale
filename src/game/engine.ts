@@ -35,6 +35,7 @@ import executioner from "./executioner-data.json" with { type: "json" };
 import sparky from "./sparky-data.json" with { type: "json" };
 import lumberjack from "./lumberjack-data.json" with { type: "json" };
 import bats from "./bats-data.json" with { type: "json" };
+import nightWitch from "./night-witch-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -151,7 +152,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "axe-die" | "bottle:lumberjack";
+  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "axe-die" | "bottle:lumberjack" | "summon:night-witch";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -673,7 +674,7 @@ export class Battle {
       move: 0,
       active: true,
       lifetime: c.lifetime,
-      spawnTimer: 4,
+      spawnTimer: id === "night-witch" ? nightWitch.spawn.pause : 4,
       ...(id === "tesla" && this.rulesVersion >= 3
         ? { burrow: { exposure: 0, idle: 0, phase: "hidden" as const } }
         : {}),
@@ -1119,6 +1120,28 @@ export class Battle {
             );
         }
       }
+      if (e.card === "night-witch") {
+        e.spawnTimer -=
+          STEP *
+          (e.rage ? rage.spawnSpeedMultiplier : 1) *
+          (e.slow ? iceWizard.spawnSpeedMultiplier : 1);
+        if (e.spawnTimer <= 1e-8) {
+          e.spawnTimer += nightWitch.spawn.pause;
+          this.emitAudio("summon", e.team, "night-witch", e.id,
+            undefined, { x: e.x, y: e.y });
+          this.emit("spell", e.team, e.x, e.y, "night-witch", 0,
+            { effect: "summon:night-witch" });
+          for (let i = 0; i < nightWitch.spawn.count; i++) {
+            const side = i - (nightWitch.spawn.count - 1) / 2;
+            this.spawn(
+              "bats", e.team,
+              clamp(e.x + side * nightWitch.spawn.radius * 1.2, 0.6, 17.4),
+              clamp(e.y + (e.team === "blue" ? -0.5 : 0.5), 0.8, 31.2),
+              true, 1 + bats.deployDelay,
+            );
+          }
+        }
+      }
       const card = e.card === "tower" ? null : CARD_MAP[e.card];
       const canAttack = (v: Entity) =>
         v.hp > 0 &&
@@ -1394,6 +1417,28 @@ export class Battle {
               clamp(e.x + (i - 1) * 0.6, 0.6, 17.4),
               clamp(e.y + (e.team === "blue" ? -0.8 : 0.8), 0.8, 31.2),
             );
+        }
+      }
+      if (e.card === "night-witch") {
+        e.spawnTimer -=
+          STEP *
+          (e.rage ? rage.spawnSpeedMultiplier : 1) *
+          (e.slow ? iceWizard.spawnSpeedMultiplier : 1);
+        if (e.spawnTimer <= 1e-8) {
+          e.spawnTimer += nightWitch.spawn.pause;
+          this.emitAudio("summon", e.team, "night-witch", e.id,
+            undefined, { x: e.x, y: e.y });
+          this.emit("spell", e.team, e.x, e.y, "night-witch", 0,
+            { effect: "summon:night-witch" });
+          for (let i = 0; i < nightWitch.spawn.count; i++) {
+            const side = i - (nightWitch.spawn.count - 1) / 2;
+            this.spawn(
+              "bats", e.team,
+              clamp(e.x + side * nightWitch.spawn.radius * 1.2, 0.6, 17.4),
+              clamp(e.y + (e.team === "blue" ? -0.5 : 0.5), 0.8, 31.2),
+              true, 1 + bats.deployDelay,
+            );
+          }
         }
       }
       if (e.pendingAttack) {
@@ -1947,7 +1992,9 @@ export class Battle {
       p.remaining = 0;
       const point = { x: p.tx, y: p.ty };
       if (p.splash > 0) {
-        for (const e of this.entities) {
+        // A death-triggered spawn begins after this impact. Do not include
+        // newborn troops in the same damage packet that killed their parent.
+        for (const e of [...this.entities]) {
           if (
             e.hp <= 0 ||
             this.isHidden(e) ||
@@ -2153,6 +2200,19 @@ export class Battle {
       });
       this.audioProjectiles.set(this.projectiles.at(-1)!.id, "lumberjack");
       this.emitAudio("death-spawn", e.team, "lumberjack", e.id);
+    }
+    if (e.card === "night-witch") {
+      this.emitAudio("death-spawn", e.team, "night-witch", e.id);
+      for (let i = 0; i < nightWitch.deathSpawn.count; i++) {
+        const angle = (i * 360 / nightWitch.deathSpawn.count +
+          nightWitch.deathSpawn.angleShift) * Math.PI / 180;
+        this.spawn(
+          "bats", e.team,
+          clamp(e.x + Math.cos(angle) * nightWitch.deathSpawn.radius, 0.6, 17.4),
+          clamp(e.y + Math.sin(angle) * nightWitch.deathSpawn.radius, 0.8, 31.2),
+          false, 1 + bats.deployDelay,
+        );
+      }
     }
     if (e.card === "balloon") {
       this.projectiles.push({
