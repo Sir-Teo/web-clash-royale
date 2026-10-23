@@ -5,7 +5,7 @@ import type { EffectLibrary, EffectSprite } from "./effects";
 interface Visual {
   team: AreaEffect["team"];
   card: AreaEffect["card"];
-  ground: EffectSprite;
+  ground: EffectSprite | null;
   radius: EffectSprite;
   frame: number;
 }
@@ -37,29 +37,37 @@ export class NativeSpellAreas {
       if (visual?.team !== area.team || visual.card !== area.card) {
         if (visual) this.release(area.id, visual);
         const groundName =
-          area.card === "freeze"
-            ? area.team === "blue"
-              ? "freeze_effect_ground"
-              : "freeze_effect_ground_red"
-            : area.card === "rage"
-              ? "rage_effect_ground"
-              : "Poison_radius";
-        const radiusName =
-          area.card === "freeze"
-            ? area.team === "blue"
-              ? "spell_freeze_radius_blue"
-              : "spell_freeze_radius_red"
-            : area.card === "rage"
+          area.card === "tornado"
+            ? null
+            : area.card === "freeze"
               ? area.team === "blue"
-                ? "spell_rage_radius_blue"
-                : "spell_rage_radius_red"
-              : area.team === "blue"
-                ? "spell_poison_radius_blue"
-                : "spell_poison_radius_red";
-        const ground = this.effects.make(groundName);
+                ? "freeze_effect_ground"
+                : "freeze_effect_ground_red"
+              : area.card === "rage"
+                ? "rage_effect_ground"
+                : "Poison_radius";
+        const radiusName =
+          area.card === "tornado"
+            ? area.team === "blue"
+              ? "spell_tornado_radius_blue"
+              : "spell_tornado_radius_red"
+            : area.card === "freeze"
+              ? area.team === "blue"
+                ? "spell_freeze_radius_blue"
+                : "spell_freeze_radius_red"
+              : area.card === "rage"
+                ? area.team === "blue"
+                  ? "spell_rage_radius_blue"
+                  : "spell_rage_radius_red"
+                : area.team === "blue"
+                  ? "spell_poison_radius_blue"
+                  : "spell_poison_radius_red";
+        const ground = groundName ? this.effects.make(groundName) : null;
         const radius = this.effects.make(radiusName);
-        if (!ground || !radius) continue;
-        for (const [index, sprite] of [ground, radius].entries()) {
+        if ((groundName && !ground) || !radius) continue;
+        for (const [index, sprite] of [ground, radius]
+          .filter((sprite) => sprite !== null)
+          .entries()) {
           sprite.mesh.rotation.x = -Math.PI / 2;
           sprite.mesh.renderOrder = 0.25 + index * 0.01;
           this.scene.add(sprite.mesh);
@@ -69,7 +77,9 @@ export class NativeSpellAreas {
       }
       const age = Math.max(0, area.duration - area.remaining);
       const frame = Math.floor(age * 30 + 1e-6);
-      for (const [index, sprite] of [visual.ground, visual.radius].entries()) {
+      for (const [index, sprite] of [visual.ground, visual.radius]
+        .filter((sprite) => sprite !== null)
+        .entries()) {
         sprite.mesh.position.set(area.x - 9, 0.21 + index * 0.002, area.y - 16);
         this.effects.frame(sprite, frame);
       }
@@ -84,7 +94,8 @@ export class NativeSpellAreas {
   }
 
   private release(id: number, visual: Visual) {
-    this.scene.remove(visual.ground.mesh, visual.radius.mesh);
+    if (visual.ground) this.scene.remove(visual.ground.mesh);
+    this.scene.remove(visual.radius.mesh);
     this.visuals.delete(id);
   }
 }

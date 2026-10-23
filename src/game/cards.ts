@@ -4,6 +4,7 @@ import rage from "./rage-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
 import lightning from "./lightning-data.json" with { type: "json" };
 import log from "./log-data.json" with { type: "json" };
+import tornado from "./tornado-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -35,7 +36,8 @@ export type CardId =
   | "rage"
   | "rocket"
   | "lightning"
-  | "log";
+  | "log"
+  | "tornado";
 export interface Card {
   id: CardId;
   name: string;
@@ -203,6 +205,23 @@ export const CARDS: Card[] = [
     1,
     "Rolls through ground enemies, knocking them back as it goes.",
     { kind: "spell", rarity: "Legendary", radius: log.collisionRadius },
+  ),
+  troop(
+    "tornado",
+    "Tornado",
+    tornado.cost,
+    0,
+    Math.round((tornado.damagePerSecond * tornado.damageInterval * 689) / 325),
+    0,
+    0,
+    tornado.damageInterval,
+    "Pulls enemy troops toward its center and deals damage over time.",
+    {
+      kind: "spell",
+      rarity: "Epic",
+      radius: tornado.radius,
+      hitsAir: tornado.hitsAir,
+    },
   ),
   troop(
     "arrows",

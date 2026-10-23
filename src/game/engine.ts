@@ -18,6 +18,7 @@ import rage from "./rage-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
 import lightning from "./lightning-data.json" with { type: "json" };
 import log from "./log-data.json" with { type: "json" };
+import tornado from "./tornado-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -95,11 +96,12 @@ export interface Projectile extends Point {
 export interface AreaEffect extends Point {
   id: number;
   team: Team;
-  card: "freeze" | "poison" | "rage" | "lightning";
+  card: "freeze" | "poison" | "rage" | "lightning" | "tornado";
   radius: number;
   duration: number;
   remaining: number;
   hitAt?: number;
+  damageAt?: number;
   struck?: number[];
 }
 export interface BattleEvent extends Point {
@@ -399,7 +401,8 @@ export class Battle {
         id === "freeze" ||
         id === "poison" ||
         id === "rage" ||
-        id === "lightning"
+        id === "lightning" ||
+        id === "tornado"
       ) {
         const rules =
           id === "freeze"
@@ -408,7 +411,9 @@ export class Battle {
               ? poison
               : id === "rage"
                 ? rage
-                : lightning;
+                : id === "lightning"
+                  ? lightning
+                  : tornado;
         this.areas.push({
           id: this.nextId++,
           team,
@@ -420,7 +425,9 @@ export class Battle {
           remaining: rules.duration,
           ...(id === "lightning"
             ? { hitAt: lightning.strikeInterval, struck: [] }
-            : {}),
+            : id === "tornado"
+              ? { hitAt: 0, damageAt: tornado.damageInterval }
+              : {}),
         });
         if (id === "poison" || id === "rage")
           this.emitAudio("impact", team, id);
@@ -735,6 +742,44 @@ export class Battle {
             );
             this.emitAudio("impact", area.team, "lightning");
           }
+        }
+        area.remaining = Math.max(0, area.remaining - STEP);
+        if (area.remaining < 1e-8) area.remaining = 0;
+        continue;
+      }
+      if (area.card === "tornado") {
+        const pull = age + 1e-8 >= (area.hitAt ?? 0);
+        if (pull) area.hitAt = (area.hitAt ?? 0) + tornado.areaHitInterval;
+        const damage = age + 1e-8 >= (area.damageAt ?? tornado.damageInterval);
+        if (damage)
+          area.damageAt =
+            (area.damageAt ?? tornado.damageInterval) + tornado.damageInterval;
+        for (const entity of this.entities) {
+          if (
+            entity.hp <= 0 ||
+            entity.team === area.team ||
+            entity.kind !== "troop" ||
+            this.isHidden(entity) ||
+            dist(entity, area) >= area.radius + entity.radius
+          )
+            continue;
+          if (pull) {
+            const dx = area.x - entity.x;
+            const dy = area.y - entity.y;
+            const distance = Math.hypot(dx, dy);
+            if (distance > 0.001) {
+              const travel = Math.min(
+                distance,
+                entity.speed *
+                  tornado.attractPercentage *
+                  tornado.areaHitInterval,
+              );
+              entity.x = clamp(entity.x + (dx / distance) * travel, 0.5, 17.5);
+              entity.y = clamp(entity.y + (dy / distance) * travel, 0.6, 31.4);
+              entity.move = 0;
+            }
+          }
+          if (damage) this.hurt(entity, CARD_MAP.tornado.damage);
         }
         area.remaining = Math.max(0, area.remaining - STEP);
         if (area.remaining < 1e-8) area.remaining = 0;

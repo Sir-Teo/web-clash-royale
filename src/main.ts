@@ -1952,6 +1952,7 @@ Object.defineProperty(window, "__arena", {
         poisonAreas: arena.poisonAreaState,
         poisonFilter: arena.poisonFilterState,
         rageAreas: arena.rageAreaState,
+        tornadoAreas: arena.tornadoAreaState,
         lightningAreas: battle.areas
           .filter((area) => area.card === "lightning")
           .map((area) => ({

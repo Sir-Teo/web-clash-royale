@@ -663,6 +663,9 @@ export class Arena {
   get rageAreaState() {
     return this.spellAreas.state.filter((area) => area.card === "rage");
   }
+  get tornadoAreaState() {
+    return this.spellAreas.state.filter((area) => area.card === "tornado");
+  }
   get placementState() {
     return this.placement
       ? {
@@ -1182,6 +1185,14 @@ export class Arena {
             eventAge - offset,
           );
       }
+      if (event.type === "spell" && event.card === "tornado")
+        this.destruction.burst(
+          "tornado",
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
       if (event.type === "hit") {
         const impactPosition = new T.Vector3(
           event.x - 9,
