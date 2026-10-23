@@ -8,6 +8,7 @@ import tornado from "./tornado-data.json" with { type: "json" };
 import goblinBarrel from "./goblin-barrel-data.json" with { type: "json" };
 import graveyard from "./graveyard-data.json" with { type: "json" };
 import clone from "./clone-data.json" with { type: "json" };
+import mirror from "./mirror-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -43,7 +44,8 @@ export type CardId =
   | "tornado"
   | "goblin-barrel"
   | "graveyard"
-  | "clone";
+  | "clone"
+  | "mirror";
 export interface Card {
   id: CardId;
   name: string;
@@ -264,6 +266,18 @@ export const CARDS: Card[] = [
     1,
     "Duplicates friendly troops in an area. The copies have one hitpoint.",
     { kind: "spell", rarity: "Epic", radius: clone.radius },
+  ),
+  troop(
+    "mirror",
+    "Mirror",
+    mirror.surcharge,
+    0,
+    0,
+    0,
+    0,
+    1,
+    "Repeats your last played card for one extra elixir.",
+    { kind: "spell", rarity: "Epic" },
   ),
   troop(
     "arrows",

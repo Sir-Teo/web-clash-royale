@@ -117,7 +117,9 @@ export class NativeCards {
             ? "reveal"
             : `${variant}${selected ? "-selected" : ""}`;
     const frame = clip === "reveal" ? revealFrame! : 0;
-    const signature = `${id}:${clip}:${frame}`;
+    const cost = element.dataset.cardCost ?? String(CARD_MAP[id].cost);
+    const mirrorCard = element.dataset.mirrorCard as CardId | undefined;
+    const signature = `${id}:${clip}:${frame}:${cost}:${mirrorCard ?? ""}`;
     if (this.signatures.get(host) === signature) return;
     let data = this.portraits.get(id);
     if (!data) {
@@ -137,9 +139,9 @@ export class NativeCards {
       clip,
       frame,
       {
-        "elixar_count/count": String(card.cost),
-        "card/elixar_count/count": String(card.cost),
-        count: String(card.cost),
+        "elixar_count/count": cost,
+        "card/elixar_count/count": cost,
+        count: cost,
         card_name: card.name,
         card_level: "Level 11",
       },
@@ -157,6 +159,45 @@ export class NativeCards {
           variant === "thumbnail" ? ["elixar_count", "elixar_count/count"] : [],
       },
     );
+    if (id === "mirror" && mirrorCard && this.data.portraits[mirrorCard]) {
+      const svg = host.querySelector("svg")!;
+      const ns = "http://www.w3.org/2000/svg";
+      const clipId = `mirror-reflection-${this.serial}`;
+      const defs = document.createElementNS(ns, "defs");
+      const clipping = document.createElementNS(ns, "clipPath");
+      clipping.id = clipId;
+      const aperture = document.createElementNS(ns, "rect");
+      for (const [key, value] of Object.entries({
+        x: "-38",
+        y: "-51",
+        width: "76",
+        height: "102",
+        rx: "12",
+      }))
+        aperture.setAttribute(key, value);
+      clipping.append(aperture);
+      defs.append(clipping);
+      svg.append(defs);
+      const image = document.createElementNS(ns, "image");
+      const portrait =
+        this.data.shapes[this.data.portraits[mirrorCard].shape].polygons?.[0]
+          .file;
+      if (portrait) {
+        image.setAttribute(
+          "href",
+          `${import.meta.env.BASE_URL}assets/ui/cards/${portrait}`,
+        );
+        image.setAttribute("x", "-38");
+        image.setAttribute("y", "-51");
+        image.setAttribute("width", "76");
+        image.setAttribute("height", "102");
+        image.setAttribute("preserveAspectRatio", "xMidYMid slice");
+        image.setAttribute("clip-path", `url(#${clipId})`);
+        image.setAttribute("opacity", "0.88");
+        image.classList.add("mirror-reflection");
+        svg.append(image);
+      }
+    }
     this.signatures.set(host, signature);
     element.classList.add("native-card-ready");
     element.dataset.cardClip = clip;

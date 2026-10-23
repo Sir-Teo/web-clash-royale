@@ -586,19 +586,33 @@ function updateBattleUI(force = false) {
   const next = CARD_MAP[p.queue[0]];
   $("#next-card-img").setAttribute("src", cardArt(next.id));
   $("#next-card-img").setAttribute("alt", `Next card: ${next.name}`);
-  $("#next-card-cost").textContent = String(next.cost);
+  $("#next-card-cost").textContent = String(
+    battle.cardCost("blue", next.id) ?? "?",
+  );
   document
     .querySelectorAll<HTMLElement>(".next-card [data-native-card]")
     .forEach((e) => {
       e.dataset.nativeCard = next.id;
+      e.dataset.cardCost = String(battle.cardCost("blue", next.id) ?? "?");
+      e.dataset.mirrorCard = next.id === "mirror" ? (p.lastPlayed ?? "") : "";
       nativeCards.draw(e);
     });
   document.querySelectorAll<HTMLElement>("[data-slot]").forEach((e, i) => {
+    const id = p.hand[i];
+    const cost = battle.cardCost("blue", id);
+    e.dataset.cardCost = String(cost ?? "?");
+    e.dataset.mirrorCard = id === "mirror" ? (p.lastPlayed ?? "") : "";
+    e.querySelector<HTMLElement>(".cost")!.textContent = String(cost ?? "?");
+    e.setAttribute(
+      "aria-label",
+      `${CARD_MAP[id].name}, ${cost ?? "unknown"} elixir${id === "mirror" && p.lastPlayed ? `, repeats ${CARD_MAP[p.lastPlayed].name}` : ""}`,
+    );
     (e as HTMLButtonElement).disabled =
       intro.clock.blocking ||
+      cost === null ||
       (multiplayer &&
         (!network.connected || network.pending || !!network.room?.paused));
-    e.classList.toggle("unaffordable", CARD_MAP[p.hand[i]].cost > p.elixir);
+    e.classList.toggle("unaffordable", cost === null || cost > p.elixir);
     e.classList.toggle("selected", selected === i);
     e.setAttribute("aria-pressed", String(selected === i));
   });
@@ -633,13 +647,20 @@ function selectCard(slot: number) {
     $("#deploy-hint").textContent = "Select a card to deploy";
     arena.showPlacement(null, null);
   } else {
-    const c = CARD_MAP[battle.players.blue.hand[selected]];
+    const id = battle.players.blue.hand[selected];
+    const repeated = battle.cardForPlay("blue", id);
+    const c = CARD_MAP[repeated ?? id];
+    const cost = battle.cardCost("blue", id);
     $("#hand-caption").textContent =
-      `${c.name} · ${c.cost} elixir · ${c.kind === "spell" ? "Target anywhere" : "Deploy on the blue half"}`;
+      cost === null
+        ? "Play another card before Mirror"
+        : `${id === "mirror" ? `Mirror → ${c.name}` : c.name} · ${cost} elixir · ${c.kind === "spell" ? "Target anywhere" : "Deploy on the blue half"}`;
     $("#deploy-hint").textContent =
-      c.kind === "spell"
-        ? `${c.name} · Target anywhere`
-        : `${c.name} · Deploy on your side`;
+      cost === null
+        ? "Play another card before Mirror"
+        : c.kind === "spell"
+          ? `${c.name} · Target anywhere`
+          : `${c.name} · Deploy on your side`;
     refreshPlacement();
   }
   updateBattleUI();
@@ -656,13 +677,16 @@ function refreshPlacement() {
     return;
   }
   const id = battle.players.blue.hand[selected],
-    cost = CARD_MAP[id].cost;
+    cost = battle.cardCost("blue", id),
+    repeated = battle.cardForPlay("blue", id);
   const place = hover
     ? battle.canPlace("blue", id, hover.x, hover.y)
-    : { ok: true, reason: "" };
-  const affordable = battle.players.blue.elixir + 1e-6 >= cost;
+    : repeated
+      ? { ok: true, reason: "" }
+      : { ok: false, reason: "Play another card before Mirror." };
+  const affordable = cost !== null && battle.players.blue.elixir + 1e-6 >= cost;
   arena.showPlacement(
-    id,
+    repeated ?? id,
     hover,
     place.ok && affordable,
     !place.ok ? place.reason : !affordable ? `You need ${cost} elixir` : "",
@@ -1431,7 +1455,11 @@ function processEvents() {
       ev.card &&
       ev.card !== "tower"
     )
-      elixir.spend(CARD_MAP[ev.card].cost, ev.time, battle.players.blue.elixir);
+      elixir.spend(
+        ev.value ?? CARD_MAP[ev.card].cost,
+        ev.time,
+        battle.players.blue.elixir,
+      );
     if (ev.type === "crown") {
       audio.play("1st_crown_01", 0.35);
     }
@@ -1854,7 +1882,9 @@ function frame(now: number) {
       battle.time,
       battle.players.blue.elixir,
       battle.multiplier,
-      selected >= 0 ? CARD_MAP[battle.players.blue.hand[selected]].cost : null,
+      selected >= 0
+        ? battle.cardCost("blue", battle.players.blue.hand[selected])
+        : null,
     );
   if (screen === "replay" && battle.winner) startEnding();
   ending.update(
@@ -1899,6 +1929,10 @@ Object.defineProperty(window, "__arena", {
         emotes: emotes.state,
         elixir: battle.players.blue.elixir,
         hand: [...battle.players.blue.hand],
+        lastPlayed: battle.players.blue.lastPlayed ?? null,
+        handCosts: battle.players.blue.hand.map((id) =>
+          battle.cardCost("blue", id),
+        ),
         troops: battle.entities.filter((e) => e.kind === "troop").length,
         actions: multiplayer ? network.actionCount : battle.actions.length,
         multiplayer: multiplayer

@@ -22,6 +22,7 @@ import tornado from "./tornado-data.json" with { type: "json" };
 import goblinBarrel from "./goblin-barrel-data.json" with { type: "json" };
 import graveyard from "./graveyard-data.json" with { type: "json" };
 import clone from "./clone-data.json" with { type: "json" };
+import mirror from "./mirror-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -147,6 +148,7 @@ export interface PlayerState {
   hand: CardId[];
   queue: CardId[];
   crowns: number;
+  lastPlayed?: CardId;
 }
 export interface EngineOptions {
   seed?: number;
@@ -316,6 +318,10 @@ export class Battle {
       y > 31.3
     )
       return { ok: false, reason: "Place your card inside the arena." };
+    const resolved = this.cardForPlay(team, id);
+    if (!resolved)
+      return { ok: false, reason: "Play another card before Mirror." };
+    id = resolved;
     const c = CARD_MAP[id];
     if (!c) return { ok: false, reason: "Unknown card." };
     if (c.kind === "spell") {
@@ -353,6 +359,15 @@ export class Battle {
       return { ok: false, reason: "That space is occupied by a building." };
     return { ok: true, reason: "" };
   }
+  cardForPlay(team: Team, id: CardId): CardId | null {
+    return id === "mirror" ? (this.players[team].lastPlayed ?? null) : id;
+  }
+  cardCost(team: Team, id: CardId): number | null {
+    const resolved = this.cardForPlay(team, id);
+    return resolved
+      ? CARD_MAP[resolved].cost + (id === "mirror" ? mirror.surcharge : 0)
+      : null;
+  }
   play(
     team: Team,
     slot: number,
@@ -360,12 +375,16 @@ export class Battle {
     y: number,
   ): { ok: boolean; reason: string } {
     const p = this.players[team];
-    const id = p.hand[slot];
-    if (!id) return { ok: false, reason: "Select a card." };
+    const played = p.hand[slot];
+    if (!played) return { ok: false, reason: "Select a card." };
+    const id = this.cardForPlay(team, played);
+    const cost = this.cardCost(team, played);
+    if (!id || cost === null)
+      return { ok: false, reason: "Play another card before Mirror." };
     const c = CARD_MAP[id];
-    if (p.elixir + 1e-6 < c.cost)
-      return { ok: false, reason: `You need ${c.cost} elixir.` };
-    const allowed = this.canPlace(team, id, x, y);
+    if (p.elixir + 1e-6 < cost)
+      return { ok: false, reason: `You need ${cost} elixir.` };
+    const allowed = this.canPlace(team, played, x, y);
     if (!allowed.ok) return allowed;
     if (
       this.entities.filter(
@@ -373,11 +392,20 @@ export class Battle {
       ).length > 160
     )
       return { ok: false, reason: "Too many troops on the field." };
-    p.elixir -= c.cost;
+    p.elixir -= cost;
     p.hand[slot] = p.queue.shift()!;
-    p.queue.push(id);
-    this.actions.push({ tick: this.tick, team, card: id, x, y });
-    this.emit(c.kind === "spell" ? "spell" : "deploy", team, x, y, id);
+    p.queue.push(played);
+    if (this.rulesVersion >= 5) p.lastPlayed = id;
+    this.actions.push({ tick: this.tick, team, card: played, x, y });
+    this.emit(
+      c.kind === "spell" ? "spell" : "deploy",
+      team,
+      x,
+      y,
+      id,
+      played === "mirror" ? cost : undefined,
+    );
+    if (played === "mirror") this.emitAudio("cast", team, "mirror");
     this.emitAudio("cast", team, id);
     if (c.kind === "spell") {
       if (id === "goblin-barrel") {
@@ -1737,8 +1765,13 @@ export class Battle {
   private think() {
     const p = this.players.red;
     const affordable = p.hand
-      .map((id, slot) => ({ id, slot, c: CARD_MAP[id] }))
-      .filter((v) => v.c.cost <= p.elixir);
+      .map((id, slot) => ({
+        id,
+        slot,
+        cost: this.cardCost("red", id),
+        c: CARD_MAP[this.cardForPlay("red", id) ?? id],
+      }))
+      .filter((v) => v.cost !== null && v.cost <= p.elixir);
     if (!affordable.length) return;
     const threats = this.entities
       .filter((e) => e.team === "blue" && e.kind === "troop" && e.y < 15)
