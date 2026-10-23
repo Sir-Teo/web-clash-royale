@@ -1613,6 +1613,155 @@
       ]
     }
   },
+  "impacts": {
+    "fireball": {
+      "source": "Fireball_explosion",
+      "components": [
+        {
+          "emitter": "explosion_base",
+          "delay": 0.1,
+          "scale": 0.85,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Fireball_explosion_smoke",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Fireball_explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Fireball_explosion_sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_lava",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_gradients",
+          "delay": 0.01,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "explosion_fire",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_continousFire",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "explosion_base",
+          "delay": 0.1,
+          "scale": 0.85,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Fireball_explosion_smoke",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Fireball_explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Fireball_explosion_sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_lava",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_gradients",
+          "delay": 0.01,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "explosion_fire",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_continousFire",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    }
+  },
   "emitters": {
     "TargetDummy_planks": {
       "count": 13,
@@ -1650,7 +1799,7 @@
       "endScale": 0.1,
       "fadeIn": 0,
       "fadeOut": 0,
-      "inertia": 0.2,
+      "inertia": 0.6666666666666666,
       "rotate": true,
       "loop": false,
       "clips": [
@@ -1829,7 +1978,7 @@
       "endScale": 0.8,
       "fadeIn": 0,
       "fadeOut": 0.5,
-      "inertia": 0.55,
+      "inertia": 1.8333333333333333,
       "rotate": false,
       "loop": false,
       "clips": [
@@ -1873,7 +2022,7 @@
       "endScale": 0.4,
       "fadeIn": 0,
       "fadeOut": 0,
-      "inertia": 0.2,
+      "inertia": 0.6666666666666666,
       "rotate": true,
       "loop": false,
       "clips": [
@@ -1918,7 +2067,7 @@
       "endScale": 0.4,
       "fadeIn": 0,
       "fadeOut": 0.2,
-      "inertia": 0.55,
+      "inertia": 1.8333333333333333,
       "rotate": false,
       "loop": false,
       "clips": [
@@ -1962,7 +2111,7 @@
       "endScale": 0.3,
       "fadeIn": 0,
       "fadeOut": 2,
-      "inertia": 0.4,
+      "inertia": 1.3333333333333333,
       "rotate": true,
       "loop": false,
       "clips": [
@@ -2005,7 +2154,7 @@
       "endScale": 0.4,
       "fadeIn": 0,
       "fadeOut": 2.5,
-      "inertia": 0.4,
+      "inertia": 1.3333333333333333,
       "rotate": true,
       "loop": false,
       "clips": [
@@ -2048,7 +2197,7 @@
       "endScale": 0.4,
       "fadeIn": 0,
       "fadeOut": 2,
-      "inertia": 1,
+      "inertia": 3.3333333333333335,
       "rotate": false,
       "loop": false,
       "clips": [
@@ -2093,7 +2242,7 @@
       "endScale": 1.6,
       "fadeIn": 0,
       "fadeOut": 1.65,
-      "inertia": 1,
+      "inertia": 3.3333333333333335,
       "rotate": true,
       "loop": false,
       "clips": [
@@ -2139,7 +2288,7 @@
       "endScale": 1,
       "fadeIn": 0,
       "fadeOut": 0.4,
-      "inertia": 0.6,
+      "inertia": 2,
       "rotate": false,
       "loop": false,
       "clips": [
@@ -2182,7 +2331,7 @@
       "endScale": 0.6,
       "fadeIn": 0,
       "fadeOut": 0.2,
-      "inertia": 0.55,
+      "inertia": 1.8333333333333333,
       "rotate": false,
       "loop": false,
       "clips": [
@@ -2226,7 +2375,7 @@
       "endScale": 0.3,
       "fadeIn": 0,
       "fadeOut": 2,
-      "inertia": 0.4,
+      "inertia": 1.3333333333333333,
       "rotate": true,
       "loop": false,
       "clips": [
@@ -2269,7 +2418,7 @@
       "endScale": 0.4,
       "fadeIn": 0,
       "fadeOut": 2.5,
-      "inertia": 0.4,
+      "inertia": 1.3333333333333333,
       "rotate": true,
       "loop": false,
       "clips": [
@@ -2312,7 +2461,7 @@
       "endScale": 0.4,
       "fadeIn": 0,
       "fadeOut": 2,
-      "inertia": 1,
+      "inertia": 3.3333333333333335,
       "rotate": false,
       "loop": false,
       "clips": [
@@ -2357,7 +2506,7 @@
       "endScale": 0.4,
       "fadeIn": 0,
       "fadeOut": 0.2,
-      "inertia": 0.55,
+      "inertia": 1.8333333333333333,
       "rotate": false,
       "loop": false,
       "clips": [
@@ -2401,7 +2550,7 @@
       "endScale": 0.3,
       "fadeIn": 0,
       "fadeOut": 2,
-      "inertia": 0.4,
+      "inertia": 1.3333333333333333,
       "rotate": true,
       "loop": false,
       "clips": [
@@ -2444,7 +2593,7 @@
       "endScale": 0.4,
       "fadeIn": 0,
       "fadeOut": 2,
-      "inertia": 1,
+      "inertia": 3.3333333333333335,
       "rotate": false,
       "loop": false,
       "clips": [
@@ -2532,7 +2681,7 @@
       "endScale": 1.25,
       "fadeIn": 0,
       "fadeOut": 3,
-      "inertia": 0.25,
+      "inertia": 0.8333333333333334,
       "rotate": true,
       "loop": true,
       "clips": [
@@ -2794,6 +2943,452 @@
       "endScale": 1,
       "fadeIn": 0,
       "fadeOut": 1,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Deco_fireplace_glow"
+      ]
+    },
+    "explosion_base": {
+      "count": 32,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0.001,
+        0.001
+      ],
+      "life": [
+        1.8,
+        2.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.26666666666666666
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        1.6666666666666667
+      ],
+      "gravity": -116.66666666666667,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0.3,
+      "inertia": 0,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "particle_coal1",
+        "particle_coal2",
+        "particle_coal3",
+        "particle_coal4",
+        "particle_coal5",
+        "particle_coal6",
+        "particle_coal7",
+        "particle_coal8",
+        "particle_coal9",
+        "particle_coal10"
+      ]
+    },
+    "Fireball_explosion_smoke": {
+      "count": 34,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0.001,
+        0.001
+      ],
+      "life": [
+        1.5,
+        2.3
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.1,
+        0.23333333333333334
+      ],
+      "speed": [
+        0.3333333333333333,
+        0.5
+      ],
+      "height": 0.4666666666666667,
+      "verticalSpeed": [
+        0.6666666666666666,
+        1
+      ],
+      "gravity": 0.3333333333333333,
+      "startScale": 1,
+      "endScale": 1.2,
+      "fadeIn": 0,
+      "fadeOut": 1.5,
+      "inertia": 0.6666666666666666,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "explosion_cloud_1"
+      ]
+    },
+    "Fireball_explosion_glow": {
+      "count": 12,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        1.2,
+        2.8
+      ],
+      "angle": [
+        -0.5235987755982988,
+        0.5235987755982988
+      ],
+      "radius": [
+        0,
+        0.06666666666666667
+      ],
+      "speed": [
+        0,
+        1.6666666666666667
+      ],
+      "height": 0.3333333333333333,
+      "verticalSpeed": [
+        0.6666666666666666,
+        3
+      ],
+      "gravity": 1.1666666666666667,
+      "startScale": 0.23,
+      "endScale": 0.3,
+      "fadeIn": 0,
+      "fadeOut": 3.5,
+      "inertia": 1.3333333333333333,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "Death_blue_smoke"
+      ]
+    },
+    "Fireball_explosion_sparks": {
+      "count": 22,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        0.8,
+        0.9
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.1
+      ],
+      "speed": [
+        2.3333333333333335,
+        2.6666666666666665
+      ],
+      "height": 2.433333333333333,
+      "verticalSpeed": [
+        16.666666666666668,
+        30
+      ],
+      "gravity": -66.66666666666667,
+      "startScale": 1,
+      "endScale": 0.01,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "SparkleBlue",
+        "SparkleBlue",
+        "SparkleBlue",
+        "particle_coal4",
+        "particle_coal3",
+        "particle_coal2"
+      ]
+    },
+    "explosion_lava": {
+      "count": 15,
+      "emissionLife": [
+        0.2,
+        0.2
+      ],
+      "interval": [
+        0,
+        0.02
+      ],
+      "life": [
+        0.9,
+        1
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.03333333333333333
+      ],
+      "speed": [
+        1.3333333333333333,
+        3
+      ],
+      "height": 1,
+      "verticalSpeed": [
+        26.666666666666668,
+        30
+      ],
+      "gravity": -100,
+      "startScale": 1.2,
+      "endScale": 0.2,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "particle_coal9"
+      ]
+    },
+    "explosion_gradients": {
+      "count": 1,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.001
+      ],
+      "life": [
+        4,
+        5
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1.35,
+      "endScale": 1.35,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "darken_gradient"
+      ]
+    },
+    "explosion_shadow": {
+      "count": 12,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0.001,
+        0.001
+      ],
+      "life": [
+        2.7,
+        2.8
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.13333333333333333,
+        0.23333333333333334
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1.5,
+      "endScale": 1.5,
+      "fadeIn": 0,
+      "fadeOut": 5,
+      "inertia": 0,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "explosion_cloud_1"
+      ]
+    },
+    "explosion_fire": {
+      "count": 4,
+      "emissionLife": [
+        0.3,
+        0.3
+      ],
+      "interval": [
+        0.001,
+        0.001
+      ],
+      "life": [
+        1.2,
+        1.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.23333333333333334
+      ],
+      "speed": [
+        0.03333333333333333,
+        0.3333333333333333
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        3,
+        3.3333333333333335
+      ],
+      "gravity": 0,
+      "startScale": 2,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 1.5,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "FireParticle1",
+        "FireParticle2",
+        "FireParticle3"
+      ]
+    },
+    "explosion_continousFire": {
+      "count": 8,
+      "emissionLife": [
+        1.5,
+        1.5
+      ],
+      "interval": [
+        0.15,
+        0.1
+      ],
+      "life": [
+        0.7,
+        0.8
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.1
+      ],
+      "speed": [
+        0,
+        0.3333333333333333
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "gravity": 10,
+      "startScale": 2,
+      "endScale": 0.01,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "MolotovTrailParticle"
+      ]
+    },
+    "explosion_glow": {
+      "count": 8,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0.001,
+        0.001
+      ],
+      "life": [
+        0.5,
+        2.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.16666666666666666
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0.8333333333333334,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "gravity": 3.3333333333333335,
+      "startScale": 1.5,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 2,
       "inertia": 0,
       "rotate": true,
       "loop": false,

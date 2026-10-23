@@ -12,7 +12,10 @@ interface FramePart {
   shape: number;
   matrix: number[];
   color: number[];
+  blend?: number;
 }
+// SC1 DisplayObjectInstance values: normal, multiply, screen, additive.
+export const SPRITE_BLENDS = [0, 3, 4, 8] as const;
 export type SpriteId = CardId | "tower-princess";
 export interface SpriteData {
   version: 2;
@@ -96,6 +99,28 @@ export function makeMaterial(texture: T.Texture) {
   material.customProgramCacheKey = () => "sc1-color-transform-v1";
   return material;
 }
+export function effectMaterials(
+  textures: T.Texture[],
+  create: (texture: T.Texture) => T.MeshBasicMaterial = makeMaterial,
+) {
+  return SPRITE_BLENDS.flatMap((blend) =>
+    textures.map((texture) => {
+      const material = create(texture);
+      if (blend === 8) material.blending = T.AdditiveBlending;
+      if (blend === 3 || blend === 4) {
+        // Premultiplied source alpha keeps soft edges neutral for multiply/screen.
+        material.premultipliedAlpha = true;
+        material.blending = T.CustomBlending;
+        material.blendSrc = blend === 3 ? T.DstColorFactor : T.OneFactor;
+        material.blendDst =
+          blend === 3 ? T.OneMinusSrcAlphaFactor : T.OneMinusSrcColorFactor;
+        material.blendSrcAlpha = T.OneFactor;
+        material.blendDstAlpha = T.OneMinusSrcAlphaFactor;
+      }
+      return material;
+    }),
+  );
+}
 export function spriteGeometry(asset: SpriteAsset, index: number) {
   const cached = asset.geometry.get(index);
   if (cached) return cached;
@@ -110,10 +135,15 @@ export function spriteGeometry(asset: SpriteAsset, index: number) {
     const m = part.matrix,
       c = part.color;
     for (const polygon of asset.data.shapes[part.shape]) {
-      if (polygon.sheet !== sheet) {
+      const blend = SPRITE_BLENDS.indexOf(
+        (part.blend ?? 0) as (typeof SPRITE_BLENDS)[number],
+      );
+      if (blend < 0) throw new Error(`Unsupported sprite blend ${part.blend}`);
+      const material = polygon.sheet + blend * asset.textures.length;
+      if (material !== sheet) {
         if (sheet >= 0)
           geometry.addGroup(start, positions.length / 3 - start, sheet);
-        sheet = polygon.sheet;
+        sheet = material;
         start = positions.length / 3;
       }
       for (let j = 1; j < polygon.xy.length - 1; j++)

@@ -25,7 +25,7 @@ import { DeploymentPreview } from "./deployment";
 import { BuildingLibrary } from "./buildings";
 import type { BuildingSprite } from "./buildings";
 import { destroyedTowerSites, TOWER_SITES } from "../game/arena-layout";
-import { DestructionEffects, deathEffect } from "./destruction";
+import { DestructionEffects, deathEffect, impactEffect } from "./destruction";
 import { CrownEffects } from "./crowns";
 import { HealthLibrary, type HealthSprite } from "./health";
 import { NativeScreenShake } from "./screen-shake";
@@ -996,9 +996,10 @@ export class Arena {
           event.height ?? 0.6,
           event.y - 16,
         );
-        if (event.effect === "balloon-bomb" && this.effects.asset) {
+        const nativeImpact = event.effect ?? impactEffect(event.card ?? "");
+        if (nativeImpact && this.effects.asset) {
           this.destruction.burst(
-            "balloon-bomb",
+            nativeImpact,
             new T.Vector3(event.x - 9, 0.2, event.y - 16),
             b.seed ^ event.id,
             event.team,

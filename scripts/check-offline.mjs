@@ -6,6 +6,9 @@ const deathAudioManifest = JSON.parse(
 const combatAudioManifest = JSON.parse(
   await readFile("reference/client/combat-audio-manifest.json", "utf8"),
 );
+const expectedEffects = JSON.parse(
+  await readFile("public/assets/effects/manifest.json", "utf8"),
+).clips;
 const nativeAudioPaths = [
   ...new Set(
     [...deathAudioManifest.audioFiles, ...combatAudioManifest.audioFiles].map(
@@ -75,8 +78,8 @@ try {
       "Native combat/death audio is missing from the offline cache",
     );
   await page.waitForFunction(
-    () =>
-      window.__arena?.state.loadedEffects === 50 &&
+    (count) =>
+      window.__arena?.state.loadedEffects === count &&
       window.__arena?.state.loadedBuildings === 3 &&
       window.__arena?.state.loadedAnimations === 19 &&
       window.__arena?.state.loadedAnnouncements === 5 &&
@@ -92,6 +95,7 @@ try {
       document.fonts.check('22px "SC CCBackBeat"') &&
       window.__arena?.state.nativeTowerPrincesses === 4 &&
       window.__arena?.state.nativePrincessTowers === 4,
+    expectedEffects,
   );
   console.log(
     "Offline title:",

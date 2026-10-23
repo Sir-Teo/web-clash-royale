@@ -12,6 +12,8 @@ Play against AI or challenge a friend over Wi-Fi or compatible remote networks. 
 
 The four original King emotes use complete native expressions and speech-bubble animations, with 16 voice variations. Six original quick-chat phrases use their native text bubbles, wooden selector and archived chat font. Each player has an independent bubble, a host-enforced cooldown and a persistent local mute option. The selector works with touch, mouse and keyboard; reduced motion uses still artwork.
 
+Fireball impacts use the original layered smoke, glowing fragments, sparks, flames and lingering scorch effect. Native additive and screen blending keep fire and lightning bright, and particle motion follows the archived client’s linear deceleration and gravity integration.
+
 Destroyed towers leave native rubble for the rest of the battle. Their collapse uses original fire, smoke, flying plank and wall-fragment artwork. Debris pauses with the match and finishes settling after victory; replay seeking reconstructs the correct ruins.
 
 Earned crowns spin out of destroyed towers and fly to the matching score counter. A King Tower awards the remaining crowns to reach three. The flights follow pause and replay speed, adapt when a phone rotates, and finish before the result panel appears.

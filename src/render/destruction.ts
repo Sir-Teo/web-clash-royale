@@ -1,11 +1,17 @@
 import * as T from "three";
 import definitions from "./destruction-data.json";
-import { makeMaterial, spriteGeometry } from "./sprites";
+import { makeMaterial, effectMaterials, spriteGeometry } from "./sprites";
 import type { EffectLibrary } from "./effects";
 import type { Team } from "../game/engine";
 
 type Emitter = (typeof definitions.emitters)[keyof typeof definitions.emitters];
 export type DeathEffect = keyof typeof definitions.effects;
+export type ImpactEffect = keyof typeof definitions.impacts;
+type NativeEffect = DeathEffect | ImpactEffect;
+const compositions = { ...definitions.effects, ...definitions.impacts };
+export function impactEffect(card: string): ImpactEffect | undefined {
+  return card in definitions.impacts ? (card as ImpactEffect) : undefined;
+}
 export function deathEffect(
   card: string,
   king = false,
@@ -30,7 +36,7 @@ export interface DebrisPlan {
 }
 // Cosmetic RNG is separate from Battle's RNG and is stable during replay.
 export function destructionPlan(
-  effect: DeathEffect,
+  effect: NativeEffect,
   seed: number,
   team: Team = "blue",
 ): DebrisPlan[] {
@@ -42,9 +48,7 @@ export function destructionPlan(
   const between = (range: number[]) =>
     range[0] + random() * (range[1] - range[0]);
   const components =
-    definitions.effects[effect][
-      team === "red" ? "enemyComponents" : "components"
-    ];
+    compositions[effect][team === "red" ? "enemyComponents" : "components"];
   return components.flatMap((component) => {
     const emitter =
       definitions.emitters[
@@ -78,10 +82,26 @@ export function destructionPlan(
 export function debrisPose(p: DebrisPlan, age: number) {
   const t = Math.max(0, age),
     e = p.emitter;
-  // Source inertia has no retained runtime implementation; exponential drag and
-  // a ground clamp are reconstruction choices. Analytic motion is frame-rate independent.
-  const drag = e.inertia * 4;
-  const distance = drag ? (1 - Math.exp(-drag * t)) / drag : t;
+  // Native helper 0x7b554 subtracts Inertia from horizontal speed and integrates
+  // Z using half the current-age gravity term. Nonzero inertia uses 16-ms steps
+  // (0x7b65e). Evaluate that sum directly so late snapshots/replays need no history.
+  // See reference/client/particle-physics-static-probe.json. Zero-inertia Z uses
+  // the continuous limit; the native variable-frame correction is not retained.
+  const step = 0.016;
+  const steps = e.inertia ? Math.floor(t / step + 1e-9) : 0;
+  const motionTime = e.inertia ? steps * step : t;
+  const speed = Math.hypot(p.vx, p.vz);
+  const movingSteps = e.inertia
+    ? Math.min(steps, Math.max(0, Math.ceil(speed / (e.inertia * step)) - 1))
+    : 0;
+  const distance = e.inertia
+    ? speed
+      ? (step *
+          (movingSteps * speed -
+            (e.inertia * step * movingSteps * (movingSteps + 1)) / 2)) /
+        speed
+      : 0
+    : t;
   const opacity = Math.min(
     1,
     e.fadeIn ? t / e.fadeIn : 1,
@@ -90,7 +110,13 @@ export function debrisPose(p: DebrisPlan, age: number) {
   return {
     x: p.x + p.vx * distance,
     z: p.z + p.vz * distance,
-    y: Math.max(0.04, e.height + p.vy * t + (e.gravity * t * t) / 2),
+    y: Math.max(
+      0.04,
+      e.height +
+        p.vy * motionTime +
+        (e.gravity * (motionTime ** 2 + (e.inertia ? motionTime * step : 0))) /
+          4,
+    ),
     scale:
       p.scale *
       T.MathUtils.lerp(e.startScale, e.endScale, Math.min(1, t / p.life)),
@@ -172,7 +198,7 @@ export class DestructionEffects {
     );
   }
   burst(
-    effect: DeathEffect,
+    effect: NativeEffect,
     origin: T.Vector3,
     seed: number,
     team: Team = "blue",
@@ -218,7 +244,9 @@ export class DestructionEffects {
       geometry.setAttribute("particleOpacity", opacity);
       let materials = this.materials.get(ground);
       if (!materials) {
-        materials = asset.textures.map((t) => particleMaterial(t, ground));
+        materials = effectMaterials(asset.textures, (t) =>
+          particleMaterial(t, ground),
+        );
         this.materials.set(ground, materials);
       }
       const mesh = new T.InstancedMesh(geometry, materials, capacity);

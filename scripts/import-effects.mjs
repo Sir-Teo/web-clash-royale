@@ -56,7 +56,14 @@ for (const resource of ["effects", "building_mega_bomb"]) {
     source: `${directory}${resource}`,
     sha256: sha256(metadata),
   });
-  function flatten(ref, frame, matrix = identity, color = neutral, depth = 0) {
+  function flatten(
+    ref,
+    frame,
+    matrix = identity,
+    color = neutral,
+    depth = 0,
+    blend = 0,
+  ) {
     if (depth > 20) throw new Error(`Recursive SC display list ${resource}`);
     if (data.shapes[ref]) {
       usedShapes.add(ref);
@@ -65,21 +72,27 @@ for (const resource of ["effects", "building_mega_bomb"]) {
           shape: ref + shapeOffset,
           matrix: matrix.map(round),
           color: color.map(round),
+          ...(blend ? { blend } : {}),
         },
       ];
     }
     const clip = data.clips[ref];
     if (!clip?.frames.length)
       throw new Error(`Missing SC child ${ref} in ${resource}`);
-    return clip.frames[frame % clip.frames.length].flatMap((child) =>
-      flatten(
+    return clip.frames[frame % clip.frames.length].flatMap((child) => {
+      if (![0, 3, 4, 8].includes(child.blend))
+        throw new Error(
+          `Unsupported effect blend mode ${child.blend} in ${ref}`,
+        );
+      return flatten(
         child.id,
         frame,
         multiply(matrix, data.matrices[child.matrix] ?? identity),
         composeColor(color, data.colors[child.color] ?? neutral),
         depth + 1,
-      ),
-    );
+        child.blend || blend,
+      );
+    });
   }
 
   const emitterExports = [

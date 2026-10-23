@@ -1,3 +1,4 @@
+import { expectedEffects } from "./native-assets";
 import { test, expect } from "@playwright/test";
 import { pathToFileURL } from "node:url";
 import { build } from "esbuild";
@@ -131,7 +132,7 @@ for (const perspective of ["blue", "red"] as const)
         () => page.evaluate(() => (window as any).__arena?.state.loadedEffects),
         { timeout: 60000 },
       )
-      .toBe(50);
+      .toBe(expectedEffects);
     await page.getByRole("button", { name: "Battle log", exact: true }).click();
     await page.locator('[data-replay="0"]').click();
     await page

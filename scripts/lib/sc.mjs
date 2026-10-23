@@ -136,6 +136,8 @@ export function parseSC(b) {
         children.push(b.readUInt16LE(q));
         q += 2;
       }
+      // Tag 12 stores one blend-mode byte per child after the ID table.
+      const blends = [...b.subarray(q, q + nc)];
       q += nc;
       const childNames = [];
       for (let i = 0; i < nc; i++) {
@@ -162,6 +164,7 @@ export function parseSC(b) {
             refs.slice(offset, offset + count).map(([child, mat, color]) => ({
               id: children[child],
               child,
+              blend: blends[child],
               matrix: mat,
               color,
             })),
@@ -175,7 +178,11 @@ export function parseSC(b) {
         nf,
         frames,
         labels,
-        children: children.map((id, i) => ({ id, name: childNames[i] })),
+        children: children.map((id, i) => ({
+          id,
+          name: childNames[i],
+          blend: blends[i],
+        })),
       };
     }
     p = end;

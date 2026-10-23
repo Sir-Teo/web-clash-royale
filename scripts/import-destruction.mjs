@@ -9,6 +9,8 @@ for (const [name, directory] of [
   ["particle_emitters", "client"],
   ["characters", "logic"],
   ["buildings", "logic"],
+  ["projectiles", "logic"],
+  ["spells_other", "logic"],
 ]) {
   const path = `reference/${directory}/${name}.csv`,
     bytes = await readFile(path);
@@ -26,6 +28,10 @@ const profilesPath = "src/game/combat-data.json",
   profilesBytes = await readFile(profilesPath);
 const profiles = JSON.parse(profilesBytes);
 files.push({ path: profilesPath, sha256: sha(profilesBytes) });
+const cardsPath = "public/assets/ui/cards/cards.json",
+  cardsBytes = await readFile(cardsPath),
+  cards = JSON.parse(cardsBytes).portraits;
+files.push({ path: cardsPath, sha256: sha(cardsBytes) });
 const sources = { tower: "TowerExplode", king: "King_player_die" };
 for (const [id, profile] of Object.entries(profiles)) {
   if (id.endsWith("-tower")) continue;
@@ -38,6 +44,7 @@ const balloon = tables.characters[profiles.balloon.source];
 sources["balloon-bomb"] =
   tables.buildings[balloon.DeathSpawnCharacter].DeathEffect;
 const effects = {},
+  impacts = {},
   emitters = {};
 function importEmitter(name) {
   if (emitters[name]) return emitters[name];
@@ -72,7 +79,8 @@ function importEmitter(name) {
     endScale: p.EndScale ? Number(p.EndScale) / 100 : 1,
     fadeIn: Number(p.FadeInDuration) / 1000,
     fadeOut: Number(p.FadeOutDuration) / 1000,
-    inertia: Number(p.Inertia) / 100,
+    // Native Inertia subtracts source speed units per second, not a percentage.
+    inertia: Number(p.Inertia) / 30,
     rotate: p.RotateToDirection.toLowerCase() === "true",
     loop: p.LoopParticleClip.toLowerCase() === "true",
     clips,
@@ -125,10 +133,18 @@ for (const [id, source] of Object.entries(sources)) {
     enemyComponents: composition(source, "red"),
   };
 }
+const fireballCard = cards.fireball;
+const fireballSpell = tables[fireballCard.table][fireballCard.row];
+const fireballImpact = tables.projectiles[fireballSpell.Projectile].HitEffect;
+impacts.fireball = {
+  source: fireballImpact,
+  components: composition(fireballImpact, "blue"),
+  enemyComponents: composition(fireballImpact, "red"),
+};
 effects.tower.rubble = "Tower_destroyed_ground1";
 effects.king.rubble = "Tower_destroyed_ground2";
 const path = "src/render/destruction-data.json",
-  bytes = JSON.stringify({ effects, emitters }, null, 2) + "\n";
+  bytes = JSON.stringify({ effects, impacts, emitters }, null, 2) + "\n";
 await writeFile(path, bytes);
 await writeFile(
   "reference/client/manifest.json",
@@ -146,5 +162,5 @@ await writeFile(
   ) + "\n",
 );
 console.log(
-  `Imported ${Object.keys(effects).length} death compositions and ${Object.keys(emitters).length} emitters.`,
+  `Imported ${Object.keys(effects).length} death compositions, ${Object.keys(impacts).length} impact compositions and ${Object.keys(emitters).length} emitters.`,
 );

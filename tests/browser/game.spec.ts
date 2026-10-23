@@ -1,3 +1,4 @@
+import { expectedEffects } from "./native-assets";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 
@@ -38,7 +39,7 @@ test("saved v4 and v5 replays retain their endings when seeking on desktop and p
       () => page.evaluate(() => (window as any).__arena?.state.loadedEffects),
       { timeout: 30000 },
     )
-    .toBe(50);
+    .toBe(expectedEffects);
   for (const [index, end] of expected.entries()) {
     await page.getByRole("button", { name: "Battle log", exact: true }).click();
     await expect(page.locator("[data-replay]")).toHaveCount(2);
@@ -121,7 +122,7 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
       () => page.evaluate(() => (window as any).__arena?.state.loadedEffects),
       { timeout: 30000 },
     )
-    .toBe(50);
+    .toBe(expectedEffects);
   await expect
     .poll(
       () => page.evaluate(() => (window as any).__arena.state.loadedBuildings),

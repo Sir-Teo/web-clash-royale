@@ -79,6 +79,9 @@ function setup() {
     unit("archers", "red", 14, 10);
     cast("arrows", "blue", 4, 12);
     cast("fireball", "blue", 14, 12);
+  } else if (scenario === "fireball") {
+    cast("fireball", "blue", 4, 13);
+    cast("fireball", "red", 14, 19);
   } else if (scenario === "ranged") {
     for (const [id, x, y] of [
       ["archers", 3, 23],
@@ -242,6 +245,13 @@ function render(now: number) {
   document.querySelector("#king-hits")!.textContent =
     `${battle.events.filter((e) => e.type === "hit" && e.card === undefined).length} tower hits`;
   const destruction = arena.destructionState;
+  (document.querySelector("#destruction") as HTMLElement).dataset.state =
+    JSON.stringify(destruction);
+  (document.querySelector("#destruction") as HTMLElement).dataset.impacts =
+    String(
+      battle.events.filter((e) => e.type === "hit" && e.card === "fireball")
+        .length,
+    );
   (document.querySelector("#destruction") as HTMLElement).dataset.shake =
     JSON.stringify(arena.shakeState);
   document.querySelector("#destruction")!.textContent =

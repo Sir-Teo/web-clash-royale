@@ -1,5 +1,5 @@
 import * as T from "three";
-import { makeMaterial, spriteGeometry } from "./sprites";
+import { effectMaterials, spriteGeometry } from "./sprites";
 import type { SpriteData, SpriteAsset } from "./sprites";
 
 export interface EffectSprite {
@@ -26,7 +26,7 @@ export class EffectLibrary {
       this.asset = {
         data,
         textures,
-        materials: textures.map(makeMaterial),
+        materials: effectMaterials(textures),
         geometry: new Map(),
         scale: 1 / 30,
       };

@@ -1,3 +1,4 @@
+import { expectedEffects } from "./native-assets";
 import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
@@ -56,6 +57,7 @@ for (const perspective of ["blue", "red"] as const)
             (window as any).__shakeSamples.push({
               time: state.time,
               ...state.shake,
+              destruction: state.destruction,
               point,
               picked,
             });
@@ -92,7 +94,7 @@ for (const perspective of ["blue", "red"] as const)
         () => page.evaluate(() => (window as any).__arena?.state.loadedEffects),
         { timeout: 60000 },
       )
-      .toBe(50);
+      .toBe(expectedEffects);
     await page.getByRole("button", { name: "Battle log", exact: true }).click();
     await page.locator('[data-replay="0"]').click();
     await page
@@ -135,6 +137,10 @@ for (const perspective of ["blue", "red"] as const)
         s.lastEffect === "Fireball_explosion" && Math.hypot(s.x, s.y) > 0,
     );
     expect(moving.length).toBeGreaterThan(0);
+    // The real replay hit must dispatch the full composition, not only shake.
+    expect(
+      moving.some((s: any) => s.destruction.clips.explosion_cloud_1 > 0),
+    ).toBe(true);
     for (const sample of moving) {
       expect(sample.time).toBeGreaterThanOrEqual(impact.time);
       expect(Math.hypot(sample.x, sample.y)).toBeLessThanOrEqual(4.80001);
@@ -151,10 +157,19 @@ for (const perspective of ["blue", "red"] as const)
     }
     expect(await page.locator("#hand").boundingBox()).toEqual(controls);
     const held = await page.evaluate(() => (window as any).__arena.state.shake);
+    const heldParticles = await page.evaluate(
+      () => (window as any).__arena.state.destruction,
+    );
     await page.waitForTimeout(250);
     expect(
       await page.evaluate(() => (window as any).__arena.state.shake),
     ).toEqual(held);
+    expect(
+      await page.evaluate(() => (window as any).__arena.state.destruction),
+    ).toEqual(heldParticles);
+    await page.screenshot({
+      path: info.outputPath(`fireball-${perspective}-impact.png`),
+    });
     await info.attach("impact-motion.json", {
       body: JSON.stringify({ impact, baseline, moving }, null, 2),
       contentType: "application/json",
@@ -166,6 +181,13 @@ for (const perspective of ["blue", "red"] as const)
       )
       .toBe(0);
     await seek.fill(before);
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () => (window as any).__arena.state.destruction.particles,
+        ),
+      )
+      .toBe(0);
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.evaluate(() => {
       (window as any).__shakeSamples.length = 0;
@@ -185,6 +207,13 @@ for (const perspective of ["blue", "red"] as const)
       await page.evaluate(() =>
         (window as any).__shakeSamples.every(
           (s: any) => s.x === 0 && s.y === 0,
+        ),
+      ),
+    ).toBe(true);
+    expect(
+      await page.evaluate(() =>
+        (window as any).__shakeSamples.some(
+          (s: any) => s.destruction.clips.MolotovTrailParticle > 0,
         ),
       ),
     ).toBe(true);
