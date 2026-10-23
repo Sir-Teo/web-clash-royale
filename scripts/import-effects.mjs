@@ -48,6 +48,7 @@ for (const resource of [
   "chr_valkyrie",
   "chr_battle_ram",
   "chr_zap_machine",
+  "building_rage_bottle",
   "spell_goblin_barrel",
 ]) {
   const path = `reference/sc/${resource}.bin`,
@@ -60,7 +61,7 @@ for (const resource of [
   const textureOffset = textures.length;
   sources.push({
     path,
-    source: `${["chr_battle_ram", "chr_zap_machine"].includes(resource)
+    source: `${["chr_battle_ram", "chr_zap_machine", "building_rage_bottle"].includes(resource)
       ? "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/"
       : directory}${resource}`,
     sha256: sha256(metadata),
@@ -180,6 +181,8 @@ for (const resource of [
         ? [balloon.BlueExportName, balloon.RedExportName, ...emitterExports]
         : resource === "spell_goblin_barrel"
           ? ["spell_goblin_barrel_projectile", "Barrel_shadow"]
+          : resource === "building_rage_bottle"
+            ? ["rage_bottle_fall"]
           : emitterExports;
   for (const name of exports) {
     let ref = data.names[name],
@@ -263,7 +266,7 @@ for (const resource of [
       original = await readFile(path);
     } catch {
       const r = await fetch(
-        `https://raw.githubusercontent.com/smlbiobot/cr/${commit}/${["chr_battle_ram", "chr_zap_machine"].includes(resource)
+        `https://raw.githubusercontent.com/smlbiobot/cr/${commit}/${["chr_battle_ram", "chr_zap_machine", "building_rage_bottle"].includes(resource)
           ? "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/"
           : directory}${name}`,
       );
@@ -281,7 +284,7 @@ for (const resource of [
       file,
       sha256: sha256(texture),
       originalSha256: sha256(original),
-      source: `${["chr_battle_ram", "chr_zap_machine"].includes(resource)
+      source: `${["chr_battle_ram", "chr_zap_machine", "building_rage_bottle"].includes(resource)
         ? "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/"
         : directory}${name}`,
     });

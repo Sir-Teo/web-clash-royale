@@ -321,6 +321,15 @@ impacts["hit:sparky"] = {
   components: composition(zapMachine.HitEffect, "blue"),
   enemyComponents: composition(zapMachine.HitEffect, "red"),
 };
+const rageBottle = tables.buildings.RageBarbarianBottle;
+if (rageBottle?.DeathEffect !== "rage_bottle_explode" ||
+    rageBottle.DeathAreaEffect !== "BarbarianRage")
+  throw new Error("Recheck native Lumberjack death bottle");
+impacts["bottle:lumberjack"] = {
+  source: rageBottle.DeathEffect,
+  components: composition(rageBottle.DeathEffect, "blue"),
+  enemyComponents: composition(rageBottle.DeathEffect, "red"),
+};
 const darkPrince = tables.characters.DarkPrince;
 if (darkPrince?.ShieldLostEffect !== "GuardShieldDown" ||
     darkPrince.ChargeEffect !== "dark_prince_charge")

@@ -26,6 +26,7 @@ const sources = {
   "battle-ram": "battle_ram",
   executioner: "axe_man",
   sparky: "zap_machine",
+  lumberjack: "rage_barbarian",
   archers: "archer",
   giant: "giant",
   musketeer: "musketeer",
@@ -118,9 +119,10 @@ for (const [id, source] of Object.entries(sources)) {
   }
   for (const [exportName, ref] of Object.entries(data.names)) {
     const match = exportName.match(
-      /(?:^|_)(run|walk|attacking|attack|idle|hover|fly|charge)(\d*)_(\d+)$/i,
+      /(?:^|_)(run|walk|attacking|attack|idle|hover|fly|charge|deploy)(\d*)_(\d+)$/i,
     );
     if (!match || Number(match[2] || 1) > 1) continue;
+    if (match[1].toLowerCase() === "deploy" && id !== "lumberjack") continue;
     // This source also contains Inferno Dragon exports. Never overwrite Baby Dragon.
     if (id === "baby-dragon" && !exportName.startsWith("baby_dragon_"))
       continue;
@@ -197,6 +199,7 @@ for (const [id, source] of Object.entries(sources)) {
         || id === "dark-prince-shield"
         || id === "battle-ram"
         || id === "executioner"
+        || id === "lumberjack"
         ? `${name}_highres_tex.png`
         : `${name}_tex${"_".repeat(i)}.png`,
     );

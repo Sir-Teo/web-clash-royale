@@ -208,6 +208,13 @@
       "gravity": 0
     }
   },
+  "lumberjack": {
+    "source": "RageBarbarian",
+    "windup": 0.4,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

@@ -276,6 +276,23 @@
       "uniqueFrames": 1030
     },
     {
+      "id": "lumberjack",
+      "source": "chr_rage_barbarian",
+      "metadataSha256": "117dfde3149a52da77d07a35e941844dc64cba76c95ef0b3ac9a32eb1246fc50",
+      "dataSha256": "a86f3a2085833fe60687b6e6eb9477d7558a797e0bbfb72653d9630c4490ad74",
+      "textures": [
+        {
+          "file": "lumberjack-0.webp",
+          "sha256": "c415b9e130bf7be0bb0b3ae812a899c61a9b132609317eac0839f098773de2e4",
+          "originalSha256": "97ee67acde145cb795fdf5a07cf17efeaeee59a4a74a5ac7d5d335cb255c0bff"
+        }
+      ],
+      "shapes": 346,
+      "clips": 58,
+      "frames": 1452,
+      "uniqueFrames": 772
+    },
+    {
       "id": "archers",
       "source": "chr_archer",
       "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",

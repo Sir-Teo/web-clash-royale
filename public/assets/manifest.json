@@ -483,6 +483,12 @@
       "sha256": "2d9202b67ebd1ae3fd9d0d343b0809c63922f81b3a2afc45d7ef058ae5a1400a"
     },
     {
+      "path": "cards/lumberjack.png",
+      "source": "cards/lumberjack.png",
+      "bytes": 124211,
+      "sha256": "3ba375ac15a33a7fdae7ec896b7201e2c38d8c471b38ed3cd11fcd61089ae293"
+    },
+    {
       "path": "cards/mega-minion.png",
       "source": "cards/mega-minion.png",
       "bytes": 158495,

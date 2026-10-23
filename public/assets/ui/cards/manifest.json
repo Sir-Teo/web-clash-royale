@@ -392,9 +392,14 @@
       "sha256": "c522632c5cc5665d3ceac3d84f3d3d720a8024bfd66743494e1b0b2a724e18cf"
     },
     {
+      "file": "portrait-lumberjack.webp",
+      "bytes": 43456,
+      "sha256": "4ac041620eb5b56965c55370a3b9179c8b677f91b5ca2e30320e9a280446ad25"
+    },
+    {
       "file": "cards.json",
-      "bytes": 101025,
-      "sha256": "4bcfac812802f4b4575bf0cebff987308b49fcf5d415edd4c162e8bb15a4fb63"
+      "bytes": 101478,
+      "sha256": "bd299fc0d462e19699c4e665ce8d6209c2e9c4d8be6a81e959722b933c51f01d"
     }
   ]
 }

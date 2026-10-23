@@ -2897,6 +2897,161 @@
         "row": "ZapMachine"
       }
     },
+    "lumberjack": {
+      "source": "RageBarbarian",
+      "attack": {
+        "sources": [
+          "ragebarbarian_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_ragebarbarian_attack_start_vo",
+            "delay": 0
+          },
+          {
+            "sound": "sound_ragebarbarian_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_ragebarbarian_attack_start_vo",
+            "delay": 0
+          },
+          {
+            "sound": "sound_ragebarbarian_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "ragebarbarian_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_ragebarbarian_attack_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_ragebarbarian_attack_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "ragebarbarian_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_ragebarbarian_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_ragebarbarian_deploy_sfx",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_ragebarbarian_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_ragebarbarian_deploy_sfx",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [
+          "rage_bottle_explode"
+        ],
+        "components": [
+          {
+            "sound": "sound_barbarian_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_barbarian_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "death-spawn": {
+        "sources": [
+          "GiantSkeleton_Bomb_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_GiantSkeleton_bomb_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_GiantSkeleton_bomb_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "RageBarbarian"
+      }
+    },
     "spear-goblins": {
       "source": "SpearGoblin",
       "attack": {
@@ -9640,6 +9795,247 @@
         "repeat": 0,
         "loop": true,
         "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_ragebarbarian_attack_start_vo": [
+      {
+        "sourceFile": "sfx/woodsman_atk_01.wav",
+        "file": "woodsman_atk_01",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/woodsman_atk_02.wav",
+        "file": "woodsman_atk_02",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/woodsman_atk_03.wav",
+        "file": "woodsman_atk_03",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/woodsman_atk_04.wav",
+        "file": "woodsman_atk_04",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/woodsman_atk_05.wav",
+        "file": "woodsman_atk_05",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/woodsman_atk_06.wav",
+        "file": "woodsman_atk_06",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/woodsman_atk_07.wav",
+        "file": "woodsman_atk_07",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_ragebarbarian_attack_start": [
+      {
+        "sourceFile": "sfx/axeswing_01.wav",
+        "file": "axeswing_01",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.96,
+          1.04
+        ],
+        "startDelay": [
+          0.2,
+          0.2
+        ],
+        "maximum": 3,
+        "repeat": 0.1,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_ragebarbarian_deploy": [
+      {
+        "sourceFile": "sfx/woodsman_deploy_01.wav",
+        "file": "woodsman_deploy_01",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0.3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_ragebarbarian_deploy_sfx": [
+      {
+        "sourceFile": "sfx/rage_barb_deploy_02.wav",
+        "file": "rage_barb_deploy_02",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0.3,
+        "loop": false,
+        "priority": 2,
+        "padding": 0
+      }
+    ],
+    "sound_GiantSkeleton_bomb_deploy": [
+      {
+        "sourceFile": "sfx/bomb_drop_01.wav",
+        "file": "bomb_drop_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
         "padding": 0
       }
     ],

@@ -1731,6 +1731,69 @@
         }
       ]
     },
+    "lumberjack": {
+      "source": "barbarian_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -3956,6 +4019,55 @@
           "scale": 1,
           "layer": "Base",
           "ground": false
+        }
+      ]
+    },
+    "bottle:lumberjack": {
+      "source": "rage_bottle_explode",
+      "components": [
+        {
+          "emitter": "rage_bottle_glass_break",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "rage_bottle_break_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "rage_bottle_spill",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "rage_bottle_glass_break",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "rage_bottle_break_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "rage_bottle_spill",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
         }
       ]
     },
@@ -6938,6 +7050,69 @@
           "scale": 1,
           "layer": "Shadow",
           "ground": true
+        }
+      ]
+    },
+    "lumberjack": {
+      "source": "ragebarbarian_deploy",
+      "components": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "knight_deploy_rocks_hitGround",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_depoy_dustShadow",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
         }
       ]
     },
@@ -12578,6 +12753,150 @@
         "d3",
         "d2",
         "d1"
+      ]
+    },
+    "rage_bottle_glass_break": {
+      "count": 8,
+      "emissionLife": [
+        0.4,
+        0.4
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        0.8,
+        1.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        1.6666666666666667,
+        3.3333333333333335
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        3.3333333333333335,
+        8.333333333333334
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -66.66666666666667,
+      "startScale": 0.5,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 1.5,
+      "inertia": 0,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "ice_particle2",
+        "ice_particle3"
+      ]
+    },
+    "rage_bottle_break_puff": {
+      "count": 24,
+      "emissionLife": [
+        0,
+        0
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.4,
+        0.4
+      ],
+      "angle": [
+        -1.7453292519943295,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        3.3333333333333335,
+        3.3333333333333335
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 3.3333333333333335,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "d3"
+      ]
+    },
+    "rage_bottle_spill": {
+      "count": 3,
+      "emissionLife": [
+        0.08,
+        0.08
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        3,
+        4
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0.1
+      ],
+      "speed": [
+        0.3333333333333333,
+        0.6666666666666666
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -56.666666666666664,
+      "startScale": 1,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 2,
+      "inertia": 3.3333333333333335,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "death_ground_elixir1",
+        "death_ground_elixir2",
+        "death_ground_elixir3"
       ]
     },
     "guard_shield_down": {
