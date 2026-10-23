@@ -74,6 +74,7 @@ const names = {
   miner: "Miner",
   bowler: "Bowler",
   "dark-prince": "DarkPrince",
+  "battle-ram": "BattleRam",
   "spear-goblins": "SpearGoblin",
   skeletons: "Skeleton",
   "skeleton-army": "Skeleton",

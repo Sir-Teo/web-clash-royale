@@ -1,0 +1,23 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_battle_ram",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/sc/chr_battle_ram.bin",
+      "sha256": "caf3c5867408a06bbdbd2eb0b83baf914f3392a5d812a9b4dc0c842e702fde1c"
+    }
+  ],
+  "output": {
+    "path": "src/game/battle-ram-data.json",
+    "sha256": "6dc1c37c06284f5de9bd1f885912205b8936f9949c490c0a3ded29f327fe3a5f"
+  }
+}

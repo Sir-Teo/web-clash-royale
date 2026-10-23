@@ -22,6 +22,7 @@ import electroWizard from "./electro-wizard-data.json" with { type: "json" };
 import miner from "./miner-data.json" with { type: "json" };
 import bowler from "./bowler-data.json" with { type: "json" };
 import darkPrince from "./dark-prince-data.json" with { type: "json" };
+import battleRam from "./battle-ram-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -45,6 +46,7 @@ export type CardId =
   | "miner"
   | "bowler"
   | "dark-prince"
+  | "battle-ram"
   | "skeletons"
   | "skeleton-army"
   | "bomber"
@@ -592,6 +594,18 @@ export const CARDS: Card[] = [
     darkPrince.sourceHitSpeed / 1000,
     "Charges into ground troops with a shield and a sweeping mace attack.",
     { rarity: "Epic", splash: darkPrince.splash },
+  ),
+  troop(
+    "battle-ram",
+    "Battle Ram",
+    battleRam.cost,
+    Math.round((battleRam.sourceHitpoints * 720) / 340),
+    Math.round((battleRam.sourceDamage * 218) / 100),
+    battleRam.sourceSpeed / 60,
+    battleRam.sourceRange / 1000,
+    battleRam.sourceHitSpeed / 1000,
+    "Charges buildings and releases two Barbarians when the ram breaks.",
+    { rarity: "Rare", buildingsOnly: battleRam.targetsBuildings },
   ),
   troop(
     "minion-horde",
