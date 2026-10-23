@@ -11,9 +11,11 @@ import clone from "./clone-data.json" with { type: "json" };
 import mirror from "./mirror-data.json" with { type: "json" };
 import swarms from "./swarm-cards-data.json" with { type: "json" };
 import goblinGang from "./goblin-gang-data.json" with { type: "json" };
+import barbarians from "./barbarians-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
+  | "barbarians"
   | "archers"
   | "giant"
   | "musketeer"
@@ -109,6 +111,20 @@ export const CARDS: Card[] = [
     0.75,
     1.2,
     "A tough melee fighter. A dependable defender with a magnificent moustache.",
+  ),
+  troop(
+    "barbarians",
+    "Barbarians",
+    barbarians.cost,
+    // Match this roster's level-11 Common Knight normalization of the
+    // archived level-one hitpoints and damage.
+    Math.round((barbarians.sourceHitpoints * 1666) / 660),
+    Math.round((barbarians.sourceDamage * 202) / 75),
+    barbarians.sourceSpeed / 60,
+    barbarians.sourceRange / 1000,
+    barbarians.sourceHitSpeed / 1000,
+    "Four sturdy melee fighters charge into battle together.",
+    { count: barbarians.count },
   ),
   troop(
     "archers",

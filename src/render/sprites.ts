@@ -48,6 +48,7 @@ export type SpriteState = Pick<
 >;
 const heights: Partial<Record<SpriteId, number>> = {
   knight: 1.65,
+  barbarians: 1.75,
   wizard: 1.8,
   archers: 1.55,
   giant: 2.7,
