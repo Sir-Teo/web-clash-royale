@@ -48,6 +48,7 @@
     "assets:tornado": "node scripts/import-tornado.mjs",
     "assets:goblin-barrel": "node scripts/import-goblin-barrel.mjs",
     "assets:graveyard": "node scripts/import-graveyard.mjs",
+    "assets:clone": "node scripts/import-clone.mjs",
     "assets:poison-filter": "node scripts/import-poison-filter.mjs",
     "assets:cold-filter": "node scripts/import-cold-filter.mjs"
   },
