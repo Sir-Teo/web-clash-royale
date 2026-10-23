@@ -60,6 +60,7 @@ export function projectileArt(p: Projectile) {
   if (p.style === "dart-goblin") return "projectile_arrow_basic";
   if (p.style === "ice-wizard") return "ice_wizard_projectile";
   if (p.style === "ice-spirit") return "projectile_icespirit";
+  if (p.style === "fire-spirits") return "projectile_firespirit";
   if (p.style === "princess") return "projectile_princess";
   if (p.style === "bomb") return `balloon_bomb_${p.team}`;
   if (["bomber", "balloon"].includes(p.style)) return "projectile_bomb";
@@ -226,7 +227,8 @@ export function updateProjectile(
       sprite.mesh.rotateZ(angle);
       sprite.mesh.scale.setScalar(p.style === "minions" ? 0.22 : 0.45);
     } else if (sprite.name === "ice_wizard_projectile" ||
-      sprite.name === "projectile_icespirit") {
+      sprite.name === "projectile_icespirit" ||
+      sprite.name === "projectile_firespirit") {
       library.animate(sprite, p.elapsed ?? progress * p.duration, true);
       sprite.mesh.rotateZ(angle);
       sprite.mesh.scale.setScalar(0.65);

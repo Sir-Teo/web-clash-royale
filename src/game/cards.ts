@@ -14,6 +14,7 @@ import goblinGang from "./goblin-gang-data.json" with { type: "json" };
 import barbarians from "./barbarians-data.json" with { type: "json" };
 import eliteBarbarians from "./elite-barbarians-data.json" with { type: "json" };
 import iceSpirit from "./ice-spirit-data.json" with { type: "json" };
+import fireSpirits from "./fire-spirits-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -39,6 +40,7 @@ export type CardId =
   | "barbarians"
   | "elite-barbarians"
   | "ice-spirit"
+  | "fire-spirits"
   | "archers"
   | "giant"
   | "royal-giant"
@@ -193,6 +195,18 @@ export const CARDS: Card[] = [
     iceSpirit.sourceHitSpeed,
     "A tiny one-use attacker that freezes ground and air enemies in a splash.",
     { hitsAir: true, splash: iceSpirit.splashRadius },
+  ),
+  troop(
+    "fire-spirits",
+    "Fire Spirits",
+    fireSpirits.cost,
+    Math.round((fireSpirits.sourceHitpoints * 1666) / 660),
+    Math.round((fireSpirits.sourceProjectileDamage * 202) / 75),
+    fireSpirits.sourceSpeed / 60,
+    fireSpirits.sourceRange,
+    fireSpirits.sourceHitSpeed,
+    "Three one-use attackers throw fiery splash projectiles at ground and air enemies.",
+    { count: fireSpirits.count, hitsAir: true, splash: fireSpirits.splashRadius },
   ),
   troop(
     "archers",

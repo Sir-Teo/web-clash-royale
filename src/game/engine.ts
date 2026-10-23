@@ -38,6 +38,7 @@ import lumberjack from "./lumberjack-data.json" with { type: "json" };
 import bats from "./bats-data.json" with { type: "json" };
 import eliteBarbarians from "./elite-barbarians-data.json" with { type: "json" };
 import iceSpirit from "./ice-spirit-data.json" with { type: "json" };
+import fireSpirits from "./fire-spirits-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
 import golem from "./golem-data.json" with { type: "json" };
@@ -654,6 +655,7 @@ export class Battle {
           id === "bats" ? 1 + bats.deployDelay :
             id === "elite-barbarians" ? 1 + eliteBarbarians.deployDelay :
             id === "ice-spirit" ? 1 + iceSpirit.deployDelay :
+            id === "fire-spirits" ? 1 + fireSpirits.deployDelay :
             id === "golem" ? golem.golem.sourceDeployTime : 1,
         );
     }
@@ -1791,7 +1793,8 @@ export class Battle {
             : (p?.gravity ?? 0) / 100,
       });
       this.audioProjectiles.set(this.projectiles.at(-1)!.id, audioProfile(e));
-      if (e.card === "ice-spirit") this.hurt(e, e.hp);
+      if (e.card === "ice-spirit" || e.card === "fire-spirits")
+        this.hurt(e, e.hp);
       if (e.card === "princess") {
         // The archived character fires one damaging custom first projectile
         // and four copies of PrincessProjectileDeco without damage.
