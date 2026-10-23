@@ -97,7 +97,7 @@ function setup() {
     ).value as CardId;
     unit(attacker, "blue", 9, 21);
     for (const target of unit(
-      attacker === "balloon" ? "cannon" : "giant",
+      attacker === "balloon" || attacker === "giant" ? "cannon" : "giant",
       "red",
       9,
       18,

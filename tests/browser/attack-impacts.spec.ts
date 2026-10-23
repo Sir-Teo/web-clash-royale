@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
 
-test("seven attackers render their archived hit particles on desktop and phone", async ({
+test("eight attackers render their archived hit particles on desktop and phone", async ({
   page,
 }, info) => {
   // The seven scene rebuilds can take several minutes with CI's software WebGL.
@@ -27,6 +27,7 @@ test("seven attackers render their archived hit particles on desktop and phone",
       .toBeGreaterThan(before + 0.099);
   };
   for (const [card, clip] of [
+    ["giant", "d5"],
     ["musketeer", "SteamSmall"],
     ["bomber", "Sparkle"],
     ["baby-dragon", "fireball_trail2"],
@@ -39,6 +40,8 @@ test("seven attackers render their archived hit particles on desktop and phone",
     await expect.poll(async () => (await state()).particles).toBe(0);
     for (let i = 0; i < 50 && !((await impacts())[card] > 0); i++) await step();
     expect((await impacts())[card]).toBeGreaterThan(0);
+    // Giant's d5 puff is authored 25 ms after the impact spark.
+    if (card === "giant") await step();
     await expect
       .poll(async () => (await state()).clips[clip] ?? 0)
       .toBeGreaterThan(0);
@@ -49,7 +52,7 @@ test("seven attackers render their archived hit particles on desktop and phone",
     expect(held.draws).toBeLessThan(80);
     await page.waitForTimeout(180);
     expect(await state()).toEqual(held);
-    if (["bomber", "wizard", "cannon", "balloon", "tesla"].includes(card)) {
+    if (["giant", "bomber", "wizard", "cannon", "balloon", "tesla"].includes(card)) {
       await step();
       await page.screenshot({
         path: info.outputPath(`${card}-native-hit.png`),
