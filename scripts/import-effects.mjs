@@ -122,6 +122,10 @@ for (const resource of ["effects", "building_mega_bomb"]) {
             "Smoke_puff_01",
             "crown_rotate_anim",
             ...emitterExports,
+            "freeze_effect_ground",
+            "freeze_effect_ground_red",
+            "spell_freeze_radius_blue",
+            "spell_freeze_radius_red",
           ]),
         ]
       : [balloon.BlueExportName, balloon.RedExportName, ...emitterExports];

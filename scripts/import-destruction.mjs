@@ -272,6 +272,24 @@ for (const [id, profile] of Object.entries(profiles)) {
     enemyComponents: source ? composition(source, "red") : [],
   };
 }
+const freezeCard = cards.freeze;
+const freezeSpell = tables[freezeCard.table][freezeCard.row];
+const freezeArea = tables.area_effect_objects[freezeSpell.AreaEffectObject];
+if (
+  freezeSpell.AreaEffectObject !== "Freeze" ||
+  freezeArea.ScaledEffect !== "Spell_freeze_ground" ||
+  freezeArea.LoopingEffect !== "Spell_freeze_loop"
+)
+  throw new Error("Recheck native Freeze area effect bindings");
+for (const [id, source] of [
+  ["freeze", freezeArea.ScaledEffect],
+  ["freeze-loop", freezeArea.LoopingEffect],
+])
+  impacts[id] = {
+    source,
+    components: composition(source, "blue"),
+    enemyComponents: composition(source, "red"),
+  };
 effects.tower.rubble = "Tower_destroyed_ground1";
 effects.king.rubble = "Tower_destroyed_ground2";
 const path = "src/render/destruction-data.json",

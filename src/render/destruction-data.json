@@ -2320,6 +2320,62 @@
           "ground": false
         }
       ]
+    },
+    "freeze": {
+      "source": "Spell_freeze_ground",
+      "components": [
+        {
+          "emitter": "freeze_snowPiles1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "freeze_snow_scatter1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "freeze_snowPiles1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "freeze_snow_scatter1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        }
+      ]
+    },
+    "freeze-loop": {
+      "source": "Spell_freeze_loop",
+      "components": [
+        {
+          "emitter": "freeze_snow1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "freeze_snow1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
     }
   },
   "launches": {
@@ -7041,6 +7097,149 @@
         "d2",
         "d3",
         "d3_green_dark"
+      ]
+    },
+    "freeze_snowPiles1": {
+      "count": 14,
+      "emissionLife": [
+        0,
+        0
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        6.5,
+        7.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0.3
+      ],
+      "speed": [
+        0.3333333333333333,
+        3
+      ],
+      "height": 0.3333333333333333,
+      "verticalSpeed": [
+        0,
+        10
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -56.666666666666664,
+      "startScale": 1.2,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 1,
+      "inertia": 3.3333333333333335,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "snowPile1",
+        "snowPile2",
+        "snowPile3"
+      ]
+    },
+    "freeze_snow_scatter1": {
+      "count": 26,
+      "emissionLife": [
+        0,
+        0
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        5.6,
+        6.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0.3
+      ],
+      "speed": [
+        0.6666666666666666,
+        1.6666666666666667
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        3.3333333333333335,
+        6.666666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -10,
+      "startScale": 0.65,
+      "endScale": 0.05,
+      "fadeIn": 0,
+      "fadeOut": 5,
+      "inertia": 0.6666666666666666,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "snowPile3"
+      ]
+    },
+    "freeze_snow1": {
+      "count": 70,
+      "emissionLife": [
+        0.1,
+        0.2
+      ],
+      "interval": [
+        0.04,
+        0.15
+      ],
+      "life": [
+        2.6,
+        4.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.4,
+        0.4
+      ],
+      "speed": [
+        0,
+        -0.6666666666666666
+      ],
+      "height": 8.933333333333334,
+      "verticalSpeed": [
+        0,
+        -1.6666666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -3.3333333333333335,
+      "startScale": 0.35,
+      "endScale": 0.25,
+      "fadeIn": 0,
+      "fadeOut": 0.25,
+      "inertia": 0,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "snowflake_anim"
       ]
     }
   }
