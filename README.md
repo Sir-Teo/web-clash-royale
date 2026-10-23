@@ -2,7 +2,7 @@
 
 A private, independent browser fan game for Sir-Teo. Built with TypeScript, Three.js and Vite. AI battles work offline. Friendly two-player battles connect directly between browsers; the default build is front end only.
 
-Build an eight-card deck from 24 cards, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
+Build an eight-card deck from 25 cards, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
 
 Combat includes cancellable attack windups, defensive building pulls, homing shots, ballistic bombs, Fireball travel and knockback, three-wave Arrows and Zap charge resets. Cannon uses its native aiming frames; Tesla hides underground, rises to attack and retracts when idle. Princess Towers use their dedicated native character animations. The King plays its original wake-up sequence and waits 3.3 seconds before aiming and attacking. Existing version-1 through version-4 replays retain their original rules; new matches record version-5 combat.
 
@@ -15,6 +15,8 @@ The four original King emotes use complete native expressions and speech-bubble 
 Fireball impacts use the original layered smoke, glowing fragments, sparks, flames and lingering scorch effect. Native additive and screen blending keep fire and lightning bright, and particle motion follows the archived client’s linear deceleration and gravity integration. Sparks, fire, smoke and elixir splashes retain source tail delays and stretch their native artwork between projected motion endpoints; pause and replay seeking preserve their poses.
 
 Zap impacts use the archived bolt, electricity, smoke, sparks and ground glow composition. Arrows fly as 15 visible sprites across three waves and leave 15 native ground marks. Their source artwork and particle timing work in solo play, replays and browser-to-browser matches on desktop and phone.
+
+Freeze costs four elixir and holds enemies within its three-tile circle for four seconds, including troops that enter later and hidden Teslas. Its original portrait, cast sound, snow particles and blue/red ground artwork work in solo play, replays and browser-to-browser matches.
 
 Musketeer and Cannon shots share the archived cannon impact; Bomber, Baby Dragon and Wizard projectiles use their own native sparks, smoke, flame and debris compositions. These hit effects stay separate from each troop's death effect.
 
@@ -30,7 +32,7 @@ Battle countdowns and overtime notices use the original font, authored animation
 
 Battles open with the original animated arena title, crossed swords, red/blue player ribbons and FIGHT lettering. Combat, AI and elixir wait for the intro's authored action frame. The opening pauses with the game, fits long player names, adapts to phone rotation and plays when a replay restarts; seeking skips it.
 
-All 24 cards use original unframed portraits with native hand/deck frames, cost drops and text. Selected cards show the original white outline, and newly drawn cards play the source reveal animation. The same artwork appears in the deck editor, details, next-card preview and drag controls; phone touch targets remain at least 44 pixels.
+All 25 cards use original unframed portraits with native hand/deck frames, cost drops and text. Selected cards show the original white outline, and newly drawn cards play the source reveal animation. The same artwork appears in the deck editor, details, next-card preview and drag controls; phone touch targets remain at least 44 pixels.
 
 The match timer and vertical crown counters use the original HUD artwork and type. Overtime transitions into its native red panel, and each team's crown icon plays the source bounce when awarded crowns. Portrait and landscape use their separate archived layouts; crown flights land on the actual counter artwork.
 
@@ -63,7 +65,7 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 
 `npm run assets:death-audio` imports the corresponding native sound mappings and six pinned audio files, preserving nested effects, team variants, volume/pitch ranges and delays.
 
-`npm run assets:combat-audio` imports 26 troop/tower/spell sound profiles, 91 groups and 111 pinned audio files from the retained logic, effects and sound tables. Card sources come from the native portrait bindings. Source and output hashes are retained in the combat-audio manifest.
+`npm run assets:combat-audio` imports 27 troop/tower/spell sound profiles, 94 groups and 114 pinned audio files from the retained logic, effects and sound tables. Card sources come from the native portrait bindings. Source and output hashes are retained in the combat-audio manifest.
 
 `npm run assets:ui` imports five native battle announcement timelines, their text styles, font, elixir icon and sound mappings. `/tests/fixtures/timing.html` provides precise countdown/overtime inspection and is excluded from production.
 
@@ -71,7 +73,9 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 
 `npm run assets:elixir` imports eight native elixir HUD clips and their source geometry. `/tests/fixtures/elixir.html` provides amount, selected-cost, spending, regeneration and frame-step controls for visual inspection.
 
-`npm run assets:cards` imports native card layers and all 24 source portraits. `/tests/fixtures/cards.html` provides the full gallery, selection states and a frame-stepped hand reveal.
+`npm run assets:cards` imports native card layers and all 25 source portraits. `/tests/fixtures/cards.html` provides the full gallery, selection states and a frame-stepped hand reveal.
+
+`npm run assets:freeze` pins Freeze's archived cost, radius, duration and hidden-target rule. `npm run assets:destruction`, `npm run assets:effects` and `npm run assets:combat-audio` regenerate its original particles, ground/radius clips and cast sound.
 
 `npm run assets:health` imports 12 native health displays and ten fill timelines. `/tests/fixtures/health.html` inspects the original artwork; `/tests/fixtures/health-arena.html` exercises damage, King activation, pause, death and renderer rebuilding in the arena.
 
