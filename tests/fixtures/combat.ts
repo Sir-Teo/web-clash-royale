@@ -303,7 +303,7 @@ function setup() {
         target.active = false;
         target.hp = target.maxHp = 10000;
       }
-    if (attacker === "ice-spirit")
+    if (attacker === "ice-spirit" || attacker === "fire-spirits")
       for (const target of unit("minions", "red", 9.8, 18)) {
         target.active = false;
         target.speed = target.damage = 0;
@@ -621,6 +621,21 @@ function render(now: number) {
       cold: arena.coldFilterState,
       visuals: arena.projectileState.filter((p) =>
         p.sprites.some((sprite) => sprite.name === "projectile_icespirit")),
+      particles: arena.particleCount,
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.fireSpirits =
+    JSON.stringify({
+      alive: battle.entities.filter((e) =>
+        e.team === "blue" && e.card === "fire-spirits" && e.hp > 0).length,
+      shots: battle.projectiles.filter((p) => p.style === "fire-spirits")
+        .map((p) => ({ id: p.id, x: p.flight?.x, y: p.flight?.y })),
+      hits: battle.events.filter((e) =>
+        e.type === "hit" && e.card === "fire-spirits").length,
+      targets: battle.entities.filter((e) =>
+        e.team === "red" && ["giant", "minions"].includes(e.card))
+        .map((e) => ({ card: e.card, hp: e.hp, air: e.air })),
+      visuals: arena.projectileState.filter((p) =>
+        p.sprites.some((sprite) => sprite.name === "projectile_firespirit")),
       particles: arena.particleCount,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.battleRam =
