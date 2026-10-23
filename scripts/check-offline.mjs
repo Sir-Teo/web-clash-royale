@@ -16,6 +16,9 @@ const expectedCards = Object.keys(
   JSON.parse(await readFile("public/assets/ui/cards/cards.json", "utf8"))
     .portraits,
 ).length;
+const expectedHealth = Object.keys(JSON.parse(
+  await readFile("public/assets/ui/health/health.json", "utf8"),
+).clips).length;
 const nativeAudioPaths = [
   ...new Set(
     [...deathAudioManifest.audioFiles, ...combatAudioManifest.audioFiles].map(
@@ -85,7 +88,7 @@ try {
       "Native combat/death audio is missing from the offline cache",
     );
   await page.waitForFunction(
-    ({ effects, animations, cards }) =>
+    ({ effects, animations, cards, health }) =>
       window.__arena?.state.loadedEffects === effects &&
       window.__arena?.state.loadedBuildings === 3 &&
       window.__arena?.state.loadedAnimations === animations &&
@@ -93,7 +96,7 @@ try {
       window.__arena?.state.loadedIntros === 2 &&
       window.__arena?.state.loadedElixir === 8 &&
       window.__arena?.state.loadedCards === cards &&
-      window.__arena?.state.loadedHealth === 22 &&
+      window.__arena?.state.loadedHealth === health &&
       window.__arena?.state.loadedHud === 6 &&
       window.__arena?.state.loadedEndings === 5 &&
       window.__arena?.state.loadedConnectionWarnings === 1 &&
@@ -106,6 +109,7 @@ try {
       effects: expectedEffects,
       animations: expectedAnimations,
       cards: expectedCards,
+      health: expectedHealth,
     },
   );
   console.log(

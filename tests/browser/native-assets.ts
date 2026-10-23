@@ -8,3 +8,9 @@ export const expectedEffects: number = JSON.parse(
 export const expectedAnimations: number = JSON.parse(
   readFileSync("public/assets/animations/manifest.json", "utf8"),
 ).files.length;
+export const expectedHealth: number = Object.keys(JSON.parse(
+  readFileSync("public/assets/ui/health/health.json", "utf8"),
+).clips).length;
+export const expectedHealthRoots: number = Object.keys(JSON.parse(
+  readFileSync("public/assets/ui/health/health.json", "utf8"),
+).clips).filter((name) => !name.endsWith("_bar")).length;
