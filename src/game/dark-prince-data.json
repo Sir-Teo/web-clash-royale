@@ -1,0 +1,23 @@
+{
+  "card": "DarkPrince",
+  "rarity": "Epic",
+  "cost": 4,
+  "sourceHitpoints": 735,
+  "sourceShieldHitpoints": 200,
+  "sourceDamage": 145,
+  "sourceChargeDamage": 290,
+  "sourceSpeed": 60,
+  "sourceRange": 1050,
+  "sourceHitSpeed": 1500,
+  "splash": 1,
+  "chargeRange": 2.5,
+  "chargeSpeedMultiplier": 2,
+  "shieldBreakEffect": "GuardShieldDown",
+  "blueExport": "BlackKnight_blue",
+  "redExport": "BlackKnight_red",
+  "blueShieldExport": "BlackKnight_shield_blue",
+  "redShieldExport": "BlackKnight_shield_red",
+  "hitEffect": "dark_prince_hit",
+  "chargeHitEffect": "dark_prince_charge_hit",
+  "chargeEffect": "dark_prince_charge"
+}

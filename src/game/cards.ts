@@ -21,6 +21,7 @@ import infernoDragon from "./inferno-dragon-data.json" with { type: "json" };
 import electroWizard from "./electro-wizard-data.json" with { type: "json" };
 import miner from "./miner-data.json" with { type: "json" };
 import bowler from "./bowler-data.json" with { type: "json" };
+import darkPrince from "./dark-prince-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -43,6 +44,7 @@ export type CardId =
   | "electro-wizard"
   | "miner"
   | "bowler"
+  | "dark-prince"
   | "skeletons"
   | "skeleton-army"
   | "bomber"
@@ -578,6 +580,18 @@ export const CARDS: Card[] = [
     bowler.sourceHitSpeed / 1000,
     "Rolls a huge boulder through ground troops, damaging and pushing them back.",
     { rarity: "Epic" },
+  ),
+  troop(
+    "dark-prince",
+    "Dark Prince",
+    darkPrince.cost,
+    Math.round(darkPrince.sourceHitpoints * 1.1 ** 5),
+    Math.round(darkPrince.sourceDamage * 1.1 ** 5),
+    darkPrince.sourceSpeed / 60,
+    darkPrince.sourceRange / 1000,
+    darkPrince.sourceHitSpeed / 1000,
+    "Charges into ground troops with a shield and a sweeping mace attack.",
+    { rarity: "Epic", splash: darkPrince.splash },
   ),
   troop(
     "minion-horde",
