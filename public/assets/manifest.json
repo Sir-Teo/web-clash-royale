@@ -375,6 +375,12 @@
       "sha256": "9635504b4b4c9d3ef1644793cdf1a79d1c68fc5cde9b6214d13fd58ec2c06bae"
     },
     {
+      "path": "cards/electro-wizard.png",
+      "source": "cards/electro-wizard.png",
+      "bytes": 132946,
+      "sha256": "f05db16d2920f2771c06bf99e3fdb5b4f0f37e5a412810798379fd45bfd8a395"
+    },
+    {
       "path": "cards/fireball.png",
       "source": "cards/fireball.png",
       "bytes": 123797,

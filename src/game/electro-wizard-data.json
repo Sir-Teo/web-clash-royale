@@ -1,0 +1,24 @@
+{
+  "card": "ElectroWizard",
+  "rarity": "Legendary",
+  "cost": 4,
+  "sourceHitpoints": 600,
+  "sourceDamage": 100,
+  "sourceSpeed": 90,
+  "sourceRange": 5000,
+  "sourceHitSpeed": 1700,
+  "targets": 2,
+  "hitsAir": true,
+  "stun": 0.5,
+  "deployZap": {
+    "sourceDamage": 75,
+    "radius": 2.5,
+    "levelIndex": 8,
+    "stun": 0.5
+  },
+  "beam": "electro_wizard_beam",
+  "hitEffect": "electro_wizard_hit",
+  "blueExport": "electro_wizard",
+  "redExport": "electro_wizard_red",
+  "deployFilter": "filter_deploy_unit_legendary"
+}

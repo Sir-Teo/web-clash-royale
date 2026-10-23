@@ -357,9 +357,14 @@
       "sha256": "458fb6e7685d989cc098a06a8956bffde42ab93bc69ecd7c4a5413078d3179ea"
     },
     {
+      "file": "portrait-electro-wizard.webp",
+      "bytes": 43830,
+      "sha256": "6924f97fcdbad44e6f51fcef5019206ef5a35a3e4b8dc8c94e8e0f89e29d1244"
+    },
+    {
       "file": "cards.json",
-      "bytes": 98347,
-      "sha256": "671046fa66d72d3de26640db25342ff6ffc57d09cd2a59672f9090f9d9a42d7a"
+      "bytes": 98825,
+      "sha256": "5eac5a73e70e19fe3158434228c45a7bae95dad2e97a57af569798fb2b291638"
     }
   ]
 }

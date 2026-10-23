@@ -273,6 +273,7 @@ const portraitNames = {
   "ice-wizard": "IceWizard",
   princess: "Princess",
   "inferno-dragon": "InfernoDragon",
+  "electro-wizard": "ElectroWizard",
 };
 const sheets = [];
 for (const [name, cache, expected] of [

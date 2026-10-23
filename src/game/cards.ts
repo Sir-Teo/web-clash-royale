@@ -18,6 +18,7 @@ import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
 import iceWizard from "./ice-wizard-data.json" with { type: "json" };
 import princess from "./princess-data.json" with { type: "json" };
 import infernoDragon from "./inferno-dragon-data.json" with { type: "json" };
+import electroWizard from "./electro-wizard-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -37,6 +38,7 @@ export type CardId =
   | "ice-wizard"
   | "princess"
   | "inferno-dragon"
+  | "electro-wizard"
   | "skeletons"
   | "skeleton-army"
   | "bomber"
@@ -536,6 +538,18 @@ export const CARDS: Card[] = [
     infernoDragon.sourceHitSpeed / 1000,
     "A flying dragon whose focused beam grows stronger the longer it stays locked on.",
     { rarity: "Legendary", air: true, hitsAir: infernoDragon.hitsAir },
+  ),
+  troop(
+    "electro-wizard",
+    "Electro Wizard",
+    electroWizard.cost,
+    Math.round(electroWizard.sourceHitpoints * 1.1 ** 2),
+    Math.round(electroWizard.sourceDamage * 1.1 ** 2),
+    electroWizard.sourceSpeed / 60,
+    electroWizard.sourceRange / 1000,
+    electroWizard.sourceHitSpeed / 1000,
+    "Strikes two targets, stuns them briefly, and Zaps enemies when he arrives.",
+    { rarity: "Legendary", hitsAir: electroWizard.hitsAir },
   ),
   troop(
     "minion-horde",
