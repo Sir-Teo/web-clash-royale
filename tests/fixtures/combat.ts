@@ -139,6 +139,17 @@ function setup() {
     cast("arrows", "red", 14, 19);
   } else if (scenario === "miner") {
     cast("miner", "blue", 4, 8);
+  } else if (scenario === "bowler") {
+    const attacker = unit("bowler", "blue", 4, 21)[0];
+    attacker.speed = 0;
+    for (const [card, y] of [["knight", 18], ["knight", 16], ["minions", 17]] as [CardId, number][]) {
+      for (const target of unit(card, "red", 4, y)) {
+        target.active = false;
+        target.speed = 0;
+        target.damage = 0;
+        target.hp = target.maxHp = 10000;
+      }
+    }
   } else if (scenario === "attack-impacts") {
     const attacker = (
       document.querySelector("#attack-card") as HTMLSelectElement
@@ -424,6 +435,14 @@ function render(now: number) {
       traveling: battle.projectiles.filter((p) => p.style === "miner-travel").length,
       units: battle.entities.filter((e) => e.card === "miner" && e.hp > 0).length,
       arrivals: battle.events.filter((e) => e.type === "deploy" && e.card === "miner").length,
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.bowler =
+    JSON.stringify({
+      shots: battle.projectiles.filter((p) => p.style === "bowler").length,
+      hits: battle.events.filter((event) => event.type === "hit" && event.card === "bowler" && event.value).length,
+      enemies: battle.entities.filter((e) => e.team === "red" && ["knight", "minions"].includes(e.card))
+        .map((e) => ({ card: e.card, x: e.x, y: e.y, hp: e.hp })),
+      visuals: arena.projectileState.filter((shot) => shot.sprites.some((sprite) => sprite.name === "bowler_projectile")),
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.projectiles =
     JSON.stringify(arena.projectileState);

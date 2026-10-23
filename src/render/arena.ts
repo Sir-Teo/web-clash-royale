@@ -1164,6 +1164,22 @@ export class Arena {
           );
         this.trailCycles.set(p.id, cycle);
       }
+      if (p.style === "bowler" && p.speed && this.effects.asset) {
+        const age = p.elapsed ?? 0;
+        const cycle = Math.floor((age + 1e-8) / 0.36);
+        const last = this.trailCycles.get(p.id) ?? -1;
+        for (let i = last + 1; i <= cycle; i++)
+          this.destruction.burstAlong(
+            "trail:bowler",
+            (seconds) => curvedFlightPoint(p, seconds),
+            p.duration,
+            i * 0.36,
+            b.seed ^ p.id ^ Math.imul(i, 0x9e3779b9),
+            p.team,
+            age,
+          );
+        this.trailCycles.set(p.id, cycle);
+      }
       if (p.style === "dart-goblin" && p.speed && this.effects.asset) {
         // The source emitter lays fifteen fragments across one short dart flight.
         // Rebuilding a late snapshot retains only fragments still alive.

@@ -190,10 +190,8 @@ test("unavailable native cards retain usable fallback artwork and deployment con
   await page.goto("/");
   await expect(page.locator("#deck-preview .game-card")).toHaveCount(8);
   await expect(page.locator("#deck-preview .native-card-ready")).toHaveCount(0);
-  expect(
-    await page
-      .locator("#deck-preview .game-card img")
-      .first()
+  await expect.poll(() =>
+    page.locator("#deck-preview .game-card img").first()
       .evaluate((e: HTMLImageElement) => e.complete && e.naturalWidth > 0),
   ).toBe(true);
   await page.locator("#battle-button").click();

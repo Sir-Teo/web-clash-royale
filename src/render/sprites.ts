@@ -70,6 +70,7 @@ const heights: Partial<Record<SpriteId, number>> = {
   "inferno-dragon": 2.05,
   "electro-wizard": 1.8,
   miner: 1.65,
+  bowler: 2.4,
   witch: 2.1,
   prince: 2.25,
   pekka: 2.7,

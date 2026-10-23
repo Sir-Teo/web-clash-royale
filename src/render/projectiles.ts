@@ -56,6 +56,7 @@ export function projectileArt(p: Projectile) {
     return p.team === "blue"
       ? "log_roll_projectile"
       : "log_roll_projectile_red";
+  if (p.style === "bowler") return "bowler_projectile";
   if (p.style === "baby-dragon") return "dragon_projectile";
   if (p.style === "wizard") return "fireball_small";
   if (p.style === "witch" || p.style === "minions") return "Tower_projectile1";
@@ -87,6 +88,7 @@ export function makeProjectile(
     p.style === "log-launch" ||
     p.style === "goblin-barrel" ||
     p.style === "princess"
+    || p.style === "bowler"
   ) {
     const shadow = library.make(
       p.style === "rocket"
@@ -95,6 +97,8 @@ export function makeProjectile(
           ? "Barrel_shadow"
           : p.style === "princess"
             ? "projectile_arrow_shadow"
+            : p.style === "bowler"
+              ? "bowler_projectile_shadow"
             : "log_projectile_shadow",
     );
     if (shadow) {
@@ -143,6 +147,7 @@ export function updateProjectile(
     if (
       sprite.name === "projectile_shadow_rocket" ||
       sprite.name === "log_projectile_shadow" ||
+      sprite.name === "bowler_projectile_shadow" ||
       sprite.name === "Barrel_shadow" ||
       sprite.name === "projectile_arrow_shadow"
     ) {
@@ -179,6 +184,9 @@ export function updateProjectile(
     } else if (sprite.name.startsWith("log_roll_projectile")) {
       library.animate(sprite, p.elapsed ?? 0, true);
       sprite.mesh.scale.setScalar(1.4);
+    } else if (sprite.name === "bowler_projectile") {
+      library.animate(sprite, p.elapsed ?? 0, true);
+      sprite.mesh.scale.setScalar(1.3);
     } else if (["fireball_small", "Tower_projectile1"].includes(sprite.name)) {
       library.animate(sprite, p.elapsed ?? progress * p.duration, true);
       sprite.mesh.rotateZ(angle);

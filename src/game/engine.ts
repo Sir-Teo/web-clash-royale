@@ -28,6 +28,7 @@ import princess from "./princess-data.json" with { type: "json" };
 import infernoDragon from "./inferno-dragon-data.json" with { type: "json" };
 import electroWizard from "./electro-wizard-data.json" with { type: "json" };
 import miner from "./miner-data.json" with { type: "json" };
+import bowler from "./bowler-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -139,7 +140,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel";
+  effect?: "balloon-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -1460,6 +1461,27 @@ export class Battle {
   }
   private releaseAttack(e: Entity, target: Entity, damage: number) {
     this.audioAttacks.delete(e.id);
+    if (e.card === "bowler") {
+      const dx = target.x - e.x, dy = target.y - e.y;
+      const length = Math.hypot(dx, dy) || 1;
+      const ux = dx / length, uy = dy / length;
+      const x = e.x + ux, y = e.y + uy;
+      const tx = clamp(x + ux * bowler.projectile.range, 0.5, 17.5);
+      const ty = clamp(y + uy * bowler.projectile.range, 0.6, 31.4);
+      const duration = Math.hypot(tx - x, ty - y) / bowler.projectile.speed;
+      const p: Projectile = {
+        id: this.nextId++, team: e.team, x, y, tx, ty, target: null,
+        damage, remaining: duration, duration, splash: 0, air: false,
+        style: "bowler", stun: 0, source: e.id, flight: { x, y },
+        speed: bowler.projectile.speed, elapsed: 0, homing: false,
+        fromHeight: 0.9, toHeight: 0.9, arc: 0,
+        knockback: bowler.projectile.knockback, rollHits: [],
+      };
+      this.projectiles.push(p);
+      this.audioProjectiles.set(p.id, audioProfile(e));
+      this.emitAudio("launch", e.team, audioProfile(e), e.id, undefined, { x: e.x, y: e.y });
+      return;
+    }
     if (e.card === "electro-wizard") {
       const targets = [
         target,
@@ -1590,7 +1612,8 @@ export class Battle {
       const target = this.entities.find(
         (e) => e.id === p.target && e.hp > 0 && !this.isHidden(e),
       );
-      const previousFlight = p.style === "log" ? { ...p.flight! } : null;
+      const previousFlight = p.style === "log" || p.style === "bowler"
+        ? { ...p.flight! } : null;
       if (p.homing && target) {
         p.tx = target.x;
         p.ty = target.y;
@@ -1701,6 +1724,37 @@ export class Battle {
           this.emit("hit", p.team, p.tx, p.ty, "log", 0, { effect: "log-die" });
           this.emitAudio("impact-special", p.team, "log");
           p.remaining = 0;
+        }
+        continue;
+      }
+      if (p.style === "bowler") {
+        const from = previousFlight!;
+        const to = p.flight!;
+        const dx = to.x - from.x, dy = to.y - from.y;
+        const segment = dx * dx + dy * dy;
+        for (const victim of this.entities) {
+          if (victim.hp <= 0 || victim.team === p.team || victim.air ||
+              this.isHidden(victim) || p.rollHits!.includes(victim.id)) continue;
+          const progress = segment > 0
+            ? clamp(((victim.x - from.x) * dx + (victim.y - from.y) * dy) / segment, 0, 1)
+            : 0;
+          const nearestX = from.x + dx * progress;
+          const nearestY = from.y + dy * progress;
+          if (Math.hypot(victim.x - nearestX, victim.y - nearestY) >
+              bowler.projectile.radius + victim.radius) continue;
+          p.rollHits!.push(victim.id);
+          this.hurt(victim, p.damage);
+          this.emit("hit", p.team, victim.x, victim.y, "bowler", p.damage);
+          this.emitAudio("impact", p.team, "bowler", p.source);
+          if (victim.hp > 0 && victim.kind === "troop")
+            this.knockback(victim, {
+              x: victim.x - (p.tx - p.x) / p.duration / bowler.projectile.speed,
+              y: victim.y - (p.ty - p.y) / p.duration / bowler.projectile.speed,
+            }, p.knockback ?? 0);
+        }
+        if (p.remaining <= 1e-8) {
+          this.emit("hit", p.team, p.tx, p.ty, "bowler", 0, { effect: "hit:bowler" });
+          this.projectileAudio(p);
         }
         continue;
       }
