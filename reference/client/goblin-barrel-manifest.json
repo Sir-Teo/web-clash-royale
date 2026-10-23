@@ -1,0 +1,22 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_other.csv",
+      "sha256": "a50dcc87e6ee337537e2dcb00c6f4f3f81fc383685ce8e630b33c41f6c4e2dda"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "reference/sc/spell_goblin_barrel.bin",
+      "sha256": "56f5e7445af53f3c50fbee58ae1f43434dcd1e380507b249ed583672c9f2b17d"
+    }
+  ],
+  "output": {
+    "path": "src/game/goblin-barrel-data.json",
+    "sha256": "26bf30f9cf83e08707f9003f20691f90c406b7638c204cab8585aae82efcc25e"
+  }
+}
