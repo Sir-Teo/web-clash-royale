@@ -224,6 +224,21 @@ impacts.tornado = {
   components: composition(tornadoArea.ScaledEffect, "blue"),
   enemyComponents: composition(tornadoArea.ScaledEffect, "red"),
 };
+const graveyardArea = tables.area_effect_objects.Graveyard;
+if (
+  graveyardArea?.ScaledEffect !== "Spell_graveyard_ground" ||
+  graveyardArea.SpawnEffect !== "Graveyard_appear"
+)
+  throw new Error("Recheck native Graveyard visual bindings");
+for (const [id, source] of [
+  ["graveyard", graveyardArea.ScaledEffect],
+  ["graveyard-appear", graveyardArea.SpawnEffect],
+])
+  impacts[id] = {
+    source,
+    components: composition(source, "blue"),
+    enemyComponents: composition(source, "red"),
+  };
 // These DamageEffect compositions contain authored impact layers at the
 // attack target: Giant's punch dust, Balloon's crater and Tesla's beam sparks.
 for (const [id, expected] of Object.entries({

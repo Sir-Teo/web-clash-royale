@@ -44,7 +44,7 @@
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "9f91b81db69aca62cb0e0d244ab8c331759ca0ed6291f89765c5b90f4c2288da"
+      "sha256": "56d7fdd6697bba3cfc7f1dc80bc73e52b69e6db0e96d1a726c0068010b7eccda"
     }
   ],
   "ignoredEnemyVersions": [
@@ -152,6 +152,12 @@
       "source": "sfx/cannon_fire_03.ogg",
       "bytes": 9053,
       "sha256": "8b074ef91f3213f21bfa1b86d2fc808c1b876e98feac66c390670d688b3aa51d"
+    },
+    {
+      "path": "public/assets/audio/cemetary_deploy_01.ogg",
+      "source": "sfx/cemetary_deploy_01.ogg",
+      "bytes": 16076,
+      "sha256": "06a0a9c773a06ba35e9364244c02d3b3cc11f358e5d6dc75f86c83ffdda5ab94"
     },
     {
       "path": "public/assets/audio/clash_archer_deploy_01.ogg",
@@ -810,6 +816,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "8ae445c2965cb814c67ea67c541071d321bd4b63e41a9e724b27f4e9d7fafd14"
+    "sha256": "0555a90ad204cae955a0637cb42a38930a1ab474529442ec3bc881e6ed0f3387"
   }
 }

@@ -292,9 +292,14 @@
       "sha256": "88e2c22112f766c9a6f9e91e75b603256eeae3d8cebcf5f57657697df52fafc5"
     },
     {
+      "file": "portrait-graveyard.webp",
+      "bytes": 36810,
+      "sha256": "2aa646750d0a102945036b40d48c6d6d2fad55a093354e1086d00cd1bf78b2e0"
+    },
+    {
       "file": "cards.json",
-      "bytes": 93527,
-      "sha256": "9f91b81db69aca62cb0e0d244ab8c331759ca0ed6291f89765c5b90f4c2288da"
+      "bytes": 93978,
+      "sha256": "56d7fdd6697bba3cfc7f1dc80bc73e52b69e6db0e96d1a726c0068010b7eccda"
     }
   ]
 }

@@ -260,6 +260,7 @@ const portraitNames = {
   log: "Log",
   tornado: "Tornado",
   "goblin-barrel": "GoblinBarrel",
+  graveyard: "Graveyard",
 };
 const sheets = [];
 for (const [name, cache, expected] of [

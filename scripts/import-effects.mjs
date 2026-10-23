@@ -146,6 +146,10 @@ for (const resource of [
             "spell_rage_radius_red",
             "spell_tornado_radius_blue",
             "spell_tornado_radius_red",
+            "Graveyard_ground_area_blue",
+            "Graveyard_ground_area_red",
+            "spell_graveyard_radius_blue",
+            "spell_graveyard_radius_red",
           ]),
         ]
       : resource === "building_mega_bomb"

@@ -387,6 +387,12 @@
       "sha256": "c0bb707e824b63babb8890925ad889d50838e8c94dcaf567f3e8061bb2404f40"
     },
     {
+      "path": "cards/graveyard.png",
+      "source": "cards/graveyard.png",
+      "bytes": 117357,
+      "sha256": "5478b3a4af71d885046367f65614928f0b6f2a95b075b22ee9e83f58998647d4"
+    },
+    {
       "path": "cards/hog-rider.png",
       "source": "cards/hog-rider.png",
       "bytes": 131428,
