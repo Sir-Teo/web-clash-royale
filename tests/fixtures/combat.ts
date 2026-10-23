@@ -325,6 +325,8 @@ function render(now: number) {
     JSON.stringify(arena.chargeFilterState);
   (document.querySelector("#destruction") as HTMLElement).dataset.deployFilter =
     JSON.stringify(arena.deployFilterState);
+  (document.querySelector("#destruction") as HTMLElement).dataset.coldFilter =
+    JSON.stringify(arena.coldFilterState);
   (document.querySelector("#destruction") as HTMLElement).dataset.freezeAreas =
     JSON.stringify(arena.freezeAreaState);
   (document.querySelector("#destruction") as HTMLElement).dataset.hogJump =

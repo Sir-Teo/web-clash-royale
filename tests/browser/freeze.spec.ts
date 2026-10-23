@@ -17,6 +17,8 @@ test("native Freeze covers both teams, holds on pause and clears with the area",
     JSON.parse((await status.getAttribute("data-freeze-areas"))!);
   const state = async () =>
     JSON.parse((await status.getAttribute("data-state"))!);
+  const cold = async () =>
+    JSON.parse((await status.getAttribute("data-cold-filter"))!);
   await page.locator("#freeze-cast").click();
   await expect.poll(async () => (await areas()).length).toBe(2);
   expect((await areas()).map((area: { team: string }) => area.team)).toEqual([
@@ -35,11 +37,23 @@ test("native Freeze covers both teams, holds on pause and clears with the area",
       (await areas()).map((area: { frame: number }) => area.frame),
     )
     .toEqual([30, 30]);
+  await expect.poll(async () => (await cold()).length).toBe(2);
+  expect((await cold()).map((actor: { frame: number }) => actor.frame)).toEqual(
+    [0, 0],
+  );
+  await page.locator("#step").click();
+  await expect
+    .poll(async () =>
+      (await cold()).map((actor: { frame: number }) => actor.frame),
+    )
+    .toEqual([6, 6]);
   const heldAreas = await areas();
   const heldParticles = await state();
+  const heldCold = await cold();
   await page.waitForTimeout(180);
   expect(await areas()).toEqual(heldAreas);
   expect(await state()).toEqual(heldParticles);
+  expect(await cold()).toEqual(heldCold);
   await page.screenshot({
     path: info.outputPath("native-freeze-active.png"),
     fullPage: true,
@@ -48,6 +62,7 @@ test("native Freeze covers both teams, holds on pause and clears with the area",
   await expect.poll(async () => (await areas()).length).toBe(0);
   for (let i = 0; i < 5; i++) await page.locator("#second").click();
   expect((await state()).particles).toBe(0);
+  expect(await cold()).toEqual([]);
   await page.locator("#reset").click();
   expect(await areas()).toEqual([]);
   expect(errors).toEqual([]);
