@@ -2,6 +2,27 @@
   "radiusFactor": 6,
   "angleFactor": 0.0006283000111579895,
   "profiles": {
+    "ice-wizard": {
+      "spawn": {
+        "sources": [
+          "ice_wizard_deploy"
+        ],
+        "components": [
+          {
+            "effect": "ShakeShcreen_delay",
+            "delay": 0.35,
+            "duration": 0.3
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "ShakeShcreen_delay",
+            "delay": 0.35,
+            "duration": 0.3
+          }
+        ]
+      }
+    },
     "balloon": {
       "impact": {
         "sources": [

@@ -33,11 +33,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "ec9b7c79000a33dc7cce870ef5d8d77f78007bac78dbd720ad3b53be1513c217"
+      "sha256": "1a2f1d15f0bcbd4d7f27c856ca66987218956c8de910c3cc2fca8a367265f478"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "3aa21c0ddc31e0c5ea4bf9c39903e45bee49c8da496bc28f7df803b23e298892"
+      "sha256": "e4e5a630f4345ff7d9b7d2a4b9e9aafebcd4b61017c709f4ad6d1282885e4653"
     }
   ],
   "ignoredEnemyVersions": [
@@ -49,6 +49,6 @@
   ],
   "output": {
     "path": "src/render/destruction-data.json",
-    "sha256": "e406e5ebf5105bde6923c780ac202de11fe3b6890451221f44a774f872dbf11f"
+    "sha256": "3c2ec32381432d78b33460c20fcf7755b06cd9cc756a7679fce744d4027cad8b"
   }
 }

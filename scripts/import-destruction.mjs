@@ -224,6 +224,14 @@ trails["dart-goblin"] = {
   components: composition(dartTrail, "blue"),
   enemyComponents: composition(dartTrail, "red"),
 };
+const iceTrail = tables.projectiles.ice_wizardProjectile?.TrailEffect;
+if (iceTrail !== "ice_wiz_emitter")
+  throw new Error(`Recheck native Ice Wizard trail: ${iceTrail}`);
+trails["ice-wizard"] = {
+  source: iceTrail,
+  components: composition(iceTrail, "blue"),
+  enemyComponents: composition(iceTrail, "red"),
+};
 const tornadoArea = tables.area_effect_objects.Tornado;
 if (tornadoArea?.ScaledEffect !== "Spell_tornado_deploy")
   throw new Error("Recheck native Tornado visual binding");
@@ -327,6 +335,7 @@ for (const [id, expected] of Object.entries({
   "royal-giant": "royal_giant_projectile_hit",
   "mega-minion": "mega_minion_hit",
   "dart-goblin": "BlowdartArrowHit",
+  "ice-wizard": "ice_wizard_hit",
 })) {
   const profile = profiles[id];
   const actor =

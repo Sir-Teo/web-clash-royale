@@ -16,6 +16,7 @@ const sc = parseSC(files[inputs[0]]);
 const characters = csvRows(files[inputs[1]].toString());
 const combat = JSON.parse(files[inputs[2]]);
 const name = "filter_deploy_unit_default";
+const legendaryName = "filter_deploy_unit_legendary";
 const cards = Object.entries(combat)
   .filter(([id, profile]) => {
     const row = characters.find((c) => c.Name === profile.source);
@@ -33,9 +34,10 @@ if (clip?.fps !== 60 || clip.frames.length !== 28)
   throw new Error("Recheck source deploy filter timeline");
 const identity = [1, 0, 0, 1, 0, 0];
 const neutral = [0, 0, 0, 255, 255, 255, 255];
-const frames = clip.frames.map((frame, i) => {
+function poses(clip, label) {
+return clip.frames.map((frame, i) => {
   if (frame.length !== 1 || frame[0].id !== 592 || frame[0].blend !== 0)
-    throw new Error(`Recheck deploy filter frame ${i}`);
+    throw new Error(`Recheck ${label} deploy filter frame ${i}`);
   const matrix = sc.matrices[frame[0].matrix] ?? identity;
   if (matrix[1] !== 0 || matrix[2] !== 0 || matrix[4] !== 0)
     throw new Error(`Unsupported deploy filter affine at frame ${i}`);
@@ -44,7 +46,23 @@ const frames = clip.frames.map((frame, i) => {
     color: sc.colors[frame[0].color] ?? neutral,
   };
 });
-const data = { source: name, fps: clip.fps, cards, frames };
+}
+const frames = poses(clip, name);
+const legendaryClip = sc.clips[sc.names[legendaryName]];
+if (legendaryClip?.fps !== 60 || legendaryClip.frames.length !== 31)
+  throw new Error("Recheck legendary deploy filter timeline");
+const legendaryCards = Object.entries(combat)
+  .filter(([, profile]) =>
+    characters.find((row) => row.Name === profile.source)?.DeployBaseAnimExportName === legendaryName,
+  )
+  .map(([id]) => id);
+if (legendaryCards.length !== 1 || legendaryCards[0] !== "ice-wizard")
+  throw new Error(`Recheck legendary deploy binding: ${legendaryCards}`);
+const data = {
+  source: name, fps: clip.fps, cards, frames,
+  legendary: { source: legendaryName, fps: legendaryClip.fps,
+    cards: legendaryCards, frames: poses(legendaryClip, legendaryName) },
+};
 const path = "src/render/deploy-filter-data.json";
 const output = Buffer.from(JSON.stringify(data, null, 2) + "\n");
 await writeFile(path, output);
@@ -62,5 +80,5 @@ await writeFile(
   ) + "\n",
 );
 console.log(
-  `Imported ${frames.length} deploy filter frames for ${cards.length} troop families.`,
+  `Imported ${frames.length} default and ${legendaryClip.frames.length} Legendary deploy filter frames.`,
 );

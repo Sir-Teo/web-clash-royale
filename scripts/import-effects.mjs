@@ -113,6 +113,7 @@ for (const resource of [
             "projectile_bomb",
             "projectile_cannonball_large",
             "projectile_cannonball_small",
+            "ice_wizard_projectile",
             "dragon_projectile",
             "Tower_projectile1",
             "fireball_small",
@@ -218,6 +219,9 @@ for (const resource of [
           bounds[3] = Math.max(bounds[3], py);
         }
     if (clips[name]) throw new Error(`Duplicate effect export ${name}`);
+    // A native export can intentionally have no drawable polygons (the blue
+    // fire placeholder in Ice Wizard's emitter is one such frame).
+    if (!bounds.every(Number.isFinite)) bounds.fill(0);
     clips[name] = {
       source: name,
       fps: source.fps,

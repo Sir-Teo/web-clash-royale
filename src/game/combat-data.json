@@ -113,6 +113,18 @@
       "gravity": 120
     }
   },
+  "ice-wizard": {
+    "source": "IceWizard",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "ice_wizardProjectile",
+      "speed": 11.666666666666666,
+      "homing": true,
+      "gravity": 50
+    }
+  },
   "spear-goblins": {
     "source": "SpearGoblin",
     "windup": 0.2,

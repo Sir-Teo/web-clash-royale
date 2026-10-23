@@ -1492,6 +1492,145 @@
         "row": "BlowdartGoblin"
       }
     },
+    "ice-wizard": {
+      "source": "IceWizard",
+      "attack": {
+        "sources": [
+          "ice_wizard_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_ice_wizard_attack_start",
+            "delay": 0
+          },
+          {
+            "sound": "sound_ice_wizard_attack_vo",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_ice_wizard_attack_start",
+            "delay": 0
+          },
+          {
+            "sound": "sound_ice_wizard_attack_vo",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "ice_wizard_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_ice_wizard_projectile_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_ice_wizard_projectile_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "ice_wizard_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_ice_wizard_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_ice_wizard_deploy_vo",
+            "delay": 0
+          },
+          {
+            "sound": "sound_ice_wizard_projectile_hit",
+            "delay": 0.35
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_ice_wizard_deploy",
+            "delay": 0
+          },
+          {
+            "sound": "sound_ice_wizard_deploy_vo",
+            "delay": 0
+          },
+          {
+            "sound": "sound_ice_wizard_projectile_hit",
+            "delay": 0.35
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "IceWizard"
+      }
+    },
     "spear-goblins": {
       "source": "SpearGoblin",
       "attack": {
@@ -6384,6 +6523,289 @@
         ],
         "maximum": 3,
         "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_ice_wizard_attack_start": [
+      {
+        "sourceFile": "sfx/icemage_attack_03.wav",
+        "file": "icemage_attack_03",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.99,
+          1.01
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 4,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_ice_wizard_attack_vo": [
+      {
+        "sourceFile": "sfx/ice_wiz_atk_01.wav",
+        "file": "ice_wiz_atk_01",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.8,
+          0.8
+        ],
+        "maximum": 1,
+        "repeat": 5,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/ice_wiz_atk_02.wav",
+        "file": "ice_wiz_atk_02",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.8,
+          0.8
+        ],
+        "maximum": 1,
+        "repeat": 5,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/ice_wiz_atk_03.wav",
+        "file": "ice_wiz_atk_03",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.8,
+          0.8
+        ],
+        "maximum": 1,
+        "repeat": 5,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/ice_wiz_atk_05.wav",
+        "file": "ice_wiz_atk_05",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.4,
+          0.4
+        ],
+        "maximum": 1,
+        "repeat": 5,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/ice_wiz_atk_07.wav",
+        "file": "ice_wiz_atk_07",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.4,
+          0.4
+        ],
+        "maximum": 1,
+        "repeat": 5,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/ice_wiz_atk_08.wav",
+        "file": "ice_wiz_atk_08",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.8,
+          0.8
+        ],
+        "maximum": 1,
+        "repeat": 5,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_ice_wizard_projectile_hit": [
+      {
+        "sourceFile": "sfx/ice_mage_impact_02.wav",
+        "file": "ice_mage_impact_02",
+        "volume": [
+          0.55,
+          0.55
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 4,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_ice_wizard_deploy": [
+      {
+        "sourceFile": "sfx/ice_wiz_deploy_01.wav",
+        "file": "ice_wiz_deploy_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 1,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_ice_wizard_deploy_vo": [
+      {
+        "sourceFile": "sfx/ice_wiz_dep_01.wav",
+        "file": "ice_wiz_dep_01",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.8,
+          0.8
+        ],
+        "maximum": 1,
+        "repeat": 3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/ice_wiz_dep_04.wav",
+        "file": "ice_wiz_dep_04",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.1,
+          0.8
+        ],
+        "maximum": 1,
+        "repeat": 3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/ice_wiz_land_01.wav",
+        "file": "ice_wiz_land_01",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.3,
+          0.3
+        ],
+        "maximum": 1,
+        "repeat": 3,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      },
+      {
+        "sourceFile": "sfx/ice_wiz_land_01.wav",
+        "file": "ice_wiz_land_01",
+        "volume": [
+          0.6,
+          0.6
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0.3,
+          0.3
+        ],
+        "maximum": 1,
+        "repeat": 3,
         "loop": false,
         "priority": 1,
         "padding": 0

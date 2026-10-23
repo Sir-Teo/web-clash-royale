@@ -15,6 +15,7 @@ const sources = {
   "royal-giant": "royal_giant",
   "mega-minion": "mega_minion",
   "dart-goblin": "goblin_blowdart",
+  "ice-wizard": "ice_wizard",
   archers: "archer",
   giant: "giant",
   musketeer: "musketeer",

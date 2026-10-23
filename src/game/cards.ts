@@ -15,6 +15,7 @@ import barbarians from "./barbarians-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
+import iceWizard from "./ice-wizard-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -31,6 +32,7 @@ export type CardId =
   | "goblin-gang"
   | "spear-goblins"
   | "dart-goblin"
+  | "ice-wizard"
   | "skeletons"
   | "skeleton-army"
   | "bomber"
@@ -391,6 +393,20 @@ export const CARDS: Card[] = [
     dartGoblin.sourceHitSpeed / 1000,
     "A fast-moving Goblin who fires darts at ground and air targets.",
     { rarity: "Rare", hitsAir: dartGoblin.hitsAir },
+  ),
+  troop(
+    "ice-wizard",
+    "Ice Wizard",
+    iceWizard.cost,
+    // Archived Legendary level-one values; approximate playable level-11
+    // progression with this roster's Rare Musketeer scaling.
+    Math.round((iceWizard.sourceHitpoints * 720) / 340),
+    Math.round((iceWizard.sourceDamage * 218) / 100),
+    iceWizard.sourceSpeed / 60,
+    iceWizard.sourceRange / 1000,
+    iceWizard.sourceHitSpeed / 1000,
+    "An icy mage whose splash attacks slow troops and towers for two seconds.",
+    { rarity: "Legendary", hitsAir: iceWizard.hitsAir, splash: iceWizard.projectileRadius },
   ),
   troop(
     "skeletons",

@@ -89,6 +89,23 @@
       "uniqueFrames": 918
     },
     {
+      "id": "ice-wizard",
+      "source": "chr_ice_wizard",
+      "metadataSha256": "7b1e93cd364b92477fc87f404920569accaac781d48e6a5d8ccef25faccfccd6",
+      "dataSha256": "4141711dcbf98fe66e5b67c3eb1b4798d500227ca6415607845edd278a34b7c6",
+      "textures": [
+        {
+          "file": "ice-wizard-0.webp",
+          "sha256": "4d537bcc1a1120589d16366e17a004ab70aa3a3491d1ccfc185d4f3d7b2be47d",
+          "originalSha256": "1af231c75f82d072d1f1642c606b9101439421c7a2ca5b8d848265254ad46abd"
+        }
+      ],
+      "shapes": 335,
+      "clips": 54,
+      "frames": 1458,
+      "uniqueFrames": 1260
+    },
+    {
       "id": "archers",
       "source": "chr_archer",
       "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",

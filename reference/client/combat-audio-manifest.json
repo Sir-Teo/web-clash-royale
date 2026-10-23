@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "ec9b7c79000a33dc7cce870ef5d8d77f78007bac78dbd720ad3b53be1513c217"
+      "sha256": "1a2f1d15f0bcbd4d7f27c856ca66987218956c8de910c3cc2fca8a367265f478"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "3aa21c0ddc31e0c5ea4bf9c39903e45bee49c8da496bc28f7df803b23e298892"
+      "sha256": "e4e5a630f4345ff7d9b7d2a4b9e9aafebcd4b61017c709f4ad6d1282885e4653"
     }
   ],
   "ignoredEnemyVersions": [
@@ -410,6 +410,78 @@
       "source": "sfx/horse_blow_01.ogg",
       "bytes": 7263,
       "sha256": "3544538274674aa2853e75009bb91448c6bbde9c198b1735eb7168cb7707e147"
+    },
+    {
+      "path": "public/assets/audio/ice_mage_impact_02.ogg",
+      "source": "sfx/ice_mage_impact_02.ogg",
+      "bytes": 7979,
+      "sha256": "afc08e6947ff598ea6743ed69d2c2071273af0d88d16cf328128a023aced9c01"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_atk_01.ogg",
+      "source": "sfx/ice_wiz_atk_01.ogg",
+      "bytes": 7031,
+      "sha256": "ba50f12cc3cba90c169d0adfef2a3840bfe67e246a0460ba9331eb8fb35a2828"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_atk_02.ogg",
+      "source": "sfx/ice_wiz_atk_02.ogg",
+      "bytes": 7855,
+      "sha256": "7f0905e95795d60ea6f2d159e2b4cb8082ba84cf08a25f91b4a34c5a78b9bb3f"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_atk_03.ogg",
+      "source": "sfx/ice_wiz_atk_03.ogg",
+      "bytes": 7339,
+      "sha256": "e2420582367eb04abdc8840c84413f29d6e4813546194a0ea992a12f3e2a8f5e"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_atk_05.ogg",
+      "source": "sfx/ice_wiz_atk_05.ogg",
+      "bytes": 7255,
+      "sha256": "8b2aa7cd3486e8386809f1a607ad828efa51322b32760fb7225a937c4962b8b1"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_atk_07.ogg",
+      "source": "sfx/ice_wiz_atk_07.ogg",
+      "bytes": 8671,
+      "sha256": "944dc078b84d054578b675606f82c452ea2e47fb89b87c098e283b1c95ee27cd"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_atk_08.ogg",
+      "source": "sfx/ice_wiz_atk_08.ogg",
+      "bytes": 8381,
+      "sha256": "1af10dc3e0bee4310674e5bfac00567bb5f10c04a69f1925fc0923d5364ee7aa"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_dep_01.ogg",
+      "source": "sfx/ice_wiz_dep_01.ogg",
+      "bytes": 9097,
+      "sha256": "285c776a75d70dcfd1c3b634804fd70fb0c51b148e4ff881529f3e77a50d310f"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_dep_04.ogg",
+      "source": "sfx/ice_wiz_dep_04.ogg",
+      "bytes": 8036,
+      "sha256": "658bdcd48c32f21de166c3a4d9f92de4fca93db8009899cf9ce8c1bb955cbcc9"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_deploy_01.ogg",
+      "source": "sfx/ice_wiz_deploy_01.ogg",
+      "bytes": 11004,
+      "sha256": "c7f3dd42a50f8aee51e5b6d45622f7ffff2f36804066a17b365103de14596037"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_land_01.ogg",
+      "source": "sfx/ice_wiz_land_01.ogg",
+      "bytes": 8237,
+      "sha256": "444f19ccbaa9b460c087a60f717ed764edc5aa1aa100347f0c1b408b40758123"
+    },
+    {
+      "path": "public/assets/audio/icemage_attack_03.ogg",
+      "source": "sfx/icemage_attack_03.ogg",
+      "bytes": 13211,
+      "sha256": "0bb144217bfbbf1b15fcf9a7e1f9793c80b9bfa8b4aaa9ee0343f18e2eca38b3"
     },
     {
       "path": "public/assets/audio/king_fire_06.ogg",
@@ -948,6 +1020,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "a8fabe991def19fab4c9a8281c10cb85f55cdeefa3259ed81aabdbfe5fe78f68"
+    "sha256": "74e51c6357326bea0c64ea0d362f987772013ecee466511a5a8d6db572503c11"
   }
 }

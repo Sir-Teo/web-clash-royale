@@ -423,6 +423,12 @@
       "sha256": "b34fb968d5843729c24cca9b65271345092a2e2ddde5647381d7186446a9b928"
     },
     {
+      "path": "cards/ice-wizard.png",
+      "source": "cards/ice-wizard.png",
+      "bytes": 123132,
+      "sha256": "2b4701fc766c9cf3f33e469638e7d00eb96daceec605b35739fff201c9b2bb2f"
+    },
+    {
       "path": "cards/knight.png",
       "source": "cards/knight.png",
       "bytes": 153676,

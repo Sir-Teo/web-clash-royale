@@ -1010,6 +1010,69 @@
         }
       ]
     },
+    "ice-wizard": {
+      "source": "ice_wizard_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "spear-goblins": {
       "source": "spear_goblin_die",
       "components": [
@@ -3651,6 +3714,69 @@
         }
       ]
     },
+    "hit:ice-wizard": {
+      "source": "ice_wizard_hit",
+      "components": [
+        {
+          "emitter": "ice_wiz_hit_ground",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "ice_wiz_hit_burst",
+          "delay": -0.1,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "ice_wiz_hit_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "ice_wiz_hit_flakes",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "ice_wiz_hit_ground",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "ice_wiz_hit_burst",
+          "delay": -0.1,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "ice_wiz_hit_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "ice_wiz_hit_flakes",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
     "freeze": {
       "source": "Spell_freeze_ground",
       "components": [
@@ -3963,6 +4089,41 @@
           "emitter": "Blowdart_arrow_emitter",
           "delay": 0,
           "scale": 0.5,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
+    "ice-wizard": {
+      "source": "ice_wiz_emitter",
+      "components": [
+        {
+          "emitter": "ice_wiz_emitter_trail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "ice_wiz_trail_shards",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "ice_wiz_emitter_trail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "ice_wiz_trail_shards",
+          "delay": 0,
+          "scale": 1,
           "layer": "Above",
           "ground": false
         }
@@ -4648,6 +4809,111 @@
       "source": "blowdart_goblin_deploy",
       "components": [],
       "enemyComponents": []
+    },
+    "ice-wizard": {
+      "source": "ice_wizard_deploy",
+      "components": [
+        {
+          "emitter": "ice_wiz_hit_ground",
+          "delay": 0.35,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "ice_wiz_hit_burst",
+          "delay": 0.24999999999999997,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "ice_wiz_hit_puff",
+          "delay": 0.35,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "ice_wiz_hit_flakes",
+          "delay": 0.35,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "ice_wizard_deploy_flakes",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "ice_wiz_hit_ground",
+          "delay": 0.35,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "ice_wiz_hit_burst",
+          "delay": 0.24999999999999997,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "ice_wiz_hit_puff",
+          "delay": 0.35,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "ice_wiz_hit_flakes",
+          "delay": 0.35,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "knight_deploy_dustPuff1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "knight_deploy_dustPuff2",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "ice_wizard_deploy_flakes",
+          "delay": 0.3,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
     },
     "spear-goblins": {
       "source": "spear_goblin_deploy",
@@ -8557,6 +8823,103 @@
         "d3_white"
       ]
     },
+    "ice_wiz_emitter_trail": {
+      "count": 50,
+      "emissionLife": [
+        1.2,
+        1.2
+      ],
+      "interval": [
+        0.01,
+        0.01
+      ],
+      "life": [
+        0.6,
+        0.8
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0.03333333333333333
+      ],
+      "speed": [
+        0.03333333333333333,
+        0.06666666666666667
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0.8333333333333334,
+        1.6666666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.6666666666666666,
+      "startScale": 0.25,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0.7,
+      "inertia": 3.3333333333333335,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "FireParticle1_blue",
+        "snowflake_anim"
+      ]
+    },
+    "ice_wiz_trail_shards": {
+      "count": 45,
+      "emissionLife": [
+        1.2,
+        1.2
+      ],
+      "interval": [
+        0.01,
+        0.01
+      ],
+      "life": [
+        0.3,
+        0.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        1.6666666666666667,
+        2
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        3.3333333333333335,
+        6.666666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -83.33333333333333,
+      "startScale": 0.25,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0.3,
+      "inertia": 1.6666666666666667,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "ice_particle1",
+        "ice_particle2",
+        "ice_particle3"
+      ]
+    },
     "tornado_rocks": {
       "count": 70,
       "emissionLife": [
@@ -10751,6 +11114,201 @@
         "Sparkle"
       ]
     },
+    "ice_wiz_hit_ground": {
+      "count": 3,
+      "emissionLife": [
+        0.08,
+        0.08
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        3,
+        4
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0.1
+      ],
+      "speed": [
+        0.3333333333333333,
+        0.6666666666666666
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -56.666666666666664,
+      "startScale": 1.2,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 2,
+      "inertia": 3.3333333333333335,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "ice_wiz_hit_ground1",
+        "ice_wiz_hit_ground2"
+      ]
+    },
+    "ice_wiz_hit_burst": {
+      "count": 11,
+      "emissionLife": [
+        0.07,
+        0.07
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        0.2,
+        0.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        0,
+        5
+      ],
+      "height": 0.8666666666666667,
+      "verticalSpeed": [
+        3.3333333333333335,
+        16.666666666666668
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -40,
+      "startScale": 0.7,
+      "endScale": 0.1,
+      "fadeIn": 0,
+      "fadeOut": 0.1,
+      "inertia": 0.8333333333333334,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "ice_particle1",
+        "ice_wiz_snow_particle",
+        "ice_particle2",
+        "ice_particle3"
+      ]
+    },
+    "ice_wiz_hit_puff": {
+      "count": 12,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.8,
+        1.3
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.03333333333333333,
+        0
+      ],
+      "speed": [
+        1.3333333333333333,
+        2.3333333333333335
+      ],
+      "height": 1.9666666666666666,
+      "verticalSpeed": [
+        0.6666666666666666,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1.5,
+      "endScale": 1.6,
+      "fadeIn": 0,
+      "fadeOut": 1.65,
+      "inertia": 3.3333333333333335,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "d1",
+        "d2",
+        "d3",
+        "d4"
+      ]
+    },
+    "ice_wiz_hit_flakes": {
+      "count": 15,
+      "emissionLife": [
+        0.1,
+        0.6
+      ],
+      "interval": [
+        0.005,
+        0.005
+      ],
+      "life": [
+        0.6,
+        1.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.2,
+        0.2
+      ],
+      "speed": [
+        0,
+        0.6666666666666666
+      ],
+      "height": 3.3333333333333335,
+      "verticalSpeed": [
+        0,
+        5
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -3.3333333333333335,
+      "startScale": 0.4,
+      "endScale": 0.1,
+      "fadeIn": 0,
+      "fadeOut": 0.25,
+      "inertia": 0,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "snowflake_anim"
+      ]
+    },
     "knight_deploy_rocks_hitGround": {
       "count": 13,
       "emissionLife": [
@@ -10947,6 +11505,53 @@
         "d2",
         "d3",
         "d3_green_dark"
+      ]
+    },
+    "ice_wizard_deploy_flakes": {
+      "count": 15,
+      "emissionLife": [
+        0,
+        0
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.6,
+        1
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.26666666666666666,
+        0.26666666666666666
+      ],
+      "speed": [
+        0,
+        2.3333333333333335
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        6.666666666666667,
+        20
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -16.666666666666668,
+      "startScale": 0.4,
+      "endScale": 0.1,
+      "fadeIn": 0,
+      "fadeOut": 0.25,
+      "inertia": 0,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "snowflake_anim"
       ]
     },
     "freeze_snowPiles1": {
