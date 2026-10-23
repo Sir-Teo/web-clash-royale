@@ -175,13 +175,34 @@ for (const perspective of ["blue", "red"] as const)
       ((death.time * 30 - 45) / replay.duration) * 100,
     );
     await timeline.fill(replaySeekValue(before));
+    // dummy_01 is shared by deployment and the Wizard death placeholder.
+    // A filename's presence in the death manifest does not identify its trigger.
     const nativeCalls = () =>
       page.evaluate(
-        (paths) =>
-          (window as any).__playedAudio.filter((entry: { path: string }) =>
-            paths.includes(entry.path),
+        ({ paths, time }) =>
+          (window as any).__playedAudio.filter(
+            (entry: { path: string; time: number }) =>
+              paths.includes(entry.path) &&
+              entry.time >= time &&
+              entry.time <= time + 0.6,
           ),
-        files,
+        { paths: expectedFiles, time: death.time },
+      );
+    const allCalls = () =>
+      page.evaluate(() =>
+        (window as any).__playedAudio.map(
+          ({
+            path,
+            rate,
+            volume,
+            time,
+          }: {
+            path: string;
+            rate: number;
+            volume: number;
+            time: number;
+          }) => ({ path, rate, volume, time }),
+        ),
       );
     expect(await nativeCalls()).toEqual([]);
     await page
@@ -201,19 +222,34 @@ for (const perspective of ["blue", "red"] as const)
         ),
       )
       .toBe(true);
+    // Let the next recorded deployment play the shared placeholder before
+    // pausing, reproducing the CI ordering that used to misclassify it.
+    await expect
+      .poll(
+        async () =>
+          (await allCalls()).some(
+            (entry: { path: string; time: number }) =>
+              entry.path === "/assets/audio/dummy_01.ogg" &&
+              entry.time > death.time + 0.6,
+          ),
+        { timeout: 15000 },
+      )
+      .toBe(true);
     await page
       .getByRole("button", { name: "Pause replay", exact: true })
       .click();
     const played = await nativeCalls();
+    expect(played).toHaveLength(cues.length);
     for (const [index, entry] of played.entries()) {
       expect(entry.rate).toBeCloseTo(cues[index].pitch);
       expect(entry.volume).toBeCloseTo(cues[index].volume);
       expect(entry.time).toBeGreaterThanOrEqual(death.time);
     }
+    const pausedCalls = await allCalls();
     await page.waitForTimeout(250);
-    expect(await nativeCalls()).toEqual(played);
+    expect(await allCalls()).toEqual(pausedCalls);
     await timeline.fill("90");
-    expect(await nativeCalls()).toEqual(played);
+    expect(await allCalls()).toEqual(pausedCalls);
     await timeline.fill(replaySeekValue(before));
     await page
       .getByRole("button", { name: "Battle settings", exact: true })
@@ -234,5 +270,5 @@ for (const perspective of ["blue", "red"] as const)
     await page
       .getByRole("button", { name: "Pause replay", exact: true })
       .click();
-    expect(await nativeCalls()).toEqual(played);
+    expect(await allCalls()).toEqual(pausedCalls);
   });
