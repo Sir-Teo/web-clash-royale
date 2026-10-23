@@ -56,6 +56,7 @@ const heights: Partial<Record<SpriteId, number>> = {
   musketeer: 1.9,
   "mini-pekka": 1.75,
   goblins: 1.3,
+  "dart-goblin": 1.5,
   "spear-goblins": 1.35,
   skeletons: 1.15,
   bomber: 1.5,

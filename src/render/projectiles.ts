@@ -29,6 +29,7 @@ export function projectileArt(p: Projectile) {
       ? "projectile_arrow_basic"
       : "projectile_arrow_basic_enemy";
   if (p.style === "spear-goblins") return "projectile_spear_360";
+  if (p.style === "dart-goblin") return "projectile_arrow_basic";
   if (p.style === "bomb") return `balloon_bomb_${p.team}`;
   if (["bomber", "balloon"].includes(p.style)) return "projectile_bomb";
   if (["cannon", "cannonball", "royal-giant"].includes(p.style))

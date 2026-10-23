@@ -76,7 +76,7 @@ export class Arena {
   private root = new T.Group();
   private units = new Map<number, Visual>();
   private shots = new Map<number, ProjectileVisual>();
-  private rocketTrailCycles = new Map<number, number>();
+  private trailCycles = new Map<number, number>();
   private effects = new EffectLibrary();
   private buildings = new BuildingLibrary();
   private health = new HealthLibrary();
@@ -534,7 +534,7 @@ export class Arena {
       this.disposeObject(p.object);
     }
     this.shots.clear();
-    this.rocketTrailCycles.clear();
+    this.trailCycles.clear();
     for (const impact of this.impacts) this.scene.remove(impact.sprite.mesh);
     this.impacts = [];
     for (const p of this.particles) {
@@ -1091,7 +1091,7 @@ export class Arena {
       if (p.style === "rocket" && p.speed && this.effects.asset) {
         const age = p.elapsed ?? 0;
         const cycle = Math.floor((age + 1e-8) / 0.8);
-        const last = this.rocketTrailCycles.get(p.id) ?? -1;
+        const last = this.trailCycles.get(p.id) ?? -1;
         const duration = Math.hypot(p.tx - p.x, p.ty - p.y) / p.speed;
         for (let i = last + 1; i <= cycle; i++)
           this.destruction.burstAlong(
@@ -1103,12 +1103,12 @@ export class Arena {
             p.team,
             age,
           );
-        this.rocketTrailCycles.set(p.id, cycle);
+        this.trailCycles.set(p.id, cycle);
       }
       if (p.style === "log" && p.speed && this.effects.asset) {
         const age = p.elapsed ?? 0;
         const cycle = Math.floor((age + 1e-8) / 0.8);
-        const last = this.rocketTrailCycles.get(p.id) ?? -1;
+        const last = this.trailCycles.get(p.id) ?? -1;
         for (let i = last + 1; i <= cycle; i++)
           this.destruction.burstAlong(
             "trail:log",
@@ -1119,7 +1119,24 @@ export class Arena {
             p.team,
             age,
           );
-        this.rocketTrailCycles.set(p.id, cycle);
+        this.trailCycles.set(p.id, cycle);
+      }
+      if (p.style === "dart-goblin" && p.speed && this.effects.asset) {
+        // The source emitter lays fifteen fragments across one short dart flight.
+        // Rebuilding a late snapshot retains only fragments still alive.
+        if (!this.trailCycles.has(p.id)) {
+          const duration = Math.hypot(p.tx - p.x, p.ty - p.y) / p.speed;
+          this.destruction.burstAlong(
+            "trail:dart-goblin",
+            (seconds) => rocketFlightPoint(p, seconds),
+            duration,
+            0,
+            b.seed ^ p.id,
+            p.team,
+            p.elapsed ?? 0,
+          );
+          this.trailCycles.set(p.id, 0);
+        }
       }
       if (
         dt > 0 &&
@@ -1141,7 +1158,7 @@ export class Arena {
         this.scene.remove(s.object);
         this.disposeObject(s.object);
         this.shots.delete(id);
-        this.rocketTrailCycles.delete(id);
+        this.trailCycles.delete(id);
       }
     for (const event of b.events) {
       if (event.id <= this.lastEvent) continue;

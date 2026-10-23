@@ -14,6 +14,7 @@ import goblinGang from "./goblin-gang-data.json" with { type: "json" };
 import barbarians from "./barbarians-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
+import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -29,6 +30,7 @@ export type CardId =
   | "goblins"
   | "goblin-gang"
   | "spear-goblins"
+  | "dart-goblin"
   | "skeletons"
   | "skeleton-army"
   | "bomber"
@@ -376,6 +378,19 @@ export const CARDS: Card[] = [
     1.7,
     "Three unarmored ranged attackers. They can hit flying enemies, too.",
     { count: 3, hitsAir: true },
+  ),
+  troop(
+    "dart-goblin",
+    "Dart Goblin",
+    dartGoblin.cost,
+    // Match this roster's level-11 Rare Musketeer normalization.
+    Math.round((dartGoblin.sourceHitpoints * 720) / 340),
+    Math.round((dartGoblin.sourceDamage * 218) / 100),
+    dartGoblin.sourceSpeed / 60,
+    dartGoblin.sourceRange / 1000,
+    dartGoblin.sourceHitSpeed / 1000,
+    "A fast-moving Goblin who fires darts at ground and air targets.",
+    { rarity: "Rare", hitsAir: dartGoblin.hitsAir },
   ),
   troop(
     "skeletons",
