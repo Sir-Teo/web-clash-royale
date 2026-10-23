@@ -1887,6 +1887,146 @@
         }
       ]
     },
+    "hit:balloon": {
+      "source": "balloon_hit",
+      "components": [
+        {
+          "emitter": "catapult_rock_Emitter",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_hit_smoke",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_smokePuff",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_grass_emitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_hit_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "catapult_rock_Emitter",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_hit_smoke",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_smokePuff",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_grass_emitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_hit_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ]
+    },
+    "hit:tesla": {
+      "source": "tesla_hit_effect",
+      "components": [
+        {
+          "emitter": "tesla_hit_spark",
+          "delay": 0,
+          "scale": 0.7,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "tesla_spot_hit",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "tesla_smoke_hit",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "tesla_electric_hit",
+          "delay": 0.15,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "tesla_hit_spark",
+          "delay": 0,
+          "scale": 0.7,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "tesla_spot_hit",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "tesla_smoke_hit",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "tesla_electric_hit",
+          "delay": 0.15,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
     "hit:musketeer": {
       "source": "cannon_hit",
       "components": [
@@ -4976,6 +5116,432 @@
         "Arrow_enemy_ground_anim_4",
         "Arrow_enemy_ground_anim_5",
         "Arrow_enemy_ground_anim_6"
+      ]
+    },
+    "catapult_rock_Emitter": {
+      "count": 13,
+      "emissionLife": [
+        0.4,
+        0.4
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        0.8,
+        1.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        1.6666666666666667,
+        5
+      ],
+      "height": 0.6666666666666666,
+      "verticalSpeed": [
+        3.3333333333333335,
+        8.333333333333334
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -66.66666666666667,
+      "startScale": 1,
+      "endScale": 1.5,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Rock1Particle",
+        "Rock2Particle",
+        "Rock3Particle"
+      ]
+    },
+    "catapult_hit_smoke": {
+      "count": 12,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        1,
+        1.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        3.3333333333333335,
+        4
+      ],
+      "height": 0.1,
+      "verticalSpeed": [
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.8333333333333334,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0.8,
+      "inertia": 11.666666666666666,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "catapult_hit_cloud_1"
+      ]
+    },
+    "catapult_smokePuff": {
+      "count": 10,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.6,
+        1
+      ],
+      "angle": [
+        0.7853981633974483,
+        1.5707963267948966
+      ],
+      "radius": [
+        -0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        0.3333333333333333,
+        2.6666666666666665
+      ],
+      "height": 1.4,
+      "verticalSpeed": [
+        1.6666666666666667,
+        4
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 1.6666666666666667,
+      "startScale": 0.3,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 0.6,
+      "inertia": 2.6666666666666665,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "catapult_hit_cloud_1"
+      ]
+    },
+    "catapult_grass_emitter": {
+      "count": 5,
+      "emissionLife": [
+        0.4,
+        0.4
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        0.8,
+        1.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        2,
+        5
+      ],
+      "height": 0.6666666666666666,
+      "verticalSpeed": [
+        3.3333333333333335,
+        8.333333333333334
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -66.66666666666667,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "grass_particle_1",
+        "grass_particle_2"
+      ]
+    },
+    "catapult_hit_shadow": {
+      "count": 8,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        1,
+        1.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0.6666666666666666,
+        0.6666666666666666
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -11.666666666666666,
+      "startScale": 1,
+      "endScale": 1.05,
+      "fadeIn": 0,
+      "fadeOut": 1,
+      "inertia": 0.3333333333333333,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "catapult_hit_cloud_1"
+      ]
+    },
+    "tesla_hit_spark": {
+      "count": 5,
+      "emissionLife": [
+        0.2,
+        0.3
+      ],
+      "interval": [
+        0.02,
+        0.02
+      ],
+      "life": [
+        0.5,
+        0.6
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.03333333333333333
+      ],
+      "speed": [
+        1.6666666666666667,
+        3.3333333333333335
+      ],
+      "height": 1.3333333333333333,
+      "verticalSpeed": [
+        2,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -16.666666666666668,
+      "startScale": 0.2,
+      "endScale": 0.1,
+      "fadeIn": 0,
+      "fadeOut": 0.3,
+      "inertia": 1.6666666666666667,
+      "rotate": true,
+      "loop": true,
+      "clips": [
+        "Death_blue_sparkle2"
+      ]
+    },
+    "tesla_spot_hit": {
+      "count": 1,
+      "emissionLife": [
+        0,
+        0.1
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.5,
+        0.7
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1.5,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "SparkleBlue"
+      ]
+    },
+    "tesla_smoke_hit": {
+      "count": 4,
+      "emissionLife": [
+        0.05,
+        0.1
+      ],
+      "interval": [
+        0.001,
+        0.005
+      ],
+      "life": [
+        0.5,
+        0.7
+      ],
+      "angle": [
+        -1.5707963267948966,
+        1.5707963267948966
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        1,
+        1.6666666666666667
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        2.6666666666666665,
+        4
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.6,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 1.2,
+      "inertia": 3.3333333333333335,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "d2"
+      ]
+    },
+    "tesla_electric_hit": {
+      "count": 2,
+      "emissionLife": [
+        0.45,
+        0.45
+      ],
+      "interval": [
+        0.05,
+        0.075
+      ],
+      "life": [
+        0.4,
+        0.4
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        0.03333333333333333,
+        0.06666666666666667
+      ],
+      "speed": [
+        0.8333333333333334,
+        1
+      ],
+      "height": 0.7666666666666667,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.6,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 6.666666666666667,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "electricity"
       ]
     },
     "cannon_hit_rock_emiter": {

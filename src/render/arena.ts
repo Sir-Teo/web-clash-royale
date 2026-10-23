@@ -1001,6 +1001,26 @@ export class Arena {
           event.height ?? 0.6,
           event.y - 16,
         );
+        if (event.card === "tesla" && event.origin) {
+          const origin = new T.Vector3(
+            event.origin.x - 9,
+            event.origin.height,
+            event.origin.y - 16,
+          );
+          const direction = impactPosition
+            .clone()
+            .sub(origin)
+            .applyQuaternion(this.camera.quaternion.clone().invert());
+          const beam = this.impact("tesla_beam", origin, 0.3, eventAge);
+          if (beam) {
+            beam.mesh.rotateZ(Math.atan2(direction.y, direction.x));
+            beam.mesh.scale.set(
+              Math.hypot(direction.x, direction.y) / 2.7,
+              0.7,
+              1,
+            );
+          }
+        }
         const nativeImpact = event.effect ?? impactEffect(event.card ?? "");
         if (nativeImpact && this.effects.asset) {
           const offsets =
@@ -1027,24 +1047,7 @@ export class Arena {
           continue;
         }
         if (event.card === "tesla" && event.origin) {
-          const origin = new T.Vector3(
-            event.origin.x - 9,
-            event.origin.height,
-            event.origin.y - 16,
-          );
-          const direction = impactPosition
-            .clone()
-            .sub(origin)
-            .applyQuaternion(this.camera.quaternion.clone().invert());
-          const beam = this.impact("tesla_beam", origin, 0.3, eventAge);
-          if (beam) {
-            beam.mesh.rotateZ(Math.atan2(direction.y, direction.x));
-            beam.mesh.scale.set(
-              Math.hypot(direction.x, direction.y) / 2.7,
-              0.7,
-              1,
-            );
-          }
+          continue;
         } else if (event.card === "zap") {
           const bolt = this.impact(
             "zap_bolt1",

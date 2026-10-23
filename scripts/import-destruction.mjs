@@ -180,6 +180,25 @@ for (const [id, expected] of Object.entries({
     enemyComponents: composition(source, "red"),
   };
 }
+// These DamageEffect compositions contain authored ground-level impact layers
+// (Balloon's crater debris and Tesla's beam sparks) at the attack target.
+for (const [id, expected] of Object.entries({
+  balloon: "balloon_hit",
+  tesla: "tesla_hit_effect",
+})) {
+  const profile = profiles[id];
+  const actor =
+    tables.characters[profile.source] ?? tables.buildings[profile.source];
+  if (actor.DamageEffect !== expected)
+    throw new Error(
+      `Recheck native ${id} damage impact: ${actor.DamageEffect}`,
+    );
+  impacts[`hit:${id}`] = {
+    source: expected,
+    components: composition(expected, "blue"),
+    enemyComponents: composition(expected, "red"),
+  };
+}
 for (const [id, expected] of Object.entries({
   musketeer: "cannon_hit",
   bomber: "BombTower_projectile_hit",
