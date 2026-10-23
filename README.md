@@ -18,7 +18,7 @@ Zap impacts use the archived bolt, electricity, smoke, sparks and ground glow co
 
 Freeze costs four elixir and holds enemies within its three-tile circle for four seconds, including troops that enter later and hidden Teslas. Its original portrait, cast sound, snow particles and blue/red ground artwork work in solo play, replays and browser-to-browser matches. Frozen troops, buildings and towers use the archived icy color animation, also shared by Zap.
 
-Poison costs four elixir and damages enemies across an eight-second, 3.5-tile area. Its damage buff lingers briefly after a troop leaves, while buried Teslas remain immune. It uses the archived portrait, cast and impact cues, rising skull particles, team-colored ground rings and a 37-frame green troop filter. Solo play, direct two-player matches and replays share the same fixed-step area rules.
+Poison costs four elixir and damages enemies across an eight-second, 3.5-tile area. Its damage buff lingers briefly after a troop leaves, while buried Teslas remain immune. It uses the archived portrait, cast and impact cues, rising skull particles, team-colored ground rings and a 37-frame green color filter for troops, buildings and towers. Solo play, direct two-player matches and replays share the same fixed-step area rules.
 
 Musketeer and Cannon shots share the archived cannon impact; Bomber, Baby Dragon and Wizard projectiles use their own native sparks, smoke, flame and debris compositions. These hit effects stay separate from each troop's death effect.
 
