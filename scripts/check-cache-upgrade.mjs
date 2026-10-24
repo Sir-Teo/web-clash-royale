@@ -20,6 +20,8 @@ try {
     '<!doctype html><title>Offline test</title><script>navigator.serviceWorker.register("/sw.js")</script>',
   );
   await writeFile(join(dist, "unchanged.txt"), "still here");
+  await writeFile(join(dist, "alias.txt"), "still here");
+  await writeFile(join(dist, "duplicate.txt"), "still here");
   await writeFile(join(dist, "changed.txt"), "before");
   const build = () => {
     const result = spawnSync(process.execPath, [generator], {
@@ -34,7 +36,7 @@ try {
     join(dist, "sw.js"),
     "const CACHE='browser-royale-/-legacy';" +
       "self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE)" +
-      ".then(c=>c.addAll(['/index.html','/unchanged.txt','/changed.txt']))" +
+      ".then(c=>c.addAll(['/index.html','/alias.txt','/duplicate.txt','/unchanged.txt','/changed.txt']))" +
       ".then(()=>self.skipWaiting())));" +
       "self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));",
   );
@@ -65,8 +67,12 @@ try {
   await page.goto(origin);
   await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
   const unchanged = requests.get("/unchanged.txt") ?? 0;
+  const alias = requests.get("/alias.txt") ?? 0;
+  const duplicate = requests.get("/duplicate.txt") ?? 0;
   const changed = requests.get("/changed.txt") ?? 0;
   assert.equal(unchanged, 1);
+  assert.equal(alias, 1);
+  assert.equal(duplicate, 1);
   assert.equal(changed, 1);
 
   await writeFile(join(dist, "changed.txt"), "after");
@@ -81,9 +87,12 @@ try {
     await activated;
   });
   assert.equal(requests.get("/unchanged.txt"), unchanged);
+  assert.equal(requests.get("/alias.txt"), alias);
+  assert.equal(requests.get("/duplicate.txt"), duplicate);
   assert.equal(requests.get("/changed.txt"), changed + 1);
 
   await writeFile(join(dist, "changed.txt"), "newer");
+  await rm(join(dist, "alias.txt"));
   build();
   await page.evaluate(async () => {
     const activated = new Promise((resolve) =>
@@ -95,6 +104,7 @@ try {
     await activated;
   });
   assert.equal(requests.get("/unchanged.txt"), unchanged);
+  assert.equal(requests.get("/duplicate.txt"), duplicate);
   assert.equal(requests.get("/changed.txt"), changed + 2);
 
   await context.setOffline(true);
@@ -102,11 +112,37 @@ try {
   assert.deepEqual(
     await page.evaluate(async () => [
       await fetch("/unchanged.txt").then((response) => response.text()),
+      await fetch("/duplicate.txt").then((response) => response.text()),
       await fetch("/changed.txt").then((response) => response.text()),
     ]),
-    ["still here", "newer"],
+    ["still here", "still here", "newer"],
   );
-  console.log("Legacy and versioned upgrades fetched only the changed asset; both assets work offline.");
+  const beforeCold = (requests.get("/duplicate.txt") ?? 0) +
+    (requests.get("/unchanged.txt") ?? 0);
+  const coldContext = await browser.newContext();
+  const coldPage = await coldContext.newPage();
+  await coldPage.goto(origin);
+  await coldPage.waitForFunction(() => navigator.serviceWorker.controller !== null);
+  const afterCold = (requests.get("/duplicate.txt") ?? 0) +
+    (requests.get("/unchanged.txt") ?? 0);
+  assert.equal(afterCold - beforeCold, 1);
+  const cachedCopies = await coldPage.evaluate(async () => {
+    const name = (await caches.keys()).find((key) => key.startsWith("browser-royale-"));
+    const cache = await caches.open(name);
+    return (await cache.keys()).filter((request) =>
+      ["/duplicate.txt", "/unchanged.txt"].includes(new URL(request.url).pathname),
+    ).length;
+  });
+  assert.equal(cachedCopies, 1);
+  await coldContext.setOffline(true);
+  assert.deepEqual(
+    await coldPage.evaluate(async () => [
+      await fetch("/duplicate.txt").then((response) => response.text()),
+      await fetch("/unchanged.txt").then((response) => response.text()),
+    ]),
+    ["still here", "still here"],
+  );
+  console.log("Legacy and versioned upgrades reused unchanged bytes; duplicate URLs need one download and work offline.");
 } finally {
   await browser?.close();
   await new Promise((resolve) => server?.close(resolve) ?? resolve());

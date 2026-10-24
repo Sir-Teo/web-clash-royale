@@ -16,20 +16,47 @@ const hash = createHash("sha256");
 hash.update(await readFile(new URL(import.meta.url)));
 const base = process.env.VITE_BASE_PATH || "/";
 const assets = [];
+const contentHashes = new Map();
+const contentGroups = new Set();
+let duplicateBytes = 0;
 for (const p of files) {
   const bytes = await readFile(p);
   hash.update(p);
   hash.update(bytes);
+  const fullHash = createHash("sha256").update(bytes).digest("hex");
+  const shortHash = fullHash.slice(0, 12);
+  const priorHash = contentHashes.get(shortHash);
+  if (priorHash && priorHash !== fullHash)
+    throw new Error(`Offline cache hash collision for ${p}`);
+  contentHashes.set(shortHash, fullHash);
+  const contentGroup = `${shortHash}:${p.slice(p.lastIndexOf("."))}`;
+  if (contentGroups.has(contentGroup)) duplicateBytes += bytes.length;
+  else contentGroups.add(contentGroup);
   assets.push([
     base + p.slice(5),
-    createHash("sha256").update(bytes).digest("hex").slice(0, 12),
+    shortHash,
   ]);
 }
 const version = hash.digest("hex").slice(0, 12);
 const source = `const CACHE = ${JSON.stringify(`browser-royale-${base}-${version}`)};
 const PREFIX = ${JSON.stringify(`browser-royale-${base}-`)};
 const FILES = ${JSON.stringify(assets)};
-const LOOKUP = new Map(FILES.map(([path, hash]) => [path, path + '?v=' + hash]));
+// Identical art can be present under several source names. Keep every URL
+// available offline while fetching and storing its bytes just once.
+const group = (path, hash) => hash + ':' + path.slice(path.lastIndexOf('.'));
+const GROUPS = new Map();
+for (const [path, hash] of FILES) {
+  const id = group(path, hash);
+  if (!GROUPS.has(id)) GROUPS.set(id, []);
+  GROUPS.get(id).push(path);
+}
+const LOOKUP = new Map();
+for (const [id, paths] of GROUPS) {
+  const hash = id.slice(0, 12);
+  const key = paths[0] + '?v=' + hash;
+  for (const path of paths) LOOKUP.set(path, key);
+}
+const UNIQUE = FILES.filter(([path, hash]) => LOOKUP.get(path) === path + '?v=' + hash);
 
 async function matchesLegacy(response, hash) {
   const bytes = new Uint8Array(await crypto.subtle.digest(
@@ -43,20 +70,39 @@ async function precache() {
   const older = await Promise.all((await caches.keys())
     .filter((name) => name.startsWith(PREFIX) && name !== CACHE)
     .map((name) => caches.open(name)));
+  const oldByGroup = await Promise.all(older.map(async (previous) => {
+    const entries = new Map();
+    for (const request of await previous.keys()) {
+      const url = new URL(request.url);
+      const hash = url.searchParams.get('v');
+      if (hash) entries.set(group(url.pathname, hash), request);
+    }
+    return entries;
+  }));
   let cursor = 0;
   async function fill() {
-    while (cursor < FILES.length) {
-      const [path, hash] = FILES[cursor++];
+    while (cursor < UNIQUE.length) {
+      const [path, hash] = UNIQUE[cursor++];
       const key = LOOKUP.get(path);
+      const id = group(path, hash);
       let saved;
-      for (const previous of older) {
+      for (let i = 0; i < older.length; i++) {
+        const previous = older[i];
         saved = await previous.match(key);
         if (saved) break;
-        const legacy = await previous.match(path);
-        if (legacy && await matchesLegacy(legacy, hash)) {
-          saved = legacy;
-          break;
+        const versioned = oldByGroup[i].get(id);
+        if (versioned) {
+          saved = await previous.match(versioned);
+          if (saved) break;
         }
+        for (const alias of GROUPS.get(id)) {
+          const legacy = await previous.match(alias);
+          if (legacy && await matchesLegacy(legacy, hash)) {
+            saved = legacy;
+            break;
+          }
+        }
+        if (saved) break;
       }
       if (saved) {
         await cache.put(key, saved);
@@ -106,4 +152,4 @@ self.addEventListener('fetch', (event) => {
 });
 `;
 await writeFile("dist/sw.js", source);
-console.log(`Offline cache: ${files.length} files, version ${version}.`);
+console.log(`Offline cache: ${files.length} URLs, ${contentGroups.size} unique files, ${(duplicateBytes / 1e6).toFixed(1)} MB of duplicate bytes omitted, version ${version}.`);
