@@ -300,3 +300,15 @@ await writeFile(
   `${output}/manifest.json`,
   JSON.stringify(manifest, null, 2) + "\n",
 );
+const canonicalByHash = new Map();
+const aliases = {};
+for (const entry of manifest.files)
+  for (const texture of entry.textures) {
+    const canonical = canonicalByHash.get(texture.sha256);
+    if (canonical && canonical !== texture.file) aliases[texture.file] = canonical;
+    else if (!canonical) canonicalByHash.set(texture.sha256, texture.file);
+  }
+await writeFile(
+  "src/render/texture-aliases.json",
+  JSON.stringify(aliases, null, 2) + "\n",
+);

@@ -14,6 +14,21 @@ scene.background = new T.Color("#19382c");
 const camera = new T.OrthographicCamera(-18, 18, 13, -13, 0.1, 100);
 camera.position.z = 20;
 await library.load();
+const textures = [...library.assets.values()].flatMap((asset) => asset.textures);
+Object.defineProperty(window, "__animationTextures", {
+  value: {
+    references: textures.length,
+    unique: new Set(textures).size,
+    shared: [
+      ["barbarians", "elite-barbarians"],
+      ["princess", "tower-princess"],
+      ["inferno-dragon", "baby-dragon"],
+      ["dark-prince", "dark-prince-shield"],
+      ["guards", "guards-shield"],
+    ].every(([a, b]) => library.assets.get(a as SpriteId)?.textures[0] ===
+      library.assets.get(b as SpriteId)?.textures[0]),
+  },
+});
 const sprites = [...library.assets.keys()].flatMap((id: SpriteId, i) =>
   ["blue", "red"].map((team, side) => {
     const sprite = library.make(id)!;
@@ -25,7 +40,7 @@ const sprites = [...library.assets.keys()].flatMap((id: SpriteId, i) =>
       y: 0,
       attack: 0,
       deploy: 0,
-      interval: id === "tower-princess" ? 0.8 : CARD_MAP[id].interval,
+      interval: CARD_MAP[id as keyof typeof CARD_MAP]?.interval ?? 0.8,
       move: 0,
     } as Entity;
     sprite.mesh.position.set(
@@ -40,7 +55,7 @@ const sprites = [...library.assets.keys()].flatMap((id: SpriteId, i) =>
 document.querySelector(".labels")!.innerHTML = [...library.assets.keys()]
   .map(
     (id) =>
-      `<span>${id === "tower-princess" ? "Tower Princess" : CARD_MAP[id].name}<br><small>Blue / Red</small></span>`,
+      `<span>${id === "tower-princess" ? "Tower Princess" : CARD_MAP[id as keyof typeof CARD_MAP]?.name ?? id}<br><small>Blue / Red</small></span>`,
   )
   .join("");
 document.querySelector("#status")!.textContent =

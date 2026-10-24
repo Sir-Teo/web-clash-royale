@@ -157,6 +157,11 @@ describe("bundled game artwork", () => {
   });
   it("preserves full source animations and every referenced UV polygon", () => {
     const manifest = json("public/assets/animations/manifest.json");
+    const aliases = json("src/render/texture-aliases.json") as Record<string, string>;
+    for (const [file, canonical] of Object.entries(aliases))
+      expect(readFileSync(`public/assets/animations/${file}`).equals(
+        readFileSync(`public/assets/animations/${canonical}`),
+      ), `${file} must remain byte-identical to ${canonical}`).toBe(true);
     expect(manifest.files.length).toBe(49);
     let total = 0;
     for (const file of manifest.files) {

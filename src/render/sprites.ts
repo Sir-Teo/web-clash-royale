@@ -4,6 +4,7 @@ import type { Entity } from "../game/engine";
 import darkPrince from "../game/dark-prince-data.json" with { type: "json" };
 import battleRam from "../game/battle-ram-data.json" with { type: "json" };
 import executioner from "../game/executioner-data.json" with { type: "json" };
+import textureAliases from "./texture-aliases.json" with { type: "json" };
 import { facing, selectClip, animationFrame } from "./animation";
 import { hasNativeDeployFilter } from "./deploy-filter";
 import type { AnimationClip } from "./animation";
@@ -213,6 +214,24 @@ export class SpriteLibrary {
   assets = new Map<SpriteId, SpriteAsset>();
   private loader = new T.TextureLoader();
   async load() {
+    const textureLoads = new Map<string, Promise<T.Texture>>();
+    const loadTexture = (file: string) => {
+      const canonical = (textureAliases as Record<string, string>)[file] ?? file;
+      let pending = textureLoads.get(canonical);
+      if (!pending) {
+        pending = this.loader.loadAsync(
+          `${import.meta.env.BASE_URL}assets/animations/${canonical}`,
+        ).then((texture) => {
+          texture.colorSpace = T.SRGBColorSpace;
+          texture.minFilter = T.LinearFilter;
+          texture.magFilter = T.LinearFilter;
+          texture.generateMipmaps = false;
+          return texture;
+        });
+        textureLoads.set(canonical, pending);
+      }
+      return pending;
+    };
     await Promise.all(
       (Object.keys(heights) as SpriteId[]).map(async (id) => {
         try {
@@ -221,19 +240,7 @@ export class SpriteLibrary {
           );
           if (!response.ok) throw new Error(`Missing animation ${id}`);
           const data: SpriteData = await response.json();
-          const textures = await Promise.all(
-            data.textures.map((t) =>
-              this.loader.loadAsync(
-                `${import.meta.env.BASE_URL}assets/animations/${t.file}`,
-              ),
-            ),
-          );
-          for (const texture of textures) {
-            texture.colorSpace = T.SRGBColorSpace;
-            texture.minFilter = T.LinearFilter;
-            texture.magFilter = T.LinearFilter;
-            texture.generateMipmaps = false;
-          }
+          const textures = await Promise.all(data.textures.map((t) => loadTexture(t.file)));
           this.assets.set(id, {
             data,
             textures,
@@ -309,10 +316,11 @@ export class SpriteLibrary {
   }
   destroy() {
     for (const asset of this.assets.values()) {
-      asset.textures.forEach((texture) => texture.dispose());
       asset.materials.forEach((material) => material.dispose());
       asset.geometry.forEach((geometry) => geometry.dispose());
     }
+    for (const texture of new Set([...this.assets.values()].flatMap((asset) => asset.textures)))
+      texture.dispose();
     this.assets.clear();
   }
 }
