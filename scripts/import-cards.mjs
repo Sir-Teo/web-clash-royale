@@ -257,6 +257,7 @@ const portraitNames = {
   zap: "Zap",
   freeze: "Freeze",
   poison: "Poison",
+  heal: "Heal",
   rage: "Rage",
   rocket: "Rocket",
   lightning: "Lightning",

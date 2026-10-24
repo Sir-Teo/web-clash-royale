@@ -44,7 +44,7 @@
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "80849f51676edbbeeadb285e95dc6f20953e077b84708b445926c884e2543811"
+      "sha256": "f1b2cb232984f6c87e2f53182a2ee35318cb1d01598609dcc5f9c604b2b6d7f7"
     }
   ],
   "ignoredEnemyVersions": [
@@ -734,6 +734,12 @@
       "source": "sfx/golem_die_01.ogg",
       "bytes": 16285,
       "sha256": "c6040efec8f8f6e663612ddf92359e3d1d0b570bd5038751414eb84de8a0b5ab"
+    },
+    {
+      "path": "public/assets/audio/heal_magic_03.ogg",
+      "source": "sfx/heal_magic_03.ogg",
+      "bytes": 16178,
+      "sha256": "92508489ca05404c3dee57e5b68952f346fb2aded7bb24f023deb184b86fa1f6"
     },
     {
       "path": "public/assets/audio/hogrider_atk_01.ogg",
@@ -1674,6 +1680,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "a0d864792e06b30930bb83b9776fdda590e6ecbc2b581fcedcdbfb071313f7de"
+    "sha256": "072bbf7455f1c05deb5aa32a0c44489a5879d8316ec9668dc8a4333e54bc93a5"
   }
 }

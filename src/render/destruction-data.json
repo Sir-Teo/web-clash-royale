@@ -6108,6 +6108,111 @@
         }
       ]
     },
+    "heal": {
+      "source": "Healing",
+      "components": [
+        {
+          "emitter": "heal_ground",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        },
+        {
+          "emitter": "heal_ground_ring",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        },
+        {
+          "emitter": "heal_particle_lines",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "heal_effect_border_smoke",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "heal_border_burst",
+          "delay": 0.01,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "heal_border_burst2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "heal_cross",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "heal_ground",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        },
+        {
+          "emitter": "heal_ground_ring_enemy",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        },
+        {
+          "emitter": "heal_border_burst",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "heal_border_burst2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "heal_effect_border_smoke",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "heal_particle_lines",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "heal_cross",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
     "clone": {
       "source": "spell_clone_ground",
       "components": [
@@ -17821,6 +17926,384 @@
       "clips": [
         "graveyard_ground",
         "graveyard_groundB"
+      ]
+    },
+    "heal_ground": {
+      "count": 1,
+      "emissionLife": [
+        4,
+        4
+      ],
+      "interval": [
+        4,
+        4
+      ],
+      "life": [
+        4,
+        4
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1.25,
+      "endScale": 1.25,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "heal_effect_ground"
+      ]
+    },
+    "heal_ground_ring": {
+      "count": 1,
+      "emissionLife": [
+        0,
+        0
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        4,
+        4
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "spell_heal_radius_blue"
+      ]
+    },
+    "heal_particle_lines": {
+      "count": 22,
+      "emissionLife": [
+        2.5,
+        3
+      ],
+      "interval": [
+        0.05,
+        0.05
+      ],
+      "life": [
+        0.8,
+        1.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.3333333333333333,
+        0.4
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.4,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 0.3,
+      "inertia": 0,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "heal_effect_glow_line"
+      ]
+    },
+    "heal_effect_border_smoke": {
+      "count": 62,
+      "emissionLife": [
+        2.5,
+        3
+      ],
+      "interval": [
+        0.005,
+        0.005
+      ],
+      "life": [
+        1,
+        1
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.4,
+        0.3
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.8333333333333334,
+      "startScale": 0.15,
+      "endScale": 0.2,
+      "fadeIn": 0.8,
+      "fadeOut": 0.8,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "heal_effect_ground"
+      ]
+    },
+    "heal_border_burst": {
+      "count": 70,
+      "emissionLife": [
+        2.5,
+        3
+      ],
+      "interval": [
+        0.001,
+        0.01
+      ],
+      "life": [
+        1,
+        1
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.4,
+        0.3333333333333333
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.8,
+      "endScale": 0.9,
+      "fadeIn": 1.2,
+      "fadeOut": 1,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "heal_effect_glow_border"
+      ]
+    },
+    "heal_border_burst2": {
+      "count": 70,
+      "emissionLife": [
+        2.5,
+        3.5
+      ],
+      "interval": [
+        0.005,
+        0.01
+      ],
+      "life": [
+        1,
+        1
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.4,
+        0.3
+      ],
+      "speed": [
+        0.3333333333333333,
+        0.8333333333333334
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0.8333333333333334,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.8333333333333334,
+      "startScale": 0.2,
+      "endScale": 1,
+      "fadeIn": 1.2,
+      "fadeOut": 1,
+      "inertia": 0.8333333333333334,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "get_legend_spark1"
+      ]
+    },
+    "heal_cross": {
+      "count": 8,
+      "emissionLife": [
+        1.8,
+        2
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        0.3,
+        2.5
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0.36666666666666664
+      ],
+      "speed": [
+        0,
+        1.1666666666666667
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        1,
+        1.6666666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.7,
+      "endScale": 0.9,
+      "fadeIn": 0,
+      "fadeOut": 3,
+      "inertia": 0.8333333333333334,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "heal_effect_cross1",
+        "heal_effect_cross2",
+        "heal_effect_cross3"
+      ]
+    },
+    "heal_ground_ring_enemy": {
+      "count": 1,
+      "emissionLife": [
+        0,
+        0
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        4,
+        4
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "spell_heal_radius_red"
       ]
     },
     "clone_sparkle1": {

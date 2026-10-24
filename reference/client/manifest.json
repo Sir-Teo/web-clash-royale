@@ -37,7 +37,7 @@
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "80849f51676edbbeeadb285e95dc6f20953e077b84708b445926c884e2543811"
+      "sha256": "f1b2cb232984f6c87e2f53182a2ee35318cb1d01598609dcc5f9c604b2b6d7f7"
     }
   ],
   "ignoredEnemyVersions": [
@@ -49,6 +49,6 @@
   ],
   "output": {
     "path": "src/render/destruction-data.json",
-    "sha256": "a3797cafb8f9016bd84480ce348cd4e9d91d7e8a3ad14a33d298d669c2b7cb88"
+    "sha256": "3eb3bfcbdaf166dac1b5006dfb8bc743d44631b0ed5cb506f03b0f5b62e2d213"
   }
 }

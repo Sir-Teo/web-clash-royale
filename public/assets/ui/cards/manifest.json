@@ -277,6 +277,11 @@
       "sha256": "cc9591495b48e8ccf5fe280f9f271ca1b34de37936d516c40970cfb8654c276e"
     },
     {
+      "file": "portrait-heal.webp",
+      "bytes": 28998,
+      "sha256": "6d17f5835ff09074fe0bab41f240b6bcfdb1370ea825ae139a6cb6c3c57dd763"
+    },
+    {
       "file": "portrait-rage.webp",
       "bytes": 28072,
       "sha256": "0aa99d98429c43d3289cb0175501d96d07f51cf8efb49d04cb00790992ed9792"
@@ -498,8 +503,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 108394,
-      "sha256": "80849f51676edbbeeadb285e95dc6f20953e077b84708b445926c884e2543811"
+      "bytes": 108682,
+      "sha256": "f1b2cb232984f6c87e2f53182a2ee35318cb1d01598609dcc5f9c604b2b6d7f7"
     }
   ]
 }

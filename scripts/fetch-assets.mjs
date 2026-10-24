@@ -38,6 +38,7 @@ const cards = [
   "zap",
   "freeze",
   "poison",
+  "heal",
   "rage",
   "rocket",
   "lightning",

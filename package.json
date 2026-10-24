@@ -41,6 +41,7 @@
     "assets:deploy-filter": "node scripts/import-deploy-filter.mjs",
     "assets:freeze": "node scripts/import-freeze.mjs",
     "assets:poison": "node scripts/import-poison.mjs",
+    "assets:heal": "node scripts/import-heal.mjs",
     "assets:rage": "node scripts/import-rage.mjs",
     "assets:rage-filter": "node scripts/import-rage-filter.mjs",
     "assets:rocket": "node scripts/import-rocket.mjs",

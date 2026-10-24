@@ -166,6 +166,9 @@ function composition(name, team, delay = 0, scale = 1, ancestry = []) {
         scale: size,
         layer: row.Layer || "Object",
         ground:
+          ["heal_ground", "heal_ground_ring", "heal_ground_ring_enemy"].includes(
+            row.ParticleEmitterName,
+          ) ||
           row.Layer === "Shadow" ||
           (row.Layer === "Ground" && !ballistic) ||
           emitter.clips.some((c) => c.startsWith("death_ground_")),
@@ -449,6 +452,14 @@ for (const [id, source] of [
     enemyComponents: composition(source, "red"),
   };
 const cloneArea = tables.area_effect_objects.Clone;
+const healArea = tables.area_effect_objects.Heal;
+if (healArea?.ScaledEffect !== "Healing")
+  throw new Error("Recheck native Heal area visual binding");
+impacts.heal = {
+  source: healArea.ScaledEffect,
+  components: composition(healArea.ScaledEffect, "blue"),
+  enemyComponents: composition(healArea.ScaledEffect, "red"),
+};
 if (cloneArea?.ScaledEffect !== "spell_clone_ground")
   throw new Error("Recheck native Clone area visual binding");
 impacts.clone = {

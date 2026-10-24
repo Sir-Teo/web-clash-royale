@@ -8474,6 +8474,94 @@
         "row": "Poison"
       }
     },
+    "heal": {
+      "source": "Heal",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "sound:SpellCasting",
+          "Healing"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          },
+          {
+            "sound": "sound_heal_spell",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          },
+          {
+            "sound": "sound_heal_spell",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_other",
+        "row": "Heal"
+      }
+    },
     "rage": {
       "source": "Rage",
       "attack": {
@@ -16689,6 +16777,29 @@
         "pitch": [
           0.98,
           1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_heal_spell": [
+      {
+        "sourceFile": "sfx/heal_magic_03.wav",
+        "file": "heal_magic_03",
+        "volume": [
+          0.65,
+          0.65
+        ],
+        "pitch": [
+          1,
+          1
         ],
         "startDelay": [
           0,
