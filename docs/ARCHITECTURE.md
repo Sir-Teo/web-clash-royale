@@ -228,6 +228,13 @@ The lobby-only adoption action validates the selected deck and destination befor
 `src/ui/match-details.css` lays out the two native card panels side by side on desktop and stacks them on narrow phones. The history actions, destination select, cards and copy/replay buttons retain 44-pixel touch targets. Dialog keyboard handling includes selects and textareas in its focus cycle. Saved-deck labels now match their actual preset composition or read Custom deck after edits and copying.
 
 
+## Deck codes
+
+`src/game/deck-code.ts` serializes eight ordered, unique supported card IDs as `BRA-DECK-1:` followed by comma-separated IDs. Explicit IDs survive collection reordering and additions. Decoding accepts whitespace around the code and separators, rejects unknown versions/cards and inherited object property names, and limits input to 512 UTF-8 bytes. Codes contain no identity, account state or gameplay commands.
+
+The lobby deck editor provides copy, paste and native-card preview. Copy uses the shared secure clipboard/user-gesture fallback and selects the visible code if both APIs fail. Preview and card inspection do not mutate the profile. Editing pasted text invalidates the previous preview immediately. Adoption uses the same validated `useDeck` action and complete deck-selection Undo as recorded decks, with an explicit destination and session-only notices when storage rejects writes. Card inspection preserves the destination and Undo context; leaving the dialog ends that context. The controls retain the modal focus cycle and phone touch targets.
+
+
 ## Individual replay files
 
 `src/game/replay-file.ts` exports a versioned `browser-royale-replay` envelope containing the exporter's display name and one whitelisted match. The file excludes profile totals, saved decks, chests, internal record IDs and friendly-room IDs. Its replay carries canonical teams, commands and the optional recorded viewer perspective. Import validates supported rules versions, bounded names and dates, both decks, result metadata, ordered commands, command deck membership and legal coordinate bounds. Unknown envelope/match/replay/action fields, files above 512,000 UTF-8 bytes, recordings over 9,000 ticks and more than 2,000 commands are rejected. The shared `validRecordEntry` predicate also retains the existing local-history recovery rules.

@@ -23,14 +23,22 @@ export function useRecordedDeck(
   side: "yours" | "opponent",
   slot: number,
 ): DeckSelection {
-  const deck = recordedDecks(record)[side];
+  return useDeck(profile, recordedDecks(record)[side], slot);
+}
+
+/** Adopt a validated deck without aliasing the source or another saved slot. */
+export function useDeck(
+  profile: Profile,
+  deck: readonly CardId[],
+  slot: number,
+): DeckSelection {
   if (
     !validDeck(deck) ||
     !Number.isInteger(slot) ||
     slot < 0 ||
     slot >= profile.decks.length
   )
-    throw new Error("Choose a valid recorded deck and saved deck slot.");
+    throw new Error("Choose a valid deck and saved deck slot.");
   const previous = {
     activeDeck: profile.activeDeck,
     deck: [...profile.deck],

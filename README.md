@@ -17,6 +17,8 @@ A battle’s Details view can export a replay-only JSON file. Open it from **Bat
 
 Battle log details show both starting decks, average elixir, the result and match duration. Tap a card to inspect it or replay the match. From the lobby, copy either recorded deck into any of the three saved slots, with an immediate Undo action in the details view. Friend replays display the decks from your own side of the arena.
 
+Open **Cards → Deck codes** to copy your current eight cards or preview a code from another player. Inspect the shared cards, choose a saved battle deck and select **Use this deck** to apply it. An immediate **Undo deck change** restores your previous deck selection. Codes contain only ordered card IDs and work across browsers; they do not include progress or rewards.
+
 The four original King emotes use complete native expressions and speech-bubble animations, with 16 voice variations. Six original quick-chat phrases use their native text bubbles, wooden selector and archived chat font. Each player has an independent bubble, a host-enforced cooldown and a persistent local mute option. The selector works with touch, mouse and keyboard; reduced motion uses still artwork.
 
 Fireball impacts use the original layered smoke, glowing fragments, sparks, flames and lingering scorch effect. Native additive and screen blending keep fire and lightning bright, and particle motion follows the archived client’s linear deceleration and gravity integration. Sparks, fire, smoke and elixir splashes retain source tail delays and stretch their native artwork between projected motion endpoints; pause and replay seeking preserve their poses.

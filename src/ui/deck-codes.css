@@ -1,0 +1,67 @@
+.builder-sharing {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 16px 0;
+}
+.builder-sharing p,
+.deck-codes p {
+  color: #a9bdd3;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.deck-codes {
+  color: #d8e3ed;
+}
+.deck-codes > section,
+.deck-codes > form {
+  margin-bottom: 22px;
+}
+.deck-code-text {
+  display: block;
+  width: 100%;
+  min-height: 82px;
+  resize: vertical;
+  font: 14px/1.5 monospace;
+  overflow-wrap: anywhere;
+  margin-bottom: 10px;
+}
+.deck-codes button {
+  min-height: 44px;
+}
+.deck-codes #deck-code-error {
+  color: #ffb5b5;
+  overflow-wrap: anywhere;
+}
+.deck-codes .match-copy-target {
+  margin-top: 18px;
+}
+.deck-codes .match-deck-heading h3 {
+  margin: 0;
+}
+.deck-code-notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+  color: #d1e3d5;
+  font-size: 13px;
+}
+.deck-code-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+@media (max-width: 600px) {
+  .builder-sharing {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0;
+  }
+  .deck-code-text {
+    font-size: 16px;
+  }
+  .deck-codes #use-code-deck {
+    width: 100%;
+  }
+}

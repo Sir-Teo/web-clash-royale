@@ -8,6 +8,7 @@ import "@fontsource/nunito-sans/latin-800.css";
 import "./style.css";
 import "./ui/match-details.css";
 import "./ui/replay-files.css";
+import "./ui/deck-codes.css";
 import "./ui/announcements.css";
 import { NativeAnnouncements, battleClock } from "./ui/announcements";
 import "./ui/rooms.css";
@@ -134,7 +135,13 @@ import {
   recordedDecks,
   restoreDeckSelection,
   useRecordedDeck,
+  useDeck,
 } from "./game/match-decks";
+import {
+  decodeDeckCode,
+  encodeDeckCode,
+  MAX_DECK_CODE_BYTES,
+} from "./game/deck-code";
 import type { DeckSelection } from "./game/match-decks";
 import type { Mode, Point, Replay } from "./game/engine";
 import { CARDS, CARD_MAP, PRESETS, averageCost, cardArt } from "./game/cards";
@@ -1059,7 +1066,7 @@ async function peerAction(action: () => Promise<void>) {
     if (screen === "lobby" && modalKey === "room") showPeerMultiplayer();
   }
 }
-function legacyCopyPeer(value: string) {
+function legacyCopyValue(value: string) {
   const field = document.createElement("textarea");
   field.value = value;
   field.setAttribute("aria-hidden", "true");
@@ -1077,7 +1084,7 @@ function legacyCopyPeer(value: string) {
   field.remove();
   return copied;
 }
-async function copyPeerValue(field: HTMLTextAreaElement) {
+async function copyTextValue(field: HTMLTextAreaElement) {
   if (navigator.clipboard?.writeText)
     try {
       await navigator.clipboard.writeText(field.value);
@@ -1085,7 +1092,7 @@ async function copyPeerValue(field: HTMLTextAreaElement) {
     } catch {
       // Some browsers expose the API but reject it on an HTTP LAN origin.
     }
-  if (legacyCopyPeer(field.value)) return true;
+  if (legacyCopyValue(field.value)) return true;
   field.focus();
   field.select();
   return false;
@@ -1155,7 +1162,7 @@ function showPeerMultiplayer() {
     ?.addEventListener("click", async () => {
       const field = $<HTMLTextAreaElement>("#peer-share");
       toast(
-        (await copyPeerValue(field))
+        (await copyTextValue(field))
           ? "Copied. Send it to your friend."
           : "Selected. Use your browser’s Copy action.",
       );
@@ -1343,7 +1350,7 @@ function showDeckBuilder() {
 function renderDeckBuilder() {
   modal(
     "Build your winning eight",
-    `<div class="builder-top"><p>Choose a deck card, then select its replacement below.</p><span><i class="tiny-drop"></i> ${averageCost(profile.deck).toFixed(1)} average</span></div><div class="builder-deck">${profile.deck.map((id, i) => cardHTML(id, `data-edit-slot="${i}"`, editSlot === i ? "selected" : "")).join("")}</div><div class="builder-controls"><div class="collection-label"><h3>Card collection</h3><span>${CARDS.length} / ${CARDS.length} unlocked</span></div><label class="search-input">${icon("search")}<input id="card-search" placeholder="Find a card…" value="${esc(search)}" aria-label="Search cards"/></label><div class="filter-row">${["all", "troop", "spell", "building"].map((f) => `<button class="${filter === f ? "active" : ""}" data-filter="${f}">${f === "all" ? "All cards" : f === "troop" ? "Troops" : f === "spell" ? "Spells" : "Buildings"}</button>`).join("")}</div></div><div class="collection-grid" id="collection-grid"></div><div class="builder-footer"><span id="builder-hint">${editSlot < 0 ? "Select one of your eight cards to replace it." : `Replacing ${CARD_MAP[profile.deck[editSlot]].name} · Choose a card below.`}</span><button class="primary-button" id="deck-done">${icon("check")} Done</button></div>`,
+    `<div class="builder-top"><p>Choose a deck card, then select its replacement below.</p><span><i class="tiny-drop"></i> ${averageCost(profile.deck).toFixed(1)} average</span></div><div class="builder-deck">${profile.deck.map((id, i) => cardHTML(id, `data-edit-slot="${i}"`, editSlot === i ? "selected" : "")).join("")}</div><div class="builder-sharing"><button class="secondary-button" id="deck-codes">Deck codes</button><p>Copy your deck or preview a shared code.</p></div><div class="builder-controls"><div class="collection-label"><h3>Card collection</h3><span>${CARDS.length} / ${CARDS.length} unlocked</span></div><label class="search-input">${icon("search")}<input id="card-search" placeholder="Find a card…" value="${esc(search)}" aria-label="Search cards"/></label><div class="filter-row">${["all", "troop", "spell", "building"].map((f) => `<button class="${filter === f ? "active" : ""}" data-filter="${f}">${f === "all" ? "All cards" : f === "troop" ? "Troops" : f === "spell" ? "Spells" : "Buildings"}</button>`).join("")}</div></div><div class="collection-grid" id="collection-grid"></div><div class="builder-footer"><span id="builder-hint">${editSlot < 0 ? "Select one of your eight cards to replace it." : `Replacing ${CARD_MAP[profile.deck[editSlot]].name} · Choose a card below.`}</span><button class="primary-button" id="deck-done">${icon("check")} Done</button></div>`,
     "deck",
     true,
   );
@@ -1365,12 +1372,111 @@ function renderDeckBuilder() {
     search = ($("#card-search") as HTMLInputElement).value;
     renderCollection();
   });
+  $("#deck-codes").onclick = () => showDeckCodes();
   $("#deck-done").onclick = () => {
     saveProfile(profile);
     refreshDeck();
     closeModal();
   };
   renderCollection();
+}
+interface DeckCodeView {
+  code: string;
+  slot: number;
+  preview?: CardId[];
+  undo?: DeckSelection;
+  notice?: string;
+}
+function showDeckCodes(state: Partial<DeckCodeView> = {}) {
+  if (screen !== "lobby") return;
+  const view: DeckCodeView = { code: "", slot: profile.activeDeck, ...state };
+  modal(
+    "Deck codes",
+    `<div class="deck-codes"><section><label class="field-label" for="current-deck-code">YOUR CURRENT DECK</label><textarea class="name-input deck-code-text" id="current-deck-code" readonly rows="3" spellcheck="false">${esc(encodeDeckCode(profile.deck))}</textarea><button class="secondary-button" id="copy-deck-code">Copy deck code</button><p id="deck-code-copy-status" role="status" aria-live="polite"></p></section><form id="deck-code-form"><label class="field-label" for="shared-deck-code">PASTE A SHARED DECK CODE</label><textarea class="name-input deck-code-text" id="shared-deck-code" rows="3" maxlength="${MAX_DECK_CODE_BYTES}" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="BRA-DECK-1:knight,…">${esc(view.code)}</textarea><button class="secondary-button" type="submit">Preview deck</button><p id="deck-code-error" class="deck-code-error" role="alert" hidden></p></form>${view.preview ? `<section id="shared-deck-preview" class="match-deck-panel"><div class="match-deck-heading"><h3>Shared deck</h3><span><i class="tiny-drop"></i> ${averageCost(view.preview).toFixed(1)} average</span></div><div class="match-deck-grid">${view.preview.map((id) => cardHTML(id, `data-code-card="${id}"`)).join("")}</div><div class="match-copy-target"><label for="code-deck-slot">Destination battle deck</label><div class="match-deck-choice"><select id="code-deck-slot" aria-describedby="code-deck-note">${profile.decks.map((_, slot) => `<option value="${slot}" ${slot === view.slot ? "selected" : ""}>Battle deck ${slot + 1}${slot === profile.activeDeck ? " (active)" : ""}</option>`).join("")}</select>${icon("chevron-down")}</div><p id="code-deck-note">Replaces battle deck ${view.slot + 1} and selects it.</p></div><button class="primary-button" id="use-code-deck">Use this deck</button></section>` : ""}${view.notice ? `<div class="deck-code-notice" role="status"><span>${esc(view.notice)}</span>${view.undo ? '<button class="text-button" id="undo-code-deck">Undo deck change</button>' : ""}</div>` : ""}<div class="deck-code-footer"><button class="text-button" id="deck-code-back">Back to deck builder</button></div></div>`,
+    "deck-codes",
+    true,
+  );
+  const current = $<HTMLTextAreaElement>("#current-deck-code");
+  $("#copy-deck-code").onclick = async () => {
+    const copied = await copyTextValue(current);
+    if (document.querySelector("#current-deck-code") !== current) return;
+    $("#deck-code-copy-status").textContent = copied
+      ? "Deck code copied."
+      : "Select and copy the code above.";
+    if (copied) $("#copy-deck-code").focus();
+  };
+  const input = $<HTMLTextAreaElement>("#shared-deck-code");
+  input.oninput = () => {
+    view.code = input.value;
+    view.preview = undefined;
+    $("#deck-code-error").hidden = true;
+    const old = document.querySelector<HTMLElement>("#shared-deck-preview");
+    if (old) old.hidden = true;
+  };
+  $("#deck-code-form").onsubmit = (event) => {
+    event.preventDefault();
+    view.code = input.value;
+    try {
+      view.preview = decodeDeckCode(view.code);
+      showDeckCodes(view);
+      $("#use-code-deck").focus();
+    } catch (cause) {
+      const error = $("#deck-code-error");
+      error.textContent =
+        cause instanceof Error
+          ? cause.message
+          : "Couldn’t read this deck code.";
+      error.hidden = false;
+    }
+  };
+  $("#deck-code-back").onclick = renderDeckBuilder;
+  if (view.preview) {
+    $("#code-deck-slot").onchange = () => {
+      view.slot = Number($<HTMLSelectElement>("#code-deck-slot").value);
+      $("#code-deck-note").textContent =
+        `Replaces battle deck ${view.slot + 1} and selects it.`;
+    };
+    $("#use-code-deck").onclick = () => {
+      if (screen !== "lobby" || !view.preview) return;
+      const undo = useDeck(profile, view.preview, view.slot);
+      saveProfile(profile);
+      refreshDeck();
+      showDeckCodes({
+        ...view,
+        undo,
+        notice: storageAvailable
+          ? `Battle deck ${view.slot + 1} selected and saved.`
+          : `Battle deck ${view.slot + 1} selected for this session. Browser storage is unavailable.`,
+      });
+      $("#undo-code-deck").focus();
+    };
+    document
+      .querySelectorAll<HTMLButtonElement>("[data-code-card]")
+      .forEach(
+        (button) =>
+          (button.onclick = () =>
+            showCard(
+              button.dataset.codeCard as CardId,
+              () => showDeckCodes(view),
+              "Back to deck codes",
+            )),
+      );
+  }
+  if (view.undo) {
+    $("#undo-code-deck").onclick = () => {
+      if (screen !== "lobby" || !view.undo) return;
+      restoreDeckSelection(profile, view.undo);
+      saveProfile(profile);
+      refreshDeck();
+      showDeckCodes({
+        ...view,
+        undo: undefined,
+        notice: storageAvailable
+          ? "Previous decks restored."
+          : "Previous decks restored for this session. Browser storage is unavailable.",
+      });
+    };
+  }
 }
 function renderCollection() {
   const matches = CARDS.filter(
