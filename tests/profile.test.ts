@@ -4,6 +4,7 @@ import {
   saveProfile,
   recordBattle,
   openChest,
+  validDeck,
 } from "../src/game/profile";
 import { Battle } from "../src/game/engine";
 import legacy from "./fixtures/legacy-replay.json";
@@ -12,6 +13,7 @@ import combatV3 from "./fixtures/combat-v3-replay.json";
 import combatV4 from "./fixtures/combat-v4-replay.json";
 import type { Replay } from "../src/game/engine";
 import { applySnapshot, snapshot } from "../src/network/perspective";
+import { STARTER_DECK } from "../src/game/cards";
 const data = new Map<string, string>();
 beforeEach(() => {
   data.clear();
@@ -21,6 +23,80 @@ beforeEach(() => {
   });
 });
 describe("local progress", () => {
+  it("rejects inherited property names as cards and recovers a playable deck", () => {
+    for (const id of ["toString", "constructor", "__proto__"]) {
+      const p = loadProfile();
+      const deck = [...STARTER_DECK];
+      deck[0] = id as any;
+      expect(validDeck(deck)).toBe(false);
+      p.deck = deck;
+      saveProfile(p);
+      const restored = loadProfile();
+      expect(restored.deck).toEqual(STARTER_DECK);
+      expect(() => new Battle({ deck })).toThrow("eight unique valid cards");
+      expect(new Battle().canPlace("blue", id as any, 4, 20)).toMatchObject({
+        ok: false,
+        reason: "Unknown card.",
+      });
+    }
+  });
+  it("drops corrupt replay records while preserving valid neighboring history and progress", () => {
+    const p = loadProfile();
+    const b = new Battle({ ai: false, seed: 42 });
+    b.play("blue", 0, 4, 20);
+    b.step();
+    b.finish("blue", "Win");
+    recordBattle(p, b);
+    const valid = structuredClone(p.history[0]);
+    const mutations = [
+      (r: any) => {
+        r.date = "not a date";
+      },
+      (r: any) => {
+        r.crowns = [4, 0];
+      },
+      (r: any) => {
+        r.crowns = [0.5, 0];
+      },
+      (r: any) => {
+        r.mode = "unknown";
+      },
+      (r: any) => {
+        r.replay.seed = null;
+      },
+      (r: any) => {
+        r.replay.mode = "double";
+      },
+      (r: any) => {
+        r.replay.actions[0].card = "constructor";
+      },
+      (r: any) => {
+        r.replay.actions[0].card = null;
+      },
+      (r: any) => {
+        r.replay.actions[0].tick = r.replay.duration + 1;
+      },
+      (r: any) => {
+        r.replay.actions = [
+          { ...r.replay.actions[0], tick: 1 },
+          { ...r.replay.actions[0], tick: 0 },
+        ];
+      },
+    ];
+    for (const mutate of mutations) {
+      const corrupt = structuredClone(valid);
+      mutate(corrupt);
+      p.history = [valid, corrupt, { ...valid, id: valid.id + 1 }];
+      saveProfile(p);
+      const restored = loadProfile();
+      expect(restored.history.map((r) => r.id)).toEqual([
+        valid.id,
+        valid.id + 1,
+      ]);
+      expect(restored.gold).toBe(p.gold);
+      expect(restored.deck).toEqual(p.deck);
+    }
+  });
   it("saves friendly red-side replays without rewards or duplicate reconnect records", () => {
     const p = loadProfile();
     const canonical = new Battle({ ai: false, seed: 16 });

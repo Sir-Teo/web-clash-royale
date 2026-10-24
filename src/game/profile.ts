@@ -76,7 +76,7 @@ export const validDeck = (a: unknown): a is CardId[] =>
   Array.isArray(a) &&
   a.length === 8 &&
   new Set(a).size === 8 &&
-  a.every((v) => typeof v === "string" && v in CARD_MAP);
+  a.every((v) => typeof v === "string" && Object.hasOwn(CARD_MAP, v));
 export function loadProfile(): Profile {
   const p = base();
   try {
@@ -130,6 +130,9 @@ export function loadProfile(): Profile {
             (r: RecordEntry) =>
               r &&
               Number.isFinite(r.id) &&
+              typeof r.date === "string" &&
+              Number.isFinite(Date.parse(r.date)) &&
+              ["classic", "double", "training"].includes(r.mode) &&
               (r.opponent === undefined || typeof r.opponent === "string") &&
               (r.matchId === undefined || typeof r.matchId === "string") &&
               (r.replay?.perspective === undefined ||
@@ -137,8 +140,10 @@ export function loadProfile(): Profile {
               ["blue", "red", "draw"].includes(r.winner) &&
               Array.isArray(r.crowns) &&
               r.crowns.length === 2 &&
-              r.crowns.every(Number.isFinite) &&
+              r.crowns.every((n) => Number.isInteger(n) && n >= 0 && n <= 3) &&
               [1, 2, 3, 4, 5].includes(r.replay?.version) &&
+              Number.isSafeInteger(r.replay.seed) &&
+              r.replay.mode === r.mode &&
               Number.isInteger(r.replay.duration) &&
               r.replay.duration >= 0 &&
               r.replay.duration <= 9000 &&
@@ -147,12 +152,15 @@ export function loadProfile(): Profile {
               Array.isArray(r.replay.actions) &&
               r.replay.actions.length <= 2000 &&
               r.replay.actions.every(
-                (a) =>
+                (a, index, actions) =>
                   a &&
                   Number.isInteger(a.tick) &&
                   a.tick >= 0 &&
+                  a.tick <= r.replay.duration &&
+                  (index === 0 || a.tick >= actions[index - 1].tick) &&
                   ["blue", "red"].includes(a.team) &&
-                  a.card in CARD_MAP &&
+                  typeof a.card === "string" &&
+                  Object.hasOwn(CARD_MAP, a.card) &&
                   Number.isFinite(a.x) &&
                   Number.isFinite(a.y),
               ),

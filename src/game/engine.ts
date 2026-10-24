@@ -208,7 +208,7 @@ export class Battle {
     if (
       deck.length !== 8 ||
       new Set(deck).size !== 8 ||
-      deck.some((id) => !CARD_MAP[id])
+      deck.some((id) => typeof id !== "string" || !Object.hasOwn(CARD_MAP, id))
     )
       throw new Error("A deck must contain eight unique valid cards.");
   }
@@ -295,8 +295,9 @@ export class Battle {
       y > 31.3
     )
       return { ok: false, reason: "Place your card inside the arena." };
+    if (typeof id !== "string" || !Object.hasOwn(CARD_MAP, id))
+      return { ok: false, reason: "Unknown card." };
     const c = CARD_MAP[id];
-    if (!c) return { ok: false, reason: "Unknown card." };
     if (c.kind === "spell") return { ok: true, reason: "" };
     const lane = x < 9 ? "left" : "right";
     const enemyPrincess = this.entities.some(
