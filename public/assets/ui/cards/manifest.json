@@ -447,6 +447,11 @@
       "sha256": "d6d553d70b70727f1e30553f996fe2400738358f2965c46a9ab2c79a7a3a4600"
     },
     {
+      "file": "portrait-furnace.webp",
+      "bytes": 35610,
+      "sha256": "ba4449976c2d498abc0c381e6ad18cd12c264caad9c657d820fe6a1391de29af"
+    },
+    {
       "file": "portrait-electro-wizard.webp",
       "bytes": 43830,
       "sha256": "6924f97fcdbad44e6f51fcef5019206ef5a35a3e4b8dc8c94e8e0f89e29d1244"
@@ -488,8 +493,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 107744,
-      "sha256": "bb88428e36489fc1042387d26bf1e816d18ece83c9ccfe4a3245c9030c15fb73"
+      "bytes": 108077,
+      "sha256": "6a61d65588740310e2c339c76e6214f97a1dec53c4d46bad0d72926cca86ca4a"
     }
   ]
 }

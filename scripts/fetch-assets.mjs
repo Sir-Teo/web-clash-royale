@@ -33,6 +33,7 @@ const cards = [
   "elixir-collector",
   "goblin-hut",
   "tombstone",
+  "furnace",
   "zap",
   "freeze",
   "poison",

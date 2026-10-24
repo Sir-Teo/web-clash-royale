@@ -1,0 +1,23 @@
+{
+  "sourceCard": "FirespiritHut",
+  "rarity": "Rare",
+  "cost": 4,
+  "sourceHitpoints": 600,
+  "deployTime": 1,
+  "lifetime": 50,
+  "spawnNumber": 2,
+  "spawnInterval": 0.5,
+  "spawnPause": 9.4,
+  "spawnCharacter": "FireSpirits",
+  "spawnCharacterLevelIndex": 2,
+  "spiritDeployTime": 1,
+  "spiritDeployDelay": 0.4,
+  "spawnRadius": 0.4,
+  "actionFrame": 13,
+  "fps": 30,
+  "frames": 300,
+  "blueExport": "firespirit_hut_blue",
+  "redExport": "firespirit_hut_red",
+  "spawnEffect": "Firespirit_building_spawn",
+  "deathEffect": "goblin_hut_die"
+}

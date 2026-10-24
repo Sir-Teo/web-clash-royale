@@ -136,6 +136,20 @@
       "frames": 98
     },
     {
+      "id": "furnace",
+      "source": "building_firespirit_hut",
+      "metadataSha256": "93123cadeab5b8da501687e170eabba68fe75d06a736971af3dd37da7258b2b0",
+      "dataSha256": "a613e57b386d163dff62d869caea89b14888138615465a0992b2918ec831941d",
+      "textures": [
+        {
+          "file": "furnace-0.webp",
+          "sha256": "cd8ea4a21cb61b2424245061959b1b4c31a00ce6b8f7578055d46a4cae0066ee",
+          "originalSha256": "0dea7afacec5019ced05466df454aa1a3d849648ae8bfab5151ce89b022fb86c"
+        }
+      ],
+      "frames": 600
+    },
+    {
       "id": "king",
       "source": "building_tower",
       "metadataSha256": "0096da89499bf03437a1caa2a88c811b293a5a3067fe571e1ef12bafadbf7962",
