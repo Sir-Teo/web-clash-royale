@@ -44,7 +44,7 @@ describe("archived Tombstone", () => {
       deathSpawnCount: 4, deathSpawnCharacter: "Skeleton", spawnRadius: 0.4,
       fps: 30, blueFrames: 60, redFrames: 70,
     });
-    expect(CARDS).toHaveLength(73);
+    expect(CARDS).toHaveLength(74);
     expect(CARD_MAP.tombstone).toMatchObject({
       kind: "building", rarity: "Rare", cost: 3, hp: 614,
       damage: 0, lifetime: 40,

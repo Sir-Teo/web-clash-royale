@@ -8,7 +8,7 @@ const portraits = JSON.parse(
 ).portraits as Record<string, { table: string; row: string }>;
 
 describe("archived 1.8.1 card roster", () => {
-  it("maps the 73 implemented cards and identifies the remaining preview card", () => {
+  it("maps every archived playable card row to a native portrait", () => {
     const tables = ["spells_characters", "spells_buildings", "spells_other"];
     const source = tables.flatMap((table) =>
       csvRows(readFileSync(`reference/logic/${table}.csv`, "utf8"))
@@ -17,15 +17,13 @@ describe("archived 1.8.1 card roster", () => {
     ).sort();
     expect(source).toHaveLength(74);
     expect(new Set(source).size).toBe(source.length);
-    expect(CARDS).toHaveLength(73);
+    expect(CARDS).toHaveLength(74);
     const imported = CARDS.map((card) => {
       const portrait = portraits[card.id];
       expect(portrait, `Missing native portrait for ${card.id}`).toBeDefined();
       return `${portrait.table}:${portrait.row}`;
     }).sort();
-    expect(source.filter((row) => !imported.includes(row)))
-      .toEqual(["spells_other:Heal"]);
-    expect(imported).toEqual(source.filter((row) => row !== "spells_other:Heal"));
+    expect(imported).toEqual(source);
     expect(new Set(CARDS.map((card) => card.id)).size).toBe(CARDS.length);
   });
 });

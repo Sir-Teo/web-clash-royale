@@ -29,7 +29,7 @@ describe("archived X-Bow siege building", () => {
       projectileArt: "projectile_arrow_basic", projectileShadow: "projectile_arrow_shadow",
       launchEffect: "XbowAttack", hitEffect: "ArrowHit",
     });
-    expect(CARDS).toHaveLength(73);
+    expect(CARDS).toHaveLength(74);
     expect(CARD_MAP["x-bow"]).toMatchObject({
       kind: "building", rarity: "Epic", cost: 6, hp: 1611,
       damage: 32, range: 11.5, interval: 0.3, lifetime: 40,

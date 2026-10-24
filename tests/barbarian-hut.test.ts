@@ -45,7 +45,7 @@ describe("archived Barbarian Hut", () => {
       unitDeployTime: 1, unitDeployDelay: 0.4,
       spawnRadius: 0.4, fps: 30, blueFrames: 1, redFrames: 1,
     });
-    expect(CARDS).toHaveLength(73);
+    expect(CARDS).toHaveLength(74);
     expect(CARD_MAP["barbarian-hut"]).toMatchObject({
       kind: "building", rarity: "Rare", cost: 7, hp: 2816,
       damage: 0, lifetime: 60,

@@ -45,7 +45,7 @@ describe("archived Furnace", () => {
       spiritDeployTime: 1, spiritDeployDelay: 0.4,
       spawnRadius: 0.4, actionFrame: 13, fps: 30, frames: 300,
     });
-    expect(CARDS).toHaveLength(73);
+    expect(CARDS).toHaveLength(74);
     expect(CARD_MAP.furnace).toMatchObject({
       kind: "building", rarity: "Rare", cost: 4, hp: 1536,
       damage: 0, lifetime: 50,
