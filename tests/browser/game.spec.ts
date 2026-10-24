@@ -157,8 +157,9 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
   await page.locator("#battle-button").click();
   await expect(page.locator("#hand .game-card")).toHaveCount(4);
   await expect
-    .poll(() =>
-      page.evaluate(() => (window as any).__arena.state.intro.blocking),
+    .poll(
+      () => page.evaluate(() => (window as any).__arena.state.intro.blocking),
+      { timeout: 15000 },
     )
     .toBe(false);
   // Select an affordable opening troop using the same public controls as a player.

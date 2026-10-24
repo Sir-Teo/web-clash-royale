@@ -1,0 +1,14 @@
+.keyboard-deployment-a11y {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.in-battle #arena-canvas canvas:focus-visible {
+  outline: 2px solid #ffdc6e;
+  outline-offset: -3px;
+}

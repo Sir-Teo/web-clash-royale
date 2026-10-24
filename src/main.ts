@@ -6,6 +6,11 @@ import "@fontsource/nunito-sans/latin-600.css";
 import "@fontsource/nunito-sans/latin-700.css";
 import "@fontsource/nunito-sans/latin-800.css";
 import "./style.css";
+import "./ui/keyboard-deployment.css";
+import {
+  DEFAULT_KEYBOARD_TARGET,
+  moveKeyboardTarget,
+} from "./ui/keyboard-deployment";
 import "./ui/match-details.css";
 import "./ui/replay-files.css";
 import "./ui/deck-codes.css";
@@ -229,6 +234,8 @@ let replayRecord: RecordEntry | null = null;
 let replayOwnerName: string | null = null;
 let lastUi = 0;
 let hover: Point | null = null;
+let keyboardTarget: Point | null = null;
+let keyboardAiming = false;
 let modalKey = "";
 let editSlot = -1;
 let filter = "all";
@@ -268,7 +275,7 @@ $("#app").innerHTML = `
    </aside>
    <main class="arena-panel">
     <div class="arena-heading"><div><span class="eyebrow">ARENA 1</span><h1>Goblin Stadium</h1></div><button class="mode-select">${icon("swords")}<span id="mode-name">Classic 1v1</span>${icon("chevron-down")}</button><button class="icon-button" id="arena-settings" aria-label="Battle settings">${icon("settings-2")}</button></div>
-    <div class="arena-stage" id="arena-stage"><div class="arena-vignette"></div><div class="arena-canvas" id="arena-canvas"></div>
+    <div class="arena-stage" id="arena-stage"><div class="arena-vignette"></div><div class="arena-canvas" id="arena-canvas"></div><p class="keyboard-deployment-a11y" id="keyboard-deployment-instructions">Battle controls: keys 1 through 4 select a card. Arrow keys aim in half-tile steps. Hold Shift for two-tile steps. Enter deploys. Escape cancels a selection or pauses. Space pauses. Tab leaves the battlefield.</p><p class="keyboard-deployment-a11y" id="keyboard-deployment-status" role="status" aria-live="polite" aria-atomic="true"></p>
      <div class="arena-corner top-left"></div><div class="arena-corner bottom-right"></div>
      <div class="lobby-badge"><span class="live-dot"></span> THE ARENA IS YOURS</div>
      <div class="lobby-bottom"><div class="battle-button-wrap"><span class="battle-flare"></span><button id="battle-button" class="battle-button">${icon("swords")} BATTLE ${icon("chevron-right")}</button></div><button id="friend-button" class="friend-button">${icon("users")} Play with a friend</button><span class="battle-caption">${icon("shield-check")} Level 11 cards <span>·</span> Offline AI opponent</span></div>
@@ -492,6 +499,7 @@ function claimChest(index: number) {
 }
 
 function lobby() {
+  clearKeyboardAim(true);
   resetEnding();
   if (initialized && (network.room || multiplayer)) network.leave();
   multiplayer = false;
@@ -501,6 +509,7 @@ function lobby() {
   $("#connection-status").classList.add("hidden");
   $("#pause-button").setAttribute("aria-label", "Pause battle");
   screen = "lobby";
+  syncKeyboardArena();
   selected = -1;
   paused = false;
   resultShown = false;
@@ -531,6 +540,7 @@ function lobby() {
   refreshProfile();
 }
 function startBattle(online = false) {
+  clearKeyboardAim(true);
   replayOwnerName = null;
   $(".match-bottom .player-name").textContent = profile.name;
   resetEnding();
@@ -604,6 +614,7 @@ function startBattle(online = false) {
 let lastHand = "";
 function updateBattleUI(force = false) {
   refreshPlacement();
+  syncKeyboardArena();
   const timer = battleClock(battle);
   const text = (selector: string, value: string) => {
     const node = $(selector);
@@ -630,11 +641,12 @@ function updateBattleUI(force = false) {
     document.querySelectorAll<HTMLButtonElement>("[data-slot]").forEach((e) => {
       e.addEventListener("click", (event) => {
         if (event.detail === 0 && screen === "battle" && !paused)
-          selectCard(Number(e.dataset.slot));
+          selectCard(Number(e.dataset.slot), true);
       });
       e.addEventListener("pointerdown", (event) => {
         if (screen !== "battle" || paused || intro.clock.blocking) return;
         if (!event.isPrimary || pointerDown) return;
+        clearKeyboardAim();
         activeSlot = Number(e.dataset.slot);
         pointerDown = true;
         activePointerId = event.pointerId;
@@ -692,10 +704,42 @@ function updateBattleUI(force = false) {
   }
   if (screen === "replay") syncReplayControl();
 }
-function selectCard(slot: number) {
+function syncKeyboardArena() {
+  const canvas = arena.renderer.domElement;
+  const role = screen === "battle" && !battle.winner ? "application" : "img";
+  if (canvas.getAttribute("role") === role) return;
+  canvas.setAttribute("role", role);
+  if (role === "application") {
+    canvas.setAttribute("aria-describedby", "keyboard-deployment-instructions");
+    canvas.setAttribute(
+      "aria-keyshortcuts",
+      "1 2 3 4 ArrowUp ArrowDown ArrowLeft ArrowRight Enter Escape Space",
+    );
+  } else {
+    canvas.removeAttribute("aria-describedby");
+    canvas.removeAttribute("aria-keyshortcuts");
+  }
+}
+function clearKeyboardAim(reset = false) {
+  if (keyboardAiming) hover = null;
+  keyboardAiming = false;
+  if (reset) keyboardTarget = null;
+  $("#keyboard-deployment-status").textContent = "";
+}
+function beginKeyboardAim() {
+  keyboardAiming = true;
+  keyboardTarget = { ...(keyboardTarget ?? DEFAULT_KEYBOARD_TARGET) };
+  hover = { ...keyboardTarget };
+}
+function selectCard(slot: number, keyboard = false) {
   if (screen !== "battle" || paused || battle.winner || intro.clock.blocking)
     return;
   selected = selected === slot ? -1 : slot;
+  clearKeyboardAim();
+  if (keyboard && selected >= 0) {
+    beginKeyboardAim();
+    arena.renderer.domElement.focus({ preventScroll: true });
+  }
   audio.play("button_click_02", 0.2);
   if (selected < 0) {
     $("#hand-caption").textContent =
@@ -731,6 +775,15 @@ function refreshPlacement() {
     ? battle.canPlace("blue", id, hover.x, hover.y)
     : { ok: true, reason: "" };
   const affordable = battle.players.blue.elixir + 1e-6 >= cost;
+  const c = CARD_MAP[id];
+  const caption = `${c.name} · ${cost} elixir · ${keyboardAiming ? "Arrows aim · Shift moves farther · Enter deploys" : c.kind === "spell" ? "Target anywhere" : "Deploy on the blue half"}`;
+  if ($("#hand-caption").textContent !== caption)
+    $("#hand-caption").textContent = caption;
+  if (keyboardAiming && hover) {
+    const message = `${c.name}, ${cost} elixir. Target column ${Number(hover.x.toFixed(1))}, row ${Number(hover.y.toFixed(1))}. ${!place.ok ? place.reason : !affordable ? `You need ${cost} elixir.` : "Placement valid. Enter deploys."}`;
+    if ($("#keyboard-deployment-status").textContent !== message)
+      $("#keyboard-deployment-status").textContent = message;
+  }
   arena.showPlacement(
     id,
     hover,
@@ -755,6 +808,11 @@ function deploy(point: Point) {
       }
     : battle.play("blue", selected, point.x, point.y);
   if (result.ok) {
+    const fromKeyboard = keyboardAiming;
+    clearKeyboardAim();
+    if (fromKeyboard)
+      $("#keyboard-deployment-status").textContent =
+        `${CARD_MAP[id].name} ${multiplayer ? "placement submitted" : "deployed"}.`;
     selected = -1;
     arena.showPlacement(null, null);
     $("#hand-caption").textContent =
@@ -878,6 +936,7 @@ function showResult() {
   };
 }
 function playReplay(record: RecordEntry, ownerName?: string) {
+  clearKeyboardAim(true);
   replayOwnerName = ownerName ?? null;
   $(".match-bottom .player-name").textContent = replayOwnerName ?? profile.name;
   resetEnding();
@@ -1808,7 +1867,7 @@ function refreshSound() {
 function showHelp() {
   modal(
     "Your first crown starts here.",
-    `<div class="help-steps"><div><b>1</b><span><h3>Pick your eight.</h3><p>Your deck has eight unique cards. Four are in your hand; playing one draws the next card.</p></span></div><div><b>2</b><span><h3>Make your move.</h3><p>Select a card and click your half of the arena. Or drag a card straight onto the battlefield. Spells can target anywhere.</p></span></div><div><b>3</b><span><h3>Protect your kingdom.</h3><p>Troops fight automatically. Use tanks to soak up damage, ranged support to back them up, and spells to clear swarms.</p></span></div><div><b>4</b><span><h3>Take the crown.</h3><p>Destroy more towers in three minutes. Ties go to sudden death, then a lowest-tower-health tiebreaker. Destroying the King Tower wins instantly.</p></span></div></div><div class="keyboard-help"><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> Select card</span><span><kbd>Esc</kbd> Cancel / pause</span><span><kbd>Space</kbd> Pause</span></div><button class="primary-button" id="help-done">Ready for the arena ${icon("swords")}</button>`,
+    `<div class="help-steps"><div><b>1</b><span><h3>Pick your eight.</h3><p>Your deck has eight unique cards. Four are in your hand; playing one draws the next card.</p></span></div><div><b>2</b><span><h3>Make your move.</h3><p>Select a card and click your half of the arena. Or drag a card straight onto the battlefield. Spells can target anywhere.</p></span></div><div><b>3</b><span><h3>Protect your kingdom.</h3><p>Troops fight automatically. Use tanks to soak up damage, ranged support to back them up, and spells to clear swarms.</p></span></div><div><b>4</b><span><h3>Take the crown.</h3><p>Destroy more towers in three minutes. Ties go to sudden death, then a lowest-tower-health tiebreaker. Destroying the King Tower wins instantly.</p></span></div></div><div class="keyboard-help"><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> Select card</span><span><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> Aim · Shift for larger steps</span><span><kbd>Enter</kbd> Deploy</span><span><kbd>Esc</kbd> Cancel / pause</span><span><kbd>Space</kbd> Pause</span></div><button class="primary-button" id="help-done">Ready for the arena ${icon("swords")}</button>`,
     "help",
   );
   $("#help-done").onclick = closeModal;
@@ -1893,13 +1952,18 @@ try {
   throw error;
 }
 arena.renderer.domElement.tabIndex = 0;
+arena.renderer.domElement.addEventListener("blur", () => {
+  clearKeyboardAim();
+  refreshPlacement();
+});
 arena.host.addEventListener("pointermove", (e) => {
   if (!e.isPrimary) return;
+  clearKeyboardAim();
   hover = arena.point(e.clientX, e.clientY);
   refreshPlacement();
 });
 arena.host.addEventListener("pointerleave", () => {
-  if (!dragging) {
+  if (!dragging && !keyboardAiming) {
     hover = null;
     refreshPlacement();
   }
@@ -1907,6 +1971,7 @@ arena.host.addEventListener("pointerleave", () => {
 arena.host.addEventListener("pointerdown", (e) => {
   if (!e.isPrimary) return;
   if (screen !== "battle" || selected < 0 || paused || pointerDown) return;
+  clearKeyboardAim();
   const p = arena.point(e.clientX, e.clientY);
   if (p) deploy(p);
 });
@@ -1961,6 +2026,7 @@ document.addEventListener("pointerup", (e) => {
   }
 });
 function cancelPointer() {
+  clearKeyboardAim();
   pointerDown = false;
   activePointerId = null;
   dragging = false;
@@ -2095,6 +2161,10 @@ document.addEventListener("keydown", (e) => {
       return;
     }
     if (selected >= 0) {
+      const fromKeyboard = keyboardAiming;
+      clearKeyboardAim();
+      if (fromKeyboard)
+        $("#keyboard-deployment-status").textContent = "Deployment cancelled.";
       selected = -1;
       arena.showPlacement(null, null);
       updateBattleUI();
@@ -2126,8 +2196,43 @@ document.addEventListener("keydown", (e) => {
     return;
   }
   if (["1", "2", "3", "4"].includes(e.key)) {
-    if (!e.repeat) selectCard(Number(e.key) - 1);
+    if (!e.repeat) selectCard(Number(e.key) - 1, true);
     e.preventDefault();
+  }
+  if (
+    screen === "battle" &&
+    selected >= 0 &&
+    !paused &&
+    !battle.winner &&
+    !intro.clock.blocking &&
+    document.activeElement === arena.renderer.domElement
+  ) {
+    const moved = moveKeyboardTarget(
+      keyboardAiming
+        ? keyboardTarget!
+        : (hover ?? keyboardTarget ?? DEFAULT_KEYBOARD_TARGET),
+      e.key,
+      e.shiftKey,
+    );
+    if (moved) {
+      e.preventDefault();
+      keyboardTarget = moved;
+      beginKeyboardAim();
+      refreshPlacement();
+      return;
+    }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (!e.repeat) {
+        if (!keyboardAiming)
+          keyboardTarget = {
+            ...(hover ?? keyboardTarget ?? DEFAULT_KEYBOARD_TARGET),
+          };
+        beginKeyboardAim();
+        deploy(keyboardTarget!);
+      }
+      return;
+    }
   }
   if (e.code === "Space" && screen !== "lobby") {
     // Keep native keyboard behavior for focused buttons and links.

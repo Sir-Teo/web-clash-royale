@@ -679,3 +679,16 @@ All 21 production browser cases pass across desktop Chromium, phone Chromium and
 Desktop and phone WebKit battle screenshots were visually reviewed; `docs/screenshots/phone-minion-horde.png` retains the paused six-flyer view with only the pause cover hidden during capture. CI includes the real Horde flow on desktop Chromium and phone WebKit. The card reuses the existing animation/particle/audio bundle; its own native and fallback portraits add two cached files. Physical phone performance, speaker output and competitive balance remain unmeasured.
 
 The Pages-path offline smoke check passes reload, match-worker startup and battle start with 588 cached files and the same 122 native combat/death audio files. The root production build is restored afterward.
+
+
+## Keyboard battlefield deployment
+
+All 365 unit checks, type checking and the production build pass. Four new real-browser cases run on desktop Chromium, phone Chromium and phone WebKit. They select through number keys or native hand-button activation, focus the battlefield, show the existing native preview, move by half tiles and Shift/two-tile steps, clamp every arena edge, submit a troop exactly once while Enter is held and preserve troop/spell coordinates in saved commands. They also exercise unaffordable cards, enemy territory, occupied buildings, pause, cancellation, Tab exit, dialog controls and pointer takeover. Tests verify coordinate/status instructions, native preview counts and the scoped battlefield role. No engine, placement rule, network protocol or replay format changes were needed.
+
+The combined cross-browser run covers 30 cases with the existing gameplay/replay/settings and native keyboard-control suites. Twenty-eight passed initially. The older desktop gameplay case exceeded its five-second opening-animation readiness budget; its timeout now matches the newer 15-second readiness checks. One WebKit pointer-takeover assertion assumed exact subpixel pointer round-tripping; it now verifies the picked position within device-pixel tolerance and checks that keyboard movement continues exactly half a tile from that actual point. Both affected cases passed on targeted rerun. Their gameplay and keyboard assertions remain intact.
+
+Desktop and phone WebKit targeting screenshots were visually reviewed; `docs/screenshots/phone-keyboard-deployment.png` retains the focused battlefield and Knight ghost at column 7, row 23.5. CI includes keyboard deployment on desktop Chromium and phone WebKit. Phone external-keyboard behavior is emulated, and screen-reader announcements have not been manually tested with assistive technology.
+
+Both desktop direct-peer browser checks pass. The host deploys through the pointer while the red-side guest selects, aims and submits through keyboard events; the browser-hosted worker accepts the rotated placement. The same run retains invite recovery, hidden opposing resources, visibility pause, surrender, both replay perspectives and the absence of game WebSocket/API requests. This brings the production checks for this change to 32 cases.
+
+The Pages-path offline smoke check passes reload, match-worker startup and battle start with 588 cached files and 122 native combat/death audio files. The root production build is restored after verification.

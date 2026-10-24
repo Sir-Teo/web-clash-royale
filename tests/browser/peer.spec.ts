@@ -52,7 +52,7 @@ async function init(page: Page, name: string, sound = false) {
   await expect(page.locator("#friend-button")).toBeVisible({ timeout: 60000 });
   await page.locator("#friend-button").click();
 }
-async function deploy(page: Page, x = 4, y = 22) {
+async function deploy(page: Page, x = 4, y = 22, keyboard = false) {
   await expect.poll(async () => (await state(page)).intro.blocking).toBe(false);
   const before = await state(page);
   const slot = before.hand.findIndex(
@@ -64,14 +64,31 @@ async function deploy(page: Page, x = 4, y = 22) {
     await expect(page.locator("#connection-status")).toContainText("FRIENDLY", {
       timeout: 30000,
     });
-    await page.locator(`[data-slot="${slot}"]`).click();
-    const point = await page.evaluate(
-      ({ x, y }) => (window as any).__arena.project(x, y),
-      { x, y },
-    );
-    if (await page.evaluate(() => navigator.maxTouchPoints > 0))
-      await page.touchscreen.tap(point.x, point.y);
-    else await page.mouse.click(point.x, point.y);
+    if (keyboard) {
+      await page.keyboard.press(String(slot + 1));
+      const point = (await state(page)).placement.point;
+      for (const [delta, negative, positive] of [
+        [x - point.x, "ArrowLeft", "ArrowRight"],
+        [y - point.y, "ArrowUp", "ArrowDown"],
+      ] as const) {
+        const key = delta < 0 ? negative : positive;
+        const coarse = Math.floor(Math.abs(delta) / 2);
+        for (let i = 0; i < coarse; i++)
+          await page.keyboard.press(`Shift+${key}`);
+        for (let i = 0; i < (Math.abs(delta) - coarse * 2) * 2; i++)
+          await page.keyboard.press(key);
+      }
+      await page.keyboard.press("Enter");
+    } else {
+      await page.locator(`[data-slot="${slot}"]`).click();
+      const point = await page.evaluate(
+        ({ x, y }) => (window as any).__arena.project(x, y),
+        { x, y },
+      );
+      if (await page.evaluate(() => navigator.maxTouchPoints > 0))
+        await page.touchscreen.tap(point.x, point.y);
+      else await page.mouse.click(point.x, point.y);
+    }
     try {
       await expect
         .poll(async () => (await state(page)).actions, { timeout: 10000 })
@@ -161,7 +178,7 @@ test("static browsers exchange invites, fight, pause together and replay without
       expect((await state(p)).multiplayer.transport).toBe("peer");
     }
     const deployed = await deploy(page, 4, 18);
-    await deploy(friend, 4, 18);
+    await deploy(friend, 4, 18, true);
     await expect.poll(async () => (await state(page)).actions).toBe(2);
     await expect.poll(async () => (await state(friend)).actions).toBe(2);
     const deploymentGroup =
