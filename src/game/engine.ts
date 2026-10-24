@@ -1407,17 +1407,25 @@ export class Battle {
           dist(e, current) <= sight + current.radius))
     )
       return current;
-    const legal = this.entities.filter((t) => this.validTarget(e, t));
-    const closest = (a: Entity, b: Entity) =>
-      dist(e, a) - a.radius - (dist(e, b) - b.radius);
-    const nearby = legal
-      .filter((t) => dist(e, t) <= sight + t.radius)
-      .sort(closest)[0];
-    const target =
-      nearby ??
-      (e.kind === "troop"
-        ? legal.filter((t) => t.kind !== "troop").sort(closest)[0]
-        : undefined);
+    let nearby: Entity | undefined;
+    let nearbyDistance = Infinity;
+    let structure: Entity | undefined;
+    let structureDistance = Infinity;
+    for (const candidate of this.entities) {
+      if (!this.validTarget(e, candidate)) continue;
+      const distance = dist(e, candidate);
+      const edgeDistance = distance - candidate.radius;
+      // Strictly smaller keeps the first entity on ties, matching stable sort.
+      if (distance <= sight + candidate.radius && edgeDistance < nearbyDistance) {
+        nearby = candidate;
+        nearbyDistance = edgeDistance;
+      }
+      if (e.kind === "troop" && candidate.kind !== "troop" && edgeDistance < structureDistance) {
+        structure = candidate;
+        structureDistance = edgeDistance;
+      }
+    }
+    const target = nearby ?? structure;
     e.target = target?.id ?? null;
     return target;
   }
