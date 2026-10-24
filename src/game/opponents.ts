@@ -44,7 +44,7 @@ export const SOLO_OPPONENTS = [
     deck: [
       "balloon",
       "baby-dragon",
-      "minions",
+      "minion-horde",
       "freeze",
       "knight",
       "archers",

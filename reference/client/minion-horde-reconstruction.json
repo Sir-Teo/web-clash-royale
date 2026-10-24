@@ -1,0 +1,42 @@
+{
+  "card": "minion-horde",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/sc/chr_minion.bin",
+      "sha256": "7b590037f1f49d09a16bdf0a60e2c7744a264d893d1ae664fb532f7306fb1346"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    }
+  ],
+  "observed": {
+    "cardRow": "MinionHorde",
+    "unitRow": "Minion",
+    "cost": 5,
+    "count": 6,
+    "rarity": "Common",
+    "icon": "minion_horde",
+    "nativeProjectile": "MinionSpit",
+    "deployFilter": "filter_deploy_unit_default"
+  },
+  "browserChoices": {
+    "unitStats": "Shares the existing curated normalized Minions HP, damage, movement speed, range and attack interval.",
+    "formation": "Existing golden-angle six-body placement; not a recovered native formation.",
+    "spriteAlias": "minions",
+    "projectileArt": "Tower_projectile1",
+    "opponent": "Sky Captain replaces Minions with Minion Horde."
+  },
+  "limits": [
+    "Retained configuration and artwork establish these bindings, not native runtime scheduling or current live balance.",
+    "No new native code execution or decompilation was performed for this card."
+  ]
+}

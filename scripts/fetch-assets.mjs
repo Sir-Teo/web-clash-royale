@@ -19,6 +19,7 @@ const cards = [
   "hog-rider",
   "baby-dragon",
   "minions",
+  "minion-horde",
   "witch",
   "wizard",
   "prince",

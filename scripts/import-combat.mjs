@@ -69,6 +69,7 @@ const names = {
   "hog-rider": "HogRider",
   "baby-dragon": "BabyDragon",
   minions: "Minion",
+  "minion-horde": "Minion",
   witch: "Witch",
   wizard: "Wizard",
   prince: "Prince",

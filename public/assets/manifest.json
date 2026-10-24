@@ -399,6 +399,12 @@
       "sha256": "dcf726551fb3c83db8bc304bdeaff48e1f7553127567b5669573674b81204a1f"
     },
     {
+      "path": "cards/minion-horde.png",
+      "source": "cards/minion-horde.png",
+      "bytes": 142074,
+      "sha256": "b02861160a1aa9ffbc474304098a86f486da71734eb9d258e0a08ad300503fce"
+    },
+    {
       "path": "cards/minions.png",
       "source": "cards/minions.png",
       "bytes": 133625,

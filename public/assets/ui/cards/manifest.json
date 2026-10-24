@@ -212,6 +212,11 @@
       "sha256": "cbca92ca99e84275cb25809860198e2f9124f7029bfaf8d1e3f480bb7c4a0fe0"
     },
     {
+      "file": "portrait-minion-horde.webp",
+      "bytes": 40674,
+      "sha256": "dbe54297bfb26d540599ff26a4a25cb169cfcd8c7d2247de258f91a220678791"
+    },
+    {
       "file": "portrait-witch.webp",
       "bytes": 36474,
       "sha256": "0733bc437e35b26735b275e638435a3527257d84af2288de5cff146114a5c5fc"
@@ -273,8 +278,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 92115,
-      "sha256": "20269dcb63475f841d17b66895101679d87153f9fd686e23da470e86213063f3"
+      "bytes": 92453,
+      "sha256": "76d217e8c4465152c46dba96013cafea09d6ee44817a431230d0cf022a0c24df"
     }
   ]
 }

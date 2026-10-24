@@ -26,7 +26,7 @@ const cards = Object.entries(combat)
     );
   })
   .map(([id]) => id);
-if (cards.length !== 19)
+if (cards.length !== 20)
   throw new Error(`Recheck source deploy filter bindings: ${cards.length}`);
 const clip = sc.clips[sc.names[name]];
 if (clip?.fps !== 60 || clip.frames.length !== 28)
@@ -62,5 +62,5 @@ await writeFile(
   ) + "\n",
 );
 console.log(
-  `Imported ${frames.length} deploy filter frames for ${cards.length} troop families.`,
+  `Imported ${frames.length} deploy filter frames for ${cards.length} troop cards.`,
 );

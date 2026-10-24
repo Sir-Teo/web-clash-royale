@@ -342,6 +342,29 @@
         }
       ]
     },
+    "minion-horde": {
+      "source": "minion_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_minion_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_minion_die",
+          "delay": 0
+        }
+      ]
+    },
     "witch": {
       "source": "witch_die",
       "components": [

@@ -244,6 +244,7 @@ const portraitNames = {
   "hog-rider": "HogRider",
   "baby-dragon": "BabyDragon",
   minions: "Minions",
+  "minion-horde": "MinionHorde",
   witch: "Witch",
   wizard: "Wizard",
   prince: "Prince",

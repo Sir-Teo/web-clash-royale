@@ -224,7 +224,13 @@ export class SpriteLibrary {
     );
   }
   make(id: SpriteId): AnimatedSprite | null {
-    const asset = this.assets.get(id === "skeleton-army" ? "skeletons" : id);
+    const asset = this.assets.get(
+      id === "skeleton-army"
+        ? "skeletons"
+        : id === "minion-horde"
+          ? "minions"
+          : id,
+    );
     if (!asset) return null;
     const frame = Object.values(asset.data.clips)[0].frames[0];
     const mesh = new T.Mesh(spriteGeometry(asset, frame), asset.materials);

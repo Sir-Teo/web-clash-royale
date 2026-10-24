@@ -204,7 +204,11 @@ export function troopModel(id: CardId, team: Team): Model {
     sphere(group, 0, 0.7, 0.3, 0.18, 0xf5ecda);
     eyes(group, 0.74, 0.45, 0.07);
     sphere(group, 0, 0.13, 0, 0.27, 0x33363b);
-  } else if (id === "baby-dragon" || id === "minions") {
+  } else if (
+    id === "baby-dragon" ||
+    id === "minions" ||
+    id === "minion-horde"
+  ) {
     const dragon = id === "baby-dragon";
     const c = dragon ? 0x75b943 : 0x6393d5;
     scale = dragon ? 1.1 : 0.7;

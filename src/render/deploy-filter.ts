@@ -20,7 +20,7 @@ export function deployFilterFrame(age: number) {
     : -1;
 }
 
-/** Source Base-layer deployment filter for the 19 curated troop families. */
+/** Source Base-layer deployment filter for the curated troop cards. */
 export class NativeDeployFilter {
   private actors = new Map<number, FilteredActor>();
 

@@ -24,7 +24,12 @@ export function projectileArt(p: Projectile) {
   if (p.style === "fireball") return "fireball_projectile1";
   if (p.style === "baby-dragon") return "dragon_projectile";
   if (p.style === "wizard") return "fireball_small";
-  if (p.style === "witch" || p.style === "minions") return "Tower_projectile1";
+  if (
+    p.style === "witch" ||
+    p.style === "minions" ||
+    p.style === "minion-horde"
+  )
+    return "Tower_projectile1";
   return null;
 }
 export function makeProjectile(
@@ -110,7 +115,9 @@ export function updateProjectile(
     } else if (["fireball_small", "Tower_projectile1"].includes(sprite.name)) {
       library.animate(sprite, p.elapsed ?? progress * p.duration, true);
       sprite.mesh.rotateZ(angle);
-      sprite.mesh.scale.setScalar(p.style === "minions" ? 0.22 : 0.45);
+      sprite.mesh.scale.setScalar(
+        p.style === "minions" || p.style === "minion-horde" ? 0.22 : 0.45,
+      );
     } else if (sprite.name === "projectile_bomb") {
       sprite.mesh.rotateZ(p.style === "bomber" ? progress * Math.PI * 2 : 0);
       sprite.mesh.scale.setScalar(p.style === "balloon" ? 0.85 : 0.6);

@@ -178,7 +178,7 @@ Poison projects the full duration against stationary buildings/towers and uses a
 ## Current boundaries
 
 - AI and private two-player rooms are implemented. Account synchronization, public matchmaking and cross-server room discovery are not implemented.
-- 28 curated cards; evolutions, champions, equipment and the full live roster are not implemented.
+- 29 curated cards; evolutions, champions, equipment and the full live roster are not implemented.
 - Historical art and curated normalized stats; no claim of current balance parity.
 - Local browser progress only; clearing browser storage removes it.
 - The surrounding diorama, some placement/pathing details and effects are approximations.
@@ -263,3 +263,10 @@ Playback controls, timeline completion and the simulation-loop break use the sam
 `src/replay-playback.ts` creates the canonical replay engine and advances directly to a clamped integer destination, stopping at an earlier natural ending. Only then does a red-side recording create and populate its display Battle. This avoids cloning and rotating every intermediate entity, projectile, area and audio/event set during a seek. Blue-side playback uses the canonical engine directly. The display Battle retains the recorded rules version and swapped deck metadata; it contains no duplicate command stream. The original canonical engine and command cursor remain available for subsequent playback and completion.
 
 Initial playback, restart and timeline seeking share this constructor. A seek creates independent state, preserves zero-duration and final-tick commands, and leaves result completion and presentation reset in the existing UI path. Ordinary red-side playback still projects each displayed simulation update; the optimization applies to the undisplayed ticks rebuilt during seeking.
+
+
+## Shared troop families: Minion Horde
+
+Minions and Minion Horde share one normalized unit definition in `cards.ts`; only the card identity, cost, body count, name and description differ. Horde binds to the retained `MinionHorde` card row and portrait, while its combat profile maps to the same `Minion` character as Minions. Generic deployment creates six independently identified flying entities and consumes five elixir in one accepted command. Each actor owns its attack and health state. Spell valuation uses five elixir divided among the six bodies through the existing count-aware planner.
+
+The sprite library aliases Horde to its already loaded Minion asset, sharing textures and geometry while keeping six meshes and animation states. Projectile artwork and scale reuse the Minion spit branch. Regenerated combat/death audio, deployment effects, health and deployment-filter profiles bind the new card to the same native family. Sky Captain replaces its three-Minion support card with Horde; Royal Trainer retains Minions, so the six solo decks cover all 29 cards. Existing saved decks and recorded enemy decks remain explicit IDs.

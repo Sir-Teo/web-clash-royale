@@ -20,6 +20,7 @@ export type CardId =
   | "hog-rider"
   | "baby-dragon"
   | "minions"
+  | "minion-horde"
   | "witch"
   | "wizard"
   | "prince"
@@ -79,6 +80,19 @@ const troop = (
   count: 1,
   ...extra,
 });
+// Both cards deploy the same normalized Minion unit.
+const minionCard = (
+  id: "minions" | "minion-horde",
+  name: string,
+  cost: number,
+  count: number,
+  description: string,
+) =>
+  troop(id, name, cost, 230, 102, 1.6, 1, 1, description, {
+    air: true,
+    hitsAir: true,
+    count,
+  });
 export const CARDS: Card[] = [
   troop(
     "knight",
@@ -259,17 +273,19 @@ export const CARDS: Card[] = [
     "A flying baby dragon that belches splash damage. Cute, hungry, and dangerous.",
     { rarity: "Epic", air: true, hitsAir: true, splash: 1.5 },
   ),
-  troop(
+  minionCard(
     "minions",
     "Minions",
     3,
-    230,
-    102,
-    1.6,
-    1,
-    1,
+    3,
     "Three fast, flying attackers. A great way to deal with enemies that cannot hit air.",
-    { air: true, hitsAir: true, count: 3 },
+  ),
+  minionCard(
+    "minion-horde",
+    "Minion Horde",
+    5,
+    6,
+    "Six flying Minions overwhelm ground and air targets. Keep them away from splash damage and Arrows.",
   ),
   troop(
     "witch",

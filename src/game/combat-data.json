@@ -127,6 +127,18 @@
       "gravity": 0
     }
   },
+  "minion-horde": {
+    "source": "Minion",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "MinionSpit",
+      "speed": 16.666666666666668,
+      "homing": true,
+      "gravity": 0
+    }
+  },
   "witch": {
     "source": "Witch",
     "windup": 0.5,
