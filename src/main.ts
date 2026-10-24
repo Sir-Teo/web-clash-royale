@@ -130,6 +130,7 @@ import {
   replayComplete,
 } from "./game/replay-completion";
 import { Battle, STEP } from "./game/engine";
+import { createReplayPlayback } from "./replay-playback";
 import { previousSoloOpponent, soloOpponent } from "./game/opponents";
 import {
   recordedDecks,
@@ -930,18 +931,10 @@ function playReplay(record: RecordEntry, ownerName?: string) {
   updateBattleUI(true);
   refreshIcons();
 }
-function createReplayBattle(replay: Replay) {
-  replaySource = replay.perspective === "red" ? new Battle({ replay }) : null;
-  battle = replaySource
-    ? new Battle({
-        seed: replay.seed,
-        ai: false,
-        mode: replay.mode,
-        deck: replay.enemyDeck,
-        enemyDeck: replay.deck,
-      })
-    : new Battle({ replay });
-  if (replaySource) applySnapshot(battle, snapshot(replaySource), "red");
+function createReplayBattle(replay: Replay, targetTick = 0) {
+  const playback = createReplayPlayback(replay, targetTick);
+  battle = playback.battle;
+  replaySource = playback.source;
 }
 function stepReplay() {
   if (replaySource) {
@@ -2057,8 +2050,7 @@ $("#replay-seek").addEventListener("input", () => {
     (Number(($("#replay-seek") as HTMLInputElement).value) / 100) *
       replayData.duration,
   );
-  createReplayBattle(replayData);
-  for (let i = 0; i < target && !battle.winner; i++) stepReplay();
+  createReplayBattle(replayData, target);
   arena.setBattle(battle);
   eventCursor = battle.events.at(-1)?.id ?? 0;
   combatAudio.skip(battle.audioEvents);

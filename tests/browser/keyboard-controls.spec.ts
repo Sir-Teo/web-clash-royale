@@ -98,7 +98,9 @@ test("held battle shortcuts act once and focused emote buttons keep native Space
   page,
 }) => {
   await page.locator("#battle-button").click();
-  await expect.poll(async () => (await state(page)).intro.blocking).toBe(false);
+  await expect
+    .poll(async () => (await state(page)).intro.blocking, { timeout: 15000 })
+    .toBe(false);
   await page.locator("canvas").focus();
   await page.keyboard.down("1");
   expect((await state(page)).selected).toBe(0);

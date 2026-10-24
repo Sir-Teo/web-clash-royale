@@ -256,3 +256,10 @@ This restores the final deployment, hand/queue, spent elixir, projectile or area
 `src/game/replay-completion.ts` treats either a natural winner or the recorded duration as completion. A recording ending without a natural winner is finished on its canonical Battle, with the recorded viewer-relative winner converted back to canonical teams before projection. This keeps the authoritative winner and event-ID allocator together; finishing a red-side display copy could otherwise reuse an existing ID. Natural combat outcomes are preserved even when file metadata claims another winner or a longer duration.
 
 Playback controls, timeline completion and the simulation-loop break use the same predicate. An actual ending therefore fills the timeline and offers Restart even before the declared duration. Restart and seeking construct fresh canonical state as before. Read-only action counts use the canonical replay's accepted commands, matching both perspectives instead of reporting zero from a red-side display copy. No recording format, combat rule, reward path or stored result is changed.
+
+
+## Replay seek reconstruction
+
+`src/replay-playback.ts` creates the canonical replay engine and advances directly to a clamped integer destination, stopping at an earlier natural ending. Only then does a red-side recording create and populate its display Battle. This avoids cloning and rotating every intermediate entity, projectile, area and audio/event set during a seek. Blue-side playback uses the canonical engine directly. The display Battle retains the recorded rules version and swapped deck metadata; it contains no duplicate command stream. The original canonical engine and command cursor remain available for subsequent playback and completion.
+
+Initial playback, restart and timeline seeking share this constructor. A seek creates independent state, preserves zero-duration and final-tick commands, and leaves result completion and presentation reset in the existing UI path. Ordinary red-side playback still projects each displayed simulation update; the optimization applies to the undisplayed ticks rebuilt during seeking.
