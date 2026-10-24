@@ -18,14 +18,14 @@
   "inputs": [
     {
       "path": "src/render/destruction-data.json",
-      "sha256": "1d1a690502428f456ac5fcf132e658b41ba8af44280402005ad8e8616c0685e0"
+      "sha256": "fa0976fef0a31aa5f3e379d9c4e1dc7dbb9ebe3cbe07973f5fc09fd1d9c9dcb9"
     },
     {
       "path": "reference/logic/buildings.csv",
       "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
     }
   ],
-  "dataSha256": "e6394ffab954260224d767ac627b5c05079462268af0bf78043b684b8fc8ac94",
+  "dataSha256": "63863ab0ee6ca167b7231a9e5f8c09a9685835759445872884e4e9846f4f486c",
   "textures": [
     {
       "file": "effects-0.webp",
@@ -40,6 +40,6 @@
       "source": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/sc/building_mega_bomb_tex.png"
     }
   ],
-  "clips": 107,
-  "frames": 5573
+  "clips": 110,
+  "frames": 5695
 }

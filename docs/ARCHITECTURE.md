@@ -16,6 +16,8 @@ Freeze creates a persistent area instead of a projectile. At each fixed simulati
 
 Poison uses the same persistent-area stream for eight seconds within a 3.5-tile radius. Its source-derived 250-ms hits refresh a one-second damage buff on enemies, including exposed buildings and Crown Towers but excluding buried Teslas. Each affected entity carries its remaining buff and one-second damage clock in simulation state, so leaving the circle still permits a final tick. Crown Towers receive 40% damage. The archived 57 damage per second is normalized to 121 for this roster using approximately the same ratio as its Fireball damage. Overlapping clouds refresh one status without stacking. The optional status, area hit cursor and rotated peer snapshot remain deterministic in replay.
 
+Rocket adds a six-elixir fixed-target blast with archived speed 350/60, radius two and knockback 1.8. Its normalized damage is 1484 using the existing Fireball scale, with the archived 40% Crown Tower fraction stored only on Rocket projectiles. Other direct spells retain their 30% fallback, preserving historical replays. Native 60-frame pitch artwork uses a documented camera-space reconstruction. Trail envelopes repeat every 800 ms; particles retain their own source delays and anchor to the reconstructed projectile position at birth. Simulation-age cursors deduplicate repeated frames and recover active trails after a scene rebuild or late snapshot. `reference/client/rocket-reconstruction.json` separates source observations from the unverified native trajectory, pitch and shadow details.
+
 Rage adds a six-second friendly area with a five-tile radius. Its 300-ms applications refresh a two-second status capped to the area's remaining lifetime. Overlaps retain the longest application without multiplying the boost. Living friendly troops, exposed buildings and Crown Towers qualify; hidden Tesla is excluded. Attack cooldown, pending windup, movement and Witch spawning advance at 1.35; deployment, stun, building decay, projectile travel and the existing Prince charge threshold retain real time. Optional buff and animation clocks survive peer snapshots and deterministic replay. Actor combat sounds use the source 1.25 pitch modifier; attack cues scheduled at attack creation use accelerated delays. The AI targets Rage at a valuable friendly push. Historical table flags supply these rules; `reference/client/rage-reconstruction.json` records the unverified native lifecycle details and reconstruction choices.
 
 An initial seeded shuffle plus timestamped commands makes battles replayable. Replays disable AI decisions and consume the recorded commands. Particle randomness stays outside the simulation. Unit tests compare full entity, player and projectile state between a live run and its replay.
@@ -164,7 +166,7 @@ Six tower HUD hosts use the shared native SVG renderer and accessible meter valu
 ## Current boundaries
 
 - AI and private two-player rooms are implemented. Account synchronization, public matchmaking and cross-server room discovery are not implemented.
-- 27 curated cards; evolutions, champions, equipment and the full live roster are not implemented.
+- 28 curated cards; evolutions, champions, equipment and the full live roster are not implemented.
 - Historical art and curated normalized stats; no claim of current balance parity.
 - Local browser progress only; clearing browser storage removes it.
 - The surrounding diorama, some placement/pathing details and effects are approximations.

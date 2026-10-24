@@ -1,0 +1,18 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_other.csv",
+      "sha256": "a50dcc87e6ee337537e2dcb00c6f4f3f81fc383685ce8e630b33c41f6c4e2dda"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    }
+  ],
+  "output": {
+    "path": "src/game/rocket-data.json",
+    "sha256": "07b8812a1cc1bdf6e09bd33bfc3aa619a34c34c86137da881ec1454ef9780744"
+  }
+}

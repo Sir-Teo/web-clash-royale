@@ -27,6 +27,7 @@ import type { BuildingSprite } from "./buildings";
 import { destroyedTowerSites, TOWER_SITES } from "../game/arena-layout";
 import { DestructionEffects, deathEffect, impactEffect } from "./destruction";
 import { NativeDeploymentEffects } from "./deployment-effects";
+import { NativeProjectileTrails } from "./projectile-trails";
 import { NativeLaunchEffects } from "./launch-effects";
 import { NativeMovementEffects } from "./movement-effects";
 import type { MovementBurst } from "./movement-effects";
@@ -81,6 +82,7 @@ export class Arena {
   );
   private destruction = new DestructionEffects(this.scene, this.effects);
   private deploymentEffects = new NativeDeploymentEffects();
+  private projectileTrails = new NativeProjectileTrails();
   private launchEffects = new NativeLaunchEffects();
   private movementEffects = new NativeMovementEffects();
   private chargeMarkers: NativeChargeMarkers;
@@ -495,6 +497,7 @@ export class Arena {
   setBattle(battle: Battle) {
     this.deploymentEffects.reset(battle.audioEvents);
     this.launchEffects.reset(battle.audioEvents);
+    this.projectileTrails.reset();
     this.movementEffects.reset();
     this.chargeMarkers.clear();
     this.chargeFilter.clear();
@@ -1059,6 +1062,8 @@ export class Arena {
         if (v.nativeHealth) this.scene.remove(v.nativeHealth.mesh);
         this.units.delete(id);
       }
+    for (const burst of this.projectileTrails.consume(b.projectiles, b.seed))
+      this.destruction.trail(burst);
     const liveShots = new Set<number>();
     for (const p of b.projectiles) {
       liveShots.add(p.id);

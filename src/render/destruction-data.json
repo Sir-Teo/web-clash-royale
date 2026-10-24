@@ -1887,6 +1887,125 @@
         }
       ]
     },
+    "rocket": {
+      "source": "Rocket_explosion",
+      "components": [
+        {
+          "emitter": "Fireball_explosion_smoke",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Fireball_explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Fireball_explosion_sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_gradients",
+          "delay": 0.01,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "explosion_fire",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_continousFire",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Fireball_explosion_smoke",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Fireball_explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Fireball_explosion_sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_gradients",
+          "delay": 0.01,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "explosion_fire",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_continousFire",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        },
+        {
+          "emitter": "explosion_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
     "hit:giant": {
       "source": "giant_hit",
       "components": [
@@ -2593,6 +2712,71 @@
           "scale": 1,
           "layer": "Shadow",
           "ground": true
+        }
+      ]
+    }
+  },
+  "trails": {
+    "rocket": {
+      "source": "Rocket_Emitter",
+      "components": [
+        {
+          "emitter": "Rocket_Emitter_Smoketrail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Rocket_Emitter_Sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Rocket_Emitter_Glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Rocket_Emitter_Smoketrail",
+          "delay": 0.8,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Rocket_Emitter_Smoketrail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Rocket_Emitter_Sparks",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Rocket_Emitter_Glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Rocket_Emitter_Smoketrail",
+          "delay": 0.8,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
         }
       ]
     }
@@ -7715,6 +7899,148 @@
         "Death_purple_sparkle2",
         "Death_purple_sparkle3",
         "Death_purple_sparkle4"
+      ]
+    },
+    "Rocket_Emitter_Smoketrail": {
+      "count": 55,
+      "emissionLife": [
+        0.8,
+        0.8
+      ],
+      "interval": [
+        0.005,
+        0.01
+      ],
+      "life": [
+        1.8,
+        2
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 1.1666666666666667,
+      "startScale": 1.2,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0.6666666666666666,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "fireball_trail1",
+        "fireball_trail2"
+      ]
+    },
+    "Rocket_Emitter_Sparks": {
+      "count": 13,
+      "emissionLife": [
+        0.8,
+        0.8
+      ],
+      "interval": [
+        0,
+        0.01
+      ],
+      "life": [
+        0.6,
+        0.8
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.13333333333333333,
+        0.13333333333333333
+      ],
+      "speed": [
+        0.5,
+        10
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        1.6666666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 1.1666666666666667,
+      "startScale": 0.55,
+      "endScale": 0.8,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0.6666666666666666,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Sparkle"
+      ]
+    },
+    "Rocket_Emitter_Glow": {
+      "count": 50,
+      "emissionLife": [
+        0.8,
+        0.8
+      ],
+      "interval": [
+        0.005,
+        0.01
+      ],
+      "life": [
+        0.8,
+        0.8
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.1,
+        0.1
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 1.1666666666666667,
+      "startScale": 1.5,
+      "endScale": 0.2,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0.03333333333333333,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "fireball_trail3"
       ]
     }
   }

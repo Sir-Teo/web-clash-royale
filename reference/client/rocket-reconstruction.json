@@ -1,0 +1,22 @@
+{
+  "feature": "Rocket spell",
+  "authority": "historical-reference",
+  "method": "Pinned logic/client CSV and SC1 geometry imports; no original client execution or native projectile-code result.",
+  "observations": [
+    "Rocket is Rare, costs six elixir, and binds RocketSpell with damage 700, speed 350, radius 2000, CrownTowerDamagePercent -60, Pushback 1800, Gravity 50 and enemy air/ground targeting.",
+    "projectile_rocket has 60 frames at 60 FPS. Resolved original shapes depict a pitch cycle with a vertical long axis; they are not 60 compass headings. The native origin lies near the body/exhaust attachment.",
+    "Rocket_Emitter retains smoke, sparks, glow and a delayed smoke component at 800 ms. Rocket_explosion retains eight particle layers and a 1.5-second shake duration.",
+    "Cast and impact sound bindings, portrait, source rows and SHA-256 hashes are retained in the import manifests."
+  ],
+  "reconstructionChoices": [
+    "Normalize damage to round(700 * 689 / 325) = 1484 using the existing Fireball scale. Retain the archived 40% Crown Tower damage fraction; existing direct spells keep their historical browser 30% fallback.",
+    "Convert source speed to 350/60 tiles per second, radius to two tiles, and knockback to 1.8 tiles. Use fixed planar targeting, the existing six-tile sine arc and King launch origins; source gravity 50 remains recorded without claiming native ballistic parity.",
+    "Map camera-relative pitch around native side-profile frame 50, then roll the billboard along its screen-space tangent. The original direction-to-frame formula is unverified. The imported native shadow is retained but not rendered until its projection can be matched confidently.",
+    "Repeat the 800-ms trail envelope along the reconstructed flight. Each particle is anchored to the projectile position at its authored birth delay, clipped at impact. Simulation-age cursors rebuild live smoke after a late snapshot or replay seek. Existing particle physics, layering, pause and the shared 1280-particle cap apply.",
+    "Use existing heavy-unit knockback immunity and hidden-Tesla targeting rules. Optional projectile tower-damage metadata preserves old recorded matches without changing their replay version."
+  ],
+  "unknowns": [
+    "Original gravity integration, launch height and native 360-frame pitch selection.",
+    "Whether native trail emitter restart, delayed attachment and shadow projection exactly match this browser reconstruction."
+  ]
+}

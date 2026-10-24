@@ -39,6 +39,7 @@
     "assets:charge-marker": "node scripts/import-charge-marker.mjs",
     "assets:charge-filter": "node scripts/import-charge-filter.mjs",
     "assets:deploy-filter": "node scripts/import-deploy-filter.mjs",
+    "assets:rocket": "node scripts/import-rocket.mjs",
     "assets:rage": "node scripts/import-rage.mjs",
     "assets:rage-filter": "node scripts/import-rage-filter.mjs",
     "assets:freeze": "node scripts/import-freeze.mjs",

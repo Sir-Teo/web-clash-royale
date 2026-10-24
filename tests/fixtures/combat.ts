@@ -92,13 +92,17 @@ function setup() {
     "destruction",
   ])
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
-      scenario !== "king";
+      scenario !== "king" &&
+      !(scenario === "rocket" && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
     unit("archers", "red", 14, 10);
     cast("arrows", "blue", 4, 12);
     cast("fireball", "blue", 14, 12);
+  } else if (scenario === "rocket") {
+    cast("rocket", "blue", 4, 10);
+    cast("rocket", "red", 14, 22);
   } else if (scenario === "fireball") {
     cast("fireball", "blue", 4, 13);
     cast("fireball", "red", 14, 19);
@@ -423,6 +427,13 @@ function render(now: number) {
           height: (arena as any).units.get(e.id)?.sprite?.mesh.position.y ?? 0,
         })),
     );
+  (document.querySelector("#destruction") as HTMLElement).dataset.rockets =
+    JSON.stringify({
+      shots: arena.projectileState,
+      impacts: battle.events.filter(
+        (e) => e.type === "hit" && e.card === "rocket",
+      ).length,
+    });
   (document.querySelector("#destruction") as HTMLElement).dataset.impacts =
     String(
       battle.events.filter((e) => e.type === "hit" && e.card === "fireball")

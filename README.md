@@ -2,7 +2,7 @@
 
 A private, independent browser fan game for Sir-Teo. Built with TypeScript, Three.js and Vite. AI battles work offline. Friendly two-player battles connect directly between browsers; the default build is front end only.
 
-Build an eight-card deck from 27 cards, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
+Build an eight-card deck from 28 cards, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
 
 Combat includes cancellable attack windups, defensive building pulls, homing shots, ballistic bombs, Fireball travel and knockback, three-wave Arrows and Zap charge resets. Cannon uses its native aiming frames; Tesla hides underground, rises to attack and retracts when idle. Princess Towers use their dedicated native character animations. The King plays its original wake-up sequence and waits 3.3 seconds before aiming and attacking. Existing version-1 through version-4 replays retain their original rules; new matches record version-5 combat.
 
@@ -10,7 +10,7 @@ Princess Towers preserve the original base and foreground battlements, with the 
 
 Play against AI or challenge a friend over Wi-Fi or compatible remote networks. Exchange an invite and reply to connect the browsers directly, then use ready checks, emotes and both players’ replays. The full live card roster and current balance parity are not implemented. See [multiplayer setup](docs/MULTIPLAYER.md) for direct Wi-Fi play and static hosting.
 
-Classic and Double Elixir rotate between six named AI opponents: Giant push, Hog cycle, Balloon Freeze, Witch Poison, Prince Rage and P.E.K.K.A defense. Their decks cover all 27 cards, and a completed match prevents the same opponent from appearing immediately again. Training keeps the original Royal Trainer and slower decisions. Opponent names and exact decks are retained in saved replays.
+Classic and Double Elixir rotate between six named AI opponents: Giant push, Hog cycle, Balloon Freeze, Witch Poison, Prince Rage and P.E.K.K.A defense. Their decks cover all 28 cards, and a completed match prevents the same opponent from appearing immediately again. Training keeps the original Royal Trainer and slower decisions. Opponent names and exact decks are retained in saved replays.
 
 Battle log details show both starting decks, average elixir, the result and match duration. Tap a card to inspect it or replay the match. From the lobby, copy either recorded deck into any of the three saved slots, with an immediate Undo action in the details view. Friend replays display the decks from your own side of the arena.
 
@@ -38,7 +38,9 @@ Battle countdowns and overtime notices use the original font, authored animation
 
 Battles open with the original animated arena title, crossed swords, red/blue player ribbons and FIGHT lettering. Combat, AI and elixir wait for the intro's authored action frame. The opening pauses with the game, fits long player names, adapts to phone rotation and plays when a replay restarts; seeking skips it.
 
-All 27 cards use original unframed portraits with native hand/deck frames, cost drops and text. Selected cards show the original white outline, and newly drawn cards play the source reveal animation. The same artwork appears in the deck editor, details, next-card preview and drag controls; phone touch targets remain at least 44 pixels.
+All 28 cards use original unframed portraits with native hand/deck frames, cost drops and text. Selected cards show the original white outline, and newly drawn cards play the source reveal animation. The same artwork appears in the deck editor, details, next-card preview and drag controls; phone touch targets remain at least 44 pixels.
+
+Rocket costs six elixir and sends a slow, powerful projectile toward its fixed target. Its two-tile blast hits enemy air and ground units, knocks back lighter troops and deals 40% damage to Crown Towers. Native artwork, moving smoke and sparks, explosion layers, sounds and camera shake accompany the spell.
 
 Rage costs two elixir and boosts friendly movement, attacks and spawning by 35% in a five-tile area for six seconds. Its buff lingers for up to two seconds after exit and ends with the cloud. Native magenta artwork and sounds accompany the spell; overlapping casts refresh the boost without stacking it.
 
@@ -73,7 +75,7 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 
 `npm run assets:death-audio` imports the corresponding native sound mappings and six pinned audio files, preserving nested effects, team variants, volume/pitch ranges and delays.
 
-`npm run assets:combat-audio` imports 29 troop/tower/spell sound profiles, 96 groups and 116 pinned audio files from the retained logic, effects and sound tables. Card sources come from the native portrait bindings. Source and output hashes are retained in the combat-audio manifest.
+`npm run assets:combat-audio` imports 30 troop/tower/spell sound profiles, 98 groups and 118 pinned audio files from the retained logic, effects and sound tables. Card sources come from the native portrait bindings. Source and output hashes are retained in the combat-audio manifest.
 
 `npm run assets:ui` imports five native battle announcement timelines, their text styles, font, elixir icon and sound mappings. `/tests/fixtures/timing.html` provides precise countdown/overtime inspection and is excluded from production.
 
@@ -81,9 +83,11 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 
 `npm run assets:elixir` imports eight native elixir HUD clips and their source geometry. `/tests/fixtures/elixir.html` provides amount, selected-cost, spending, regeneration and frame-step controls for visual inspection.
 
+`npm run assets:rocket` reproduces the pinned Rocket rules; its normalization, trajectory and native-art mapping choices are recorded in `reference/client/rocket-reconstruction.json`.
+
 `npm run assets:rage` and `npm run assets:rage-filter` reproduce the pinned Rage rules and tint timeline.
 
-`npm run assets:cards` imports native card layers and all 27 source portraits. `/tests/fixtures/cards.html` provides the full gallery, selection states and a frame-stepped hand reveal.
+`npm run assets:cards` imports native card layers and all 28 source portraits. `/tests/fixtures/cards.html` provides the full gallery, selection states and a frame-stepped hand reveal.
 
 `npm run assets:freeze` pins Freeze's archived cost, radius, duration and hidden-target rule. `npm run assets:destruction`, `npm run assets:effects` and `npm run assets:combat-audio` regenerate its original particles, ground/radius clips and cast sound. `npm run assets:cold-filter` imports the original character tint shared by Freeze and Zap.
 

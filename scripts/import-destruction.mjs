@@ -47,6 +47,7 @@ sources["balloon-bomb"] =
 const effects = {},
   impacts = {},
   launches = {},
+  trails = {},
   movements = {},
   charges = {},
   landings = {},
@@ -168,6 +169,7 @@ for (const [id, expected] of Object.entries({
   fireball: "Fireball_explosion",
   zap: "Spell_zap_effect",
   arrows: "ArrowHitGround",
+  rocket: "Rocket_explosion",
 })) {
   const card = cards[id];
   const spell = tables[card.table][card.row];
@@ -326,6 +328,15 @@ for (const [id, source] of [
     components: composition(source, "blue"),
     enemyComponents: composition(source, "red"),
   };
+const rocketSpell = tables[cards.rocket.table][cards.rocket.row];
+const rocketProjectile = tables.projectiles[rocketSpell.Projectile];
+if (rocketProjectile.TrailEffect !== "Rocket_Emitter")
+  throw new Error("Recheck native Rocket trail binding");
+trails.rocket = {
+  source: rocketProjectile.TrailEffect,
+  components: composition(rocketProjectile.TrailEffect, "blue"),
+  enemyComponents: composition(rocketProjectile.TrailEffect, "red"),
+};
 effects.tower.rubble = "Tower_destroyed_ground1";
 effects.king.rubble = "Tower_destroyed_ground2";
 const path = "src/render/destruction-data.json",
@@ -335,6 +346,7 @@ const path = "src/render/destruction-data.json",
         effects,
         impacts,
         launches,
+        trails,
         movements,
         charges,
         landings,

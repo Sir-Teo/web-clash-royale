@@ -267,9 +267,14 @@
       "sha256": "0aa99d98429c43d3289cb0175501d96d07f51cf8efb49d04cb00790992ed9792"
     },
     {
+      "file": "portrait-rocket.webp",
+      "bytes": 36846,
+      "sha256": "d349ff0e03790573a49cd14551fd9630595b09c7de0f764b4333e16b6221936b"
+    },
+    {
       "file": "cards.json",
-      "bytes": 91807,
-      "sha256": "77bedfec954bf57691b1b92815ee3116de8c45ea19d73c9e12ddeaac8d7f32e6"
+      "bytes": 92115,
+      "sha256": "20269dcb63475f841d17b66895101679d87153f9fd686e23da470e86213063f3"
     }
   ]
 }

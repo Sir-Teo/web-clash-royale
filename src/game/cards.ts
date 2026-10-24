@@ -1,5 +1,6 @@
 import freeze from "./freeze-data.json" with { type: "json" };
 import poison from "./poison-data.json" with { type: "json" };
+import rocket from "./rocket-data.json" with { type: "json" };
 import rage from "./rage-data.json" with { type: "json" };
 
 export type CardId =
@@ -29,7 +30,8 @@ export type CardId =
   | "zap"
   | "freeze"
   | "poison"
-  | "rage";
+  | "rage"
+  | "rocket";
 export interface Card {
   id: CardId;
   name: string;
@@ -415,6 +417,18 @@ export const CARDS: Card[] = [
       radius: rage.radius,
       hitsAir: rage.hitsAir,
     },
+  ),
+  troop(
+    "rocket",
+    "Rocket",
+    rocket.cost,
+    0,
+    rocket.damage,
+    0,
+    0,
+    1,
+    "A slow, powerful blast that damages air and ground enemies. Deals 40% damage to Crown Towers.",
+    { kind: "spell", rarity: "Rare", radius: rocket.radius, hitsAir: true },
   ),
 ];
 export const CARD_MAP = Object.fromEntries(

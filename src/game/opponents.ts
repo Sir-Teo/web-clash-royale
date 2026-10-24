@@ -89,7 +89,7 @@ export const SOLO_OPPONENTS = [
       "tesla",
       "skeletons",
       "spear-goblins",
-      "fireball",
+      "rocket",
       "zap",
       "valkyrie",
     ],

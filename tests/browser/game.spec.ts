@@ -214,6 +214,14 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
   ).toBeVisible({ timeout: 15000 });
   await page.getByRole("button", { name: "Watch replay", exact: true }).click();
   await expect(page.locator(".replay-controls")).toBeVisible();
+  // The replay has its own native opening. Wait for it independently of
+  // playback so software-rendered browsers get a full simulation-time check.
+  await expect
+    .poll(
+      () => page.evaluate(() => (window as any).__arena.state.intro.blocking),
+      { timeout: 30000 },
+    )
+    .toBe(false);
   await expect
     .poll(() => page.evaluate(() => (window as any).__arena.state.time))
     .toBeGreaterThan(0);

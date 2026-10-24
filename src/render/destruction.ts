@@ -2,6 +2,8 @@ import * as T from "three";
 import definitions from "./destruction-data.json";
 import { makeMaterial, effectMaterials, spriteGeometry } from "./sprites";
 import type { EffectLibrary } from "./effects";
+import { projectilePose } from "./projectile-path";
+import type { TrailBurst } from "./projectile-trails";
 import type { Team } from "../game/engine";
 import { particleTailPose, rotatedSpriteHeight } from "./particle-tail";
 
@@ -15,6 +17,7 @@ export type LandingEffect = `land:${keyof typeof definitions.landings}`;
 type DeploymentCard = keyof typeof definitions.deployments;
 export type DeploymentEffect = `deploy:${DeploymentCard}`;
 type NativeEffect =
+  | "trail:rocket"
   | DeathEffect
   | ImpactEffect
   | LaunchEffect
@@ -100,25 +103,28 @@ export function destructionPlan(
   };
   const between = (range: number[]) =>
     range[0] + random() * (range[1] - range[0]);
-  const definition = effect.startsWith("deploy:")
-    ? definitions.deployments[effect.slice(7) as DeploymentCard]
-    : effect.startsWith("launch:")
-      ? definitions.launches[
-          effect.slice(7) as keyof typeof definitions.launches
-        ]
-      : effect.startsWith("move:")
-        ? definitions.movements[
-            effect.slice(5) as keyof typeof definitions.movements
-          ]
-        : effect.startsWith("charge:")
-          ? definitions.charges[
-              effect.slice(7) as keyof typeof definitions.charges
+  const definition =
+    effect === "trail:rocket"
+      ? definitions.trails.rocket
+      : effect.startsWith("deploy:")
+        ? definitions.deployments[effect.slice(7) as DeploymentCard]
+        : effect.startsWith("launch:")
+          ? definitions.launches[
+              effect.slice(7) as keyof typeof definitions.launches
             ]
-          : effect.startsWith("land:")
-            ? definitions.landings[
-                effect.slice(5) as keyof typeof definitions.landings
+          : effect.startsWith("move:")
+            ? definitions.movements[
+                effect.slice(5) as keyof typeof definitions.movements
               ]
-            : compositions[effect as DeathEffect | ImpactEffect];
+            : effect.startsWith("charge:")
+              ? definitions.charges[
+                  effect.slice(7) as keyof typeof definitions.charges
+                ]
+              : effect.startsWith("land:")
+                ? definitions.landings[
+                    effect.slice(5) as keyof typeof definitions.landings
+                  ]
+                : compositions[effect as DeathEffect | ImpactEffect];
   const components =
     definition[team === "red" ? "enemyComponents" : "components"];
   return components.flatMap((component) => {
@@ -304,6 +310,23 @@ export class DestructionEffects {
       this.particles.push({
         plan,
         origin: origin.clone(),
+        start: this.clock - age + plan.delay,
+      });
+      this.dirty = true;
+    }
+  }
+  trail(burst: TrailBurst) {
+    if (!this.library.asset) return;
+    const { projectile: p, start, age, seed } = burst;
+    for (const plan of destructionPlan("trail:rocket", seed, p.team)) {
+      if (this.particles.length >= MAX_NATIVE_PARTICLES) break;
+      if (start + plan.delay >= p.duration || age - plan.delay >= plan.life)
+        continue;
+      if (!this.library.asset.data.clips[plan.clip]) continue;
+      const pose = projectilePose(p, start + plan.delay);
+      this.particles.push({
+        plan,
+        origin: new T.Vector3(pose.x, pose.y, pose.z),
         start: this.clock - age + plan.delay,
       });
       this.dirty = true;

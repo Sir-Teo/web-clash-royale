@@ -20,6 +20,7 @@ export function projectileArt(p: Projectile) {
   if (["cannon", "cannonball"].includes(p.style))
     return "projectile_cannonball_large";
   if (p.style === "musketeer") return "projectile_cannonball_small";
+  if (p.style === "rocket") return "projectile_rocket";
   if (p.style === "fireball") return "fireball_projectile1";
   if (p.style === "baby-dragon") return "dragon_projectile";
   if (p.style === "wizard") return "fireball_small";
@@ -92,6 +93,16 @@ export function updateProjectile(
     } else if (sprite.name === "projectile_spear_360") {
       library.frame(sprite, 4);
       sprite.mesh.rotateZ(angle + Math.PI / 2);
+    } else if (sprite.name === "projectile_rocket") {
+      // The native 60 shapes encode pitch, not compass headings. Reconstruct
+      // camera-relative pitch around the nose-up side profile, then roll it
+      // along the screen-space tangent. Native runtime mapping is unverified.
+      const pitch = Math.atan2(tangent.z, Math.hypot(tangent.x, tangent.y));
+      library.frame(
+        sprite,
+        (Math.round(50 + (pitch * 60) / (Math.PI * 2)) + 60) % 60,
+      );
+      sprite.mesh.rotateZ(angle - Math.PI / 2);
     } else if (sprite.name === "fireball_projectile1") {
       library.frame(sprite, 7);
       sprite.mesh.rotateZ(angle);
