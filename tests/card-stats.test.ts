@@ -22,7 +22,7 @@ describe("archived basic troop movement and attack stats", () => {
       Record<string, Pick<Card, "speed" | "range" | "interval">>;
     const ids = Object.entries(portraits)
       .filter(([id, portrait]) => portrait.table === "spells_characters" &&
-        id !== "executioner" && id !== "balloon")
+        id !== "executioner")
       .map(([id]) => id).sort();
     expect(Object.keys(projected).sort()).toEqual(ids);
     for (const id of ids) {
@@ -43,7 +43,7 @@ describe("archived basic troop movement and attack stats", () => {
     const previous = new Battle({ replay: {
       ...original.exportReplay(), version: 6,
     } as Replay });
-    expect(original.rulesVersion).toBe(12);
+    expect(original.rulesVersion).toBe(13);
     expect(previous.rulesVersion).toBe(6);
     for (const battle of [original, previous]) {
       for (const id of cards) {
@@ -51,7 +51,7 @@ describe("archived basic troop movement and attack stats", () => {
         battle.players.blue.elixir = 10;
         expect(battle.play("blue", 0, 4, 22).ok, `${id} v${battle.rulesVersion}`).toBe(true);
         const unit = battle.entities.findLast((entity) => entity.card === id)!;
-        const stats = battle.rulesVersion === 12 ? CARD_MAP[id] : LEGACY_CARD_STATS[id]!;
+        const stats = battle.rulesVersion === 13 ? CARD_MAP[id] : LEGACY_CARD_STATS[id]!;
         expect(unit, `${id} v${battle.rulesVersion}`).toMatchObject({
           speed: stats.speed, range: stats.range, interval: stats.interval,
         });
@@ -77,8 +77,8 @@ describe("archived basic troop movement and attack stats", () => {
 
   it("keeps Cannon and Tesla cadence and Tesla lifetime unchanged in version-7 replays", () => {
     const base = new Battle({ seed: 91, ai: false });
-    for (const version of [7, 8, 9, 10, 11, 12] as const) {
-      const battle = version === 12 ? base : new Battle({
+    for (const version of [7, 8, 9, 10, 11, 12, 13] as const) {
+      const battle = version === 13 ? base : new Battle({
         replay: { ...base.exportReplay(), version } as Replay,
       });
       for (const id of ["cannon", "tesla"] as CardId[]) {

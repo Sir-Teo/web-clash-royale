@@ -188,7 +188,7 @@ export interface Action extends Point {
 }
 export interface Replay {
   perspective?: Team;
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -253,7 +253,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
-    this.rulesVersion = r?.version ?? 12;
+    this.rulesVersion = r?.version ?? 13;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -733,7 +733,8 @@ export class Battle {
       range: legacyBalloon?.range ?? stats.range,
       cooldown: id === "sparky" ? sparky.sourceLoadTime + deploy : 0.4,
       interval: legacyBalloon?.interval ?? legacyBuilding?.interval ?? stats.interval,
-      speed: stats.speed,
+      speed: id === "balloon" && this.rulesVersion < 13
+        ? LEGACY_CARD_STATS.balloon!.speed : stats.speed,
       target: null,
       age: 0,
       deploy,

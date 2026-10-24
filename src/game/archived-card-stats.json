@@ -9,6 +9,11 @@
     "range": 3.5,
     "interval": 1.6
   },
+  "balloon": {
+    "speed": 1,
+    "range": 0.1,
+    "interval": 3
+  },
   "bandit": {
     "speed": 1.5,
     "range": 0.75,

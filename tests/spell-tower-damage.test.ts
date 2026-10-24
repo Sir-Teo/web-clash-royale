@@ -30,9 +30,9 @@ describe("archived spell damage to Crown Towers", () => {
 
   it("uses 40% in new battles and retains 30% for the first three spells in v11 replays", () => {
     const base = new Battle({ seed: 83, ai: false });
-    for (const version of [11, 12] as const) {
+    for (const version of [11, 12, 13] as const) {
       for (const id of ["fireball", "arrows", "zap"] as CardId[]) {
-        const battle = version === 12
+        const battle = version === 13
           ? new Battle({ seed: 83, ai: false })
           : new Battle({ replay: { ...base.exportReplay(), version } as Replay });
         const tower = battle.entities.find((entity) =>
@@ -45,11 +45,11 @@ describe("archived spell damage to Crown Towers", () => {
         const hp = tower.hp;
         expect(battle.play("blue", 0, tower.x, tower.y).ok).toBe(true);
         expect(battle.projectiles.every((p) =>
-          p.towerDamageFraction === (version === 12 ? 0.4 : undefined),
+          p.towerDamageFraction === (version >= 12 ? 0.4 : undefined),
         ), `${id} v${version}`).toBe(true);
         for (let i = 0; i < 4 / STEP; i++) battle.step();
         expect(tower.hp, `${id} v${version}`).toBeCloseTo(
-          hp - CARD_MAP[id].damage * (version === 12 ? 0.4 : 0.3),
+          hp - CARD_MAP[id].damage * (version >= 12 ? 0.4 : 0.3),
         );
       }
     }

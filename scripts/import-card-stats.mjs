@@ -17,9 +17,9 @@ const [portraits, spells, characters] = await Promise.all([
 const stats = {};
 for (const [id, portrait] of Object.entries(portraits)) {
   if (portrait.table !== "spells_characters") continue;
-  // These attacks have bespoke cadence: the axe's round trip and the
-  // Balloon's bomb animation cannot be reduced to a single HitSpeed value.
-  if (id === "executioner" || id === "balloon") continue;
+  // Executioner's axe round trip cannot be reduced to one HitSpeed value.
+  // Balloon's movement, reach and main-bomb interval map directly.
+  if (id === "executioner") continue;
   const name = spells[portrait.row]?.SummonCharacter;
   const source = characters[name];
   if (!source) throw new Error(`Missing character for ${id}: ${name}`);
