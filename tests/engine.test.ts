@@ -69,7 +69,7 @@ describe("battle rules", () => {
     const hp = t.hp;
     expect(b.play("blue", 0, t.x, t.y).ok).toBe(true);
     advance(b, 3);
-    expect(t.hp).toBeCloseTo(hp - CARD_MAP.fireball.damage * 0.3);
+    expect(t.hp).toBeCloseTo(hp - CARD_MAP.fireball.damage * 0.4);
   });
   it("requires ground troops to cross the bridges", () => {
     const b = new Battle({ seed: 1, ai: false });

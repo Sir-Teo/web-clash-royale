@@ -188,7 +188,7 @@ export interface Action extends Point {
 }
 export interface Replay {
   perspective?: Team;
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -253,7 +253,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
-    this.rulesVersion = r?.version ?? 11;
+    this.rulesVersion = r?.version ?? 12;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -639,7 +639,10 @@ export class Battle {
                       : 0,
                 ...(id === "rocket"
                   ? { towerDamageFraction: rocket.crownTowerDamageFraction }
-                  : {}),
+                  : this.rulesVersion >= 12 &&
+                    (id === "fireball" || id === "arrows" || id === "zap")
+                    ? { towerDamageFraction: 0.4 }
+                    : {}),
               }
             : {}),
         });

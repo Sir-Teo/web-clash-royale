@@ -19,8 +19,8 @@ describe("archived Balloon main attack", () => {
 
   it("keeps the previous Balloon attack in version-9 replays", () => {
     const base = new Battle({ seed: 67, ai: false });
-    for (const version of [9, 10, 11] as const) {
-      const battle = version === 11 ? base : new Battle({
+    for (const version of [9, 10, 11, 12] as const) {
+      const battle = version === 12 ? base : new Battle({
         replay: { ...base.exportReplay(), version } as Replay,
       });
       battle.players.blue.hand[0] = "balloon";
