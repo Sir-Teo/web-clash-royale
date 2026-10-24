@@ -18,6 +18,7 @@ import fireSpirits from "./fire-spirits-data.json" with { type: "json" };
 import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import giantSkeleton from "./giant-skeleton-data.json" with { type: "json" };
 import guards from "./guards-data.json" with { type: "json" };
+import mortar from "./mortar-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -93,6 +94,7 @@ export type CardId =
   | "balloon"
   | "cannon"
   | "tesla"
+  | "mortar"
   | "zap"
   | "freeze"
   | "poison"
@@ -212,7 +214,11 @@ export const CARDS: Card[] = [
     fireSpirits.sourceRange,
     fireSpirits.sourceHitSpeed,
     "Three one-use attackers throw fiery splash projectiles at ground and air enemies.",
-    { count: fireSpirits.count, hitsAir: true, splash: fireSpirits.splashRadius },
+    {
+      count: fireSpirits.count,
+      hitsAir: true,
+      splash: fireSpirits.splashRadius,
+    },
   ),
   troop(
     "ice-golem",
@@ -900,6 +906,18 @@ export const CARDS: Card[] = [
     1.2,
     "Hides underground when idle, then emerges to shock enemies on the ground and in the air.",
     { kind: "building", lifetime: 30, hitsAir: true },
+  ),
+  troop(
+    "mortar",
+    "Mortar",
+    mortar.cost,
+    Math.round((mortar.sourceHitpoints * 1666) / 660),
+    Math.round((mortar.sourceDamage * 202) / 75),
+    0,
+    mortar.range,
+    mortar.hitSpeed,
+    "A long-range siege building with a blind spot. Lobs shells that damage ground troops in an area.",
+    { kind: "building", lifetime: mortar.lifetime, splash: mortar.splash },
   ),
   troop(
     "zap",

@@ -27,7 +27,7 @@ export class BuildingLibrary {
   async load() {
     const loader = new T.TextureLoader();
     await Promise.all(
-      ["cannon", "tesla", "king"].map(async (id) => {
+      ["cannon", "tesla", "mortar", "king"].map(async (id) => {
         try {
           const response = await fetch(
             `${import.meta.env.BASE_URL}assets/buildings/${id}.json`,
@@ -59,7 +59,8 @@ export class BuildingLibrary {
             }),
             geometry: new Map(),
             scale:
-              (id === "king" ? 3.5 : 2.2) / (data.bounds[2] - data.bounds[0]),
+              (id === "king" ? 3.5 : id === "mortar" ? 2.8 : 2.2) /
+              (data.bounds[2] - data.bounds[0]),
           });
         } catch (error) {
           console.warn(`Using static building artwork for ${id}`, error);
@@ -88,7 +89,12 @@ export class BuildingLibrary {
       }
       asset = this.princessAsset;
     }
-    const key = id === "princess" ? `princess-${team}` : team;
+    const key =
+      id === "princess"
+        ? `princess-${team}`
+        : id === "mortar"
+          ? `${team}-idle-1`
+          : team;
     const clip = asset.data.clips[key] as BuildingSprite["clip"],
       frame = clip.frames[0];
     const mesh = new T.Mesh(spriteGeometry(asset, frame), asset.materials);
@@ -208,6 +214,28 @@ export class BuildingLibrary {
           parts.front.visible = true;
         }
       }
+    } else if (e.card === "mortar") {
+      const angle = target
+        ? Math.atan2(target.x - e.x, -(target.y - e.y))
+        : e.team === "blue"
+          ? 0
+          : Math.PI;
+      const direction = Math.min(
+        5,
+        1 + Math.round((Math.abs(angle) / Math.PI) * 4),
+      );
+      const state =
+        e.pendingAttack && e.pendingAttack.remaining < 0.1 ? "attack" : "idle";
+      const clip = sprite.asset.data.clips[`${e.team}-${state}-${direction}`];
+      if (clip) {
+        sprite.clip = clip as BuildingSprite["clip"];
+        const progress =
+          state === "attack"
+            ? Math.floor((0.1 - e.pendingAttack!.remaining) * clip.fps)
+            : Math.floor(time * clip.fps);
+        this.frame(sprite, progress % clip.frames.length);
+      }
+      sprite.mesh.scale.x = angle < 0 ? -1 : 1;
     } else if (e.card === "tesla") {
       const labels = sprite.clip.labels,
         state = e.burrow;
@@ -227,7 +255,10 @@ export class BuildingLibrary {
         );
     }
     sprite.mesh.quaternion.copy(camera.quaternion);
-    const scale = e.deploy > 0 ? Math.max(0.05, 1 - e.deploy) : 1;
+    const scale =
+      e.deploy > 0
+        ? Math.max(0.05, 1 - e.deploy / (e.card === "mortar" ? 4 : 1))
+        : 1;
     sprite.mesh.scale.set(
       sprite.mesh.scale.x < 0 ? -scale : scale,
       scale,

@@ -56,6 +56,7 @@ export function projectileArt(p: Projectile) {
     return p.team === "blue"
       ? "projectile_arrow_basic"
       : "projectile_arrow_basic_enemy";
+  if (p.style === "mortar") return "catapult_projectile1";
   if (p.style === "spear-goblins") return "projectile_spear_360";
   if (p.style === "dart-goblin") return "projectile_arrow_basic";
   if (p.style === "ice-wizard") return "ice_wizard_projectile";
@@ -116,6 +117,7 @@ export function makeProjectile(
     p.style === "princess"
     || p.style === "bowler"
     || p.style === "executioner"
+    || p.style === "mortar"
   ) {
     const shadow = library.make(
       p.style === "rocket"
@@ -124,6 +126,8 @@ export function makeProjectile(
           ? "Barrel_shadow"
           : p.style === "princess"
             ? "projectile_arrow_shadow"
+            : p.style === "mortar"
+              ? "projectile_arrow_shadow"
             : p.style === "bowler" || p.style === "executioner"
               ? "bowler_projectile_shadow"
             : "log_projectile_shadow",
@@ -216,6 +220,9 @@ export function updateProjectile(
     } else if (sprite.name === "bowler_projectile") {
       library.animate(sprite, p.elapsed ?? 0, true);
       sprite.mesh.scale.setScalar(1.3);
+    } else if (sprite.name === "catapult_projectile1") {
+      library.animate(sprite, p.elapsed ?? 0, true);
+      sprite.mesh.scale.setScalar(1.1);
     } else if (sprite.name === "executioner_projectile") {
       library.animate(sprite, p.elapsed ?? 0, true);
       sprite.mesh.scale.setScalar(1.1);

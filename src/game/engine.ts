@@ -41,6 +41,7 @@ import iceSpirit from "./ice-spirit-data.json" with { type: "json" };
 import fireSpirits from "./fire-spirits-data.json" with { type: "json" };
 import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import giantSkeleton from "./giant-skeleton-data.json" with { type: "json" };
+import mortar from "./mortar-data.json" with { type: "json" };
 import guards from "./guards-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
@@ -661,7 +662,8 @@ export class Battle {
           id === "guards" ? guards.sourceDeployTime + guards.deployDelay :
             id === "ice-spirit" ? 1 + iceSpirit.deployDelay :
             id === "fire-spirits" ? 1 + fireSpirits.deployDelay :
-            id === "golem" ? golem.golem.sourceDeployTime : 1,
+            id === "golem" ? golem.golem.sourceDeployTime :
+            id === "mortar" ? mortar.deployTime : 1,
         );
     }
     return { ok: true, reason: "" };
@@ -1313,7 +1315,8 @@ export class Battle {
       !this.isHidden(target) &&
       target.team !== e.team &&
       (!target.air || e.kind === "tower" || !!card?.hitsAir) &&
-      (!card?.buildingsOnly || target.kind !== "troop")
+      (!card?.buildingsOnly || target.kind !== "troop") &&
+      (e.card !== "mortar" || dist(e, target) >= mortar.minimumRange)
     );
   }
   private inRange(e: Entity, target: Entity) {
@@ -1779,6 +1782,8 @@ export class Battle {
               ? 1.8
               : e.card === "cannon"
                 ? 1.1
+                : e.card === "mortar"
+                  ? 1
                 : e.air
                   ? 2.3
                   : 0.8;
@@ -2484,7 +2489,7 @@ export class Battle {
             if (a.c.kind === "building") score += 2;
           }
         } else {
-          if (a.c.kind !== "troop") score -= 7;
+          if (a.c.kind !== "troop" && a.id !== "mortar") score -= 7;
           if (a.c.buildingsOnly) score += 2;
         }
         return { ...a, score };
@@ -2512,8 +2517,8 @@ export class Battle {
       y = target.y;
     }
     if (a.c.kind === "building") {
-      x = 9;
-      y = 10;
+      x = a.id === "mortar" ? lane : 9;
+      y = a.id === "mortar" ? 14 : 10;
     }
     this.play("red", a.slot, x, y);
   }
