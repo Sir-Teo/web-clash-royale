@@ -5,6 +5,7 @@ import type { SpriteAsset, SpriteData } from "./sprites";
 import type { AnimationClip } from "./animation";
 import { KING_ACTIVATION_TIME } from "../game/combat";
 import xBow from "../game/x-bow-data.json" with { type: "json" };
+import elixirCollector from "../game/elixir-collector-data.json" with { type: "json" };
 
 export interface BuildingSprite {
   mesh: T.Mesh<T.BufferGeometry, T.MeshBasicMaterial[]>;
@@ -32,7 +33,7 @@ export class BuildingLibrary {
   async load() {
     const loader = new T.TextureLoader();
     await Promise.all(
-      ["cannon", "tesla", "mortar", "bomb-tower", "inferno-tower", "x-bow", "king"].map(async (id) => {
+      ["cannon", "tesla", "mortar", "bomb-tower", "inferno-tower", "x-bow", "elixir-collector", "king"].map(async (id) => {
         try {
           const response = await fetch(
             `${import.meta.env.BASE_URL}assets/buildings/${id}.json`,
@@ -67,6 +68,7 @@ export class BuildingLibrary {
               (id === "king" ? 3.5 : id === "mortar" ? 2.8 :
                 id === "bomb-tower" ? 2.5 :
                 id === "x-bow" ? 2.8 :
+                id === "elixir-collector" ? 2.5 :
                 id === "inferno-tower" ? 2.4 : 2.2) /
               (data.bounds[2] - data.bounds[0]),
           });
@@ -257,6 +259,17 @@ export class BuildingLibrary {
         this.frame(sprite, progress % clip.frames.length);
       }
       sprite.mesh.scale.x = angle < 0 ? -1 : 1;
+    } else if (e.card === "elixir-collector") {
+      const recovery = (elixirCollector.frames - elixirCollector.actionFrame - 1) /
+        elixirCollector.fps;
+      const frame = e.deploy > 0 ? 0 : e.attack > 0
+        ? elixirCollector.actionFrame + 1 +
+          Math.floor((recovery - e.attack) * elixirCollector.fps + 1e-6)
+        : e.spawnTimer <= elixirCollector.actionFrame / elixirCollector.fps
+          ? elixirCollector.actionFrame -
+            Math.floor(e.spawnTimer * elixirCollector.fps + 1e-6)
+          : 0;
+      this.frame(sprite, frame);
     } else if (e.card === "tesla") {
       const labels = sprite.clip.labels,
         state = e.burrow;

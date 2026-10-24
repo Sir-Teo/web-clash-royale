@@ -22,6 +22,7 @@ import mortar from "./mortar-data.json" with { type: "json" };
 import bombTower from "./bomb-tower-data.json" with { type: "json" };
 import infernoTower from "./inferno-tower-data.json" with { type: "json" };
 import xBow from "./x-bow-data.json" with { type: "json" };
+import elixirCollector from "./elixir-collector-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -101,6 +102,7 @@ export type CardId =
   | "bomb-tower"
   | "inferno-tower"
   | "x-bow"
+  | "elixir-collector"
   | "zap"
   | "freeze"
   | "poison"
@@ -962,6 +964,18 @@ export const CARDS: Card[] = [
     xBow.hitSpeed,
     "A long-range siege building that rapidly fires at ground targets and Crown Towers.",
     { kind: "building", rarity: "Epic", lifetime: xBow.lifetime },
+  ),
+  troop(
+    "elixir-collector",
+    "Elixir Collector",
+    elixirCollector.cost,
+    Math.round(elixirCollector.sourceHitpoints * 1152 / 450),
+    0,
+    0,
+    0,
+    elixirCollector.generateInterval,
+    "Produces one elixir every 8.5 seconds while it stands. Protect it to get ahead.",
+    { kind: "building", rarity: "Rare", lifetime: elixirCollector.lifetime },
   ),
   troop(
     "zap",

@@ -45,6 +45,7 @@ import mortar from "./mortar-data.json" with { type: "json" };
 import bombTower from "./bomb-tower-data.json" with { type: "json" };
 import infernoTower from "./inferno-tower-data.json" with { type: "json" };
 import xBow from "./x-bow-data.json" with { type: "json" };
+import elixirCollector from "./elixir-collector-data.json" with { type: "json" };
 import guards from "./guards-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
@@ -667,7 +668,8 @@ export class Battle {
             id === "fire-spirits" ? 1 + fireSpirits.deployDelay :
             id === "golem" ? golem.golem.sourceDeployTime :
             id === "mortar" ? mortar.deployTime :
-            id === "x-bow" ? xBow.deployTime : 1,
+            id === "x-bow" ? xBow.deployTime :
+            id === "elixir-collector" ? elixirCollector.deployTime : 1,
         );
     }
     return { ok: true, reason: "" };
@@ -713,7 +715,8 @@ export class Battle {
       move: 0,
       active: true,
       lifetime: c.lifetime,
-      spawnTimer: id === "night-witch" ? nightWitch.spawn.pause : 4,
+      spawnTimer: id === "night-witch" ? nightWitch.spawn.pause :
+        id === "elixir-collector" ? elixirCollector.generateInterval : 4,
       ...(id === "tesla" && this.rulesVersion >= 3
         ? { burrow: { exposure: 0, idle: 0, phase: "hidden" as const } }
         : {}),
@@ -1443,6 +1446,19 @@ export class Battle {
       }
       if (!e.active) {
         this.cancelAttack(e);
+        continue;
+      }
+      if (e.card === "elixir-collector") {
+        e.spawnTimer -= STEP;
+        if (e.spawnTimer <= 1e-8) {
+          e.spawnTimer += elixirCollector.generateInterval;
+          e.attack = (elixirCollector.frames - elixirCollector.actionFrame - 1) /
+            elixirCollector.fps;
+          this.players[e.team].elixir = Math.min(10,
+            this.players[e.team].elixir + elixirCollector.collectAmount);
+          this.emitAudio("collect", e.team, "elixir-collector", e.id,
+            undefined, { x: e.x, y: e.y });
+        }
         continue;
       }
       if (e.card === "sparky") {

@@ -10,6 +10,7 @@ export type CombatAudioPhase =
   | "cast"
   | "cancel"
   | "spawn"
+  | "collect"
   | "summon"
   | "appear"
   | "hide"
@@ -49,6 +50,7 @@ export const audioProfile = (
 // Older browser clients only understand the original attack phases.
 export const isLifecycleAudio = (event: CombatAudioEvent) =>
   event.phase === "spawn" ||
+  event.phase === "collect" ||
   event.phase === "summon" ||
   event.phase === "appear" ||
   event.phase === "hide" ||
