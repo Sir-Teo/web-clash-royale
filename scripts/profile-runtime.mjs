@@ -7,6 +7,7 @@ const swarms = Number(process.argv.find((arg) => arg.startsWith("--swarms="))?.s
 const noBatch = process.argv.includes("--no-batch");
 const ratio = Number(process.argv.find((arg) => arg.startsWith("--ratio="))?.split("=")[1] ?? 0);
 const fixedTime = process.argv.find((arg) => arg.startsWith("--fixed-time="))?.split("=")[1];
+const crowns = Number(process.argv.find((arg) => arg.startsWith("--crowns="))?.split("=")[1] ?? 0);
 const duration = Number(process.env.ARENA_PROFILE_SECONDS ?? 12) * 1000;
 const browser = await chromium.launch({
   headless: true,
@@ -50,7 +51,7 @@ await page.addInitScript(() => {
 });
 const started = performance.now();
 await page.goto(process.env.ARENA_PROFILE_URL ??
-  (stress ? `http://127.0.0.1:5188/tests/fixtures/performance.html?swarms=${swarms}&batch=${noBatch ? "off" : "on"}${fixedTime ? `&fixedTime=${fixedTime}` : ""}` : "http://127.0.0.1:5188/"));
+  (stress ? `http://127.0.0.1:5188/tests/fixtures/performance.html?swarms=${swarms}&batch=${noBatch ? "off" : "on"}&crowns=${crowns}${fixedTime ? `&fixedTime=${fixedTime}` : ""}` : "http://127.0.0.1:5188/"));
 if (!stress) {
   await page.locator("#battle-button").waitFor({ timeout: 60000 });
   await page.locator("#battle-button").click();
@@ -69,6 +70,10 @@ await page.waitForFunction(
 );
 if (stress && ratio) await page.evaluate((value) => window.__arenaProfile.setRatio(value), ratio);
 await page.waitForTimeout(3000);
+if (stress && crowns) {
+  await page.evaluate(() => window.__arenaProfile.burstCrowns());
+  await page.waitForFunction((count) => window.__arenaProfile.state.particles >= count * 24, crowns, { timeout: 10000 });
+}
 const session = await context.newCDPSession(page);
 await session.send("Profiler.enable");
 await session.send("Profiler.setSamplingInterval", { interval: 1000 });
@@ -103,6 +108,7 @@ console.log(JSON.stringify({
   phone,
   stress,
   swarms: stress ? swarms : undefined,
+  crowns: stress ? crowns : undefined,
   noBatch: stress ? noBatch : undefined,
   bootMs: Math.round(boot),
   durationMs: duration,
@@ -111,6 +117,7 @@ console.log(JSON.stringify({
   drawCalls: after.state.drawCalls,
   renderPixelRatio: after.state.renderPixelRatio,
   entities: after.state.units?.length ?? after.state.entities,
+  particles: after.state.particles,
   geometries: after.state.geometries,
   textures: after.state.textures,
   mainThreadMs: Math.round((byMetric(afterMetrics, "TaskDuration") - byMetric(beforeMetrics, "TaskDuration")) * 1000),

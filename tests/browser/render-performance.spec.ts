@@ -54,3 +54,18 @@ test("swarm sprites batch without changing the rendered frame", async ({ page })
   expect(batched.equals(unbatched)).toBe(true);
   expect(errors).toEqual([]);
 });
+
+test("simultaneous crown sparks use one GPU draw", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/tests/fixtures/performance.html?swarms=0&crowns=3&fixedTime=3");
+  await expect.poll(async () => page.evaluate(() => (window as any).__arenaProfile?.state.loadedAnimations),
+    { timeout: 120000 }).toBe(expectedAnimations);
+  await page.evaluate(() => (window as any).__arenaProfile.burstCrowns());
+  await expect.poll(async () => page.evaluate(() => (window as any).__arenaProfile.state.particles))
+    .toBe(72);
+  const state = await page.evaluate(() => (window as any).__arenaProfile.state);
+  expect(state.drawCalls).toBeLessThan(110);
+  expect(state.geometries).toBeLessThan(70);
+  expect(errors).toEqual([]);
+});

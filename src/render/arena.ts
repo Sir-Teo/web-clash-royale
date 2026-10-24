@@ -17,6 +17,7 @@ import {
 import type { Model } from "./models";
 import { SpriteLibrary } from "./sprites";
 import { SpriteBatcher } from "./sprite-batcher";
+import { LegacyParticles } from "./legacy-particles";
 import type { AnimatedSprite } from "./sprites";
 import { EffectLibrary } from "./effects";
 import type { EffectSprite } from "./effects";
@@ -75,12 +76,6 @@ interface Visual {
   healthFill?: T.Mesh;
   nativeHealth?: HealthSprite;
 }
-interface Particle {
-  mesh: T.Mesh;
-  velocity: T.Vector3;
-  life: number;
-  max: number;
-}
 export class Arena {
   readonly renderer: T.WebGLRenderer;
   readonly scene = new T.Scene();
@@ -123,7 +118,7 @@ export class Arena {
   private crowns = new CrownEffects(this.scene, this.effects);
   private rubble = new Map<string, T.Mesh>();
   private impacts: { sprite: EffectSprite; start: number; life: number }[] = [];
-  private particles: Particle[] = [];
+  private particles = new LegacyParticles(this.scene);
   private waterWaves: T.InstancedMesh | null = null;
   private wavePositions = new Float32Array(20);
   private waveOpacities = new Float32Array(20);
@@ -613,11 +608,7 @@ export class Arena {
     this.trailCycles.clear();
     for (const impact of this.impacts) this.scene.remove(impact.sprite.mesh);
     this.impacts = [];
-    for (const p of this.particles) {
-      this.scene.remove(p.mesh);
-      p.mesh.geometry.dispose();
-    }
-    this.particles = [];
+    this.particles.clear();
     this.battle = battle;
     this.lastEvent = battle.events.at(-1)?.id ?? 0;
   }
@@ -707,7 +698,7 @@ export class Arena {
     return this.buildings.assets.size;
   }
   get particleCount() {
-    return this.particles.length + this.destruction.count;
+    return this.particles.count + this.destruction.count;
   }
   get destructionState() {
     return {
@@ -1725,18 +1716,7 @@ export class Arena {
           );
       }
     }
-    for (const p of this.particles) {
-      p.life -= dt;
-      p.velocity.y -= dt * 5;
-      p.mesh.position.addScaledVector(p.velocity, dt);
-      p.mesh.scale.setScalar(Math.max(0, p.life / p.max));
-    }
-    const dead = this.particles.filter((p) => p.life <= 0);
-    for (const p of dead) {
-      this.scene.remove(p.mesh);
-      p.mesh.geometry.dispose();
-    }
-    this.particles = this.particles.filter((p) => p.life > 0);
+    this.particles.update(dt);
     this.impacts = this.impacts.filter((impact) => {
       const age = this.destruction.time - impact.start;
       if (age >= impact.life) {
@@ -2030,20 +2010,7 @@ export class Arena {
     life: number,
     speed: number,
   ) {
-    if (this.particles.length > 400) return;
-    const mesh = new T.Mesh(new T.IcosahedronGeometry(size, 0), mat(color));
-    mesh.position.copy(pos);
-    this.scene.add(mesh);
-    this.particles.push({
-      mesh,
-      velocity: new T.Vector3(
-        (Math.random() - 0.5) * speed,
-        Math.random() * speed,
-        (Math.random() - 0.5) * speed,
-      ),
-      life,
-      max: life,
-    });
+    this.particles.burst(pos, color, size, life, speed);
   }
   private disposeObject(object: T.Object3D) {
     object.traverse((o) => {
@@ -2056,6 +2023,7 @@ export class Arena {
     this.observer.disconnect();
     this.spriteBatcher.clear();
     this.entityById.clear();
+    this.particles.destroy();
     this.scene.traverse((o) => {
       if (o instanceof T.Mesh && !o.geometry.userData.shared)
         o.geometry.dispose();
