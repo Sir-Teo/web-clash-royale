@@ -13,6 +13,7 @@ import {
 import { TOWER_SITES } from "./arena-layout";
 import { audioProfile } from "./combat-audio-events";
 import flyingHeights from "./flight-heights.json" with { type: "json" };
+import collisionRadii from "./archived-collision-radii.json" with { type: "json" };
 import freeze from "./freeze-data.json" with { type: "json" };
 import poison from "./poison-data.json" with { type: "json" };
 import heal from "./heal-data.json" with { type: "json" };
@@ -188,7 +189,7 @@ export interface Action extends Point {
 }
 export interface Replay {
   perspective?: Team;
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -253,7 +254,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
-    this.rulesVersion = r?.version ?? 14;
+    this.rulesVersion = r?.version ?? 15;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -341,6 +342,9 @@ export class Battle {
     // The archived King and Princess have 2,400 and 1,400 base HP.
     // Princess HP already uses the roster's 2.18 tower scale (3,052 / 1,400).
     const kingHp = this.rulesVersion >= 11 ? Math.round(2400 * 3052 / 1400) : 4824;
+    const radius = this.rulesVersion >= 15
+      ? collisionRadii.towers[king ? "king" : "princess"]
+      : king ? 1.25 : 1.05;
     this.entities.push({
       id: this.nextId++,
       team,
@@ -350,7 +354,7 @@ export class Battle {
       kind: "tower",
       hp: king ? kingHp : 3052,
       maxHp: king ? kingHp : 3052,
-      radius: king ? 1.25 : 1.05,
+      radius,
       air: false,
       damage: king ? 109 : 109,
       range: king ? 7 : 7.5,
@@ -704,6 +708,8 @@ export class Battle {
     const legacyBalloon = this.rulesVersion < 10 && id === "balloon"
       ? LEGACY_BALLOON_STATS : undefined;
     const hp = legacyVitals?.hp ?? c.hp;
+    const legacyRadius = c.kind === "building" ? 0.8 :
+      hp > 3000 ? 0.55 : c.count > 2 ? 0.25 : 0.37;
     this.entities.push({
       id: this.nextId++,
       team,
@@ -720,14 +726,9 @@ export class Battle {
         shield: Math.round(guards.sourceShieldHitpoints * 1.1 ** 5),
         maxShield: Math.round(guards.sourceShieldHitpoints * 1.1 ** 5),
       } : {}),
-      radius:
-        c.kind === "building"
-          ? 0.8
-          : hp > 3000
-            ? 0.55
-            : c.count > 2
-              ? 0.25
-              : 0.37,
+      radius: this.rulesVersion >= 15
+        ? (collisionRadii.cards as Record<string, number>)[id]
+        : legacyRadius,
       air: !!c.air,
       damage: legacyBalloon?.damage ?? legacyVitals?.damage ?? c.damage,
       range: legacyBalloon?.range ?? stats.range,

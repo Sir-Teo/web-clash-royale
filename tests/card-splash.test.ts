@@ -18,11 +18,11 @@ const projectiles = table("projectiles");
 const projected = JSON.parse(readFileSync("src/game/archived-card-splash.json", "utf8")) as
   Record<string, number>;
 const cases = [
-  { id: "valkyrie", secondary: 2.15, oldHits: false },
-  { id: "bomber", secondary: 1.92, oldHits: true },
-  { id: "baby-dragon", secondary: 1.72, oldHits: true },
-  { id: "witch", secondary: 1.47, oldHits: true },
-  { id: "wizard", secondary: 1.75, oldHits: true },
+  { id: "valkyrie", oldHits: false },
+  { id: "bomber", oldHits: true },
+  { id: "baby-dragon", oldHits: true },
+  { id: "witch", oldHits: true },
+  { id: "wizard", oldHits: true },
 ] as const;
 
 describe("archived troop splash radii", () => {
@@ -38,11 +38,11 @@ describe("archived troop splash radii", () => {
   });
 
   it.each(cases)("uses the new $id hit area while preserving legacy damage", ({
-    id, secondary, oldHits,
+    id, oldHits,
   }) => {
     const base = new Battle({ seed: 143, ai: false });
-    for (const version of [1, 13, 14] as const) {
-      const battle = version === 14 ? base : new Battle({
+    for (const version of [1, 13, 14, 15] as const) {
+      const battle = version === 15 ? base : new Battle({
         replay: { ...base.exportReplay(), version } as Replay,
       });
       for (const tower of battle.entities) tower.active = false;
@@ -61,6 +61,10 @@ describe("archived troop splash radii", () => {
         )!);
       }
       const [primary, nearEdge] = defenders;
+      // Midway between the previous and archived splash limits after adding
+      // the defender's collision radius for this replay version.
+      const secondary = (LEGACY_CARD_SPLASH[id]! + projected[id]) / 2 +
+        nearEdge.radius;
       Object.assign(primary, { x: 9, y: 20.5, deploy: 0, active: false });
       Object.assign(nearEdge, {
         x: 9 + secondary, y: id === "valkyrie" ? 21 : 20.5,
