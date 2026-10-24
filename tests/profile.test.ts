@@ -23,6 +23,24 @@ beforeEach(() => {
   });
 });
 describe("local progress", () => {
+  it("persists named AI opponents without changing ranked rewards or legacy records", () => {
+    const p = loadProfile();
+    const b = new Battle({ seed: 8, ai: false });
+    b.finish("blue", "Win");
+    expect(
+      recordBattle(p, b, { opponent: "Sky Captain", opponentType: "ai" }),
+    ).toEqual({ trophies: 30, gold: 125, chest: "silver" });
+    expect(loadProfile().history[0]).toMatchObject({
+      opponent: "Sky Captain",
+      opponentType: "ai",
+    });
+    const raw = JSON.parse(data.get("browser-royale.profile.v1")!);
+    raw.history.push({ ...raw.history[0], id: 9, opponentType: undefined });
+    raw.history[0].opponentType = "unrecognized";
+    data.set("browser-royale.profile.v1", JSON.stringify(raw));
+    expect(loadProfile().history).toHaveLength(1);
+    expect(loadProfile().history[0].opponentType).toBeUndefined();
+  });
   it("rejects inherited property names as cards and recovers a playable deck", () => {
     for (const id of ["toString", "constructor", "__proto__"]) {
       const p = loadProfile();

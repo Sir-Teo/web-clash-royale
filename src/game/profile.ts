@@ -3,6 +3,7 @@ import type { CardId } from "./cards";
 import type { Battle, Mode, Replay } from "./engine";
 export interface RecordEntry {
   opponent?: string;
+  opponentType?: "ai" | "friend";
   matchId?: string;
   id: number;
   winner: "blue" | "red" | "draw";
@@ -145,6 +146,8 @@ function decodeProfile(raw: string): Profile | null {
               Number.isFinite(Date.parse(r.date)) &&
               ["classic", "double", "training"].includes(r.mode) &&
               (r.opponent === undefined || typeof r.opponent === "string") &&
+              (r.opponentType === undefined ||
+                ["ai", "friend"].includes(r.opponentType)) &&
               (r.matchId === undefined || typeof r.matchId === "string") &&
               (r.replay?.perspective === undefined ||
                 ["blue", "red"].includes(r.replay.perspective)) &&
@@ -240,6 +243,7 @@ export function recordBattle(
   options?: {
     friendly?: boolean;
     opponent?: string;
+    opponentType?: "ai" | "friend";
     matchId?: string;
     replay?: Replay;
   },
@@ -277,6 +281,7 @@ export function recordBattle(
     mode: b.mode,
     replay: options?.replay ?? b.exportReplay(),
     opponent: options?.opponent,
+    opponentType: options?.opponentType,
     matchId: options?.matchId,
     date: new Date().toISOString(),
   });

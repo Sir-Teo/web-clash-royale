@@ -30,7 +30,10 @@ describe("portable progress backups", () => {
     profile.emotesMuted = true;
     const battle = new Battle({ seed: 42, ai: false, deck: profile.deck });
     battle.finish("blue", "Victory");
-    recordBattle(profile, battle);
+    recordBattle(profile, battle, {
+      opponent: "Sky Captain",
+      opponentType: "ai",
+    });
     for (const fixture of [legacy, combatV2, combatV3, combatV4])
       profile.history.push({
         ...profile.history[0],

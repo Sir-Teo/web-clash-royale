@@ -1438,6 +1438,26 @@ export class Battle {
       x = 9;
       y = 10;
     }
+    if (a.c.kind !== "spell") {
+      // A building can still occupy the preferred tile when the deck cycles.
+      // Try nearby legal tiles instead of wasting every subsequent decision.
+      const point = [
+        [0, 0],
+        [-2.5, 0],
+        [2.5, 0],
+        [0, -2.5],
+        [-2.5, -2.5],
+        [2.5, -2.5],
+      ]
+        .map(([dx, dy]) => ({
+          x: clamp(x + dx, 0.5, 17.5),
+          y: clamp(y + dy, 0.8, 14.2),
+        }))
+        .find((point) => this.canPlace("red", a.id, point.x, point.y).ok);
+      if (!point) return;
+      x = point.x;
+      y = point.y;
+    }
     this.play("red", a.slot, x, y);
   }
   finish(winner: Team | "draw", reason: string) {

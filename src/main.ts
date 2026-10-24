@@ -121,6 +121,7 @@ const icons = {
 };
 import { Arena } from "./render/arena";
 import { Battle, STEP } from "./game/engine";
+import { previousSoloOpponent, soloOpponent } from "./game/opponents";
 import type { Mode, Point, Replay } from "./game/engine";
 import { CARDS, CARD_MAP, PRESETS, averageCost, cardArt } from "./game/cards";
 import type { CardId } from "./game/cards";
@@ -513,21 +514,26 @@ function startBattle(online = false) {
   document.body.classList.add("in-battle");
   window.scrollTo(0, 0);
   document.body.classList.remove("in-replay");
+  const seed = Math.floor(Math.random() * 2147483646) + 1;
+  const opponent = online
+    ? undefined
+    : soloOpponent(seed, mode, previousSoloOpponent(profile.history));
   battle = new Battle({
     deck: profile.deck,
+    enemyDeck: opponent?.deck,
     mode: online ? (network.room?.mode ?? mode) : mode,
     ai: !online,
-    seed: Math.floor(Math.random() * 2147483646) + 1,
+    seed,
   });
   arena.setBattle(battle);
   opponentName = online
     ? (network.room?.players.find((p) => p.team !== network.team)?.name ??
       "Opponent")
-    : "Royal Trainer";
+    : opponent!.name;
   $(".competitor.enemy b").textContent = opponentName;
   $(".competitor.enemy div > span").textContent = online
     ? "Friendly battle"
-    : "Training guild";
+    : `${opponent!.style} · AI opponent`;
   $("#pause-button").setAttribute(
     "aria-label",
     online ? "Battle options" : "Pause battle",
@@ -780,12 +786,13 @@ function showResult() {
         ? {
             friendly: true,
             opponent: opponentName,
+            opponentType: "friend",
             matchId: networkBattleCode,
             replay: networkReplay
               ? { ...networkReplay, perspective: network.team }
               : undefined,
           }
-        : undefined,
+        : { opponent: opponentName, opponentType: "ai" },
     ),
     win = battle.winner === "blue",
     draw = battle.winner === "draw";
@@ -829,9 +836,12 @@ function playReplay(record: RecordEntry) {
   $("#connection-status").classList.add("hidden");
   opponentName = record.opponent ?? "Royal Trainer";
   $(".competitor.enemy b").textContent = opponentName;
-  $(".competitor.enemy div > span").textContent = record.opponent
-    ? "Friendly battle replay"
-    : "Training guild";
+  $(".competitor.enemy div > span").textContent =
+    record.opponentType === "ai"
+      ? "AI battle replay"
+      : record.opponent
+        ? "Friendly battle replay"
+        : "Training guild";
   closeModal();
   screen = "replay";
   replayRecord = record;
@@ -1992,6 +2002,8 @@ Object.defineProperty(window, "__arena", {
         emotes: emotes.state,
         elixir: battle.players.blue.elixir,
         hand: [...battle.players.blue.hand],
+        opponentName,
+        enemyDeck: multiplayer ? undefined : [...battle.enemyDeck],
         troops: battle.entities.filter((e) => e.kind === "troop").length,
         actions: multiplayer ? network.actionCount : battle.actions.length,
         multiplayer: multiplayer

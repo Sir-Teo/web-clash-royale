@@ -10,6 +10,8 @@ Princess Towers preserve the original base and foreground battlements, with the 
 
 Play against AI or challenge a friend over Wi-Fi or compatible remote networks. Exchange an invite and reply to connect the browsers directly, then use ready checks, emotes and both players’ replays. The full live card roster and current balance parity are not implemented. See [multiplayer setup](docs/MULTIPLAYER.md) for direct Wi-Fi play and static hosting.
 
+Classic and Double Elixir rotate between six named AI opponents: Giant push, Hog cycle, Balloon Freeze, Witch Poison, Prince Rage and P.E.K.K.A defense. Their decks cover all 27 cards, and a completed match prevents the same opponent from appearing immediately again. Training keeps the original Royal Trainer and slower decisions. Opponent names and exact decks are retained in saved replays.
+
 The four original King emotes use complete native expressions and speech-bubble animations, with 16 voice variations. Six original quick-chat phrases use their native text bubbles, wooden selector and archived chat font. Each player has an independent bubble, a host-enforced cooldown and a persistent local mute option. The selector works with touch, mouse and keyboard; reduced motion uses still artwork.
 
 Fireball impacts use the original layered smoke, glowing fragments, sparks, flames and lingering scorch effect. Native additive and screen blending keep fire and lightning bright, and particle motion follows the archived client’s linear deceleration and gravity integration. Sparks, fire, smoke and elixir splashes retain source tail delays and stretch their native artwork between projected motion endpoints; pause and replay seeking preserve their poses.

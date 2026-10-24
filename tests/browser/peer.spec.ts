@@ -7,7 +7,7 @@ import {
   devices,
   type Page,
 } from "@playwright/test";
-import { CARD_MAP } from "../../src/game/cards";
+import { CARD_MAP, STARTER_DECK } from "../../src/game/cards";
 import { readFileSync } from "node:fs";
 import { observeCombatAudio, playedCombatAudio } from "./audio-helpers";
 const nativeAudio = JSON.parse(
@@ -238,10 +238,30 @@ test("static browsers exchange invites, fight, pause together and replay without
     await expect(
       friend.getByRole("button", { name: "Watch replay", exact: true }),
     ).toBeVisible({ timeout: 20000 });
+    for (const p of [page, friend]) {
+      await expect
+        .poll(() =>
+          p.evaluate(
+            () =>
+              JSON.parse(localStorage.getItem("browser-royale.profile.v1")!)
+                .history[0]?.opponentType,
+          ),
+        )
+        .toBe("friend");
+      const record = await p.evaluate(
+        () =>
+          JSON.parse(localStorage.getItem("browser-royale.profile.v1")!)
+            .history[0],
+      );
+      expect(record.replay.enemyDeck).toEqual(STARTER_DECK);
+    }
     await friend
       .getByRole("button", { name: "Watch replay", exact: true })
       .click();
     await expect.poll(async () => (await state(friend)).screen).toBe("replay");
+    await expect(friend.locator(".competitor.enemy div > span")).toHaveText(
+      "Friendly battle replay",
+    );
     expect(backendRequests).toEqual([]);
     expect(errors).toEqual([]);
   } finally {
