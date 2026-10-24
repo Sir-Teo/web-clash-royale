@@ -40,16 +40,20 @@ export class NativeSpellAreas {
             ? area.team === "blue"
               ? "freeze_effect_ground"
               : "freeze_effect_ground_red"
-            : "Poison_radius",
+            : area.card === "rage"
+              ? "rage_effect_ground"
+              : "Poison_radius",
         );
         const radius = this.effects.make(
           area.card === "freeze"
             ? area.team === "blue"
               ? "spell_freeze_radius_blue"
               : "spell_freeze_radius_red"
-            : area.team === "blue"
-              ? "spell_poison_radius_blue"
-              : "spell_poison_radius_red",
+            : area.card === "rage"
+              ? `spell_rage_radius_${area.team}`
+              : area.team === "blue"
+                ? "spell_poison_radius_blue"
+                : "spell_poison_radius_red",
         );
         if (!ground || !radius) continue;
         for (const [index, sprite] of [ground, radius].entries()) {

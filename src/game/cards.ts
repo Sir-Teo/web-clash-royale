@@ -1,5 +1,6 @@
 import freeze from "./freeze-data.json" with { type: "json" };
 import poison from "./poison-data.json" with { type: "json" };
+import rage from "./rage-data.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -27,7 +28,8 @@ export type CardId =
   | "tesla"
   | "zap"
   | "freeze"
-  | "poison";
+  | "poison"
+  | "rage";
 export interface Card {
   id: CardId;
   name: string;
@@ -395,6 +397,23 @@ export const CARDS: Card[] = [
       rarity: "Epic",
       radius: poison.radius,
       hitsAir: poison.hitsAir,
+    },
+  ),
+  troop(
+    "rage",
+    "Rage",
+    rage.cost,
+    0,
+    0,
+    0,
+    0,
+    1,
+    "Boosts friendly movement, attacks and spawning by 35% in its area. The boost lingers briefly after leaving.",
+    {
+      kind: "spell",
+      rarity: "Epic",
+      radius: rage.radius,
+      hitsAir: rage.hitsAir,
     },
   ),
 ];

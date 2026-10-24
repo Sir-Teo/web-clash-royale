@@ -14,6 +14,7 @@ import { TOWER_SITES } from "./arena-layout";
 import { audioProfile } from "./combat-audio-events";
 import freeze from "./freeze-data.json" with { type: "json" };
 import poison from "./poison-data.json" with { type: "json" };
+import rage from "./rage-data.json" with { type: "json" };
 import type {
   AudioProfile,
   CombatAudioEvent,
@@ -46,6 +47,8 @@ export interface Entity extends Point {
   deploy: number;
   stun: number;
   poison?: { remaining: number; elapsed: number };
+  rage?: { remaining: number };
+  animationTime?: number;
   attack: number;
   move: number;
   king?: boolean;
@@ -88,7 +91,7 @@ export interface Projectile extends Point {
 export interface AreaEffect extends Point {
   id: number;
   team: Team;
-  card: "freeze" | "poison";
+  card: "freeze" | "poison" | "rage";
   radius: number;
   duration: number;
   remaining: number;
@@ -353,8 +356,9 @@ export class Battle {
     this.emit(c.kind === "spell" ? "spell" : "deploy", team, x, y, id);
     this.emitAudio("cast", team, id);
     if (c.kind === "spell") {
-      if (id === "freeze" || id === "poison") {
-        const rules = id === "freeze" ? freeze : poison;
+      if (id === "freeze" || id === "poison" || id === "rage") {
+        const rules =
+          id === "freeze" ? freeze : id === "poison" ? poison : rage;
         this.areas.push({
           id: this.nextId++,
           team,
@@ -365,7 +369,7 @@ export class Battle {
           duration: rules.duration,
           remaining: rules.duration,
         });
-        if (id === "poison") this.emitAudio("impact", team, id);
+        if (id !== "freeze") this.emitAudio("impact", team, id);
         return { ok: true, reason: "" };
       }
       const origin = { x: 9, y: team === "blue" ? 30 : 2 };
@@ -506,6 +510,13 @@ export class Battle {
       attack,
       ...(origin ? { origin } : {}),
     };
+    if (
+      actor !== undefined &&
+      this.entities.find((e) => e.id === actor)?.rage
+    ) {
+      event.pitch = rage.audioPitchMultiplier;
+      if (phase === "attack") event.rate = rage.hitSpeedMultiplier;
+    }
     this.audioEvents.push(event);
     if (this.audioEvents.length > 256)
       this.audioEvents.splice(0, this.audioEvents.length - 256);
@@ -584,6 +595,12 @@ export class Battle {
     this.updateAreas();
     if (this.rulesVersion === 1) this.updateLegacyCombat();
     else this.updateCombat();
+    // Buff lifetime is real time, independent of accelerated combat clocks.
+    for (const entity of this.entities) {
+      if (!entity.rage) continue;
+      entity.rage.remaining = Math.max(0, entity.rage.remaining - STEP);
+      if (entity.rage.remaining < 1e-8) entity.rage = undefined;
+    }
     if (this.rulesVersion >= 5) this.resolveKingLosses();
     this.separate();
     this.entities = this.entities.filter((e) => e.hp > 0);
@@ -616,6 +633,27 @@ export class Battle {
   private updateAreas() {
     for (const area of this.areas) {
       const age = area.duration - area.remaining;
+      if (area.card === "rage") {
+        if (age + 1e-8 >= (area.hitAt ?? 0)) {
+          area.hitAt = (area.hitAt ?? 0) + rage.areaHitInterval;
+          for (const entity of this.entities) {
+            if (
+              entity.hp <= 0 ||
+              entity.team !== area.team ||
+              this.isHidden(entity) ||
+              dist(entity, area) >= area.radius + entity.radius
+            )
+              continue;
+            const remaining = Math.min(rage.buffDuration, area.remaining);
+            entity.rage = {
+              remaining: Math.max(entity.rage?.remaining ?? 0, remaining),
+            };
+          }
+        }
+        area.remaining = Math.max(0, area.remaining - STEP);
+        if (area.remaining < 1e-8) area.remaining = 0;
+        continue;
+      }
       const poisonHit =
         area.card === "poison" && age + 1e-8 >= (area.hitAt ?? 0);
       if (poisonHit) area.hitAt = (area.hitAt ?? 0) + poison.areaHitInterval;
@@ -910,9 +948,14 @@ export class Battle {
   private updateCombat() {
     for (const e of [...this.entities]) {
       if (e.hp <= 0) continue;
+      const rate = e.rage ? rage.hitSpeedMultiplier : 1;
+      if (e.rage || e.animationTime !== undefined)
+        e.animationTime =
+          (e.animationTime ?? e.age) +
+          STEP * (e.rage ? rage.speedMultiplier : 1);
       e.age += STEP;
-      e.attack = Math.max(0, e.attack - STEP);
-      e.cooldown = Math.max(0, e.cooldown - STEP);
+      e.attack = Math.max(0, e.attack - STEP * rate);
+      e.cooldown = Math.max(0, e.cooldown - STEP * rate);
       e.stun = Math.max(0, e.stun - STEP);
       if (e.deploy > 0) {
         e.deploy -= STEP;
@@ -939,7 +982,7 @@ export class Battle {
       }
       if (e.burrow && !this.updateTesla(e)) continue;
       if (e.card === "witch") {
-        e.spawnTimer -= STEP;
+        e.spawnTimer -= STEP * (e.rage ? rage.spawnSpeedMultiplier : 1);
         if (e.spawnTimer <= 0) {
           e.spawnTimer = 7;
           this.emitAudio("summon", e.team, audioProfile(e), e.id);
@@ -959,7 +1002,7 @@ export class Battle {
         );
         if (!target || !this.inRange(e, target)) this.cancelAttack(e);
         else {
-          pending.remaining -= STEP;
+          pending.remaining -= STEP * rate;
           if (pending.remaining > 1e-8) continue;
           e.pendingAttack = undefined;
           this.releaseAttack(e, target, pending.damage);
@@ -1199,7 +1242,10 @@ export class Battle {
       dy = y - e.y,
       d = Math.hypot(dx, dy);
     if (d < 0.001) return;
-    const speed = e.speed * (e.card === "prince" && e.move > 2.3 ? 1.8 : 1);
+    const speed =
+      e.speed *
+      (e.card === "prince" && e.move > 2.3 ? 1.8 : 1) *
+      (e.rage ? rage.speedMultiplier : 1);
     const move = Math.min(d, speed * STEP);
     e.x = clamp(e.x + (dx / d) * move, 0.5, 17.5);
     e.y = clamp(e.y + (dy / d) * move, 0.6, 31.4);
@@ -1323,6 +1369,25 @@ export class Battle {
       .filter((e) => e.team === "blue" && e.kind === "troop" && e.y < 15)
       .sort((a, b) => a.y - b.y);
     const threat = threats[0];
+    const allies = affordable.some((a) => a.id === "rage")
+      ? this.entities.filter(
+          (e) =>
+            e.team === "red" && e.kind === "troop" && e.hp > 0 && e.deploy <= 0,
+        )
+      : [];
+    const push = allies
+      .map((entity) => ({
+        entity,
+        value: allies
+          .filter((friend) => dist(friend, entity) < rage.radius)
+          .reduce(
+            (value, friend) =>
+              value +
+              (friend.card === "tower" ? 0 : CARD_MAP[friend.card].cost),
+            0,
+          ),
+      }))
+      .sort((a, b) => b.value - a.value)[0];
     if (!threat && p.elixir < 6 && this.mode !== "training") return;
     const scored = affordable
       .map((a) => {
@@ -1344,6 +1409,7 @@ export class Battle {
           if (a.c.kind !== "troop") score -= 7;
           if (a.c.buildingsOnly) score += 2;
         }
+        if (a.id === "rage") score += push && push.value >= 5 ? 12 : -20;
         return { ...a, score };
       })
       .sort((a, b) => b.score - a.score);
@@ -1360,7 +1426,7 @@ export class Battle {
       y = threat ? clamp(threat.y + 1.3, 8, 13.8) : a.c.buildingsOnly ? 3.5 : 9;
     if (a.c.kind === "spell") {
       const target =
-        threat ??
+        (a.id === "rage" ? push?.entity : threat) ??
         this.entities.find(
           (e) => e.team === "blue" && e.kind === "tower" && !e.king,
         );

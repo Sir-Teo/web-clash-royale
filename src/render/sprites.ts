@@ -44,7 +44,16 @@ export interface AnimatedSprite {
 }
 export type SpriteState = Pick<
   Entity,
-  "id" | "card" | "team" | "x" | "y" | "attack" | "interval" | "move" | "deploy"
+  | "id"
+  | "card"
+  | "team"
+  | "x"
+  | "y"
+  | "attack"
+  | "interval"
+  | "move"
+  | "deploy"
+  | "animationTime"
 >;
 const heights: Partial<Record<SpriteId, number>> = {
   knight: 1.65,
@@ -251,7 +260,9 @@ export class SpriteLibrary {
           : "idle";
     const clip = selectClip(sprite.asset.data.clips, e.team, kind, direction);
     const elapsed =
-      kind === "attack" ? e.interval - e.attack : time + e.id * 0.13;
+      kind === "attack"
+        ? e.interval - e.attack
+        : (e.animationTime ?? time) + e.id * 0.13;
     const frame = animationFrame(clip, elapsed, kind === "attack", e.interval);
     if (frame !== sprite.lastFrame) {
       sprite.mesh.geometry = spriteGeometry(sprite.asset, frame);

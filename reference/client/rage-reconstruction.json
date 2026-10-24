@@ -1,0 +1,55 @@
+{
+  "feature": "Rage spell",
+  "source": {
+    "url": "https://github.com/smlbiobot/cr",
+    "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+    "binary": "lib/x86/libg.so",
+    "sha256": "a7eb74c5b72770e39b8dc2c55e452fc11434f3df3efc46fd0ea13d28c1da9309"
+  },
+  "authority": "historical-reference",
+  "method": "Pinned CSV and SC1 timeline imports; native provider initialization attempted but no static query completed.",
+  "nativeProbe": {
+    "provider": "hopper",
+    "result": "provider_timeout",
+    "timeoutMs": 120000,
+    "cleanup": "incomplete; REA could not confirm authenticated document shutdown",
+    "nativeExecution": false,
+    "evidence": []
+  },
+  "reconstructionChoices": [
+    "Use the six-second base duration, with no level scaling, as for the other persistent spells in the normalized roster.",
+    "Refresh the friendly buff every 300 ms; cap each refresh to the remaining area lifetime and retain the maximum across overlapping clouds.",
+    "Skip fully hidden Tesla, consistent with the unset AffectsHidden field; include friendly troops, buildings and Crown Towers from the source targeting flags.",
+    "Advance attack/windup, movement animation and Witch spawning at 1.35; retain real-time deployment, stun, lifetime decay, projectile travel and Prince charge threshold.",
+    "Apply the 1.25 audio pitch modifier to actor combat cues and divide attack cue delays by 1.35 at attack creation; later buff changes do not reschedule already queued cues.",
+    "Truncate the 390-frame ground/radius timelines when the six-second area expires. Repeat the short loop particle composition at the 300-ms area cadence; particle tails retain source lifetime.",
+    "Renderer-local tint phase starts on first observation; peers preserve simulation buffs but do not synchronize this presentation phase."
+  ],
+  "unknown": {
+    "unknown_id": "unk_ddf2bdf79e2cafaa15561b26adbe021397c441440b01c82e5524161ce5221e15",
+    "revision": 1,
+    "previous_revision_digest": null,
+    "revision_digest": "1e86114ec02b2095fbfbb3940db24537ac480259a065174f96371285d8e3d2e1",
+    "scope_digest": null,
+    "question": "Does the archived 1.8.0 Rage area include friendly hidden Tesla, and how does its owner truncate the 390-frame ground/radius clips and cap the final buff tick?",
+    "status": "open",
+    "severity": "low",
+    "domain": "rage-native-lifecycle",
+    "supporting_evidence_ids": [],
+    "contradicting_evidence_ids": [],
+    "required_authority": "shipped-artifact",
+    "required_confidence": "derived",
+    "required_environment": null,
+    "recommended_probes": [
+      {
+        "operation": "procedure_pseudo_code",
+        "rationale": "Trace area object lifetime and friendly targeting once the native provider can initialize."
+      }
+    ],
+    "relationships": [],
+    "resolution": null,
+    "mutation_evidence_ids": [
+      "ev_f21253ef040de76fd6308f9a775fe4a9370fb1bd175c7f6a5b6cff2781d77f29"
+    ]
+  }
+}

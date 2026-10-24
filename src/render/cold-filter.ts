@@ -7,6 +7,8 @@ import {
   SpriteFilterStack,
 } from "./sprite-filter";
 import source from "./cold-filter-data.json";
+import rageSource from "./rage-filter-data.json";
+import { rageFilterFrame } from "./rage-filter";
 import poisonSource from "./poison-filter-data.json";
 import { poisonFilterFrame } from "./poison-filter";
 
@@ -75,6 +77,7 @@ export interface ColdStructurePart {
 }
 
 interface ColdStructure {
+  rage?: { start: number; frame: number };
   cold?: { start: number; frame: number };
   poison?: { start: number; frame: number };
   add: T.Vector3;
@@ -108,6 +111,17 @@ export class NativeColdStructures {
       }));
   }
 
+  get rageState() {
+    return [...this.actors.entries()]
+      .filter(([, actor]) => actor.rage)
+      .map(([id, actor]) => ({
+        id,
+        frame: actor.rage!.frame,
+        parts: actor.parts.length,
+        color: rageSource.colors[actor.rage!.frame],
+      }));
+  }
+
   update(
     entities: readonly Entity[],
     time: number,
@@ -117,7 +131,9 @@ export class NativeColdStructures {
     for (const entity of entities) {
       if (
         entity.hp <= 0 ||
-        (entity.stun <= 0 && !entity.poison?.remaining) ||
+        (entity.stun <= 0 &&
+          !entity.poison?.remaining &&
+          !entity.rage?.remaining) ||
         (entity.kind !== "tower" && entity.kind !== "building")
       )
         continue;
@@ -155,7 +171,12 @@ export class NativeColdStructures {
         actor.poison ??= { start: time, frame: 0 };
         actor.poison.frame = poisonFilterFrame(time - actor.poison.start);
       } else actor.poison = undefined;
+      if (entity.rage?.remaining) {
+        actor.rage ??= { start: time, frame: 0 };
+        actor.rage.frame = rageFilterFrame(time - actor.rage.start);
+      } else actor.rage = undefined;
       const colors = [
+        ...(actor.rage ? [rageSource.colors[actor.rage.frame]] : []),
         ...(actor.poison
           ? [poisonSource.frames[actor.poison.frame].color]
           : []),

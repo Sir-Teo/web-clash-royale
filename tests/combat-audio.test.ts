@@ -53,14 +53,32 @@ function advanceUntil(battle: Battle, condition: () => boolean) {
 }
 
 describe("native combat audio evidence", () => {
+  it("applies Rage pitch and attack timing without advancing delayed cues while paused", () => {
+    const { audio, cues } = harness();
+    const cue = { ...event(1, 0, "musketeer"), pitch: 1.25, rate: 1.35 };
+    const plan = combatAudioPlan(cue.profile, cue.phase, 29 ^ cue.id);
+    cues.consume([cue], 29, 0);
+    cues.update(1, true);
+    expect(audio.play).not.toHaveBeenCalled();
+    cues.update(0);
+    const immediate = plan.filter((p) => p.delay === 0);
+    expect(audio.play).toHaveBeenCalledTimes(immediate.length);
+    for (const [index, p] of immediate.entries())
+      expect(audio.play.mock.calls[index][2]?.pitch).toBeCloseTo(
+        p.pitch * 1.25,
+      );
+    cues.update(0.5);
+    const due = plan.filter((p) => p.delay / 1.35 <= 0.5);
+    expect(audio.play).toHaveBeenCalledTimes(due.length);
+  });
   it("retains all source rows, variant-specific values and pinned file hashes", () => {
     const manifest = JSON.parse(
       readFileSync("reference/client/combat-audio-manifest.json", "utf8"),
     );
-    expect(manifest.audioFiles).toHaveLength(115);
+    expect(manifest.audioFiles).toHaveLength(116);
     expect(manifest.sources).toHaveLength(11);
-    expect(Object.keys(definitions.profiles)).toHaveLength(28);
-    expect(Object.keys(definitions.sounds)).toHaveLength(95);
+    expect(Object.keys(definitions.profiles)).toHaveLength(29);
+    expect(Object.keys(definitions.sounds)).toHaveLength(96);
     for (const file of [
       ...manifest.sources,
       ...manifest.audioFiles,

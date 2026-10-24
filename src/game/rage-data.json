@@ -1,0 +1,23 @@
+{
+  "card": "Rage",
+  "area": "Rage",
+  "buff": "Rage",
+  "cost": 2,
+  "rarity": "Epic",
+  "radius": 5,
+  "duration": 6,
+  "durationIncreasePerLevel": 0.5,
+  "durationIncreaseAfterTournamentCap": 0.5,
+  "areaHitInterval": 0.3,
+  "buffDuration": 2,
+  "capBuffTimeToAreaEffectTime": true,
+  "hitSpeedMultiplier": 1.35,
+  "speedMultiplier": 1.35,
+  "spawnSpeedMultiplier": 1.35,
+  "audioPitchMultiplier": 1.25,
+  "targets": "friendly",
+  "hitsGround": true,
+  "hitsAir": true,
+  "affectsBuildings": true,
+  "affectsHidden": false
+}

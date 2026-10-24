@@ -72,6 +72,9 @@ function setup() {
     scenario !== "deployment";
   (document.querySelector("#freeze-cast") as HTMLElement).hidden =
     scenario !== "freeze";
+  for (const id of ["rage-cast", "rage-towers"])
+    (document.querySelector(`#${id}`) as HTMLElement).hidden =
+      scenario !== "rage";
   (document.querySelector("#poison-cast") as HTMLElement).hidden =
     scenario !== "poison";
   (document.querySelector("#poison-towers") as HTMLElement).hidden =
@@ -150,7 +153,7 @@ function setup() {
       for (const entity of unit("knight", team, 9, y)) entity.active = false;
       for (const entity of unit("tesla", team, 11.2, y)) entity.active = false;
     }
-  } else if (scenario === "poison") {
+  } else if (scenario === "poison" || scenario === "rage") {
     for (const [team, y] of [
       ["red", 12],
       ["blue", 20],
@@ -245,13 +248,24 @@ document.querySelector("#freeze-cast")!.addEventListener("click", () => {
   cast("freeze", "blue", 9, 12);
   cast("freeze", "red", 9, 20);
 });
+document.querySelector("#rage-cast")!.addEventListener("click", () => {
+  cast("rage", "red", 9, 12);
+  cast("rage", "blue", 9, 20);
+});
+document.querySelector("#rage-towers")!.addEventListener("click", () => {
+  for (const tower of battle.entities.filter(
+    (e) => e.kind === "tower" && !e.king && e.lane === "left",
+  ))
+    cast("rage", tower.team, tower.x, tower.y);
+});
 document.querySelector("#poison-cast")!.addEventListener("click", () => {
   cast("poison", "blue", 9, 12);
   cast("poison", "red", 9, 20);
 });
 document.querySelector("#poison-towers")!.addEventListener("click", () => {
   for (const tower of battle.entities.filter(
-    (entity) => entity.kind === "tower" && !entity.king && entity.lane === "left",
+    (entity) =>
+      entity.kind === "tower" && !entity.king && entity.lane === "left",
   ))
     cast("poison", tower.team === "blue" ? "red" : "blue", tower.x, tower.y);
 });
@@ -367,20 +381,38 @@ function render(now: number) {
     JSON.stringify(arena.deployFilterState);
   (document.querySelector("#destruction") as HTMLElement).dataset.coldFilter =
     JSON.stringify(arena.coldFilterState);
+  const rageNode = document.querySelector("#destruction") as HTMLElement;
+  rageNode.dataset.rageFilter = JSON.stringify(arena.rageFilterState);
+  rageNode.dataset.rageStructures = JSON.stringify(arena.rageStructureState);
+  rageNode.dataset.rageAreas = JSON.stringify(arena.rageAreaState);
+  rageNode.dataset.rageEntities = JSON.stringify(
+    battle.entities
+      .filter((e) => e.card === "knight")
+      .map((e) => ({ team: e.team, hp: e.hp, rage: e.rage })),
+  );
   (document.querySelector("#destruction") as HTMLElement).dataset.poisonFilter =
     JSON.stringify(arena.poisonFilterState);
   (
     document.querySelector("#destruction") as HTMLElement
   ).dataset.coldStructures = JSON.stringify(arena.coldStructureState);
-  (document.querySelector("#destruction") as HTMLElement).dataset.poisonStructures =
-    JSON.stringify(arena.poisonStructureState);
+  (
+    document.querySelector("#destruction") as HTMLElement
+  ).dataset.poisonStructures = JSON.stringify(arena.poisonStructureState);
   (document.querySelector("#destruction") as HTMLElement).dataset.freezeAreas =
     JSON.stringify(arena.freezeAreaState);
   (document.querySelector("#destruction") as HTMLElement).dataset.poisonAreas =
     JSON.stringify(arena.poisonAreaState);
-  (document.querySelector("#destruction") as HTMLElement).dataset.poisonEntities =
-    JSON.stringify(battle.entities.filter((entity) => entity.card === "knight")
-      .map((entity) => ({ team: entity.team, hp: entity.hp, poison: entity.poison })));
+  (
+    document.querySelector("#destruction") as HTMLElement
+  ).dataset.poisonEntities = JSON.stringify(
+    battle.entities
+      .filter((entity) => entity.card === "knight")
+      .map((entity) => ({
+        team: entity.team,
+        hp: entity.hp,
+        poison: entity.poison,
+      })),
+  );
   (document.querySelector("#destruction") as HTMLElement).dataset.hogJump =
     JSON.stringify(
       battle.entities

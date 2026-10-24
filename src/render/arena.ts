@@ -35,6 +35,8 @@ import { NativeChargeMarkers } from "./charge-marker";
 import { NativeChargeFilter } from "./charge-filter";
 import { NativeDeployFilter } from "./deploy-filter";
 import { NativeColdFilter, NativeColdStructures } from "./cold-filter";
+import { NativeRageFilter } from "./rage-filter";
+import rageRules from "../game/rage-data.json" with { type: "json" };
 import { NativePoisonFilter } from "./poison-filter";
 import type { ColdStructurePart } from "./cold-filter";
 import { SpriteFilterStack } from "./sprite-filter";
@@ -86,6 +88,7 @@ export class Arena {
   private chargeFilter = new NativeChargeFilter(this.spriteFilters);
   private deployFilter = new NativeDeployFilter(this.spriteFilters);
   private coldFilter = new NativeColdFilter(this.spriteFilters);
+  private rageFilter = new NativeRageFilter(this.spriteFilters);
   private poisonFilter = new NativePoisonFilter(this.spriteFilters);
   private coldStructures = new NativeColdStructures();
   private spellAreas = new NativeSpellAreas(this.scene, this.effects);
@@ -498,6 +501,7 @@ export class Arena {
     this.deployFilter.clear();
     this.coldFilter.clear();
     this.poisonFilter.clear();
+    this.rageFilter.clear();
     this.coldStructures.clear();
     this.spriteFilters.clear();
     this.spellAreas.clear();
@@ -609,6 +613,15 @@ export class Arena {
   }
   get coldFilterState() {
     return this.coldFilter.state;
+  }
+  get rageFilterState() {
+    return this.rageFilter.state;
+  }
+  get rageStructureState() {
+    return this.coldStructures.rageState;
+  }
+  get rageAreaState() {
+    return this.spellAreas.state.filter((area) => area.card === "rage");
   }
   get poisonFilterState() {
     return this.poisonFilter.state;
@@ -1093,6 +1106,29 @@ export class Arena {
             eventAge,
           );
       }
+      if (event.type === "spell" && event.card === "rage") {
+        const origin = new T.Vector3(event.x - 9, 0.2, event.y - 16);
+        this.destruction.burst(
+          "rage",
+          origin,
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
+        // Reconstruct the short looping emitter at each area hit interval.
+        for (
+          let index = 0;
+          index < Math.ceil(rageRules.duration / rageRules.areaHitInterval);
+          index++
+        )
+          this.destruction.burst(
+            "rage-loop",
+            origin,
+            b.seed ^ event.id ^ Math.imul(index, 0x9e3779b9),
+            event.team,
+            eventAge - index * rageRules.areaHitInterval,
+          );
+      }
       if (event.type === "spell" && event.card === "poison") {
         const origin = new T.Vector3(event.x - 9, 0.2, event.y - 16);
         this.destruction.burst(
@@ -1350,6 +1386,11 @@ export class Arena {
       this.destruction.time,
       (id) => this.units.get(id)?.sprite,
     );
+    this.rageFilter.update(
+      b.entities,
+      this.destruction.time,
+      (id) => this.units.get(id)?.sprite,
+    );
     this.poisonFilter.update(
       b.entities,
       this.destruction.time,
@@ -1552,6 +1593,7 @@ export class Arena {
     this.deployFilter.clear();
     this.coldFilter.clear();
     this.poisonFilter.clear();
+    this.rageFilter.clear();
     this.coldStructures.clear();
     this.spriteFilters.clear();
     this.spellAreas.clear();
