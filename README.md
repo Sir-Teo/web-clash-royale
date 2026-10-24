@@ -4,7 +4,7 @@ A private, independent browser fan game for Sir-Teo. Built with TypeScript, Thre
 
 Build an eight-card deck from all 74 playable rows in the archived 1.8.1 card roster, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
 
-Combat includes cancellable attack windups, defensive building pulls, homing shots, ballistic bombs, Fireball travel and knockback, three-wave Arrows and Zap charge resets. Cannon uses its native aiming frames; Tesla hides underground, rises to attack and retracts when idle. Princess Towers use their dedicated native character animations. The King plays its original wake-up sequence and waits 3.3 seconds before aiming and attacking. Existing version-1 through version-5 replays retain their original rules; new matches record version-6 combat.
+Combat includes cancellable attack windups, defensive building pulls, homing shots, ballistic bombs, Fireball travel and knockback, three-wave Arrows and Zap charge resets. Cannon uses its native aiming frames; Tesla hides underground, rises to attack and retracts when idle. Princess Towers use their dedicated native character animations. The King plays its original wake-up sequence and waits 3.3 seconds before aiming and attacking. New matches record version-7 combat; version-1 through version-6 replays retain their original rules.
 
 Princess Towers preserve the original base and foreground battlements, with the animated character placed between them using her authored origin and the archived attachment height.
 
@@ -15,6 +15,8 @@ The four original King emotes use complete native expressions and speech-bubble 
 Fireball impacts use the original layered smoke, glowing fragments, sparks, flames and lingering scorch effect. Native additive and screen blending keep fire and lightning bright, and particle motion follows the archived client’s linear deceleration and gravity integration. Sparks, fire, smoke and elixir splashes retain source tail delays and stretch their native artwork between projected motion endpoints; pause and replay seeking preserve their poses.
 
 Zap impacts use the archived bolt, electricity, smoke, sparks and ground glow composition. Arrows cover their source four-tile radius with 15 visible sprites across three waves and leave 15 native ground marks. Their source artwork and particle timing work in solo play, replays and browser-to-browser matches on desktop and phone. Bomber costs three elixir; Goblins deploy three units and Skeletons deploy four, matching their archived card rows.
+
+The basic speed, attack reach and hit interval of 46 directly mapped troop cards now come from the pinned character table. Executioner and Balloon retain their dedicated attack timing. Earlier replay versions keep the previous curated values. Regenerate the source projection with `npm run assets:card-stats`.
 
 Freeze costs four elixir and holds enemies within its three-tile circle for four seconds, including troops that enter later and hidden Teslas. Its original portrait, cast sound, snow particles and blue/red ground artwork work in solo play, replays and browser-to-browser matches. Frozen troops, buildings and towers use the archived icy color animation, also shared by Zap.
 
