@@ -4034,6 +4034,55 @@
         }
       ]
     },
+    "furnace": {
+      "source": "goblin_hut_die",
+      "components": [
+        {
+          "emitter": "Goblin_hut_woodExplosion",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TargetDummy_planks2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TowerExplode_smokePuff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Goblin_hut_woodExplosion",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TargetDummy_planks2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TowerExplode_smokePuff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ]
+    },
     "balloon-bomb": {
       "source": "MegaBombExplodeBalloon",
       "components": [
@@ -10336,6 +10385,41 @@
           "delay": 0.25,
           "scale": 1,
           "layer": "Ground",
+          "ground": false
+        }
+      ]
+    },
+    "furnace": {
+      "source": "Firespirit_building_spawn",
+      "components": [
+        {
+          "emitter": "Firespirit_building_spawn_burst1_small",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Firespirit_building_spawn_puff_small",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Firespirit_building_spawn_burst1_small",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "Firespirit_building_spawn_puff_small",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
           "ground": false
         }
       ]
@@ -20541,6 +20625,101 @@
         "Rock1Particle",
         "Rock2Particle",
         "Rock3Particle"
+      ]
+    },
+    "Firespirit_building_spawn_burst1_small": {
+      "count": 7,
+      "emissionLife": [
+        0.08,
+        0.08
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        0.3,
+        1
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0.6666666666666666,
+        2.3333333333333335
+      ],
+      "height": 1.6666666666666667,
+      "verticalSpeed": [
+        0,
+        10
+      ],
+      "tailDelayMs": [
+        0,
+        100
+      ],
+      "gravity": -56.666666666666664,
+      "startScale": 1,
+      "endScale": 0.4,
+      "fadeIn": 0,
+      "fadeOut": 0.2,
+      "inertia": 1.8333333333333333,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "death_particle_elixir1",
+        "death_particle_elixir2"
+      ]
+    },
+    "Firespirit_building_spawn_puff_small": {
+      "count": 2,
+      "emissionLife": [
+        0.19,
+        0.19
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        0.7,
+        2
+      ],
+      "angle": [
+        -0.5235987755982988,
+        0.5235987755982988
+      ],
+      "radius": [
+        0,
+        0.06666666666666667
+      ],
+      "speed": [
+        0,
+        1.6666666666666667
+      ],
+      "height": 1.6666666666666667,
+      "verticalSpeed": [
+        0.6666666666666666,
+        3
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 1.1666666666666667,
+      "startScale": 0.23,
+      "endScale": 0.3,
+      "fadeIn": 0,
+      "fadeOut": 2,
+      "inertia": 1.3333333333333333,
+      "rotate": true,
+      "loop": false,
+      "clips": [
+        "explosion_purple_glow1"
       ]
     },
     "freeze_snowPiles1": {

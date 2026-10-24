@@ -33,7 +33,7 @@ export class BuildingLibrary {
   async load() {
     const loader = new T.TextureLoader();
     await Promise.all(
-      ["cannon", "tesla", "mortar", "bomb-tower", "inferno-tower", "x-bow", "elixir-collector", "goblin-hut", "tombstone", "king"].map(async (id) => {
+      ["cannon", "tesla", "mortar", "bomb-tower", "inferno-tower", "x-bow", "elixir-collector", "goblin-hut", "tombstone", "furnace", "king"].map(async (id) => {
         try {
           const response = await fetch(
             `${import.meta.env.BASE_URL}assets/buildings/${id}.json`,
@@ -71,6 +71,7 @@ export class BuildingLibrary {
                 id === "elixir-collector" ? 2.5 :
                 id === "goblin-hut" ? 2.5 :
                 id === "tombstone" ? 2.3 :
+                id === "furnace" ? 2.5 :
                 id === "inferno-tower" ? 2.4 : 2.2) /
               (data.bounds[2] - data.bounds[0]),
           });
@@ -261,6 +262,8 @@ export class BuildingLibrary {
         this.frame(sprite, progress % clip.frames.length);
       }
       sprite.mesh.scale.x = angle < 0 ? -1 : 1;
+    } else if (e.card === "furnace") {
+      this.frame(sprite, Math.floor(e.age * sprite.clip.fps) % sprite.clip.frames.length);
     } else if (e.card === "tombstone") {
       const firstIdle = (sprite.clip.labels.deploy_end ?? 20) + 1;
       const frame = e.deploy > 0

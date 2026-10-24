@@ -48,6 +48,7 @@ import xBow from "./x-bow-data.json" with { type: "json" };
 import elixirCollector from "./elixir-collector-data.json" with { type: "json" };
 import goblinHut from "./goblin-hut-data.json" with { type: "json" };
 import tombstone from "./tombstone-data.json" with { type: "json" };
+import furnace from "./furnace-data.json" with { type: "json" };
 import guards from "./guards-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
@@ -107,6 +108,7 @@ export interface Entity extends Point {
   lane?: "left" | "right";
   lifetime?: number;
   spawnTimer: number;
+  spawnBurst?: number;
   pendingAttack?: { target: number; remaining: number; damage: number };
   burrow?: {
     exposure: number;
@@ -720,7 +722,8 @@ export class Battle {
       spawnTimer: id === "night-witch" ? nightWitch.spawn.pause :
         id === "elixir-collector" ? elixirCollector.generateInterval :
         id === "goblin-hut" ? goblinHut.spawnPause :
-        id === "tombstone" ? tombstone.spawnPause : 4,
+        id === "tombstone" ? tombstone.spawnPause :
+        id === "furnace" ? furnace.spawnPause : 4,
       ...(id === "tesla" && this.rulesVersion >= 3
         ? { burrow: { exposure: 0, idle: 0, phase: "hidden" as const } }
         : {}),
@@ -1482,6 +1485,26 @@ export class Battle {
           this.spawn("skeletons", e.team, e.x,
             e.y + (e.team === "blue" ? -1 : 1) * tombstone.spawnRadius,
             true, 1);
+        }
+        continue;
+      }
+      if (e.card === "furnace") {
+        if (e.spawnBurst !== undefined) {
+          e.spawnBurst -= STEP * hitSpeed;
+          if (e.spawnBurst <= 1e-8) {
+            e.spawnBurst = undefined;
+            this.spawn("fire-spirits", e.team, e.x + 0.22,
+              e.y + (e.team === "blue" ? -1 : 1) * furnace.spawnRadius,
+              true, furnace.spiritDeployTime + furnace.spiritDeployDelay);
+          }
+        }
+        e.spawnTimer -= STEP * hitSpeed;
+        if (e.spawnTimer <= 1e-8) {
+          e.spawnTimer += furnace.spawnPause + furnace.spawnInterval;
+          e.spawnBurst = furnace.spawnInterval;
+          this.spawn("fire-spirits", e.team, e.x - 0.22,
+            e.y + (e.team === "blue" ? -1 : 1) * furnace.spawnRadius,
+            true, furnace.spiritDeployTime + furnace.spiritDeployDelay);
         }
         continue;
       }

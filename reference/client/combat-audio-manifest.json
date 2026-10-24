@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "e3aceff90f2a4ecc876a15baacc78de108e41b7eb7fded216ae3e1190f6fba4d"
+      "sha256": "c57448e5749092a230d3dbeded7784f8438d9ff0afeb3b53c74fa9105b3e931b"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "bb88428e36489fc1042387d26bf1e816d18ece83c9ccfe4a3245c9030c15fb73"
+      "sha256": "6a61d65588740310e2c339c76e6214f97a1dec53c4d46bad0d72926cca86ca4a"
     }
   ],
   "ignoredEnemyVersions": [
@@ -584,6 +584,12 @@
       "source": "sfx/fire_ball_explo_02.ogg",
       "bytes": 18534,
       "sha256": "f4eb0012b52f0b4a142770d69d2caac2ccbcaedf4ddf3a336ce4f94dfed63ed8"
+    },
+    {
+      "path": "public/assets/audio/fire_hut_place_01.ogg",
+      "source": "sfx/fire_hut_place_01.ogg",
+      "bytes": 20309,
+      "sha256": "2953a201cb393a2d0e07e8ce96eba1d6863e077851e16588d9f7442f884209b5"
     },
     {
       "path": "public/assets/audio/fire_spirit_attack_01.ogg",
@@ -1668,6 +1674,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "a5217678260cc9435159eb7755b2350820b83bc7cde85ecd3c19879c5f22979c"
+    "sha256": "065e4a07e13ae2a352c98dd7aa49c44775c403294ab08d6d1de7d636057d03c5"
   }
 }

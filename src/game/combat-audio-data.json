@@ -7656,6 +7656,97 @@
         "row": "Tombstone"
       }
     },
+    "furnace": {
+      "source": "FirespiritHut",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "sound:SpellCasting"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "Firespirit_building_spawn"
+        ],
+        "components": [
+          {
+            "sound": "sound_firespirit_building_spawn",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_firespirit_building_spawn",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_buildings",
+        "row": "FirespiritHut"
+      }
+    },
     "king-tower": {
       "source": "KingTower",
       "attack": {
@@ -16283,6 +16374,29 @@
           0
         ],
         "maximum": 5,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_firespirit_building_spawn": [
+      {
+        "sourceFile": "sfx/fire_hut_place_01.wav",
+        "file": "fire_hut_place_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
         "repeat": 0,
         "loop": false,
         "priority": 1,

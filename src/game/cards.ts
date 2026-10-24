@@ -25,6 +25,7 @@ import xBow from "./x-bow-data.json" with { type: "json" };
 import elixirCollector from "./elixir-collector-data.json" with { type: "json" };
 import goblinHut from "./goblin-hut-data.json" with { type: "json" };
 import tombstone from "./tombstone-data.json" with { type: "json" };
+import furnace from "./furnace-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -107,6 +108,7 @@ export type CardId =
   | "elixir-collector"
   | "goblin-hut"
   | "tombstone"
+  | "furnace"
   | "zap"
   | "freeze"
   | "poison"
@@ -1004,6 +1006,18 @@ export const CARDS: Card[] = [
     tombstone.spawnPause,
     "Releases a Skeleton every 2.95 seconds and four more when destroyed.",
     { kind: "building", rarity: "Rare", lifetime: tombstone.lifetime },
+  ),
+  troop(
+    "furnace",
+    "Furnace",
+    furnace.cost,
+    Math.round(furnace.sourceHitpoints * 1152 / 450),
+    0,
+    0,
+    0,
+    furnace.spawnPause + furnace.spawnInterval,
+    "Releases two Fire Spirits per wave, half a second apart.",
+    { kind: "building", rarity: "Rare", lifetime: furnace.lifetime },
   ),
   troop(
     "zap",
