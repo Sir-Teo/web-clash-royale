@@ -4,8 +4,13 @@ import { Battle } from "../../src/game/engine";
 const arena = new Arena(document.querySelector<HTMLElement>("#arena")!);
 const batcher = (arena as any).spriteBatcher;
 const prepareSprites = batcher.prepare.bind(batcher);
+const groundBatcher = (arena as any).groundBatcher;
+const prepareGround = groundBatcher.prepare.bind(groundBatcher);
 function setBatch(enabled: boolean) {
   batcher.prepare = enabled ? prepareSprites : () => {};
+}
+function setGroundBatch(enabled: boolean) {
+  groundBatcher.prepare = enabled ? prepareGround : () => {};
 }
 setBatch(new URLSearchParams(location.search).get("batch") !== "off");
 const battle = new Battle({ seed: 12, ai: false });
@@ -54,6 +59,7 @@ Object.defineProperty(window, "__arenaProfile", {
   value: {
     setRatio(value: number) { arena.renderer.setPixelRatio(value); },
     setBatch,
+    setGroundBatch,
     burstCrowns,
     get state() {
       return {

@@ -17,6 +17,7 @@ import {
 import type { Model } from "./models";
 import { SpriteLibrary } from "./sprites";
 import { SpriteBatcher } from "./sprite-batcher";
+import { GroundBatcher } from "./ground-batcher";
 import { LegacyParticles } from "./legacy-particles";
 import type { AnimatedSprite } from "./sprites";
 import { EffectLibrary } from "./effects";
@@ -84,6 +85,22 @@ export class Arena {
   private units = new Map<number, Visual>();
   private entityById = new Map<number, Entity>();
   private spriteBatcher = new SpriteBatcher(this.scene);
+  private groundBatcher = new GroundBatcher(this.scene);
+  private shadowGeometry = new T.CircleGeometry(1, 16);
+  private ringGeometry = new T.RingGeometry(1.1, 1.35, 24);
+  private shadowMaterial = new T.MeshBasicMaterial({
+    color: 0x173721, transparent: true, opacity: 0.22, depthWrite: false,
+  });
+  private ringMaterials: Record<Team, T.MeshBasicMaterial> = {
+    blue: new T.MeshBasicMaterial({
+      color: teamColor("blue"), transparent: true, opacity: 0.8,
+      depthWrite: false, side: T.DoubleSide,
+    }),
+    red: new T.MeshBasicMaterial({
+      color: teamColor("red"), transparent: true, opacity: 0.8,
+      depthWrite: false, side: T.DoubleSide,
+    }),
+  };
   private shots = new Map<number, ProjectileVisual>();
   private trailCycles = new Map<number, number>();
   private effects = new EffectLibrary();
@@ -160,6 +177,8 @@ export class Arena {
   onCharge: (burst: MovementBurst) => void = () => {};
   crownTarget: (team: Team) => Point | null = () => null;
   constructor(readonly host: HTMLElement) {
+    this.shadowGeometry.userData.shared = true;
+    this.ringGeometry.userData.shared = true;
     this.renderer = new T.WebGLRenderer({
       antialias: true,
       alpha: true,
@@ -563,6 +582,7 @@ export class Arena {
   }
   setBattle(battle: Battle) {
     this.spriteBatcher.clear();
+    this.groundBatcher.clear();
     this.entityById.clear();
     this.deploymentEffects.reset(battle.audioEvents);
     this.launchEffects.reset(battle.audioEvents);
@@ -1114,15 +1134,8 @@ export class Arena {
           if (sprite) {
             object = new T.Group();
             object.add(sprite.mesh);
-            shadow = new T.Mesh(
-              new T.CircleGeometry(e.radius * 1.2, 16),
-              new T.MeshBasicMaterial({
-                color: 0x173721,
-                transparent: true,
-                opacity: 0.22,
-                depthWrite: false,
-              }),
-            );
+            shadow = new T.Mesh(this.shadowGeometry, this.shadowMaterial);
+            shadow.scale.setScalar(e.radius * 1.2);
             shadow.rotation.x = -Math.PI / 2;
             shadow.position.y = 0.02;
             object.add(shadow);
@@ -1185,16 +1198,8 @@ export class Arena {
           this.labels.append(label);
           v.label = label;
         } else {
-          const ring = new T.Mesh(
-            new T.RingGeometry(e.radius * 1.1, e.radius * 1.35, 24),
-            new T.MeshBasicMaterial({
-              color: teamColor(e.team),
-              transparent: true,
-              opacity: 0.8,
-              depthWrite: false,
-              side: T.DoubleSide,
-            }),
-          );
+          const ring = new T.Mesh(this.ringGeometry, this.ringMaterials[e.team]);
+          ring.scale.setScalar(e.radius);
           ring.rotation.x = -Math.PI / 2;
           ring.position.y = 0.03;
           object.add(ring);
@@ -1835,12 +1840,14 @@ export class Arena {
         break;
       }
     try {
-      if (this.units.size >= 20)
+      if (this.units.size >= 20) {
         this.spriteBatcher.prepare(this.units.values(), this.camera);
-      else this.spriteBatcher.idle();
+        this.groundBatcher.prepare(this.units.values());
+      } else this.spriteBatcher.idle();
       this.renderer.render(this.scene, this.camera);
     } finally {
       this.spriteBatcher.finish();
+      this.groundBatcher.finish();
     }
   }
   private impact(name: string, position: T.Vector3, life: number, age = 0) {
@@ -2022,6 +2029,12 @@ export class Arena {
     this.destroyed = true;
     this.observer.disconnect();
     this.spriteBatcher.clear();
+    this.groundBatcher.clear();
+    this.shadowGeometry.dispose();
+    this.ringGeometry.dispose();
+    this.shadowMaterial.dispose();
+    this.ringMaterials.blue.dispose();
+    this.ringMaterials.red.dispose();
     this.entityById.clear();
     this.particles.destroy();
     this.scene.traverse((o) => {
