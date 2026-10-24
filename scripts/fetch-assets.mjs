@@ -32,6 +32,7 @@ const cards = [
   "x-bow",
   "elixir-collector",
   "goblin-hut",
+  "tombstone",
   "zap",
   "freeze",
   "poison",

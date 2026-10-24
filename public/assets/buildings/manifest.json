@@ -122,6 +122,20 @@
       "frames": 2
     },
     {
+      "id": "tombstone",
+      "source": "building_tombstone",
+      "metadataSha256": "e36dcc29a05b307c67f3658a09b7ebea58cca0346a58fd9c0ab50e14b1ab15e6",
+      "dataSha256": "4991a99faeb146d304d39cfb63234eb0e627e576f05d47748d862d05c87e7228",
+      "textures": [
+        {
+          "file": "tombstone-0.webp",
+          "sha256": "a6fc20106b451326030bbb583da027c6480e08291664ea4a190394b462cc33d5",
+          "originalSha256": "74e2150c5bedcb1bb49fed12fa054896df98537df22fa8a4a68b1a3d441446b7"
+        }
+      ],
+      "frames": 98
+    },
+    {
       "id": "king",
       "source": "building_tower",
       "metadataSha256": "0096da89499bf03437a1caa2a88c811b293a5a3067fe571e1ef12bafadbf7962",

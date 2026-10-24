@@ -1,0 +1,38 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_buildings.csv",
+      "sha256": "f302372ce1d0870e3edb37d0520be9164865eb207ea600910616b9cbf024f456"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/client/effects.csv",
+      "sha256": "22591ef669cb9af6535a10caae5b7f7f8b5b79c81630aeb3381a04bfef298985"
+    },
+    {
+      "path": "reference/client/sounds.csv",
+      "sha256": "89136418aae9513b094b0f66b61c920a1df40347292aee5c28eefac13b13e3ca"
+    },
+    {
+      "path": "reference/sc/building_tombstone.bin",
+      "sha256": "e36dcc29a05b307c67f3658a09b7ebea58cca0346a58fd9c0ab50e14b1ab15e6"
+    },
+    {
+      "path": "reference/sc/building_tombstone_tex.png",
+      "sha256": "74e2150c5bedcb1bb49fed12fa054896df98537df22fa8a4a68b1a3d441446b7"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    }
+  ],
+  "output": {
+    "path": "src/game/tombstone-data.json",
+    "sha256": "e7db42ddcb3954cfaefcbf3bc81bb999528a002174dd64c90d9f1380fb58d4f2"
+  }
+}

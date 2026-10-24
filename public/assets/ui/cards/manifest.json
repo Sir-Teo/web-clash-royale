@@ -442,6 +442,11 @@
       "sha256": "fb1e97e9967e940c230551ac9250c9a3d3200e997432686d9b55d685701d003c"
     },
     {
+      "file": "portrait-tombstone.webp",
+      "bytes": 30804,
+      "sha256": "d6d553d70b70727f1e30553f996fe2400738358f2965c46a9ab2c79a7a3a4600"
+    },
+    {
       "file": "portrait-electro-wizard.webp",
       "bytes": 43830,
       "sha256": "6924f97fcdbad44e6f51fcef5019206ef5a35a3e4b8dc8c94e8e0f89e29d1244"
@@ -483,8 +488,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 107432,
-      "sha256": "b920dfac83e78aae2b80343a18d61da2fc080b89e63789aee51fe656acc87e64"
+      "bytes": 107744,
+      "sha256": "bb88428e36489fc1042387d26bf1e816d18ece83c9ccfe4a3245c9030c15fb73"
     }
   ]
 }

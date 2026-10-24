@@ -60,6 +60,7 @@
     "assets:x-bow": "node scripts/import-x-bow.mjs",
     "assets:elixir-collector": "node scripts/import-elixir-collector.mjs",
     "assets:goblin-hut": "node scripts/import-goblin-hut.mjs",
+    "assets:tombstone": "node scripts/import-tombstone.mjs",
     "assets:bomb-tower": "node scripts/import-bomb-tower.mjs",
     "assets:mortar": "node scripts/import-mortar.mjs",
     "assets:guards": "node scripts/import-guards.mjs",

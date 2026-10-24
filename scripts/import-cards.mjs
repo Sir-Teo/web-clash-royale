@@ -290,6 +290,7 @@ const portraitNames = {
   "x-bow": "Xbow",
   "elixir-collector": "Elixir Collector",
   "goblin-hut": "GoblinHut",
+  tombstone: "Tombstone",
   "electro-wizard": "ElectroWizard",
   miner: "Miner",
   bowler: "Bowler",
