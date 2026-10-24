@@ -3,6 +3,7 @@ import type { CardId } from "./cards";
 import { areaSpellTarget } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell } from "./spell-targeting";
 import { deploymentPositions } from "./deployment";
+import { defensiveThreats } from "./defensive-threats";
 import {
   combatTraits,
   FIREBALL_SPEED,
@@ -1404,11 +1405,7 @@ export class Battle {
       .map((id, slot) => ({ id, slot, c: CARD_MAP[id] }))
       .filter((v) => v.c.cost <= p.elixir);
     if (!affordable.length) return;
-    const threats = this.entities
-      .filter(
-        (e) => e.team === "blue" && e.kind === "troop" && e.hp > 0 && e.y < 15,
-      )
-      .sort((a, b) => a.y - b.y);
+    const threats = defensiveThreats("red", this.entities);
     const threat = threats[0];
     const spellTargets = new Map(
       affordable
@@ -1449,7 +1446,15 @@ export class Battle {
         else if (threat) {
           score += a.c.buildingsOnly ? -3 : 3;
           if (threat.air && !a.c.hitsAir) score -= 8;
-          if (a.c.splash && threats.length >= 3) score += 3;
+          if (
+            a.c.splash &&
+            threats.filter(
+              (enemy) =>
+                (!enemy.air || a.c.hitsAir) &&
+                dist(enemy, threat) <= a.c.splash! + enemy.radius,
+            ).length >= 3
+          )
+            score += 3;
           if (a.c.kind === "building") score += 2;
         } else {
           if (a.c.kind !== "troop") score -= 7;
@@ -1460,15 +1465,9 @@ export class Battle {
       .sort((a, b) => b.score - a.score);
     const a = scored[0];
     if (a.score < 0) return;
-    const lane = threat
-      ? threat.x < 9
-        ? 4
-        : 14
-      : this.random() < 0.5
-        ? 4
-        : 14;
+    const lane = threat ? threat.x : this.random() < 0.5 ? 4 : 14;
     let x = lane + (this.random() - 0.5) * 1.4,
-      y = threat ? clamp(threat.y + 1.3, 8, 13.8) : a.c.buildingsOnly ? 3.5 : 9;
+      y = threat ? clamp(threat.y + 1.3, 4, 13.8) : a.c.buildingsOnly ? 3.5 : 9;
     if (a.c.kind === "spell") {
       if (!a.target) return;
       x = a.target.x;

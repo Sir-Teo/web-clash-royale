@@ -129,6 +129,20 @@ function setup() {
     battle.players.red.hand = [card, "pekka", "pekka", "pekka"];
     battle.players.red.queue[0] = card;
     battle.players.red.elixir = card === "rage" ? 2 : 10;
+  } else if (scenario.startsWith("ai-defense-")) {
+    if (scenario === "ai-defense-lane") {
+      for (const e of unit("skeletons", "blue", 4, 1)) {
+        e.hp = 1;
+        e.active = false;
+      }
+      for (const e of unit("hog-rider", "blue", 14, 8)) e.active = false;
+      battle.entities.find((e) => e.team === "red" && e.lane === "right")!.hp =
+        100;
+    } else {
+      for (const e of unit("knight", "blue", 9, 3)) e.active = false;
+    }
+    battle.players.red.hand = ["mini-pekka", "knight", "giant", "hog-rider"];
+    battle.players.red.elixir = 4;
   } else if (scenario === "ai-spells") {
     // Let the ordinary AI timer choose its cast; no private think call here.
     const tower = battle.entities.find((e) => e.team === "blue" && !e.king)!;
@@ -491,6 +505,18 @@ function render(now: number) {
         .filter((e) => e.team === "blue" && e.kind === "tower")
         .map((e) => ({ id: e.id, hp: e.hp, x: e.x, y: e.y })),
       crowns: battle.players.red.crowns,
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.aiDefense =
+    JSON.stringify({
+      scene: (document.querySelector("#scenario") as HTMLSelectElement).value,
+      actions: battle.actions.filter((a) => a.team === "red"),
+      targets: battle.entities
+        .filter((e) => e.team === "blue" && e.kind === "troop" && e.hp > 0)
+        .map((e) => ({ card: e.card, x: e.x, y: e.y })),
+      elixir: battle.players.red.elixir,
+      towers: battle.entities
+        .filter((e) => e.team === "red" && e.kind === "tower")
+        .map((e) => ({ hp: e.hp, lane: e.lane, king: e.king })),
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.rockets =
     JSON.stringify({

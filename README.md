@@ -19,6 +19,8 @@ Battle log details show both starting decks, average elixir, the result and matc
 
 Open **Cards → Deck codes** to copy your current eight cards or preview a code from another player. Inspect the shared cards, choose a saved battle deck and select **Use this deck** to apply it. An immediate **Undo deck change** restores your previous deck selection. Codes contain only ordered card IDs and work across browsers; they do not include progress or rewards.
 
+Troop defense weighs each visible attacker’s damage, health, approach time and the health of nearby living Crown Towers. It prioritizes imminent lethal King hits, places defenders near the chosen attacker, and values splash support from nearby enemies that the defender can actually hit.
+
 Minion Horde adds six flying Minions for five elixir, using the original Minion animations, projectiles, sounds and its own native card portrait. It attacks ground and air, and remains vulnerable to splash damage and Arrows. Sky Captain includes it in the Balloon Freeze deck.
 
 The four original King emotes use complete native expressions and speech-bubble animations, with 16 voice variations. Six original quick-chat phrases use their native text bubbles, wooden selector and archived chat font. Each player has an independent bubble, a host-enforced cooldown and a persistent local mute option. The selector works with touch, mouse and keyboard; reduced motion uses still artwork.

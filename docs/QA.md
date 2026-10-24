@@ -692,3 +692,18 @@ Desktop and phone WebKit targeting screenshots were visually reviewed; `docs/scr
 Both desktop direct-peer browser checks pass. The host deploys through the pointer while the red-side guest selects, aims and submits through keyboard events; the browser-hosted worker accepts the rotated placement. The same run retains invite recovery, hidden opposing resources, visibility pause, surrender, both replay perspectives and the absence of game WebSocket/API requests. This brings the production checks for this change to 32 cases.
 
 The Pages-path offline smoke check passes reload, match-worker startup and battle start with 588 cached files and 122 native combat/death audio files. The root production build is restored after verification.
+
+
+## Defensive troop priority
+
+A direct baseline reproduction put a one-HP Skeleton deep in the left lane and a healthy Hog Rider beside a 100-HP right Princess Tower. The AI selected Mini P.E.K.K.A but placed it at `(3.9066, 8)` in the Skeleton’s lane. After ranking per-body pressure on living Crown Towers, the same scenario responds in the Hog’s lane at Y 9.3. Central attackers also receive a nearby response rather than a fixed lane-center deployment with a Y floor of 8.
+
+Thirteen new unit checks bring the complete suite to 378 passing tests. They cover split-lane urgency, lethal King priority, wounded bodies, deployment/stun and existing-defender delays, destroyed towers, dead/friendly/building/not-yet-crossed exclusions, mirrored teams, deterministic fallback without towers, central placement, nearby versus distant swarm support, air-ineligible splash bodies, input purity and unchanged RNG draw count. Existing damaging/area spell tests, occupied-building fallback and all six full-match opponent/replay equivalence checks pass. Type checking and the production build pass.
+
+The six new browser fixture cases pass across desktop Chromium, phone Chromium and phone WebKit, using the ordinary 2.5-second first AI decision. They verify the weak-tower lane and nearby central response, zero earlier decisions, legal troop choices, nonnegative spending and unchanged commands while the fixture clock is stopped. The test waits for its committed scene identifier; an earlier readiness attempt queried the wrong fixture field. The central comparison uses the attacker’s current position after ordinary tower-collision separation, rather than assuming the actor remains at its initial overlapping position. No collision or timing rule was changed.
+
+The existing twelve browser spell-AI cases also pass on those targets, retaining cheaper finishers, pending-damage reservations and Rage/Freeze/Poison roles. The reviewed desktop fixture image is retained in `docs/screenshots/ai-weak-tower-defense.png`. These isolated scenarios establish the decision change; they do not measure competitive win rate or physical-phone performance. CI includes defensive targeting in desktop and phone WebKit fixture runs.
+
+All eighteen production gameplay/opponent cases pass across desktop Chromium, phone Chromium and phone WebKit. They retain real deployment, pause/background behavior, historical replay endings, settings, named enemy decks, history, replay identity, non-repeating rematches, the original Training opponent/rewards and legacy unnamed history. Together with the eighteen AI fixture cases, this change has 36 passing browser checks.
+
+The Pages-path offline smoke check passes reload, match-worker startup and battle start with 588 cached files and 122 native combat/death audio files. The root production build is restored after verification.
