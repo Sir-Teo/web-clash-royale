@@ -2221,6 +2221,67 @@ kbd {
 #settings-form > .primary-button {
   width: 100%;
 }
+.progress-backup {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid #ffffff12;
+}
+.progress-backup h3,
+.restore-progress h3 {
+  color: #e3dfc9;
+  font-size: 15px;
+}
+.progress-backup p,
+.restore-progress > p {
+  color: #91a7c2;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 10px 0 16px;
+}
+.backup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.backup-actions > button {
+  flex: 1 1 160px;
+  min-height: 44px;
+}
+.progress-backup .backup-error {
+  color: #ffb8a8;
+  margin-bottom: 0;
+}
+.restore-progress dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 24px 0;
+}
+.restore-progress dl > div {
+  min-width: 0;
+  padding: 14px 5px;
+  background: #10253a88;
+  border-radius: 8px;
+  text-align: center;
+}
+.restore-progress dt {
+  color: #91a7c2;
+  font-size: 10px;
+}
+.restore-progress dd {
+  margin: 8px 0 0;
+  overflow-wrap: anywhere;
+  color: #f3dd9e;
+  font-size: 18px;
+  font-weight: 900;
+}
+.restore-progress > button {
+  width: 100%;
+  min-height: 44px;
+}
+.restore-progress .text-button {
+  margin-top: 12px;
+}
 .result-content {
   text-align: center;
 }

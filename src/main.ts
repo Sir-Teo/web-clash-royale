@@ -129,8 +129,11 @@ import {
   recordBattle,
   openChest,
   storageAvailable,
+  exportProgress,
+  importProgress,
+  MAX_BACKUP_BYTES,
 } from "./game/profile";
-import type { RecordEntry } from "./game/profile";
+import type { Profile, RecordEntry } from "./game/profile";
 import { GameAudio } from "./game/audio";
 import { NativeDeathAudio } from "./game/death-audio";
 import { NativeCombatAudio } from "./game/combat-audio";
@@ -1361,11 +1364,60 @@ function showHistory() {
     };
 }
 function showSettings() {
+  const backups =
+    screen === "lobby"
+      ? `<section class="progress-backup" aria-labelledby="backup-heading"><h3 id="backup-heading">Your progress, to go</h3><p>Save your decks, rewards and battle log to a file, or restore a backup from another browser.</p><div class="backup-actions"><button type="button" class="secondary-button" id="export-progress">${icon("hard-drive-download")} Export progress</button><button type="button" class="secondary-button" id="import-progress">Restore backup ${icon("rotate-ccw")}</button></div><input type="file" id="progress-file" accept=".json,application/json" aria-label="Choose progress backup" hidden/><p class="backup-error" role="alert" hidden></p></section>`
+      : "";
   modal(
     "Make yourself at home",
     `<form id="settings-form"><label class="field-label" for="player-name">PLAYER NAME</label><input class="name-input" id="player-name" maxlength="18" value="${esc(profile.name)}" required/><div class="setting-row"><div>${icon("volume-2")}<span><b>Sound effects</b><small>Deploys, spells, and a familiar king laugh</small></span></div><label class="switch"><input type="checkbox" id="sound-setting" ${profile.sound ? "checked" : ""}/><span></span></label></div><div class="setting-row"><div>${icon("music-2")}<span><b>Battle music</b><small>The soundtrack to your next victory</small></span></div><label class="switch"><input type="checkbox" id="music-setting" ${profile.music ? "checked" : ""}/><span></span></label></div><div class="setting-row"><div>${icon("maximize")}<span><b>More room for the arena</b><small>Toggle fullscreen mode</small></span></div><button type="button" class="icon-button" id="fullscreen">${icon("expand")}</button></div><div class="save-note">${icon("shield-check")} Progress saves automatically on this browser.</div><button type="submit" class="primary-button">Save settings ${icon("check")}</button></form>`,
     "settings",
   );
+  $("#settings-form").insertAdjacentHTML("afterend", backups);
+  refreshIcons();
+  if (backups) {
+    $("#export-progress").onclick = () => {
+      const url = URL.createObjectURL(
+        new Blob([exportProgress(profile)], { type: "application/json" }),
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `browser-arena-progress-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.append(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 30000);
+    };
+    const input = $<HTMLInputElement>("#progress-file");
+    const restore = $<HTMLButtonElement>("#import-progress");
+    restore.onclick = () => {
+      input.value = "";
+      input.click();
+    };
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      const error = $(".backup-error");
+      error.hidden = true;
+      restore.disabled = true;
+      try {
+        if (file.size > MAX_BACKUP_BYTES)
+          throw new Error("Choose a progress backup smaller than 2 MB.");
+        const imported = importProgress(await file.text());
+        if (document.querySelector("#progress-file") !== input) return;
+        showProgressRestore(imported);
+      } catch (cause) {
+        if (document.querySelector("#progress-file") !== input) return;
+        error.textContent =
+          cause instanceof Error
+            ? cause.message
+            : "Couldn’t read this backup. Try another file.";
+        error.hidden = false;
+      } finally {
+        restore.disabled = false;
+      }
+    };
+  }
   $("#settings-form").onsubmit = (e) => {
     e.preventDefault();
     profile.name =
@@ -1389,6 +1441,30 @@ function showSettings() {
       void document.documentElement
         .requestFullscreen()
         .catch(() => toast("Fullscreen is unavailable in this browser."));
+  };
+}
+function showProgressRestore(imported: Profile) {
+  modal(
+    "Restore your kingdom?",
+    `<div class="restore-progress"><p>This replaces the progress saved in this browser.</p><h3>${esc(imported.name)}</h3><dl><div><dt>Trophies</dt><dd>${fmt(imported.trophies)}</dd></div><div><dt>Gold</dt><dd>${fmt(imported.gold)}</dd></div><div><dt>Saved replays</dt><dd>${imported.history.length}</dd></div></dl><button class="primary-button" id="confirm-restore">Restore progress ${icon("check")}</button><button class="text-button" id="cancel-restore">Keep current progress</button></div>`,
+    "restore-progress",
+  );
+  $("#cancel-restore").onclick = showSettings;
+  $("#confirm-restore").onclick = () => {
+    network.leave();
+    Object.assign(profile, imported);
+    audio.setEnabled(profile.sound);
+    audio.musicEnabled = profile.music;
+    audio.stopMusic();
+    emotes.setMuted(profile.emotesMuted);
+    closeModal();
+    lobby();
+    refreshSound();
+    toast(
+      storageAvailable
+        ? "Progress restored."
+        : "Progress restored for this session. Browser storage is unavailable.",
+    );
   };
 }
 function refreshSound() {
@@ -1694,8 +1770,11 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "Tab") {
       const focusables = Array.from(
         document.querySelectorAll<HTMLElement>(
-          ".modal button:not(:disabled),.modal input,.modal a",
+          ".modal button:not(:disabled),.modal input:not(:disabled),.modal a[href]",
         ),
+      ).filter(
+        (element) =>
+          element.tabIndex >= 0 && element.getClientRects().length > 0,
       );
       const first = focusables[0],
         last = focusables.at(-1);

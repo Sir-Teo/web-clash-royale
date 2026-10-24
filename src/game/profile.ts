@@ -78,12 +78,17 @@ export const validDeck = (a: unknown): a is CardId[] =>
   new Set(a).size === 8 &&
   a.every((v) => typeof v === "string" && Object.hasOwn(CARD_MAP, v));
 export function loadProfile(): Profile {
+  try {
+    return decodeProfile(localStorage.getItem(KEY) ?? "") ?? base();
+  } catch {
+    return base();
+  }
+}
+function decodeProfile(raw: string): Profile | null {
   const p = base();
   try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) return p;
     const saved = JSON.parse(raw);
-    if (saved.version !== 1) return p;
+    if (!saved || saved.version !== 1) return null;
     for (const key of [
       "trophies",
       "best",
@@ -95,7 +100,11 @@ export function loadProfile(): Profile {
       if (Number.isFinite(saved[key]) && saved[key] >= 0)
         p[key] = Math.floor(saved[key]);
     if (typeof saved.name === "string")
-      p.name = saved.name.trim().slice(0, 18) || p.name;
+      p.name =
+        saved.name
+          .replace(/[\u0000-\u001f\u007f]/g, "")
+          .trim()
+          .slice(0, 18) || p.name;
     for (const key of [
       "sound",
       "music",
@@ -119,8 +128,10 @@ export function loadProfile(): Profile {
     else p.deck = [...p.decks[p.activeDeck]];
     p.chests = Array.isArray(saved.chests)
       ? saved.chests
-          .filter((c: unknown) =>
-            ["silver", "gold", "magical"].includes(String(c)),
+          .filter(
+            (c: unknown) =>
+              typeof c === "string" &&
+              ["silver", "gold", "magical"].includes(c),
           )
           .slice(0, 4)
       : [];
@@ -168,9 +179,51 @@ export function loadProfile(): Profile {
           .slice(0, 10)
       : [];
   } catch {
-    /* Corrupt or unavailable browser storage falls back to a fresh local profile. */
+    return null;
   }
   return p;
+}
+
+export const MAX_BACKUP_BYTES = 2_000_000;
+export function exportProgress(profile: Profile): string {
+  return JSON.stringify(
+    { format: "browser-royale-progress", version: 1, profile },
+    null,
+    2,
+  );
+}
+
+/** Backups must restore completely; local storage recovery may discard broken fields. */
+export function importProgress(text: string): Profile {
+  if (new TextEncoder().encode(text).byteLength > MAX_BACKUP_BYTES)
+    throw new Error("Choose a progress backup smaller than 2 MB.");
+  let saved;
+  try {
+    saved = JSON.parse(text);
+  } catch {
+    throw new Error("This file is not a Browser Arena progress backup.");
+  }
+  if (
+    saved?.format !== "browser-royale-progress" ||
+    saved.version !== 1 ||
+    !saved.profile
+  )
+    throw new Error(
+      "Choose a Browser Arena progress backup exported by this game.",
+    );
+  const profile = decodeProfile(JSON.stringify(saved.profile));
+  if (
+    !profile ||
+    !Object.keys(profile).every(
+      (key) =>
+        JSON.stringify(profile[key as keyof Profile]) ===
+        JSON.stringify(saved.profile[key]),
+    )
+  )
+    throw new Error(
+      "This backup contains incomplete or invalid progress. Your current progress is unchanged.",
+    );
+  return profile;
 }
 export let storageAvailable = true;
 export function saveProfile(p: Profile) {

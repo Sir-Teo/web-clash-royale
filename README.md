@@ -109,6 +109,7 @@ The workflow builds with `VITE_BASE_PATH=/web-clash-royale/`, including asset UR
 - During a replay, the speed button cycles through 1×, 2×, 4×, 0.5× and 0.25×.
 - Troops deploy on your half; spells can target either half. Destroying a Princess Tower opens deployment territory in that lane.
 - Decks, results and preferences save automatically in this browser.
+- From the lobby's **Battle settings**, use **Export progress** to save a JSON backup. **Restore backup** previews its player, rewards and replay count before replacing this browser's progress. Backups include all three decks, chests, preferences and the latest ten replays; they can move progress to another browser or device.
 
 See [architecture](docs/ARCHITECTURE.md), [asset provenance](docs/ASSETS.md) and [verification](docs/QA.md).
 
