@@ -130,7 +130,17 @@ function setup() {
     battle.players.red.queue[0] = card;
     battle.players.red.elixir = card === "rage" ? 2 : 10;
   } else if (scenario.startsWith("ai-defense-")) {
-    if (scenario === "ai-defense-lane") {
+    if (
+      scenario === "ai-defense-ground-swarm" ||
+      scenario === "ai-defense-air-swarm"
+    ) {
+      const card =
+        scenario === "ai-defense-ground-swarm"
+          ? "skeleton-army"
+          : "minion-horde";
+      for (const e of unit(card, "blue", 4, 8)) e.active = false;
+      for (const e of unit("hog-rider", "blue", 14, 8)) e.active = false;
+    } else if (scenario === "ai-defense-lane") {
       for (const e of unit("skeletons", "blue", 4, 1)) {
         e.hp = 1;
         e.active = false;
@@ -141,7 +151,12 @@ function setup() {
     } else {
       for (const e of unit("knight", "blue", 9, 3)) e.active = false;
     }
-    battle.players.red.hand = ["mini-pekka", "knight", "giant", "hog-rider"];
+    battle.players.red.hand =
+      scenario === "ai-defense-ground-swarm"
+        ? ["mini-pekka", "valkyrie", "giant", "hog-rider"]
+        : scenario === "ai-defense-air-swarm"
+          ? ["mini-pekka", "baby-dragon", "musketeer", "giant"]
+          : ["mini-pekka", "knight", "giant", "hog-rider"];
     battle.players.red.elixir = 4;
   } else if (scenario === "ai-spells") {
     // Let the ordinary AI timer choose its cast; no private think call here.

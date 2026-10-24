@@ -707,3 +707,18 @@ The existing twelve browser spell-AI cases also pass on those targets, retaining
 All eighteen production gameplay/opponent cases pass across desktop Chromium, phone Chromium and phone WebKit. They retain real deployment, pause/background behavior, historical replay endings, settings, named enemy decks, history, replay identity, non-repeating rematches, the original Training opponent/rewards and legacy unnamed history. Together with the eighteen AI fixture cases, this change has 36 passing browser checks.
 
 The Pages-path offline smoke check passes reload, match-worker startup and battle start with 588 cached files and 122 native combat/death audio files. The root production build is restored after verification.
+
+
+## Nearby push pressure
+
+A direct baseline reproduction placed a healthy fifteen-body Skeleton Army or six-body Minion Horde in the left lane and a single Hog in the right lane, with both Princess Towers healthy. The per-body planner selected the Hog in both cases and deployed at `(13.9066, 9.3)`. Nearby attackers aimed at the same living Crown Tower now share pressure, allowing the existing local splash and air-capability scoring to choose Valkyrie for the ground swarm and Baby Dragon for the air swarm in the affected lane.
+
+Seven additional model checks bring the suite to 385 passing tests. They cover both healthy swarm counters, sparse chains, nearly dead swarms, preserved lethal King priority even against eighty bodies threatening a Princess Tower, a separate immediate finishing hit on a weak Tower, mirrored ordering and input ownership. The existing ground-only splash fixture now gives nearby flyers one HP so the Hog remains its intended primary threat; it still verifies that those airborne bodies cannot award Valkyrie a splash bonus. Other defensive priority, spell targeting, RNG-count and complete six-opponent replay/budget checks remain green. Type checking and the production build pass.
+
+All 24 AI browser fixture cases pass across desktop Chromium, phone Chromium and phone WebKit. The expanded ordinary-timer fixture includes a fifteen-body ground swarm and six-body air swarm competing with an isolated Hog. It verifies the complete visible body count, Valkyrie or Baby Dragon as appropriate, deployment in the swarm’s lane, nonnegative elixir and unchanged commands while the fixture clock is stopped. The prior weak-tower, central-defense, direct-spell and area-spell cases remain green. The reviewed ground-swarm response is retained in `docs/screenshots/ai-ground-swarm-defense.png`; existing desktop/phone WebKit CI automatically runs the expanded spec. These scenarios verify response selection, not competitive win rate.
+
+All eighteen production gameplay/opponent cases also pass on the three browser targets, retaining deployment, pause/background handling, historical replay endings, named decks, history, replay identity, rematches, Training rewards and legacy records. The complete browser verification for this change is 42 cases.
+
+A local Node probe used 160 living attackers in spread and dense formations, ten warm-up calls and 100 measured rankings per layout. Median ranking time was 0.54 ms spread and 0.58 ms dense; the 95th-percentile samples were 0.87 ms and 1.10 ms respectively. Each ranking retained all 160 bodies. These measurements describe the development machine and are not physical-phone frame-time guarantees or CI timing thresholds.
+
+The Pages-path offline smoke check passes reload, match-worker startup and battle start with 588 cached files and 122 native combat/death audio files. The root production build is restored after verification.

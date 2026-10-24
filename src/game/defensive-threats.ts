@@ -21,7 +21,7 @@ export function defensiveThreats(
       (gap === 0 ? 0 : gap / Math.max(0.1, e.speed))
     );
   };
-  return entities
+  const threats = entities
     .filter(
       (e) =>
         e.team !== team &&
@@ -36,6 +36,8 @@ export function defensiveThreats(
           (a, b) => arrival(entity, a) - arrival(entity, b) || a.id - b.id,
         )[0];
       let score = 0;
+      let lethalKing = false,
+        lethalTower = false;
       if (target) {
         let eta = arrival(entity, target);
         const dps = entity.damage / Math.max(0.1, entity.interval);
@@ -56,13 +58,36 @@ export function defensiveThreats(
         score =
           (dps * health * vulnerability * (target.king ? 1.5 : 1)) /
           (1 + eta / 2);
-        if (eta < 1 && target.hp <= entity.damage)
-          score += target.king ? 10000 : 500;
+        if (eta < 1 && target.hp <= entity.damage) {
+          lethalKing = !!target.king;
+          lethalTower = !target.king;
+        }
       }
-      return { entity, score };
+      return { entity, score, target: target?.id, lethalKing, lethalTower };
+    });
+  return threats
+    .map((threat) => {
+      let pressure = 0,
+        urgency = 0;
+      for (const neighbor of threats) {
+        if (threat.target === undefined || neighbor.target !== threat.target)
+          continue;
+        // Local support fades to zero at three tiles. This is not a chain
+        // joining every attacker in a lane into one distant push.
+        const weight = Math.max(
+          0,
+          1 - distance(threat.entity, neighbor.entity) / 3,
+        );
+        pressure += neighbor.score * weight;
+        // Losing the same Princess Tower is one emergency, not one per body.
+        if (neighbor.lethalTower) urgency = Math.max(urgency, 500 * weight);
+      }
+      return { ...threat, pressure: pressure + urgency };
     })
     .sort(
       (a, b) =>
+        Number(b.lethalKing) - Number(a.lethalKing) ||
+        b.pressure - a.pressure ||
         b.score - a.score ||
         (team === "red" ? a.entity.y - b.entity.y : b.entity.y - a.entity.y) ||
         a.entity.id - b.entity.id,

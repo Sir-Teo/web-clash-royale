@@ -1,9 +1,12 @@
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
-for (const scenario of ["lane", "center"] as const)
-  test(`the ordinary AI timer defends the ${scenario === "lane" ? "weak tower's lane" : "central King approach"}`, async ({
-    page,
-  }, info) => {
+for (const [scenario, label] of [
+  ["lane", "weak tower's lane"],
+  ["center", "central King approach"],
+  ["ground-swarm", "ground swarm instead of the isolated Hog"],
+  ["air-swarm", "air swarm instead of the isolated Hog"],
+] as const)
+  test(`the ordinary AI timer defends the ${label}`, async ({ page }, info) => {
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto("/tests/fixtures/combat.html");
@@ -33,13 +36,25 @@ for (const scenario of ["lane", "center"] as const)
     const result = await state();
     expect(result.actions).toHaveLength(1);
     const action = result.actions[0];
-    expect(["mini-pekka", "knight"]).toContain(action.card);
-    if (scenario === "lane") {
+    if (scenario === "ground-swarm" || scenario === "air-swarm") {
+      const card =
+        scenario === "ground-swarm" ? "skeleton-army" : "minion-horde";
+      expect(result.targets.filter((e: any) => e.card === card)).toHaveLength(
+        scenario === "ground-swarm" ? 15 : 6,
+      );
+      expect(action.card).toBe(
+        scenario === "ground-swarm" ? "valkyrie" : "baby-dragon",
+      );
+      expect(action.x).toBeGreaterThan(1);
+      expect(action.x).toBeLessThan(7);
+    } else if (scenario === "lane") {
+      expect(["mini-pekka", "knight"]).toContain(action.card);
       expect(result.towers.find((e: any) => e.lane === "right").hp).toBe(100);
       expect(action.x).toBeGreaterThan(13);
       expect(action.x).toBeLessThan(15);
       expect(action.y).toBeCloseTo(9.3);
     } else {
+      expect(["mini-pekka", "knight"]).toContain(action.card);
       const attacker = result.targets.find((e: any) => e.card === "knight");
       expect(
         Math.hypot(action.x - attacker.x, action.y - attacker.y),
@@ -53,6 +68,11 @@ for (const scenario of ["lane", "center"] as const)
     if (info.project.name === "desktop" && scenario === "lane")
       await page.screenshot({
         path: info.outputPath("ai-weak-tower-defense.png"),
+        animations: "disabled",
+      });
+    if (info.project.name === "desktop" && scenario === "ground-swarm")
+      await page.screenshot({
+        path: info.outputPath("ai-ground-swarm-defense.png"),
         animations: "disabled",
       });
     expect(errors).toEqual([]);
