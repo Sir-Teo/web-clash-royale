@@ -49,6 +49,7 @@ import golem from "./golem-data.json" with { type: "json" };
 import lavaHound from "./lava-hound-data.json" with { type: "json" };
 import archivedStats from "./archived-card-stats.json" with { type: "json" };
 import archivedVitals from "./archived-card-vitals.json" with { type: "json" };
+import archivedSplash from "./archived-card-splash.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -1121,6 +1122,7 @@ const originalCards: Card[] = [
 type BasicStats = Pick<Card, "speed" | "range" | "interval">;
 const sourceStats = archivedStats as Record<string, BasicStats>;
 const sourceVitals = archivedVitals as Record<string, Partial<Pick<Card, "hp" | "damage">>>;
+const sourceSplash = archivedSplash as Record<string, number>;
 // Replay rules 1–6 retain the original curated stats. Rule 7 uses the
 // archive's movement, attack reach, and attack interval where directly mapped.
 export const LEGACY_CARD_STATS = Object.fromEntries(
@@ -1145,6 +1147,11 @@ export const LEGACY_CARD_VITALS = Object.fromEntries(
       ...(sourceVitals[id].damage !== undefined ? { damage } : {}),
     }]),
 ) as Partial<Record<CardId, Partial<Pick<Card, "hp" | "damage">>>>;
+// Version 14 uses the archive's hit radii. Earlier replays keep curated areas.
+export const LEGACY_CARD_SPLASH = Object.fromEntries(
+  originalCards.filter((card) => sourceSplash[card.id] !== undefined)
+    .map(({ id, splash }) => [id, splash]),
+) as Partial<Record<CardId, number>>;
 export const LEGACY_BALLOON_STATS = {
   damage: 640,
   range: 0.9,
@@ -1154,6 +1161,7 @@ export const CARDS: Card[] = originalCards.map((card) => ({
   ...card,
   ...sourceStats[card.id],
   ...sourceVitals[card.id],
+  ...(sourceSplash[card.id] === undefined ? {} : { splash: sourceSplash[card.id] }),
 }));
 export const CARD_MAP = {
   ...Object.fromEntries(CARDS.map((c) => [c.id, c])),

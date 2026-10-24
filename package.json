@@ -18,6 +18,7 @@
     "assets:combat": "node scripts/import-combat.mjs",
     "assets:card-stats": "node scripts/import-card-stats.mjs",
     "assets:card-vitals": "node scripts/import-card-vitals.mjs",
+    "assets:card-splash": "node scripts/import-card-splash.mjs",
     "assets:effects": "node scripts/import-effects.mjs",
     "assets:destruction": "node scripts/import-destruction.mjs && npm run assets:effects",
     "assets:buildings": "node scripts/import-buildings.mjs",

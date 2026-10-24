@@ -1,4 +1,4 @@
-import { CARD_MAP, LEGACY_BALLOON_STATS, LEGACY_BUILDING_STATS, LEGACY_CARD_STATS, LEGACY_CARD_VITALS, STARTER_DECK } from "./cards";
+import { CARD_MAP, LEGACY_BALLOON_STATS, LEGACY_BUILDING_STATS, LEGACY_CARD_SPLASH, LEGACY_CARD_STATS, LEGACY_CARD_VITALS, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
 import { deploymentPositions } from "./deployment";
 import {
@@ -188,7 +188,7 @@ export interface Action extends Point {
 }
 export interface Replay {
   perspective?: Team;
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -253,7 +253,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
-    this.rulesVersion = r?.version ?? 13;
+    this.rulesVersion = r?.version ?? 14;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -1194,6 +1194,11 @@ export class Battle {
         : "King Tower destroyed",
     );
   }
+  private attackSplash(card: CardId | "tower") {
+    if (card === "tower") return 0;
+    const current = CARD_MAP[card].splash ?? 0;
+    return this.rulesVersion < 14 ? LEGACY_CARD_SPLASH[card] ?? current : current;
+  }
   // Frozen rules for saved v1 battles. New matches use updateCombat below.
   private updateLegacyCombat() {
     for (const e of [...this.entities]) {
@@ -1249,6 +1254,7 @@ export class Battle {
         }
       }
       const card = e.card === "tower" ? null : CARD_MAP[e.card];
+      const splash = this.attackSplash(e.card);
       const canAttack = (v: Entity) =>
         v.hp > 0 &&
         v.team !== e.team &&
@@ -1298,7 +1304,7 @@ export class Battle {
               damage,
               remaining: duration,
               duration,
-              splash: card?.splash ?? 0,
+              splash,
               air: e.kind === "tower" || !!card?.hitsAir,
               style: e.kind === "tower" ? "arrow" : e.card,
               stun: 0,
@@ -1312,9 +1318,9 @@ export class Battle {
               x: e.x,
               y: e.y,
             });
-          } else if (card?.splash) {
+          } else if (splash) {
             for (const v of this.entities)
-              if (canAttack(v) && dist(v, e) <= card.splash + v.radius)
+              if (canAttack(v) && dist(v, e) <= splash + v.radius)
                 this.hurt(v, damage);
             this.emit("hit", e.team, e.x, e.y, e.card);
             this.emitImpactAudio(e, damage);
@@ -1887,6 +1893,7 @@ export class Battle {
       return;
     }
     const card = e.card === "tower" ? null : CARD_MAP[e.card];
+    const splash = this.attackSplash(e.card);
     const traits = combatTraits(e);
     const p = traits.projectile;
     if (p || e.card === "balloon" || e.card === "tesla") {
@@ -1930,7 +1937,7 @@ export class Battle {
         damage,
         remaining: duration,
         duration,
-        splash: card?.splash ?? 0,
+        splash,
         air: e.kind === "tower" || !!card?.hitsAir,
         style: e.kind === "tower" ? (e.king ? "cannonball" : "arrow") : e.card,
         stun: e.card === "ice-spirit" ? iceSpirit.freezeDuration : 0,
@@ -1980,9 +1987,9 @@ export class Battle {
         x: e.x,
         y: e.y,
       });
-    } else if (card?.splash) {
+    } else if (splash) {
       for (const v of this.entities)
-        if (this.validTarget(e, v) && dist(v, e) <= card.splash + v.radius)
+        if (this.validTarget(e, v) && dist(v, e) <= splash + v.radius)
           this.hurt(v, damage);
       this.emit("hit", e.team, e.x, e.y, e.card, damage);
       this.emitImpactAudio(e, damage);
