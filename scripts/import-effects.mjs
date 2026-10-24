@@ -124,6 +124,7 @@ for (const resource of [
             "projectile_spear_360",
             "projectile_bomb",
             "projectile_cannonball_large",
+            "catapult_projectile1",
             "projectile_cannonball_small",
             "ice_wizard_projectile",
             "projectile_icespirit",

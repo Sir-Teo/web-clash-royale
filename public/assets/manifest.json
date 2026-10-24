@@ -603,6 +603,12 @@
       "sha256": "7b3a3b042574ede94cbcdf321e3f963657cd8497a3aaa6fe7c272d4a86e2ee6e"
     },
     {
+      "path": "cards/mortar.png",
+      "source": "cards/mortar.png",
+      "bytes": 150505,
+      "sha256": "ae586599383e1459a025ca6a465513d7ab6124a7d643b38c091f8d6b1e15fb70"
+    },
+    {
       "path": "cards/musketeer.png",
       "source": "cards/musketeer.png",
       "bytes": 138281,

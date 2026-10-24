@@ -39,6 +39,7 @@ const manifest = {
 for (const [id, name] of Object.entries({
   tesla: "building_tesla",
   cannon: "building_basic_cannon",
+  mortar: "building_mortar",
   king: "building_tower",
 })) {
   const metadata = await readFile(`reference/sc/${name}.bin`),
@@ -111,12 +112,23 @@ for (const [id, name] of Object.entries({
           "princess-blue-front": "StarTower_top_blue",
           "princess-red-front": "StarTower_top_red",
         }
-      : Object.fromEntries(
-          Object.keys(data.names).map((name) => [
-            /red|enemy/.test(name) ? "red" : "blue",
-            name,
-          ]),
-        );
+      : id === "mortar"
+        ? Object.fromEntries(
+            ["blue", "red"].flatMap((team) =>
+              ["idle", "attack"].flatMap((state) =>
+                Array.from({ length: 5 }, (_, i) => [
+                  `${team}-${state}-${i + 1}`,
+                  `building_mortar1${team === "red" ? "_enemy" : ""}_${state}1_${i + 1}`,
+                ]),
+              ),
+            ),
+          )
+        : Object.fromEntries(
+            Object.keys(data.names).map((name) => [
+              /red|enemy/.test(name) ? "red" : "blue",
+              name,
+            ]),
+          );
   for (const [team, exp] of Object.entries(exports)) {
     const ref = data.names[exp],
       clip = data.clips[ref];
@@ -187,9 +199,28 @@ for (const [id, name] of Object.entries({
       }
     }
   }
-  const bounds = JSON.parse(
-    await readFile(`reference/sc/${id}-blue.json`, "utf8"),
-  ).bounds;
+  const bounds =
+    id === "mortar"
+      ? (() => {
+          const b = [Infinity, Infinity, -Infinity, -Infinity];
+          for (const parts of frames)
+            for (const part of parts)
+              for (const polygon of data.shapes[part.shape])
+                for (const [x, y] of polygon.xy) {
+                  const m = part.matrix;
+                  const px = m[0] * x + m[2] * y + m[4];
+                  const py = m[1] * x + m[3] * y + m[5];
+                  b[0] = Math.min(b[0], px);
+                  b[1] = Math.min(b[1], py);
+                  b[2] = Math.max(b[2], px);
+                  b[3] = Math.max(b[3], py);
+                }
+          if (!b.every(Number.isFinite))
+            throw new Error("Missing Mortar geometry");
+          return b.map(round);
+        })()
+      : JSON.parse(await readFile(`reference/sc/${id}-blue.json`, "utf8"))
+          .bounds;
   const shapes = Object.fromEntries(
     [...usedShapes].map((ref) => [
       ref,

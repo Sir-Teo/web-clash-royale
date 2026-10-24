@@ -502,6 +502,21 @@ launches.cannon = {
   components: composition(cannonLaunch, "blue"),
   enemyComponents: composition(cannonLaunch, "red"),
 };
+const mortar = tables.buildings[profiles.mortar.source];
+const mortarProjectile = tables.projectiles[mortar.Projectile];
+if (mortar.ProjectileEffect !== "mortar_attack" ||
+    mortarProjectile?.HitEffect !== "mortar_hit")
+  throw new Error("Recheck native Mortar launch and impact");
+launches.mortar = {
+  source: mortar.ProjectileEffect,
+  components: composition(mortar.ProjectileEffect, "blue"),
+  enemyComponents: composition(mortar.ProjectileEffect, "red"),
+};
+impacts["hit:mortar"] = {
+  source: mortarProjectile.HitEffect,
+  components: composition(mortarProjectile.HitEffect, "blue"),
+  enemyComponents: composition(mortarProjectile.HitEffect, "red"),
+};
 for (const [id, expected] of Object.entries({
   knight: "knight_steps",
   prince: "prince_steps",

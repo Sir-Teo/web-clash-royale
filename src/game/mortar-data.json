@@ -1,0 +1,20 @@
+{
+  "card": "Mortar",
+  "rarity": "Common",
+  "cost": 4,
+  "sourceHitpoints": 600,
+  "sourceDamage": 108,
+  "deployTime": 4,
+  "hitSpeed": 5,
+  "loadTime": 4,
+  "range": 11.5,
+  "minimumRange": 4.5,
+  "lifetime": 30,
+  "splash": 2,
+  "projectileSpeed": 5,
+  "gravity": 60,
+  "projectileArt": "catapult_projectile1",
+  "projectileShadow": "projectile_arrow_shadow",
+  "blueExport": "building_mortar1",
+  "redExport": "building_mortar1_enemy"
+}

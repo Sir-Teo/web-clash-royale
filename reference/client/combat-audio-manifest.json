@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "abcc736384eced930d82e27786d9423c7477b04153c196759be5b6b91fb83e55"
+      "sha256": "57d1f5f094f449fd0419e38c7dccca9397f98e68c679428cc85a09faf66e51bd"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "b4eb8edbf277a5c715fd5fea5aa3c72b38acc8bc2cd637f88842242b6554b74c"
+      "sha256": "731ebd73226eebf0504a87f94ef6d45c4188d9688ff65d152c4122e432527e20"
     }
   ],
   "ignoredEnemyVersions": [
@@ -1024,6 +1024,18 @@
       "sha256": "50c996a28c2be9ce37b0fa81454274fa82c51b6260b054205f27ee2dda9288d2"
     },
     {
+      "path": "public/assets/audio/mortar_deploy.ogg",
+      "source": "sfx/mortar_deploy.ogg",
+      "bytes": 6387,
+      "sha256": "092295e2afa30706e9ec0ace23c123eec3950fcd3deed90e7581dc33cdbaeb3e"
+    },
+    {
+      "path": "public/assets/audio/mortar_fire_03.ogg",
+      "source": "sfx/mortar_fire_03.ogg",
+      "bytes": 13201,
+      "sha256": "7bb3960cb1cceef0b62ff7b3008b9a27d2592be8f599e6940ec31d68039d3b29"
+    },
+    {
       "path": "public/assets/audio/musket_fire_02.ogg",
       "source": "sfx/musket_fire_02.ogg",
       "bytes": 8808,
@@ -1620,6 +1632,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "307725383a09f6455e828759e0e8b6586141a3bcc58b8ad9f008c70b277678d0"
+    "sha256": "7b703924b8e3d9c8085c47bf69ca5433dc1f0b4978e5753a6baa6b0051c729e1"
   }
 }

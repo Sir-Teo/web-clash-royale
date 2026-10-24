@@ -107,6 +107,7 @@ const names = {
   balloon: "Balloon",
   cannon: "Cannon",
   tesla: "Tesla",
+  mortar: "Mortar",
   "king-tower": "KingTower",
   "princess-tower": "PrincessTower",
 };

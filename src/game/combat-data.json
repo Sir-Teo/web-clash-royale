@@ -478,6 +478,18 @@
     "ignoresKnockback": false,
     "projectile": null
   },
+  "mortar": {
+    "source": "Mortar",
+    "windup": 1,
+    "sight": 11.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "MortarProjectile",
+      "speed": 5,
+      "homing": false,
+      "gravity": 60
+    }
+  },
   "king-tower": {
     "source": "KingTower",
     "windup": 0.5,

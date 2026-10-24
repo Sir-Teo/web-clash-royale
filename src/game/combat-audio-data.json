@@ -6872,6 +6872,121 @@
         "row": "Tesla"
       }
     },
+    "mortar": {
+      "source": "Mortar",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [
+          "mortar_attack"
+        ],
+        "components": [
+          {
+            "sound": "sound_mortar_attack",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_mortar_attack",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "mortar_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_mortar_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_mortar_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "sound:SpellCasting"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "mortar_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_mortar_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_mortar_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_buildings",
+        "row": "Mortar"
+      }
+    },
     "king-tower": {
       "source": "KingTower",
       "attack": {
@@ -15246,6 +15361,75 @@
           0
         ],
         "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_mortar_attack": [
+      {
+        "sourceFile": "sfx/mortar_fire_03.wav",
+        "file": "mortar_fire_03",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_mortar_hit": [
+      {
+        "sourceFile": "sfx/boulder_impact_01.wav",
+        "file": "boulder_impact_01",
+        "volume": [
+          0.8,
+          0.9
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_mortar_deploy": [
+      {
+        "sourceFile": "sfx/mortar_deploy.wav",
+        "file": "mortar_deploy",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
         "repeat": 0,
         "loop": false,
         "priority": 1,

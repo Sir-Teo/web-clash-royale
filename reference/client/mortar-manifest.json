@@ -1,0 +1,42 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_buildings.csv",
+      "sha256": "f302372ce1d0870e3edb37d0520be9164865eb207ea600910616b9cbf024f456"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "reference/client/effects.csv",
+      "sha256": "22591ef669cb9af6535a10caae5b7f7f8b5b79c81630aeb3381a04bfef298985"
+    },
+    {
+      "path": "reference/sc/building_mortar.bin",
+      "sha256": "e80c80a2287417fb236258a4bc15877ffc60d859de41a597f735c1027535ede2"
+    },
+    {
+      "path": "reference/sc/building_mortar_tex.png",
+      "sha256": "f7c89ccf9502947e19790f1720211d439850732e8fb8eeda1034b012c538ebf7"
+    },
+    {
+      "path": "reference/sc/effects.bin",
+      "sha256": "1a9b0a2efe99578cd03fb9d8673ddb042aa067ba9f9fc0d3a253e15c2e9c7b7c"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    }
+  ],
+  "output": {
+    "path": "src/game/mortar-data.json",
+    "sha256": "6144cc899be606f62f1594bc806ae30c88d718a62a92bb0f492f75a311e3d23e"
+  }
+}

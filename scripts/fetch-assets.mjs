@@ -26,6 +26,7 @@ const cards = [
   "balloon",
   "cannon",
   "tesla",
+  "mortar",
   "zap",
   "freeze",
   "poison",

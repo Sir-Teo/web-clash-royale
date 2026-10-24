@@ -56,6 +56,7 @@
     "assets:ice-spirit": "node scripts/import-ice-spirit.mjs",
     "assets:ice-golem": "node scripts/import-ice-golem.mjs",
     "assets:giant-skeleton": "node scripts/import-giant-skeleton.mjs",
+    "assets:mortar": "node scripts/import-mortar.mjs",
     "assets:guards": "node scripts/import-guards.mjs",
     "assets:fire-spirits": "node scripts/import-fire-spirits.mjs",
     "assets:goblin-gang": "node scripts/import-goblin-gang.mjs",

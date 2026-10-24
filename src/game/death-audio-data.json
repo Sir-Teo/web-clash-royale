@@ -1165,6 +1165,21 @@
           "delay": 0
         }
       ]
+    },
+    "mortar": {
+      "source": "mortar_die",
+      "components": [
+        {
+          "sound": "sound_mortar_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_mortar_die",
+          "delay": 0
+        }
+      ]
     }
   },
   "sounds": {
@@ -2151,6 +2166,29 @@
         0
       ],
       "maximum": 2,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_mortar_die": {
+      "sourceFiles": [
+        "sfx/building_destroyed_05.wav"
+      ],
+      "files": [
+        "building_destroyed_05"
+      ],
+      "volume": [
+        0.5,
+        0.5
+      ],
+      "pitch": [
+        1,
+        1
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 3,
       "priority": 1,
       "padding": 0
     }

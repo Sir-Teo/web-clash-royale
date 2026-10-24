@@ -147,6 +147,27 @@
         ]
       }
     },
+    "mortar": {
+      "impact": {
+        "sources": [
+          "mortar_hit"
+        ],
+        "components": [
+          {
+            "effect": "mortar_hit",
+            "delay": 0,
+            "duration": 0.35
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "mortar_hit",
+            "delay": 0,
+            "duration": 0.35
+          }
+        ]
+      }
+    },
     "king-tower": {
       "death": {
         "sources": [

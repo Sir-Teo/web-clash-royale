@@ -38,6 +38,20 @@
       "frames": 38
     },
     {
+      "id": "mortar",
+      "source": "building_mortar",
+      "metadataSha256": "e80c80a2287417fb236258a4bc15877ffc60d859de41a597f735c1027535ede2",
+      "dataSha256": "0047845767bc66c0677779f7f8aec1b26531b4ff6ba03b92f4da0ac02946ca62",
+      "textures": [
+        {
+          "file": "mortar-0.webp",
+          "sha256": "a5b3abdc6f6230671bf6c940f0c21ca101b39ce472c8cc03cac238d5282a19e2",
+          "originalSha256": "f7c89ccf9502947e19790f1720211d439850732e8fb8eeda1034b012c538ebf7"
+        }
+      ],
+      "frames": 10
+    },
+    {
       "id": "king",
       "source": "building_tower",
       "metadataSha256": "0096da89499bf03437a1caa2a88c811b293a5a3067fe571e1ef12bafadbf7962",

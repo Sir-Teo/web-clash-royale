@@ -3621,6 +3621,69 @@
         }
       ]
     },
+    "mortar": {
+      "source": "mortar_die",
+      "components": [
+        {
+          "emitter": "TowerExplode_sparks",
+          "delay": 0.15,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "towerExplode_Smoke",
+          "delay": 0.04,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "TowerExplode_rockEmitter",
+          "delay": 0.15,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TowerExplode_smokePuff",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "TowerExplode_sparks",
+          "delay": 0.15,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "towerExplode_Smoke",
+          "delay": 0.04,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "TowerExplode_rockEmitter",
+          "delay": 0.15,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TowerExplode_smokePuff",
+          "delay": 0.2,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
     "balloon-bomb": {
       "source": "MegaBombExplodeBalloon",
       "components": [
@@ -5912,6 +5975,83 @@
         }
       ]
     },
+    "hit:mortar": {
+      "source": "mortar_hit",
+      "components": [
+        {
+          "emitter": "catapult_rock_Emitter",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_hit_smoke",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_smokePuff",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_grass_emitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_hit_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "catapult_rock_Emitter",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_hit_smoke",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_smokePuff",
+          "delay": 0,
+          "scale": 0.6,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_grass_emitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        },
+        {
+          "emitter": "catapult_hit_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        }
+      ]
+    },
     "hit:musketeer": {
       "source": "cannon_hit",
       "components": [
@@ -7257,6 +7397,27 @@
           "scale": 1,
           "layer": "Shadow",
           "ground": true
+        }
+      ]
+    },
+    "mortar": {
+      "source": "mortar_attack",
+      "components": [
+        {
+          "emitter": "cannon_smoke1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "cannon_smoke1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
         }
       ]
     }
@@ -9475,6 +9636,11 @@
       "source": "tesla_deploy",
       "components": [],
       "enemyComponents": []
+    },
+    "mortar": {
+      "source": "mortar_deploy",
+      "components": [],
+      "enemyComponents": []
     }
   },
   "emitters": {
@@ -11211,6 +11377,100 @@
       "loop": true,
       "clips": [
         "smoke_cloud_1"
+      ]
+    },
+    "TowerExplode_sparks": {
+      "count": 20,
+      "emissionLife": [
+        0.2,
+        0.2
+      ],
+      "interval": [
+        0,
+        0.01
+      ],
+      "life": [
+        0.25,
+        0.35
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        6.666666666666667,
+        8.333333333333334
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Sparkle"
+      ]
+    },
+    "TowerExplode_smokePuff": {
+      "count": 11,
+      "emissionLife": [
+        0,
+        0
+      ],
+      "interval": [
+        0,
+        0
+      ],
+      "life": [
+        0.8,
+        1
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0.6666666666666666
+      ],
+      "height": 1.3333333333333333,
+      "verticalSpeed": [
+        2.6666666666666665,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0.8333333333333334,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0.9,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "tower_destr_cloud_1"
       ]
     },
     "MagaBomb_FireRing": {
