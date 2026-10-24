@@ -16,6 +16,7 @@ import {
 } from "./models";
 import type { Model } from "./models";
 import { SpriteLibrary } from "./sprites";
+import { SpriteBatcher } from "./sprite-batcher";
 import type { AnimatedSprite } from "./sprites";
 import { EffectLibrary } from "./effects";
 import type { EffectSprite } from "./effects";
@@ -86,6 +87,8 @@ export class Arena {
   readonly camera: T.OrthographicCamera;
   private root = new T.Group();
   private units = new Map<number, Visual>();
+  private entityById = new Map<number, Entity>();
+  private spriteBatcher = new SpriteBatcher(this.scene);
   private shots = new Map<number, ProjectileVisual>();
   private trailCycles = new Map<number, number>();
   private effects = new EffectLibrary();
@@ -564,6 +567,8 @@ export class Arena {
     this.waterWaves.geometry.attributes.instanceOpacity.needsUpdate = true;
   }
   setBattle(battle: Battle) {
+    this.spriteBatcher.clear();
+    this.entityById.clear();
     this.deploymentEffects.reset(battle.audioEvents);
     this.launchEffects.reset(battle.audioEvents);
     this.movementEffects.reset();
@@ -984,6 +989,9 @@ export class Arena {
     }
     const b = this.battle;
     if (!b) return;
+    const entityById = this.entityById;
+    entityById.clear();
+    for (const entity of b.entities) entityById.set(entity.id, entity);
     this.shake.consume(b.audioEvents, b.seed, b.time);
     const shake = this.shake.update(effectDelta, this.reducedMotion.matches);
     // Native effect points share the renderer's existing 30-points-per-tile
@@ -1226,7 +1234,7 @@ export class Arena {
         this.units.set(e.id, v);
         if (v.model) this.renderer.shadowMap.needsUpdate = true;
       }
-      this.updateUnit(v, e, dt, time);
+      this.updateUnit(v, e, entityById.get(e.target ?? -1), dt, time);
     }
     for (const [id, v] of this.units)
       if (!alive.has(id)) {
@@ -1270,7 +1278,8 @@ export class Arena {
         this.shots.set(p.id, shot);
         this.scene.add(shot.object);
       }
-      const target = b.entities.find((e) => e.id === p.target && e.hp > 0);
+      const candidate = entityById.get(p.target ?? -1);
+      const target = candidate && candidate.hp > 0 ? candidate : undefined;
       updateProjectile(shot, p, this.effects, this.camera, target);
       if (p.style === "rocket" && p.speed && this.effects.asset) {
         const age = p.elapsed ?? 0;
@@ -1845,7 +1854,14 @@ export class Arena {
         this.renderer.shadowMap.needsUpdate = true;
         break;
       }
-    this.renderer.render(this.scene, this.camera);
+    try {
+      if (this.units.size >= 20)
+        this.spriteBatcher.prepare(this.units.values(), this.camera);
+      else this.spriteBatcher.idle();
+      this.renderer.render(this.scene, this.camera);
+    } finally {
+      this.spriteBatcher.finish();
+    }
   }
   private impact(name: string, position: T.Vector3, life: number, age = 0) {
     if (this.impacts.length >= 120 || !this.battle || age >= life) return null;
@@ -1857,7 +1873,7 @@ export class Arena {
     this.impacts.push({ sprite, start: this.destruction.time - age, life });
     return sprite;
   }
-  private updateUnit(v: Visual, e: Entity, dt: number, time: number) {
+  private updateUnit(v: Visual, e: Entity, target: Entity | undefined, dt: number, time: number) {
     const o = v.object;
     const y = entityVisualHeight(e);
     const jump = hogJumpHeight(e);
@@ -1896,7 +1912,6 @@ export class Arena {
       }
       v.sprite.mesh.position.x = 0;
       v.sprite.mesh.position.y = jump;
-      const target = this.battle?.entities.find((t) => t.id === e.target);
       this.sprites.update(v.sprite, e, target, moving, time, this.camera, {
         x: o.position.x - oldX,
         y: o.position.z - oldZ,
@@ -1906,12 +1921,11 @@ export class Arena {
       this.buildings.update(
         v.building,
         e,
-        this.battle?.entities.find((t) => t.id === e.target),
+        target,
         this.camera,
         time,
       );
     if (v.archer) {
-      const target = this.battle?.entities.find((t) => t.id === e.target);
       this.sprites.update(v.archer, e, target, false, time, this.camera);
       if (v.building?.princess || v.building?.attached)
         v.archer.mesh.quaternion.identity();
@@ -1959,7 +1973,6 @@ export class Arena {
       v.healthFill.position.x = -(1 - e.hp / e.maxHp) * 0.425;
     }
     if (e.kind !== "tower" && !v.sprite && !v.art && !v.building) {
-      const target = this.battle?.entities.find((t) => t.id === e.target);
       const targetAngle = target
         ? Math.atan2(target.x - e.x, target.y - e.y)
         : e.team === "blue"
@@ -2041,6 +2054,8 @@ export class Arena {
   destroy() {
     this.destroyed = true;
     this.observer.disconnect();
+    this.spriteBatcher.clear();
+    this.entityById.clear();
     this.scene.traverse((o) => {
       if (o instanceof T.Mesh && !o.geometry.userData.shared)
         o.geometry.dispose();

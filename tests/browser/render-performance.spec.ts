@@ -36,3 +36,21 @@ test("battle scenery stays batched after native assets load", async ({ page }) =
   expect(state.renderPixelRatio).toBeGreaterThanOrEqual(0.75);
   expect(state.renderPixelRatio).toBeLessThanOrEqual(2);
 });
+
+test("swarm sprites batch without changing the rendered frame", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/tests/fixtures/performance.html?swarms=8&fixedTime=3");
+  await expect.poll(async () => page.evaluate(() => (window as any).__arenaProfile?.state.loadedAnimations),
+    { timeout: 120000 }).toBe(expectedAnimations);
+  const state = await page.evaluate(() => (window as any).__arenaProfile.state);
+  expect(state.entities).toBe(126);
+  expect(state.drawCalls).toBeLessThan(520);
+  const batched = await page.screenshot();
+  await page.evaluate(() => (window as any).__arenaProfile.setBatch(false));
+  await expect.poll(async () => page.evaluate(() => (window as any).__arenaProfile.state.drawCalls))
+    .toBeGreaterThan(650);
+  const unbatched = await page.screenshot();
+  expect(batched.equals(unbatched)).toBe(true);
+  expect(errors).toEqual([]);
+});
