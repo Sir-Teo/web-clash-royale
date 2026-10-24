@@ -412,6 +412,40 @@
       "uniqueFrames": 459
     },
     {
+      "id": "guards",
+      "source": "chr_skeleton_warrior",
+      "metadataSha256": "f2a0d9637be7fe94586bbc323d7da658dd846977a56a4d47166366ef21a4082d",
+      "dataSha256": "b24d1029001a657bc8777242ee0f59cf8dcc8601eca8f3066bbea100866551ca",
+      "textures": [
+        {
+          "file": "guards-0.webp",
+          "sha256": "aec508260d1801fa1e1eeec3fa2af0d539a699dc995cc354f299be47b348bb4c",
+          "originalSha256": "fa52b1a8a886680cb2c0ead840e0dc31db65f1f59e61fd0e50aa4fc8e2833e78"
+        }
+      ],
+      "shapes": 360,
+      "clips": 54,
+      "frames": 720,
+      "uniqueFrames": 360
+    },
+    {
+      "id": "guards-shield",
+      "source": "chr_skeleton_warrior",
+      "metadataSha256": "f2a0d9637be7fe94586bbc323d7da658dd846977a56a4d47166366ef21a4082d",
+      "dataSha256": "e7a5b4adaf7caf9305bcea809bed2311e7e320754c51193c43472ca386721041",
+      "textures": [
+        {
+          "file": "guards-0.webp",
+          "sha256": "aec508260d1801fa1e1eeec3fa2af0d539a699dc995cc354f299be47b348bb4c",
+          "originalSha256": "fa52b1a8a886680cb2c0ead840e0dc31db65f1f59e61fd0e50aa4fc8e2833e78"
+        }
+      ],
+      "shapes": 360,
+      "clips": 54,
+      "frames": 720,
+      "uniqueFrames": 360
+    },
+    {
       "id": "musketeer",
       "source": "chr_musketeer",
       "metadataSha256": "8ceb69fb0d485a971f2990081d8d88823beade5453183190d15ec45fe691f4ca",

@@ -112,6 +112,29 @@
         }
       ]
     },
+    "guards": {
+      "source": "skeleton_warrior_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_skeleton_warrior_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "sound_skeleton_warrior_die",
+          "delay": 0
+        }
+      ]
+    },
     "musketeer": {
       "source": "musketeer_die",
       "components": [
@@ -1276,6 +1299,25 @@
       "padding": 0
     },
     "sound_giant_skeleton_die": {
+      "sourceFiles": [],
+      "files": [],
+      "volume": [
+        0,
+        0
+      ],
+      "pitch": [
+        0,
+        0
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 0,
+      "priority": 0,
+      "padding": 0
+    },
+    "sound_skeleton_warrior_die": {
       "sourceFiles": [],
       "files": [],
       "volume": [

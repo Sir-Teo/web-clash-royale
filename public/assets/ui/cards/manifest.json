@@ -372,6 +372,11 @@
       "sha256": "c56f70f9e09447ac0043ab476b8afe6dc4e40fd85784ff402a14951e6a3963fd"
     },
     {
+      "file": "portrait-guards.webp",
+      "bytes": 34676,
+      "sha256": "16c4268e4170a9d2b9b4e99fe1dec2d6d15bcefac8d912e97da8c7500e705d1b"
+    },
+    {
       "file": "portrait-ice-golem.webp",
       "bytes": 42180,
       "sha256": "10232266b9bb41fb68d24e232ebe20e6bdd799efdcdc61261957b7e05add5ff6"
@@ -448,8 +453,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 105101,
-      "sha256": "3612582f25573aae4d952efc7f340669f451db56fe6f76f57eaedc998789b768"
+      "bytes": 105435,
+      "sha256": "b4eb8edbf277a5c715fd5fea5aa3c72b38acc8bc2cd637f88842242b6554b74c"
     }
   ]
 }

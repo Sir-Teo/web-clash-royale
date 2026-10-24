@@ -512,6 +512,138 @@
         "row": "GiantSkeleton"
       }
     },
+    "guards": {
+      "source": "SkeletonWarrior",
+      "attack": {
+        "sources": [
+          "skeleton_warrior_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_skeleton_warrior_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_skeleton_warrior_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "skeleton_warrior_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_skeleton_warrior_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_skeleton_warrior_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "CharacterDeploy"
+        ],
+        "components": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "CharacterDeploy",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "skeleton_warrior_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_skeleton_warrior_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_skeleton_warrior_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "shield-lost": {
+        "sources": [
+          "skeleton_warrior_lose_shield"
+        ],
+        "components": [
+          {
+            "sound": "sound_skeleton_warrior_lose_shield",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_skeleton_warrior_lose_shield",
+            "delay": 0
+          }
+        ]
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_characters",
+        "row": "SkeletonWarriors"
+      }
+    },
     "musketeer": {
       "source": "Musketeer",
       "attack": {
@@ -3058,6 +3190,31 @@
         "sources": [],
         "components": [],
         "enemyComponents": []
+      },
+      "shield-lost": {
+        "sources": [
+          "GuardShieldDown"
+        ],
+        "components": [
+          {
+            "sound": "sound_GuardShieldDown",
+            "delay": 0
+          },
+          {
+            "sound": "sound_GuardShieldDown_vo",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_GuardShieldDown",
+            "delay": 0
+          },
+          {
+            "sound": "sound_GuardShieldDown_vo",
+            "delay": 0
+          }
+        ]
       },
       "death-impact": {
         "sources": [],
@@ -8758,6 +8915,98 @@
         "padding": 0
       }
     ],
+    "sound_skeleton_warrior_attack_start": [
+      {
+        "sourceFile": "sfx/shield_skele_atk_02.wav",
+        "file": "shield_skele_atk_02",
+        "volume": [
+          0.45,
+          0.55
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0.265,
+          0.265
+        ],
+        "maximum": 3,
+        "repeat": 0.2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_skeleton_warrior_hit": [
+      {
+        "sourceFile": "",
+        "file": null,
+        "volume": [
+          0,
+          0
+        ],
+        "pitch": [
+          0,
+          0
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 0,
+        "repeat": 0,
+        "loop": false,
+        "priority": 0,
+        "padding": 0
+      }
+    ],
+    "sound_skeleton_warrior_deploy": [
+      {
+        "sourceFile": "sfx/skele_warrior_dep_02.wav",
+        "file": "skele_warrior_dep_02",
+        "volume": [
+          0.7,
+          0.7
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_skeleton_warrior_lose_shield": [
+      {
+        "sourceFile": "sfx/shield_skele_lost_02.wav",
+        "file": "shield_skele_lost_02",
+        "volume": [
+          0.75,
+          0.8
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0.2,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
     "sound_musketeer_attack_start": [
       {
         "sourceFile": "",
@@ -11614,6 +11863,52 @@
         "repeat": 0,
         "loop": false,
         "priority": 0,
+        "padding": 0
+      }
+    ],
+    "sound_GuardShieldDown": [
+      {
+        "sourceFile": "sfx/dark_prince_shield_01.wav",
+        "file": "dark_prince_shield_01",
+        "volume": [
+          1,
+          1
+        ],
+        "pitch": [
+          1,
+          1
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_GuardShieldDown_vo": [
+      {
+        "sourceFile": "sfx/dark_prince_shield_lost_01.wav",
+        "file": "dark_prince_shield_lost_01",
+        "volume": [
+          0.9,
+          0.9
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
         "padding": 0
       }
     ],

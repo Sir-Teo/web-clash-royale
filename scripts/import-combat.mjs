@@ -59,6 +59,7 @@ const names = {
   archers: "Archer",
   giant: "Giant",
   "giant-skeleton": "GiantSkeleton",
+  guards: "SkeletonWarrior",
   musketeer: "Musketeer",
   "three-musketeers": "Musketeer",
   "mini-pekka": "MiniPekka",

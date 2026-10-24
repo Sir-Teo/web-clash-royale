@@ -32,6 +32,13 @@
     "ignoresKnockback": true,
     "projectile": null
   },
+  "guards": {
+    "source": "SkeletonWarrior",
+    "windup": 0.4,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
   "musketeer": {
     "source": "Musketeer",
     "windup": 0.5,

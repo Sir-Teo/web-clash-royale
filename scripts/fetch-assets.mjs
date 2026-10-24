@@ -46,6 +46,7 @@ const cards = [
   "ice-spirit",
   "fire-spirits",
   "giant-skeleton",
+  "guards",
   "ice-golem",
   "royal-giant",
   "mega-minion",

@@ -501,6 +501,12 @@
       "sha256": "5478b3a4af71d885046367f65614928f0b6f2a95b075b22ee9e83f58998647d4"
     },
     {
+      "path": "cards/guards.png",
+      "source": "cards/guards.png",
+      "bytes": 125912,
+      "sha256": "bfc68221b68ab264d95ac45961d5ea6d59324692b78f19e6740cb55f7a8bd9a9"
+    },
+    {
       "path": "cards/hog-rider.png",
       "source": "cards/hog-rider.png",
       "bytes": 131428,

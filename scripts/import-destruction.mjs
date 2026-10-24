@@ -407,6 +407,14 @@ impacts["shield:dark-prince"] = {
   components: composition(darkPrince.ShieldLostEffect, "blue"),
   enemyComponents: composition(darkPrince.ShieldLostEffect, "red"),
 };
+const guard = tables.characters.SkeletonWarrior;
+if (guard?.ShieldLostEffect !== "skeleton_warrior_lose_shield")
+  throw new Error("Recheck native Guards shield loss effect");
+impacts["shield:guards"] = {
+  source: guard.ShieldLostEffect,
+  components: composition(guard.ShieldLostEffect, "blue"),
+  enemyComponents: composition(guard.ShieldLostEffect, "red"),
+};
 const battleRam = tables.characters.BattleRam;
 if (battleRam?.TargetedHitEffect !== "battle_ram_hit" ||
     battleRam.ChargeEffect !== "battleram_charge" ||

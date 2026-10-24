@@ -1,0 +1,39 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_skeleton_warrior",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/client/effects.csv",
+      "sha256": "22591ef669cb9af6535a10caae5b7f7f8b5b79c81630aeb3381a04bfef298985"
+    },
+    {
+      "path": "reference/client/sounds.csv",
+      "sha256": "89136418aae9513b094b0f66b61c920a1df40347292aee5c28eefac13b13e3ca"
+    },
+    {
+      "path": "reference/sc/chr_skeleton_warrior.bin",
+      "sha256": "f2a0d9637be7fe94586bbc323d7da658dd846977a56a4d47166366ef21a4082d"
+    },
+    {
+      "path": "reference/sc/chr_skeleton_warrior_highres_tex.png",
+      "sha256": "fa52b1a8a886680cb2c0ead840e0dc31db65f1f59e61fd0e50aa4fc8e2833e78"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    }
+  ],
+  "output": {
+    "path": "src/game/guards-data.json",
+    "sha256": "bd15d9741f5053bf6fa8fd6df569e839586724410729b678d23266b893f5ab31"
+  }
+}

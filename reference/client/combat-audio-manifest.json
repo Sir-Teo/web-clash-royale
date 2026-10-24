@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "ea92dc1d99144e298fce9f37aa7f3dc6a3e8ab752d9781948bf40efb06efe050"
+      "sha256": "abcc736384eced930d82e27786d9423c7477b04153c196759be5b6b91fb83e55"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "3612582f25573aae4d952efc7f340669f451db56fe6f76f57eaedc998789b768"
+      "sha256": "b4eb8edbf277a5c715fd5fea5aa3c72b38acc8bc2cd637f88842242b6554b74c"
     }
   ],
   "ignoredEnemyVersions": [
@@ -440,6 +440,18 @@
       "source": "sfx/dark_prince_deploy_01.ogg",
       "bytes": 10635,
       "sha256": "6ffaeeb087c83f582e6aa8b93d91e41f4174c98775ac4e605ad99efff03d3123"
+    },
+    {
+      "path": "public/assets/audio/dark_prince_shield_01.ogg",
+      "source": "sfx/dark_prince_shield_01.ogg",
+      "bytes": 9204,
+      "sha256": "c8a7952bcdd2a55cb7110ea21c515ce258900bb4dc9cb216f4cd20d42b1bd4ec"
+    },
+    {
+      "path": "public/assets/audio/dark_prince_shield_lost_01.ogg",
+      "source": "sfx/dark_prince_shield_lost_01.ogg",
+      "bytes": 6784,
+      "sha256": "fff7e00e33cee7dd5110855720f0927501d026d2c6e356455d56748b8fd7203c"
     },
     {
       "path": "public/assets/audio/deploy_balloon_06.ogg",
@@ -1264,6 +1276,24 @@
       "sha256": "5c4ad5a2b66b638027d26beef26b115733b8afe46127071b52b23161360f5aef"
     },
     {
+      "path": "public/assets/audio/shield_skele_atk_02.ogg",
+      "source": "sfx/shield_skele_atk_02.ogg",
+      "bytes": 5458,
+      "sha256": "3980c22105002d0da2f8e533afd1c1471003d60d7b224d77e7fde9ba71941556"
+    },
+    {
+      "path": "public/assets/audio/shield_skele_lost_02.ogg",
+      "source": "sfx/shield_skele_lost_02.ogg",
+      "bytes": 7049,
+      "sha256": "9e4edd854813bb6ba30520168baefa4bb89ba6c8f16f1fda4ded77fdfe10fcb5"
+    },
+    {
+      "path": "public/assets/audio/skele_warrior_dep_02.ogg",
+      "source": "sfx/skele_warrior_dep_02.ogg",
+      "bytes": 7644,
+      "sha256": "4f741799328602b838e496a27da1ea3408f26df38a1a0f76d78d62e668b9a243"
+    },
+    {
       "path": "public/assets/audio/skeleton_arm_swing_02.ogg",
       "source": "sfx/skeleton_arm_swing_02.ogg",
       "bytes": 6469,
@@ -1590,6 +1620,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "bfb71f7b30564eeacd30423df380125f4f8ec75cf599d6485a633cf4d57245df"
+    "sha256": "307725383a09f6455e828759e0e8b6586141a3bcc58b8ad9f008c70b277678d0"
   }
 }

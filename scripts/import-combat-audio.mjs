@@ -158,6 +158,7 @@ for (const [id, profile] of Object.entries(JSON.parse(profilesBytes))) {
     summon: [row.SpawnCharacterEffect],
     appear: [row.AppearEffect],
     hide: [row.HideEffect],
+    ...(row.ShieldLostEffect ? { "shield-lost": [row.ShieldLostEffect] } : {}),
     "death-impact": [deathSpawn?.DeathEffect],
     "death-spawn": [deathSpawn?.SpawnEffect],
     ...(id === "bandit" ? {

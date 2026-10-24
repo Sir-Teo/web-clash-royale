@@ -34,6 +34,8 @@ const sources = {
   archers: "archer",
   giant: "giant",
   "giant-skeleton": "giant_skeleton",
+  guards: "skeleton_warrior",
+  "guards-shield": "skeleton_warrior",
   musketeer: "musketeer",
   "mini-pekka": "mini_pekka",
   goblins: "goblin",
@@ -148,6 +150,8 @@ for (const [id, source] of Object.entries(sources)) {
     if (id === "princess" && exportName.startsWith("princess_tower_")) continue;
     if (id === "dark-prince" && exportName.startsWith("BlackKnight_shield_")) continue;
     if (id === "dark-prince-shield" && !exportName.startsWith("BlackKnight_shield_")) continue;
+    if (id === "guards" && exportName.includes("_shield_")) continue;
+    if (id === "guards-shield" && !exportName.includes("_shield_")) continue;
     const direction = Number(match[3]);
     if (direction < 1 || direction > 9) continue;
     const hasExplicitBlue = Object.keys(data.names).some((name) =>
@@ -210,6 +214,8 @@ for (const [id, source] of Object.entries(sources)) {
         || id === "bowler"
         || id === "dark-prince"
         || id === "dark-prince-shield"
+        || id === "guards"
+        || id === "guards-shield"
         || id === "battle-ram"
         || id === "executioner"
         || id === "lumberjack"
@@ -221,8 +227,10 @@ for (const [id, source] of Object.entries(sources)) {
       .webp({ lossless: true, effort: 6 })
       .toBuffer();
     // Both Barbarian characters share one archived atlas byte-for-byte.
-    const file = `${id === "elite-barbarians" ? "barbarians" : id}-${i}.webp`;
-    if (id !== "elite-barbarians") await writeFile(`${output}/${file}`, texture);
+    const file = `${id === "elite-barbarians" ? "barbarians" :
+      id === "guards-shield" ? "guards" : id}-${i}.webp`;
+    if (id !== "elite-barbarians" && id !== "guards-shield")
+      await writeFile(`${output}/${file}`, texture);
     const info = await sharp(texture).metadata();
     textures.push({ file, width: info.width, height: info.height });
     hashes.push({

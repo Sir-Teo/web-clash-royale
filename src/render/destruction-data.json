@@ -464,6 +464,69 @@
         }
       ]
     },
+    "guards": {
+      "source": "skeleton_warrior_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "musketeer": {
       "source": "musketeer_die",
       "components": [
@@ -5163,6 +5226,27 @@
         }
       ]
     },
+    "shield:guards": {
+      "source": "skeleton_warrior_lose_shield",
+      "components": [
+        {
+          "emitter": "skeleton_warrior_lose_shield",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "skeleton_warrior_lose_shield",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
     "hit:battle-ram": {
       "source": "battle_ram_hit",
       "components": [
@@ -7781,6 +7865,11 @@
           "ground": true
         }
       ]
+    },
+    "guards": {
+      "source": "skeleton_warrior_deploy",
+      "components": [],
+      "enemyComponents": []
     },
     "musketeer": {
       "source": "musketeer_deploy",
@@ -15744,6 +15833,54 @@
       "loop": false,
       "clips": [
         "SparkleBlue"
+      ]
+    },
+    "skeleton_warrior_lose_shield": {
+      "count": 1,
+      "emissionLife": [
+        0.18,
+        0.18
+      ],
+      "interval": [
+        0.001,
+        0.003
+      ],
+      "life": [
+        2.8,
+        3.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        1,
+        1
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        0
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 0.65,
+      "endScale": 0.55,
+      "fadeIn": 0,
+      "fadeOut": 0.2,
+      "inertia": 1,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "shield_red_particle_01",
+        "shield_red_particle_02"
       ]
     },
     "battle_ram_log_drop": {
