@@ -8,7 +8,7 @@ Combat includes cancellable attack windups, defensive building pulls, homing sho
 
 Princess Towers preserve the original base and foreground battlements, with the animated character placed between them using her authored origin and the archived attachment height.
 
-Play against AI or challenge a friend over Wi-Fi or compatible remote networks. Exchange an invite and reply to connect the browsers directly, then use ready checks, emotes and both players’ replays. The game follows an archived card roster rather than the current live game's balance. See [multiplayer setup](docs/MULTIPLAYER.md) for direct Wi-Fi play and static hosting.
+Play against AI or challenge a friend over Wi-Fi or compatible remote networks. Exchange an invite and reply to connect the browsers directly, then use ready checks, emotes and both players’ replays. The game follows an archived card roster rather than the current live game's balance. Phone browsers can add it to the home screen with a standalone launch icon; AI battles remain available after the first complete load, while two-player matches require a connection. See [multiplayer setup](docs/MULTIPLAYER.md) for direct Wi-Fi play and static hosting.
 
 The four original King emotes use complete native expressions and speech-bubble animations, with 16 voice variations. Six original quick-chat phrases use their native text bubbles, wooden selector and archived chat font. Each player has an independent bubble, a host-enforced cooldown and a persistent local mute option. The selector works with touch, mouse and keyboard; reduced motion uses still artwork.
 
@@ -91,7 +91,7 @@ npm ci
 npm run dev
 ```
 
-`npm run check` runs simulation and persistence tests, type checking and a production build. `npm run test:e2e` runs desktop Chromium and phone Chromium/WebKit browser tests (install both once with `npx playwright install chromium webkit`). Assets and fonts are bundled locally. The production build generates an offline cache; after its first complete load, the game can reload and start battles without a network connection.
+`npm run check` runs simulation and persistence tests, type checking and a production build. `npm run test:e2e` runs desktop Chromium and phone Chromium/WebKit browser tests (install both once with `npx playwright install chromium webkit`). Assets and fonts are bundled locally. The production build generates an offline cache; after its first complete load, the game can reload and start battles without a network connection. `npm run assets:app-icons` regenerates the install and touch icons from `public/app-icon.svg`.
 
 To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189 --strictPort` and then `npm run test:offline`.
 
