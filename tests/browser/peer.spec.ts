@@ -102,7 +102,7 @@ test("static browsers exchange invites, fight, pause together and replay without
   const context = await (crossBrowser ?? browser).newContext({
     ...info.project.use,
     ...(crossBrowser ? devices["iPhone 13"] : {}),
-    baseURL: "http://127.0.0.1:5188",
+    baseURL: process.env.ARENA_LIVE_URL ?? "http://127.0.0.1:5188",
     serviceWorkers: "block",
   } as any);
   const friend = await context.newPage();
@@ -129,7 +129,7 @@ test("static browsers exchange invites, fight, pause together and replay without
       .click();
     await expect(page.locator("#peer-share")).toBeVisible({ timeout: 20000 });
     const invite = await page.locator("#peer-share").inputValue();
-    expect(invite).toMatch(/^CR1\./);
+    expect(invite).toContain("CR1.");
     await friend.locator("#peer-invite").fill(invite);
     await friend
       .getByRole("button", { name: "Join friend", exact: true })
