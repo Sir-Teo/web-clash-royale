@@ -1,5 +1,8 @@
 import { chromium } from "playwright";
 import { readFile } from "node:fs/promises";
+const siteBase = process.env.VITE_BASE_PATH || "/";
+if (!siteBase.startsWith("/") || !siteBase.endsWith("/"))
+  throw new Error("VITE_BASE_PATH must start and end with /");
 const deathAudioManifest = JSON.parse(
   await readFile("reference/client/death-audio-manifest.json", "utf8"),
 );
@@ -34,7 +37,7 @@ const nativeAudioPaths = [
         .map((file) => `/assets/${file.path}`),
     ],
   ),
-];
+].map((path) => `${siteBase}${path.replace(/^\//, "")}`);
 const browser = await chromium.launch({
   args: [
     "--enable-webgl",
@@ -59,7 +62,7 @@ try {
     console.error("Failed:", r.url(), r.failure()?.errorText),
   );
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("http://127.0.0.1:5189");
+  await page.goto(new URL(siteBase, "http://127.0.0.1:5189").href);
   await page.waitForFunction(() => !!window.__arena);
   await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
   const workerCached = await page.evaluate(async () => {
@@ -88,13 +91,18 @@ try {
     const response = await fetch(manifestLink.href);
     if (!response.ok) return false;
     const manifest = await response.json();
+    const basePath = new URL(".", manifestLink.href).pathname;
     if (
       manifest.display !== "standalone" ||
-      manifest.start_url !== "/" ||
+      new URL(manifest.start_url, manifestLink.href).pathname !== basePath ||
+      new URL(manifest.scope, manifestLink.href).pathname !== basePath ||
       manifest.icons?.length !== 3 ||
       !manifest.icons.some((icon) => icon.purpose === "maskable")
     ) return false;
-    const paths = [...manifest.icons.map((icon) => icon.src), touchLink.href];
+    const paths = [
+      ...manifest.icons.map((icon) => new URL(icon.src, manifestLink.href).href),
+      touchLink.href,
+    ];
     return (await Promise.all(paths.map(async (path) => {
       const icon = await fetch(path);
       if (!icon.ok || !icon.headers.get("content-type")?.includes("image/png"))
