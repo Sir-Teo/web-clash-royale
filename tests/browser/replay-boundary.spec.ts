@@ -109,6 +109,7 @@ for (const scenario of [
           elixir: s.elixir,
           time: s.time,
           winner: s.winner,
+          actions: s.actions,
         };
       });
     const seek = page.getByRole("slider", { name: "Replay timeline" });
@@ -120,6 +121,7 @@ for (const scenario of [
     expect(result.elixir).toBeCloseTo(expected.elixir);
     expect(result.time).toBe(expected.time);
     expect(result.winner).toBe("red");
+    expect(result.actions).toBe(1);
     await page.waitForTimeout(180);
     expect(await state()).toEqual(result);
     await page

@@ -33,7 +33,7 @@ jobs:
       - run: npx playwright test tests/browser/update-ui.spec.ts --project=desktop
         env:
           ARENA_PRODUCTION: "1"
-      - run: npx playwright test tests/browser/game.spec.ts tests/browser/opponents.spec.ts tests/browser/match-details.spec.ts tests/browser/replay-files.spec.ts tests/browser/replay-boundary.spec.ts tests/browser/progress-backup.spec.ts tests/browser/peer.spec.ts tests/browser/peer-share.spec.ts tests/browser/freeze-card.spec.ts tests/browser/poison-card.spec.ts tests/browser/rage-card.spec.ts tests/browser/rocket-card.spec.ts tests/browser/ending-performance.spec.ts tests/browser/death-audio.spec.ts tests/browser/combat-audio.spec.ts tests/browser/prince-charge-audio.spec.ts tests/browser/deployment-audio.spec.ts tests/browser/tesla-audio.spec.ts tests/browser/screen-shake.spec.ts tests/browser/balloon-bomb.spec.ts --project=desktop
+      - run: npx playwright test tests/browser/game.spec.ts tests/browser/opponents.spec.ts tests/browser/match-details.spec.ts tests/browser/replay-files.spec.ts tests/browser/replay-boundary.spec.ts tests/browser/replay-completion.spec.ts tests/browser/progress-backup.spec.ts tests/browser/peer.spec.ts tests/browser/peer-share.spec.ts tests/browser/freeze-card.spec.ts tests/browser/poison-card.spec.ts tests/browser/rage-card.spec.ts tests/browser/rocket-card.spec.ts tests/browser/ending-performance.spec.ts tests/browser/death-audio.spec.ts tests/browser/combat-audio.spec.ts tests/browser/prince-charge-audio.spec.ts tests/browser/deployment-audio.spec.ts tests/browser/tesla-audio.spec.ts tests/browser/screen-shake.spec.ts tests/browser/balloon-bomb.spec.ts --project=desktop
         env:
           ARENA_PRODUCTION: "1"
       - run: npx playwright test tests/browser/effects.spec.ts tests/browser/freeze.spec.ts tests/browser/poison.spec.ts tests/browser/rage.spec.ts tests/browser/deployment-effects.spec.ts tests/browser/spell-impacts.spec.ts tests/browser/rocket.spec.ts tests/browser/ai-spells.spec.ts tests/browser/ai-area-spells.spec.ts tests/browser/attack-impacts.spec.ts tests/browser/movement-effects.spec.ts tests/browser/hog-jump.spec.ts --project=desktop
@@ -54,7 +54,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps webkit
       - run: npm run build
-      - run: npx playwright test tests/browser/game.spec.ts tests/browser/opponents.spec.ts tests/browser/match-details.spec.ts tests/browser/replay-files.spec.ts tests/browser/replay-boundary.spec.ts tests/browser/progress-backup.spec.ts tests/browser/rage-card.spec.ts tests/browser/rocket-card.spec.ts tests/browser/mobile.spec.ts tests/browser/offline-updates.spec.ts tests/browser/update-ui.spec.ts --project=mobile-safari
+      - run: npx playwright test tests/browser/game.spec.ts tests/browser/opponents.spec.ts tests/browser/match-details.spec.ts tests/browser/replay-files.spec.ts tests/browser/replay-boundary.spec.ts tests/browser/replay-completion.spec.ts tests/browser/progress-backup.spec.ts tests/browser/rage-card.spec.ts tests/browser/rocket-card.spec.ts tests/browser/mobile.spec.ts tests/browser/offline-updates.spec.ts tests/browser/update-ui.spec.ts --project=mobile-safari
         env:
           ARENA_PRODUCTION: "1"
       - run: npx playwright test tests/browser/rage.spec.ts tests/browser/rocket.spec.ts tests/browser/ai-spells.spec.ts tests/browser/ai-area-spells.spec.ts --project=mobile-safari

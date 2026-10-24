@@ -124,6 +124,10 @@ const icons = {
   MonitorX,
 };
 import { Arena } from "./render/arena";
+import {
+  completeRecordedReplay,
+  replayComplete,
+} from "./game/replay-completion";
 import { Battle, STEP } from "./game/engine";
 import { previousSoloOpponent, soloOpponent } from "./game/opponents";
 import {
@@ -655,14 +659,23 @@ function updateBattleUI(force = false) {
   if (screen === "replay" && replayData) {
     $("#replay-clock").textContent = clock(battle.time);
     ($("#replay-seek") as HTMLInputElement).value = String(
-      (battle.tick / Math.max(1, replayData.duration)) * 100,
+      replayComplete(battle, replayData)
+        ? 100
+        : (battle.tick / Math.max(1, replayData.duration)) * 100,
     );
   }
   if (screen === "battle" && battle.winner && !resultShown) showResult();
-  if (screen === "replay" && replayData && battle.tick >= replayData.duration) {
+  if (screen === "replay" && replayData && replayComplete(battle, replayData)) {
     paused = true;
-    if (replayRecord && !battle.winner) {
-      battle.finish(replayRecord.winner, "Replay complete");
+    if (
+      replayRecord &&
+      completeRecordedReplay(
+        replaySource ?? battle,
+        replayData,
+        replayRecord.winner,
+      )
+    ) {
+      if (replaySource) applySnapshot(battle, snapshot(replaySource), "red");
       if (!force) {
         audio.stopEffects();
         announcements.cue("Gameend Horn");
@@ -777,7 +790,7 @@ function togglePause() {
 }
 function syncReplayControl() {
   const action =
-    replayData && battle.tick >= replayData.duration
+    replayData && replayComplete(battle, replayData)
       ? "restart"
       : paused
         ? "play"
@@ -1909,7 +1922,7 @@ $("#surrender-button").onclick = () => {
   updateBattleUI();
 };
 $("#replay-play").onclick = () => {
-  if (replayData && battle.tick >= replayData.duration && replayRecord)
+  if (replayData && replayComplete(battle, replayData) && replayRecord)
     playReplay(replayRecord, replayOwnerName ?? undefined);
   else togglePause();
 };
@@ -2089,7 +2102,7 @@ function frame(now: number) {
       if (
         screen === "replay" &&
         replayData &&
-        battle.tick >= replayData.duration
+        replayComplete(battle, replayData)
       )
         break;
       if (screen === "replay") stepReplay();
@@ -2202,7 +2215,9 @@ Object.defineProperty(window, "__arena", {
         opponentName,
         enemyDeck: multiplayer ? undefined : [...battle.enemyDeck],
         troops: battle.entities.filter((e) => e.kind === "troop").length,
-        actions: multiplayer ? network.actionCount : battle.actions.length,
+        actions: multiplayer
+          ? network.actionCount
+          : (replaySource?.actions.length ?? battle.actions.length),
         multiplayer: multiplayer
           ? {
               team: network.team,
