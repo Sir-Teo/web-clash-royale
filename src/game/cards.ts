@@ -23,6 +23,7 @@ import bombTower from "./bomb-tower-data.json" with { type: "json" };
 import infernoTower from "./inferno-tower-data.json" with { type: "json" };
 import xBow from "./x-bow-data.json" with { type: "json" };
 import elixirCollector from "./elixir-collector-data.json" with { type: "json" };
+import goblinHut from "./goblin-hut-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -103,6 +104,7 @@ export type CardId =
   | "inferno-tower"
   | "x-bow"
   | "elixir-collector"
+  | "goblin-hut"
   | "zap"
   | "freeze"
   | "poison"
@@ -976,6 +978,18 @@ export const CARDS: Card[] = [
     elixirCollector.generateInterval,
     "Produces one elixir every 8.5 seconds while it stands. Protect it to get ahead.",
     { kind: "building", rarity: "Rare", lifetime: elixirCollector.lifetime },
+  ),
+  troop(
+    "goblin-hut",
+    "Goblin Hut",
+    goblinHut.cost,
+    Math.round(goblinHut.sourceHitpoints * 1152 / 450),
+    0,
+    0,
+    0,
+    goblinHut.spawnPause,
+    "Releases a Spear Goblin every 4.95 seconds while the hut stands.",
+    { kind: "building", rarity: "Rare", lifetime: goblinHut.lifetime },
   ),
   troop(
     "zap",

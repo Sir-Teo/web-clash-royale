@@ -46,6 +46,7 @@ import bombTower from "./bomb-tower-data.json" with { type: "json" };
 import infernoTower from "./inferno-tower-data.json" with { type: "json" };
 import xBow from "./x-bow-data.json" with { type: "json" };
 import elixirCollector from "./elixir-collector-data.json" with { type: "json" };
+import goblinHut from "./goblin-hut-data.json" with { type: "json" };
 import guards from "./guards-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
@@ -716,7 +717,8 @@ export class Battle {
       active: true,
       lifetime: c.lifetime,
       spawnTimer: id === "night-witch" ? nightWitch.spawn.pause :
-        id === "elixir-collector" ? elixirCollector.generateInterval : 4,
+        id === "elixir-collector" ? elixirCollector.generateInterval :
+        id === "goblin-hut" ? goblinHut.spawnPause : 4,
       ...(id === "tesla" && this.rulesVersion >= 3
         ? { burrow: { exposure: 0, idle: 0, phase: "hidden" as const } }
         : {}),
@@ -1458,6 +1460,16 @@ export class Battle {
             this.players[e.team].elixir + elixirCollector.collectAmount);
           this.emitAudio("collect", e.team, "elixir-collector", e.id,
             undefined, { x: e.x, y: e.y });
+        }
+        continue;
+      }
+      if (e.card === "goblin-hut") {
+        e.spawnTimer -= STEP * hitSpeed;
+        if (e.spawnTimer <= 1e-8) {
+          e.spawnTimer += goblinHut.spawnPause;
+          this.spawn("spear-goblins", e.team, e.x,
+            e.y + (e.team === "blue" ? -1 : 1) * goblinHut.spawnRadius,
+            true, 1);
         }
         continue;
       }
