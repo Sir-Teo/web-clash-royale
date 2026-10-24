@@ -44,6 +44,7 @@ import giantSkeleton from "./giant-skeleton-data.json" with { type: "json" };
 import mortar from "./mortar-data.json" with { type: "json" };
 import bombTower from "./bomb-tower-data.json" with { type: "json" };
 import infernoTower from "./inferno-tower-data.json" with { type: "json" };
+import xBow from "./x-bow-data.json" with { type: "json" };
 import guards from "./guards-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
@@ -665,7 +666,8 @@ export class Battle {
             id === "ice-spirit" ? 1 + iceSpirit.deployDelay :
             id === "fire-spirits" ? 1 + fireSpirits.deployDelay :
             id === "golem" ? golem.golem.sourceDeployTime :
-            id === "mortar" ? mortar.deployTime : 1,
+            id === "mortar" ? mortar.deployTime :
+            id === "x-bow" ? xBow.deployTime : 1,
         );
     }
     return { ok: true, reason: "" };
@@ -1774,7 +1776,13 @@ export class Battle {
     const p = traits.projectile;
     if (p || e.card === "balloon" || e.card === "tesla") {
       const speed = p?.speed ?? (e.card === "tesla" ? 1000 : undefined);
-      const duration = speed ? Math.max(STEP, dist(e, target) / speed) : 0.35;
+      const muzzleDistance = e.card === "x-bow" ? xBow.projectileStartRadius : 0;
+      const targetDistance = dist(e, target) || 1;
+      const launchX = e.x + (target.x - e.x) / targetDistance * muzzleDistance;
+      const launchY = e.y + (target.y - e.y) / targetDistance * muzzleDistance;
+      const duration = speed
+        ? Math.max(STEP, dist({ x: launchX, y: launchY }, target) / speed)
+        : 0.35;
       const defaultFromHeight =
         e.kind === "tower"
           ? e.king
@@ -1790,6 +1798,8 @@ export class Battle {
                   ? 1
                   : e.card === "bomb-tower"
                     ? 4.5
+                  : e.card === "x-bow"
+                    ? xBow.projectileStartHeight
                 : e.air
                   ? 2.3
                   : 0.8;
@@ -1797,8 +1807,8 @@ export class Battle {
       this.projectiles.push({
         id: this.nextId++,
         team: e.team,
-        x: e.x,
-        y: e.y,
+        x: launchX,
+        y: launchY,
         tx: target.x,
         ty: target.y,
         target: target.id,
@@ -1811,7 +1821,7 @@ export class Battle {
         stun: e.card === "ice-spirit" ? iceSpirit.freezeDuration : 0,
         source: e.id,
         ...(e.card === "ice-wizard" ? { slow: iceWizard.slowDuration } : {}),
-        flight: { x: e.x, y: e.y },
+        flight: { x: launchX, y: launchY },
         speed,
         elapsed: 0,
         homing: p?.homing ?? true,

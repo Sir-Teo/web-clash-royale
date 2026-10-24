@@ -52,7 +52,7 @@ export function executionerFlightPoint(p: Projectile, seconds: number) {
     p.fromHeight ?? 3, p.y + uy * offset - 16);
 }
 export function projectileArt(p: Projectile) {
-  if (["arrow", "arrows", "archers"].includes(p.style))
+  if (["arrow", "arrows", "archers", "x-bow"].includes(p.style))
     return p.team === "blue"
       ? "projectile_arrow_basic"
       : "projectile_arrow_basic_enemy";
@@ -120,6 +120,7 @@ export function makeProjectile(
     || p.style === "executioner"
     || p.style === "mortar"
     || p.style === "bomb-tower"
+    || p.style === "x-bow"
   ) {
     const shadow = library.make(
       p.style === "rocket"
@@ -128,7 +129,7 @@ export function makeProjectile(
           ? "Barrel_shadow"
           : p.style === "princess"
             ? "projectile_arrow_shadow"
-            : p.style === "mortar" || p.style === "bomb-tower"
+            : p.style === "mortar" || p.style === "bomb-tower" || p.style === "x-bow"
               ? "projectile_arrow_shadow"
             : p.style === "bowler" || p.style === "executioner"
               ? "bowler_projectile_shadow"

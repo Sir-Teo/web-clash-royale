@@ -4,6 +4,7 @@ import { makeMaterial, spriteGeometry } from "./sprites";
 import type { SpriteAsset, SpriteData } from "./sprites";
 import type { AnimationClip } from "./animation";
 import { KING_ACTIVATION_TIME } from "../game/combat";
+import xBow from "../game/x-bow-data.json" with { type: "json" };
 
 export interface BuildingSprite {
   mesh: T.Mesh<T.BufferGeometry, T.MeshBasicMaterial[]>;
@@ -31,7 +32,7 @@ export class BuildingLibrary {
   async load() {
     const loader = new T.TextureLoader();
     await Promise.all(
-      ["cannon", "tesla", "mortar", "bomb-tower", "inferno-tower", "king"].map(async (id) => {
+      ["cannon", "tesla", "mortar", "bomb-tower", "inferno-tower", "x-bow", "king"].map(async (id) => {
         try {
           const response = await fetch(
             `${import.meta.env.BASE_URL}assets/buildings/${id}.json`,
@@ -65,6 +66,7 @@ export class BuildingLibrary {
             scale:
               (id === "king" ? 3.5 : id === "mortar" ? 2.8 :
                 id === "bomb-tower" ? 2.5 :
+                id === "x-bow" ? 2.8 :
                 id === "inferno-tower" ? 2.4 : 2.2) /
               (data.bounds[2] - data.bounds[0]),
           });
@@ -184,11 +186,11 @@ export class BuildingLibrary {
     camera: T.Camera,
     time = 0,
   ) {
-    if (e.card === "cannon" && target) {
+    if ((e.card === "cannon" || e.card === "x-bow") && target) {
       const angle = Math.atan2(target.x - e.x, -(target.y - e.y));
       this.frame(sprite, Math.round((Math.abs(angle) / Math.PI) * 18));
       sprite.mesh.scale.x = angle < 0 ? -1 : 1;
-    } else if (e.card === "cannon") {
+    } else if (e.card === "cannon" || e.card === "x-bow") {
       this.frame(sprite, e.team === "blue" ? 0 : 18);
       sprite.mesh.scale.x = 1;
     } else if (e.king) {
@@ -276,7 +278,8 @@ export class BuildingLibrary {
     sprite.mesh.quaternion.copy(camera.quaternion);
     const scale =
       e.deploy > 0
-        ? Math.max(0.05, 1 - e.deploy / (e.card === "mortar" ? 4 : 1))
+        ? Math.max(0.05, 1 - e.deploy / (e.card === "mortar" ? 4 :
+          e.card === "x-bow" ? xBow.deployTime : 1))
         : 1;
     sprite.mesh.scale.set(
       sprite.mesh.scale.x < 0 ? -scale : scale,

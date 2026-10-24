@@ -21,6 +21,7 @@ import guards from "./guards-data.json" with { type: "json" };
 import mortar from "./mortar-data.json" with { type: "json" };
 import bombTower from "./bomb-tower-data.json" with { type: "json" };
 import infernoTower from "./inferno-tower-data.json" with { type: "json" };
+import xBow from "./x-bow-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -99,6 +100,7 @@ export type CardId =
   | "mortar"
   | "bomb-tower"
   | "inferno-tower"
+  | "x-bow"
   | "zap"
   | "freeze"
   | "poison"
@@ -948,6 +950,18 @@ export const CARDS: Card[] = [
     "Locks onto one enemy, then intensifies its beam through three damage stages.",
     { kind: "building", rarity: "Rare", lifetime: infernoTower.lifetime,
       hitsAir: infernoTower.hitsAir },
+  ),
+  troop(
+    "x-bow",
+    "X-Bow",
+    xBow.cost,
+    Math.round(xBow.sourceHitpoints * 1.1 ** 5),
+    Math.round(xBow.sourceDamage * 1.1 ** 5),
+    0,
+    xBow.range,
+    xBow.hitSpeed,
+    "A long-range siege building that rapidly fires at ground targets and Crown Towers.",
+    { kind: "building", rarity: "Epic", lifetime: xBow.lifetime },
   ),
   troop(
     "zap",
