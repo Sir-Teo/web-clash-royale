@@ -340,6 +340,8 @@ function setup() {
         target.speed = target.damage = 0;
         target.hp = target.maxHp = 10000;
       }
+  } else if (scenario === "elixir-collector") {
+    unit("elixir-collector", "blue", 9, 22);
   } else if (scenario === "footsteps") {
     for (const [card, x] of [
       ["knight", 4],
@@ -639,6 +641,14 @@ function render(now: number) {
     JSON.stringify(arena.impactSpriteState);
   (document.querySelector("#destruction") as HTMLElement).dataset.infernoBeams =
     JSON.stringify(arena.infernoBeamState);
+  const collector = battle.entities.find((entity) => entity.card === "elixir-collector");
+  (document.querySelector("#destruction") as HTMLElement).dataset.collector =
+    JSON.stringify({
+      elixir: battle.players.blue.elixir,
+      frame: collector ? (arena as any).units.get(collector.id)?.building?.frame : null,
+      timer: collector?.spawnTimer ?? null,
+      collections: battle.audioEvents.filter((event) => event.phase === "collect").length,
+    });
   (document.querySelector("#destruction") as HTMLElement).dataset.miner =
     JSON.stringify({
       trails: arena.minerTrailState,

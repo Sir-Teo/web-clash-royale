@@ -42,7 +42,7 @@ describe("archived Bomb Tower", () => {
       hitSpeed: 1.6, loadTime: 1.1, range: 6, lifetime: 40,
       splash: 1.5, attachedCharacter: "Bomber", attachedCharacterHeight: 3.2,
       deathEffect: "BombTower_die", hitEffect: "BombTower_projectile_hit" });
-    expect(CARDS).toHaveLength(68);
+    expect(CARDS).toHaveLength(69);
     expect(CARD_MAP["bomb-tower"]).toMatchObject({ kind: "building", rarity: "Rare",
       cost: 5, hp: 2432, damage: 256, range: 6, interval: 1.6,
       lifetime: 40, splash: 1.5 });

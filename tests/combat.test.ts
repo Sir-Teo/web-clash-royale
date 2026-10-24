@@ -53,7 +53,10 @@ describe("combat timing and targeting", () => {
       const traits = combatTraits({ card: card.id });
       expect(traits.windup).toBeGreaterThanOrEqual(0);
       if (card.id === "inferno-dragon") expect(traits.windup).toBe(0);
-      expect(traits.sight).toBeGreaterThan(0);
+      if (card.id === "elixir-collector") {
+        expect(traits.sight).toBe(0);
+        expect(traits.projectile).toBeNull();
+      } else expect(traits.sight).toBeGreaterThan(0);
       if (traits.projectile) expect(traits.projectile.speed).toBeGreaterThan(0);
     }
     expect(combatTraits({ card: "tower", king: true }).projectile?.homing).toBe(
