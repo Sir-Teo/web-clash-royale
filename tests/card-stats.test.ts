@@ -43,7 +43,7 @@ describe("archived basic troop movement and attack stats", () => {
     const previous = new Battle({ replay: {
       ...original.exportReplay(), version: 6,
     } as Replay });
-    expect(original.rulesVersion).toBe(15);
+    expect(original.rulesVersion).toBe(16);
     expect(previous.rulesVersion).toBe(6);
     for (const battle of [original, previous]) {
       for (const id of cards) {
@@ -51,7 +51,7 @@ describe("archived basic troop movement and attack stats", () => {
         battle.players.blue.elixir = 10;
         expect(battle.play("blue", 0, 4, 22).ok, `${id} v${battle.rulesVersion}`).toBe(true);
         const unit = battle.entities.findLast((entity) => entity.card === id)!;
-        const stats = battle.rulesVersion === 15 ? CARD_MAP[id] : LEGACY_CARD_STATS[id]!;
+        const stats = battle.rulesVersion === 16 ? CARD_MAP[id] : LEGACY_CARD_STATS[id]!;
         expect(unit, `${id} v${battle.rulesVersion}`).toMatchObject({
           speed: stats.speed, range: stats.range, interval: stats.interval,
         });
@@ -77,8 +77,8 @@ describe("archived basic troop movement and attack stats", () => {
 
   it("keeps Cannon and Tesla cadence and Tesla lifetime unchanged in version-7 replays", () => {
     const base = new Battle({ seed: 91, ai: false });
-    for (const version of [7, 8, 9, 10, 11, 12, 13, 14, 15] as const) {
-      const battle = version === 15 ? base : new Battle({
+    for (const version of [7, 8, 9, 10, 11, 12, 13, 14, 15, 16] as const) {
+      const battle = version === 16 ? base : new Battle({
         replay: { ...base.exportReplay(), version } as Replay,
       });
       for (const id of ["cannon", "tesla"] as CardId[]) {

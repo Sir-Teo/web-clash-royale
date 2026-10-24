@@ -41,8 +41,8 @@ describe("archived troop splash radii", () => {
     id, oldHits,
   }) => {
     const base = new Battle({ seed: 143, ai: false });
-    for (const version of [1, 13, 14, 15] as const) {
-      const battle = version === 15 ? base : new Battle({
+    for (const version of [1, 13, 14, 15, 16] as const) {
+      const battle = version === 16 ? base : new Battle({
         replay: { ...base.exportReplay(), version } as Replay,
       });
       for (const tower of battle.entities) tower.active = false;

@@ -1,7 +1,7 @@
 import type { Team } from "../game/engine";
 
-// The retained Arrows card requests 15 projectiles. The browser simulates
-// three damage waves; split the 15 native arrows evenly among their flights.
+// The retained Arrows card requests 15 projectiles, with damage on the first.
+// Earlier replays split the artwork across three damage waves.
 // Their exact original random scatter is untraced, so use a deterministic
 // sunflower across the archived four-tile radius. The same positions drive
 // flight artwork and ground hits; the guest's rotated team flips both axes.

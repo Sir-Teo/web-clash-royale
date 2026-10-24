@@ -189,7 +189,7 @@ export interface Action extends Point {
 }
 export interface Replay {
   perspective?: Team;
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -254,7 +254,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
-    this.rulesVersion = r?.version ?? 15;
+    this.rulesVersion = r?.version ?? 16;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -607,7 +607,10 @@ export class Battle {
             : id === "arrows"
               ? 0.65
               : 0.9;
-      const waves = modern && id === "arrows" ? ARROWS_WAVES : 1;
+      // The archived custom first arrow deals the spell's full damage; its
+      // fourteen companions are visual only. Older replays keep three hits.
+      const waves = modern && id === "arrows" && this.rulesVersion < 16
+        ? ARROWS_WAVES : 1;
       for (let wave = 0; wave < waves; wave++) {
         this.projectiles.push({
           id: this.nextId++,
@@ -631,7 +634,8 @@ export class Battle {
                 speed: id === "zap" ? undefined : speed,
                 homing: false,
                 elapsed: 0,
-                delay: wave * ARROWS_WAVE_GAP,
+                delay: id === "arrows" && this.rulesVersion >= 16
+                  ? undefined : wave * ARROWS_WAVE_GAP,
                 fromHeight: id === "zap" ? 7 : 2.4,
                 toHeight: 0.2,
                 arc: id === "arrows" ? 9 : id === "zap" ? 0 : 6,

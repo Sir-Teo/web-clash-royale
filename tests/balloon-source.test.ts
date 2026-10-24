@@ -20,8 +20,8 @@ describe("archived Balloon main attack", () => {
 
   it("keeps the previous Balloon attack in version-9 replays", () => {
     const base = new Battle({ seed: 67, ai: false });
-    for (const version of [9, 10, 11, 12, 13, 14, 15] as const) {
-      const battle = version === 15 ? base : new Battle({
+    for (const version of [9, 10, 11, 12, 13, 14, 15, 16] as const) {
+      const battle = version === 16 ? base : new Battle({
         replay: { ...base.exportReplay(), version } as Replay,
       });
       battle.players.blue.hand[0] = "balloon";
@@ -49,8 +49,8 @@ describe("archived Balloon main attack", () => {
 
   it("keeps the old flight speed through version 12 and moves at the source speed in new matches", () => {
     const base = new Battle({ seed: 68, ai: false });
-    for (const version of [6, 7, 10, 12, 13, 14, 15] as const) {
-      const battle = version === 15 ? base : new Battle({
+    for (const version of [6, 7, 10, 12, 13, 14, 15, 16] as const) {
+      const battle = version === 16 ? base : new Battle({
         replay: { ...base.exportReplay(), version } as Replay,
       });
       battle.players.blue.hand[0] = "balloon";

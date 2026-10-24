@@ -530,8 +530,11 @@ describe("canonical combat presentation events", () => {
       ),
     ).toBe(false);
   });
-  it("preserves simulation IDs and the three Arrows waves while transporting team-relative cues", () => {
-    const battle = arena();
+  it("preserves version-15 Arrows waves and simulation IDs while transporting team-relative cues", () => {
+    const battle = new Battle({
+      replay: { ...arena().exportReplay(), version: 15 },
+    });
+    for (const tower of battle.entities) tower.active = false;
     battle.players.blue.hand[0] = "arrows";
     battle.play("blue", 0, 4, 6);
     expect(battle.events[0].id).toBe(7);

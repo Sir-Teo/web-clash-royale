@@ -43,15 +43,15 @@ describe("archived collision radii", () => {
 
   it("changes live attack reach while replay versions 1–14 keep prior bounds", () => {
     const base = new Battle({ seed: 151, ai: false });
-    for (const version of [1, 14, 15] as const) {
-      const battle = version === 15 ? base : new Battle({
+    for (const version of [1, 14, 15, 16] as const) {
+      const battle = version === 16 ? base : new Battle({
         replay: { ...base.exportReplay(), version } as Replay,
       });
       expect(battle.entities.filter((e) => e.king).map((e) => e.radius)).toEqual(
-        version === 15 ? [1.4, 1.4] : [1.25, 1.25],
+        version >= 15 ? [1.4, 1.4] : [1.25, 1.25],
       );
       expect(battle.entities.filter((e) => e.kind === "tower" && !e.king)
-        .map((e) => e.radius)).toEqual(Array(4).fill(version === 15 ? 1 : 1.05));
+        .map((e) => e.radius)).toEqual(Array(4).fill(version >= 15 ? 1 : 1.05));
       for (const id of ["knight", "skeleton-army", "giant-skeleton", "sparky",
         "tesla", "goblin-hut"] as CardId[]) {
         const sample = new Battle({ replay: {
@@ -65,7 +65,7 @@ describe("archived collision radii", () => {
         const legacy = card.kind === "building" ? 0.8 :
           troop.hp > 3000 ? 0.55 : card.count > 2 ? 0.25 : 0.37;
         expect(troop.radius, `${id} v${version}`).toBe(
-          version === 15 ? radii.cards[id as keyof typeof radii.cards] : legacy,
+          version >= 15 ? radii.cards[id as keyof typeof radii.cards] : legacy,
         );
       }
       for (const tower of battle.entities) tower.active = false;
@@ -81,7 +81,7 @@ describe("archived collision radii", () => {
       Object.assign(defender, { x: 9, y: 19.2, deploy: 0, active: false });
       battle.step();
       expect(!!attacker.pendingAttack, `attack reach v${version}`).toBe(
-        version === 15,
+        version >= 15,
       );
     }
   });

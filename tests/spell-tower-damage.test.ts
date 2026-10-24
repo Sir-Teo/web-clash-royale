@@ -30,9 +30,9 @@ describe("archived spell damage to Crown Towers", () => {
 
   it("uses 40% in new battles and retains 30% for the first three spells in v11 replays", () => {
     const base = new Battle({ seed: 83, ai: false });
-    for (const version of [11, 12, 13, 14, 15] as const) {
+    for (const version of [11, 12, 13, 14, 15, 16] as const) {
       for (const id of ["fireball", "arrows", "zap"] as CardId[]) {
-        const battle = version === 15
+        const battle = version === 16
           ? new Battle({ seed: 83, ai: false })
           : new Battle({ replay: { ...base.exportReplay(), version } as Replay });
         const tower = battle.entities.find((entity) =>

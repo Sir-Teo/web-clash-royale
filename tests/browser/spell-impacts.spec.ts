@@ -26,7 +26,7 @@ test("native Zap and 15-arrow volley render, pause, and clear on phone and deskt
   };
   await expect
     .poll(async () => (await impacts()).arrowSprites, { timeout: 30000 })
-    .toEqual([5, 5, 5]);
+    .toEqual([15]);
   await advance();
   await advance();
   expect((await impacts()).zap).toBe(1);
@@ -36,8 +36,8 @@ test("native Zap and 15-arrow volley render, pause, and clear on phone and deskt
     path: info.outputPath("native-zap.png"),
     fullPage: true,
   });
-  for (let i = 0; i < 25 && (await impacts()).arrows < 3; i++) await advance();
-  expect((await impacts()).arrows).toBe(3);
+  for (let i = 0; i < 25 && (await impacts()).arrows < 1; i++) await advance();
+  expect((await impacts()).arrows).toBe(1);
   const volley = await state();
   const marks = Object.entries(volley.clips)
     .filter(([name]) => name.startsWith("Arrow_enemy_ground_anim_"))

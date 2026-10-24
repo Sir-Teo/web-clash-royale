@@ -17,6 +17,12 @@ function sandbox() {
   for (const t of b.entities) t.active = false;
   return b;
 }
+function sandboxAt(version: Replay["version"]) {
+  const base = sandbox();
+  const b = new Battle({ replay: { ...base.exportReplay(), version } });
+  for (const t of b.entities) t.active = false;
+  return b;
+}
 function cast(b: Battle, id: CardId, team: Team, x: number, y: number) {
   b.players[team].hand[0] = id;
   b.players[team].elixir = 10;
@@ -137,8 +143,8 @@ describe("combat timing and targeting", () => {
 });
 
 describe("projectile impacts", () => {
-  it("retains all delayed Arrow waves even when cast at the launch point", () => {
-    const b = sandbox(),
+  it("retains all version-15 Arrow waves even when cast at the launch point", () => {
+    const b = sandboxAt(15),
       target = dummy(b, "knight", "red", 9, 31.1);
     cast(b, "arrows", "blue", 9, 30);
     advance(b, 0.5);
@@ -204,8 +210,8 @@ describe("projectile impacts", () => {
     expect(friend.hp).toBe(10000);
     expect([friend.x, friend.y]).toEqual([7.5, 20]);
   });
-  it("Arrows resolve three separate waves across 0.4 seconds", () => {
-    const b = sandbox(),
+  it("version-15 Arrows resolve three separate waves across 0.4 seconds", () => {
+    const b = sandboxAt(15),
       target = dummy(b, "knight", "red", 9, 20);
     cast(b, "arrows", "blue", 9, 20);
     advance(b, 0.8);
@@ -427,7 +433,7 @@ describe("versioned battle replay", () => {
     }
     expect(b.winner).not.toBeNull();
     const record = b.exportReplay();
-    expect(record.version).toBe(15);
+    expect(record.version).toBe(16);
     const replay = new Battle({ replay: record });
     for (let i = 0; i < record.duration; i++) replay.step();
     expect(replay.winner).toEqual(b.winner);
