@@ -1,5 +1,6 @@
 import freeze from "./freeze-data.json" with { type: "json" };
 import poison from "./poison-data.json" with { type: "json" };
+import heal from "./heal-data.json" with { type: "json" };
 import rage from "./rage-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
 import lightning from "./lightning-data.json" with { type: "json" };
@@ -114,6 +115,7 @@ export type CardId =
   | "zap"
   | "freeze"
   | "poison"
+  | "heal"
   | "rage"
   | "rocket"
   | "lightning"
@@ -1077,6 +1079,23 @@ export const CARDS: Card[] = [
       rarity: "Epic",
       radius: poison.radius,
       hitsAir: poison.hitsAir,
+    },
+  ),
+  troop(
+    "heal",
+    "Heal",
+    heal.cost,
+    0,
+    0,
+    0,
+    0,
+    heal.healInterval,
+    "Restores friendly ground and air troops over time inside its glowing area.",
+    {
+      kind: "spell",
+      rarity: "Rare",
+      radius: heal.radius,
+      hitsAir: heal.hitsAir,
     },
   ),
   troop(

@@ -1378,6 +1378,14 @@ export class Arena {
             eventAge,
           );
       }
+      if (event.type === "spell" && event.card === "heal")
+        this.destruction.burst(
+          "heal",
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
       if (event.type === "spell" && event.card === "poison") {
         const origin = new T.Vector3(event.x - 9, 0.2, event.y - 16);
         this.destruction.burst(

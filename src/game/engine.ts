@@ -15,6 +15,7 @@ import { audioProfile } from "./combat-audio-events";
 import flyingHeights from "./flight-heights.json" with { type: "json" };
 import freeze from "./freeze-data.json" with { type: "json" };
 import poison from "./poison-data.json" with { type: "json" };
+import heal from "./heal-data.json" with { type: "json" };
 import rage from "./rage-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
 import lightning from "./lightning-data.json" with { type: "json" };
@@ -90,6 +91,7 @@ export interface Entity extends Point {
   stun: number;
   clone?: boolean;
   poison?: { remaining: number; elapsed: number };
+  heal?: { remaining: number; elapsed: number };
   rage?: { remaining: number };
   slow?: { remaining: number };
   inferno?: {
@@ -153,6 +155,7 @@ export interface AreaEffect extends Point {
   card:
     | "freeze"
     | "poison"
+    | "heal"
     | "rage"
     | "lightning"
     | "tornado"
@@ -535,6 +538,7 @@ export class Battle {
       if (
         id === "freeze" ||
         id === "poison" ||
+        id === "heal" ||
         id === "rage" ||
         id === "lightning" ||
         id === "tornado" ||
@@ -546,6 +550,8 @@ export class Battle {
             ? freeze
             : id === "poison"
               ? poison
+              : id === "heal"
+                ? heal
               : id === "rage"
                 ? rage
                 : id === "lightning"
@@ -572,7 +578,7 @@ export class Battle {
                 ? { hitAt: graveyard.spawnInitialDelay }
                 : {}),
         });
-        if (id === "poison" || id === "rage")
+        if (id === "poison" || id === "heal" || id === "rage")
           this.emitAudio("impact", team, id);
         return { ok: true, reason: "" };
       }
@@ -1070,18 +1076,20 @@ export class Battle {
         if (area.remaining < 1e-8) area.remaining = 0;
         continue;
       }
-      const periodic = area.card === "poison" || area.card === "rage";
+      const periodic = area.card === "poison" || area.card === "heal" || area.card === "rage";
       const areaHit = periodic && age + 1e-8 >= (area.hitAt ?? 0);
       if (areaHit)
         area.hitAt =
           (area.hitAt ?? 0) +
           (area.card === "poison"
             ? poison.areaHitInterval
+            : area.card === "heal"
+              ? heal.areaHitInterval
             : rage.areaHitInterval);
       for (const entity of this.entities) {
         if (
           entity.hp <= 0 ||
-          (area.card === "rage"
+          (area.card === "rage" || area.card === "heal"
             ? entity.team !== area.team || entity.kind !== "troop"
             : entity.team === area.team) ||
           (periodic && !areaHit) ||
@@ -1095,6 +1103,10 @@ export class Battle {
           entity.poison ??= { remaining: 0, elapsed: 0 };
         if (area.card === "poison" && entity.poison)
           entity.poison.remaining = poison.buffDuration;
+        if (area.card === "heal") {
+          entity.heal ??= { remaining: 0, elapsed: 0 };
+          entity.heal.remaining = heal.buffDuration;
+        }
         if (area.card === "rage") {
           entity.rage ??= { remaining: 0 };
           entity.rage.remaining = Math.max(
@@ -1115,6 +1127,20 @@ export class Battle {
       if (entity.slow) {
         entity.slow.remaining = Math.max(0, entity.slow.remaining - STEP);
         if (entity.slow.remaining < 1e-8) entity.slow = undefined;
+      }
+      if (entity.heal) {
+        const status = entity.heal;
+        status.remaining = Math.max(0, status.remaining - STEP);
+        status.elapsed += STEP;
+        if (entity.hp > 0 && status.elapsed + 1e-8 >= heal.healInterval) {
+          status.elapsed -= heal.healInterval;
+          // The archived buff is 100 HP/s at its base Rare level. Match the
+          // roster's level-11 Rare conversion used for other source values.
+          const amount = Math.round(heal.sourceHealPerSecond * 1152 / 450 * heal.healInterval);
+          entity.hp = Math.min(entity.maxHp, entity.hp + amount);
+        }
+        if (status.remaining < 1e-8 || entity.hp <= 0)
+          entity.heal = undefined;
       }
       const status = entity.poison;
       if (!status || entity.hp <= 0) continue;

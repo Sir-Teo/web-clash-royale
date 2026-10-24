@@ -1996,6 +1996,7 @@ Object.defineProperty(window, "__arena", {
         coldStructures: arena.coldStructureState,
         freezeAreas: arena.freezeAreaState,
         poisonAreas: arena.poisonAreaState,
+        healAreas: battle.areas.filter((area) => area.card === "heal"),
         poisonFilter: arena.poisonFilterState,
         rageAreas: arena.rageAreaState,
         tornadoAreas: arena.tornadoAreaState,
