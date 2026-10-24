@@ -108,6 +108,20 @@
       "frames": 66
     },
     {
+      "id": "goblin-hut",
+      "source": "building_goblin_hut",
+      "metadataSha256": "2bf581500a420cfa03edc3796459f666713e6b70b4c27cab06412f7599dd3b61",
+      "dataSha256": "6228b4bd24d061faefc804c617be3e9006e8d1e9c7c478da762e317ab9602ebd",
+      "textures": [
+        {
+          "file": "goblin-hut-0.webp",
+          "sha256": "3ea00c19e1472d35a48475ddf295f6aff7d6739109361c51bff95952d29292eb",
+          "originalSha256": "e0d93dcb7563d7ca795884657ba8331712a1ea3616416edd09705ae1653d6814"
+        }
+      ],
+      "frames": 2
+    },
+    {
       "id": "king",
       "source": "building_tower",
       "metadataSha256": "0096da89499bf03437a1caa2a88c811b293a5a3067fe571e1ef12bafadbf7962",

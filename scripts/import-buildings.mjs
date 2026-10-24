@@ -47,6 +47,7 @@ for (const [id, name] of Object.entries({
   "inferno-tower": "building_inferno_tower",
   "x-bow": "building_xbow",
   "elixir-collector": "building_elixir_collector",
+  "goblin-hut": "building_goblin_hut",
   king: "building_tower",
 })) {
   const metadata = await readFile(`reference/sc/${name}.bin`),
@@ -70,6 +71,9 @@ for (const [id, name] of Object.entries({
         { shape: ref, matrix: matrix.map(round), color: color.map(round) },
       ];
     }
+    // The archived Goblin Hut references absent child 5 only in its first
+    // frame. All later frames contain its complete four-part structure.
+    if (id === "goblin-hut" && ref === 5) return [];
     const clip = data.clips[ref];
     if (!clip?.frames.length)
       throw new Error(`Missing SC child ${ref} in ${name}`);
@@ -215,7 +219,7 @@ for (const [id, name] of Object.entries({
   }
   const bounds =
     id === "mortar" || id === "bomb-tower" || id === "inferno-tower" ||
-    id === "x-bow" || id === "elixir-collector"
+    id === "x-bow" || id === "elixir-collector" || id === "goblin-hut"
       ? (() => {
           const b = [Infinity, Infinity, -Infinity, -Infinity];
           for (const parts of frames)

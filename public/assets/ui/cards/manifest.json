@@ -437,6 +437,11 @@
       "sha256": "86c977dec4da76c17ade516d4b133c27f3b3a1a96e50c367e88308815599c640"
     },
     {
+      "file": "portrait-goblin-hut.webp",
+      "bytes": 41686,
+      "sha256": "fb1e97e9967e940c230551ac9250c9a3d3200e997432686d9b55d685701d003c"
+    },
+    {
       "file": "portrait-electro-wizard.webp",
       "bytes": 43830,
       "sha256": "6924f97fcdbad44e6f51fcef5019206ef5a35a3e4b8dc8c94e8e0f89e29d1244"
@@ -478,8 +483,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 107099,
-      "sha256": "b4bae2f4355123faa67ffac32ab58d1541223202d057547b53df13137dd37a69"
+      "bytes": 107432,
+      "sha256": "b920dfac83e78aae2b80343a18d61da2fc080b89e63789aee51fe656acc87e64"
     }
   ]
 }

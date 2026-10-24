@@ -1,0 +1,19 @@
+{
+  "card": "GoblinHut",
+  "rarity": "Rare",
+  "cost": 5,
+  "sourceHitpoints": 700,
+  "deployTime": 1,
+  "lifetime": 60,
+  "spawnNumber": 1,
+  "spawnPause": 4.95,
+  "spawnCharacter": "SpearGoblin",
+  "spawnCharacterLevelIndex": 2,
+  "spawnRadius": 0.4,
+  "fps": 30,
+  "frames": 5245,
+  "blueExport": "building_goblinHut_player",
+  "redExport": "building_goblinHut_enemy",
+  "spawnEffect": "goblin_hut_deploy",
+  "deathEffect": "goblin_hut_die"
+}

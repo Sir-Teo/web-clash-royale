@@ -495,6 +495,12 @@
       "sha256": "6cf6e06d7c94ad938f94dfd57c0308b1d1081e898001b1df5963e42a5a990031"
     },
     {
+      "path": "cards/goblin-hut.png",
+      "source": "cards/goblin-hut.png",
+      "bytes": 151797,
+      "sha256": "ae097ff5e26e203b67e0df0c9fc6f91e355d38feb8d45022cfc371411c0cd7dc"
+    },
+    {
       "path": "cards/goblins.png",
       "source": "cards/goblins.png",
       "bytes": 126701,
