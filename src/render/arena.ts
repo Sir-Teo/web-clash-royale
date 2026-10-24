@@ -121,7 +121,11 @@ export class Arena {
   private rubble = new Map<string, T.Mesh>();
   private impacts: { sprite: EffectSprite; start: number; life: number }[] = [];
   private particles: Particle[] = [];
-  private waters: T.Mesh[] = [];
+  private waterWaves: T.InstancedMesh | null = null;
+  private wavePositions = new Float32Array(20);
+  private waveOpacities = new Float32Array(20);
+  private waveMatrix = new T.Matrix4();
+  private lastWaveTime = Number.NaN;
   private flags: T.Mesh[] = [];
   private observer: ResizeObserver;
   private ray = new T.Raycaster();
@@ -149,8 +153,11 @@ export class Arena {
     string,
     { texture: T.Texture; aspect: number; anchor: [number, number] }
   >();
-  private artwork: T.Mesh[] = [];
   private contextLost = false;
+  private readonly maxPixelRatio = Math.min(window.devicePixelRatio, 2);
+  private slowFrames = 0;
+  private fastFrames = 0;
+  private resolutionCooldown = 0;
   onContextLost: () => void = () => {};
   onCharge: (burst: MovementBurst) => void = () => {};
   crownTarget: (team: Team) => Point | null = () => null;
@@ -160,9 +167,13 @@ export class Arena {
       alpha: true,
       powerPreference: "high-performance",
     });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setPixelRatio(this.maxPixelRatio);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = T.PCFSoftShadowMap;
+    // The diorama is static. Troops and effects use their own ground shadows,
+    // so rebuilding the 2048px sun map on every frame only stalls the GPU.
+    this.renderer.shadowMap.autoUpdate = false;
+    this.renderer.shadowMap.needsUpdate = true;
     this.renderer.outputColorSpace = T.SRGBColorSpace;
     this.renderer.toneMapping = T.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 0.95;
@@ -178,6 +189,7 @@ export class Arena {
     });
     this.renderer.domElement.addEventListener("webglcontextrestored", () => {
       this.contextLost = false;
+      this.renderer.shadowMap.needsUpdate = true;
     });
     host.append(this.renderer.domElement);
     this.labels = document.createElement("div");
@@ -347,18 +359,29 @@ export class Arena {
             toneMapped: false,
             side: T.DoubleSide,
           });
-          for (const point of item.positions) {
-            const geometry = new T.PlaneGeometry(item.width, item.height);
-            geometry.translate(
-              (0.5 - item.anchor[0]) * item.width,
-              (0.5 - item.anchor[1]) * item.height,
-              0,
-            );
-            const mesh = new T.Mesh(geometry, material);
-            mesh.position.set(point.x - 9, 0.15, point.y - 16);
-            this.scene.add(mesh);
-            this.artwork.push(mesh);
+          const geometry = new T.PlaneGeometry(item.width, item.height);
+          geometry.translate(
+            (0.5 - item.anchor[0]) * item.width,
+            (0.5 - item.anchor[1]) * item.height,
+            0,
+          );
+          const mesh = new T.InstancedMesh(
+            geometry,
+            material,
+            item.positions.length,
+          );
+          mesh.instanceMatrix.setUsage(T.StaticDrawUsage);
+          const matrix = new T.Matrix4();
+          const position = new T.Vector3();
+          const scale = new T.Vector3(1, 1, 1);
+          for (let i = 0; i < item.positions.length; i++) {
+            const point = item.positions[i];
+            position.set(point.x - 9, 0.15, point.y - 16);
+            matrix.compose(position, this.camera.quaternion, scale);
+            mesh.setMatrixAt(i, matrix);
           }
+          mesh.computeBoundingSphere();
+          this.scene.add(mesh);
         }),
       );
     } catch {
@@ -418,21 +441,30 @@ export class Arena {
     water.position.set(0, 0.1, 0);
     water.receiveShadow = true;
     r.add(water);
-    for (let i = 0; i < 20; i++) {
-      const wave = new T.Mesh(
-        new T.PlaneGeometry(0.35 + (i % 4) * 0.28, 0.055),
-        new T.MeshBasicMaterial({
-          color: 0xbcf1e5,
-          transparent: true,
-          opacity: 0.25,
-          depthWrite: false,
-        }),
-      );
-      wave.rotation.x = -Math.PI / 2;
-      wave.position.set(-10 + i * 1.1, 0.13, Math.sin(i * 12) * 1);
-      r.add(wave);
-      this.waters.push(wave);
-    }
+    const waveGeometry = new T.PlaneGeometry(1, 0.055);
+    waveGeometry.rotateX(-Math.PI / 2);
+    waveGeometry.setAttribute(
+      "instanceOpacity",
+      new T.InstancedBufferAttribute(this.waveOpacities, 1),
+    );
+    const waveMaterial = new T.MeshBasicMaterial({
+      color: 0xbcf1e5,
+      transparent: true,
+      opacity: 1,
+      depthWrite: false,
+    });
+    waveMaterial.onBeforeCompile = (shader) => {
+      shader.vertexShader = shader.vertexShader
+        .replace("#include <common>", "#include <common>\nattribute float instanceOpacity;\nvarying float vInstanceOpacity;")
+        .replace("#include <begin_vertex>", "#include <begin_vertex>\nvInstanceOpacity = instanceOpacity;");
+      shader.fragmentShader = shader.fragmentShader
+        .replace("#include <common>", "#include <common>\nvarying float vInstanceOpacity;")
+        .replace("#include <alphamap_fragment>", "#include <alphamap_fragment>\ndiffuseColor.a *= vInstanceOpacity;");
+    };
+    this.waterWaves = new T.InstancedMesh(waveGeometry, waveMaterial, 20);
+    for (let i = 0; i < 20; i++) this.wavePositions[i] = -10 + i * 1.1;
+    this.updateWaterWaves(0, 0);
+    r.add(this.waterWaves);
     for (const z of [-1.6, 1.6])
       for (let x = -9.5; x <= 9.5; x += 1) {
         if (Math.abs(x + 5) < 1.2 || Math.abs(x - 5) < 1.2) continue;
@@ -514,7 +546,22 @@ export class Arena {
         z = -1.3 + Math.floor(i / 2) * 0.48;
       sphere(r, x, 0.1, z, 0.3, 0x8a9c8e, 1, 0.55, 0.7);
     }
-    batchGeometry(r, [...this.waters, ...this.flags]);
+    batchGeometry(r, [this.waterWaves, ...this.flags]);
+  }
+  private updateWaterWaves(dt: number, time: number) {
+    if (!this.waterWaves || (dt === 0 && time === this.lastWaveTime)) return;
+    this.lastWaveTime = time;
+    for (let i = 0; i < 20; i++) {
+      let x = this.wavePositions[i] + dt * 0.35;
+      if (x > 10) x = -10;
+      this.wavePositions[i] = x;
+      this.waveMatrix.makeScale(0.35 + (i % 4) * 0.28, 1, 1);
+      this.waveMatrix.setPosition(x, 0.13, Math.sin(i * 12));
+      this.waterWaves.setMatrixAt(i, this.waveMatrix);
+      this.waveOpacities[i] = 0.2 + Math.sin(time * 1.8 + i) * 0.12;
+    }
+    this.waterWaves.instanceMatrix.needsUpdate = true;
+    this.waterWaves.geometry.attributes.instanceOpacity.needsUpdate = true;
   }
   setBattle(battle: Battle) {
     this.deploymentEffects.reset(battle.audioEvents);
@@ -552,6 +599,7 @@ export class Arena {
       this.disposeObject(v.object);
     }
     this.units.clear();
+    this.renderer.shadowMap.needsUpdate = true;
     for (const p of this.shots.values()) {
       this.scene.remove(p.object);
       this.disposeObject(p.object);
@@ -775,6 +823,33 @@ export class Arena {
     this.camera.clearViewOffset();
     this.camera.updateProjectionMatrix();
   }
+  adaptResolution(fps: number, active: boolean) {
+    if (!active) {
+      this.slowFrames = 0;
+      this.fastFrames = 0;
+      return;
+    }
+    if (this.resolutionCooldown > 0) {
+      this.resolutionCooldown--;
+      return;
+    }
+    this.slowFrames = fps < 42 ? this.slowFrames + 1 : 0;
+    this.fastFrames = fps > 52 ? this.fastFrames + 1 : 0;
+    const current = this.renderer.getPixelRatio();
+    const minimum = this.maxPixelRatio > 1 ? 1 : 0.75;
+    if (this.slowFrames >= 3 && current > minimum) {
+      const target = fps < 22
+        ? minimum
+        : Math.max(minimum, this.maxPixelRatio - 0.5);
+      if (target < current) this.renderer.setPixelRatio(target);
+      this.slowFrames = 0;
+      this.resolutionCooldown = 8;
+    } else if (this.fastFrames >= 8 && current < this.maxPixelRatio) {
+      this.renderer.setPixelRatio(Math.min(this.maxPixelRatio, current + 0.25));
+      this.fastFrames = 0;
+      this.resolutionCooldown = 8;
+    }
+  }
   point(clientX: number, clientY: number): Point | null {
     const rect = this.renderer.domElement.getBoundingClientRect();
     const v = new T.Vector2(
@@ -890,13 +965,7 @@ export class Arena {
   }
   render(dt: number, time: number, effectDelta = dt) {
     if (this.destroyed || this.contextLost) return;
-    for (let i = 0; i < this.waters.length; i++) {
-      const wave = this.waters[i];
-      wave.position.x += dt * 0.35;
-      if (wave.position.x > 10) wave.position.x = -10;
-      (wave.material as T.MeshBasicMaterial).opacity =
-        0.2 + Math.sin(time * 1.8 + i) * 0.12;
-    }
+    this.updateWaterWaves(dt, time);
     for (let i = 0; i < this.flags.length; i++) {
       const f = this.flags[i],
         positions = f.geometry.attributes.position,
@@ -960,8 +1029,6 @@ export class Arena {
           new T.Vector3(0, 0, 1).applyQuaternion(this.camera.quaternion).y,
         );
     }
-    for (const mesh of this.artwork)
-      mesh.quaternion.copy(this.camera.quaternion);
     const alive = new Set<number>();
     for (const e of b.entities) {
       alive.add(e.id);
@@ -1157,6 +1224,7 @@ export class Arena {
           }
         }
         this.units.set(e.id, v);
+        if (v.model) this.renderer.shadowMap.needsUpdate = true;
       }
       this.updateUnit(v, e, dt, time);
     }
@@ -1167,6 +1235,7 @@ export class Arena {
         v.label?.remove();
         if (v.nativeHealth) this.scene.remove(v.nativeHealth.mesh);
         this.units.delete(id);
+        if (v.model) this.renderer.shadowMap.needsUpdate = true;
       }
     this.infernoBeams.update(b.entities, this.camera);
     this.minerTrails.update(b.projectiles, this.camera);
@@ -1771,6 +1840,11 @@ export class Arena {
     this.destruction.update(0, this.camera);
     this.deployment.render(time, this.camera);
     this.positionPlacementFeedback();
+    for (const unit of this.units.values())
+      if (unit.model) {
+        this.renderer.shadowMap.needsUpdate = true;
+        break;
+      }
     this.renderer.render(this.scene, this.camera);
   }
   private impact(name: string, position: T.Vector3, life: number, age = 0) {

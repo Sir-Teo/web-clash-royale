@@ -1842,7 +1842,7 @@ function frame(now: number) {
   if (screen !== "lobby" && !paused && !battle.winner) {
     const wasOpening = intro.clock.blocking;
     accumulator += intro.clock.advance(
-      multiplayer && network.room?.paused ? 0 : delta * speed,
+      multiplayer && network.room?.paused ? 0 : Math.min(5, elapsed) * speed,
     );
     if (wasOpening && !intro.clock.blocking) {
       announcements.cue("match start");
@@ -1900,6 +1900,11 @@ function frame(now: number) {
     fpsFrames++;
     if (now - lastFpsTime >= 1000) {
       fps = Math.round((fpsFrames * 1000) / (now - lastFpsTime));
+      arena.adaptResolution(
+        fps,
+        screen === "battle" && !presentationPaused && !battle.winner &&
+          !intro.clock.blocking,
+      );
       fpsFrames = 0;
       lastFpsTime = now;
     }
@@ -1999,6 +2004,7 @@ Object.defineProperty(window, "__arena", {
         animationTime,
         frameLoopRunning: frameHandle !== undefined,
         drawCalls: arena.renderer.info.render.calls,
+        renderPixelRatio: arena.renderer.getPixelRatio(),
         loadedEffects: arena.loadedEffects,
         projectileArtwork: arena.projectileState,
         infernoBeams: arena.infernoBeamState,
