@@ -38,7 +38,7 @@ describe("native troop deployment filter", () => {
     expect(source.source).toBe("filter_deploy_unit_default");
     expect(source.fps).toBe(60);
     expect(source.frames).toHaveLength(28);
-    expect(source.cards).toHaveLength(39);
+    expect(source.cards).toHaveLength(40);
     expect(hasNativeDeployFilter("elite-barbarians")).toBe(true);
     expect(hasNativeDeployFilter("knight")).toBe(true);
     expect(hasNativeDeployFilter("prince")).toBe(true);

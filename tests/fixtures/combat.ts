@@ -78,7 +78,7 @@ function setup() {
   (document.querySelector("#attack-config") as HTMLElement).hidden =
     scenario !== "attack-impacts";
   (document.querySelector("#break-shield") as HTMLElement).hidden =
-    scenario !== "dark-prince";
+    scenario !== "dark-prince" && scenario !== "guards";
   (document.querySelector("#kill-night-witch") as HTMLElement).hidden =
     scenario !== "night-witch";
   (document.querySelector("#kill-golem") as HTMLElement).hidden =
@@ -184,6 +184,11 @@ function setup() {
         target.damage = 0;
         target.hp = target.maxHp = 10000;
       }
+    }
+  } else if (scenario === "guards") {
+    for (const guard of unit("guards", "blue", 9, 21)) {
+      guard.active = false;
+      guard.speed = guard.damage = 0;
     }
   } else if (scenario === "battle-ram") {
     const attacker = unit("battle-ram", "blue", 4, 23)[0];
@@ -456,7 +461,9 @@ function setup() {
 }
 document.querySelector("#scenario")!.addEventListener("change", setup);
 document.querySelector("#break-shield")!.addEventListener("click", () =>
-  cast("fireball", "red", 4, 21));
+  cast("fireball", "red",
+    (document.querySelector("#scenario") as HTMLSelectElement).value === "guards" ? 9 : 4,
+    21));
 document.querySelector("#death-card")!.addEventListener("change", setup);
 document.querySelector("#attack-card")!.addEventListener("change", setup);
 document.querySelector("#defeat")!.addEventListener("click", () => {
@@ -830,6 +837,13 @@ function render(now: number) {
       shieldBreaks: battle.events.filter((event) => event.effect === "shield:dark-prince").length,
       enemyHealth: battle.entities.filter((e) => e.team === "red" && ["knight", "minions"].includes(e.card))
         .map((e) => ({ card: e.card, hp: e.hp })),
+    });
+  (document.querySelector("#destruction") as HTMLElement).dataset.guards =
+    JSON.stringify({
+      units: arena.guardsState,
+      shieldBreaks: battle.events.filter((event) => event.effect === "shield:guards").length,
+      shieldAudio: battle.audioEvents.filter((event) => event.phase === "shield-lost" && event.profile === "guards").length,
+      particles: arena.particleCount,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.projectiles =
     JSON.stringify(arena.projectileState);

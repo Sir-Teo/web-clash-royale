@@ -134,7 +134,7 @@ describe("bundled game artwork", () => {
   });
   it("preserves full source animations and every referenced UV polygon", () => {
     const manifest = json("public/assets/animations/manifest.json");
-    expect(manifest.files.length).toBe(47);
+    expect(manifest.files.length).toBe(49);
     let total = 0;
     for (const file of manifest.files) {
       const bytes = readFileSync(`public/assets/animations/${file.id}.json`);

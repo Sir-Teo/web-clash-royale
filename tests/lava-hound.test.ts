@@ -44,7 +44,7 @@ describe("archived Lava Hound", () => {
         flyingHeight: 3.5, projectileStartZ: 0.1,
         projectile: { source: "LavaPupProjectile",
           homing: true, export: "particle_coal1", trail: "lava_pups_emitter" } } });
-    expect(CARDS).toHaveLength(63);
+    expect(CARDS).toHaveLength(64);
     expect(CARDS.some((card) => card.id === "lava-pup")).toBe(false);
     expect(CARD_MAP["lava-hound"]).toMatchObject({ cost: 7, hp: 3630,
       damage: 54, air: true, hitsAir: true, buildingsOnly: true });
