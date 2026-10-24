@@ -1,0 +1,43 @@
+.replay-file-toolbar,
+.replay-export {
+  color: #c6d6e5;
+  margin-bottom: 18px;
+}
+.replay-export {
+  margin-top: 22px;
+}
+.replay-file-toolbar p,
+.replay-export p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.replay-file-toolbar button,
+.replay-export button {
+  min-height: 44px;
+}
+.replay-file-error {
+  color: #ffb5b5;
+  overflow-wrap: anywhere;
+}
+.shared-replay {
+  color: #cad8e9;
+}
+.shared-replay-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  align-items: center;
+}
+.shared-replay-names strong {
+  color: #f4e9b7;
+  overflow-wrap: anywhere;
+}
+.shared-replay-meta,
+.shared-replay-result {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.shared-replay .match-deck-heading h3 {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}

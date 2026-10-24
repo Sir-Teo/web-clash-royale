@@ -7,6 +7,7 @@ import "@fontsource/nunito-sans/latin-700.css";
 import "@fontsource/nunito-sans/latin-800.css";
 import "./style.css";
 import "./ui/match-details.css";
+import "./ui/replay-files.css";
 import "./ui/announcements.css";
 import { NativeAnnouncements, battleClock } from "./ui/announcements";
 import "./ui/rooms.css";
@@ -45,6 +46,7 @@ import {
   Trophy,
   LockKeyhole,
   HardDriveDownload,
+  Upload,
   ChevronDown,
   Settings2,
   ChevronRight,
@@ -89,6 +91,7 @@ const icons = {
   Trophy,
   LockKeyhole,
   HardDriveDownload,
+  Upload,
   ChevronDown,
   Settings2,
   ChevronRight,
@@ -142,6 +145,12 @@ import {
   importProgress,
   MAX_BACKUP_BYTES,
 } from "./game/profile";
+import {
+  exportReplayFile,
+  importReplayFile,
+  MAX_REPLAY_BYTES,
+  type SharedReplay,
+} from "./game/replay-file";
 import type { Profile, RecordEntry } from "./game/profile";
 import { GameAudio } from "./game/audio";
 import { NativeDeathAudio } from "./game/death-audio";
@@ -205,6 +214,7 @@ let pendingResult: { battle: Battle; time: number; show: () => void } | null =
   null;
 let replayData: Replay | null = null;
 let replayRecord: RecordEntry | null = null;
+let replayOwnerName: string | null = null;
 let lastUi = 0;
 let hover: Point | null = null;
 let modalKey = "";
@@ -337,7 +347,7 @@ function startEnding(hold = false) {
   const player = multiplayer
     ? (network.room?.players.find((p) => p.team === network.team)?.name ??
       profile.name)
-    : profile.name;
+    : (replayOwnerName ?? profile.name);
   ending.start(endResult(battle, player, opponentName), hold);
 }
 $(".match-timer").append($("#elixir-rate"));
@@ -401,7 +411,13 @@ function refreshProfile() {
   $("#trophies").textContent = fmt(profile.trophies);
   document
     .querySelectorAll(".player-name")
-    .forEach((e) => (e.textContent = profile.name));
+    .forEach(
+      (e) =>
+        (e.textContent =
+          screen === "replay" && e.closest(".match-bottom")
+            ? (replayOwnerName ?? profile.name)
+            : profile.name),
+    );
   $("#road-progress").style.width =
     `${Math.min(100, (profile.trophies / 300) * 100)}%`;
   $("#road-count").textContent = `${Math.min(profile.trophies, 300)} / 300`;
@@ -478,6 +494,7 @@ function lobby() {
   resultShown = false;
   replayData = null;
   replayRecord = null;
+  replayOwnerName = null;
   accumulator = 0;
   audio.stopMusic();
   audio.stopEffects();
@@ -502,6 +519,8 @@ function lobby() {
   refreshProfile();
 }
 function startBattle(online = false) {
+  replayOwnerName = null;
+  $(".match-bottom .player-name").textContent = profile.name;
   resetEnding();
   if (!online) network.leave();
   multiplayer = online;
@@ -837,7 +856,9 @@ function showResult() {
     },
   };
 }
-function playReplay(record: RecordEntry) {
+function playReplay(record: RecordEntry, ownerName?: string) {
+  replayOwnerName = ownerName ?? null;
+  $(".match-bottom .player-name").textContent = replayOwnerName ?? profile.name;
   resetEnding();
   if (network.room) network.leave();
   multiplayer = false;
@@ -882,7 +903,7 @@ function playReplay(record: RecordEntry) {
   syncReplayControl();
   $("#replay-speed").textContent = "1×";
   refreshDeck();
-  intro.start(profile.name, battle.mode, opponentName);
+  intro.start(replayOwnerName ?? profile.name, battle.mode, opponentName);
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
   nativeCards.reset(battle.time, battle.players.blue.hand);
   matchHud.reset(arena.effectTime, crownCounts());
@@ -1256,7 +1277,11 @@ function showModes() {
       }),
   );
 }
-function showCard(id: CardId, back?: () => void) {
+function showCard(
+  id: CardId,
+  back?: () => void,
+  backLabel = "Back to battle details",
+) {
   const c = CARD_MAP[id];
   modal(
     c.name,
@@ -1286,7 +1311,7 @@ function showCard(id: CardId, back?: () => void) {
       )
       .join(
         "",
-      )}</div>${back ? `<button class="secondary-button" id="card-back">${icon("arrow-right")} Back to battle details</button>` : screen === "lobby" ? `<button class="secondary-button" id="card-edit-deck">${icon("layers-2")} Open deck builder</button>` : ""}`,
+      )}</div>${back ? `<button class="secondary-button" id="card-back">${icon("arrow-right")} ${esc(backLabel)}</button>` : screen === "lobby" ? `<button class="secondary-button" id="card-edit-deck">${icon("layers-2")} Open deck builder</button>` : ""}`,
     "card",
   );
   if (back) $("#card-back").onclick = back;
@@ -1379,7 +1404,7 @@ function renderCollection() {
 function showHistory() {
   modal(
     "Your battle log",
-    `<div class="history-summary"><div>${icon("swords")}<b>${profile.battles}</b><span>BATTLES</span></div><div>${icon("trophy")}<b>${profile.wins}</b><span>VICTORIES</span></div><div>${icon("crown")}<b>${profile.crowns}</b><span>CROWNS</span></div></div><div class="history-list">${profile.history.length ? profile.history.map((r, i) => `<div class="history-entry"><span class="history-outcome ${r.winner === "blue" ? "win" : "loss"}">${icon(r.winner === "blue" ? "trophy" : r.winner === "draw" ? "equal" : "swords")}</span><div><b>${r.winner === "blue" ? "Victory" : r.winner === "draw" ? "Draw" : "Defeat"} <small>vs ${esc(r.opponent ?? "Royal Trainer")}</small></b><span>${modeNames[r.mode] ?? "Classic 1v1"} · ${new Date(r.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span></div><strong>${r.crowns[0]} – ${r.crowns[1]}</strong><div class="history-actions"><button class="secondary-button" data-match-details="${i}" aria-label="View battle details against ${esc(r.opponent ?? "Royal Trainer")}">${icon("layers-2")} Details</button><button class="secondary-button" data-replay="${i}">${icon("play")} Replay</button></div></div>`).join("") : `<div class="empty-history">${icon("swords")}<h3>Your story starts in the arena.</h3><p>Play a battle to see your results and replays here.</p><button class="primary-button" id="history-battle">Let's battle ${icon("arrow-right")}</button></div>`}</div><p class="modal-footnote">Your latest 10 battles are saved locally, with playable replays.</p>`,
+    `${screen === "lobby" ? `<div class="replay-file-toolbar"><button class="secondary-button" id="open-replay-file">${icon("upload")} Open replay file</button><input id="replay-file" type="file" accept=".json,application/json" aria-label="Choose replay file" hidden/><p>Watch a shared recording without changing your progress.</p><p class="replay-file-error" role="alert" hidden></p></div>` : ""}<div class="history-summary"><div>${icon("swords")}<b>${profile.battles}</b><span>BATTLES</span></div><div>${icon("trophy")}<b>${profile.wins}</b><span>VICTORIES</span></div><div>${icon("crown")}<b>${profile.crowns}</b><span>CROWNS</span></div></div><div class="history-list">${profile.history.length ? profile.history.map((r, i) => `<div class="history-entry"><span class="history-outcome ${r.winner === "blue" ? "win" : "loss"}">${icon(r.winner === "blue" ? "trophy" : r.winner === "draw" ? "equal" : "swords")}</span><div><b>${r.winner === "blue" ? "Victory" : r.winner === "draw" ? "Draw" : "Defeat"} <small>vs ${esc(r.opponent ?? "Royal Trainer")}</small></b><span>${modeNames[r.mode] ?? "Classic 1v1"} · ${new Date(r.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span></div><strong>${r.crowns[0]} – ${r.crowns[1]}</strong><div class="history-actions"><button class="secondary-button" data-match-details="${i}" aria-label="View battle details against ${esc(r.opponent ?? "Royal Trainer")}">${icon("layers-2")} Details</button><button class="secondary-button" data-replay="${i}">${icon("play")} Replay</button></div></div>`).join("") : `<div class="empty-history">${icon("swords")}<h3>Your story starts in the arena.</h3><p>Play a battle to see your results and replays here.</p><button class="primary-button" id="history-battle">Let's battle ${icon("arrow-right")}</button></div>`}</div><p class="modal-footnote">Your latest 10 battles are saved locally, with playable replays.</p>`,
     "history",
     true,
   );
@@ -1396,10 +1421,87 @@ function showHistory() {
       button.onclick = () =>
         showMatchDetails(Number(button.dataset.matchDetails));
     });
+  bindReplayFileInput();
   if (document.querySelector("#history-battle"))
     $("#history-battle").onclick = () => {
       closeModal();
     };
+}
+function downloadJson(text: string, filename: string) {
+  const url = URL.createObjectURL(
+    new Blob([text], { type: "application/json" }),
+  );
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+function bindReplayFileInput() {
+  const input = document.querySelector<HTMLInputElement>("#replay-file");
+  const button = document.querySelector<HTMLButtonElement>("#open-replay-file");
+  if (!input || !button) return;
+  button.onclick = () => {
+    input.value = "";
+    input.click();
+  };
+  input.onchange = async () => {
+    const file = input.files?.[0];
+    if (!file || screen !== "lobby") return;
+    const error = $(".replay-file-error");
+    error.hidden = true;
+    button.disabled = true;
+    try {
+      if (file.size > MAX_REPLAY_BYTES)
+        throw new Error("Choose a replay file smaller than 512 KB.");
+      const shared = importReplayFile(await file.text());
+      if (
+        screen !== "lobby" ||
+        document.querySelector("#replay-file") !== input
+      )
+        return;
+      showSharedReplay(shared);
+    } catch (cause) {
+      if (document.querySelector("#replay-file") !== input) return;
+      error.textContent =
+        cause instanceof Error
+          ? cause.message
+          : "Couldn’t read this replay. Try another file.";
+      error.hidden = false;
+    } finally {
+      button.disabled = false;
+    }
+  };
+}
+function showSharedReplay(shared: SharedReplay) {
+  if (screen !== "lobby") return;
+  const { record, playerName } = shared,
+    decks = recordedDecks(record);
+  const deck = (side: "yours" | "opponent", name: string) =>
+    `<section class="match-deck-panel"><div class="match-deck-heading"><h3>${esc(name)}</h3><span><i class="tiny-drop"></i> ${averageCost(decks[side]).toFixed(1)} average</span></div><div class="match-deck-grid">${decks[side].map((id) => cardHTML(id, `data-shared-card="${id}"`)).join("")}</div></section>`;
+  modal(
+    "Shared replay",
+    `<div class="shared-replay"><p class="shared-replay-names"><strong>${esc(playerName)}</strong><span>vs</span><strong>${esc(record.opponent ?? "Royal Trainer")}</strong></p><p class="shared-replay-meta">${esc(modeNames[record.mode])} · ${clock(record.replay.duration * STEP)} played<br>${esc(new Date(record.date).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }))}</p><p class="shared-replay-result">Recorded result: ${record.winner === "blue" ? "Victory" : record.winner === "red" ? "Defeat" : "Draw"} · ${record.crowns[0]} – ${record.crowns[1]}</p><div class="match-decks">${deck("yours", playerName)}${deck("opponent", record.opponent ?? "Royal Trainer")}</div><p class="modal-footnote">Watching this file does not add battles, rewards or decks to your progress.</p><div class="match-details-actions"><button class="text-button" id="shared-replay-back">Back to battle log</button><button class="primary-button" id="watch-shared-replay">${icon("play")} Watch shared replay</button></div></div>`,
+    "shared-replay",
+    true,
+  );
+  $("#shared-replay-back").onclick = showHistory;
+  $("#watch-shared-replay").onclick = () => {
+    if (screen === "lobby") playReplay(record, playerName);
+  };
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-shared-card]")
+    .forEach(
+      (button) =>
+        (button.onclick = () =>
+          showCard(
+            button.dataset.sharedCard as CardId,
+            () => showSharedReplay(shared),
+            "Back to shared replay",
+          )),
+    );
 }
 interface MatchDeckView {
   slot: number;
@@ -1416,12 +1518,27 @@ function showMatchDetails(index: number, state: Partial<MatchDeckView> = {}) {
     `<section class="match-deck-panel" data-match-side="${side}" aria-label="${side === "yours" ? "Your recorded deck" : "Opponent recorded deck"}"><div class="match-deck-heading"><div><h3>${side === "yours" ? "Your deck" : "Opponent deck"}</h3><p>${side === "yours" ? "Your starting eight" : esc(record.opponent ?? "Royal Trainer")}</p></div><span><i class="tiny-drop"></i> ${averageCost(decks[side]).toFixed(1)} average</span></div><div class="match-deck-grid">${decks[side].map((id) => cardHTML(id, `data-match-card="${id}"`)).join("")}</div>${editable ? `<button class="secondary-button" data-use-match-deck="${side}" aria-describedby="match-copy-note">${icon("layers-2")} ${side === "yours" ? "Use your recorded deck" : "Use opponent deck"}</button>` : ""}</section>`;
   modal(
     "Battle details",
-    `<div class="match-details"><div class="match-result ${record.winner === "blue" ? "win" : record.winner === "red" ? "loss" : "draw"}"><div><strong>${record.winner === "blue" ? "Victory" : record.winner === "red" ? "Defeat" : "Draw"}</strong><span>vs ${esc(record.opponent ?? "Royal Trainer")}</span></div><b aria-label="Your crowns ${record.crowns[0]}, opponent crowns ${record.crowns[1]}">${record.crowns[0]} ${icon("crown")} ${record.crowns[1]}</b></div><p class="match-metadata">${modeNames[record.mode]} · ${clock(record.replay.duration * STEP)} played<br>${esc(new Date(record.date).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }))}</p>${editable ? `<div class="match-copy-target"><label for="match-deck-slot">Destination battle deck</label><div class="match-deck-choice"><select id="match-deck-slot" aria-describedby="match-copy-note">${profile.decks.map((_, slot) => `<option value="${slot}" ${view.slot === slot ? "selected" : ""}>Battle deck ${slot + 1}${profile.activeDeck === slot ? " (active)" : ""}</option>`).join("")}</select>${icon("chevron-down")}</div><p id="match-copy-note">Replaces battle deck ${view.slot + 1} and selects it.</p></div>` : ""}<div class="match-decks">${section("yours")}${section("opponent")}</div>${view.notice ? `<div class="match-deck-status" role="status"><span id="match-deck-notice">${esc(view.notice)}</span>${view.undo ? `<button class="text-button" id="undo-match-deck" aria-describedby="match-deck-notice">Undo deck change</button>` : ""}</div>` : ""}<div class="match-details-actions"><button class="text-button" id="match-log">Back to battle log</button><button class="primary-button" id="match-replay">${icon("play")} Watch this replay</button></div></div>`,
+    `<div class="match-details"><div class="match-result ${record.winner === "blue" ? "win" : record.winner === "red" ? "loss" : "draw"}"><div><strong>${record.winner === "blue" ? "Victory" : record.winner === "red" ? "Defeat" : "Draw"}</strong><span>vs ${esc(record.opponent ?? "Royal Trainer")}</span></div><b aria-label="Your crowns ${record.crowns[0]}, opponent crowns ${record.crowns[1]}">${record.crowns[0]} ${icon("crown")} ${record.crowns[1]}</b></div><p class="match-metadata">${modeNames[record.mode]} · ${clock(record.replay.duration * STEP)} played<br>${esc(new Date(record.date).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }))}</p>${editable ? `<div class="match-copy-target"><label for="match-deck-slot">Destination battle deck</label><div class="match-deck-choice"><select id="match-deck-slot" aria-describedby="match-copy-note">${profile.decks.map((_, slot) => `<option value="${slot}" ${view.slot === slot ? "selected" : ""}>Battle deck ${slot + 1}${profile.activeDeck === slot ? " (active)" : ""}</option>`).join("")}</select>${icon("chevron-down")}</div><p id="match-copy-note">Replaces battle deck ${view.slot + 1} and selects it.</p></div>` : ""}<div class="match-decks">${section("yours")}${section("opponent")}</div>${view.notice ? `<div class="match-deck-status" role="status"><span id="match-deck-notice">${esc(view.notice)}</span>${view.undo ? `<button class="text-button" id="undo-match-deck" aria-describedby="match-deck-notice">Undo deck change</button>` : ""}</div>` : ""}<div class="replay-export"><button class="secondary-button" id="export-replay-file">${icon("hard-drive-download")} Export replay</button><p>Save this recording to watch in another browser.</p><p class="replay-file-error" role="alert" hidden></p></div><div class="match-details-actions"><button class="text-button" id="match-log">Back to battle log</button><button class="primary-button" id="match-replay">${icon("play")} Watch this replay</button></div></div>`,
     "match-details",
     true,
   );
   $("#match-log").onclick = showHistory;
   $("#match-replay").onclick = () => playReplay(record);
+  $("#export-replay-file").onclick = () => {
+    const error = $(".replay-file-error");
+    error.hidden = true;
+    try {
+      const text = exportReplayFile(record, profile.name);
+      downloadJson(
+        text,
+        `browser-arena-replay-${new Date(record.date).toISOString().slice(0, 10)}.json`,
+      );
+    } catch (cause) {
+      error.textContent =
+        cause instanceof Error ? cause.message : "Couldn’t export this replay.";
+      error.hidden = false;
+    }
+  };
   document
     .querySelectorAll<HTMLButtonElement>("[data-match-card]")
     .forEach((button) => {
@@ -1484,16 +1601,10 @@ function showSettings() {
   refreshIcons();
   if (backups) {
     $("#export-progress").onclick = () => {
-      const url = URL.createObjectURL(
-        new Blob([exportProgress(profile)], { type: "application/json" }),
+      downloadJson(
+        exportProgress(profile),
+        `browser-arena-progress-${new Date().toISOString().slice(0, 10)}.json`,
       );
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `browser-arena-progress-${new Date().toISOString().slice(0, 10)}.json`;
-      document.body.append(link);
-      link.click();
-      link.remove();
-      window.setTimeout(() => URL.revokeObjectURL(url), 30000);
     };
     const input = $<HTMLInputElement>("#progress-file");
     const restore = $<HTMLButtonElement>("#import-progress");
@@ -1799,7 +1910,7 @@ $("#surrender-button").onclick = () => {
 };
 $("#replay-play").onclick = () => {
   if (replayData && battle.tick >= replayData.duration && replayRecord)
-    playReplay(replayRecord);
+    playReplay(replayRecord, replayOwnerName ?? undefined);
   else togglePause();
 };
 $("#replay-speed").onclick = () => {

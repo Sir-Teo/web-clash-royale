@@ -78,6 +78,51 @@ export const validDeck = (a: unknown): a is CardId[] =>
   a.length === 8 &&
   new Set(a).size === 8 &&
   a.every((v) => typeof v === "string" && Object.hasOwn(CARD_MAP, v));
+export function validRecordEntry(value: unknown): value is RecordEntry {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const r = value as RecordEntry;
+  return (
+    r &&
+    Number.isFinite(r.id) &&
+    typeof r.date === "string" &&
+    Number.isFinite(Date.parse(r.date)) &&
+    ["classic", "double", "training"].includes(r.mode) &&
+    (r.opponent === undefined || typeof r.opponent === "string") &&
+    (r.opponentType === undefined ||
+      ["ai", "friend"].includes(r.opponentType)) &&
+    (r.matchId === undefined || typeof r.matchId === "string") &&
+    (r.replay?.perspective === undefined ||
+      ["blue", "red"].includes(r.replay.perspective)) &&
+    ["blue", "red", "draw"].includes(r.winner) &&
+    Array.isArray(r.crowns) &&
+    r.crowns.length === 2 &&
+    r.crowns.every((n) => Number.isInteger(n) && n >= 0 && n <= 3) &&
+    [1, 2, 3, 4, 5].includes(r.replay?.version) &&
+    Number.isSafeInteger(r.replay.seed) &&
+    r.replay.mode === r.mode &&
+    Number.isInteger(r.replay.duration) &&
+    r.replay.duration >= 0 &&
+    r.replay.duration <= 9000 &&
+    validDeck(r.replay.deck) &&
+    validDeck(r.replay.enemyDeck) &&
+    Array.isArray(r.replay.actions) &&
+    r.replay.actions.length <= 2000 &&
+    r.replay.actions.every(
+      (a, index, actions) =>
+        a &&
+        Number.isInteger(a.tick) &&
+        a.tick >= 0 &&
+        a.tick <= r.replay.duration &&
+        (index === 0 || a.tick >= actions[index - 1].tick) &&
+        ["blue", "red"].includes(a.team) &&
+        typeof a.card === "string" &&
+        Object.hasOwn(CARD_MAP, a.card) &&
+        Number.isFinite(a.x) &&
+        Number.isFinite(a.y),
+    )
+  );
+}
+
 export function loadProfile(): Profile {
   try {
     return decodeProfile(localStorage.getItem(KEY) ?? "") ?? base();
@@ -137,49 +182,7 @@ function decodeProfile(raw: string): Profile | null {
           .slice(0, 4)
       : [];
     p.history = Array.isArray(saved.history)
-      ? saved.history
-          .filter(
-            (r: RecordEntry) =>
-              r &&
-              Number.isFinite(r.id) &&
-              typeof r.date === "string" &&
-              Number.isFinite(Date.parse(r.date)) &&
-              ["classic", "double", "training"].includes(r.mode) &&
-              (r.opponent === undefined || typeof r.opponent === "string") &&
-              (r.opponentType === undefined ||
-                ["ai", "friend"].includes(r.opponentType)) &&
-              (r.matchId === undefined || typeof r.matchId === "string") &&
-              (r.replay?.perspective === undefined ||
-                ["blue", "red"].includes(r.replay.perspective)) &&
-              ["blue", "red", "draw"].includes(r.winner) &&
-              Array.isArray(r.crowns) &&
-              r.crowns.length === 2 &&
-              r.crowns.every((n) => Number.isInteger(n) && n >= 0 && n <= 3) &&
-              [1, 2, 3, 4, 5].includes(r.replay?.version) &&
-              Number.isSafeInteger(r.replay.seed) &&
-              r.replay.mode === r.mode &&
-              Number.isInteger(r.replay.duration) &&
-              r.replay.duration >= 0 &&
-              r.replay.duration <= 9000 &&
-              validDeck(r.replay.deck) &&
-              validDeck(r.replay.enemyDeck) &&
-              Array.isArray(r.replay.actions) &&
-              r.replay.actions.length <= 2000 &&
-              r.replay.actions.every(
-                (a, index, actions) =>
-                  a &&
-                  Number.isInteger(a.tick) &&
-                  a.tick >= 0 &&
-                  a.tick <= r.replay.duration &&
-                  (index === 0 || a.tick >= actions[index - 1].tick) &&
-                  ["blue", "red"].includes(a.team) &&
-                  typeof a.card === "string" &&
-                  Object.hasOwn(CARD_MAP, a.card) &&
-                  Number.isFinite(a.x) &&
-                  Number.isFinite(a.y),
-              ),
-          )
-          .slice(0, 10)
+      ? saved.history.filter(validRecordEntry).slice(0, 10)
       : [];
   } catch {
     return null;
