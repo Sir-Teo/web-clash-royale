@@ -12,6 +12,9 @@ const assetManifest = JSON.parse(
 const expectedEffects = JSON.parse(
   await readFile("public/assets/effects/manifest.json", "utf8"),
 ).clips;
+const expectedBuildings = JSON.parse(
+  await readFile("public/assets/buildings/manifest.json", "utf8"),
+).files.length;
 const expectedAnimations = JSON.parse(
   await readFile("public/assets/animations/manifest.json", "utf8"),
 ).files.length;
@@ -92,9 +95,9 @@ try {
   if (!offlineNativeAudio.every(Boolean))
     throw new Error("Native combat/death audio or battle music is missing from the offline cache");
   await page.waitForFunction(
-    ({ effects, animations, cards, health }) =>
+    ({ effects, buildings, animations, cards, health }) =>
       window.__arena?.state.loadedEffects === effects &&
-      window.__arena?.state.loadedBuildings === 3 &&
+      window.__arena?.state.loadedBuildings === buildings &&
       window.__arena?.state.loadedAnimations === animations &&
       window.__arena?.state.loadedAnnouncements === 5 &&
       window.__arena?.state.loadedIntros === 2 &&
@@ -111,6 +114,7 @@ try {
       window.__arena?.state.nativePrincessTowers === 4,
     {
       effects: expectedEffects,
+      buildings: expectedBuildings,
       animations: expectedAnimations,
       cards: expectedCards,
       health: expectedHealth,

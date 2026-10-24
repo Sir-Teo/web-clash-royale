@@ -189,7 +189,7 @@ test("tower debris pauses, settles after victory, and rubble survives renderer r
       timeout: 30000,
     },
   );
-  await expect(page.locator("#status")).toContainText("3 buildings loaded");
+  await expect(page.locator("#status")).toContainText("4 buildings loaded");
   await page.locator("#princess").click();
   const step = page.locator("#step"),
     second = page.locator("#second");

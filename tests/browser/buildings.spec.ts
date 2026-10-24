@@ -7,7 +7,7 @@ test("native defensive buildings emerge, attack and retract in the arena", async
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/tests/fixtures/combat.html");
   await page.locator("#scenario").selectOption("burrow");
-  await expect(page.locator("#status")).toContainText("3 buildings loaded", {
+  await expect(page.locator("#status")).toContainText("4 buildings loaded", {
     timeout: 30000,
   });
   await expect(page.locator("#buildings")).toHaveText(
@@ -48,7 +48,7 @@ test("Kings wake before firing and also activate after a Princess Tower falls", 
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/tests/fixtures/combat.html");
   await page.locator("#scenario").selectOption("king");
-  await expect(page.locator("#status")).toContainText("3 buildings loaded", {
+  await expect(page.locator("#status")).toContainText("4 buildings loaded", {
     timeout: 30000,
   });
   await expect(page.locator("#kings")).toHaveText("red: asleep · blue: asleep");
