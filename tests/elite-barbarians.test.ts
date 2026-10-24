@@ -37,7 +37,7 @@ describe("archived Elite Barbarians", () => {
       .toBe("AngryBarbarians");
     expect(combatAudioPlan("elite-barbarians", "spawn", 7).length).toBeGreaterThan(0);
     expect(combatAudioPlan("elite-barbarians", "attack", 7).length).toBeGreaterThan(0);
-    expect(CARDS).toHaveLength(70);
+    expect(CARDS).toHaveLength(71);
   });
 
   it("spends six elixir, places two symmetric melee units and replays their positions", () => {

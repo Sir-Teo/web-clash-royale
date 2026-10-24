@@ -6,7 +6,7 @@ const json = (path: string) => JSON.parse(readFileSync(path, "utf8"));
 describe("bundled game artwork", () => {
   it("preserves both teams' building directions and Tesla's labeled state transitions", () => {
     const manifest = json("public/assets/buildings/manifest.json");
-    expect(manifest.files).toHaveLength(9);
+    expect(manifest.files).toHaveLength(10);
     for (const source of manifest.sourceTables)
       expect(
         createHash("sha256").update(readFileSync(source.path)).digest("hex"),
@@ -65,7 +65,8 @@ describe("bundled game artwork", () => {
           file.id === "tesla" ? 39 : file.id === "king" ? 98 :
             file.id === "bomb-tower" || file.id === "inferno-tower" ? 1 :
               file.id === "elixir-collector" ? 35 :
-              file.id === "goblin-hut" ? 5245 : 19,
+              file.id === "goblin-hut" ? 5245 :
+              file.id === "tombstone" ? (team === "blue" ? 60 : 70) : 19,
         );
         if (file.id === "tesla")
           expect(clip.labels).toEqual({

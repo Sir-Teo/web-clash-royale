@@ -54,7 +54,7 @@ describe("archived Guards", () => {
     expect(combatAudioPlan("guards", "spawn", 7).length).toBeGreaterThan(0);
     expect(combatAudioPlan("guards", "shield-lost", 7).map((cue) => cue.file))
       .toContain("shield_skele_lost_02");
-    expect(CARDS).toHaveLength(70);
+    expect(CARDS).toHaveLength(71);
   });
 
   it("deploys three shielded fighters, absorbs a full breaking hit and replays formation", () => {

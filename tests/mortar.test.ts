@@ -72,7 +72,7 @@ describe("archived Mortar siege building", () => {
       gravity: 60,
       projectileArt: "catapult_projectile1",
     });
-    expect(CARDS).toHaveLength(70);
+    expect(CARDS).toHaveLength(71);
     expect(CARD_MAP.mortar).toMatchObject({
       kind: "building",
       cost: 4,

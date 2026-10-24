@@ -36,7 +36,7 @@ describe("archived Goblin Hut", () => {
       spawnCharacter: "SpearGoblin", spawnCharacterLevelIndex: 2,
       spawnRadius: 0.4, fps: 30, frames: 5245,
     });
-    expect(CARDS).toHaveLength(70);
+    expect(CARDS).toHaveLength(71);
     expect(CARD_MAP["goblin-hut"]).toMatchObject({
       kind: "building", rarity: "Rare", cost: 5, hp: 1792,
       damage: 0, lifetime: 60,

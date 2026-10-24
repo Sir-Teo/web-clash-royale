@@ -1,5 +1,11 @@
 # Asset provenance
 
+## Tombstone
+
+`npm run assets:tombstone` pins the archived Rare card and building rows: three elixir, 240 source hitpoints, one-second deployment, 40-second lifetime, one Skeleton every 2.95 seconds, and four Skeletons on destruction. The browser scales the building to the roster's level-11 Rare health curve (614 HP) and uses its existing level-11 Skeleton stats. The archived `SpawnCharacterLevelIndex=2` is retained but does not independently override that normalized troop level. The source supplies a 0.4-tile release radius; the browser places periodic Skeletons forward and death Skeletons at four cardinal points on that radius, since the archive does not specify their exact individual placement.
+
+The pinned native card portrait, `building_tombstone` team exports, 60-frame blue and 70-frame red animations, deployment/death particles and sounds are imported from the archived 1.8.1 client. The browser advances each team's deploy segment once and loops its remaining animation while the building survives. `reference/client/tombstone-manifest.json` hashes the source and generated rules. Solo and browser-to-browser matches both use the same spawn and death behavior, including on phones.
+
 ## Goblin Hut
 
 `npm run assets:goblin-hut` pins the archived Rare card and building rows: five elixir, 700 source hitpoints, one-second deployment, 60-second lifetime, and one Spear Goblin released every 4.95 seconds at a 0.4-tile forward offset. The browser scales the hut to the roster's level-11 Rare health curve (1,792 HP) and uses its existing level-11 Spear Goblin stats. The archived `SpawnCharacterLevelIndex=2` is retained in the data but does not independently override that normalized troop level.

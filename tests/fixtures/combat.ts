@@ -1,6 +1,6 @@
 import { Arena } from "../../src/render/arena";
 import { Battle, STEP } from "../../src/game/engine";
-import type { Team } from "../../src/game/engine";
+import type { Entity, Team } from "../../src/game/engine";
 import type { CardId } from "../../src/game/cards";
 import { CARDS } from "../../src/game/cards";
 const arena = new Arena(document.querySelector("#arena")!);
@@ -81,6 +81,8 @@ function setup() {
     scenario !== "dark-prince" && scenario !== "guards";
   (document.querySelector("#kill-night-witch") as HTMLElement).hidden =
     scenario !== "night-witch";
+  (document.querySelector("#kill-tombstone") as HTMLElement).hidden =
+    scenario !== "tombstone";
   (document.querySelector("#kill-golem") as HTMLElement).hidden =
     scenario !== "golem";
   (document.querySelector("#kill-ice-golem") as HTMLElement).hidden =
@@ -344,6 +346,8 @@ function setup() {
     unit("elixir-collector", "blue", 9, 22);
   } else if (scenario === "goblin-hut") {
     unit("goblin-hut", "blue", 9, 22);
+  } else if (scenario === "tombstone") {
+    unit("tombstone", "blue", 9, 22);
   } else if (scenario === "footsteps") {
     for (const [card, x] of [
       ["knight", 4],
@@ -563,6 +567,12 @@ function advance(ticks: number) {
 }
 document.querySelector("#step")!.addEventListener("click", () => advance(3));
 document.querySelector("#second")!.addEventListener("click", () => advance(30));
+document.querySelector("#kill-tombstone")!.addEventListener("click", () => {
+  const stone = battle.entities.find((e) => e.team === "blue" && e.card === "tombstone" && e.hp > 0);
+  if (!stone) return;
+  (battle as unknown as { hurt: (entity: Entity, amount: number) => void })
+    .hurt(stone, stone.hp);
+});
 document.querySelector("#kill-night-witch")!.addEventListener("click", () => {
   const witch = battle.entities.find((e) => e.team === "blue" && e.card === "night-witch" && e.hp > 0);
   if (!witch) return;
@@ -658,6 +668,18 @@ function render(now: number) {
       timer: hut?.spawnTimer ?? null,
       spears: battle.entities.filter((entity) =>
         entity.card === "spear-goblins" && entity.team === "blue" && entity.hp > 0
+      ).length,
+    });
+  const stone = battle.entities.find((entity) => entity.card === "tombstone" && entity.hp > 0);
+  (document.querySelector("#destruction") as HTMLElement).dataset.tombstone =
+    JSON.stringify({
+      frame: stone ? (arena as any).units.get(stone.id)?.building?.frame : null,
+      timer: stone?.spawnTimer ?? null,
+      skeletons: battle.entities.filter((entity) =>
+        entity.card === "skeletons" && entity.team === "blue" && entity.hp > 0
+      ).length,
+      deaths: battle.events.filter((event) =>
+        event.type === "death" && event.card === "tombstone"
       ).length,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.miner =
