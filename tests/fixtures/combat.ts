@@ -55,7 +55,10 @@ function setup() {
   extraVisualTime = 0;
   victims = [];
   document.querySelector("#play")!.textContent = "Play";
-  battle = new Battle({ seed: 12, ai: false });
+  const selectedScene = (
+    document.querySelector("#scenario") as HTMLSelectElement
+  ).value;
+  battle = new Battle({ seed: 12, ai: selectedScene === "ai-spells" });
   for (const t of battle.entities) t.active = false;
   const scenario = (document.querySelector("#scenario") as HTMLSelectElement)
     .value;
@@ -100,6 +103,12 @@ function setup() {
     unit("archers", "red", 14, 10);
     cast("arrows", "blue", 4, 12);
     cast("fireball", "blue", 14, 12);
+  } else if (scenario === "ai-spells") {
+    // Let the ordinary AI timer choose its cast; no private think call here.
+    const tower = battle.entities.find((e) => e.team === "blue" && !e.king)!;
+    tower.hp = 100;
+    battle.players.red.hand = ["rocket", "fireball", "pekka", "giant"];
+    battle.players.red.elixir = 10;
   } else if (scenario === "rocket") {
     cast("rocket", "blue", 4, 10);
     cast("rocket", "red", 14, 22);
@@ -427,6 +436,18 @@ function render(now: number) {
           height: (arena as any).units.get(e.id)?.sprite?.mesh.position.y ?? 0,
         })),
     );
+  (document.querySelector("#destruction") as HTMLElement).dataset.aiSpells =
+    JSON.stringify({
+      actions: battle.actions.filter(
+        (a) =>
+          a.team === "red" &&
+          ["rocket", "fireball", "arrows", "zap"].includes(a.card),
+      ),
+      towers: battle.entities
+        .filter((e) => e.team === "blue" && e.kind === "tower")
+        .map((e) => ({ id: e.id, hp: e.hp, x: e.x, y: e.y })),
+      crowns: battle.players.red.crowns,
+    });
   (document.querySelector("#destruction") as HTMLElement).dataset.rockets =
     JSON.stringify({
       shots: arena.projectileState,

@@ -1,5 +1,6 @@
 import { CARD_MAP, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
+import { damageSpellTarget, isDamageSpell } from "./spell-targeting";
 import { deploymentPositions } from "./deployment";
 import {
   combatTraits,
@@ -1389,7 +1390,9 @@ export class Battle {
       .filter((v) => v.c.cost <= p.elixir);
     if (!affordable.length) return;
     const threats = this.entities
-      .filter((e) => e.team === "blue" && e.kind === "troop" && e.y < 15)
+      .filter(
+        (e) => e.team === "blue" && e.kind === "troop" && e.hp > 0 && e.y < 15,
+      )
       .sort((a, b) => a.y - b.y);
     const threat = threats[0];
     const allies = affordable.some((a) => a.id === "rage")
@@ -1411,10 +1414,25 @@ export class Battle {
           ),
       }))
       .sort((a, b) => b.value - a.value)[0];
-    if (!threat && p.elixir < 6 && this.mode !== "training") return;
+    const spellTargets = new Map(
+      affordable
+        .filter((a) => isDamageSpell(a.id))
+        .map((a) => [
+          a.id,
+          damageSpellTarget(a.id, "red", this.entities, this.projectiles),
+        ]),
+    );
+    if (
+      !threat &&
+      p.elixir < 6 &&
+      this.mode !== "training" &&
+      ![...spellTargets.values()].some(Boolean)
+    )
+      return;
     const scored = affordable
       .map((a) => {
-        let score = this.random() * 2;
+        const jitter = this.random() * 2;
+        let score = jitter;
         if (threat) {
           if (a.c.kind === "spell") {
             const nearby = threats.filter(
@@ -1433,7 +1451,10 @@ export class Battle {
           if (a.c.buildingsOnly) score += 2;
         }
         if (a.id === "rage") score += push && push.value >= 5 ? 12 : -20;
-        return { ...a, score };
+        const target = spellTargets.get(a.id);
+        if (isDamageSpell(a.id))
+          score = target ? target.score + jitter * 0.1 : -Infinity;
+        return { ...a, score, target };
       })
       .sort((a, b) => b.score - a.score);
     const a = scored[0];
@@ -1449,6 +1470,7 @@ export class Battle {
       y = threat ? clamp(threat.y + 1.3, 8, 13.8) : a.c.buildingsOnly ? 3.5 : 9;
     if (a.c.kind === "spell") {
       const target =
+        a.target ??
         (a.id === "rage" ? push?.entity : threat) ??
         this.entities.find(
           (e) => e.team === "blue" && e.kind === "tower" && !e.king,

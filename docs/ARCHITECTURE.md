@@ -163,6 +163,12 @@ Six tower HUD hosts use the shared native SVG renderer and accessible meter valu
 
 `src/ui/ending.ts` preloads five native clips, their lossless crops and the local font. It caches unchanged frames, fits player names within source text bounds and preserves accessible final totals. The main view binds each ending to its completed Battle instance so repeated snapshots cannot restart it. Results wait for both the ending and the 1.4-second crown-flight deadline. Continue becomes available after that flight deadline. Replays never open the reward modal; restarting, rewinding or leaving clears the presentation. Missing native assets retain the existing result flow. Read-only diagnostics expose `loadedEndings` and the current ending state.
 
+## Solo damage-spell decisions
+
+`src/game/spell-targeting.ts` evaluates Fireball, Arrows, Zap and Rocket against visible, living enemy troops, exposed buildings and Crown Towers. Body positions and nearby pair midpoints supply legal candidate centers. Value reflects effective damage and removal per body, with a small defensive preference; swarm cost is divided by the card's spawn count. A dormant King incurs an activation penalty. A lethal King takes priority over a Princess, and cheaper spells receive preference for the same finishing opportunity. Thresholds are browser AI heuristics, not native-client rules.
+
+Friendly spell projectiles reserve damage at their fixed destination, including delayed Arrows waves and Rocket's distinct Crown Tower fraction. This prevents repeat finishers while a lethal blast is in flight. The planner reads current positions without forecasting movement, so moving troops can evade long flights. It consumes no random draws or mutable state. Battle retains one seeded preference draw per affordable card and its existing decision cadence; only a worthwhile spell target bypasses the usual six-elixir opening wait. Recorded commands preserve the result without rerunning the AI during replay. Freeze, Poison and Rage retain their existing area/support decisions.
+
 ## Current boundaries
 
 - AI and private two-player rooms are implemented. Account synchronization, public matchmaking and cross-server room discovery are not implemented.
