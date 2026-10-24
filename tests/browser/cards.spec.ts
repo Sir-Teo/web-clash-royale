@@ -13,6 +13,8 @@ test("native portraits use separate frames and the draw animation freezes and se
   await expect(page.locator("#gallery .native-card-ready")).toHaveCount(CARDS.length);
   const knight = page.locator('#gallery [data-native-card="knight"]');
   await expect(knight.locator("text")).toHaveText(["3", "Knight", "Level 11"]);
+  await expect(page.locator('#gallery [data-native-card="bomber"] text'))
+    .toHaveText(["3", "Bomber", "Level 11"]);
   await knight.click();
   await expect(knight).toHaveAttribute("data-card-clip", "deck-selected");
   const hand = page.locator('#hand [data-slot="0"]');
