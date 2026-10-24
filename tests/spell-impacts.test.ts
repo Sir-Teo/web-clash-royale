@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import definitions from "../src/render/destruction-data.json";
 import { Battle, STEP } from "../src/game/engine";
+import { CARD_MAP } from "../src/game/cards";
 import { perspective, snapshot } from "../src/network/perspective";
 import { arrowOffsets } from "../src/render/arrow-volley";
 import {
@@ -11,6 +12,27 @@ import {
 } from "../src/render/destruction";
 
 describe("native Zap and Arrows impact compositions", () => {
+  it("hits troops at the archived four-tile Arrows edge without extending beyond it", () => {
+    const battle = new Battle({ seed: 8, ai: false });
+    for (const tower of battle.entities) tower.active = false;
+    const targets = [13.3, 14.2].map((x) => {
+      battle.players.red.hand[0] = "knight";
+      battle.players.red.elixir = 10;
+      expect(battle.play("red", 0, 4, 10).ok).toBe(true);
+      const target = battle.entities.filter((e) => e.team === "red" && e.card === "knight").at(-1)!;
+      Object.assign(target, { x, y: 22, deploy: 0, active: false, hp: 10000, maxHp: 10000 });
+      return target;
+    });
+    battle.players.blue.hand[0] = "arrows";
+    battle.players.blue.elixir = 10;
+    expect(battle.play("blue", 0, 9, 22).ok).toBe(true);
+    for (let i = 0; i < 45; i++) battle.step();
+    expect(targets.map((target) => target.hp)).toEqual([
+      10000 - CARD_MAP.arrows.damage,
+      10000,
+    ]);
+  });
+
   it("resolves retained spell and effect bindings through the source tables", async () => {
     const { csvRows } = await import("../scripts/lib/csv.mjs");
     const rows = (name: string) =>

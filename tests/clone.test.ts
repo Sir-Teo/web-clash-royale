@@ -183,12 +183,12 @@ describe("native Clone spell", () => {
       true,
       true,
     ]);
-    expect(peer.battle!.entities.filter((e) => e.clone)).toHaveLength(4);
+    expect(peer.battle!.entities.filter((e) => e.clone)).toHaveLength(3);
     const latest = messages.findLast(
       ({ team, message }) => team === "red" && message.type === "state",
     )?.message as Extract<ServerMessage, { type: "state" }>;
     expect(
       perspective(latest.state, "red").entities.filter((e) => e.clone),
-    ).toHaveLength(4);
+    ).toHaveLength(3);
   });
 });

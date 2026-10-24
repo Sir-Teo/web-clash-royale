@@ -188,7 +188,7 @@ export interface Action extends Point {
 }
 export interface Replay {
   perspective?: Team;
-  version: 1 | 2 | 3 | 4 | 5;
+  version: 1 | 2 | 3 | 4 | 5 | 6;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -253,7 +253,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
-    this.rulesVersion = r?.version ?? 5;
+    this.rulesVersion = r?.version ?? 6;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -431,7 +431,9 @@ export class Battle {
   cardCost(team: Team, id: CardId): number | null {
     const resolved = this.cardForPlay(team, id);
     return resolved
-      ? CARD_MAP[resolved].cost + (id === "mirror" ? mirror.surcharge : 0)
+      ? (resolved === "bomber" && this.rulesVersion < 6
+          ? 2
+          : CARD_MAP[resolved].cost) + (id === "mirror" ? mirror.surcharge : 0)
       : null;
   }
   play(
@@ -611,7 +613,7 @@ export class Battle {
           damage: c.damage / waves,
           remaining: duration,
           duration,
-          splash: c.radius!,
+          splash: id === "arrows" && this.rulesVersion < 6 ? 3.6 : c.radius!,
           air: true,
           style: id,
           stun: c.stun ?? 0,
@@ -661,6 +663,9 @@ export class Battle {
         id,
         { x, y },
         team,
+        this.rulesVersion < 6
+          ? id === "goblins" ? 4 : id === "skeletons" ? 3 : undefined
+          : undefined,
       ).entries())
         this.spawn(
           id === "goblin-gang"

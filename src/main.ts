@@ -1489,7 +1489,7 @@ function processEvents() {
       ev.card !== "tower"
     )
       elixir.spend(
-        ev.value ?? CARD_MAP[ev.card].cost,
+        ev.value ?? battle.cardCost(ev.team, ev.card) ?? CARD_MAP[ev.card].cost,
         ev.time,
         battle.players.blue.elixir,
       );

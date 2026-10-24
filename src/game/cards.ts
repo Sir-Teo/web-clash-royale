@@ -495,7 +495,7 @@ export const CARDS: Card[] = [
     0,
     1,
     "Pepper a large area with arrows. An excellent answer to swarms.",
-    { kind: "spell", radius: 3.6, hitsAir: true },
+    { kind: "spell", radius: 4, hitsAir: true },
   ),
   troop(
     "goblins",
@@ -506,8 +506,8 @@ export const CARDS: Card[] = [
     1.8,
     0.55,
     1.1,
-    "Four speedy melee attackers. Small, mean, green and very good value.",
-    { count: 4 },
+    "Three speedy melee attackers. Small, mean, green and very good value.",
+    { count: 3 },
   ),
   troop(
     "goblin-gang",
@@ -585,8 +585,8 @@ export const CARDS: Card[] = [
     1.3,
     0.5,
     1,
-    "Three tiny distractions. Cycle your deck and pull enemies off course.",
-    { count: 3 },
+    "Four tiny distractions. Cycle your deck and pull enemies off course.",
+    { count: 4 },
   ),
   troop(
     "skeleton-army",
@@ -615,7 +615,7 @@ export const CARDS: Card[] = [
   troop(
     "bomber",
     "Bomber",
-    2,
+    3,
     332,
     222,
     1,

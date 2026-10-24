@@ -12,6 +12,7 @@ export function deploymentPositions(
   id: CardId,
   point: Point,
   team: Team = "blue",
+  countOverride?: number,
 ): Point[] {
   if (id === "barbarians") {
     const forward = team === "blue" ? -1 : 1;
@@ -72,7 +73,7 @@ export function deploymentPositions(
       };
     });
   }
-  const count = CARD_MAP[id].count;
+  const count = countOverride ?? CARD_MAP[id].count;
   return Array.from({ length: count }, (_, i) => {
     const angle = i * 2.39996,
       spread = count === 1 ? 0 : Math.sqrt(i) * 0.43;

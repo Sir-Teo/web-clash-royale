@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { Battle, STEP } from "../src/game/engine";
 import type { Entity, Replay, Team } from "../src/game/engine";
-import { CARDS, CARD_MAP } from "../src/game/cards";
+import { CARDS, CARD_MAP, STARTER_DECK } from "../src/game/cards";
 import type { CardId } from "../src/game/cards";
 import { combatTraits, KING_ACTIVATION_TIME } from "../src/game/combat";
 import legacy from "./fixtures/legacy-replay.json";
@@ -330,6 +330,31 @@ describe("Tesla hiding and emergence", () => {
 });
 
 describe("versioned battle replay", () => {
+  it("retains v5 Bomber, Arrows, Goblins and Skeletons rules", () => {
+    const old = new Battle({ replay: {
+      version: 5,
+      seed: 8,
+      mode: "classic",
+      deck: STARTER_DECK,
+      enemyDeck: STARTER_DECK,
+      actions: [],
+      duration: 0,
+    } });
+    old.players.blue.hand[0] = "bomber";
+    expect(old.cardCost("blue", "bomber")).toBe(2);
+    expect(old.play("blue", 0, 4, 22).ok).toBe(true);
+    expect(old.players.blue.elixir).toBe(3);
+    old.players.blue.hand[0] = "goblins";
+    old.players.blue.elixir = 10;
+    expect(old.play("blue", 0, 6, 22).ok).toBe(true);
+    expect(old.entities.filter((e) => e.card === "goblins")).toHaveLength(4);
+    old.players.red.hand[0] = "skeletons";
+    expect(old.play("red", 0, 4, 10).ok).toBe(true);
+    expect(old.entities.filter((e) => e.card === "skeletons")).toHaveLength(3);
+    old.players.blue.hand[0] = "arrows";
+    expect(old.play("blue", 0, 9, 22).ok).toBe(true);
+    expect(old.projectiles.filter((p) => p.style === "arrows").every((p) => p.splash === 3.6)).toBe(true);
+  });
   it("preserves the captured v4 match with delayed King activation and immediate finish order", () => {
     const b = new Battle({ replay: combatV4.replay as Replay });
     for (let i = 0; i < combatV4.replay.duration; i++) b.step();
@@ -402,7 +427,7 @@ describe("versioned battle replay", () => {
     }
     expect(b.winner).not.toBeNull();
     const record = b.exportReplay();
-    expect(record.version).toBe(5);
+    expect(record.version).toBe(6);
     const replay = new Battle({ replay: record });
     for (let i = 0; i < record.duration; i++) replay.step();
     expect(replay.winner).toEqual(b.winner);

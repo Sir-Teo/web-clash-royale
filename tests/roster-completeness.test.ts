@@ -26,4 +26,38 @@ describe("archived 1.8.1 card roster", () => {
     expect(imported).toEqual(source);
     expect(new Set(CARDS.map((card) => card.id)).size).toBe(CARDS.length);
   });
+
+  it("keeps every card's archived cost, rarity and basic type", () => {
+    const source = Object.fromEntries(
+      ["spells_characters", "spells_buildings", "spells_other"].map((table) => [
+        table,
+        Object.fromEntries(csvRows(readFileSync(`reference/logic/${table}.csv`, "utf8"))
+          .filter((row) => row.Name)
+          .map((row) => [row.Name, row])),
+      ]),
+    );
+    const mismatches: string[] = [];
+    for (const card of CARDS) {
+      const { table, row } = portraits[card.id];
+      const archived = source[table][row];
+      for (const [field, actual, expected] of [
+        ["cost", card.cost, Number(archived.ManaCost)],
+        ["rarity", card.rarity, archived.Rarity],
+        ["type", card.kind, {
+        spells_characters: "troop",
+        spells_buildings: "building",
+        spells_other: "spell",
+        }[table]],
+      ] as const)
+        if (actual !== expected)
+          mismatches.push(`${card.id} ${field}: ${actual} vs source ${expected}`);
+      if (table === "spells_other" && archived.Radius)
+        if (card.radius !== Number(archived.Radius) / 1000)
+          mismatches.push(`${card.id} radius: ${card.radius} vs source ${Number(archived.Radius) / 1000}`);
+      if (table === "spells_characters" && archived.SummonNumber)
+        if (card.count !== Number(archived.SummonNumber))
+          mismatches.push(`${card.id} count: ${card.count} vs source ${archived.SummonNumber}`);
+    }
+    expect(mismatches).toEqual([]);
+  });
 });

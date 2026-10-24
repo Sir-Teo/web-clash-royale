@@ -59,7 +59,7 @@ describe("native Mirror card", () => {
     expect(p.elixir).toBeCloseTo(previous - 2);
     expect(p.lastPlayed).toBe("skeletons");
     expect(battle.entities.filter((e) => e.card === "skeletons")).toHaveLength(
-      6,
+      8,
     );
     expect(battle.actions.at(-1)?.card).toBe("mirror");
     expect(p.queue.at(-1)).toBe("mirror");
@@ -101,7 +101,7 @@ describe("native Mirror card", () => {
     expect(replay.actions).toEqual(battle.actions);
     expect(replay.players.blue.lastPlayed).toBe("skeletons");
     expect(replay.entities.filter((e) => e.card === "skeletons")).toHaveLength(
-      6,
+      8,
     );
   });
 
@@ -139,7 +139,7 @@ describe("native Mirror card", () => {
     ).toEqual([false, true, true]);
     expect(
       peer.battle!.entities.filter((e) => e.card === "skeletons"),
-    ).toHaveLength(6);
+    ).toHaveLength(8);
     expect(peer.battle!.actions.map((a) => a.card)).toEqual([
       "skeletons",
       "mirror",
