@@ -427,6 +427,11 @@
       "sha256": "458fb6e7685d989cc098a06a8956bffde42ab93bc69ecd7c4a5413078d3179ea"
     },
     {
+      "file": "portrait-x-bow.webp",
+      "bytes": 36066,
+      "sha256": "c1201a2c451dfdba327cdd7889caee3581b4a2af5175ca26f40bc4cbe74868c0"
+    },
+    {
       "file": "portrait-electro-wizard.webp",
       "bytes": 43830,
       "sha256": "6924f97fcdbad44e6f51fcef5019206ef5a35a3e4b8dc8c94e8e0f89e29d1244"
@@ -468,8 +473,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 106433,
-      "sha256": "ff84e078d6b3d7c882eaf04eb1fbc4bd73919ef74cb1cd77e5c17043130046e5"
+      "bytes": 106748,
+      "sha256": "c217f53ab871c6c27b273d9d3b1c5d812af10680eed45ae3e31e700edcb392a5"
     }
   ]
 }

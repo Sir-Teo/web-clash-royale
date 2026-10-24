@@ -80,6 +80,20 @@
       "frames": 2
     },
     {
+      "id": "x-bow",
+      "source": "building_xbow",
+      "metadataSha256": "f88d6d4f0ce9943e27a9bb9bdfe6d44199f0a655c770f901d3c267d55eadcd50",
+      "dataSha256": "5e579a9753d93ea4b3c4ae14d714b6d4295e54f88174b3635578b38c6ce8c317",
+      "textures": [
+        {
+          "file": "x-bow-0.webp",
+          "sha256": "f0c07b020e56e0ec9203a8714c7e0a16bbf95e97f8fc130ab4e6ea8df3114cb3",
+          "originalSha256": "fa0b40c06811213bab0ee1640fcc85f5627ba73355891700858b76eccbfb9d48"
+        }
+      ],
+      "frames": 38
+    },
+    {
       "id": "king",
       "source": "building_tower",
       "metadataSha256": "0096da89499bf03437a1caa2a88c811b293a5a3067fe571e1ef12bafadbf7962",

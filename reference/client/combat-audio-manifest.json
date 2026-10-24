@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "75dabcbf8e12f5d8053f4db55b5a844f0b2f033b88ce5d4fa2506621a6d406b7"
+      "sha256": "12dc52032fea6ebe8095c54357a769af92762d432e029679f8da0ee2775555ee"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "ff84e078d6b3d7c882eaf04eb1fbc4bd73919ef74cb1cd77e5c17043130046e5"
+      "sha256": "c217f53ab871c6c27b273d9d3b1c5d812af10680eed45ae3e31e700edcb392a5"
     }
   ],
   "ignoredEnemyVersions": [
@@ -1606,6 +1606,18 @@
       "sha256": "eb79f3fd0f04851b05a48cf32ec2378e412bfd7ff45719192b80110ee8ea3e10"
     },
     {
+      "path": "public/assets/audio/xbow_fire_01.ogg",
+      "source": "sfx/xbow_fire_01.ogg",
+      "bytes": 5242,
+      "sha256": "29a5088e24e688fd295bfc427a00fd135261bd1ae585f62826f792f967bcc74d"
+    },
+    {
+      "path": "public/assets/audio/xbow_place_02.ogg",
+      "source": "sfx/xbow_place_02.ogg",
+      "bytes": 6280,
+      "sha256": "ab6d8852cea0140b561e718bcc00b7d21ce8fd7d5a65057f56e9f8e8d8019f94"
+    },
+    {
       "path": "public/assets/audio/zap_02.ogg",
       "source": "sfx/zap_02.ogg",
       "bytes": 12938,
@@ -1638,6 +1650,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "e043be2cf92ceea954c81ee77828f00368fffabba2a783aede426cc85fff07f3"
+    "sha256": "38b0d56350942b3b3c8544be5a32a98296d35a563b656d26940644abf4259e6f"
   }
 }

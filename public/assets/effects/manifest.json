@@ -43,7 +43,7 @@
   "inputs": [
     {
       "path": "src/render/destruction-data.json",
-      "sha256": "1d829f8da56fc56431129c7123804929e2d1301f5b31a7ebcf18d1b3478ddf1f"
+      "sha256": "eed6c7a2d6c328c276f8870a32d1f7485f03e55d1b0dab7b592533e81443f635"
     },
     {
       "path": "reference/logic/buildings.csv",

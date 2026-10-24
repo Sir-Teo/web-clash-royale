@@ -57,6 +57,7 @@
     "assets:ice-golem": "node scripts/import-ice-golem.mjs",
     "assets:giant-skeleton": "node scripts/import-giant-skeleton.mjs",
     "assets:inferno-tower": "node scripts/import-inferno-tower.mjs",
+    "assets:x-bow": "node scripts/import-x-bow.mjs",
     "assets:bomb-tower": "node scripts/import-bomb-tower.mjs",
     "assets:mortar": "node scripts/import-mortar.mjs",
     "assets:guards": "node scripts/import-guards.mjs",

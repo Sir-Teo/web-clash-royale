@@ -518,6 +518,21 @@ impacts["hit:mortar"] = {
   components: composition(mortarProjectile.HitEffect, "blue"),
   enemyComponents: composition(mortarProjectile.HitEffect, "red"),
 };
+const xBow = tables.buildings[profiles["x-bow"].source];
+const xBowProjectile = tables.projectiles[xBow.Projectile];
+if (xBow.ProjectileEffect !== "XbowAttack" ||
+    xBowProjectile?.HitEffect !== "ArrowHit")
+  throw new Error("Recheck native X-Bow launch and impact");
+launches["x-bow"] = {
+  source: xBow.ProjectileEffect,
+  components: composition(xBow.ProjectileEffect, "blue"),
+  enemyComponents: composition(xBow.ProjectileEffect, "red"),
+};
+impacts["hit:x-bow"] = {
+  source: xBowProjectile.HitEffect,
+  components: composition(xBowProjectile.HitEffect, "blue"),
+  enemyComponents: composition(xBowProjectile.HitEffect, "red"),
+};
 const bombTower = tables.buildings[profiles["bomb-tower"].source];
 const bombTowerProjectile = tables.projectiles[bombTower.Projectile];
 if (bombTower.ProjectileEffect !== "BombTower_attack" ||

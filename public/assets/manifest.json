@@ -735,6 +735,12 @@
       "sha256": "12254947e7486740288b315062fdb1c415ffd2482d8b00fd6ac4dd65cfc0561a"
     },
     {
+      "path": "cards/x-bow.png",
+      "source": "cards/x-bow.png",
+      "bytes": 127145,
+      "sha256": "c09cfc7cf5b8e12029ac9dd21ff0a3f52aef8529b5e22ce73df52970a73f1b3c"
+    },
+    {
       "path": "cards/zap.png",
       "source": "cards/zap.png",
       "bytes": 137311,

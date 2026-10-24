@@ -110,6 +110,7 @@ const names = {
   mortar: "Mortar",
   "bomb-tower": "BombTower",
   "inferno-tower": "InfernoTower",
+  "x-bow": "Xbow",
   "king-tower": "KingTower",
   "princess-tower": "PrincessTower",
 };

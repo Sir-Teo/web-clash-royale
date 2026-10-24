@@ -509,6 +509,18 @@
     "ignoresKnockback": false,
     "projectile": null
   },
+  "x-bow": {
+    "source": "Xbow",
+    "windup": 0.3,
+    "sight": 11.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "xbow_projectile",
+      "speed": 23.333333333333332,
+      "homing": true,
+      "gravity": 0
+    }
+  },
   "king-tower": {
     "source": "KingTower",
     "windup": 0.5,

@@ -3810,6 +3810,69 @@
         }
       ]
     },
+    "x-bow": {
+      "source": "Cannon_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "balloon-bomb": {
       "source": "MegaBombExplodeBalloon",
       "components": [
@@ -6241,6 +6304,11 @@
         }
       ]
     },
+    "hit:x-bow": {
+      "source": "ArrowHit",
+      "components": [],
+      "enemyComponents": []
+    },
     "hit:bomb-tower": {
       "source": "BombTower_projectile_hit",
       "components": [
@@ -7707,6 +7775,11 @@
           "ground": false
         }
       ]
+    },
+    "x-bow": {
+      "source": "XbowAttack",
+      "components": [],
+      "enemyComponents": []
     },
     "bomb-tower": {
       "source": "BombTower_attack",
@@ -10025,6 +10098,11 @@
           "ground": true
         }
       ]
+    },
+    "x-bow": {
+      "source": "Xbow_deploy",
+      "components": [],
+      "enemyComponents": []
     }
   },
   "emitters": {

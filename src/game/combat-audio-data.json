@@ -7219,6 +7219,121 @@
         "row": "InfernoTower"
       }
     },
+    "x-bow": {
+      "source": "Xbow",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [
+          "XbowAttack"
+        ],
+        "components": [
+          {
+            "sound": "sound_xbow_fire_1",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_xbow_fire_1",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "ArrowHit"
+        ],
+        "components": [
+          {
+            "sound": "Arrow hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "Arrow hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "sound:SpellCasting"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "Xbow_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_xbow_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_xbow_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_buildings",
+        "row": "Xbow"
+      }
+    },
     "king-tower": {
       "source": "KingTower",
       "attack": {
@@ -15708,6 +15823,52 @@
           0
         ],
         "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_xbow_fire_1": [
+      {
+        "sourceFile": "sfx/xbow_fire_01.wav",
+        "file": "xbow_fire_01",
+        "volume": [
+          0.3,
+          0.35
+        ],
+        "pitch": [
+          0.97,
+          1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 5,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_xbow_deploy": [
+      {
+        "sourceFile": "sfx/xbow_place_02.wav",
+        "file": "xbow_place_02",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 3,
         "repeat": 0,
         "loop": false,
         "priority": 1,

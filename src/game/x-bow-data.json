@@ -1,0 +1,23 @@
+{
+  "card": "Xbow",
+  "rarity": "Epic",
+  "cost": 6,
+  "sourceHitpoints": 1000,
+  "sourceDamage": 20,
+  "deployTime": 4,
+  "hitSpeed": 0.3,
+  "range": 11.5,
+  "lifetime": 40,
+  "hitsAir": false,
+  "projectileSpeed": 23.333333333333332,
+  "projectileStartRadius": 1,
+  "projectileStartHeight": 2.4,
+  "projectileArt": "projectile_arrow_basic",
+  "projectileShadow": "projectile_arrow_shadow",
+  "hitEffect": "ArrowHit",
+  "launchEffect": "XbowAttack",
+  "spawnEffect": "Xbow_deploy",
+  "deathEffect": "Cannon_die",
+  "blueExport": "building_xbow_attack1_1",
+  "redExport": "building_xbow_red_attack1"
+}
