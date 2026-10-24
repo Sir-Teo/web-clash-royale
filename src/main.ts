@@ -1,5 +1,6 @@
 import { NativeConnectionWarning } from "./ui/connection";
 import { OfflineUpdates } from "./ui/offline-updates";
+import { ModalFocus } from "./ui/modal-focus";
 import "@fontsource/lilita-one/latin-400.css";
 import "@fontsource/nunito-sans/latin-400.css";
 import "@fontsource/nunito-sans/latin-600.css";
@@ -306,6 +307,11 @@ updateHost.className = "offline-update";
 updateHost.setAttribute("role", "status");
 updateHost.setAttribute("aria-label", "Game update");
 document.body.append(updateHost);
+const modalFocus = new ModalFocus(
+  $("#modal-root"),
+  [$(".app-shell"), updateHost],
+  () => $("#battle-button"),
+);
 const offlineUpdates = new OfflineUpdates(
   updateHost,
   () => screen === "lobby" && !modalKey && !network.room,
@@ -399,19 +405,20 @@ function modal(title: string, body: string, key = "generic", wide = false) {
     audio.stopEffects();
   }
   modalKey = key;
-  $("#modal-root").innerHTML =
-    `<div class="modal-backdrop"><section class="modal ${wide ? "wide" : ""}" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-heading"><div><span class="eyebrow">BROWSER ARENA</span><h2 id="modal-title">${title}</h2></div><button class="icon-button close-modal" aria-label="Close dialog">${icon("x")}</button></div>${body}</section></div>`;
+  modalFocus.render(key, () => {
+    $("#modal-root").innerHTML =
+      `<div class="modal-backdrop"><section class="modal ${wide ? "wide" : ""}" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-heading"><div><span class="eyebrow">BROWSER ARENA</span><h2 id="modal-title">${title}</h2></div><button class="icon-button close-modal" aria-label="Close dialog">${icon("x")}</button></div>${body}</section></div>`;
+  });
   refreshIcons();
   $(".close-modal").addEventListener("click", closeModal);
   $(".modal-backdrop").addEventListener("click", (e) => {
     if (e.target === $(".modal-backdrop")) closeModal();
   });
-  $(".close-modal").focus();
 }
 function closeModal() {
   const wasResult = modalKey === "result";
   modalKey = "";
-  $("#modal-root").innerHTML = "";
+  modalFocus.close();
   if (modalPausedBattle) {
     modalPausedBattle = false;
     paused = false;
