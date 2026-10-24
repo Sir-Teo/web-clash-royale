@@ -142,7 +142,7 @@ test("real replay notices survive seeking, backgrounding and phone rotation", as
   await expect
     .poll(
       () =>
-        page.evaluate(() => (window as any).__arena.state.loadedAnnouncements),
+        page.evaluate(() => (window as any).__arena?.state.loadedAnnouncements),
       { timeout: 30000 },
     )
     .toBe(5);

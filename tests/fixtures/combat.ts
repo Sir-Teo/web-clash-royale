@@ -206,6 +206,13 @@ function setup() {
       target.hp = target.maxHp = 10000;
       target.lifetime = undefined;
     }
+  } else if (scenario === "ice-wizard") {
+    const attacker = unit("ice-wizard", "blue", 4, 21)[0];
+    attacker.speed = attacker.cooldown = 0;
+    const target = unit("knight", "red", 4, 18.5)[0];
+    target.active = false;
+    target.speed = target.damage = 0;
+    target.hp = target.maxHp = 10000;
   } else if (scenario === "executioner") {
     const attacker = unit("executioner", "blue", 4, 21)[0];
     attacker.speed = attacker.cooldown = 0;
@@ -916,6 +923,14 @@ function render(now: number) {
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.projectiles =
     JSON.stringify(arena.projectileState);
+  (document.querySelector("#destruction") as HTMLElement).dataset.iceWizard =
+    JSON.stringify({
+      caster: battle.entities.filter((e) => e.card === "ice-wizard" && e.hp > 0).length,
+      targetHp: battle.entities.find((e) => e.team === "red" && e.card === "knight")?.hp,
+      hits: battle.events.filter((event) => event.type === "hit" && event.card === "ice-wizard" && event.value).length,
+      visuals: arena.projectileState.filter((shot) =>
+        shot.sprites.some((sprite) => sprite.name === "ice_wizard_projectile")),
+    });
   (document.querySelector("#destruction") as HTMLElement).dataset.tornadoAreas =
     JSON.stringify(arena.tornadoAreaState);
   (

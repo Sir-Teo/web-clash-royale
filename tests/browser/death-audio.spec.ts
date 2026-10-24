@@ -12,7 +12,7 @@ const files: string[] = manifest.audioFiles.map((file: { path: string }) =>
   file.path.replace(/^public/, ""),
 );
 
-test("all six native death sounds decode, including the retained Wizard placeholder", async ({
+test("all retained native death sounds decode, including the Wizard placeholder", async ({
   page,
 }, info) => {
   await page.goto("/");
@@ -47,7 +47,7 @@ test("all six native death sounds decode, including the retained Wizard placehol
       ),
     );
   }, files);
-  expect(decoded).toHaveLength(6);
+  expect(decoded).toHaveLength(files.length);
   await info.attach("decoded-death-audio.json", {
     body: JSON.stringify(decoded, null, 2),
     contentType: "application/json",

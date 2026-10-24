@@ -15,7 +15,7 @@ test("Battle Ram charges a building then releases two Barbarians on desktop and 
     await page.locator("#step").click();
     await expect.poll(time).toBeGreaterThan(before + 0.099);
   };
-  expect((await data()).rams).toHaveLength(1);
+  await expect.poll(async () => (await data()).rams.length).toBe(1);
   for (let i = 0; i < 65 && (await data()).chargeCues === 0; i++) await advance();
   expect((await data()).chargeCues).toBeGreaterThan(0);
   expect((await data()).rams[0].move).toBeGreaterThan(3);

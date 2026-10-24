@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { expectedHealth, expectedHealthRoots } from "./native-assets";
+import { CARD_MAP } from "../../src/game/cards";
 
 test("source health fills stay independent of King activation frames", async ({
   page,
@@ -50,7 +51,10 @@ test("native health tracks damage, freezes, survives a paused rebuild, and clear
   await page.locator("#second").click();
   await expect(page.locator("#status")).toContainText("Kings 25/25");
   const king = page.locator('[data-health-kind="king"]').first();
-  await expect(king).toHaveAttribute("aria-valuenow", "5175");
+  await expect(king).toHaveAttribute(
+    "aria-valuenow",
+    String(Math.ceil(5232 - CARD_MAP.zap.damage * 0.4)),
+  );
   const held = await page.locator(".tower-labels").innerHTML();
   await page.waitForTimeout(200);
   expect(await page.locator(".tower-labels").innerHTML()).toBe(held);

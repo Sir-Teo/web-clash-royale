@@ -1,10 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { CARDS, STARTER_DECK } from "../../src/game/cards";
-import { expectedAnimations } from "./native-assets";
+import { expectedAnimations, expectedEffects } from "./native-assets";
 
 const deck = ["ice-wizard", ...STARTER_DECK.filter((id) => id !== "arrows")];
 
-test("Ice Wizard can deploy and fire its native icy projectile on desktop and phone", async ({ page }, info) => {
+test("Ice Wizard can be selected and deployed from the real hand on desktop and phone", async ({ page }, info) => {
   test.setTimeout(180000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
@@ -41,11 +41,32 @@ test("Ice Wizard can deploy and fire its native icy projectile on desktop and ph
   await expect.poll(async () => (await state()).units.filter(
     (e: any) => e.team === "blue" && e.card === "ice-wizard" && e.hp > 0,
   ).length).toBe(1);
-  await page.waitForFunction(() => {
-    const state = (window as any).__arena?.state;
-    return state?.projectileArtwork.some((shot: any) =>
-      shot.sprites.some((sprite: any) => sprite.name === "ice_wizard_projectile"));
-  }, null, { timeout: 45000, polling: "raf" });
+  await page.screenshot({ path: info.outputPath("ice-wizard-deployed.png"), fullPage: true });
+  expect(errors).toEqual([]);
+});
+
+test("Ice Wizard's native projectile reaches a controlled target", async ({ page }, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/tests/fixtures/combat.html");
+  await page.locator("#scenario").selectOption("ice-wizard");
+  await expect(page.locator("#status")).toContainText(`${expectedEffects} effects`, {
+    timeout: 60000,
+  });
+  const panel = page.locator("#destruction");
+  const state = async () => JSON.parse((await panel.getAttribute("data-state"))!);
+  const shot = async () => JSON.parse((await panel.getAttribute("data-ice-wizard"))!);
+  await expect.poll(async () => (await shot()).caster).toBe(1);
+  const step = async () => {
+    const before = (await state()).time;
+    await page.locator("#step").click();
+    await expect.poll(async () => (await state()).time).toBeGreaterThan(before + 0.099);
+  };
+  for (let i = 0; i < 30 && (await shot()).visuals.length === 0; i++) await step();
+  expect((await shot()).visuals.length).toBeGreaterThan(0);
   await page.screenshot({ path: info.outputPath("ice-wizard-shot.png"), fullPage: true });
+  for (let i = 0; i < 30 && (await shot()).hits === 0; i++) await step();
+  expect((await shot()).hits).toBeGreaterThan(0);
+  expect((await shot()).targetHp).toBeLessThan(10000);
   expect(errors).toEqual([]);
 });
