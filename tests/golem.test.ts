@@ -49,7 +49,7 @@ describe("archived Golem and Golemites", () => {
       golemite: { sourceHitpoints: 650, sourceDamage: 40,
         targetsBuildings: true, death: { damage: 40, radius: 2,
           pushback: 1.8, hitsAir: true } } });
-    expect(CARDS).toHaveLength(72);
+    expect(CARDS).toHaveLength(73);
     expect(CARDS.some((card) => card.id === "golemite")).toBe(false);
     expect(CARD_MAP.golem).toMatchObject({ cost: 8, hp: 5154, damage: 314,
       buildingsOnly: true });

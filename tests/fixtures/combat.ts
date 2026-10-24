@@ -350,6 +350,8 @@ function setup() {
     unit("tombstone", "blue", 9, 22);
   } else if (scenario === "furnace") {
     unit("furnace", "blue", 9, 22);
+  } else if (scenario === "barbarian-hut") {
+    unit("barbarian-hut", "blue", 9, 22);
   } else if (scenario === "footsteps") {
     for (const [card, x] of [
       ["knight", 4],
@@ -692,6 +694,18 @@ function render(now: number) {
       burst: furnace?.spawnBurst ?? null,
       spirits: battle.entities.filter((entity) =>
         entity.card === "fire-spirits" && entity.team === "blue" && entity.hp > 0
+      ).length,
+    });
+  const barbarianHut = battle.entities.find((entity) =>
+    entity.card === "barbarian-hut" && entity.hp > 0
+  );
+  (document.querySelector("#destruction") as HTMLElement).dataset.barbarianHut =
+    JSON.stringify({
+      frame: barbarianHut ? (arena as any).units.get(barbarianHut.id)?.building?.frame : null,
+      timer: barbarianHut?.spawnTimer ?? null,
+      burst: barbarianHut?.spawnBurst ?? null,
+      barbarians: battle.entities.filter((entity) =>
+        entity.card === "barbarians" && entity.team === "blue" && entity.hp > 0
       ).length,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.miner =

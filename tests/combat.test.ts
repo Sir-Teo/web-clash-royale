@@ -53,7 +53,7 @@ describe("combat timing and targeting", () => {
       const traits = combatTraits({ card: card.id });
       expect(traits.windup).toBeGreaterThanOrEqual(0);
       if (card.id === "inferno-dragon") expect(traits.windup).toBe(0);
-      if (["elixir-collector", "goblin-hut", "tombstone", "furnace"].includes(card.id)) {
+      if (["elixir-collector", "goblin-hut", "tombstone", "furnace", "barbarian-hut"].includes(card.id)) {
         expect(traits.sight).toBe(0);
         expect(traits.projectile).toBeNull();
       } else expect(traits.sight).toBeGreaterThan(0);

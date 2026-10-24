@@ -1,5 +1,11 @@
 # Asset provenance
 
+## Barbarian Hut
+
+`npm run assets:barbarian-hut` pins the archived `BarbarianHut` Rare card and building rows: seven elixir, 1,100 source hitpoints, one-second deployment, 60-second lifetime, and two Barbarians per wave, released 500 ms apart with a 13,500-ms spawn pause. Each Barbarian retains its source 1,000-ms deployment and 400-ms delay. The browser scales the Hut to the roster's level-11 Rare health curve (2,816 HP) and uses its existing level-11 Barbarian stats. `SpawnCharacterLevelIndex=2` is retained but does not separately override the normalized unit level.
+
+The browser starts the first wave after the spawn pause, releases the second Barbarian 0.5 seconds later, and waits 13.5 seconds after that second unit for the next wave. Source rows give the pause and interval but do not specify first-wave initialization or exact left/right release offsets; those remain reconstruction choices. Destroying the Hut cancels an unfinished pair. Both one-frame native team exports, the `barbarian_hut` portrait, `goblin_hut_deploy` and `goblin_hut_die` effects, and their original sound groups come from the pinned archive. `reference/client/barbarian-hut-manifest.json` hashes the source and generated rules.
+
 ## Furnace
 
 `npm run assets:furnace` pins the archived `FirespiritHut` Rare card and building rows: four elixir, 600 source hitpoints, one-second placement, 50-second lifetime, and two Fire Spirits per wave with a 500-ms interval and a 9,400-ms spawn pause. Each Fire Spirit retains its source 1,000-ms deployment and 400-ms deployment delay. The browser scales Furnace to the roster's level-11 Rare health curve (1,536 HP) and uses its existing level-11 Fire Spirit stats. `SpawnCharacterLevelIndex=2` is recorded but does not separately override that normalized troop level.
