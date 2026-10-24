@@ -6,7 +6,7 @@ const json = (path: string) => JSON.parse(readFileSync(path, "utf8"));
 describe("bundled game artwork", () => {
   it("preserves both teams' building directions and Tesla's labeled state transitions", () => {
     const manifest = json("public/assets/buildings/manifest.json");
-    expect(manifest.files).toHaveLength(6);
+    expect(manifest.files).toHaveLength(7);
     for (const source of manifest.sourceTables)
       expect(
         createHash("sha256").update(readFileSync(source.path)).digest("hex"),
