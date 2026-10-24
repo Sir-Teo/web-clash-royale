@@ -323,3 +323,10 @@ Deck cards expose selection state and the keyboard shortcut. The ordering row sh
 The default Crown Tower spell multiplier is shared by the engine, AI damage planner and card panel through `SPELL_CROWN_TOWER_DAMAGE_FRACTION`. Rocket and Poison retain their individual multipliers. Values keep fractional damage rather than rounding to whole hitpoints. Poison's displayed damage rate comes from the normalized card damage and live tick interval, matching the engine's 121-damage tick, rather than the retained archived 57-damage source field. Timing and coverage notes distinguish capped Rage lingering and new Poison applications against buried Tesla. The surrounding combat rules and historical versions retain their existing numeric behavior.
 
 Phone detail panels use two stat columns with centered wrapping labels and values; desktop uses three. Card inspection through lobby, shared decks and match details uses the same read-only provider.
+
+
+## Collection inspection and replacement
+
+With no selected deck slot, collection cards open the read-only card detail view. Back to collection rerenders the builder with its current search/filter and focuses the same collection card, including scrolling it into view. Selecting a deck slot switches collection actions to replacement; selecting that slot again cancels the selection. A successful replacement returns the collection to inspection. The existing profile write path runs only for a valid replacement or explicit ordering change.
+
+`renderCollection` exposes its action state through `data-collection-mode`, and collection controls reference the current builder hint for their accessible description. Existing-deck cards retain their IN DECK label in both states, with replacement-only dimming so they remain visibly available for inspection.

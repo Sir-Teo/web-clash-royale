@@ -1974,7 +1974,7 @@ kbd {
 .collection-grid .game-card {
   width: 100%;
 }
-.collection-grid .in-deck {
+.collection-grid[data-collection-mode="replace"] .in-deck {
   filter: saturate(0.65) brightness(0.65);
 }
 .collection-card-label {
