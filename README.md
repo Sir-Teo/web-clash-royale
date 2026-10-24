@@ -4,7 +4,7 @@ A private, independent browser fan game for Sir-Teo. Built with TypeScript, Thre
 
 Build an eight-card deck from all 74 playable rows in the archived 1.8.1 card roster, deploy troops and spells in a real-time arena battle, and take down the opposing King Tower. Includes three battle modes, complete native troop animations and projectile artwork, Goblin Stadium scenery reconstructed from archived exports and placements, audio, local progression, victory chests and match replays.
 
-Combat includes cancellable attack windups, defensive building pulls, homing shots, ballistic bombs, Fireball travel and knockback, three-wave Arrows and Zap charge resets. Cannon uses its native aiming frames; Tesla hides underground, rises to attack and retracts when idle. Princess Towers use their dedicated native character animations. The King plays its original wake-up sequence and waits 3.3 seconds before aiming and attacking. New matches record version-13 combat; version-1 through version-12 replays retain their original rules.
+Combat includes cancellable attack windups, defensive building pulls, homing shots, ballistic bombs, Fireball travel and knockback, three-wave Arrows and Zap charge resets. Cannon uses its native aiming frames; Tesla hides underground, rises to attack and retracts when idle. Princess Towers use their dedicated native character animations. The King plays its original wake-up sequence and waits 3.3 seconds before aiming and attacking. New matches record version-14 combat; version-1 through version-13 replays retain their original rules.
 
 Princess Towers preserve the original base and foreground battlements, with the animated character placed between them using her authored origin and the archived attachment height.
 
@@ -17,6 +17,8 @@ Fireball impacts use the original layered smoke, glowing fragments, sparks, flam
 Zap impacts use the archived bolt, electricity, smoke, sparks and ground glow composition. Arrows cover their source four-tile radius with 15 visible sprites across three waves and leave 15 native ground marks. Their source artwork and particle timing work in solo play, replays and browser-to-browser matches on desktop and phone. Bomber costs three elixir; Goblins deploy three units and Skeletons deploy four, matching their archived card rows.
 
 The basic speed, attack reach and hit interval of 47 directly mapped troop cards now come from the pinned character table. Executioner's returning axe keeps dedicated timing. Balloon retains its dedicated bomb attack while moving at the archived speed of one arena tile per second in new matches. Versions 1–12 replay its previous 0.85-tile speed. Regenerate the source projection with `npm run assets:card-stats`.
+
+Valkyrie, Bomber, Baby Dragon, Witch and Wizard now use their archived melee or projectile splash radii: 2, 1.5, 1.2, 1 and 1.2 tiles respectively. Versions 1–13 replays retain the previous curated hit areas. Regenerate these values with `npm run assets:card-splash`.
 
 The attacking buildings also use their archived range, cadence and lifetime. Cannon and Tesla both fire every 0.8 seconds; Tesla lasts 40 seconds. Existing replays preserve the earlier building values.
 
