@@ -81,6 +81,32 @@ try {
     throw new Error("Browser match worker is missing from the offline cache");
   await context.setOffline(true);
   await page.reload();
+  const phoneInstall = await page.evaluate(async () => {
+    const manifestLink = document.querySelector('link[rel="manifest"]');
+    const touchLink = document.querySelector('link[rel="apple-touch-icon"]');
+    if (!manifestLink || !touchLink) return false;
+    const response = await fetch(manifestLink.href);
+    if (!response.ok) return false;
+    const manifest = await response.json();
+    if (
+      manifest.display !== "standalone" ||
+      manifest.start_url !== "/" ||
+      manifest.icons?.length !== 3 ||
+      !manifest.icons.some((icon) => icon.purpose === "maskable")
+    ) return false;
+    const paths = [...manifest.icons.map((icon) => icon.src), touchLink.href];
+    return (await Promise.all(paths.map(async (path) => {
+      const icon = await fetch(path);
+      if (!icon.ok || !icon.headers.get("content-type")?.includes("image/png"))
+        return false;
+      const bitmap = await createImageBitmap(await icon.blob());
+      const valid = bitmap.width >= 180 && bitmap.height === bitmap.width;
+      bitmap.close();
+      return valid;
+    }))).every(Boolean);
+  });
+  if (!phoneInstall)
+    throw new Error("Phone install manifest or icons are unavailable offline");
   const offlineNativeAudio = await page.evaluate(async (paths) => {
     return Promise.all(
       paths.map(async (path) => {
