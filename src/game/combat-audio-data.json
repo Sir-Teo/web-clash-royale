@@ -7747,6 +7747,97 @@
         "row": "FirespiritHut"
       }
     },
+    "barbarian-hut": {
+      "source": "BarbarianHut",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "sound:SpellCasting"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "goblin_hut_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_goblin_hut_deploy",
+            "delay": 0.25
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_goblin_hut_deploy",
+            "delay": 0.25
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_buildings",
+        "row": "BarbarianHut"
+      }
+    },
     "king-tower": {
       "source": "KingTower",
       "attack": {

@@ -115,6 +115,7 @@ const names = {
   "goblin-hut": "GoblinHut",
   tombstone: "Tombstone",
   furnace: "FirespiritHut",
+  "barbarian-hut": "BarbarianHut",
   "king-tower": "KingTower",
   "princess-tower": "PrincessTower",
 };

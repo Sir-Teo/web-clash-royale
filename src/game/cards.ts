@@ -26,6 +26,7 @@ import elixirCollector from "./elixir-collector-data.json" with { type: "json" }
 import goblinHut from "./goblin-hut-data.json" with { type: "json" };
 import tombstone from "./tombstone-data.json" with { type: "json" };
 import furnace from "./furnace-data.json" with { type: "json" };
+import barbarianHut from "./barbarian-hut-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -109,6 +110,7 @@ export type CardId =
   | "goblin-hut"
   | "tombstone"
   | "furnace"
+  | "barbarian-hut"
   | "zap"
   | "freeze"
   | "poison"
@@ -1018,6 +1020,18 @@ export const CARDS: Card[] = [
     furnace.spawnPause + furnace.spawnInterval,
     "Releases two Fire Spirits per wave, half a second apart.",
     { kind: "building", rarity: "Rare", lifetime: furnace.lifetime },
+  ),
+  troop(
+    "barbarian-hut",
+    "Barbarian Hut",
+    barbarianHut.cost,
+    Math.round(barbarianHut.sourceHitpoints * 1152 / 450),
+    0,
+    0,
+    0,
+    barbarianHut.spawnPause + barbarianHut.spawnInterval,
+    "Releases two Barbarians per wave, half a second apart.",
+    { kind: "building", rarity: "Rare", lifetime: barbarianHut.lifetime },
   ),
   troop(
     "zap",

@@ -1317,6 +1317,21 @@
           "delay": 0
         }
       ]
+    },
+    "barbarian-hut": {
+      "source": "goblin_hut_die",
+      "components": [
+        {
+          "sound": "sound_goblin_hut_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_goblin_hut_die",
+          "delay": 0
+        }
+      ]
     }
   },
   "sounds": {

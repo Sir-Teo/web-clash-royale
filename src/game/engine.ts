@@ -49,6 +49,7 @@ import elixirCollector from "./elixir-collector-data.json" with { type: "json" }
 import goblinHut from "./goblin-hut-data.json" with { type: "json" };
 import tombstone from "./tombstone-data.json" with { type: "json" };
 import furnace from "./furnace-data.json" with { type: "json" };
+import barbarianHut from "./barbarian-hut-data.json" with { type: "json" };
 import guards from "./guards-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
@@ -723,7 +724,8 @@ export class Battle {
         id === "elixir-collector" ? elixirCollector.generateInterval :
         id === "goblin-hut" ? goblinHut.spawnPause :
         id === "tombstone" ? tombstone.spawnPause :
-        id === "furnace" ? furnace.spawnPause : 4,
+        id === "furnace" ? furnace.spawnPause :
+        id === "barbarian-hut" ? barbarianHut.spawnPause : 4,
       ...(id === "tesla" && this.rulesVersion >= 3
         ? { burrow: { exposure: 0, idle: 0, phase: "hidden" as const } }
         : {}),
@@ -1488,23 +1490,29 @@ export class Battle {
         }
         continue;
       }
-      if (e.card === "furnace") {
+      if (e.card === "furnace" || e.card === "barbarian-hut") {
+        const fire = e.card === "furnace";
+        const rules = fire ? furnace : barbarianHut;
+        const unit: CardId = fire ? "fire-spirits" : "barbarians";
+        const deploy = fire
+          ? furnace.spiritDeployTime + furnace.spiritDeployDelay
+          : barbarianHut.unitDeployTime + barbarianHut.unitDeployDelay;
         if (e.spawnBurst !== undefined) {
           e.spawnBurst -= STEP * hitSpeed;
           if (e.spawnBurst <= 1e-8) {
             e.spawnBurst = undefined;
-            this.spawn("fire-spirits", e.team, e.x + 0.22,
-              e.y + (e.team === "blue" ? -1 : 1) * furnace.spawnRadius,
-              true, furnace.spiritDeployTime + furnace.spiritDeployDelay);
+            this.spawn(unit, e.team, e.x + 0.22,
+              e.y + (e.team === "blue" ? -1 : 1) * rules.spawnRadius,
+              true, deploy);
           }
         }
         e.spawnTimer -= STEP * hitSpeed;
         if (e.spawnTimer <= 1e-8) {
-          e.spawnTimer += furnace.spawnPause + furnace.spawnInterval;
-          e.spawnBurst = furnace.spawnInterval;
-          this.spawn("fire-spirits", e.team, e.x - 0.22,
-            e.y + (e.team === "blue" ? -1 : 1) * furnace.spawnRadius,
-            true, furnace.spiritDeployTime + furnace.spiritDeployDelay);
+          e.spawnTimer += rules.spawnPause + rules.spawnInterval;
+          e.spawnBurst = rules.spawnInterval;
+          this.spawn(unit, e.team, e.x - 0.22,
+            e.y + (e.team === "blue" ? -1 : 1) * rules.spawnRadius,
+            true, deploy);
         }
         continue;
       }

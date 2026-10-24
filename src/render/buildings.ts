@@ -33,7 +33,7 @@ export class BuildingLibrary {
   async load() {
     const loader = new T.TextureLoader();
     await Promise.all(
-      ["cannon", "tesla", "mortar", "bomb-tower", "inferno-tower", "x-bow", "elixir-collector", "goblin-hut", "tombstone", "furnace", "king"].map(async (id) => {
+      ["cannon", "tesla", "mortar", "bomb-tower", "inferno-tower", "x-bow", "elixir-collector", "goblin-hut", "tombstone", "furnace", "barbarian-hut", "king"].map(async (id) => {
         try {
           const response = await fetch(
             `${import.meta.env.BASE_URL}assets/buildings/${id}.json`,
@@ -72,6 +72,7 @@ export class BuildingLibrary {
                 id === "goblin-hut" ? 2.5 :
                 id === "tombstone" ? 2.3 :
                 id === "furnace" ? 2.5 :
+                id === "barbarian-hut" ? 2.7 :
                 id === "inferno-tower" ? 2.4 : 2.2) /
               (data.bounds[2] - data.bounds[0]),
           });

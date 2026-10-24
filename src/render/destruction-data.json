@@ -4083,6 +4083,55 @@
         }
       ]
     },
+    "barbarian-hut": {
+      "source": "goblin_hut_die",
+      "components": [
+        {
+          "emitter": "Goblin_hut_woodExplosion",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TargetDummy_planks2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TowerExplode_smokePuff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Goblin_hut_woodExplosion",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TargetDummy_planks2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TowerExplode_smokePuff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": false
+        }
+      ]
+    },
     "balloon-bomb": {
       "source": "MegaBombExplodeBalloon",
       "components": [
@@ -10420,6 +10469,41 @@
           "delay": 0,
           "scale": 1,
           "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
+    "barbarian-hut": {
+      "source": "goblin_hut_deploy",
+      "components": [
+        {
+          "emitter": "towerExplode_Smoke",
+          "delay": 0.25,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Rock Pieces Emitter",
+          "delay": 0.25,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "towerExplode_Smoke",
+          "delay": 0.25,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Rock Pieces Emitter",
+          "delay": 0.25,
+          "scale": 1,
+          "layer": "Ground",
           "ground": false
         }
       ]
