@@ -1151,6 +1151,34 @@ function showPeerMultiplayer() {
       }),
     );
 }
+// Room packets can arrive while a friend presses Ready. Keep the button node
+// and its click listener in place so a simultaneous status update cannot drop
+// that press between pointer-down and click (notably across Chrome/WebKit).
+function refreshPeerRoom() {
+  const peer = peerNetwork;
+  const room = peer?.room;
+  const ready = document.querySelector<HTMLButtonElement>("#room-ready");
+  const list = document.querySelector<HTMLElement>(".room-players");
+  if (!peer || !room || !ready || !list) return false;
+  const rows = room.players.map((player) => ({
+    player,
+    row: list.querySelector<HTMLElement>(`.room-player.${player.team}`),
+  }));
+  if (rows.some(({ row }) => !row)) return false;
+  for (const { player, row } of rows) {
+    const name = row!.querySelector<HTMLElement>("b");
+    const status = row!.querySelector<HTMLElement>("div > span");
+    const symbol = row!.lastElementChild;
+    if (!name || !status || !symbol) return false;
+    name.textContent = player.name;
+    status.textContent = player.ready ? "Ready for battle" : "Preparing deck";
+    symbol.outerHTML = icon(player.ready ? "check" : "swords");
+  }
+  ready.textContent = room.players.find((player) => player.team === peer.team)?.ready
+    ? "Cancel ready" : "Ready for battle";
+  ready.disabled = !peer.connected;
+  return true;
+}
 if (peerNetwork)
   peerNetwork.onSetup = () => {
     if (screen === "lobby" && modalKey === "room") showPeerMultiplayer();
@@ -1174,7 +1202,8 @@ network.onConnection = (status) => {
 };
 network.onMessage = (message) => {
   if (message.type === "room") {
-    if (screen === "lobby" && modalKey === "room") showMultiplayer();
+    if (screen === "lobby" && modalKey === "room" && !refreshPeerRoom())
+      showMultiplayer();
     if (multiplayer) updateConnection();
   }
   if (message.type === "state") {

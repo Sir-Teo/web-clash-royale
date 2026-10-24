@@ -150,12 +150,12 @@ test("static browsers exchange invites, fight, pause together and replay without
       path: `docs/screenshots/${info.project.name}-peer-room.png`,
       animations: "disabled",
     });
-    await page
-      .getByRole("button", { name: "Ready for battle", exact: true })
-      .click();
-    await friend
-      .getByRole("button", { name: "Ready for battle", exact: true })
-      .click();
+    // Friends may press Ready at the same moment. Room status packets must
+    // update the modal without replacing either button mid-click.
+    await Promise.all([
+      page.getByRole("button", { name: "Ready for battle", exact: true }).click(),
+      friend.getByRole("button", { name: "Ready for battle", exact: true }).click(),
+    ]);
     for (const p of [page, friend]) {
       await expect
         .poll(async () => (await state(p)).multiplayer?.phase)
