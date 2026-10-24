@@ -150,6 +150,20 @@
       "frames": 600
     },
     {
+      "id": "barbarian-hut",
+      "source": "building_barbarian_hut",
+      "metadataSha256": "d25641f343dfcfb90297ecb780e1f39eb7a8b7a834d3c144b587765b2fdb2a0f",
+      "dataSha256": "5ff41c38e81a8bdbe2379d5b46d3da1c0ca5193b5dfe298f7b36d6b2c839da51",
+      "textures": [
+        {
+          "file": "barbarian-hut-0.webp",
+          "sha256": "7836a36724ae1036ea2806b02ad46ec705759886e65139d9868efcef8acd8fd9",
+          "originalSha256": "3ffc5fcf542c631e240e86cce7e79c8d35532a6c2f43a917e42aa0904ccd1922"
+        }
+      ],
+      "frames": 2
+    },
+    {
       "id": "king",
       "source": "building_tower",
       "metadataSha256": "0096da89499bf03437a1caa2a88c811b293a5a3067fe571e1ef12bafadbf7962",

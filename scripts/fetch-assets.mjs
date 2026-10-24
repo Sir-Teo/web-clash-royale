@@ -34,6 +34,7 @@ const cards = [
   "goblin-hut",
   "tombstone",
   "furnace",
+  "barbarian-hut",
   "zap",
   "freeze",
   "poison",

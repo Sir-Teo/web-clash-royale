@@ -452,6 +452,11 @@
       "sha256": "ba4449976c2d498abc0c381e6ad18cd12c264caad9c657d820fe6a1391de29af"
     },
     {
+      "file": "portrait-barbarian-hut.webp",
+      "bytes": 41652,
+      "sha256": "8b70254abbb1e2c5837841ecf5e5fd93eee326a01e1a90a5dac078cb387bb580"
+    },
+    {
       "file": "portrait-electro-wizard.webp",
       "bytes": 43830,
       "sha256": "6924f97fcdbad44e6f51fcef5019206ef5a35a3e4b8dc8c94e8e0f89e29d1244"
@@ -493,8 +498,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 108077,
-      "sha256": "6a61d65588740310e2c339c76e6214f97a1dec53c4d46bad0d72926cca86ca4a"
+      "bytes": 108394,
+      "sha256": "80849f51676edbbeeadb285e95dc6f20953e077b84708b445926c884e2543811"
     }
   ]
 }

@@ -292,6 +292,7 @@ const portraitNames = {
   "goblin-hut": "GoblinHut",
   tombstone: "Tombstone",
   furnace: "FirespiritHut",
+  "barbarian-hut": "BarbarianHut",
   "electro-wizard": "ElectroWizard",
   miner: "Miner",
   bowler: "Bowler",

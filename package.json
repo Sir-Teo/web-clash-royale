@@ -62,6 +62,7 @@
     "assets:goblin-hut": "node scripts/import-goblin-hut.mjs",
     "assets:tombstone": "node scripts/import-tombstone.mjs",
     "assets:furnace": "node scripts/import-furnace.mjs",
+    "assets:barbarian-hut": "node scripts/import-barbarian-hut.mjs",
     "assets:bomb-tower": "node scripts/import-bomb-tower.mjs",
     "assets:mortar": "node scripts/import-mortar.mjs",
     "assets:guards": "node scripts/import-guards.mjs",

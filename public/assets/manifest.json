@@ -369,6 +369,12 @@
       "sha256": "c1695a9ef6889e932d0961308d79d1a2a33526cdf5198c212f7e1b84a38a9eed"
     },
     {
+      "path": "cards/barbarian-hut.png",
+      "source": "cards/barbarian-hut.png",
+      "bytes": 144860,
+      "sha256": "cbee8ebf5514af11551937db69cc44365e1196aef16628f6f37c8d58c8e88bbb"
+    },
+    {
       "path": "cards/barbarians.png",
       "source": "cards/barbarians.png",
       "bytes": 114510,
