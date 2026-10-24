@@ -1,0 +1,7 @@
+# Battle rendering performance
+
+The battle renderer is primarily limited by GPU submissions and pixel work on slower devices. In an iPhone-sized Chromium software-WebGL profile with a seven-entity battle, the original scene used 186 draw calls. Batching repeated scenery images and animated river waves, and caching the static sun shadow map, reduced the same light scene to about 100 draw calls. The exact number varies as troops and effects enter the battle.
+
+The renderer starts at the device's normal pixel density, capped at 2. During an active battle, three consecutive one-second samples below 42 FPS lower its rendering resolution. A severe result below 22 FPS selects the minimum in one resize, avoiding repeated canvas reallocations. Eight samples above 52 FPS allow resolution to recover. The HTML controls remain at their native screen resolution. Pauses, the lobby, and the opening animation do not drive this governor.
+
+To repeat the Chromium profile locally, start the Vite server on port 5188, then run `node scripts/profile-runtime.mjs --phone` (or omit `--phone` for desktop). The script waits for native animation assets to load and reports rendered frames, draw calls, pixel ratio, main-thread cost, and JavaScript samples. Software WebGL and the automatic AI battle make FPS figures variable; draw calls and sustained frame cost are the more stable comparisons. `tests/browser/render-performance.spec.ts` checks the full scene on desktop, mobile Chrome, and mobile Safari.
