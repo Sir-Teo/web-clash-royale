@@ -1,4 +1,5 @@
 import { test, expect as baseExpect, type Page } from "@playwright/test";
+import { expectedCards } from "./native-assets";
 import { writeFileSync } from "node:fs";
 import { CARD_MAP } from "../../src/game/cards";
 const expect = baseExpect.configure({ timeout: 15000 });
@@ -298,7 +299,9 @@ test("two players join, deploy from opposite sides, reconnect and replay the sam
         timeout: 30000,
       })
       .toBe(4);
-    await expect.poll(async () => (await state(red)).loadedCards).toBe(26);
+    await expect
+      .poll(async () => (await state(red)).loadedCards)
+      .toBe(expectedCards);
     await expect.poll(async () => (await state(red)).loadedHud).toBe(6);
     expect((await state(red)).intro.active).toBe(false);
     const heading = await red.locator(".arena-heading").boundingBox();

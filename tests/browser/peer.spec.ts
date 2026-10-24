@@ -1,4 +1,4 @@
-import { expectedEffects } from "./native-assets";
+import { expectedCards, expectedEffects } from "./native-assets";
 import {
   test,
   expect as baseExpect,
@@ -48,7 +48,7 @@ async function init(page: Page, name: string, sound = false) {
       },
       { timeout: 60000 },
     )
-    .toEqual([expectedEffects, 19, 3, 25]);
+    .toEqual([expectedEffects, 19, 3, expectedCards]);
   await expect(page.locator("#friend-button")).toBeVisible({ timeout: 60000 });
   await page.locator("#friend-button").click();
 }

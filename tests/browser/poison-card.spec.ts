@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { expectedCards } from "./native-assets";
 import { CARD_MAP } from "../../src/game/cards";
 import type { CardId } from "../../src/game/cards";
 
@@ -17,7 +18,7 @@ test("Poison can be selected and cast from the real desktop and phone hand", asy
   ));
   await page.goto("/");
   const state = () => page.evaluate(() => (window as any).__arena?.state);
-  await expect.poll(async () => (await state())?.loadedCards, { timeout: 60000 }).toBe(26);
+  await expect.poll(async () => (await state())?.loadedCards, { timeout: 60000 }).toBe(expectedCards);
   await page.locator('#deck-preview [data-card-info="poison"]').click();
   await expect(page.locator(".detail-art.native-card-ready text")).toHaveText(["4", "Poison", "Level 11"]);
   await page.getByRole("button", { name: "Close dialog", exact: true }).click();
