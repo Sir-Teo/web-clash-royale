@@ -1,0 +1,62 @@
+import type { CardId } from "./cards";
+import { validDeck } from "./profile";
+import type { Profile, RecordEntry } from "./profile";
+
+export interface DeckSelection {
+  activeDeck: number;
+  deck: CardId[];
+  decks: CardId[][];
+}
+
+/** Replay decks use canonical teams; history results already use the viewer's side. */
+export function recordedDecks(record: RecordEntry) {
+  const red = record.replay.perspective === "red";
+  return {
+    yours: [...(red ? record.replay.enemyDeck : record.replay.deck)],
+    opponent: [...(red ? record.replay.deck : record.replay.enemyDeck)],
+  };
+}
+
+export function useRecordedDeck(
+  profile: Profile,
+  record: RecordEntry,
+  side: "yours" | "opponent",
+  slot: number,
+): DeckSelection {
+  const deck = recordedDecks(record)[side];
+  if (
+    !validDeck(deck) ||
+    !Number.isInteger(slot) ||
+    slot < 0 ||
+    slot >= profile.decks.length
+  )
+    throw new Error("Choose a valid recorded deck and saved deck slot.");
+  const previous = {
+    activeDeck: profile.activeDeck,
+    deck: [...profile.deck],
+    decks: profile.decks.map((deck) => [...deck]),
+  };
+  profile.decks[profile.activeDeck] = [...profile.deck];
+  profile.decks[slot] = [...deck];
+  profile.activeDeck = slot;
+  profile.deck = [...deck];
+  return previous;
+}
+
+export function restoreDeckSelection(
+  profile: Profile,
+  previous: DeckSelection,
+) {
+  if (
+    !validDeck(previous.deck) ||
+    previous.decks.length !== 3 ||
+    !previous.decks.every(validDeck) ||
+    !Number.isInteger(previous.activeDeck) ||
+    previous.activeDeck < 0 ||
+    previous.activeDeck >= 3
+  )
+    throw new Error("The previous deck selection is invalid.");
+  profile.activeDeck = previous.activeDeck;
+  profile.deck = [...previous.deck];
+  profile.decks = previous.decks.map((deck) => [...deck]);
+}

@@ -6,6 +6,7 @@ import "@fontsource/nunito-sans/latin-600.css";
 import "@fontsource/nunito-sans/latin-700.css";
 import "@fontsource/nunito-sans/latin-800.css";
 import "./style.css";
+import "./ui/match-details.css";
 import "./ui/announcements.css";
 import { NativeAnnouncements, battleClock } from "./ui/announcements";
 import "./ui/rooms.css";
@@ -122,6 +123,12 @@ const icons = {
 import { Arena } from "./render/arena";
 import { Battle, STEP } from "./game/engine";
 import { previousSoloOpponent, soloOpponent } from "./game/opponents";
+import {
+  recordedDecks,
+  restoreDeckSelection,
+  useRecordedDeck,
+} from "./game/match-decks";
+import type { DeckSelection } from "./game/match-decks";
 import type { Mode, Point, Replay } from "./game/engine";
 import { CARDS, CARD_MAP, PRESETS, averageCost, cardArt } from "./game/cards";
 import type { CardId } from "./game/cards";
@@ -418,7 +425,8 @@ function refreshDeck() {
         (_, i) =>
           `<button class="${i === profile.activeDeck ? "active" : ""}" data-deck="${i}" ${screen !== "lobby" ? "disabled" : ""}>${i + 1}</button>`,
       )
-      .join("") + `<span>${PRESETS[profile.activeDeck].name}</span>`;
+      .join("") +
+    `<span>${PRESETS.find((preset) => profile.deck.every((id) => preset.deck.includes(id)))?.name ?? "Custom deck"}</span>`;
   document.querySelectorAll<HTMLButtonElement>("[data-deck]").forEach(
     (e) =>
       (e.onclick = () => {
@@ -1248,7 +1256,7 @@ function showModes() {
       }),
   );
 }
-function showCard(id: CardId) {
+function showCard(id: CardId, back?: () => void) {
   const c = CARD_MAP[id];
   modal(
     c.name,
@@ -1278,10 +1286,11 @@ function showCard(id: CardId) {
       )
       .join(
         "",
-      )}</div>${screen === "lobby" ? `<button class="secondary-button" id="card-edit-deck">${icon("layers-2")} Open deck builder</button>` : ""}`,
+      )}</div>${back ? `<button class="secondary-button" id="card-back">${icon("arrow-right")} Back to battle details</button>` : screen === "lobby" ? `<button class="secondary-button" id="card-edit-deck">${icon("layers-2")} Open deck builder</button>` : ""}`,
     "card",
   );
-  if (screen === "lobby") $("#card-edit-deck").onclick = showDeckBuilder;
+  if (back) $("#card-back").onclick = back;
+  else if (screen === "lobby") $("#card-edit-deck").onclick = showDeckBuilder;
 }
 function showDeckBuilder() {
   if (screen !== "lobby") {
@@ -1370,7 +1379,7 @@ function renderCollection() {
 function showHistory() {
   modal(
     "Your battle log",
-    `<div class="history-summary"><div>${icon("swords")}<b>${profile.battles}</b><span>BATTLES</span></div><div>${icon("trophy")}<b>${profile.wins}</b><span>VICTORIES</span></div><div>${icon("crown")}<b>${profile.crowns}</b><span>CROWNS</span></div></div><div class="history-list">${profile.history.length ? profile.history.map((r, i) => `<div class="history-entry"><span class="history-outcome ${r.winner === "blue" ? "win" : "loss"}">${icon(r.winner === "blue" ? "trophy" : r.winner === "draw" ? "equal" : "swords")}</span><div><b>${r.winner === "blue" ? "Victory" : r.winner === "draw" ? "Draw" : "Defeat"} <small>vs ${esc(r.opponent ?? "Royal Trainer")}</small></b><span>${modeNames[r.mode] ?? "Classic 1v1"} · ${new Date(r.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span></div><strong>${r.crowns[0]} – ${r.crowns[1]}</strong><button class="secondary-button" data-replay="${i}">${icon("play")} Replay</button></div>`).join("") : `<div class="empty-history">${icon("swords")}<h3>Your story starts in the arena.</h3><p>Play a battle to see your results and replays here.</p><button class="primary-button" id="history-battle">Let's battle ${icon("arrow-right")}</button></div>`}</div><p class="modal-footnote">Your latest 10 battles are saved locally, with playable replays.</p>`,
+    `<div class="history-summary"><div>${icon("swords")}<b>${profile.battles}</b><span>BATTLES</span></div><div>${icon("trophy")}<b>${profile.wins}</b><span>VICTORIES</span></div><div>${icon("crown")}<b>${profile.crowns}</b><span>CROWNS</span></div></div><div class="history-list">${profile.history.length ? profile.history.map((r, i) => `<div class="history-entry"><span class="history-outcome ${r.winner === "blue" ? "win" : "loss"}">${icon(r.winner === "blue" ? "trophy" : r.winner === "draw" ? "equal" : "swords")}</span><div><b>${r.winner === "blue" ? "Victory" : r.winner === "draw" ? "Draw" : "Defeat"} <small>vs ${esc(r.opponent ?? "Royal Trainer")}</small></b><span>${modeNames[r.mode] ?? "Classic 1v1"} · ${new Date(r.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span></div><strong>${r.crowns[0]} – ${r.crowns[1]}</strong><div class="history-actions"><button class="secondary-button" data-match-details="${i}" aria-label="View battle details against ${esc(r.opponent ?? "Royal Trainer")}">${icon("layers-2")} Details</button><button class="secondary-button" data-replay="${i}">${icon("play")} Replay</button></div></div>`).join("") : `<div class="empty-history">${icon("swords")}<h3>Your story starts in the arena.</h3><p>Play a battle to see your results and replays here.</p><button class="primary-button" id="history-battle">Let's battle ${icon("arrow-right")}</button></div>`}</div><p class="modal-footnote">Your latest 10 battles are saved locally, with playable replays.</p>`,
     "history",
     true,
   );
@@ -1381,9 +1390,84 @@ function showHistory() {
         (e.onclick = () =>
           playReplay(profile.history[Number(e.dataset.replay)])),
     );
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-match-details]")
+    .forEach((button) => {
+      button.onclick = () =>
+        showMatchDetails(Number(button.dataset.matchDetails));
+    });
   if (document.querySelector("#history-battle"))
     $("#history-battle").onclick = () => {
       closeModal();
+    };
+}
+interface MatchDeckView {
+  slot: number;
+  undo?: DeckSelection;
+  notice?: string;
+}
+function showMatchDetails(index: number, state: Partial<MatchDeckView> = {}) {
+  const record = profile.history[index];
+  if (!record) return;
+  const view: MatchDeckView = { slot: profile.activeDeck, ...state };
+  const decks = recordedDecks(record);
+  const editable = screen === "lobby";
+  const section = (side: "yours" | "opponent") =>
+    `<section class="match-deck-panel" data-match-side="${side}" aria-label="${side === "yours" ? "Your recorded deck" : "Opponent recorded deck"}"><div class="match-deck-heading"><div><h3>${side === "yours" ? "Your deck" : "Opponent deck"}</h3><p>${side === "yours" ? "Your starting eight" : esc(record.opponent ?? "Royal Trainer")}</p></div><span><i class="tiny-drop"></i> ${averageCost(decks[side]).toFixed(1)} average</span></div><div class="match-deck-grid">${decks[side].map((id) => cardHTML(id, `data-match-card="${id}"`)).join("")}</div>${editable ? `<button class="secondary-button" data-use-match-deck="${side}" aria-describedby="match-copy-note">${icon("layers-2")} ${side === "yours" ? "Use your recorded deck" : "Use opponent deck"}</button>` : ""}</section>`;
+  modal(
+    "Battle details",
+    `<div class="match-details"><div class="match-result ${record.winner === "blue" ? "win" : record.winner === "red" ? "loss" : "draw"}"><div><strong>${record.winner === "blue" ? "Victory" : record.winner === "red" ? "Defeat" : "Draw"}</strong><span>vs ${esc(record.opponent ?? "Royal Trainer")}</span></div><b aria-label="Your crowns ${record.crowns[0]}, opponent crowns ${record.crowns[1]}">${record.crowns[0]} ${icon("crown")} ${record.crowns[1]}</b></div><p class="match-metadata">${modeNames[record.mode]} · ${clock(record.replay.duration * STEP)} played<br>${esc(new Date(record.date).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }))}</p>${editable ? `<div class="match-copy-target"><label for="match-deck-slot">Destination battle deck</label><div class="match-deck-choice"><select id="match-deck-slot" aria-describedby="match-copy-note">${profile.decks.map((_, slot) => `<option value="${slot}" ${view.slot === slot ? "selected" : ""}>Battle deck ${slot + 1}${profile.activeDeck === slot ? " (active)" : ""}</option>`).join("")}</select>${icon("chevron-down")}</div><p id="match-copy-note">Replaces battle deck ${view.slot + 1} and selects it.</p></div>` : ""}<div class="match-decks">${section("yours")}${section("opponent")}</div>${view.notice ? `<div class="match-deck-status" role="status"><span id="match-deck-notice">${esc(view.notice)}</span>${view.undo ? `<button class="text-button" id="undo-match-deck" aria-describedby="match-deck-notice">Undo deck change</button>` : ""}</div>` : ""}<div class="match-details-actions"><button class="text-button" id="match-log">Back to battle log</button><button class="primary-button" id="match-replay">${icon("play")} Watch this replay</button></div></div>`,
+    "match-details",
+    true,
+  );
+  $("#match-log").onclick = showHistory;
+  $("#match-replay").onclick = () => playReplay(record);
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-match-card]")
+    .forEach((button) => {
+      button.onclick = () =>
+        showCard(button.dataset.matchCard as CardId, () =>
+          showMatchDetails(index, view),
+        );
+    });
+  if (!editable) return;
+  $("#match-deck-slot").onchange = () => {
+    view.slot = Number($<HTMLSelectElement>("#match-deck-slot").value);
+    $("#match-copy-note").textContent =
+      `Replaces battle deck ${view.slot + 1} and selects it.`;
+  };
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-use-match-deck]")
+    .forEach((button) => {
+      button.onclick = () => {
+        if (screen !== "lobby") return;
+        const side = button.dataset.useMatchDeck as "yours" | "opponent";
+        const undo = useRecordedDeck(profile, record, side, view.slot);
+        saveProfile(profile);
+        refreshDeck();
+        showMatchDetails(index, {
+          slot: view.slot,
+          undo,
+          notice: storageAvailable
+            ? `Battle deck ${view.slot + 1} selected and saved.`
+            : `Battle deck ${view.slot + 1} selected for this session. Browser storage is unavailable.`,
+        });
+        $("#undo-match-deck").focus();
+      };
+    });
+  if (view.undo)
+    $("#undo-match-deck").onclick = () => {
+      if (screen !== "lobby") return;
+      restoreDeckSelection(profile, view.undo!);
+      saveProfile(profile);
+      refreshDeck();
+      showMatchDetails(index, {
+        slot: view.slot,
+        notice: storageAvailable
+          ? "Previous decks restored."
+          : "Previous decks restored for this session. Browser storage is unavailable.",
+      });
+      $("#match-deck-slot").focus();
     };
 }
 function showSettings() {
@@ -1775,7 +1859,8 @@ document.addEventListener("keydown", (e) => {
     closeModal();
     return;
   }
-  if ((e.target as HTMLElement).matches("input,textarea,select")) return;
+  if (!modalKey && (e.target as HTMLElement).matches("input,textarea,select"))
+    return;
   if (e.key === "Escape") {
     if (modalKey) {
       closeModal();
@@ -1793,21 +1878,22 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "Tab") {
       const focusables = Array.from(
         document.querySelectorAll<HTMLElement>(
-          ".modal button:not(:disabled),.modal input:not(:disabled),.modal a[href]",
+          ".modal button:not(:disabled),.modal input:not(:disabled),.modal select:not(:disabled),.modal textarea:not(:disabled),.modal a[href]",
         ),
       ).filter(
         (element) =>
           element.tabIndex >= 0 && element.getClientRects().length > 0,
       );
-      const first = focusables[0],
-        last = focusables.at(-1);
-      if (e.shiftKey && document.activeElement === first) {
-        last?.focus();
-        e.preventDefault();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        first.focus();
-        e.preventDefault();
-      }
+      const current = focusables.indexOf(document.activeElement as HTMLElement);
+      const next =
+        current < 0
+          ? e.shiftKey
+            ? focusables.length - 1
+            : 0
+          : (current + (e.shiftKey ? -1 : 1) + focusables.length) %
+            focusables.length;
+      focusables[next]?.focus();
+      e.preventDefault();
     }
     return;
   }

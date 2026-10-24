@@ -12,6 +12,8 @@ Play against AI or challenge a friend over Wi-Fi or compatible remote networks. 
 
 Classic and Double Elixir rotate between six named AI opponents: Giant push, Hog cycle, Balloon Freeze, Witch Poison, Prince Rage and P.E.K.K.A defense. Their decks cover all 27 cards, and a completed match prevents the same opponent from appearing immediately again. Training keeps the original Royal Trainer and slower decisions. Opponent names and exact decks are retained in saved replays.
 
+Battle log details show both starting decks, average elixir, the result and match duration. Tap a card to inspect it or replay the match. From the lobby, copy either recorded deck into any of the three saved slots, with an immediate Undo action in the details view. Friend replays display the decks from your own side of the arena.
+
 The four original King emotes use complete native expressions and speech-bubble animations, with 16 voice variations. Six original quick-chat phrases use their native text bubbles, wooden selector and archived chat font. Each player has an independent bubble, a host-enforced cooldown and a persistent local mute option. The selector works with touch, mouse and keyboard; reduced motion uses still artwork.
 
 Fireball impacts use the original layered smoke, glowing fragments, sparks, flames and lingering scorch effect. Native additive and screen blending keep fire and lightning bright, and particle motion follows the archived client’s linear deceleration and gravity integration. Sparks, fire, smoke and elixir splashes retain source tail delays and stretch their native artwork between projected motion endpoints; pause and replay seeking preserve their poses.
@@ -71,7 +73,7 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 
 `npm run assets:death-audio` imports the corresponding native sound mappings and six pinned audio files, preserving nested effects, team variants, volume/pitch ranges and delays.
 
-`npm run assets:combat-audio` imports 28 troop/tower/spell sound profiles, 95 groups and 115 pinned audio files from the retained logic, effects and sound tables. Card sources come from the native portrait bindings. Source and output hashes are retained in the combat-audio manifest.
+`npm run assets:combat-audio` imports 29 troop/tower/spell sound profiles, 96 groups and 116 pinned audio files from the retained logic, effects and sound tables. Card sources come from the native portrait bindings. Source and output hashes are retained in the combat-audio manifest.
 
 `npm run assets:ui` imports five native battle announcement timelines, their text styles, font, elixir icon and sound mappings. `/tests/fixtures/timing.html` provides precise countdown/overtime inspection and is excluded from production.
 
