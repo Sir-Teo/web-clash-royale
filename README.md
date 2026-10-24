@@ -155,7 +155,7 @@ Open the Vite **Network** URL on a phone connected to the same Wi-Fi as the deve
 
 The current game is live at https://sir-teo-clash.web.app/. It serves the front-end-only build from a dedicated Firebase Hosting site; the match still connects browser to browser. To publish the current checkout again, install the Firebase CLI and run `npm run deploy:hosting`. The command builds `dist/` with root-relative assets and publishes only that directory to the `sir-teo-clash` site in project `sincere-hybrid-203601`. Source, tests and reference files remain in the private repository.
 
-GitHub Pages is also configured to deploy on every push to `main` through `.github/workflows/pages.yml` at https://teozeng.dev/web-clash-royale/. As of October 23, 2026, GitHub Actions rejects its jobs before the first step because of an account billing or spending-limit issue ([affected Pages run](https://github.com/Sir-Teo/web-clash-royale/actions/runs/40034244242)); that URL has an older build. Once the account issue is resolved, Pages can build the current `main` branch with `VITE_BASE_PATH=/web-clash-royale/`.
+GitHub Pages is also configured to deploy on every push to `main` through `.github/workflows/pages.yml` at https://teozeng.dev/web-clash-royale/. As of October 23, 2026, GitHub Actions rejects its jobs before the first step because of an account billing or spending-limit issue ([affected Pages run](https://github.com/Sir-Teo/web-clash-royale/actions/runs/40034244242)); that URL has an older build. Once the account issue is resolved, Pages can build the current `main` branch with `VITE_BASE_PATH=/web-clash-royale/`. The web app manifest resolves its launch scope and icons relative to that path.
 
 ## Controls
 
