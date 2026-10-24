@@ -156,7 +156,7 @@ import { CARDS, CARD_MAP, PRESETS, averageCost, cardArt } from "./game/cards";
 import type { CardId } from "./game/cards";
 import {
   loadProfile,
-  saveProfile,
+  saveProfile as persistProfile,
   recordBattle,
   openChest,
   storageAvailable,
@@ -196,6 +196,11 @@ const clock = (seconds: number) =>
     .padStart(2, "0")}`;
 const profile = loadProfile(),
   audio = new GameAudio();
+function saveProfile(value: Profile) {
+  persistProfile(value);
+  peerNetwork?.updatePlayer({ name: value.name, deck: value.deck });
+}
+let battlePlayerName = profile.name;
 const deathAudio = new NativeDeathAudio(audio);
 const combatAudio = new NativeCombatAudio(audio);
 audio.enabled = profile.sound;
@@ -440,10 +445,13 @@ function refreshProfile() {
     .querySelectorAll(".player-name")
     .forEach(
       (e) =>
-        (e.textContent =
-          screen === "replay" && e.closest(".match-bottom")
+        (e.textContent = e.closest(".match-bottom")
+          ? screen === "replay"
             ? (replayOwnerName ?? profile.name)
-            : profile.name),
+            : screen === "battle" && multiplayer
+              ? battlePlayerName
+              : profile.name
+          : profile.name),
     );
   $("#road-progress").style.width =
     `${Math.min(100, (profile.trophies / 300) * 100)}%`;
@@ -549,7 +557,13 @@ function lobby() {
 function startBattle(online = false) {
   clearKeyboardAim(true);
   replayOwnerName = null;
-  $(".match-bottom .player-name").textContent = profile.name;
+  const loadout = online ? peerNetwork?.loadout : null;
+  battlePlayerName = online
+    ? (loadout?.name ??
+      network.room?.players.find((p) => p.team === network.team)?.name ??
+      profile.name)
+    : profile.name;
+  $(".match-bottom .player-name").textContent = battlePlayerName;
   resetEnding();
   if (!online) network.leave();
   multiplayer = online;
@@ -575,7 +589,7 @@ function startBattle(online = false) {
     ? undefined
     : soloOpponent(seed, mode, previousSoloOpponent(profile.history));
   battle = new Battle({
-    deck: profile.deck,
+    deck: loadout?.deck ?? profile.deck,
     enemyDeck: opponent?.deck,
     mode: online ? (network.room?.mode ?? mode) : mode,
     ai: !online,
@@ -606,7 +620,7 @@ function startBattle(online = false) {
   $("#deploy-hint").classList.remove("hidden");
   $(".replay-controls").classList.add("hidden");
   refreshDeck();
-  intro.start(profile.name, battle.mode, opponentName);
+  intro.start(battlePlayerName, battle.mode, opponentName);
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
   nativeCards.reset(battle.time, battle.players.blue.hand);
   matchHud.reset(arena.effectTime, crownCounts());
@@ -1170,11 +1184,12 @@ async function copyTextValue(field: HTMLTextAreaElement) {
 function showPeerMultiplayer() {
   const peer = peerNetwork!;
   const room = peer.room;
+  const loadout = peer.loadout;
   const footnote =
     '<p class="modal-footnote">Keep both game tabs open. Battles pause when either player switches apps. Some remote networks block direct play; try the same Wi-Fi if connecting fails.</p>';
   let content = "";
   if (room) {
-    content = `<div class="room-banner">${icon("swords")}<span>${modeNames[room.mode]} · Level 11</span></div><p class="room-note">Connected directly. Ready when you are.</p><div class="room-players">${room.players.map((p) => `<div class="room-player ${p.team}">${icon("shield")}<div><b>${esc(p.name)}</b><span>${p.ready ? "Ready for battle" : "Preparing deck"}</span></div>${icon(p.ready ? "check" : "swords")}</div>`).join("")}</div><button id="room-ready" class="primary-button" ${!peer.connected ? "disabled" : ""}>${room.players.find((p) => p.team === peer.team)?.ready ? "Cancel ready" : "Ready for battle"}</button>`;
+    content = `<div class="room-banner">${icon("swords")}<span>${modeNames[room.mode]} · Level 11</span></div><p class="room-note">Connected directly. Deck or name changes clear both Ready checks.</p><div class="room-players">${room.players.map((p) => `<div class="room-player ${p.team}">${icon("shield")}<div><b>${esc(p.name)}</b><span>${p.ready ? "Ready for battle" : "Preparing deck"}</span></div>${icon(p.ready ? "check" : "swords")}</div>`).join("")}</div>${loadout ? `<section class="room-deck" aria-label="Your confirmed battle deck"><h3>Your battle deck</h3><div class="match-deck-grid">${loadout.deck.map((id) => cardHTML(id, `data-peer-card="${id}"`)).join("")}</div></section>` : ""}<button id="room-ready" class="primary-button" ${!peer.connected ? "disabled" : ""}>${room.players.find((p) => p.team === peer.team)?.ready ? "Cancel ready" : "Ready for battle"}</button>`;
   } else if (peer.setup === "gathering" || peer.setup === "connecting") {
     content = `<div class="room-banner">${icon("users")}<span>${peer.setup === "gathering" ? "Preparing your connection…" : "Connecting to your friend…"}</span></div><p class="room-note" role="status">${peer.setup === "gathering" ? "This usually takes a few seconds." : "Keep this tab open on both devices."}</p>`;
   } else if (peer.setup === "offer" || peer.setup === "answer") {
@@ -1197,6 +1212,16 @@ function showPeerMultiplayer() {
     "room",
   );
   const player = () => ({ name: profile.name, deck: profile.deck });
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-peer-card]")
+    .forEach((button) => {
+      button.onclick = () =>
+        showCard(
+          button.dataset.peerCard as CardId,
+          showPeerMultiplayer,
+          "Back to friend lobby",
+        );
+    });
   document
     .querySelector<HTMLButtonElement>("#create-peer")
     ?.addEventListener("click", () => {
@@ -1262,12 +1287,18 @@ function showPeerMultiplayer() {
     });
   document
     .querySelector<HTMLButtonElement>("#room-ready")
-    ?.addEventListener("click", () =>
-      peer.send({
-        type: "ready",
-        ready: !peer.room?.players.find((p) => p.team === peer.team)?.ready,
-      }),
-    );
+    ?.addEventListener("click", () => {
+      const ready = !peer.room?.players.find((p) => p.team === peer.team)
+        ?.ready;
+      if (ready && !peer.updatePlayer(player())) {
+        roomError =
+          "Could not confirm your deck. Check your name and connection, then try Ready again.";
+        showPeerMultiplayer();
+        return;
+      }
+      roomError = "";
+      peer.send({ type: "ready", ready });
+    });
 }
 if (peerNetwork)
   peerNetwork.onSetup = () => {
@@ -1292,6 +1323,8 @@ network.onConnection = (status) => {
 };
 network.onMessage = (message) => {
   if (message.type === "room") {
+    if (screen === "lobby" && message.room.phase === "waiting")
+      peerNetwork?.updatePlayer({ name: profile.name, deck: profile.deck });
     if (screen === "lobby" && modalKey === "room") showMultiplayer();
     if (multiplayer) updateConnection();
   }

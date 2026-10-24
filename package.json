@@ -45,7 +45,8 @@
     "assets:freeze": "node scripts/import-freeze.mjs",
     "assets:poison": "node scripts/import-poison.mjs",
     "assets:poison-filter": "node scripts/import-poison-filter.mjs",
-    "assets:cold-filter": "node scripts/import-cold-filter.mjs"
+    "assets:cold-filter": "node scripts/import-cold-filter.mjs",
+    "test:rtc": "playwright test --config tests/diagnostics/playwright.config.ts"
   },
   "dependencies": {
     "@fontsource/lilita-one": "^5.2.6",

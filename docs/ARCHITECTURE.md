@@ -330,3 +330,14 @@ Phone detail panels use two stat columns with centered wrapping labels and value
 With no selected deck slot, collection cards open the read-only card detail view. Back to collection rerenders the builder with its current search/filter and focuses the same collection card, including scrolling it into view. Selecting a deck slot switches collection actions to replacement; selecting that slot again cancels the selection. A successful replacement returns the collection to inspection. The existing profile write path runs only for a valid replacement or explicit ordering change.
 
 `renderCollection` exposes its action state through `data-collection-mode`, and collection controls reference the current builder hint for their accessible description. Existing-deck cards retain their IN DECK label in both states, with replacement-only dimming so they remain visibly available for inspection.
+
+
+## Confirmed friendly lobby loadouts
+
+Main's profile-save wrapper persists locally and offers the current name/deck to the direct-peer client while its room is waiting. The initial room event also synchronizes edits made after an offer/answer was created but before handshake completion. `PeerRoomClient.updatePlayer` validates, copies and deduplicates the newest pending choice; its public `loadout` getter returns a clone of the last confirmed choice. Older acknowledgements cannot discard a newer pending update. Readiness uses the same synchronization path before sending Ready.
+
+`PeerMatch` accepts loadout commands only after both players have joined and before countdown. A semantic change, including card order, clears both Ready flags, updates the public name and sends a private confirmation containing only that player's deck. Unchanged settings emit nothing. Invalid changes preserve the accepted match state. Room broadcasts keep decks private; countdown/play/result ignore further configuration. Accepted deck arrays are independent of caller arrays and emitted messages.
+
+The friend lobby renders the confirmed local deck and provides read-only card inspection. Battle construction, the local match header and intro use the accepted identity; profile-name edits during a friendly battle remain available for future matches. Replays retain the actual updated canonical starting decks. Direct peers negotiate `PEER_PROTOCOL = 2` in hello and private welcome; older peers receive an explicit update action. Legacy WebSocket `PROTOCOL = 1` and the CR1 signaling codec are separate and retain their existing format.
+
+Native WebKit/WebKit loopback still stalls on this development host without any game JavaScript. A separate `test:rtc` configuration preserves that diagnostic outside normal game assertions, with recorded metadata under `docs/diagnostics/`. Mixed Chromium/WebKit tests exercise both host directions; they do not establish Safari/Safari or physical-device compatibility.

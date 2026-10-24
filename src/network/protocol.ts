@@ -12,6 +12,7 @@ import type {
   Team,
 } from "../game/engine";
 export const PROTOCOL = 1;
+export const PEER_PROTOCOL = 2;
 export const RECONNECT_MS = 30_000;
 export type RoomPhase = "waiting" | "countdown" | "playing" | "finished";
 export interface RoomState {
@@ -50,6 +51,7 @@ export type ClientMessage =
       deck: CardId[];
     }
   | { type: "resume"; version: number; code: string; token: string }
+  | { type: "loadout"; name: string; deck: CardId[] }
   | { type: "ready"; ready: boolean }
   | { type: "play"; seq: number; card: CardId; x: number; y: number }
   | { type: "leave" | "surrender" }
@@ -61,6 +63,8 @@ export type ServerMessage =
       type: "welcome";
       code: string;
       token: string;
+      peerVersion?: number;
+      name?: string;
       team: Team;
       deck: CardId[];
       mode: Mode;

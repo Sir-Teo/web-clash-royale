@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-24",
+  "environment": "Local macOS Playwright browser automation",
+  "scenario": "Native RTCPeerConnection and data channel between two isolated WebKit contexts; no game JavaScript loaded",
+  "chromiumComparison": "Channel opened; diagnostic passed",
+  "webkitObservation": {
+    "dataChannel": "connecting after 15 seconds",
+    "signalingState": "stable on both peers",
+    "hostCandidates": 2,
+    "guestCandidates": 2,
+    "mDNSCandidatesPerPeer": [
+      2,
+      2
+    ],
+    "lastRecordedIceState": "new on both peers"
+  },
+  "cause": "Not established; this records the local native baseline and does not claim physical-device behavior",
+  "reproduce": "ARENA_PRODUCTION=1 npm run test:rtc -- --project=mobile-safari",
+  "coverage": "Game loadout tests use Chromium/WebKit pairs in both host directions, plus Chromium/Chromium",
+  "playwrightVersion": "1.64.1"
+}

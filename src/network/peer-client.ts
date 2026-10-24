@@ -1,6 +1,7 @@
 import type { Mode, Team } from "../game/engine";
 import type { CardId } from "../game/cards";
 import type { ClientMessage, RoomState, ServerMessage } from "./protocol";
+import { PEER_PROTOCOL } from "./protocol";
 import type { PeerPlayer } from "./peer-match";
 import type { PeerHostCommand } from "./peer-host-worker";
 import {
@@ -10,6 +11,9 @@ import {
   peerChunks,
 } from "./peer-signaling";
 import { validPeerPlayer } from "./peer-match";
+
+const INCOMPATIBLE_PEER =
+  "The other browser sent an incompatible battle update. Update both games and create a new invite.";
 
 export type PeerSetup =
   "idle" | "gathering" | "offer" | "answer" | "connecting" | "connected";
@@ -40,11 +44,36 @@ export class PeerRoomClient {
   private id = "";
   private mode: Mode = "classic";
   private player?: PeerPlayer;
+  private pendingPlayer?: PeerPlayer;
   private lastReceived = 0;
   private opponentActive = true;
   private joined = false;
   private remoteBudget = 60;
   private budgetAt = 0;
+  get loadout(): PeerPlayer | null {
+    return this.joined && this.player ? structuredClone(this.player) : null;
+  }
+  updatePlayer(player: PeerPlayer) {
+    if (
+      !this.joined ||
+      !this.connected ||
+      this.room?.phase !== "waiting" ||
+      !validPeerPlayer(player)
+    )
+      return false;
+    const queued = this.pendingPlayer ?? this.player;
+    if (
+      queued?.name === player.name &&
+      queued.deck.every((id, i) => id === player.deck[i])
+    )
+      return true;
+    if (
+      !this.send({ type: "loadout", name: player.name, deck: [...player.deck] })
+    )
+      return false;
+    this.pendingPlayer = structuredClone(player);
+    return true;
+  }
   constructor() {
     document.addEventListener("visibilitychange", () => this.visibility());
   }
@@ -231,6 +260,7 @@ export class PeerRoomClient {
       if (this.team === "red")
         this.wire({
           kind: "hello",
+          version: PEER_PROTOCOL,
           player: this.player,
           id: this.id,
           active: !document.hidden,
@@ -249,9 +279,7 @@ export class PeerRoomClient {
         const value = assembler.receive(event.data);
         if (value !== undefined) this.handle(value);
       } catch {
-        this.fail(
-          "The other browser sent an incompatible battle update. Create a new invite.",
-        );
+        this.fail(INCOMPATIBLE_PEER);
       }
     };
     channel.onclose = () => {
@@ -304,7 +332,8 @@ export class PeerRoomClient {
       m.id === this.id &&
       !this.joined
     ) {
-      if (!validPeerPlayer(m.player)) throw new Error();
+      if (m.version !== PEER_PROTOCOL || !validPeerPlayer(m.player))
+        throw new Error();
       this.joined = true;
       this.post({ type: "join", player: m.player });
       this.opponentActive = m.active === true;
@@ -337,12 +366,26 @@ export class PeerRoomClient {
     // Do not replace that form with a one-player room before the handshake.
     if (!this.joined && message.type !== "welcome") return;
     if (message.type === "welcome") {
+      const accepted = { name: message.name, deck: message.deck };
+      if (message.peerVersion !== PEER_PROTOCOL || !validPeerPlayer(accepted)) {
+        this.fail(INCOMPATIBLE_PEER);
+        return;
+      }
+      this.player = structuredClone(accepted);
+      if (
+        this.pendingPlayer?.name === accepted.name &&
+        this.pendingPlayer.deck.every((id, i) => id === accepted.deck[i])
+      )
+        this.pendingPlayer = undefined;
       this.joined = true;
       this.connection(true);
       this.changed("connected");
       clearTimeout(this.timeout);
     }
-    if (message.type === "room") this.room = message.room;
+    if (message.type === "room") {
+      this.room = message.room;
+      if (message.room.phase !== "waiting") this.pendingPlayer = undefined;
+    }
     if (message.type === "state") {
       this.actionCount = message.state.actionCount;
       this.pending = false;
@@ -431,6 +474,8 @@ export class PeerRoomClient {
     this.pending = false;
     this.room = null;
     this.joined = false;
+    this.player = undefined;
+    this.pendingPlayer = undefined;
     this.opponentActive = true;
     this.remoteBudget = 60;
     this.signal = "";
@@ -452,6 +497,8 @@ export class PeerRoomClient {
     this.pending = false;
     this.room = null;
     this.joined = false;
+    this.player = undefined;
+    this.pendingPlayer = undefined;
     this.signal = "";
     this.setup = "idle";
     setTimeout(() => {

@@ -4,6 +4,7 @@ import { CARD_MAP, STARTER_DECK } from "../game/cards";
 import type { CardId } from "../game/cards";
 import { EMOTE_COOLDOWN, isEmote, isQuickChat } from "../game/emotes";
 import type { ClientMessage, RoomState, ServerMessage } from "./protocol";
+import { PEER_PROTOCOL } from "./protocol";
 import { snapshot } from "./perspective";
 import intro from "../ui/intro-settings.json";
 
@@ -77,8 +78,10 @@ export class PeerMatch {
         type: "welcome",
         code: this.room.code,
         token: "",
+        peerVersion: PEER_PROTOCOL,
+        name: this.players[team]!.name,
         team,
-        deck: this.players[team]!.deck,
+        deck: [...this.players[team]!.deck],
         mode: this.room.mode,
       });
     }
@@ -135,6 +138,37 @@ export class PeerMatch {
     if (!this.players[team] || !m || typeof m !== "object") return;
     if (m.type === "ping") {
       if (Number.isFinite(m.at)) this.emit(team, { type: "pong", at: m.at });
+    } else if (m.type === "loadout" && this.room.phase === "waiting") {
+      if (!this.players.red) return;
+      if (!validPeerPlayer(m)) {
+        this.emit(team, {
+          type: "error",
+          message: "Choose a valid name and eight different cards.",
+        });
+        return;
+      }
+      const previous = this.players[team]!;
+      if (
+        previous.name === m.name &&
+        previous.deck.every((id, i) => id === m.deck[i])
+      )
+        return;
+      this.players[team] = { name: m.name, deck: [...m.deck] };
+      for (const player of this.room.players) {
+        if (player.team === team) player.name = m.name;
+        player.ready = false;
+      }
+      this.emit(team, {
+        type: "welcome",
+        code: this.room.code,
+        token: "",
+        team,
+        peerVersion: PEER_PROTOCOL,
+        name: m.name,
+        deck: [...m.deck],
+        mode: this.room.mode,
+      });
+      this.changed();
     } else if (m.type === "ready" && this.room.phase === "waiting") {
       this.room.players.find((p) => p.team === team)!.ready = m.ready === true;
       if (
