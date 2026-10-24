@@ -66,15 +66,21 @@ describe("local progress", () => {
     p.history.push({ ...old, id: 8, replay: { ...old.replay, version: 7 } });
     p.history.push({ ...old, id: 9, replay: { ...old.replay, version: 8 } });
     p.history.push({ ...old, id: 10, replay: { ...old.replay, version: 9 } });
+    p.history.push({ ...old, id: 11, replay: { ...old.replay, version: 10 } });
     saveProfile(p);
     expect(loadProfile().history.map((r) => r.replay.version)).toEqual([
-      10, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+      11, 1, 2, 3, 4, 5, 6, 7, 8, 9,
     ]);
     const raw = JSON.parse(data.get("browser-royale.profile.v1")!);
+    raw.history.shift();
+    data.set("browser-royale.profile.v1", JSON.stringify(raw));
+    expect(loadProfile().history.map((r) => r.replay.version)).toEqual([
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+    ]);
     raw.history[0].replay.version = 99;
     data.set("browser-royale.profile.v1", JSON.stringify(raw));
     expect(loadProfile().history.map((r) => r.replay.version)).toEqual([
-      1, 2, 3, 4, 5, 6, 7, 8, 9,
+      2, 3, 4, 5, 6, 7, 8, 9, 10,
     ]);
   });
   it("recovers from corrupt data and rejects duplicate deck cards", () => {

@@ -19,15 +19,15 @@ describe("archived Balloon main attack", () => {
 
   it("keeps the previous Balloon attack in version-9 replays", () => {
     const base = new Battle({ seed: 67, ai: false });
-    for (const version of [9, 10] as const) {
-      const battle = version === 10 ? base : new Battle({
+    for (const version of [9, 10, 11] as const) {
+      const battle = version === 11 ? base : new Battle({
         replay: { ...base.exportReplay(), version } as Replay,
       });
       battle.players.blue.hand[0] = "balloon";
       battle.players.blue.elixir = 10;
       expect(battle.play("blue", 0, 4, 22).ok).toBe(true);
       const balloon = battle.entities.find((entity) => entity.card === "balloon")!;
-      const stats = version === 10 ? CARD_MAP.balloon : LEGACY_BALLOON_STATS;
+      const stats = version >= 10 ? CARD_MAP.balloon : LEGACY_BALLOON_STATS;
       expect(balloon).toMatchObject({
         damage: stats.damage, range: stats.range, interval: stats.interval,
       });

@@ -51,8 +51,8 @@ describe("source-normalized troop vitals", () => {
 
   it("spawns version-9 values and retains version-8 health and damage in old replays", () => {
     const base = new Battle({ seed: 97, ai: false });
-    for (const version of [8, 9, 10] as const) {
-      const battle = version === 10 ? base : new Battle({
+    for (const version of [8, 9, 10, 11] as const) {
+      const battle = version === 11 ? base : new Battle({
         replay: { ...base.exportReplay(), version } as Replay,
       });
       for (const id of ["mini-pekka", "bomber", "baby-dragon", "prince",

@@ -188,7 +188,7 @@ export interface Action extends Point {
 }
 export interface Replay {
   perspective?: Team;
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -253,7 +253,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
-    this.rulesVersion = r?.version ?? 10;
+    this.rulesVersion = r?.version ?? 11;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -338,6 +338,9 @@ export class Battle {
     king: boolean,
     lane?: "left" | "right",
   ) {
+    // The archived King and Princess have 2,400 and 1,400 base HP.
+    // Princess HP already uses the roster's 2.18 tower scale (3,052 / 1,400).
+    const kingHp = this.rulesVersion >= 11 ? Math.round(2400 * 3052 / 1400) : 4824;
     this.entities.push({
       id: this.nextId++,
       team,
@@ -345,8 +348,8 @@ export class Battle {
       y,
       card: "tower",
       kind: "tower",
-      hp: king ? 4824 : 3052,
-      maxHp: king ? 4824 : 3052,
+      hp: king ? kingHp : 3052,
+      maxHp: king ? kingHp : 3052,
       radius: king ? 1.25 : 1.05,
       air: false,
       damage: king ? 109 : 109,

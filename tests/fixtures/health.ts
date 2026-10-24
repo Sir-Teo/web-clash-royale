@@ -34,7 +34,7 @@ function draw() {
       0,
       {
         "hpNumber/txt": String(
-          Math.ceil(ratio * (name.endsWith("wizard") ? 4824 : 3052)),
+          Math.ceil(ratio * (name.endsWith("wizard") ? 5232 : 3052)),
         ),
         level: "11",
       },

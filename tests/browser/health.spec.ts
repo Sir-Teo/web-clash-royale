@@ -11,14 +11,14 @@ test("source health fills stay independent of King activation frames", async ({
     timeout: 30000,
   });
   const king = page.locator('[data-name="hp_player_wizard"]');
-  await expect(king.locator("text")).toHaveText(["11", "4824"]);
+  await expect(king.locator("text")).toHaveText(["11", "5232"]);
   await page.locator("#health").fill("50");
-  await expect(king.locator("text")).toHaveText(["11", "2412"]);
+  await expect(king.locator("text")).toHaveText(["11", "2616"]);
   await expect(page.locator("#status")).toContainText("health state 50");
   await page.locator("#frame").fill("0");
   await expect(king.locator("text")).toHaveText("11");
   await page.locator("#frame").fill("31");
-  await expect(king.locator("text")).toHaveText(["11", "2412"]);
+  await expect(king.locator("text")).toHaveText(["11", "2616"]);
   await page.locator("#health").fill("0");
   await expect(king.locator("text")).toHaveText(["11", "0"]);
   expect(errors).toEqual([]);
@@ -50,7 +50,7 @@ test("native health tracks damage, freezes, survives a paused rebuild, and clear
   await page.locator("#second").click();
   await expect(page.locator("#status")).toContainText("Kings 25/25");
   const king = page.locator('[data-health-kind="king"]').first();
-  await expect(king).toHaveAttribute("aria-valuenow", "4767");
+  await expect(king).toHaveAttribute("aria-valuenow", "5175");
   const held = await page.locator(".tower-labels").innerHTML();
   await page.waitForTimeout(200);
   expect(await page.locator(".tower-labels").innerHTML()).toBe(held);
