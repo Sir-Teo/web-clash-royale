@@ -1,4 +1,4 @@
-import { CARD_MAP, LEGACY_BUILDING_STATS, LEGACY_CARD_STATS, STARTER_DECK } from "./cards";
+import { CARD_MAP, LEGACY_BUILDING_STATS, LEGACY_CARD_STATS, LEGACY_CARD_VITALS, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
 import { deploymentPositions } from "./deployment";
 import {
@@ -188,7 +188,7 @@ export interface Action extends Point {
 }
 export interface Replay {
   perspective?: Team;
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -253,7 +253,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
-    this.rulesVersion = r?.version ?? 8;
+    this.rulesVersion = r?.version ?? 9;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -694,6 +694,8 @@ export class Battle {
     const c = CARD_MAP[id];
     const stats = this.rulesVersion < 7 ? LEGACY_CARD_STATS[id] ?? c : c;
     const legacyBuilding = this.rulesVersion < 8 ? LEGACY_BUILDING_STATS[id] : undefined;
+    const legacyVitals = this.rulesVersion < 9 ? LEGACY_CARD_VITALS[id] : undefined;
+    const hp = legacyVitals?.hp ?? c.hp;
     this.entities.push({
       id: this.nextId++,
       team,
@@ -701,8 +703,8 @@ export class Battle {
       y,
       card: id,
       kind: c.kind === "building" ? "building" : "troop",
-      hp: c.hp,
-      maxHp: c.hp,
+      hp,
+      maxHp: hp,
       ...(id === "dark-prince" ? {
         shield: Math.round(darkPrince.sourceShieldHitpoints * 1.1 ** 5),
         maxShield: Math.round(darkPrince.sourceShieldHitpoints * 1.1 ** 5),
@@ -713,13 +715,13 @@ export class Battle {
       radius:
         c.kind === "building"
           ? 0.8
-          : c.hp > 3000
+          : hp > 3000
             ? 0.55
             : c.count > 2
               ? 0.25
               : 0.37,
       air: !!c.air,
-      damage: c.damage,
+      damage: legacyVitals?.damage ?? c.damage,
       range: stats.range,
       cooldown: id === "sparky" ? sparky.sourceLoadTime + deploy : 0.4,
       interval: legacyBuilding?.interval ?? stats.interval,

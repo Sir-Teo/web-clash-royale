@@ -48,6 +48,7 @@ import bandit from "./bandit-data.json" with { type: "json" };
 import golem from "./golem-data.json" with { type: "json" };
 import lavaHound from "./lava-hound-data.json" with { type: "json" };
 import archivedStats from "./archived-card-stats.json" with { type: "json" };
+import archivedVitals from "./archived-card-vitals.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -1119,6 +1120,7 @@ const originalCards: Card[] = [
 ];
 type BasicStats = Pick<Card, "speed" | "range" | "interval">;
 const sourceStats = archivedStats as Record<string, BasicStats>;
+const sourceVitals = archivedVitals as Record<string, Partial<Pick<Card, "hp" | "damage">>>;
 // Replay rules 1–6 retain the original curated stats. Rule 7 uses the
 // archive's movement, attack reach, and attack interval where directly mapped.
 export const LEGACY_CARD_STATS = Object.fromEntries(
@@ -1134,9 +1136,19 @@ export const LEGACY_BUILDING_STATS: Partial<Record<CardId, Partial<Card>>> = {
   cannon: { interval: 0.9 },
   tesla: { interval: 1.2, lifetime: 30 },
 };
+// Earlier replays keep the curated values before the source-normalized
+// health and damage projection introduced in version 9.
+export const LEGACY_CARD_VITALS = Object.fromEntries(
+  originalCards.filter((card) => sourceVitals[card.id])
+    .map(({ id, hp, damage }) => [id, {
+      ...(sourceVitals[id].hp !== undefined ? { hp } : {}),
+      ...(sourceVitals[id].damage !== undefined ? { damage } : {}),
+    }]),
+) as Partial<Record<CardId, Partial<Pick<Card, "hp" | "damage">>>>;
 export const CARDS: Card[] = originalCards.map((card) => ({
   ...card,
   ...sourceStats[card.id],
+  ...sourceVitals[card.id],
 }));
 export const CARD_MAP = {
   ...Object.fromEntries(CARDS.map((c) => [c.id, c])),
