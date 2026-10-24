@@ -2,6 +2,8 @@ import { CARD_MAP } from "./cards";
 import type { CardId } from "./cards";
 import type { Point } from "./engine";
 
+export const BUILDING_RADIUS = 0.8;
+
 export function deploymentPositions(id: CardId, point: Point): Point[] {
   const count = CARD_MAP[id].count;
   return Array.from({ length: count }, (_, i) => {

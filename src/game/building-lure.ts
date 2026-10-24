@@ -1,0 +1,79 @@
+import { CARD_MAP, type CardId } from "./cards";
+import { combatTraits } from "./combat";
+import { BUILDING_RADIUS } from "./deployment";
+import type { Entity, Point, Team } from "./engine";
+
+const distance = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
+
+/** A legal ground-only building that can intercept an aerial building-seeker. */
+export function buildingLureTarget(
+  card: CardId,
+  team: Team,
+  threat: Entity,
+  entities: readonly Entity[],
+  legal: (point: Point) => boolean,
+): Point | undefined {
+  const candidate = CARD_MAP[card];
+  if (
+    candidate.kind !== "building" ||
+    candidate.hitsAir ||
+    threat.team === team ||
+    threat.hp <= 0 ||
+    threat.kind !== "troop" ||
+    !threat.air ||
+    threat.card === "tower" ||
+    !CARD_MAP[threat.card].buildingsOnly
+  )
+    return;
+  const visible = entities.filter(
+    (e) =>
+      e.team === team &&
+      e.hp > 0 &&
+      e.kind !== "troop" &&
+      !(e.deploy <= 0 && e.burrow?.phase === "hidden"),
+  );
+  const current = visible.find((e) => e.id === threat.target);
+  // Combat retains an engaged target. Do not buy a second existing lure.
+  if (
+    current &&
+    (current.kind === "building" ||
+      distance(threat, current) <=
+        threat.range + current.radius + threat.radius * 0.35)
+  )
+    return;
+  const crownDistance = Math.min(
+    ...visible
+      .filter((e) => e.kind === "tower")
+      .map((e) => distance(threat, e) - e.radius),
+  );
+  if (!Number.isFinite(crownDistance)) return;
+  const sight = Math.max(combatTraits(threat).sight, threat.range);
+  if (
+    visible.some(
+      (e) =>
+        e.kind === "building" &&
+        distance(threat, e) <= sight + e.radius &&
+        distance(threat, e) - e.radius < crownDistance,
+    )
+  )
+    return;
+  for (const [dx, dy] of [
+    [0, 0],
+    [-2.5, 0],
+    [2.5, 0],
+    [0, -2.5],
+    [-2.5, -2.5],
+    [2.5, -2.5],
+  ]) {
+    const point =
+      team === "red" ? { x: 9 + dx, y: 10 + dy } : { x: 9 - dx, y: 22 - dy };
+    const gap = distance(threat, point);
+    // Strictly closer: equal edge distances retain the older Crown Tower.
+    if (
+      gap <= sight + BUILDING_RADIUS &&
+      gap - BUILDING_RADIUS < crownDistance &&
+      legal(point)
+    )
+      return point;
+  }
+}

@@ -129,6 +129,18 @@ function setup() {
     battle.players.red.hand = [card, "pekka", "pekka", "pekka"];
     battle.players.red.queue[0] = card;
     battle.players.red.elixir = card === "rage" ? 2 : 10;
+  } else if (scenario.startsWith("ai-defense-balloon")) {
+    unit("balloon", "blue", 14, 14.2);
+    if (scenario.endsWith("blocked"))
+      for (const e of unit("tesla", "red", 9, 10)) {
+        e.active = false;
+        e.burrow = { exposure: 0, idle: 0, phase: "hidden" };
+      }
+    battle.players.red.hand = ["cannon", "giant", "hog-rider", "prince"];
+    battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
+    battle.players.red.elixir = 3;
+    // The fixture's red Tesla setup is not an AI decision.
+    battle.actions = battle.actions.filter((a) => a.team !== "red");
   } else if (scenario.startsWith("ai-defense-")) {
     if (
       scenario === "ai-defense-ground-swarm" ||
@@ -527,11 +539,31 @@ function render(now: number) {
       actions: battle.actions.filter((a) => a.team === "red"),
       targets: battle.entities
         .filter((e) => e.team === "blue" && e.kind === "troop" && e.hp > 0)
-        .map((e) => ({ card: e.card, x: e.x, y: e.y })),
+        .map((e) => ({
+          id: e.id,
+          card: e.card,
+          x: e.x,
+          y: e.y,
+          target: e.target,
+        })),
+      buildings: battle.entities
+        .filter((e) => e.team === "red" && e.kind === "building")
+        .map((e) => ({
+          id: e.id,
+          card: e.card,
+          x: e.x,
+          y: e.y,
+          hp: e.hp,
+          maxHp: e.maxHp,
+          target: e.target,
+        })),
+      balloonHits: battle.events.filter(
+        (e) => e.type === "hit" && e.card === "balloon",
+      ),
       elixir: battle.players.red.elixir,
       towers: battle.entities
         .filter((e) => e.team === "red" && e.kind === "tower")
-        .map((e) => ({ hp: e.hp, lane: e.lane, king: e.king })),
+        .map((e) => ({ hp: e.hp, maxHp: e.maxHp, lane: e.lane, king: e.king })),
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.rockets =
     JSON.stringify({

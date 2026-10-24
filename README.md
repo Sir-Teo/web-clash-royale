@@ -19,7 +19,7 @@ Battle log details show both starting decks, average elixir, the result and matc
 
 Open **Cards → Deck codes** to copy your current eight cards or preview a code from another player. Inspect the shared cards, choose a saved battle deck and select **Use this deck** to apply it. An immediate **Undo deck change** restores your previous deck selection. Codes contain only ordered card IDs and work across browsers; they do not include progress or rewards.
 
-Troop defense weighs nearby pushes using each visible attacker’s damage, health, approach time and the health of living Crown Towers. Healthy swarms share pressure around the same target; distant or nearly dead bodies carry less weight. It prioritizes imminent lethal King hits, places defenders near the chosen attacker, and values splash support from nearby enemies that the defender can actually hit.
+Troop defense weighs nearby pushes using each visible attacker’s damage, health, approach time and the health of living Crown Towers. Healthy swarms share pressure around the same target; distant or nearly dead bodies carry less weight. It prioritizes imminent lethal King hits, places defenders near the chosen attacker, and values splash support from nearby enemies that the defender can actually hit. When no affordable direct air counter is available, Cannon can draw an approaching Balloon away from a Crown Tower if a legal placement will intercept its targeting.
 
 Minion Horde adds six flying Minions for five elixir, using the original Minion animations, projectiles, sounds and its own native card portrait. It attacks ground and air, and remains vulnerable to splash damage and Arrows. Sky Captain includes it in the Balloon Freeze deck.
 

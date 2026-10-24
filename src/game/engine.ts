@@ -2,8 +2,9 @@ import { CARD_MAP, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
 import { areaSpellTarget } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell } from "./spell-targeting";
-import { deploymentPositions } from "./deployment";
+import { BUILDING_RADIUS, deploymentPositions } from "./deployment";
 import { defensiveThreats } from "./defensive-threats";
+import { buildingLureTarget } from "./building-lure";
 import {
   combatTraits,
   FIREBALL_SPEED,
@@ -459,7 +460,7 @@ export class Battle {
       maxHp: c.hp,
       radius:
         c.kind === "building"
-          ? 0.8
+          ? BUILDING_RADIUS
           : c.hp > 3000
             ? 0.55
             : c.count > 2
@@ -1407,6 +1408,22 @@ export class Battle {
     if (!affordable.length) return;
     const threats = defensiveThreats("red", this.entities);
     const threat = threats[0];
+    const buildingLures = new Map(
+      affordable
+        .filter((a) => a.c.kind === "building")
+        .map((a) => [
+          a.id,
+          threat
+            ? buildingLureTarget(
+                a.id,
+                "red",
+                threat,
+                this.entities,
+                (point) => this.canPlace("red", a.id, point.x, point.y).ok,
+              )
+            : undefined,
+        ]),
+    );
     const spellTargets = new Map(
       affordable
         .filter((a) => a.c.kind === "spell")
@@ -1443,6 +1460,9 @@ export class Battle {
         const target = spellTargets.get(a.id);
         if (a.c.kind === "spell")
           score = target ? target.score + jitter * 0.1 : -Infinity;
+        else if (buildingLures.get(a.id))
+          // A distraction buys time, but a direct air counter is preferable.
+          score = 0.5 + jitter * 0.1;
         else if (threat) {
           score += a.c.buildingsOnly ? -3 : 3;
           if (threat.air && !a.c.hitsAir) score -= 8;
@@ -1474,8 +1494,9 @@ export class Battle {
       y = a.target.y;
     }
     if (a.c.kind === "building") {
-      x = 9;
-      y = 10;
+      const lure = buildingLures.get(a.id);
+      x = lure?.x ?? 9;
+      y = lure?.y ?? 10;
     }
     if (a.c.kind !== "spell") {
       // A building can still occupy the preferred tile when the deck cycles.

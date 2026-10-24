@@ -77,3 +77,63 @@ for (const [scenario, label] of [
       });
     expect(errors).toEqual([]);
   });
+
+for (const blocked of [false, true])
+  test(`the ordinary AI timer lures a Balloon${blocked ? " around an occupied center" : ""}`, async ({
+    page,
+  }, info) => {
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    const scene = `ai-defense-balloon${blocked ? "-blocked" : ""}`;
+    await page.goto("/tests/fixtures/combat.html");
+    await page.locator("#scenario").selectOption(scene);
+    await expect(page.locator("#status")).toContainText(
+      `${expectedEffects} effects`,
+      { timeout: 60000 },
+    );
+    const output = page.locator("#destruction");
+    const state = async () =>
+      JSON.parse((await output.getAttribute("data-ai-defense"))!);
+    const time = async () =>
+      JSON.parse((await output.getAttribute("data-state"))!).time;
+    const step = async () => {
+      const before = await time();
+      await page.locator("#second").click();
+      await expect.poll(time).toBeGreaterThan(before + 0.99);
+    };
+    await expect.poll(async () => (await state()).scene).toBe(scene);
+    await step();
+    await step();
+    expect((await state()).actions).toEqual([]);
+    await step();
+    const result = await state();
+    expect(result.actions).toHaveLength(1);
+    const cannon = result.buildings.find((e: any) => e.card === "cannon");
+    expect(result.actions[0]).toMatchObject({
+      card: "cannon",
+      x: blocked ? 11.5 : 9,
+      y: 10,
+    });
+    expect(result.targets.find((e: any) => e.card === "balloon").target).toBe(
+      cannon.id,
+    );
+    expect(result.elixir).toBeGreaterThanOrEqual(0);
+    if (info.project.name === "desktop" && !blocked)
+      await page.screenshot({
+        path: info.outputPath("ai-balloon-distraction.png"),
+        animations: "disabled",
+      });
+    for (let i = 0; i < 6 && !(await state()).balloonHits.length; i++)
+      await step();
+    const hit = await state();
+    expect(hit.balloonHits[0]).toMatchObject({
+      x: cannon.x,
+      y: cannon.y,
+      value: 640,
+    });
+    expect(hit.towers.every((e: any) => e.hp === e.maxHp)).toBe(true);
+    expect(
+      hit.buildings.find((e: any) => e.id === cannon.id).target,
+    ).toBeNull();
+    expect(errors).toEqual([]);
+  });
