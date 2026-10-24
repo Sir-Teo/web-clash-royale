@@ -1,3 +1,4 @@
+import { expectedBuildings } from "./native-assets";
 import { expectedEffects } from "./native-assets";
 import { test, expect } from "@playwright/test";
 
@@ -189,7 +190,7 @@ test("tower debris pauses, settles after victory, and rubble survives renderer r
       timeout: 30000,
     },
   );
-  await expect(page.locator("#status")).toContainText("4 buildings loaded");
+  await expect(page.locator("#status")).toContainText(`${expectedBuildings} buildings loaded`);
   await page.locator("#princess").click();
   const step = page.locator("#step"),
     second = page.locator("#second");

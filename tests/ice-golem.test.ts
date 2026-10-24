@@ -63,7 +63,7 @@ describe("archived Ice Golem", () => {
     expect(destructionPlan("ice-golem-ground", 9).length).toBeGreaterThan(0);
     expect(combatAudioPlan("ice-golem", "spawn", 9).length).toBeGreaterThan(0);
     expect(deathAudioPlan("ice-golem", 9).length).toBeGreaterThan(0);
-    expect(CARDS).toHaveLength(65);
+    expect(CARDS).toHaveLength(66);
   });
 
   it("hunts buildings, then damages and slows ground and air on death", () => {

@@ -1,3 +1,4 @@
+import { expectedBuildings } from "./native-assets";
 import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
@@ -88,7 +89,7 @@ for (const perspective of ["blue", "red"] as const)
           page.evaluate(() => (window as any).__arena?.state.loadedBuildings),
         { timeout: 60000 },
       )
-      .toBe(3);
+      .toBe(expectedBuildings);
     await page.getByRole("button", { name: "Battle log", exact: true }).click();
     await page.locator('[data-replay="0"]').click();
     await page

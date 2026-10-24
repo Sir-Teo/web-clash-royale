@@ -6,7 +6,7 @@ const json = (path: string) => JSON.parse(readFileSync(path, "utf8"));
 describe("bundled game artwork", () => {
   it("preserves both teams' building directions and Tesla's labeled state transitions", () => {
     const manifest = json("public/assets/buildings/manifest.json");
-    expect(manifest.files).toHaveLength(4);
+    expect(manifest.files).toHaveLength(5);
     for (const source of manifest.sourceTables)
       expect(
         createHash("sha256").update(readFileSync(source.path)).digest("hex"),
@@ -51,10 +51,19 @@ describe("bundled game artwork", () => {
               expect(clip.labels).toMatchObject({ action_frame: 1 });
             }
       }
+      if (file.id === "bomb-tower") {
+        expect(data.attachedCharacterHeight).toBe(3.2);
+        for (const team of ["blue", "red"]) {
+          expect(data.clips[`${team}-top`].frames).toHaveLength(1);
+          expect(data.clips[`${team}-top`].source)
+            .toBe(`building_bomb_tower_top_${team}`);
+        }
+      }
       for (const team of file.id === "mortar" ? [] : ["blue", "red"]) {
         const clip = data.clips[team];
         expect(clip.frames).toHaveLength(
-          file.id === "tesla" ? 39 : file.id === "king" ? 98 : 19,
+          file.id === "tesla" ? 39 : file.id === "king" ? 98 :
+            file.id === "bomb-tower" ? 1 : 19,
         );
         if (file.id === "tesla")
           expect(clip.labels).toEqual({

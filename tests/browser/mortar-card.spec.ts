@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { CARDS, STARTER_DECK } from "../../src/game/cards";
-import { expectedEffects } from "./native-assets";
+import { expectedBuildings, expectedEffects } from "./native-assets";
 
 const deck = ["mortar", ...STARTER_DECK.filter((id) => id !== "arrows")];
 
@@ -28,7 +28,7 @@ test("native Mortar deploys, aims and fires on desktop and phone", async ({
     .toBe(CARDS.length);
   await expect
     .poll(async () => (await state())?.loadedBuildings, { timeout: 60000 })
-    .toBe(4);
+    .toBe(expectedBuildings);
   await expect
     .poll(async () => (await state())?.loadedEffects, { timeout: 60000 })
     .toBe(expectedEffects);

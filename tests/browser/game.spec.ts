@@ -1,4 +1,4 @@
-import { expectedEffects } from "./native-assets";
+import { expectedBuildings, expectedEffects } from "./native-assets";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { CARDS } from "../../src/game/cards";
@@ -129,7 +129,7 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
       () => page.evaluate(() => (window as any).__arena.state.loadedBuildings),
       { timeout: 30000 },
     )
-    .toBe(3);
+    .toBe(expectedBuildings);
   await expect
     .poll(
       () =>

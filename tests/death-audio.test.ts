@@ -26,7 +26,7 @@ describe("retained native death audio", () => {
     const manifest = JSON.parse(
       readFileSync("reference/client/death-audio-manifest.json", "utf8"),
     );
-    expect(manifest.audioFiles).toHaveLength(8);
+    expect(manifest.audioFiles).toHaveLength(9);
     for (const file of [
       ...manifest.sources,
       ...manifest.audioFiles,
@@ -38,8 +38,8 @@ describe("retained native death audio", () => {
     const source = csvGroups(
       readFileSync("reference/client/sounds.csv", "utf8"),
     );
-    expect(Object.keys(definitions.effects)).toHaveLength(55);
-    expect(Object.keys(definitions.sounds)).toHaveLength(47);
+    expect(Object.keys(definitions.effects)).toHaveLength(56);
+    expect(Object.keys(definitions.sounds)).toHaveLength(48);
     for (const [name, sound] of Object.entries(definitions.sounds)) {
       const row = source[name][0];
       expect(sound.sourceFiles.join(",")).toBe(row.FileNames);
