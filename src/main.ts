@@ -2076,6 +2076,12 @@ $("#about-button").onclick = () =>
     "about",
   );
 document.addEventListener("keydown", (e) => {
+  if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+  // Holding Escape must not cancel a card or close a dialog and then pause.
+  if (e.key === "Escape" && e.repeat) {
+    e.preventDefault();
+    return;
+  }
   if (pointerDown) {
     if (e.key === "Escape") {
       cancelPointer();
@@ -2128,12 +2134,15 @@ document.addEventListener("keydown", (e) => {
     return;
   }
   if (["1", "2", "3", "4"].includes(e.key)) {
-    selectCard(Number(e.key) - 1);
+    if (!e.repeat) selectCard(Number(e.key) - 1);
     e.preventDefault();
   }
   if (e.code === "Space" && screen !== "lobby") {
+    // Keep native keyboard behavior for focused buttons and links.
+    if ((e.target as HTMLElement).closest("button,a[href],[role=button]"))
+      return;
     e.preventDefault();
-    togglePause();
+    if (!e.repeat) togglePause();
   }
 });
 function suspendFrameLoop() {

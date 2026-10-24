@@ -648,3 +648,12 @@ All 30 production browser checks pass across desktop Chromium, phone Chromium an
 Desktop and both phone preview screenshots were visually reviewed after SVG bitmap decoding and paint completion; `docs/screenshots/phone-deck-code-preview.png` retains the WebKit preview. CI includes deck codes in the desktop and phone WebKit production runs. Physical devices and cross-application OS clipboard integration remain unmeasured.
 
 The Pages-path offline smoke check passes reload, match-worker startup and battle start with 586 cached files and 122 native combat/death audio files. The root production build is restored after verification.
+
+
+## Native keyboard activation and held shortcuts
+
+A production reproduction focused replay speed and pressed Space: the label stayed at 1× because the global pause shortcut prevented the button's native activation. The shortcut handler now respects focused buttons/links, consumed events and browser modifiers. Auto-repeat cannot toggle card selection or pause repeatedly, or close a dialog/cancel a card and then pause from the same held Escape. All 346 unit checks, type checking and the production build pass.
+
+All 30 production browser checks pass across desktop Chromium, phone Chromium and phone WebKit: nine new keyboard cases, nine existing gameplay/replay/settings cases and twelve deck-code cases. The new cases use real keyboard events to activate replay speed, pause/resume, Exit and completed-replay Restart; verify that restarting leaves saved progress unchanged; hold number, Escape and arena Space keys; resume through the focused native button; open/close King emotes without pausing; and dismiss settings with a held Escape without re-pausing. Existing modal focus, range-key seeking, deck selection, persistence, clipboard fallback and storage-failure paths remain covered. CI includes the keyboard cases on desktop Chromium and phone WebKit. Phone browser keyboard events are emulated; physical external keyboards remain unmeasured.
+
+The Pages-path offline smoke check passes reload, match-worker startup and battle start with 586 cached files and 122 native combat/death audio files. The root production build is restored afterward.
