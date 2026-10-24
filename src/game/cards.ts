@@ -896,10 +896,10 @@ const originalCards: Card[] = [
     "Balloon",
     5,
     1680,
-    640,
+    Math.round(600 * 1.1 ** 5),
     0.85,
-    0.9,
-    2,
+    0.1,
+    3,
     "Floats over the river to drop enormous bombs on buildings. Explodes when defeated.",
     { rarity: "Epic", air: true, buildingsOnly: true },
   ),
@@ -1145,6 +1145,11 @@ export const LEGACY_CARD_VITALS = Object.fromEntries(
       ...(sourceVitals[id].damage !== undefined ? { damage } : {}),
     }]),
 ) as Partial<Record<CardId, Partial<Pick<Card, "hp" | "damage">>>>;
+export const LEGACY_BALLOON_STATS = {
+  damage: 640,
+  range: 0.9,
+  interval: 2,
+} as const;
 export const CARDS: Card[] = originalCards.map((card) => ({
   ...card,
   ...sourceStats[card.id],

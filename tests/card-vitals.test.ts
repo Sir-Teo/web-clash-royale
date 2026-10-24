@@ -51,8 +51,8 @@ describe("source-normalized troop vitals", () => {
 
   it("spawns version-9 values and retains version-8 health and damage in old replays", () => {
     const base = new Battle({ seed: 97, ai: false });
-    for (const version of [8, 9] as const) {
-      const battle = version === 9 ? base : new Battle({
+    for (const version of [8, 9, 10] as const) {
+      const battle = version === 10 ? base : new Battle({
         replay: { ...base.exportReplay(), version } as Replay,
       });
       for (const id of ["mini-pekka", "bomber", "baby-dragon", "prince",
@@ -61,7 +61,7 @@ describe("source-normalized troop vitals", () => {
         battle.players.blue.elixir = 10;
         expect(battle.play("blue", 0, 4, 22).ok, `${id} v${version}`).toBe(true);
         const unit = battle.entities.findLast((entity) => entity.card === id)!;
-        const stats = version === 9 ? CARD_MAP[id] : LEGACY_CARD_VITALS[id]!;
+        const stats = version >= 9 ? CARD_MAP[id] : LEGACY_CARD_VITALS[id]!;
         expect(unit.hp).toBe(stats.hp ?? CARD_MAP[id].hp);
         expect(unit.maxHp).toBe(stats.hp ?? CARD_MAP[id].hp);
         expect(unit.damage).toBe(stats.damage ?? CARD_MAP[id].damage);

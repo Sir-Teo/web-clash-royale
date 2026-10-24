@@ -1,4 +1,4 @@
-import { CARD_MAP, LEGACY_BUILDING_STATS, LEGACY_CARD_STATS, LEGACY_CARD_VITALS, STARTER_DECK } from "./cards";
+import { CARD_MAP, LEGACY_BALLOON_STATS, LEGACY_BUILDING_STATS, LEGACY_CARD_STATS, LEGACY_CARD_VITALS, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
 import { deploymentPositions } from "./deployment";
 import {
@@ -188,7 +188,7 @@ export interface Action extends Point {
 }
 export interface Replay {
   perspective?: Team;
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -253,7 +253,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
-    this.rulesVersion = r?.version ?? 9;
+    this.rulesVersion = r?.version ?? 10;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -695,6 +695,8 @@ export class Battle {
     const stats = this.rulesVersion < 7 ? LEGACY_CARD_STATS[id] ?? c : c;
     const legacyBuilding = this.rulesVersion < 8 ? LEGACY_BUILDING_STATS[id] : undefined;
     const legacyVitals = this.rulesVersion < 9 ? LEGACY_CARD_VITALS[id] : undefined;
+    const legacyBalloon = this.rulesVersion < 10 && id === "balloon"
+      ? LEGACY_BALLOON_STATS : undefined;
     const hp = legacyVitals?.hp ?? c.hp;
     this.entities.push({
       id: this.nextId++,
@@ -721,10 +723,10 @@ export class Battle {
               ? 0.25
               : 0.37,
       air: !!c.air,
-      damage: legacyVitals?.damage ?? c.damage,
-      range: stats.range,
+      damage: legacyBalloon?.damage ?? legacyVitals?.damage ?? c.damage,
+      range: legacyBalloon?.range ?? stats.range,
       cooldown: id === "sparky" ? sparky.sourceLoadTime + deploy : 0.4,
-      interval: legacyBuilding?.interval ?? stats.interval,
+      interval: legacyBalloon?.interval ?? legacyBuilding?.interval ?? stats.interval,
       speed: stats.speed,
       target: null,
       age: 0,
