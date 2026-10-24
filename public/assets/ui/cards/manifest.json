@@ -432,6 +432,11 @@
       "sha256": "c1201a2c451dfdba327cdd7889caee3581b4a2af5175ca26f40bc4cbe74868c0"
     },
     {
+      "file": "portrait-elixir-collector.webp",
+      "bytes": 33568,
+      "sha256": "86c977dec4da76c17ade516d4b133c27f3b3a1a96e50c367e88308815599c640"
+    },
+    {
       "file": "portrait-electro-wizard.webp",
       "bytes": 43830,
       "sha256": "6924f97fcdbad44e6f51fcef5019206ef5a35a3e4b8dc8c94e8e0f89e29d1244"
@@ -473,8 +478,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 106748,
-      "sha256": "c217f53ab871c6c27b273d9d3b1c5d812af10680eed45ae3e31e700edcb392a5"
+      "bytes": 107099,
+      "sha256": "b4bae2f4355123faa67ffac32ab58d1541223202d057547b53df13137dd37a69"
     }
   ]
 }

@@ -7334,6 +7334,114 @@
         "row": "Xbow"
       }
     },
+    "elixir-collector": {
+      "source": "ElixirCollector",
+      "attack": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "sound:SpellCasting"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "elixircollector_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_elixircollector_deploy",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_elixircollector_deploy",
+            "delay": 0
+          }
+        ]
+      },
+      "collect": {
+        "sources": [
+          "sound:sound_elixircollector_get"
+        ],
+        "components": [
+          {
+            "sound": "sound_elixircollector_get",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_elixircollector_get",
+            "delay": 0
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_buildings",
+        "row": "Elixir Collector"
+      }
+    },
     "king-tower": {
       "source": "KingTower",
       "attack": {
@@ -15870,6 +15978,52 @@
         ],
         "maximum": 3,
         "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_elixircollector_deploy": [
+      {
+        "sourceFile": "sfx/elixir_collector_place_02.wav",
+        "file": "elixir_collector_place_02",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.95,
+          1.05
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_elixircollector_get": [
+      {
+        "sourceFile": "sfx/get_elixir_02.wav",
+        "file": "get_elixir_02",
+        "volume": [
+          0.45,
+          0.45
+        ],
+        "pitch": [
+          0.86,
+          0.86
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0.1,
         "loop": false,
         "priority": 1,
         "padding": 0

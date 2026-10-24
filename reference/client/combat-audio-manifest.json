@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "12dc52032fea6ebe8095c54357a769af92762d432e029679f8da0ee2775555ee"
+      "sha256": "b465c9dfb2cd92f0607c51f0fe4deb42d6ab3008545d13b6360d51e97cd5a5c1"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "c217f53ab871c6c27b273d9d3b1c5d812af10680eed45ae3e31e700edcb392a5"
+      "sha256": "b4bae2f4355123faa67ffac32ab58d1541223202d057547b53df13137dd37a69"
     }
   ],
   "ignoredEnemyVersions": [
@@ -562,6 +562,12 @@
       "sha256": "05fc64dd6fb0931e4fa004d0955d58d21ba10525d622824ae1fe2237ca52f7b5"
     },
     {
+      "path": "public/assets/audio/elixir_collector_place_02.ogg",
+      "source": "sfx/elixir_collector_place_02.ogg",
+      "bytes": 6377,
+      "sha256": "e35b2ac6e660964dd82a3e944024a4633134195d5e5f3fe6dc8065d920d12ed2"
+    },
+    {
       "path": "public/assets/audio/explosion_01.ogg",
       "source": "sfx/explosion_01.ogg",
       "bytes": 12667,
@@ -632,6 +638,12 @@
       "source": "sfx/freeze_04.ogg",
       "bytes": 26368,
       "sha256": "56d458283376d0ed8b330836d76852862942d2a75c99c381d1427101819fcbe1"
+    },
+    {
+      "path": "public/assets/audio/get_elixir_02.ogg",
+      "source": "sfx/get_elixir_02.ogg",
+      "bytes": 8341,
+      "sha256": "790583e9f0819dc2babbb6c63a0536bcfe8fb9770f3a93b1d39cd1e1f29c49c2"
     },
     {
       "path": "public/assets/audio/giant_attack_swing_01.ogg",
@@ -1650,6 +1662,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "38b0d56350942b3b3c8544be5a32a98296d35a563b656d26940644abf4259e6f"
+    "sha256": "a7e7febfd09cb75d2e173ea2526830084e1f6624193145d8caea41e085e367d0"
   }
 }

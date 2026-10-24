@@ -46,6 +46,7 @@ for (const [id, name] of Object.entries({
   "bomb-tower": "building_bomb_tower",
   "inferno-tower": "building_inferno_tower",
   "x-bow": "building_xbow",
+  "elixir-collector": "building_elixir_collector",
   king: "building_tower",
 })) {
   const metadata = await readFile(`reference/sc/${name}.bin`),
@@ -213,7 +214,8 @@ for (const [id, name] of Object.entries({
     }
   }
   const bounds =
-    id === "mortar" || id === "bomb-tower" || id === "inferno-tower" || id === "x-bow"
+    id === "mortar" || id === "bomb-tower" || id === "inferno-tower" ||
+    id === "x-bow" || id === "elixir-collector"
       ? (() => {
           const b = [Infinity, Infinity, -Infinity, -Infinity];
           for (const parts of frames)

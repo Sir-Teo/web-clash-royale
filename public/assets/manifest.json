@@ -441,6 +441,12 @@
       "sha256": "8ea6b12aa61a277f5bba5c5b4ff2f1580bf181ffac74af58fa14bb2e03b955ca"
     },
     {
+      "path": "cards/elixir-collector.png",
+      "source": "cards/elixir-collector.png",
+      "bytes": 129117,
+      "sha256": "e2f12455481b6742b488c92a12cf2021e2ef34c1c437331942252ae2dbe9b59a"
+    },
+    {
       "path": "cards/executioner.png",
       "source": "cards/executioner.png",
       "bytes": 124677,

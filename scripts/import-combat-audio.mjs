@@ -155,6 +155,9 @@ for (const [id, profile] of Object.entries(JSON.parse(profilesBytes))) {
     "impact-special": [row.DamageEffectSpecial],
     cast: [card?.CastSound && `sound:${card.CastSound}`, card?.Effect],
     spawn: [row.SpawnEffect],
+    ...(id === "elixir-collector" ? {
+      collect: ["sound:sound_elixircollector_get"],
+    } : {}),
     summon: [row.SpawnCharacterEffect],
     appear: [row.AppearEffect],
     hide: [row.HideEffect],

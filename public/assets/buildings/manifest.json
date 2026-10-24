@@ -94,6 +94,20 @@
       "frames": 38
     },
     {
+      "id": "elixir-collector",
+      "source": "building_elixir_collector",
+      "metadataSha256": "cbaf8c2f4d6cd6e61b513b89b2202dc3c42b6cb817a1f30eb8726f53fae8baa6",
+      "dataSha256": "a43fe77579a5ff15d69978404e304babdf53318d847e57915bf931ff1762ee4f",
+      "textures": [
+        {
+          "file": "elixir-collector-0.webp",
+          "sha256": "4dd9ea9c86be8f2b7af433d8c6abe6ff3b419498dd124a950774aab3330ceeb2",
+          "originalSha256": "d65c0d92ae3d37b090604fd9c1eb5451f591e65ab3ab99f557431966a5be6bea"
+        }
+      ],
+      "frames": 66
+    },
+    {
       "id": "king",
       "source": "building_tower",
       "metadataSha256": "0096da89499bf03437a1caa2a88c811b293a5a3067fe571e1ef12bafadbf7962",

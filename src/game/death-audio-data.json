@@ -1241,6 +1241,37 @@
           "delay": 0
         }
       ]
+    },
+    "elixir-collector": {
+      "source": "elixircollector_die",
+      "components": [
+        {
+          "sound": "sound_elixircollector_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "Boulder impact",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_elixircollector_die",
+          "delay": 0
+        },
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "Boulder impact",
+          "delay": 0
+        }
+      ]
     }
   },
   "sounds": {
@@ -2267,6 +2298,29 @@
       "pitch": [
         0.95,
         1.05
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 3,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_elixircollector_die": {
+      "sourceFiles": [
+        "sfx/building_destroyed_05.wav"
+      ],
+      "files": [
+        "building_destroyed_05"
+      ],
+      "volume": [
+        0.5,
+        0.5
+      ],
+      "pitch": [
+        0.98,
+        1.02
       ],
       "startDelay": [
         0,

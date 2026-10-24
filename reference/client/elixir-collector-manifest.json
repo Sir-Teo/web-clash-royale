@@ -1,0 +1,38 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_buildings.csv",
+      "sha256": "f302372ce1d0870e3edb37d0520be9164865eb207ea600910616b9cbf024f456"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/client/effects.csv",
+      "sha256": "22591ef669cb9af6535a10caae5b7f7f8b5b79c81630aeb3381a04bfef298985"
+    },
+    {
+      "path": "reference/client/sounds.csv",
+      "sha256": "89136418aae9513b094b0f66b61c920a1df40347292aee5c28eefac13b13e3ca"
+    },
+    {
+      "path": "reference/sc/building_elixir_collector.bin",
+      "sha256": "cbaf8c2f4d6cd6e61b513b89b2202dc3c42b6cb817a1f30eb8726f53fae8baa6"
+    },
+    {
+      "path": "reference/sc/building_elixir_collector_tex.png",
+      "sha256": "d65c0d92ae3d37b090604fd9c1eb5451f591e65ab3ab99f557431966a5be6bea"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    }
+  ],
+  "output": {
+    "path": "src/game/elixir-collector-data.json",
+    "sha256": "befcdd8c2244ed1fd631ccf6c5efb5d90966acfa11aba21a9578eac2d42f09c5"
+  }
+}

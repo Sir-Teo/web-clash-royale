@@ -30,6 +30,7 @@ const cards = [
   "bomb-tower",
   "inferno-tower",
   "x-bow",
+  "elixir-collector",
   "zap",
   "freeze",
   "poison",

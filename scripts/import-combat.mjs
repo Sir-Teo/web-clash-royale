@@ -111,6 +111,7 @@ const names = {
   "bomb-tower": "BombTower",
   "inferno-tower": "InfernoTower",
   "x-bow": "Xbow",
+  "elixir-collector": "ElixirCollector",
   "king-tower": "KingTower",
   "princess-tower": "PrincessTower",
 };

@@ -288,6 +288,7 @@ const portraitNames = {
   princess: "Princess",
   "inferno-dragon": "InfernoDragon",
   "x-bow": "Xbow",
+  "elixir-collector": "Elixir Collector",
   "electro-wizard": "ElectroWizard",
   miner: "Miner",
   bowler: "Bowler",
