@@ -1,5 +1,7 @@
 import { chromium } from "playwright";
 import { readFile } from "node:fs/promises";
+const gameUrl = new URL(process.env.ARENA_BASE_URL || "http://127.0.0.1:5189/");
+if (!gameUrl.pathname.endsWith("/")) gameUrl.pathname += "/";
 const deathAudioManifest = JSON.parse(
   await readFile("reference/client/death-audio-manifest.json", "utf8"),
 );
@@ -37,6 +39,15 @@ try {
   page.setDefaultTimeout(60000);
   page.setDefaultNavigationTimeout(60000);
   const errors = [];
+  const misplaced = new Set();
+  page.on("request", (request) => {
+    const url = new URL(request.url());
+    if (
+      url.origin === gameUrl.origin &&
+      !url.pathname.startsWith(gameUrl.pathname)
+    )
+      misplaced.add(url.pathname);
+  });
   page.on("console", (m) => {
     if (m.type() === "error") console.error("Browser:", m.text());
   });
@@ -44,9 +55,14 @@ try {
     console.error("Failed:", r.url(), r.failure()?.errorText),
   );
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("http://127.0.0.1:5189");
+  await page.goto(gameUrl.href);
   await page.waitForFunction(() => !!window.__arena);
   await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+  const scope = await page.evaluate(
+    async () => (await navigator.serviceWorker.getRegistration())?.scope,
+  );
+  if (scope !== gameUrl.href)
+    throw new Error(`Expected worker scope ${gameUrl.href}, received ${scope}`);
   const workerCached = await page.evaluate(async () => {
     for (const name of await caches.keys()) {
       if (!name.startsWith("browser-royale-")) continue;
@@ -66,17 +82,20 @@ try {
     throw new Error("Browser match worker is missing from the offline cache");
   await context.setOffline(true);
   await page.reload();
-  const offlineNativeAudio = await page.evaluate(async (paths) => {
-    return Promise.all(
-      paths.map(async (path) => {
-        const response = await fetch(path);
-        const bytes = new Uint8Array(await response.arrayBuffer());
-        return (
-          response.ok && String.fromCharCode(...bytes.slice(0, 4)) === "OggS"
-        );
-      }),
-    );
-  }, nativeAudioPaths);
+  const offlineNativeAudio = await page.evaluate(
+    async (paths) => {
+      return Promise.all(
+        paths.map(async (path) => {
+          const response = await fetch(path);
+          const bytes = new Uint8Array(await response.arrayBuffer());
+          return (
+            response.ok && String.fromCharCode(...bytes.slice(0, 4)) === "OggS"
+          );
+        }),
+      );
+    },
+    nativeAudioPaths.map((path) => new URL(path.slice(1), gameUrl).href),
+  );
   if (!offlineNativeAudio.every(Boolean))
     throw new Error(
       "Native combat/death audio is missing from the offline cache",
@@ -138,6 +157,10 @@ try {
     .filter({ hasText: "Good luck!" })
     .waitFor();
   if (errors.length) throw new Error(errors.join("\n"));
+  if (misplaced.size)
+    throw new Error(
+      `Game requested assets outside its hosting path: ${[...misplaced].join(", ")}`,
+    );
   console.log(
     `Production offline reload, browser match worker, battle start, ${nativeAudioPaths.length} native combat/death audio files and connection/emote/voice/font/quick chat passed.`,
   );

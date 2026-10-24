@@ -12,6 +12,7 @@
     "check": "npm test && npm run build",
     "assets": "node scripts/fetch-assets.mjs",
     "test:offline": "node scripts/check-offline.mjs",
+    "test:hosting": "node scripts/check-hosting.mjs",
     "assets:sprites": "node scripts/import-sprites.mjs",
     "assets:scenery": "node scripts/compose-scene.mjs",
     "assets:combat": "node scripts/import-combat.mjs",

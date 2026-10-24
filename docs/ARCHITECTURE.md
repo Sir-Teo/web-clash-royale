@@ -154,7 +154,7 @@ Six tower HUD hosts use the shared native SVG renderer and accessible meter valu
 ## Current boundaries
 
 - AI and private two-player rooms are implemented. Account synchronization, public matchmaking and cross-server room discovery are not implemented.
-- 25 curated cards; evolutions, champions, equipment and the full live roster are not implemented.
+- 26 curated cards; evolutions, champions, equipment and the full live roster are not implemented.
 - Historical art and curated normalized stats; no claim of current balance parity.
 - Local browser progress only; clearing browser storage removes it.
 - The surrounding diorama, some placement/pathing details and effects are approximations.

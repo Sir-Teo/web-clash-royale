@@ -99,6 +99,8 @@ The private source repository deploys automatically on every push to `main` thro
 
 The workflow builds with `VITE_BASE_PATH=/web-clash-royale/`, including asset URLs and the offline service worker. Local development continues to use `/`. Only `dist/` is published; source, tests and reference files remain in the private repository.
 
+`npm run test:hosting` builds at the Pages path, starts an isolated preview on port 5189, and verifies native assets, service-worker scope, offline reload and battle startup. CI runs this check before the production browser suite. For another preview address, set `ARENA_BASE_URL` when running `npm run test:offline`.
+
 ## Controls
 
 - Click a hand card, then click the arena, or drag the card into position.
