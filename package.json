@@ -14,6 +14,7 @@
     "assets": "node scripts/fetch-assets.mjs",
     "assets:app-icons": "node scripts/build-app-icons.mjs",
     "test:offline": "node scripts/check-offline.mjs",
+    "test:cache-upgrade": "node scripts/check-cache-upgrade.mjs",
     "assets:sprites": "node scripts/import-sprites.mjs",
     "assets:scenery": "node scripts/compose-scene.mjs",
     "assets:combat": "node scripts/import-combat.mjs",
