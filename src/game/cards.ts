@@ -17,6 +17,7 @@ import iceSpirit from "./ice-spirit-data.json" with { type: "json" };
 import fireSpirits from "./fire-spirits-data.json" with { type: "json" };
 import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import giantSkeleton from "./giant-skeleton-data.json" with { type: "json" };
+import guards from "./guards-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -45,6 +46,7 @@ export type CardId =
   | "fire-spirits"
   | "ice-golem"
   | "giant-skeleton"
+  | "guards"
   | "archers"
   | "giant"
   | "royal-giant"
@@ -573,6 +575,18 @@ export const CARDS: Card[] = [
     1,
     "Fifteen skeletons overwhelm single-target attackers. Watch out for splash damage.",
     { rarity: "Epic", count: 15 },
+  ),
+  troop(
+    "guards",
+    "Guards",
+    guards.cost,
+    Math.round(guards.sourceHitpoints * 1.1 ** 5),
+    Math.round(guards.sourceDamage * 1.1 ** 5),
+    guards.sourceSpeed / 60,
+    guards.sourceRange,
+    guards.sourceHitSpeed,
+    "Three shielded skeletons. Their shields absorb a hit before their bodies are exposed.",
+    { rarity: "Epic", count: guards.count },
   ),
   troop(
     "bomber",

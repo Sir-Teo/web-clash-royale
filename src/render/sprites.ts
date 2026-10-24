@@ -20,7 +20,7 @@ interface FramePart {
 }
 // SC1 DisplayObjectInstance values: normal, multiply, screen, additive.
 export const SPRITE_BLENDS = [0, 3, 4, 8] as const;
-export type SpriteId = CardId | "tower-princess" | "dark-prince-shield";
+export type SpriteId = CardId | "tower-princess" | "dark-prince-shield" | "guards-shield";
 export interface SpriteData {
   version: 2;
   textures: { file: string; width: number; height: number }[];
@@ -73,6 +73,8 @@ const heights: Partial<Record<SpriteId, number>> = {
   "dart-goblin": 1.5,
   "spear-goblins": 1.35,
   skeletons: 1.15,
+  guards: 1.45,
+  "guards-shield": 1.45,
   bomber: 1.5,
   valkyrie: 1.9,
   "hog-rider": 2.1,

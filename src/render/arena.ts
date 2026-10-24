@@ -614,13 +614,20 @@ export class Arena {
     return this.minerTrails.state;
   }
   get darkPrinceState() {
-    return this.battle?.entities.filter((e) => e.card === "dark-prince").map((e) => {
+    return this.shieldTroopState("dark-prince", "dark-prince-shield");
+  }
+  get guardsState() {
+    return this.shieldTroopState("guards", "guards-shield");
+  }
+  private shieldTroopState(card: CardId, shieldArt: "dark-prince-shield" | "guards-shield") {
+    return this.battle?.entities.filter((e) => e.card === card).map((e) => {
       const visual = this.units.get(e.id);
       return {
         id: e.id, hp: e.hp, shield: e.shield ?? 0,
-        art: visual?.sprite?.asset === this.sprites.assets.get("dark-prince-shield")
+        art: visual?.sprite?.asset === this.sprites.assets.get(shieldArt)
           ? "shielded" : "unshielded",
-        health: visual?.nativeHealth?.mesh.userData.health?.name,
+        health: visual?.nativeHealth?.mesh.visible
+          ? visual.nativeHealth.mesh.userData.health?.name : null,
       };
     }) ?? [];
   }
@@ -1029,7 +1036,8 @@ export class Arena {
           object = buildingModel(e.card as CardId, e.team);
         else {
           sprite = this.sprites.make(
-            e.card === "dark-prince" && e.shield ? "dark-prince-shield" : e.card as CardId,
+            e.shield && e.card === "dark-prince" ? "dark-prince-shield" :
+            e.shield && e.card === "guards" ? "guards-shield" : e.card as CardId,
           ) ?? undefined;
           if (sprite) {
             object = new T.Group();
@@ -1771,8 +1779,9 @@ export class Arena {
     if (v.shadow) v.shadow.position.y = 0.22 - o.position.y;
     if (v.ring) v.ring.position.y = 0.23 - o.position.y;
     if (v.sprite) {
-      if (e.card === "dark-prince") {
-        const source = e.shield ? "dark-prince-shield" : "dark-prince";
+      if (e.card === "dark-prince" || e.card === "guards") {
+        const source = e.shield ?
+          e.card === "guards" ? "guards-shield" : "dark-prince-shield" : e.card;
         if (v.sprite.asset !== this.sprites.assets.get(source)) {
           const next = this.sprites.make(source);
           if (next) {

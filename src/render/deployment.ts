@@ -39,7 +39,10 @@ export class DeploymentPreview {
         let object: T.Group, sprite: AnimatedSprite | undefined;
         if (card.kind === "building") object = this.building(id);
         else {
-          sprite = this.library.make(id === "dark-prince" ? "dark-prince-shield" : id) ?? undefined;
+          sprite = this.library.make(
+            id === "dark-prince" ? "dark-prince-shield" :
+            id === "guards" ? "guards-shield" : id,
+          ) ?? undefined;
           object = sprite ? new T.Group() : troopModel(id, "blue").group;
           if (sprite) object.add(sprite.mesh);
           else object.rotation.y = Math.PI;

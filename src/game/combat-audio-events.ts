@@ -13,6 +13,7 @@ export type CombatAudioPhase =
   | "summon"
   | "appear"
   | "hide"
+  | "shield-lost"
   | "load-1"
   | "load-2"
   | "load-3"
@@ -51,6 +52,7 @@ export const isLifecycleAudio = (event: CombatAudioEvent) =>
   event.phase === "summon" ||
   event.phase === "appear" ||
   event.phase === "hide" ||
+  event.phase === "shield-lost" ||
   event.phase === "death-impact" ||
   event.phase === "death-spawn" ||
   event.phase === "impact-special" ||

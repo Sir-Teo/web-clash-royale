@@ -94,7 +94,7 @@ export function healthSelection(data: HealthData, e: Entity) {
     kind = e.hp >= e.maxHp && (!shielded || e.shield === e.maxShield)
       ? "number"
       : (data.profiles[e.card]?.healthBar || "Medium").toLowerCase();
-    if (kind === "shield") kind = "medium";
+    if (kind === "shield" || kind === "shield_small") kind = "medium";
   }
   const visible =
     e.hp > 0 &&

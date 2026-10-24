@@ -6,6 +6,7 @@ import goblinGang from "./goblin-gang-data.json" with { type: "json" };
 import bats from "./bats-data.json" with { type: "json" };
 import eliteBarbarians from "./elite-barbarians-data.json" with { type: "json" };
 import fireSpirits from "./fire-spirits-data.json" with { type: "json" };
+import guards from "./guards-data.json" with { type: "json" };
 
 export function deploymentPositions(
   id: CardId,
@@ -34,6 +35,17 @@ export function deploymentPositions(
       { x: -0.55, y: -forward * 0.25 },
       { x: 0, y: forward * fireSpirits.sourceSpawnRadius },
       { x: 0.55, y: -forward * 0.25 },
+    ].map((offset) => ({
+      x: Math.max(0.6, Math.min(17.4, point.x + offset.x)),
+      y: Math.max(0.8, Math.min(31.2, point.y + offset.y)),
+    }));
+  }
+  if (id === "guards") {
+    const forward = team === "blue" ? -1 : 1;
+    return [
+      { x: -guards.summonRadius, y: 0 },
+      { x: guards.summonRadius, y: 0 },
+      { x: 0, y: forward * guards.summonRadius },
     ].map((offset) => ({
       x: Math.max(0.6, Math.min(17.4, point.x + offset.x)),
       y: Math.max(0.8, Math.min(31.2, point.y + offset.y)),

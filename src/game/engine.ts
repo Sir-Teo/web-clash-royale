@@ -41,6 +41,7 @@ import iceSpirit from "./ice-spirit-data.json" with { type: "json" };
 import fireSpirits from "./fire-spirits-data.json" with { type: "json" };
 import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import giantSkeleton from "./giant-skeleton-data.json" with { type: "json" };
+import guards from "./guards-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
 import golem from "./golem-data.json" with { type: "json" };
@@ -164,7 +165,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb" | "giant-skeleton-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "axe-die" | "bottle:lumberjack" | "summon:night-witch" | "dash-start:bandit" | "dash-end:bandit" | "hit-special:bandit" | "ice-golem-slow";
+  effect?: "balloon-bomb" | "giant-skeleton-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "shield:guards" | "axe-die" | "bottle:lumberjack" | "summon:night-witch" | "dash-start:bandit" | "dash-end:bandit" | "hit-special:bandit" | "ice-golem-slow";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -657,6 +658,7 @@ export class Battle {
           true,
           id === "bats" ? 1 + bats.deployDelay :
             id === "elite-barbarians" ? 1 + eliteBarbarians.deployDelay :
+          id === "guards" ? guards.sourceDeployTime + guards.deployDelay :
             id === "ice-spirit" ? 1 + iceSpirit.deployDelay :
             id === "fire-spirits" ? 1 + fireSpirits.deployDelay :
             id === "golem" ? golem.golem.sourceDeployTime : 1,
@@ -678,6 +680,9 @@ export class Battle {
       ...(id === "dark-prince" ? {
         shield: Math.round(darkPrince.sourceShieldHitpoints * 1.1 ** 5),
         maxShield: Math.round(darkPrince.sourceShieldHitpoints * 1.1 ** 5),
+      } : id === "guards" ? {
+        shield: Math.round(guards.sourceShieldHitpoints * 1.1 ** 5),
+        maxShield: Math.round(guards.sourceShieldHitpoints * 1.1 ** 5),
       } : {}),
       radius:
         c.kind === "building"
@@ -2266,8 +2271,13 @@ export class Battle {
     if (e.hp <= 0 || (!decay && (this.isHidden(e) || e.dash))) return;
     if (e.shield && !decay) {
       e.shield = Math.max(0, e.shield - amount);
-      if (e.shield === 0)
-        this.emit("hit", e.team, e.x, e.y, e.card, 0, { effect: "shield:dark-prince" });
+      if (e.shield === 0) {
+        this.emit("hit", e.team, e.x, e.y, e.card, 0, {
+          effect: e.card === "guards" ? "shield:guards" : "shield:dark-prince",
+        });
+        this.emitAudio("shield-lost", e.team, audioProfile(e), e.id,
+          undefined, { x: e.x, y: e.y });
+      }
       return;
     }
     e.hp -= amount;
