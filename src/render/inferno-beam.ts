@@ -2,6 +2,7 @@ import * as T from "three";
 import { entityProjectileStartHeight, projectileHitHeight } from "../game/engine";
 import type { Entity } from "../game/engine";
 import type { EffectLibrary, EffectSprite } from "./effects";
+import infernoTower from "../game/inferno-tower-data.json" with { type: "json" };
 
 interface BeamActor {
   target: number;
@@ -32,7 +33,9 @@ export class NativeInfernoBeams {
     const active = new Set<number>();
     for (const entity of entities) {
       const lock = entity.inferno;
-      if (entity.hp <= 0 || !lock || entity.card !== "inferno-dragon") continue;
+      const tower = entity.card === "inferno-tower";
+      if (entity.hp <= 0 || !lock ||
+          (entity.card !== "inferno-dragon" && !tower)) continue;
       const target = entities.find((candidate) => candidate.id === lock.target && candidate.hp > 0);
       if (!target) continue;
       let actor = this.actors.get(entity.id);
@@ -42,8 +45,11 @@ export class NativeInfernoBeams {
         actor = undefined;
       }
       if (!actor) {
-        const beam = this.effects.make(BEAMS[lock.stage]);
-        const muzzle = this.effects.make(lock.stage === 2 ? "inferno_shoot_st2" : "inferno_shoot");
+        const beam = this.effects.make(tower
+          ? infernoTower.beamArt[lock.stage] : BEAMS[lock.stage]);
+        const muzzle = this.effects.make(tower
+          ? infernoTower.muzzleArt[lock.stage]
+          : lock.stage === 2 ? "inferno_shoot_st2" : "inferno_shoot");
         const hit = this.effects.make("inferno_hit_lines");
         if (!beam || !muzzle || !hit) continue;
         actor = { target: lock.target, stage: lock.stage, beam, muzzle, hit };
@@ -52,7 +58,9 @@ export class NativeInfernoBeams {
       }
       active.add(entity.id);
       actor.target = lock.target;
-      const source = new T.Vector3(entity.x - 9, entityProjectileStartHeight(entity) ?? 2.3, entity.y - 16);
+      const source = new T.Vector3(entity.x - 9,
+        entityProjectileStartHeight(entity) ??
+          (tower ? infernoTower.projectileStartHeight : 2.3), entity.y - 16);
       const destination = new T.Vector3(
         target.x - 9,
         projectileHitHeight(target),

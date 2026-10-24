@@ -43,6 +43,7 @@ import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import giantSkeleton from "./giant-skeleton-data.json" with { type: "json" };
 import mortar from "./mortar-data.json" with { type: "json" };
 import bombTower from "./bomb-tower-data.json" with { type: "json" };
+import infernoTower from "./inferno-tower-data.json" with { type: "json" };
 import guards from "./guards-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
@@ -1454,8 +1455,8 @@ export class Battle {
         }
       }
       if (e.burrow && !this.updateTesla(e)) continue;
-      if (e.card === "inferno-dragon") {
-        this.updateInfernoDragon(e, hitSpeed);
+      if (e.card === "inferno-dragon" || e.card === "inferno-tower") {
+        this.updateInferno(e, hitSpeed);
         continue;
       }
       if (e.card === "witch") {
@@ -1584,7 +1585,8 @@ export class Battle {
     dash.remaining -= STEP;
     if (this.inRange(e, target)) this.advanceBanditDash(e);
   }
-  private updateInfernoDragon(e: Entity, hitSpeed: number) {
+  private updateInferno(e: Entity, hitSpeed: number) {
+    const source = e.card === "inferno-tower" ? infernoTower : infernoDragon;
     const target = this.acquireTarget(e);
     if (!target || !this.inRange(e, target)) {
       this.cancelAttack(e);
@@ -1606,18 +1608,19 @@ export class Battle {
     e.move = 0;
     lock.elapsed += STEP;
     lock.stage =
-      lock.elapsed >= infernoDragon.stageDurations[0] + infernoDragon.stageDurations[1]
+      lock.elapsed >= source.stageDurations[0] + source.stageDurations[1]
         ? 2
-        : lock.elapsed >= infernoDragon.stageDurations[0]
+        : lock.elapsed >= source.stageDurations[0]
           ? 1
           : 0;
     lock.hitTimer -= STEP * hitSpeed;
     if (lock.hitTimer > 1e-8) return;
     lock.hitTimer += e.interval;
     e.attack = e.interval;
-    const damage = Math.round(infernoDragon.sourceDamage[lock.stage] * 1.1 ** 2);
+    const damage = Math.round(source.sourceDamage[lock.stage] *
+      (e.card === "inferno-tower" ? 1152 / 450 : 1.1 ** 2));
     this.hurt(target, damage);
-    this.emit("hit", e.team, target.x, target.y, "inferno-dragon", damage, {
+    this.emit("hit", e.team, target.x, target.y, e.card, damage, {
       height: projectileHitHeight(target),
     });
     this.emitImpactAudio(e, damage);

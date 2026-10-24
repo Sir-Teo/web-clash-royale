@@ -2,6 +2,7 @@ import type { Entity, Point, Team } from "../game/engine";
 import golem from "../game/golem-data.json" with { type: "json" };
 import iceSpirit from "../game/ice-spirit-data.json" with { type: "json" };
 import fireSpirits from "../game/fire-spirits-data.json" with { type: "json" };
+import infernoTower from "../game/inferno-tower-data.json" with { type: "json" };
 import definitions from "./destruction-data.json";
 import { continuousEffect } from "./destruction";
 import type { ContinuousEffect } from "./destruction";
@@ -34,7 +35,9 @@ export class NativeContinuousEffects {
       const deployTime = entity.card === "ice-spirit"
         ? 1 + iceSpirit.deployDelay :
         entity.card === "fire-spirits"
-          ? 1 + fireSpirits.deployDelay : golem.golem.sourceDeployTime;
+          ? 1 + fireSpirits.deployDelay :
+        entity.card === "inferno-tower"
+          ? infernoTower.deployTime : golem.golem.sourceDeployTime;
       const activeAge = Math.max(0, entity.age - deployTime);
       const previous = this.tracks.get(entity.id);
       // At a late peer snapshot, reconstruct only particles whose native life

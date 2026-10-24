@@ -20,6 +20,7 @@ import giantSkeleton from "./giant-skeleton-data.json" with { type: "json" };
 import guards from "./guards-data.json" with { type: "json" };
 import mortar from "./mortar-data.json" with { type: "json" };
 import bombTower from "./bomb-tower-data.json" with { type: "json" };
+import infernoTower from "./inferno-tower-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -97,6 +98,7 @@ export type CardId =
   | "tesla"
   | "mortar"
   | "bomb-tower"
+  | "inferno-tower"
   | "zap"
   | "freeze"
   | "poison"
@@ -933,6 +935,19 @@ export const CARDS: Card[] = [
     "A defensive tower with a Bomber on top. Its bombs splash ground enemies.",
     { kind: "building", rarity: "Rare", lifetime: bombTower.lifetime,
       splash: bombTower.splash },
+  ),
+  troop(
+    "inferno-tower",
+    "Inferno Tower",
+    infernoTower.cost,
+    Math.round(infernoTower.sourceHitpoints * 1152 / 450),
+    Math.round(infernoTower.sourceDamage[0] * 1152 / 450),
+    0,
+    infernoTower.range,
+    infernoTower.hitSpeed,
+    "Locks onto one enemy, then intensifies its beam through three damage stages.",
+    { kind: "building", rarity: "Rare", lifetime: infernoTower.lifetime,
+      hitsAir: infernoTower.hitsAir },
   ),
   troop(
     "zap",
