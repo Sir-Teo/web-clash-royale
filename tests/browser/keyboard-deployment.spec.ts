@@ -128,10 +128,12 @@ test("keyboard placement retains elixir, territory and occupied-tile checks and 
   await page.keyboard.press("Space");
   expect((await state(page)).paused).toBe(true);
   await page.keyboard.press("ArrowLeft");
+  expect((await state(page)).placement).toBeNull();
   await page.keyboard.press("Enter");
   expect((await state(page)).hand[slot]).toBe("knight");
-  expect((await state(page)).placement).toBeNull();
-  await page.keyboard.press("Space");
+  expect((await state(page)).placement?.point ?? null).toBeNull();
+  // Enter activates the focused Resume button without deploying the card.
+  expect((await state(page)).paused).toBe(false);
   await page.keyboard.press("ArrowUp");
   expect((await state(page)).placement.point).toEqual({ x: 9, y: 27.5 });
   await page.keyboard.press("Escape");

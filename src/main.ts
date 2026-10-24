@@ -287,7 +287,6 @@ $("#app").innerHTML = `
      <div class="battle-announcements hidden" id="battle-announcements" role="img" aria-label="Battle announcement"></div>
      <div class="battle-intro hidden" id="battle-intro" role="img" aria-label="Battle introduction"></div>
      <section class="battle-ending hidden" id="battle-ending" aria-label="Battle ended"></section>
-     <div class="pause-cover hidden"><span class="eyebrow">TAKE A BREATHER</span><h2>Battle paused</h2><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button><button class="text-button" id="surrender-button">Leave battle</button></div>
      <div id="emote-layer"></div><div id="connection-warning"></div>
     </div>
     <div id="lobby-footer" class="chest-tray"><div class="chest-heading"><span>VICTORY CHESTS</span><b id="chest-count">0 / 4</b></div><div class="chest-slots" id="chest-slots"></div></div>
@@ -417,9 +416,10 @@ function modal(title: string, body: string, key = "generic", wide = false) {
 }
 function closeModal() {
   const wasResult = modalKey === "result";
+  const wasPause = modalKey === "pause";
   modalKey = "";
   modalFocus.close();
-  if (modalPausedBattle) {
+  if (modalPausedBattle || wasPause) {
     modalPausedBattle = false;
     paused = false;
     accumulator = 0;
@@ -537,7 +537,6 @@ function lobby() {
   $(".lobby-bottom").classList.remove("hidden");
   $("#lobby-footer").classList.remove("hidden");
   $("#battle-tray").classList.add("hidden");
-  $(".pause-cover").classList.add("hidden");
   $(".replay-controls").classList.add("hidden");
   document
     .querySelectorAll(".match-top,.match-bottom,.match-crowns")
@@ -599,7 +598,6 @@ function startBattle(online = false) {
   $(".lobby-bottom").classList.add("hidden");
   $("#lobby-footer").classList.add("hidden");
   $("#battle-tray").classList.remove("hidden");
-  $(".pause-cover").classList.add("hidden");
   document
     .querySelectorAll(".match-top,.match-bottom,.match-crowns")
     .forEach((e) => e.classList.remove("hidden"));
@@ -854,9 +852,22 @@ function togglePause() {
   }
   accumulator = 0;
   if (screen === "battle") {
-    $(".pause-cover").classList.toggle("hidden", !paused);
-    if (paused) audio.stopMusic();
-    else audio.startMusic();
+    if (paused) {
+      audio.stopMusic();
+      modal(
+        "Battle paused",
+        `<div class="pause-actions"><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button><button class="text-button" id="surrender-button">Leave battle</button></div>`,
+        "pause",
+      );
+      $(".modal-backdrop").classList.add("pause-cover");
+      $("#resume-button").onclick = closeModal;
+      $("#surrender-button").onclick = () => {
+        battle.finish("red", "Surrender");
+        closeModal();
+        updateBattleUI();
+      };
+      $("#resume-button").focus();
+    } else closeModal();
   } else {
     syncReplayControl();
   }
@@ -980,7 +991,6 @@ function playReplay(record: RecordEntry, ownerName?: string) {
   $(".lobby-bottom").classList.add("hidden");
   $("#lobby-footer").classList.add("hidden");
   $("#battle-tray").classList.remove("hidden");
-  $(".pause-cover").classList.add("hidden");
   document
     .querySelectorAll(".match-top,.match-bottom,.match-crowns")
     .forEach((e) => e.classList.remove("hidden"));
@@ -2085,14 +2095,6 @@ $(".sound-toggle").onclick = () => {
   audio.play("button_click_02");
 };
 $("#pause-button").onclick = togglePause;
-$("#resume-button").onclick = togglePause;
-$("#surrender-button").onclick = () => {
-  paused = false;
-  $(".pause-cover").classList.add("hidden");
-  if (multiplayer) network.send({ type: "surrender" });
-  else battle.finish("red", "Surrender");
-  updateBattleUI();
-};
 $("#replay-play").onclick = () => {
   if (replayData && replayComplete(battle, replayData) && replayRecord)
     playReplay(replayRecord, replayOwnerName ?? undefined);
@@ -2180,6 +2182,18 @@ document.addEventListener("keydown", (e) => {
     togglePause();
   }
   if (modalKey) {
+    if (
+      modalKey === "pause" &&
+      e.code === "Space" &&
+      (e.repeat ||
+        !(e.target as HTMLElement).closest(
+          "button,a[href],input,textarea,select",
+        ))
+    ) {
+      e.preventDefault();
+      if (!e.repeat) closeModal();
+      return;
+    }
     if (e.key === "Tab") {
       const focusables = Array.from(
         document.querySelectorAll<HTMLElement>(

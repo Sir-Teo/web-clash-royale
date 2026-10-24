@@ -128,7 +128,7 @@ New releases wait while a game is open. When an update is ready, **Update game**
 
 - Click a hand card, then click the arena, or drag the card into position.
 - Placement previews show the complete troop formation in native artwork, with live elixir and territory feedback.
-- Keys **1–4** select a card. **Escape** cancels a selection or pauses; **Space** pauses when the arena has focus. Focused buttons keep their normal keyboard activation. Selection, cancel and pause shortcuts act once per press.
+- Keys **1–4** select a card. **Escape** cancels a selection or pauses; **Space** pauses when the arena has focus. Focused buttons keep their normal keyboard activation. Selection, cancel and pause shortcuts act once per press. The pause menu focuses **Resume battle**; **Tab** reaches Leave and Close, and **Escape** resumes.
 - To deploy by keyboard, select a card with **1–4** or its focused hand button, use the **Arrow keys** to aim, and press **Enter**. Arrows move half a tile; **Shift + Arrow** moves two tiles. The preview shows the same placement and elixir feedback as mouse and touch. **Tab** leaves the battlefield.
 - Dialogs keep keyboard focus inside their controls. Deck selections retain focus while the builder updates; closing a dialog returns to its opener. The arena and lobby controls are inactive behind an open dialog.
 - During a replay, the speed button cycles through 1×, 2×, 4×, 0.5× and 0.25×.

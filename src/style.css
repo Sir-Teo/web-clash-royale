@@ -1570,27 +1570,13 @@ kbd {
 .in-battle .arena-stage {
   height: clamp(410px, calc(100vh - 355px), 650px);
 }
-.pause-cover {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  background: #10283cce;
-  backdrop-filter: blur(5px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 22px;
+.pause-actions {
+  display: grid;
+  gap: 12px;
+  padding-top: 8px;
 }
-.pause-cover h2 {
-  font-family: var(--display);
-  font-size: 37px;
-  font-weight: 400;
-  color: #f0f0d5;
-}
-.pause-cover > .text-button {
-  font-size: 11px;
-  color: #9bb0c1;
+.pause-actions > button {
+  min-height: 44px;
 }
 .replay-controls {
   display: flex;
