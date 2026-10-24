@@ -110,7 +110,8 @@ describe("solo opponents", () => {
     const giant = b.entities.find((e) => e.card === "giant")!;
     giant.y = 12;
     giant.deploy = 0;
-    b.players.red.hand = ["cannon", "rage", "rage", "rage"];
+    // Keep alternatives unattractive so this isolates occupied-tile fallback.
+    b.players.red.hand = ["cannon", "poison", "poison", "poison"];
     b.players.red.elixir = 10;
     expect(b.canPlace("red", "cannon", 9, 10).ok).toBe(false);
     (b as unknown as { think: () => void }).think();

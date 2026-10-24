@@ -1,5 +1,6 @@
 import { CARD_MAP, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
+import { areaSpellTarget } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell } from "./spell-targeting";
 import { deploymentPositions } from "./deployment";
 import {
@@ -1395,31 +1396,26 @@ export class Battle {
       )
       .sort((a, b) => a.y - b.y);
     const threat = threats[0];
-    const allies = affordable.some((a) => a.id === "rage")
-      ? this.entities.filter(
-          (e) =>
-            e.team === "red" && e.kind === "troop" && e.hp > 0 && e.deploy <= 0,
-        )
-      : [];
-    const push = allies
-      .map((entity) => ({
-        entity,
-        value: allies
-          .filter((friend) => dist(friend, entity) < rage.radius)
-          .reduce(
-            (value, friend) =>
-              value +
-              (friend.card === "tower" ? 0 : CARD_MAP[friend.card].cost),
-            0,
-          ),
-      }))
-      .sort((a, b) => b.value - a.value)[0];
     const spellTargets = new Map(
       affordable
-        .filter((a) => isDamageSpell(a.id))
+        .filter((a) => a.c.kind === "spell")
         .map((a) => [
           a.id,
-          damageSpellTarget(a.id, "red", this.entities, this.projectiles),
+          isDamageSpell(a.id)
+            ? damageSpellTarget(
+                a.id,
+                "red",
+                this.entities,
+                this.projectiles,
+                this.areas,
+              )
+            : areaSpellTarget(
+                a.id,
+                "red",
+                this.entities,
+                this.areas,
+                this.projectiles,
+              ),
         ]),
     );
     if (
@@ -1433,27 +1429,18 @@ export class Battle {
       .map((a) => {
         const jitter = this.random() * 2;
         let score = jitter;
-        if (threat) {
-          if (a.c.kind === "spell") {
-            const nearby = threats.filter(
-              (e) => dist(e, threat) < (a.c.radius ?? 2.5),
-            );
-            score += nearby.length > 2 ? 6 : -5;
-            if (threat.hp < a.c.damage) score += 2;
-          } else {
-            score += a.c.buildingsOnly ? -3 : 3;
-            if (threat.air && !a.c.hitsAir) score -= 8;
-            if (a.c.splash && threats.length >= 3) score += 3;
-            if (a.c.kind === "building") score += 2;
-          }
+        const target = spellTargets.get(a.id);
+        if (a.c.kind === "spell")
+          score = target ? target.score + jitter * 0.1 : -Infinity;
+        else if (threat) {
+          score += a.c.buildingsOnly ? -3 : 3;
+          if (threat.air && !a.c.hitsAir) score -= 8;
+          if (a.c.splash && threats.length >= 3) score += 3;
+          if (a.c.kind === "building") score += 2;
         } else {
           if (a.c.kind !== "troop") score -= 7;
           if (a.c.buildingsOnly) score += 2;
         }
-        if (a.id === "rage") score += push && push.value >= 5 ? 12 : -20;
-        const target = spellTargets.get(a.id);
-        if (isDamageSpell(a.id))
-          score = target ? target.score + jitter * 0.1 : -Infinity;
         return { ...a, score, target };
       })
       .sort((a, b) => b.score - a.score);
@@ -1469,15 +1456,9 @@ export class Battle {
     let x = lane + (this.random() - 0.5) * 1.4,
       y = threat ? clamp(threat.y + 1.3, 8, 13.8) : a.c.buildingsOnly ? 3.5 : 9;
     if (a.c.kind === "spell") {
-      const target =
-        a.target ??
-        (a.id === "rage" ? push?.entity : threat) ??
-        this.entities.find(
-          (e) => e.team === "blue" && e.kind === "tower" && !e.king,
-        );
-      if (!target) return;
-      x = target.x;
-      y = target.y;
+      if (!a.target) return;
+      x = a.target.x;
+      y = a.target.y;
     }
     if (a.c.kind === "building") {
       x = 9;

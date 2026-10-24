@@ -1,0 +1,195 @@
+import { CARD_MAP, type CardId } from "./cards";
+import type { AreaEffect, Entity, Projectile, Team } from "./engine";
+import poison from "./poison-data.json" with { type: "json" };
+import {
+  hiddenSpellTarget,
+  pendingSpellDamage,
+  spellCandidatePoints,
+  spellContains,
+  type SpellTarget,
+} from "./spell-targeting";
+
+const bodyValue = (e: Entity) =>
+  e.kind === "tower"
+    ? e.king
+      ? 6
+      : 4
+    : CARD_MAP[e.card as CardId].cost / CARD_MAP[e.card as CardId].count;
+const health = (e: Entity) => Math.max(0, Math.min(1, e.hp / e.maxHp));
+const covered = (
+  e: Entity,
+  card: AreaEffect["card"],
+  team: Team,
+  areas: readonly AreaEffect[],
+  remaining = 0.5,
+) =>
+  areas.some(
+    (a) =>
+      a.card === card &&
+      a.team === team &&
+      a.remaining > remaining &&
+      spellContains(a, e, a.radius + e.radius),
+  );
+const near = (a: Entity, b: Entity, extra = 0) =>
+  spellContains(a, b, a.range + a.radius + b.radius + extra);
+const canHit = (a: Entity, b: Entity) =>
+  !b.air || a.kind === "tower" || !!CARD_MAP[a.card as CardId].hitsAir;
+
+/** Current-position support heuristics; no simulation or random draws. */
+export function areaSpellTarget(
+  card: CardId,
+  team: Team,
+  entities: readonly Entity[],
+  areas: readonly AreaEffect[] = [],
+  projectiles: readonly Projectile[] = [],
+): SpellTarget | undefined {
+  if (card !== "rage" && card !== "freeze" && card !== "poison") return;
+  const living = entities.filter((e) => e.hp > 0);
+  const friends = living.filter(
+    (e) => e.team === team && e.deploy <= 0 && !hiddenSpellTarget(e),
+  );
+  const enemies = living.filter((e) => e.team !== team);
+  const radius = CARD_MAP[card].radius!;
+  const targets: {
+    entity: Entity;
+    value: number;
+    penalty: number;
+    lethal: boolean;
+  }[] = [];
+  if (card === "rage") {
+    for (const e of friends) {
+      if (
+        e.stun > 1 ||
+        (e.rage?.remaining ?? 0) > 0.5 ||
+        covered(e, "rage", team, areas) ||
+        areas.some(
+          (a) =>
+            a.team !== team &&
+            a.card === "freeze" &&
+            a.remaining > 0.5 &&
+            spellContains(a, e, a.radius + e.radius),
+        )
+      )
+        continue;
+      const engaged = enemies.some(
+        (foe) => !hiddenSpellTarget(foe) && canHit(e, foe) && near(e, foe, 1),
+      );
+      const advancing =
+        e.kind === "troop" && (team === "red" ? e.y >= 10 : e.y <= 22);
+      if ((!engaged && !advancing) || (e.kind === "tower" && !e.active))
+        continue;
+      targets.push({
+        entity: e,
+        value: bodyValue(e) * (0.25 + 0.75 * health(e)),
+        penalty: 0,
+        lethal: false,
+      });
+    }
+  } else if (card === "freeze") {
+    for (const e of enemies) {
+      if (
+        e.deploy > 0 ||
+        e.stun > 0.3 ||
+        covered(e, "freeze", team, areas, 0.3) ||
+        (e.kind === "tower" && !e.active)
+      )
+        continue;
+      const support = friends
+        .filter(
+          (friend) =>
+            canHit(e, friend) && near(friend, e, 1) && near(e, friend, 1),
+        )
+        .reduce(
+          (sum, friend) =>
+            sum + bodyValue(friend) * (0.25 + 0.75 * health(friend)),
+          0,
+        );
+      if (support < 2) continue;
+      targets.push({
+        entity: e,
+        value: bodyValue(e) * (0.5 + 0.5 * health(e)),
+        penalty: 0,
+        lethal: false,
+      });
+    }
+  } else {
+    for (const e of enemies) {
+      if (hiddenSpellTarget(e) || covered(e, "poison", team, areas)) continue;
+      const hp = Math.max(0, e.hp - pendingSpellDamage(e, team, projectiles));
+      if (hp <= 1e-6) continue;
+      const fighting = friends.some((friend) => near(e, friend));
+      const dwell =
+        e.kind !== "troop"
+          ? poison.duration
+          : fighting
+            ? 4
+            : Math.min(3, (2 * radius) / Math.max(0.1, e.speed));
+      const ticks = Math.floor(dwell / poison.damageInterval);
+      const damage =
+        CARD_MAP.poison.damage *
+        ticks *
+        (e.kind === "tower" ? poison.crownTowerDamageFraction : 1);
+      const lethal = e.kind === "tower" && hp <= damage + 1e-6;
+      const defense = (team === "red" ? e.y < 15 : e.y > 17) ? 1.2 : 1;
+      const value =
+        e.kind === "tower"
+          ? lethal
+            ? 0
+            : (Math.min(damage, hp) / e.maxHp) * 2
+          : bodyValue(e) *
+            Math.min(
+              1,
+              Math.min(damage, hp) / e.maxHp + (hp <= damage ? 0.35 : 0),
+            ) *
+            defense;
+      targets.push({
+        entity: e,
+        value,
+        lethal,
+        penalty:
+          e.kind === "tower" && e.king && !e.active && !lethal
+            ? CARD_MAP.poison.cost + 8
+            : 0,
+      });
+    }
+  }
+  let best: SpellTarget | undefined;
+  for (const point of spellCandidatePoints(
+    targets.map((t) => t.entity),
+    radius,
+  )) {
+    let value = 0,
+      penalty = 0,
+      king = false,
+      lethalTower: number | undefined;
+    for (const t of targets) {
+      if (!spellContains(point, t.entity, radius + t.entity.radius)) continue;
+      value += t.value;
+      penalty += t.penalty;
+      if (t.lethal && (lethalTower === undefined || t.entity.king)) {
+        lethalTower = t.entity.id;
+        king = !!t.entity.king;
+      }
+    }
+    const threshold =
+      card === "rage" ? 5 : CARD_MAP[card].cost * (card === "poison" ? 0.8 : 1);
+    const score =
+      lethalTower !== undefined
+        ? (king ? 10_000 : 40) -
+          CARD_MAP[card].cost -
+          poison.duration * 0.1 +
+          value -
+          penalty
+        : 3 + 2 * (value - threshold) - penalty;
+    if (lethalTower === undefined && (value < threshold || score <= 0))
+      continue;
+    if (!best || score > best.score + 1e-8)
+      best = {
+        ...point,
+        score,
+        value,
+        ...(lethalTower !== undefined ? { lethalTower } : {}),
+      };
+  }
+  return best;
+}

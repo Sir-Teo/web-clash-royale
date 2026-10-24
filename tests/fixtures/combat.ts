@@ -58,7 +58,7 @@ function setup() {
   const selectedScene = (
     document.querySelector("#scenario") as HTMLSelectElement
   ).value;
-  battle = new Battle({ seed: 12, ai: selectedScene === "ai-spells" });
+  battle = new Battle({ seed: 12, ai: selectedScene.startsWith("ai-") });
   for (const t of battle.entities) t.active = false;
   const scenario = (document.querySelector("#scenario") as HTMLSelectElement)
     .value;
@@ -103,6 +103,32 @@ function setup() {
     unit("archers", "red", 14, 10);
     cast("arrows", "blue", 4, 12);
     cast("fireball", "blue", 14, 12);
+  } else if (["ai-rage", "ai-freeze", "ai-poison"].includes(scenario)) {
+    const card = scenario.slice(3) as "rage" | "freeze" | "poison";
+    if (card === "rage") {
+      for (const e of unit("giant", "red", 4, 20)) {
+        e.active = false;
+        e.speed = 0;
+      }
+    } else if (card === "freeze") {
+      for (const e of unit("balloon", "red", 4, 23)) {
+        e.active = false;
+        e.speed = 0;
+      }
+      for (const e of unit("wizard", "blue", 4, 22)) {
+        e.active = false;
+        e.speed = 0;
+      }
+    } else {
+      for (const id of ["wizard", "witch"] as const)
+        for (const e of unit(id, "blue", id === "wizard" ? 4 : 5, 23)) {
+          e.active = false;
+          e.speed = 0;
+        }
+    }
+    battle.players.red.hand = [card, "pekka", "pekka", "pekka"];
+    battle.players.red.queue[0] = card;
+    battle.players.red.elixir = card === "rage" ? 2 : 10;
   } else if (scenario === "ai-spells") {
     // Let the ordinary AI timer choose its cast; no private think call here.
     const tower = battle.entities.find((e) => e.team === "blue" && !e.king)!;
@@ -436,6 +462,24 @@ function render(now: number) {
           height: (arena as any).units.get(e.id)?.sprite?.mesh.position.y ?? 0,
         })),
     );
+  (document.querySelector("#destruction") as HTMLElement).dataset.aiAreas =
+    JSON.stringify({
+      scene: (document.querySelector("#scenario") as HTMLSelectElement).value,
+      actions: battle.actions.filter(
+        (a) =>
+          a.team === "red" && ["rage", "freeze", "poison"].includes(a.card),
+      ),
+      areas: battle.areas,
+      entities: battle.entities
+        .filter((e) => e.kind !== "tower")
+        .map((e) => ({
+          team: e.team,
+          card: e.card,
+          stun: e.stun,
+          rage: e.rage,
+          poison: e.poison,
+        })),
+    });
   (document.querySelector("#destruction") as HTMLElement).dataset.aiSpells =
     JSON.stringify({
       actions: battle.actions.filter(
