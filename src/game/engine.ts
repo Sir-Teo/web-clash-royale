@@ -11,6 +11,7 @@ import {
   FIREBALL_KNOCKBACK,
   ARROWS_SPEED,
   ARROWS_WAVES,
+  SPELL_CROWN_TOWER_DAMAGE_FRACTION,
   ARROWS_WAVE_GAP,
   KING_ACTIVATION_TIME,
 } from "./combat";
@@ -873,7 +874,8 @@ export class Battle {
               e,
               p.damage *
                 (p.source === 0 && e.kind === "tower"
-                  ? (p.crownTowerDamageFraction ?? 0.3)
+                  ? (p.crownTowerDamageFraction ??
+                    SPELL_CROWN_TOWER_DAMAGE_FRACTION)
                   : 1),
             );
             e.stun = Math.max(e.stun, p.stun);
@@ -1189,7 +1191,8 @@ export class Battle {
             e,
             p.damage *
               (p.source === 0 && e.kind === "tower"
-                ? (p.crownTowerDamageFraction ?? 0.3)
+                ? (p.crownTowerDamageFraction ??
+                  SPELL_CROWN_TOWER_DAMAGE_FRACTION)
                 : 1),
           );
           if (e.hp <= 0) continue;

@@ -1,0 +1,183 @@
+import { test, expect } from "@playwright/test";
+const deck = [
+  "rage",
+  "freeze",
+  "poison",
+  "rocket",
+  "fireball",
+  "arrows",
+  "zap",
+  "minion-horde",
+];
+const key = "browser-royale.profile.v1";
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(
+    ({ deck, key }) =>
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          version: 1,
+          deck,
+          seenTutorial: true,
+          sound: false,
+          music: false,
+        }),
+      ),
+    { deck, key },
+  );
+  await page.goto("/");
+  await page.waitForFunction(() => !!(window as any).__arena);
+});
+
+test("spell details describe their actual damage, allegiance and timed effects", async ({
+  page,
+}, info) => {
+  if (info.project.name !== "desktop")
+    await page.setViewportSize({ width: 320, height: 740 });
+  const before = await page.evaluate((key) => localStorage.getItem(key), key);
+  const cases = [
+    [
+      "rage",
+      {
+        "Speed boost": "+35%",
+        Duration: "6 s",
+        Linger: "Up to 2 s",
+        Targets: "Friendly air & ground",
+      },
+    ],
+    [
+      "freeze",
+      { Effect: "Freeze", Duration: "4 s", "Hidden Tesla": "Affected" },
+    ],
+    [
+      "poison",
+      {
+        "Damage per second": "121",
+        "Crown Tower / second": "48.4",
+        Duration: "8 s",
+        Linger: "Up to 1 s",
+      },
+    ],
+    [
+      "rocket",
+      { Damage: "1,484", "Crown Tower damage": "593.6", Radius: "2 tiles" },
+    ],
+    [
+      "fireball",
+      { Damage: "689", "Crown Tower damage": "206.7", Knockback: "1.8 tiles" },
+    ],
+    [
+      "arrows",
+      { "Volley damage": "366", "Crown Tower damage": "109.8", Waves: "3" },
+    ],
+    ["zap", { Damage: "192", "Crown Tower damage": "57.6", Stun: "0.5 s" }],
+  ] as const;
+  for (const [id, expected] of cases) {
+    await page.locator(`#deck-preview [data-card-info="${id}"]`).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    for (const [label, value] of Object.entries(expected))
+      await expect(page.locator(`[data-card-stat="${label}"] b`)).toHaveText(
+        value,
+      );
+    if (id !== "rage")
+      await expect(page.locator('[data-card-stat="Targets"] b')).toHaveText(
+        "Enemy air & ground",
+      );
+    await expect(page.locator(".level-pill")).toContainText(
+      "CURRENT ARENA STATS",
+    );
+    await expect(page.locator('[data-card-stat="Area damage"]')).toHaveCount(0);
+    if (id === "rage" || id === "freeze")
+      await expect(page.locator('[data-card-stat="Damage"]')).toHaveCount(0);
+    const overflow = await page
+      .locator(".modal")
+      .evaluate((e) => e.scrollWidth > e.clientWidth);
+    expect(overflow).toBe(false);
+    const boxes = await page
+      .locator("[data-card-stat]")
+      .evaluateAll((elements) =>
+        elements.map((e) => ({
+          left: e.getBoundingClientRect().left,
+          right: e.getBoundingClientRect().right,
+        })),
+      );
+    for (const box of boxes) {
+      expect(box.left).toBeGreaterThanOrEqual(0);
+      expect(box.right).toBeLessThanOrEqual(page.viewportSize()!.width);
+    }
+    if (id === "poison" && info.project.name !== "mobile") {
+      await page.locator(".stat-grid").scrollIntoViewIfNeeded();
+      await page.screenshot({
+        path: info.outputPath("poison-card-stats.png"),
+        animations: "disabled",
+      });
+    }
+    await page.keyboard.press("Escape");
+  }
+  expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(
+    before,
+  );
+});
+
+test("shared-deck card inspection shows per-troop stats and building lifetimes without changing the deck", async ({
+  page,
+}, info) => {
+  if (info.project.name !== "desktop")
+    await page.setViewportSize({ width: 320, height: 568 });
+  const before = await page.evaluate((key) => localStorage.getItem(key), key);
+  const preview = [
+    "minion-horde",
+    "skeleton-army",
+    "archers",
+    "cannon",
+    "tesla",
+    "knight",
+    "giant",
+    "witch",
+  ];
+  await page.locator('[data-nav="cards"]').click();
+  await page.locator("#deck-codes").click();
+  await page
+    .locator("#shared-deck-code")
+    .fill("BRA-DECK-1:" + preview.join(","));
+  await page.getByRole("button", { name: "Preview deck", exact: true }).click();
+  for (const [id, expected] of [
+    [
+      "minion-horde",
+      {
+        "Hitpoints per troop": "230",
+        "Damage per troop": "102",
+        Count: "6",
+        "Hit interval": "1 s",
+      },
+    ],
+    [
+      "skeleton-army",
+      { "Hitpoints per troop": "81", "Damage per troop": "81", Count: "15" },
+    ],
+    ["archers", { "Hitpoints per troop": "304", Count: "2" }],
+    ["cannon", { Hitpoints: "824", Lifetime: "30 s", Targets: "Ground" }],
+    [
+      "tesla",
+      { Hitpoints: "1,152", Lifetime: "30 s", Targets: "Air & ground" },
+    ],
+  ] as const) {
+    await page.locator(`[data-code-card="${id}"]`).click();
+    for (const [label, value] of Object.entries(expected))
+      await expect(page.locator(`[data-card-stat="${label}"] b`)).toHaveText(
+        value,
+      );
+    expect(
+      await page
+        .locator(".modal")
+        .evaluate((e) => e.scrollWidth > e.clientWidth),
+    ).toBe(false);
+    await page
+      .getByRole("button", { name: "Back to deck codes", exact: true })
+      .click();
+    await expect(page.locator("#shared-deck-preview")).toBeVisible();
+  }
+  expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(
+    before,
+  );
+});

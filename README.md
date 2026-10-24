@@ -21,6 +21,8 @@ Open **Cards → Deck codes** to copy your current eight cards or preview a code
 
 Troop defense weighs nearby pushes using each visible attacker’s damage, health, approach time and the health of living Crown Towers. Healthy swarms share pressure around the same target; distant or nearly dead bodies carry less weight. It prioritizes imminent lethal King hits, places defenders near the chosen attacker, and values splash support from nearby enemies that the defender can actually hit. When no affordable direct air counter is available, Cannon can draw an approaching Balloon away from a Crown Tower if a legal placement will intercept its targeting.
 
+Card details show current arena stats: per-troop swarm health and damage, hit intervals, building lifetimes, Crown Tower spell damage, and timed spell effects. Rage identifies friendly targets and its boost; Poison shows damage per second and lingering time.
+
 Minion Horde adds six flying Minions for five elixir, using the original Minion animations, projectiles, sounds and its own native card portrait. It attacks ground and air, and remains vulnerable to splash damage and Arrows. Sky Captain includes it in the Balloon Freeze deck.
 
 The four original King emotes use complete native expressions and speech-bubble animations, with 16 voice variations. Six original quick-chat phrases use their native text bubbles, wooden selector and archived chat font. Each player has an independent bubble, a host-enforced cooldown and a persistent local mute option. The selector works with touch, mouse and keyboard; reduced motion uses still artwork.

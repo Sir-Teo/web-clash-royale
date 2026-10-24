@@ -1,4 +1,5 @@
 import { CARD_MAP, type CardId } from "./cards";
+import { SPELL_CROWN_TOWER_DAMAGE_FRACTION } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import poison from "./poison-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
@@ -63,7 +64,9 @@ export function pendingSpellDamage(
     return (
       sum +
       p.damage *
-        (entity.kind === "tower" ? (p.crownTowerDamageFraction ?? 0.3) : 1)
+        (entity.kind === "tower"
+          ? (p.crownTowerDamageFraction ?? SPELL_CROWN_TOWER_DAMAGE_FRACTION)
+          : 1)
     );
   }, 0);
   let cloud = 0;
@@ -124,7 +127,7 @@ export function damageSpellTarget(
       (e.kind === "tower"
         ? card === "rocket"
           ? rocket.crownTowerDamageFraction
-          : 0.3
+          : SPELL_CROWN_TOWER_DAMAGE_FRACTION
         : 1);
     if (e.kind === "tower")
       return {

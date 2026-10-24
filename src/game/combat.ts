@@ -26,6 +26,7 @@ export function combatTraits(e: Pick<Entity, "card" | "king">): CombatTraits {
 export const FIREBALL_SPEED = 600 / 60;
 export const FIREBALL_KNOCKBACK = 1800 / 1000;
 export const ARROWS_SPEED = 800 / 60;
+export const SPELL_CROWN_TOWER_DAMAGE_FRACTION = 0.3;
 export const ARROWS_WAVES = 3;
 export const ARROWS_WAVE_GAP = 0.2;
 export const KING_ACTIVATION_TIME = settings.kingActivationSeconds;

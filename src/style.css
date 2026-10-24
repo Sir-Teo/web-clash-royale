@@ -1786,13 +1786,20 @@ kbd {
   letter-spacing: 0.5px;
   font-weight: 900;
 }
+.card-rule-note {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #a9bdd3;
+  margin: 16px 0;
+}
 .stat-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   margin: 25px 0;
 }
 .stat-grid > div {
+  text-align: center;
   padding: 15px 8px;
   background: #0d203388;
   border: 1px solid #ffffff07;
@@ -3442,10 +3449,11 @@ kbd {
     font-size: 6px;
   }
   .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
   }
   .stat-grid small {
-    font-size: 8px;
+    font-size: 9px;
   }
   .stat-grid b {
     font-size: 12px;

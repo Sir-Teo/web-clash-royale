@@ -1,6 +1,7 @@
 import { NativeConnectionWarning } from "./ui/connection";
 import { OfflineUpdates } from "./ui/offline-updates";
 import { ModalFocus } from "./ui/modal-focus";
+import { cardDetails } from "./ui/card-details";
 import "@fontsource/lilita-one/latin-400.css";
 import "@fontsource/nunito-sans/latin-400.css";
 import "@fontsource/nunito-sans/latin-600.css";
@@ -1372,35 +1373,10 @@ function showCard(
   backLabel = "Back to battle details",
 ) {
   const c = CARD_MAP[id];
+  const details = cardDetails(id);
   modal(
     c.name,
-    `<div class="card-detail"><div class="detail-art ${c.rarity.toLowerCase()}" data-native-card="${id}" data-card-variant="deck">${nativeCardArt}<img src="${cardArt(id)}" alt="${c.name}"/><span class="cost">${c.cost}</span></div><div><span class="rarity-label ${c.rarity.toLowerCase()}">${c.rarity} · ${c.kind}</span><p>${c.description}</p><span class="level-pill">TOURNAMENT STANDARD · LEVEL 11</span></div></div><div class="stat-grid">${[
-      [
-        c.kind === "spell" ? "Area damage" : "Hitpoints",
-        c.kind === "spell" ? c.damage : c.hp,
-        "heart",
-      ],
-      ["Damage", c.damage, "swords"],
-      [
-        c.kind === "spell" ? "Radius" : "Range",
-        `${c.radius ?? c.range} tiles`,
-        "scan",
-      ],
-      [
-        "Targets",
-        c.buildingsOnly ? "Buildings" : c.hitsAir ? "Air & ground" : "Ground",
-        "crosshair",
-      ],
-      ["Count", c.kind === "spell" ? "Area" : c.count, "users"],
-      ["Elixir", c.cost, "droplet"],
-    ]
-      .map(
-        ([a, b, i]) =>
-          `<div>${icon(String(i))}<small>${a}</small><b>${b}</b></div>`,
-      )
-      .join(
-        "",
-      )}</div>${back ? `<button class="secondary-button" id="card-back">${icon("arrow-right")} ${esc(backLabel)}</button>` : screen === "lobby" ? `<button class="secondary-button" id="card-edit-deck">${icon("layers-2")} Open deck builder</button>` : ""}`,
+    `<div class="card-detail"><div class="detail-art ${c.rarity.toLowerCase()}" data-native-card="${id}" data-card-variant="deck">${nativeCardArt}<img src="${cardArt(id)}" alt="${c.name}"/><span class="cost">${c.cost}</span></div><div><span class="rarity-label ${c.rarity.toLowerCase()}">${c.rarity} · ${c.kind}</span><p>${c.description}</p><span class="level-pill">CURRENT ARENA STATS · LEVEL 11</span></div></div><div class="stat-grid">${details.stats.map((row) => `<div data-card-stat="${esc(row.label)}">${icon(row.icon)}<small>${esc(row.label)}</small><b>${esc(row.value)}</b></div>`).join("")}</div>${details.note ? `<p class="card-rule-note">${esc(details.note)}</p>` : ""}${back ? `<button class="secondary-button" id="card-back">${icon("arrow-right")} ${esc(backLabel)}</button>` : screen === "lobby" ? `<button class="secondary-button" id="card-edit-deck">${icon("layers-2")} Open deck builder</button>` : ""}`,
     "card",
   );
   if (back) $("#card-back").onclick = back;
