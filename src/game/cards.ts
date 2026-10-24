@@ -19,6 +19,7 @@ import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import giantSkeleton from "./giant-skeleton-data.json" with { type: "json" };
 import guards from "./guards-data.json" with { type: "json" };
 import mortar from "./mortar-data.json" with { type: "json" };
+import bombTower from "./bomb-tower-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -95,6 +96,7 @@ export type CardId =
   | "cannon"
   | "tesla"
   | "mortar"
+  | "bomb-tower"
   | "zap"
   | "freeze"
   | "poison"
@@ -918,6 +920,19 @@ export const CARDS: Card[] = [
     mortar.hitSpeed,
     "A long-range siege building with a blind spot. Lobs shells that damage ground troops in an area.",
     { kind: "building", lifetime: mortar.lifetime, splash: mortar.splash },
+  ),
+  troop(
+    "bomb-tower",
+    "Bomb Tower",
+    bombTower.cost,
+    Math.round(bombTower.sourceHitpoints * 1152 / 450),
+    Math.round(bombTower.sourceDamage * 1152 / 450),
+    0,
+    bombTower.range,
+    bombTower.hitSpeed,
+    "A defensive tower with a Bomber on top. Its bombs splash ground enemies.",
+    { kind: "building", rarity: "Rare", lifetime: bombTower.lifetime,
+      splash: bombTower.splash },
   ),
   troop(
     "zap",

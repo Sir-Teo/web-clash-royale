@@ -57,6 +57,7 @@ export function projectileArt(p: Projectile) {
       ? "projectile_arrow_basic"
       : "projectile_arrow_basic_enemy";
   if (p.style === "mortar") return "catapult_projectile1";
+  if (p.style === "bomb-tower") return "projectile_bomb";
   if (p.style === "spear-goblins") return "projectile_spear_360";
   if (p.style === "dart-goblin") return "projectile_arrow_basic";
   if (p.style === "ice-wizard") return "ice_wizard_projectile";
@@ -118,6 +119,7 @@ export function makeProjectile(
     || p.style === "bowler"
     || p.style === "executioner"
     || p.style === "mortar"
+    || p.style === "bomb-tower"
   ) {
     const shadow = library.make(
       p.style === "rocket"
@@ -126,7 +128,7 @@ export function makeProjectile(
           ? "Barrel_shadow"
           : p.style === "princess"
             ? "projectile_arrow_shadow"
-            : p.style === "mortar"
+            : p.style === "mortar" || p.style === "bomb-tower"
               ? "projectile_arrow_shadow"
             : p.style === "bowler" || p.style === "executioner"
               ? "bowler_projectile_shadow"
@@ -247,7 +249,7 @@ export function updateProjectile(
       sprite.mesh.rotateZ(angle);
       sprite.mesh.scale.setScalar(0.8);
     } else if (sprite.name === "projectile_bomb") {
-      sprite.mesh.rotateZ(p.style === "bomber" ? progress * Math.PI * 2 : 0);
+      sprite.mesh.rotateZ(["bomber", "bomb-tower"].includes(p.style) ? progress * Math.PI * 2 : 0);
       sprite.mesh.scale.setScalar(p.style === "balloon" ? 0.85 : 0.6);
     } else if (sprite.name === "particle_coal1") {
       library.animate(sprite, p.elapsed ?? progress * p.duration, true);

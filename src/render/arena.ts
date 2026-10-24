@@ -587,6 +587,12 @@ export class Arena {
   get nativePrincessTowers() {
     return [...this.units.values()].filter((v) => v.building?.princess).length;
   }
+  get nativeBombTowerBombers() {
+    const asset = this.sprites.assets.get("bomber");
+    return [...this.units.values()].filter(
+      (v) => v.building?.attached && asset && v.archer?.asset === asset,
+    ).length;
+  }
   get crownState() {
     return this.crowns.state;
   }
@@ -1075,6 +1081,21 @@ export class Arena {
               archer.mesh.position.z = 0.01;
               buildingSprite.mesh.add(archer.mesh);
             } else object.add(archer.mesh);
+          }
+        } else if (e.card === "bomb-tower" && buildingSprite?.attached) {
+          const bomber = this.sprites.make("bomber");
+          if (bomber) {
+            towerArcher = bomber;
+            bomber.mesh.position.set(
+              0,
+              buildingSprite.attached.height,
+              0,
+            );
+            bomber.mesh.position.applyQuaternion(
+              this.camera.quaternion.clone().invert(),
+            );
+            bomber.mesh.position.z = 0.01;
+            buildingSprite.mesh.add(bomber.mesh);
           }
         }
         // Rebuilt/seeked entities may already be old while the clock is paused.
@@ -1810,7 +1831,8 @@ export class Arena {
     if (v.archer) {
       const target = this.battle?.entities.find((t) => t.id === e.target);
       this.sprites.update(v.archer, e, target, false, time, this.camera);
-      if (v.building?.princess) v.archer.mesh.quaternion.identity();
+      if (v.building?.princess || v.building?.attached)
+        v.archer.mesh.quaternion.identity();
     }
     if (v.art) {
       v.art.quaternion.copy(this.camera.quaternion);

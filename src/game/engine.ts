@@ -42,6 +42,7 @@ import fireSpirits from "./fire-spirits-data.json" with { type: "json" };
 import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import giantSkeleton from "./giant-skeleton-data.json" with { type: "json" };
 import mortar from "./mortar-data.json" with { type: "json" };
+import bombTower from "./bomb-tower-data.json" with { type: "json" };
 import guards from "./guards-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
@@ -1784,6 +1785,8 @@ export class Battle {
                 ? 1.1
                 : e.card === "mortar"
                   ? 1
+                  : e.card === "bomb-tower"
+                    ? 4.5
                 : e.air
                   ? 2.3
                   : 0.8;

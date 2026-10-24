@@ -2024,6 +2024,7 @@ Object.defineProperty(window, "__arena", {
         loadedAnimations: arena.loadedAnimations,
         nativeTowerPrincesses: arena.nativeTowerPrincesses,
         nativePrincessTowers: arena.nativePrincessTowers,
+        nativeBombTowerBombers: arena.nativeBombTowerBombers,
         crownFlights: arena.crownState,
       };
     },

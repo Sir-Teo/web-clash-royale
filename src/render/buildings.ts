@@ -14,6 +14,10 @@ export interface BuildingSprite {
     front: T.Mesh<T.BufferGeometry, T.MeshBasicMaterial[]>;
     height: number;
   };
+  attached?: {
+    front: T.Mesh<T.BufferGeometry, T.MeshBasicMaterial[]>;
+    height: number;
+  };
   king?: {
     team: Team;
     turret: T.Mesh<T.BufferGeometry, T.MeshBasicMaterial[]>;
@@ -27,7 +31,7 @@ export class BuildingLibrary {
   async load() {
     const loader = new T.TextureLoader();
     await Promise.all(
-      ["cannon", "tesla", "mortar", "king"].map(async (id) => {
+      ["cannon", "tesla", "mortar", "bomb-tower", "king"].map(async (id) => {
         try {
           const response = await fetch(
             `${import.meta.env.BASE_URL}assets/buildings/${id}.json`,
@@ -59,7 +63,8 @@ export class BuildingLibrary {
             }),
             geometry: new Map(),
             scale:
-              (id === "king" ? 3.5 : id === "mortar" ? 2.8 : 2.2) /
+              (id === "king" ? 3.5 : id === "mortar" ? 2.8 :
+                id === "bomb-tower" ? 2.5 : 2.2) /
               (data.bounds[2] - data.bounds[0]),
           });
         } catch (error) {
@@ -112,6 +117,19 @@ export class BuildingLibrary {
       sprite.princess = {
         front,
         height: asset.data.attachedCharacterHeight ?? 2.2,
+      };
+    }
+    if (id === "bomb-tower") {
+      const front = new T.Mesh(
+        spriteGeometry(asset, asset.data.clips[`${team}-top`].frames[0]),
+        asset.materials,
+      );
+      front.position.z = 0.02;
+      front.renderOrder = 1;
+      mesh.add(front);
+      sprite.attached = {
+        front,
+        height: asset.data.attachedCharacterHeight ?? 3.2,
       };
     }
     if (id === "king") {
