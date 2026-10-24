@@ -1416,20 +1416,66 @@ function showDeckBuilder() {
   search = "";
   renderDeckBuilder();
 }
+function moveDeckCard(step: -1 | 1, focusCard = false, source = editSlot) {
+  const destination = source + step;
+  if (
+    screen !== "lobby" ||
+    source < 0 ||
+    destination < 0 ||
+    destination >= profile.deck.length
+  )
+    return;
+  const id = profile.deck[source];
+  [profile.deck[source], profile.deck[destination]] = [
+    profile.deck[destination],
+    id,
+  ];
+  profile.decks[profile.activeDeck] = [...profile.deck];
+  editSlot = destination;
+  saveProfile(profile);
+  refreshDeck();
+  renderDeckBuilder();
+  const button = $<HTMLButtonElement>(
+    step < 0 ? "#deck-move-earlier" : "#deck-move-later",
+  );
+  const focus =
+    focusCard || button.disabled ? $(`[data-edit-slot="${editSlot}"]`) : button;
+  focus.focus();
+  audio.play("button_click_02");
+}
 function renderDeckBuilder() {
+  const orderDescription = `deck-order-position deck-order-help${storageAvailable ? "" : " deck-order-save"}`;
   modal(
     "Build your winning eight",
-    `<div class="builder-top"><p>Choose a deck card, then select its replacement below.</p><span><i class="tiny-drop"></i> ${averageCost(profile.deck).toFixed(1)} average</span></div><div class="builder-deck">${profile.deck.map((id, i) => cardHTML(id, `data-edit-slot="${i}"`, editSlot === i ? "selected" : "")).join("")}</div><div class="builder-sharing"><button class="secondary-button" id="deck-codes">Deck codes</button><p>Copy your deck or preview a shared code.</p></div><div class="builder-controls"><div class="collection-label"><h3>Card collection</h3><span>${CARDS.length} / ${CARDS.length} unlocked</span></div><label class="search-input">${icon("search")}<input id="card-search" placeholder="Find a card…" value="${esc(search)}" aria-label="Search cards"/></label><div class="filter-row">${["all", "troop", "spell", "building"].map((f) => `<button class="${filter === f ? "active" : ""}" data-filter="${f}">${f === "all" ? "All cards" : f === "troop" ? "Troops" : f === "spell" ? "Spells" : "Buildings"}</button>`).join("")}</div></div><div class="collection-grid" id="collection-grid"></div><div class="builder-footer"><span id="builder-hint">${editSlot < 0 ? "Select one of your eight cards to replace it." : `Replacing ${CARD_MAP[profile.deck[editSlot]].name} · Choose a card below.`}</span><button class="primary-button" id="deck-done">${icon("check")} Done</button></div>`,
+    `<div class="builder-top"><p>Select a deck card to move it or choose a replacement below.</p><span><i class="tiny-drop"></i> ${averageCost(profile.deck).toFixed(1)} average</span></div><div class="builder-deck">${profile.deck.map((id, i) => cardHTML(id, `data-edit-slot="${i}" aria-pressed="${editSlot === i}" aria-keyshortcuts="Alt+ArrowLeft Alt+ArrowRight" aria-describedby="${orderDescription}"`, editSlot === i ? "selected" : "")).join("")}</div><div class="builder-order" role="group" aria-label="Deck order"><div><b id="deck-order-position">${editSlot < 0 ? "Arrange your deck" : `${CARD_MAP[profile.deck[editSlot]].name} · Slot ${editSlot + 1} of 8`}</b><p id="deck-order-help">${editSlot < 0 ? "Select a deck card to move it." : "Move this card with the buttons or Alt + Left / Right."}</p>${storageAvailable ? "" : '<p id="deck-order-save" role="status">Changes are available for this session. Browser storage is unavailable.</p>'}</div><div class="builder-order-actions"><button class="secondary-button" id="deck-move-earlier" aria-describedby="${orderDescription}" ${editSlot <= 0 ? "disabled" : ""}>Earlier</button><button class="secondary-button" id="deck-move-later" aria-describedby="${orderDescription}" ${editSlot < 0 || editSlot >= 7 ? "disabled" : ""}>Later</button></div></div><div class="builder-sharing"><button class="secondary-button" id="deck-codes">Deck codes</button><p>Copy your deck or preview a shared code.</p></div><div class="builder-controls"><div class="collection-label"><h3>Card collection</h3><span>${CARDS.length} / ${CARDS.length} unlocked</span></div><label class="search-input">${icon("search")}<input id="card-search" placeholder="Find a card…" value="${esc(search)}" aria-label="Search cards"/></label><div class="filter-row">${["all", "troop", "spell", "building"].map((f) => `<button class="${filter === f ? "active" : ""}" data-filter="${f}">${f === "all" ? "All cards" : f === "troop" ? "Troops" : f === "spell" ? "Spells" : "Buildings"}</button>`).join("")}</div></div><div class="collection-grid" id="collection-grid"></div><div class="builder-footer"><span id="builder-hint">${editSlot < 0 ? "Select a deck card to move or replace it." : `${CARD_MAP[profile.deck[editSlot]].name} selected · Move it above or choose a replacement below.`}</span><button class="primary-button" id="deck-done">${icon("check")} Done</button></div>`,
     "deck",
     true,
   );
-  document.querySelectorAll<HTMLButtonElement>("[data-edit-slot]").forEach(
-    (e) =>
-      (e.onclick = () => {
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-edit-slot]")
+    .forEach((e) => {
+      e.onclick = () => {
         editSlot = Number(e.dataset.editSlot);
         renderDeckBuilder();
-      }),
-  );
+      };
+      e.onkeydown = (event) => {
+        if (
+          event.altKey &&
+          !event.ctrlKey &&
+          !event.metaKey &&
+          (event.key === "ArrowLeft" || event.key === "ArrowRight")
+        ) {
+          event.preventDefault();
+          moveDeckCard(
+            event.key === "ArrowLeft" ? -1 : 1,
+            true,
+            Number(e.dataset.editSlot),
+          );
+        }
+      };
+    });
+  $("#deck-move-earlier").onclick = () => moveDeckCard(-1);
+  $("#deck-move-later").onclick = () => moveDeckCard(1);
   document.querySelectorAll<HTMLButtonElement>("[data-filter]").forEach(
     (e) =>
       (e.onclick = () => {
