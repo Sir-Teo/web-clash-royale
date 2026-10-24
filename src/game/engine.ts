@@ -169,6 +169,7 @@ export class Battle {
   private aiTimer = 2.5;
   private ai: boolean;
   private replayActions: Action[] | null;
+  private readonly replayDuration?: number;
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
@@ -194,6 +195,7 @@ export class Battle {
     this.validateDeck(this.enemyDeck);
     this.ai = !r && (options.ai ?? true);
     this.replayActions = r?.actions ?? null;
+    this.replayDuration = r?.duration;
     const player = (deck: CardId[]): PlayerState => {
       const shuffled = [...deck];
       for (let i = shuffled.length - 1; i > 0; i--) {
@@ -210,6 +212,7 @@ export class Battle {
     this.players = { blue: player(this.deck), red: player(this.enemyDeck) };
     for (const site of TOWER_SITES)
       this.makeTower(site.team, site.x, site.y, site.king, site.lane);
+    if (this.replayDuration === 0) this.applyReplayActions();
   }
   private validateDeck(deck: CardId[]) {
     if (
@@ -585,17 +588,24 @@ export class Battle {
       );
     this.audioProjectiles.delete(p.id);
   }
+  private applyReplayActions() {
+    if (this.winner || !this.replayActions) return;
+    while (
+      this.replayIndex < this.replayActions.length &&
+      this.replayActions[this.replayIndex].tick === this.tick
+    ) {
+      const action = this.replayActions[this.replayIndex++];
+      this.play(
+        action.team,
+        this.players[action.team].hand.indexOf(action.card),
+        action.x,
+        action.y,
+      );
+    }
+  }
   step() {
     if (this.winner) return;
-    if (this.replayActions) {
-      while (
-        this.replayIndex < this.replayActions.length &&
-        this.replayActions[this.replayIndex].tick === this.tick
-      ) {
-        const a = this.replayActions[this.replayIndex++];
-        this.play(a.team, this.players[a.team].hand.indexOf(a.card), a.x, a.y);
-      }
-    }
+    this.applyReplayActions();
     if (this.ai) {
       this.aiTimer -= STEP;
       if (this.aiTimer <= 0) {
@@ -648,6 +658,10 @@ export class Battle {
         "Tiebreaker",
       );
     }
+    // External plays happen between simulation steps. A recording can end
+    // immediately after a play at this exact tick; consume it without another
+    // combat, elixir, deployment or status update.
+    if (this.tick === this.replayDuration) this.applyReplayActions();
   }
   private updateAreas() {
     for (const area of this.areas) {
