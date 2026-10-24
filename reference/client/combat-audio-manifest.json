@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "4571bd91d80bd1189d50effdc1b8c2ed7793d9ffdda0df4be80ddf6aa766e8b0"
+      "sha256": "75dabcbf8e12f5d8053f4db55b5a844f0b2f033b88ce5d4fa2506621a6d406b7"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "a78c30387d14e6450955f195b8ee4fdbeae0bb7daa0adaaf26c5cf0f8c06a3e0"
+      "sha256": "ff84e078d6b3d7c882eaf04eb1fbc4bd73919ef74cb1cd77e5c17043130046e5"
     }
   ],
   "ignoredEnemyVersions": [
@@ -1114,6 +1114,12 @@
       "sha256": "2b35457fd04d1917251f5f41f4f0abf12cca32b73188baac729e7a871f2bb518"
     },
     {
+      "path": "public/assets/audio/place_inferno_02.ogg",
+      "source": "sfx/place_inferno_02.ogg",
+      "bytes": 17905,
+      "sha256": "c1c926a00115140107481384771706693e50d20511a7e20662081d7af1aeeb3d"
+    },
+    {
       "path": "public/assets/audio/poison_spell_01.ogg",
       "source": "sfx/poison_spell_01.ogg",
       "bytes": 27116,
@@ -1632,6 +1638,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "112bc744568cd8817c45b61d6a474f46222227eaf829ac354a694a525ed9fb1c"
+    "sha256": "e043be2cf92ceea954c81ee77828f00368fffabba2a783aede426cc85fff07f3"
   }
 }

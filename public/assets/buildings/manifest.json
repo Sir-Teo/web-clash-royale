@@ -66,6 +66,20 @@
       "frames": 3
     },
     {
+      "id": "inferno-tower",
+      "source": "building_inferno_tower",
+      "metadataSha256": "684d313daf9671364b229a8ad70a045ff84834ec966a0271c02ef68b955c868b",
+      "dataSha256": "08070e1ad41b5c870f0d99520fc4400d8fa8b2bfa8c9ce33c7ec5a63dbf60012",
+      "textures": [
+        {
+          "file": "inferno-tower-0.webp",
+          "sha256": "b07b6de2c4565299d070597bb9ecf235a0cf10322781293da51ab38f302e6212",
+          "originalSha256": "9b5c2ad1f352b8c95266afec2d2c7c4e47e93271e5b1869183c42185c26c1f99"
+        }
+      ],
+      "frames": 2
+    },
+    {
       "id": "king",
       "source": "building_tower",
       "metadataSha256": "0096da89499bf03437a1caa2a88c811b293a5a3067fe571e1ef12bafadbf7962",

@@ -1,0 +1,50 @@
+{
+  "card": "InfernoTower",
+  "rarity": "Rare",
+  "cost": 5,
+  "sourceHitpoints": 800,
+  "sourceDamage": [
+    20,
+    75,
+    400
+  ],
+  "stageDurations": [
+    2,
+    2
+  ],
+  "hitSpeed": 0.4,
+  "loadTime": 1.6,
+  "deployTime": 1,
+  "range": 6,
+  "lifetime": 40,
+  "projectileStartHeight": 1,
+  "hitsAir": true,
+  "hitEffect": "inferno_hit_effect",
+  "continuousEffect": "Inferno_continuous",
+  "beamEffects": [
+    "inferno_beam_lvl1",
+    "inferno_beam_lvl2",
+    "inferno_beam_lvl3"
+  ],
+  "stageEffects": [
+    "inferno_stage2_root",
+    "inferno_stage3_root"
+  ],
+  "flameEffects": [
+    "inferno_muzzle",
+    "inferno_muzzle_stage2",
+    "inferno_muzzle_stage3"
+  ],
+  "beamArt": [
+    "inferno_beam",
+    "inferno_beam_stage2",
+    "inferno_beam_stage3"
+  ],
+  "muzzleArt": [
+    "inferno_shoot",
+    "inferno_shoot_st2",
+    "inferno_shoot_st3"
+  ],
+  "blueExport": "inferno_blue",
+  "redExport": "inferno_red"
+}

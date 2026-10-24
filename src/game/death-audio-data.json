@@ -1195,6 +1195,29 @@
           "delay": 0.05
         }
       ]
+    },
+    "inferno-tower": {
+      "source": "Cannon_die",
+      "components": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "Boulder impact",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_generic_death",
+          "delay": 0
+        },
+        {
+          "sound": "Boulder impact",
+          "delay": 0
+        }
+      ]
     }
   },
   "sounds": {

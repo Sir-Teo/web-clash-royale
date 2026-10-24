@@ -28,6 +28,7 @@ const cards = [
   "tesla",
   "mortar",
   "bomb-tower",
+  "inferno-tower",
   "zap",
   "freeze",
   "poison",

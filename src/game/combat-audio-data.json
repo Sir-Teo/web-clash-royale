@@ -7114,6 +7114,111 @@
         "row": "BombTower"
       }
     },
+    "inferno-tower": {
+      "source": "InfernoTower",
+      "attack": {
+        "sources": [
+          "knight_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_knight_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_knight_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact": {
+        "sources": [
+          "inferno_hit_effect"
+        ],
+        "components": [],
+        "enemyComponents": []
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "sound:SpellCasting"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "inferno_tower_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_place_inferno_tower",
+            "delay": 0.25
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_place_inferno_tower",
+            "delay": 0.25
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_buildings",
+        "row": "InfernoTower"
+      }
+    },
     "king-tower": {
       "source": "KingTower",
       "attack": {
@@ -15574,6 +15679,29 @@
         "pitch": [
           0.98,
           1.02
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_place_inferno_tower": [
+      {
+        "sourceFile": "sfx/place_inferno_02.wav",
+        "file": "place_inferno_02",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          1,
+          1
         ],
         "startDelay": [
           0,

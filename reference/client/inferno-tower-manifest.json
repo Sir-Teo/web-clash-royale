@@ -1,0 +1,38 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_buildings.csv",
+      "sha256": "f302372ce1d0870e3edb37d0520be9164865eb207ea600910616b9cbf024f456"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/client/effects.csv",
+      "sha256": "22591ef669cb9af6535a10caae5b7f7f8b5b79c81630aeb3381a04bfef298985"
+    },
+    {
+      "path": "reference/sc/building_inferno_tower.bin",
+      "sha256": "684d313daf9671364b229a8ad70a045ff84834ec966a0271c02ef68b955c868b"
+    },
+    {
+      "path": "reference/sc/building_inferno_tower_tex.png",
+      "sha256": "9b5c2ad1f352b8c95266afec2d2c7c4e47e93271e5b1869183c42185c26c1f99"
+    },
+    {
+      "path": "reference/sc/effects.bin",
+      "sha256": "1a9b0a2efe99578cd03fb9d8673ddb042aa067ba9f9fc0d3a253e15c2e9c7b7c"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    }
+  ],
+  "output": {
+    "path": "src/game/inferno-tower-data.json",
+    "sha256": "0e22d033bd701d6d5b9f2c7887c8cf8f2ea1034f443315eaa81b7b57ddc71aa2"
+  }
+}

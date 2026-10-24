@@ -480,6 +480,7 @@ for (const [id, expected] of Object.entries({
   giant: "giant_hit",
   balloon: "balloon_hit",
   tesla: "tesla_hit_effect",
+  "inferno-tower": "inferno_hit_effect",
 })) {
   const profile = profiles[id];
   const actor =
@@ -584,6 +585,15 @@ continuities["fire-spirits"] = {
   cycle: 1,
   components: composition(fireSpiritsContinuous, "blue"),
   enemyComponents: composition(fireSpiritsContinuous, "red"),
+};
+const infernoTowerContinuous = tables.buildings[profiles["inferno-tower"].source].ContinuousEffect;
+if (infernoTowerContinuous !== "Inferno_continuous")
+  throw new Error("Recheck native Inferno Tower continuous effect");
+continuities["inferno-tower"] = {
+  source: infernoTowerContinuous,
+  cycle: 1,
+  components: composition(infernoTowerContinuous, "blue"),
+  enemyComponents: composition(infernoTowerContinuous, "red"),
 };
 importEmitter(redFirefly);
 const princeCharge = tables.characters[profiles.prince.source].ChargeEffect;

@@ -543,6 +543,12 @@
       "sha256": "09b3d010aaba0c5aa3d8d4df30b9c29d2dd51007c8702fb435133b57cc44e793"
     },
     {
+      "path": "cards/inferno-tower.png",
+      "source": "cards/inferno-tower.png",
+      "bytes": 120823,
+      "sha256": "180ef438e5f57c6292680ee107314c1a7581a1dea2cdaf3a36995e38f2e83196"
+    },
+    {
       "path": "cards/knight.png",
       "source": "cards/knight.png",
       "bytes": 153676,

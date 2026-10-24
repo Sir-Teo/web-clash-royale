@@ -257,6 +257,11 @@
       "sha256": "5491d0fe7895bdaa4c637a2350ad6c7f97c01279920fc381c0ffb14d082a1679"
     },
     {
+      "file": "portrait-inferno-tower.webp",
+      "bytes": 31764,
+      "sha256": "0275a2ba70eda0a2d24d7154279ce0f3c9e1162cb9d240219bb0d2642095a75c"
+    },
+    {
       "file": "portrait-zap.webp",
       "bytes": 39706,
       "sha256": "0acff86dd7ba3d91c2d161b007f0b38e2e833c2bdce25c08545c1f0874bd14a4"
@@ -463,8 +468,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 106087,
-      "sha256": "a78c30387d14e6450955f195b8ee4fdbeae0bb7daa0adaaf26c5cf0f8c06a3e0"
+      "bytes": 106433,
+      "sha256": "ff84e078d6b3d7c882eaf04eb1fbc4bd73919ef74cb1cd77e5c17043130046e5"
     }
   ]
 }

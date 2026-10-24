@@ -3747,6 +3747,69 @@
         }
       ]
     },
+    "inferno-tower": {
+      "source": "Cannon_die",
+      "components": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Death_elixir_burst1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_enemy_puff",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Death_blue_smoke_shadow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Shadow",
+          "ground": true
+        },
+        {
+          "emitter": "Death_elixir_ground1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Base",
+          "ground": true
+        }
+      ]
+    },
     "balloon-bomb": {
       "source": "MegaBombExplodeBalloon",
       "components": [
@@ -6038,6 +6101,69 @@
         }
       ]
     },
+    "hit:inferno-tower": {
+      "source": "inferno_hit_effect",
+      "components": [
+        {
+          "emitter": "inferno_hit_sparks",
+          "delay": 0,
+          "scale": 0.7,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "inferno_dragon_emitterTrail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "fireball_trial_spark",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "inferno_dragon_glowTrail",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "inferno_hit_sparks",
+          "delay": 0,
+          "scale": 0.7,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "inferno_dragon_emitterTrail",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "fireball_trial_spark",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "inferno_dragon_glowTrail",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
     "hit:mortar": {
       "source": "mortar_hit",
       "components": [
@@ -7833,6 +7959,42 @@
           "delay": 0,
           "scale": 1,
           "layer": "Above",
+          "ground": false
+        }
+      ]
+    },
+    "inferno-tower": {
+      "source": "Inferno_continuous",
+      "cycle": 1,
+      "components": [
+        {
+          "emitter": "Inferno_loop1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Inferno_loop1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "Inferno_loop1",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "Inferno_loop1",
+          "delay": 0.3,
+          "scale": 1,
+          "layer": "Object",
           "ground": false
         }
       ]
@@ -9840,6 +10002,27 @@
           "scale": 1,
           "layer": "Ground",
           "ground": false
+        }
+      ]
+    },
+    "inferno-tower": {
+      "source": "inferno_tower_deploy",
+      "components": [
+        {
+          "emitter": "towerExplode_Smoke",
+          "delay": 0.25,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "towerExplode_Smoke",
+          "delay": 0.25,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
         }
       ]
     }
@@ -18724,6 +18907,56 @@
       "loop": false,
       "clips": [
         "Sparkle"
+      ]
+    },
+    "Inferno_loop1": {
+      "count": 8,
+      "emissionLife": [
+        0.41,
+        0.8
+      ],
+      "interval": [
+        0.001,
+        0.01
+      ],
+      "life": [
+        0.3,
+        0.7
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        0,
+        0.16666666666666666
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        0,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 2,
+      "startScale": 1.5,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 0.3,
+      "inertia": 0.8333333333333334,
+      "rotate": false,
+      "loop": true,
+      "clips": [
+        "FireParticle1_small",
+        "FireParticle2_small",
+        "FireParticle3_small",
+        "fireplace_particle"
       ]
     },
     "golem_firefly_trail_red": {
