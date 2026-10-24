@@ -47,6 +47,7 @@ import infernoTower from "./inferno-tower-data.json" with { type: "json" };
 import xBow from "./x-bow-data.json" with { type: "json" };
 import elixirCollector from "./elixir-collector-data.json" with { type: "json" };
 import goblinHut from "./goblin-hut-data.json" with { type: "json" };
+import tombstone from "./tombstone-data.json" with { type: "json" };
 import guards from "./guards-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
@@ -718,7 +719,8 @@ export class Battle {
       lifetime: c.lifetime,
       spawnTimer: id === "night-witch" ? nightWitch.spawn.pause :
         id === "elixir-collector" ? elixirCollector.generateInterval :
-        id === "goblin-hut" ? goblinHut.spawnPause : 4,
+        id === "goblin-hut" ? goblinHut.spawnPause :
+        id === "tombstone" ? tombstone.spawnPause : 4,
       ...(id === "tesla" && this.rulesVersion >= 3
         ? { burrow: { exposure: 0, idle: 0, phase: "hidden" as const } }
         : {}),
@@ -1469,6 +1471,16 @@ export class Battle {
           e.spawnTimer += goblinHut.spawnPause;
           this.spawn("spear-goblins", e.team, e.x,
             e.y + (e.team === "blue" ? -1 : 1) * goblinHut.spawnRadius,
+            true, 1);
+        }
+        continue;
+      }
+      if (e.card === "tombstone") {
+        e.spawnTimer -= STEP * hitSpeed;
+        if (e.spawnTimer <= 1e-8) {
+          e.spawnTimer += tombstone.spawnPause;
+          this.spawn("skeletons", e.team, e.x,
+            e.y + (e.team === "blue" ? -1 : 1) * tombstone.spawnRadius,
             true, 1);
         }
         continue;
@@ -2336,6 +2348,14 @@ export class Battle {
     this.cancelAudio(e);
     this.emitAudio("death", e.team, audioProfile(e), e.id);
     this.emit("death", e.team, e.x, e.y, e.card);
+    if (e.card === "tombstone")
+      for (let i = 0; i < tombstone.deathSpawnCount; i++) {
+        const angle = (i * Math.PI * 2) / tombstone.deathSpawnCount;
+        this.spawn("skeletons", e.team,
+          clamp(e.x + Math.cos(angle) * tombstone.spawnRadius, 0.6, 17.4),
+          clamp(e.y + Math.sin(angle) * tombstone.spawnRadius, 0.8, 31.2),
+          true, 1);
+      }
     if (e.card === "giant-skeleton") {
       this.projectiles.push({
         id: this.nextId++, team: e.team, x: e.x, y: e.y,

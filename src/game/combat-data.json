@@ -535,6 +535,13 @@
     "ignoresKnockback": false,
     "projectile": null
   },
+  "tombstone": {
+    "source": "Tombstone",
+    "windup": 10,
+    "sight": 0,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
   "king-tower": {
     "source": "KingTower",
     "windup": 0.5,

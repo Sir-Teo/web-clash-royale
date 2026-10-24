@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "e90883835fd210cc750e877c0a724ded98003fe300ee4e1079da037ae571f854"
+      "sha256": "e3aceff90f2a4ecc876a15baacc78de108e41b7eb7fded216ae3e1190f6fba4d"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "b920dfac83e78aae2b80343a18d61da2fc080b89e63789aee51fe656acc87e64"
+      "sha256": "bb88428e36489fc1042387d26bf1e816d18ece83c9ccfe4a3245c9030c15fb73"
     }
   ],
   "ignoredEnemyVersions": [
@@ -1456,6 +1456,12 @@
       "sha256": "adc4f1c65fc5013c5b5d6e569a5ce49f3d4b9be755e52a6d9c6a890a09ea7b0e"
     },
     {
+      "path": "public/assets/audio/tombstone_deploy_01.ogg",
+      "source": "sfx/tombstone_deploy_01.ogg",
+      "bytes": 12103,
+      "sha256": "7a0d0b705daf52eb033d96efe104f337df64db75da08e28a2606a4e3b2c069de"
+    },
+    {
       "path": "public/assets/audio/valkyrie_atk_04.ogg",
       "source": "sfx/valkyrie_atk_04.ogg",
       "bytes": 6996,
@@ -1662,6 +1668,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "1ac1c014920661e87c950b83cfb470bbcd2b4b046e8b07a5a5378df93c0e2669"
+    "sha256": "a5217678260cc9435159eb7755b2350820b83bc7cde85ecd3c19879c5f22979c"
   }
 }

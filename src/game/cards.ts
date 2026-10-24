@@ -24,6 +24,7 @@ import infernoTower from "./inferno-tower-data.json" with { type: "json" };
 import xBow from "./x-bow-data.json" with { type: "json" };
 import elixirCollector from "./elixir-collector-data.json" with { type: "json" };
 import goblinHut from "./goblin-hut-data.json" with { type: "json" };
+import tombstone from "./tombstone-data.json" with { type: "json" };
 import royalGiant from "./royal-giant-data.json" with { type: "json" };
 import megaMinion from "./mega-minion-data.json" with { type: "json" };
 import dartGoblin from "./dart-goblin-data.json" with { type: "json" };
@@ -105,6 +106,7 @@ export type CardId =
   | "x-bow"
   | "elixir-collector"
   | "goblin-hut"
+  | "tombstone"
   | "zap"
   | "freeze"
   | "poison"
@@ -990,6 +992,18 @@ export const CARDS: Card[] = [
     goblinHut.spawnPause,
     "Releases a Spear Goblin every 4.95 seconds while the hut stands.",
     { kind: "building", rarity: "Rare", lifetime: goblinHut.lifetime },
+  ),
+  troop(
+    "tombstone",
+    "Tombstone",
+    tombstone.cost,
+    Math.round(tombstone.sourceHitpoints * 1152 / 450),
+    0,
+    0,
+    0,
+    tombstone.spawnPause,
+    "Releases a Skeleton every 2.95 seconds and four more when destroyed.",
+    { kind: "building", rarity: "Rare", lifetime: tombstone.lifetime },
   ),
   troop(
     "zap",

@@ -113,6 +113,7 @@ const names = {
   "x-bow": "Xbow",
   "elixir-collector": "ElixirCollector",
   "goblin-hut": "GoblinHut",
+  tombstone: "Tombstone",
   "king-tower": "KingTower",
   "princess-tower": "PrincessTower",
 };

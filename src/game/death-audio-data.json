@@ -1287,6 +1287,21 @@
           "delay": 0
         }
       ]
+    },
+    "tombstone": {
+      "source": "tombstone_die",
+      "components": [
+        {
+          "sound": "sound_tombstone_die",
+          "delay": 0
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_tombstone_die",
+          "delay": 0
+        }
+      ]
     }
   },
   "sounds": {
@@ -2346,6 +2361,29 @@
       "padding": 0
     },
     "sound_goblin_hut_die": {
+      "sourceFiles": [
+        "sfx/boulder_impact_01.wav"
+      ],
+      "files": [
+        "boulder_impact_01"
+      ],
+      "volume": [
+        0.8,
+        0.9
+      ],
+      "pitch": [
+        0.95,
+        1.05
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 2,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_tombstone_die": {
       "sourceFiles": [
         "sfx/boulder_impact_01.wav"
       ],
