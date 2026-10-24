@@ -1,4 +1,5 @@
 import { NativeConnectionWarning } from "./ui/connection";
+import { OfflineUpdates } from "./ui/offline-updates";
 import "@fontsource/lilita-one/latin-400.css";
 import "@fontsource/nunito-sans/latin-400.css";
 import "@fontsource/nunito-sans/latin-600.css";
@@ -263,6 +264,18 @@ $("#app").innerHTML = `
  </div><div id="modal-root"></div><div class="toast" id="toast" role="status"></div><div id="drag-card" class="drag-card hidden"></div>`;
 
 const nativeCards = new NativeCards();
+const updateHost = document.createElement("aside");
+updateHost.className = "offline-update";
+updateHost.setAttribute("role", "status");
+updateHost.setAttribute("aria-label", "Game update");
+document.body.append(updateHost);
+const offlineUpdates = new OfflineUpdates(
+  updateHost,
+  () => screen === "lobby" && !modalKey && !network.room,
+  (busy) => {
+    $("#app").inert = busy;
+  },
+);
 const matchHud = new NativeBattleHud($(".match-timer"), $(".match-crowns"));
 const crownCounts = () => ({
   blue: battle.players.blue.crowns,
@@ -1942,6 +1955,7 @@ function frame(now: number) {
   );
   endingFrameTime = arena.effectTime;
   connectionWarning.update(now / 1000);
+  offlineUpdates.update();
   emotes.update(
     paused ? 0 : delta,
     screen === "battle" &&
@@ -2051,9 +2065,7 @@ Object.defineProperty(window, "__arena", {
 
 if (import.meta.env.PROD && "serviceWorker" in navigator) {
   const install = () => {
-    void navigator.serviceWorker
-      .register(`${import.meta.env.BASE_URL}sw.js`)
-      .catch(() => {});
+    void offlineUpdates.register();
   };
   if (document.readyState === "complete") install();
   else window.addEventListener("load", install, { once: true });

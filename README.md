@@ -101,6 +101,8 @@ The workflow builds with `VITE_BASE_PATH=/web-clash-royale/`, including asset UR
 
 `npm run test:hosting` builds at the Pages path, starts an isolated preview on port 5189, and verifies native assets, service-worker scope, offline reload and battle startup. CI runs this check before the production browser suite. For another preview address, set `ARENA_BASE_URL` when running `npm run test:offline`.
 
+New releases wait while a game is open. When an update is ready, **Update game** appears in the lobby; close other arena tabs before applying it. Dismiss the notice to keep playing the current release. Battles, replays and friendly rooms keep their current release. Reloads can use that release offline until the update is applied, so a deployment cannot mix a new page with old cached artwork and rules.
+
 ## Controls
 
 - Click a hand card, then click the arena, or drag the card into position.
