@@ -1,5 +1,11 @@
 # Asset provenance
 
+## Furnace
+
+`npm run assets:furnace` pins the archived `FirespiritHut` Rare card and building rows: four elixir, 600 source hitpoints, one-second placement, 50-second lifetime, and two Fire Spirits per wave with a 500-ms interval and a 9,400-ms spawn pause. Each Fire Spirit retains its source 1,000-ms deployment and 400-ms deployment delay. The browser scales Furnace to the roster's level-11 Rare health curve (1,536 HP) and uses its existing level-11 Fire Spirit stats. `SpawnCharacterLevelIndex=2` is recorded but does not separately override that normalized troop level.
+
+The browser starts the first wave after the spawn pause, releases the second spirit 0.5 seconds later, then waits 9.4 seconds after that second spirit before the next wave. Source rows give the interval and pause but do not state the first-wave initialization or exact left/right release offsets; those remain reconstruction choices. Destroying Furnace cancels an unfinished pair. The 300-frame, 30-FPS blue and red building clips, native card portrait, `Firespirit_building_spawn` deployment effect, `goblin_hut_die` death effect and original sound group are retained from the pinned archive. `reference/client/furnace-manifest.json` hashes the source and generated rules.
+
 ## Tombstone
 
 `npm run assets:tombstone` pins the archived Rare card and building rows: three elixir, 240 source hitpoints, one-second deployment, 40-second lifetime, one Skeleton every 2.95 seconds, and four Skeletons on destruction. The browser scales the building to the roster's level-11 Rare health curve (614 HP) and uses its existing level-11 Skeleton stats. The archived `SpawnCharacterLevelIndex=2` is retained but does not independently override that normalized troop level. The source supplies a 0.4-tile release radius; the browser places periodic Skeletons forward and death Skeletons at four cardinal points on that radius, since the archive does not specify their exact individual placement.

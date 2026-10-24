@@ -47,7 +47,7 @@ describe("archived Fire Spirits", () => {
       .toBe("PrincessArrowProjectileEmitter");
     expect(combatAudioPlan("fire-spirits", "spawn", 7).length).toBeGreaterThan(0);
     expect(combatAudioPlan("fire-spirits", "impact", 7).length).toBeGreaterThan(0);
-    expect(CARDS).toHaveLength(71);
+    expect(CARDS).toHaveLength(72);
   });
 
   it("spends two elixir, deploys a readable triangle and resolves a deterministic battle", () => {
