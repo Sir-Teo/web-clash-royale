@@ -47,6 +47,7 @@ import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
 import golem from "./golem-data.json" with { type: "json" };
 import lavaHound from "./lava-hound-data.json" with { type: "json" };
+import archivedStats from "./archived-card-stats.json" with { type: "json" };
 
 export type CardId =
   | "knight"
@@ -172,7 +173,7 @@ const troop = (
   count: 1,
   ...extra,
 });
-export const CARDS: Card[] = [
+const originalCards: Card[] = [
   troop(
     "knight",
     "Knight",
@@ -1116,6 +1117,21 @@ export const CARDS: Card[] = [
     },
   ),
 ];
+type BasicStats = Pick<Card, "speed" | "range" | "interval">;
+const sourceStats = archivedStats as Record<string, BasicStats>;
+// Replay rules 1–6 retain the original curated stats. Rule 7 uses the
+// archive's movement, attack reach, and attack interval where directly mapped.
+export const LEGACY_CARD_STATS = Object.fromEntries(
+  originalCards.filter((card) => {
+    const source = sourceStats[card.id];
+    return source && (card.speed !== source.speed ||
+      card.range !== source.range || card.interval !== source.interval);
+  }).map(({ id, speed, range, interval }) => [id, { speed, range, interval }]),
+) as Partial<Record<CardId, BasicStats>>;
+export const CARDS: Card[] = originalCards.map((card) => ({
+  ...card,
+  ...sourceStats[card.id],
+}));
 export const CARD_MAP = {
   ...Object.fromEntries(CARDS.map((c) => [c.id, c])),
   // Spawned by Golem; never offered as a deck card.

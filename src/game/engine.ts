@@ -1,4 +1,4 @@
-import { CARD_MAP, STARTER_DECK } from "./cards";
+import { CARD_MAP, LEGACY_CARD_STATS, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
 import { deploymentPositions } from "./deployment";
 import {
@@ -188,7 +188,7 @@ export interface Action extends Point {
 }
 export interface Replay {
   perspective?: Team;
-  version: 1 | 2 | 3 | 4 | 5 | 6;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -253,7 +253,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
-    this.rulesVersion = r?.version ?? 6;
+    this.rulesVersion = r?.version ?? 7;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -692,6 +692,7 @@ export class Battle {
   }
   private spawn(id: CardId, team: Team, x: number, y: number, audio = true, deploy = 1) {
     const c = CARD_MAP[id];
+    const stats = this.rulesVersion < 7 ? LEGACY_CARD_STATS[id] ?? c : c;
     this.entities.push({
       id: this.nextId++,
       team,
@@ -718,10 +719,10 @@ export class Battle {
               : 0.37,
       air: !!c.air,
       damage: c.damage,
-      range: c.range,
+      range: stats.range,
       cooldown: id === "sparky" ? sparky.sourceLoadTime + deploy : 0.4,
-      interval: c.interval,
-      speed: c.speed,
+      interval: stats.interval,
+      speed: stats.speed,
       target: null,
       age: 0,
       deploy,
