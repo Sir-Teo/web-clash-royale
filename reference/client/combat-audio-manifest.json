@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "57d1f5f094f449fd0419e38c7dccca9397f98e68c679428cc85a09faf66e51bd"
+      "sha256": "4571bd91d80bd1189d50effdc1b8c2ed7793d9ffdda0df4be80ddf6aa766e8b0"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "731ebd73226eebf0504a87f94ef6d45c4188d9688ff65d152c4122e432527e20"
+      "sha256": "a78c30387d14e6450955f195b8ee4fdbeae0bb7daa0adaaf26c5cf0f8c06a3e0"
     }
   ],
   "ignoredEnemyVersions": [
@@ -1632,6 +1632,6 @@
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "7b703924b8e3d9c8085c47bf69ca5433dc1f0b4978e5753a6baa6b0051c729e1"
+    "sha256": "112bc744568cd8817c45b61d6a474f46222227eaf829ac354a694a525ed9fb1c"
   }
 }

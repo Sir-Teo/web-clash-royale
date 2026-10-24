@@ -3684,6 +3684,69 @@
         }
       ]
     },
+    "bomb-tower": {
+      "source": "BombTower_die",
+      "components": [
+        {
+          "emitter": "TargetDummy_planks",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "FireRingEmitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TargetDummy_smoke",
+          "delay": 0.25,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TargetDummy_planks2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "TargetDummy_planks",
+          "delay": 0.05,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "FireRingEmitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TargetDummy_smoke",
+          "delay": 0.25,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "TargetDummy_planks2",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
     "balloon-bomb": {
       "source": "MegaBombExplodeBalloon",
       "components": [
@@ -6052,6 +6115,83 @@
         }
       ]
     },
+    "hit:bomb-tower": {
+      "source": "BombTower_projectile_hit",
+      "components": [
+        {
+          "emitter": "FireRingEmitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "BlueSparkEmitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "cannon_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "BombTower_hit_flame",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "HitEffectParticles",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "FireRingEmitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "BlueSparkEmitter",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "cannon_glow",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Above",
+          "ground": false
+        },
+        {
+          "emitter": "BombTower_hit_flame",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        },
+        {
+          "emitter": "HitEffectParticles",
+          "delay": 0,
+          "scale": 1,
+          "layer": "Object",
+          "ground": false
+        }
+      ]
+    },
     "hit:musketeer": {
       "source": "cannon_hit",
       "components": [
@@ -7320,6 +7460,27 @@
           "ground": false
         }
       ]
+    },
+    "bomb-tower": {
+      "source": "BomberBomb_fire_emitter",
+      "components": [
+        {
+          "emitter": "FlameArrowEmitter_small",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Above",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "FlameArrowEmitter_small",
+          "delay": 0,
+          "scale": 0.5,
+          "layer": "Above",
+          "ground": false
+        }
+      ]
     }
   },
   "launches": {
@@ -7420,6 +7581,11 @@
           "ground": false
         }
       ]
+    },
+    "bomb-tower": {
+      "source": "BombTower_attack",
+      "components": [],
+      "enemyComponents": []
     }
   },
   "movements": {
@@ -9641,6 +9807,41 @@
       "source": "mortar_deploy",
       "components": [],
       "enemyComponents": []
+    },
+    "bomb-tower": {
+      "source": "goblin_hut_deploy",
+      "components": [
+        {
+          "emitter": "towerExplode_Smoke",
+          "delay": 0.25,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Rock Pieces Emitter",
+          "delay": 0.25,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        }
+      ],
+      "enemyComponents": [
+        {
+          "emitter": "towerExplode_Smoke",
+          "delay": 0.25,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": true
+        },
+        {
+          "emitter": "Rock Pieces Emitter",
+          "delay": 0.25,
+          "scale": 1,
+          "layer": "Ground",
+          "ground": false
+        }
+      ]
     }
   },
   "emitters": {
@@ -18091,6 +18292,150 @@
         "smoke_cloud_1"
       ]
     },
+    "BombTower_hit_flame": {
+      "count": 50,
+      "emissionLife": [
+        0.35,
+        0.35
+      ],
+      "interval": [
+        0.005,
+        0.01
+      ],
+      "life": [
+        0.6,
+        0.8
+      ],
+      "angle": [
+        -6.283185307179586,
+        6.283185307179586
+      ],
+      "radius": [
+        -0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        0.03333333333333333,
+        0.3333333333333333
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        1.6666666666666667,
+        6.666666666666667
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 1.1666666666666667,
+      "startScale": 0.7,
+      "endScale": 0.5,
+      "fadeIn": 0,
+      "fadeOut": 0.5,
+      "inertia": 0.03333333333333333,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "fireball_trail1",
+        "fireball_trail2"
+      ]
+    },
+    "HitEffectParticles": {
+      "count": 20,
+      "emissionLife": [
+        0.1,
+        0.1
+      ],
+      "interval": [
+        0,
+        0.01
+      ],
+      "life": [
+        0.15,
+        0.2
+      ],
+      "angle": [
+        0.017453292519943295,
+        6.283185307179586
+      ],
+      "radius": [
+        0.06666666666666667,
+        0.06666666666666667
+      ],
+      "speed": [
+        10,
+        11.666666666666666
+      ],
+      "height": 0,
+      "verticalSpeed": [
+        2,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        100,
+        150
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Sparkle"
+      ]
+    },
+    "FlameArrowEmitter_small": {
+      "count": 10,
+      "emissionLife": [
+        0.001,
+        0.001
+      ],
+      "interval": [
+        0.001,
+        0.05
+      ],
+      "life": [
+        0.2,
+        0.5
+      ],
+      "angle": [
+        0,
+        0
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        0,
+        0
+      ],
+      "height": 0.9666666666666667,
+      "verticalSpeed": [
+        3,
+        3.3333333333333335
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": 0,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "FireParticle1_small",
+        "FireParticle2_small",
+        "FireParticle3_small"
+      ]
+    },
     "knight_speps_dust1": {
       "count": 3,
       "emissionLife": [
@@ -18476,101 +18821,6 @@
       "clips": [
         "d3",
         "d4"
-      ]
-    },
-    "BombTower_hit_flame": {
-      "count": 50,
-      "emissionLife": [
-        0.35,
-        0.35
-      ],
-      "interval": [
-        0.005,
-        0.01
-      ],
-      "life": [
-        0.6,
-        0.8
-      ],
-      "angle": [
-        -6.283185307179586,
-        6.283185307179586
-      ],
-      "radius": [
-        -0.06666666666666667,
-        0.06666666666666667
-      ],
-      "speed": [
-        0.03333333333333333,
-        0.3333333333333333
-      ],
-      "height": 0,
-      "verticalSpeed": [
-        1.6666666666666667,
-        6.666666666666667
-      ],
-      "tailDelayMs": [
-        0,
-        0
-      ],
-      "gravity": 1.1666666666666667,
-      "startScale": 0.7,
-      "endScale": 0.5,
-      "fadeIn": 0,
-      "fadeOut": 0.5,
-      "inertia": 0.03333333333333333,
-      "rotate": false,
-      "loop": false,
-      "clips": [
-        "fireball_trail1",
-        "fireball_trail2"
-      ]
-    },
-    "HitEffectParticles": {
-      "count": 20,
-      "emissionLife": [
-        0.1,
-        0.1
-      ],
-      "interval": [
-        0,
-        0.01
-      ],
-      "life": [
-        0.15,
-        0.2
-      ],
-      "angle": [
-        0.017453292519943295,
-        6.283185307179586
-      ],
-      "radius": [
-        0.06666666666666667,
-        0.06666666666666667
-      ],
-      "speed": [
-        10,
-        11.666666666666666
-      ],
-      "height": 0,
-      "verticalSpeed": [
-        2,
-        3.3333333333333335
-      ],
-      "tailDelayMs": [
-        100,
-        150
-      ],
-      "gravity": 0,
-      "startScale": 1,
-      "endScale": 1,
-      "fadeIn": 0,
-      "fadeOut": 0,
-      "inertia": 0,
-      "rotate": false,
-      "loop": false,
-      "clips": [
-        "Sparkle"
       ]
     },
     "dragon_hit_sparks": {
@@ -19689,6 +19939,55 @@
       "fadeIn": 0,
       "fadeOut": 6,
       "inertia": 0.6666666666666666,
+      "rotate": false,
+      "loop": false,
+      "clips": [
+        "Rock1Particle",
+        "Rock2Particle",
+        "Rock3Particle"
+      ]
+    },
+    "Rock Pieces Emitter": {
+      "count": 13,
+      "emissionLife": [
+        0.4,
+        0.4
+      ],
+      "interval": [
+        0,
+        0.005
+      ],
+      "life": [
+        0.8,
+        1.2
+      ],
+      "angle": [
+        0,
+        6.283185307179586
+      ],
+      "radius": [
+        0,
+        0
+      ],
+      "speed": [
+        1,
+        5
+      ],
+      "height": 0.6666666666666666,
+      "verticalSpeed": [
+        3.3333333333333335,
+        8.333333333333334
+      ],
+      "tailDelayMs": [
+        0,
+        0
+      ],
+      "gravity": -66.66666666666667,
+      "startScale": 1,
+      "endScale": 1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "inertia": 0,
       "rotate": false,
       "loop": false,
       "clips": [

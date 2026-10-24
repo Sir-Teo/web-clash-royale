@@ -1180,6 +1180,21 @@
           "delay": 0
         }
       ]
+    },
+    "bomb-tower": {
+      "source": "BombTower_die",
+      "components": [
+        {
+          "sound": "sound_bomb_tower_die",
+          "delay": 0.05
+        }
+      ],
+      "enemyComponents": [
+        {
+          "sound": "sound_bomb_tower_die",
+          "delay": 0.05
+        }
+      ]
     }
   },
   "sounds": {
@@ -2183,6 +2198,29 @@
       "pitch": [
         1,
         1
+      ],
+      "startDelay": [
+        0,
+        0
+      ],
+      "maximum": 3,
+      "priority": 1,
+      "padding": 0
+    },
+    "sound_bomb_tower_die": {
+      "sourceFiles": [
+        "sfx/building_explode_01.wav"
+      ],
+      "files": [
+        "building_explode_01"
+      ],
+      "volume": [
+        0.8,
+        0.8
+      ],
+      "pitch": [
+        0.95,
+        1.05
       ],
       "startDelay": [
         0,

@@ -35,7 +35,7 @@ const cardsPath = "public/assets/ui/cards/cards.json",
 files.push({ path: cardsPath, sha256: sha(cardsBytes) });
 const sources = { tower: "TowerExplode", king: "King_player_die" };
 for (const [id, profile] of Object.entries(profiles)) {
-  if (id.endsWith("-tower")) continue;
+  if (id === "king-tower" || id === "princess-tower") continue;
   sources[id] = (
     tables.characters[profile.source] ?? tables.buildings[profile.source]
   ).DeathEffect;
@@ -517,6 +517,27 @@ impacts["hit:mortar"] = {
   components: composition(mortarProjectile.HitEffect, "blue"),
   enemyComponents: composition(mortarProjectile.HitEffect, "red"),
 };
+const bombTower = tables.buildings[profiles["bomb-tower"].source];
+const bombTowerProjectile = tables.projectiles[bombTower.Projectile];
+if (bombTower.ProjectileEffect !== "BombTower_attack" ||
+    bombTowerProjectile?.HitEffect !== "BombTower_projectile_hit" ||
+    bombTowerProjectile.TrailEffect !== "BomberBomb_fire_emitter")
+  throw new Error("Recheck native Bomb Tower attack effects");
+launches["bomb-tower"] = {
+  source: bombTower.ProjectileEffect,
+  components: composition(bombTower.ProjectileEffect, "blue"),
+  enemyComponents: composition(bombTower.ProjectileEffect, "red"),
+};
+impacts["hit:bomb-tower"] = {
+  source: bombTowerProjectile.HitEffect,
+  components: composition(bombTowerProjectile.HitEffect, "blue"),
+  enemyComponents: composition(bombTowerProjectile.HitEffect, "red"),
+};
+trails["bomb-tower"] = {
+  source: bombTowerProjectile.TrailEffect,
+  components: composition(bombTowerProjectile.TrailEffect, "blue"),
+  enemyComponents: composition(bombTowerProjectile.TrailEffect, "red"),
+};
 for (const [id, expected] of Object.entries({
   knight: "knight_steps",
   prince: "prince_steps",
@@ -629,7 +650,7 @@ for (const [id, expected] of Object.entries({
   };
 }
 for (const [id, profile] of Object.entries(profiles)) {
-  if (id.endsWith("-tower")) continue;
+  if (id === "king-tower" || id === "princess-tower") continue;
   const source = (
     tables.characters[profile.source] ?? tables.buildings[profile.source]
   ).SpawnEffect;

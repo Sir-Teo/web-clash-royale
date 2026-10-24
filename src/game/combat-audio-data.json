@@ -6987,6 +6987,133 @@
         "row": "Mortar"
       }
     },
+    "bomb-tower": {
+      "source": "BombTower",
+      "attack": {
+        "sources": [
+          "BombTower_attack_start"
+        ],
+        "components": [
+          {
+            "sound": "sound_bomber_attack_start",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_bomber_attack_start",
+            "delay": 0
+          }
+        ]
+      },
+      "charge": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "launch": {
+        "sources": [
+          "BombTower_attack"
+        ],
+        "components": [
+          {
+            "sound": "sound_bomber_attack",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_bomber_attack",
+            "delay": 0
+          }
+        ]
+      },
+      "impact": {
+        "sources": [
+          "BombTower_projectile_hit"
+        ],
+        "components": [
+          {
+            "sound": "sound_BombTower_projectile_hit",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_BombTower_projectile_hit",
+            "delay": 0
+          }
+        ]
+      },
+      "impact-special": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cast": {
+        "sources": [
+          "sound:SpellCasting"
+        ],
+        "components": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "SpellCasting",
+            "delay": 0
+          }
+        ]
+      },
+      "spawn": {
+        "sources": [
+          "goblin_hut_deploy"
+        ],
+        "components": [
+          {
+            "sound": "sound_goblin_hut_deploy",
+            "delay": 0.25
+          }
+        ],
+        "enemyComponents": [
+          {
+            "sound": "sound_goblin_hut_deploy",
+            "delay": 0.25
+          }
+        ]
+      },
+      "summon": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "appear": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "hide": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-impact": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "death-spawn": {
+        "sources": [],
+        "components": [],
+        "enemyComponents": []
+      },
+      "cardSource": {
+        "table": "spells_buildings",
+        "row": "BombTower"
+      }
+    },
     "king-tower": {
       "source": "KingTower",
       "attack": {
@@ -15424,6 +15551,29 @@
         "pitch": [
           0.97,
           1.03
+        ],
+        "startDelay": [
+          0,
+          0
+        ],
+        "maximum": 2,
+        "repeat": 0,
+        "loop": false,
+        "priority": 1,
+        "padding": 0
+      }
+    ],
+    "sound_goblin_hut_deploy": [
+      {
+        "sourceFile": "sfx/building_place_01.wav",
+        "file": "building_place_01",
+        "volume": [
+          0.8,
+          0.8
+        ],
+        "pitch": [
+          0.98,
+          1.02
         ],
         "startDelay": [
           0,

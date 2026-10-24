@@ -490,6 +490,18 @@
       "gravity": 60
     }
   },
+  "bomb-tower": {
+    "source": "BombTower",
+    "windup": 0.5,
+    "sight": 6,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "BombTowerProjectile",
+      "speed": 8.333333333333334,
+      "homing": false,
+      "gravity": 200
+    }
+  },
   "king-tower": {
     "source": "KingTower",
     "windup": 0.5,

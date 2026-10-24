@@ -168,6 +168,27 @@
         ]
       }
     },
+    "bomb-tower": {
+      "death": {
+        "sources": [
+          "BombTower_die"
+        ],
+        "components": [
+          {
+            "effect": "BombTower_die",
+            "delay": 0,
+            "duration": 0.4
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "BombTower_die",
+            "delay": 0,
+            "duration": 0.4
+          }
+        ]
+      }
+    },
     "king-tower": {
       "death": {
         "sources": [

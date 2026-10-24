@@ -28,6 +28,9 @@ const buildingTable = await readFile(buildingsPath);
 const princessRow = csvRows(buildingTable.toString()).find(
   (row) => row.Name === "PrincessTower",
 );
+const bombTowerRow = csvRows(buildingTable.toString()).find(
+  (row) => row.Name === "BombTower",
+);
 
 const manifest = {
   source: "https://github.com/smlbiobot/cr",
@@ -40,6 +43,7 @@ for (const [id, name] of Object.entries({
   tesla: "building_tesla",
   cannon: "building_basic_cannon",
   mortar: "building_mortar",
+  "bomb-tower": "building_bomb_tower",
   king: "building_tower",
 })) {
   const metadata = await readFile(`reference/sc/${name}.bin`),
@@ -112,6 +116,13 @@ for (const [id, name] of Object.entries({
           "princess-blue-front": "StarTower_top_blue",
           "princess-red-front": "StarTower_top_red",
         }
+      : id === "bomb-tower"
+        ? {
+            blue: "building_bomb_tower_blue",
+            red: "building_bomb_tower_red",
+            "blue-top": "building_bomb_tower_top_blue",
+            "red-top": "building_bomb_tower_top_red",
+          }
       : id === "mortar"
         ? Object.fromEntries(
             ["blue", "red"].flatMap((team) =>
@@ -200,7 +211,7 @@ for (const [id, name] of Object.entries({
     }
   }
   const bounds =
-    id === "mortar"
+    id === "mortar" || id === "bomb-tower"
       ? (() => {
           const b = [Infinity, Infinity, -Infinity, -Infinity];
           for (const parts of frames)
@@ -216,7 +227,7 @@ for (const [id, name] of Object.entries({
                   b[3] = Math.max(b[3], py);
                 }
           if (!b.every(Number.isFinite))
-            throw new Error("Missing Mortar geometry");
+            throw new Error(`Missing ${id} geometry`);
           return b.map(round);
         })()
       : JSON.parse(await readFile(`reference/sc/${id}-blue.json`, "utf8"))
@@ -268,7 +279,12 @@ for (const [id, name] of Object.entries({
           attachedCharacterHeight:
             Number(princessRow.AttachedCharacterHeight) / 1000,
         }
-      : {}),
+      : id === "bomb-tower"
+        ? {
+            attachedCharacterHeight:
+              Number(bombTowerRow.AttachedCharacterHeight) / 1000,
+          }
+        : {}),
     textures,
     bounds,
     anchor: [0, 0],

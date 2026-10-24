@@ -252,6 +252,11 @@
       "sha256": "7fdb925aa25f19aa1a0ed3b65792af837b76544b2bee67fd1755ce3885f335f8"
     },
     {
+      "file": "portrait-bomb-tower.webp",
+      "bytes": 35948,
+      "sha256": "5491d0fe7895bdaa4c637a2350ad6c7f97c01279920fc381c0ffb14d082a1679"
+    },
+    {
       "file": "portrait-zap.webp",
       "bytes": 39706,
       "sha256": "0acff86dd7ba3d91c2d161b007f0b38e2e833c2bdce25c08545c1f0874bd14a4"
@@ -458,8 +463,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 105756,
-      "sha256": "731ebd73226eebf0504a87f94ef6d45c4188d9688ff65d152c4122e432527e20"
+      "bytes": 106087,
+      "sha256": "a78c30387d14e6450955f195b8ee4fdbeae0bb7daa0adaaf26c5cf0f8c06a3e0"
     }
   ]
 }

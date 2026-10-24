@@ -52,6 +52,20 @@
       "frames": 10
     },
     {
+      "id": "bomb-tower",
+      "source": "building_bomb_tower",
+      "metadataSha256": "637b4fc6d45e555f5959c0a9bd76485044caeaf63014ee7fb35e25d42789cf66",
+      "dataSha256": "7998c51e81936f4c0eb83f76f55e450e60dcf977954bade0841f5f8efed2e017",
+      "textures": [
+        {
+          "file": "bomb-tower-0.webp",
+          "sha256": "a995e0a4402122b7394077985e13097269e31536afb84a70dbe21504c6d9a99d",
+          "originalSha256": "3dd8adaaad023865dd6ba86696d620c1d86c430225ddf4254a2e95b816a52faf"
+        }
+      ],
+      "frames": 3
+    },
+    {
       "id": "king",
       "source": "building_tower",
       "metadataSha256": "0096da89499bf03437a1caa2a88c811b293a5a3067fe571e1ef12bafadbf7962",

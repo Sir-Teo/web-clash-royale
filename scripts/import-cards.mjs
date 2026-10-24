@@ -252,6 +252,7 @@ const portraitNames = {
   cannon: "Cannon",
   tesla: "Tesla",
   mortar: "Mortar",
+  "bomb-tower": "BombTower",
   zap: "Zap",
   freeze: "Freeze",
   poison: "Poison",

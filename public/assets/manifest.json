@@ -387,6 +387,12 @@
       "sha256": "0b949a9e7781c8c782f6ca3b7d357475fa12cc2246f6bad172f64d11cadea633"
     },
     {
+      "path": "cards/bomb-tower.png",
+      "source": "cards/bomb-tower.png",
+      "bytes": 130071,
+      "sha256": "ef3956d4a5aec9ecbfe37f0bc65b66b4ce6299726f4575b8e336fbf3f66cb640"
+    },
+    {
       "path": "cards/bomber.png",
       "source": "cards/bomber.png",
       "bytes": 139334,

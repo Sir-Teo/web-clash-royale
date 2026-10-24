@@ -20,7 +20,7 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "57d1f5f094f449fd0419e38c7dccca9397f98e68c679428cc85a09faf66e51bd"
+      "sha256": "4571bd91d80bd1189d50effdc1b8c2ed7793d9ffdda0df4be80ddf6aa766e8b0"
     }
   ],
   "audioSource": "https://github.com/RoyaleAPI/cr-api-assets",
@@ -37,6 +37,12 @@
       "source": "sfx/building_destroyed_05.ogg",
       "bytes": 16228,
       "sha256": "548f9e71f8bb1c40ef72d3e9363eac9f1f97bafeff17d6b29b8aac0fcf51a93b"
+    },
+    {
+      "path": "public/assets/audio/building_explode_01.ogg",
+      "source": "sfx/building_explode_01.ogg",
+      "bytes": 14172,
+      "sha256": "8db3927f5469c9c1bd3c486335a4a276e812173d8af693f0c0072d3103a1f245"
     },
     {
       "path": "public/assets/audio/dark_prince_death_01.ogg",
@@ -77,6 +83,6 @@
   ],
   "output": {
     "path": "src/game/death-audio-data.json",
-    "sha256": "410a568cafd78981d18e0aba8ea14c4d5c251e7d1952a73ab0eb923fa617bef8"
+    "sha256": "da1250ed5f182da81a415f1398d806d5182d515ee7df677ab68b34acd6aadf22"
   }
 }
