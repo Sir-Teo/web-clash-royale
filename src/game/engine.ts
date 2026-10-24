@@ -1,4 +1,4 @@
-import { CARD_MAP, LEGACY_CARD_STATS, STARTER_DECK } from "./cards";
+import { CARD_MAP, LEGACY_BUILDING_STATS, LEGACY_CARD_STATS, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
 import { deploymentPositions } from "./deployment";
 import {
@@ -188,7 +188,7 @@ export interface Action extends Point {
 }
 export interface Replay {
   perspective?: Team;
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -253,7 +253,7 @@ export class Battle {
   private replayIndex = 0;
   constructor(options: EngineOptions = {}) {
     const r = options.replay;
-    this.rulesVersion = r?.version ?? 7;
+    this.rulesVersion = r?.version ?? 8;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -693,6 +693,7 @@ export class Battle {
   private spawn(id: CardId, team: Team, x: number, y: number, audio = true, deploy = 1) {
     const c = CARD_MAP[id];
     const stats = this.rulesVersion < 7 ? LEGACY_CARD_STATS[id] ?? c : c;
+    const legacyBuilding = this.rulesVersion < 8 ? LEGACY_BUILDING_STATS[id] : undefined;
     this.entities.push({
       id: this.nextId++,
       team,
@@ -721,7 +722,7 @@ export class Battle {
       damage: c.damage,
       range: stats.range,
       cooldown: id === "sparky" ? sparky.sourceLoadTime + deploy : 0.4,
-      interval: stats.interval,
+      interval: legacyBuilding?.interval ?? stats.interval,
       speed: stats.speed,
       target: null,
       age: 0,
@@ -731,7 +732,7 @@ export class Battle {
       ...(id === "sparky" ? { sparkyCharge: 0 } : {}),
       move: 0,
       active: true,
-      lifetime: c.lifetime,
+      lifetime: legacyBuilding?.lifetime ?? c.lifetime,
       spawnTimer: id === "night-witch" ? nightWitch.spawn.pause :
         id === "elixir-collector" ? elixirCollector.generateInterval :
         id === "goblin-hut" ? goblinHut.spawnPause :

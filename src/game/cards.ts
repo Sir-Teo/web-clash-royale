@@ -910,7 +910,7 @@ const originalCards: Card[] = [
     175,
     0,
     5.5,
-    0.9,
+    0.8,
     "A defensive building with a powerful ground attack. Distracts building-targeting troops.",
     { kind: "building", lifetime: 30 },
   ),
@@ -922,9 +922,9 @@ const originalCards: Card[] = [
     230,
     0,
     5.5,
-    1.2,
+    0.8,
     "Hides underground when idle, then emerges to shock enemies on the ground and in the air.",
-    { kind: "building", lifetime: 30, hitsAir: true },
+    { kind: "building", lifetime: 40, hitsAir: true },
   ),
   troop(
     "mortar",
@@ -1128,6 +1128,12 @@ export const LEGACY_CARD_STATS = Object.fromEntries(
       card.range !== source.range || card.interval !== source.interval);
   }).map(({ id, speed, range, interval }) => [id, { speed, range, interval }]),
 ) as Partial<Record<CardId, BasicStats>>;
+// Version 8 corrects these two source-backed defenses. Older recordings
+// retain their original attack interval and Tesla lifetime.
+export const LEGACY_BUILDING_STATS: Partial<Record<CardId, Partial<Card>>> = {
+  cannon: { interval: 0.9 },
+  tesla: { interval: 1.2, lifetime: 30 },
+};
 export const CARDS: Card[] = originalCards.map((card) => ({
   ...card,
   ...sourceStats[card.id],

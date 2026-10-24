@@ -306,7 +306,7 @@ describe("Tesla hiding and emergence", () => {
   it("expires underground without awarding a crown", () => {
     const b = sandbox(),
       tesla = unit(b, "tesla", "blue", 9, 21);
-    advance(b, 31);
+    advance(b, CARD_MAP.tesla.lifetime! + 1);
     expect(b.entities.some((e) => e.id === tesla.id)).toBe(false);
     expect(b.players.red.crowns).toBe(0);
   });
@@ -427,7 +427,7 @@ describe("versioned battle replay", () => {
     }
     expect(b.winner).not.toBeNull();
     const record = b.exportReplay();
-    expect(record.version).toBe(7);
+    expect(record.version).toBe(8);
     const replay = new Battle({ replay: record });
     for (let i = 0; i < record.duration; i++) replay.step();
     expect(replay.winner).toEqual(b.winner);
