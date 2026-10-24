@@ -342,6 +342,8 @@ function setup() {
       }
   } else if (scenario === "elixir-collector") {
     unit("elixir-collector", "blue", 9, 22);
+  } else if (scenario === "goblin-hut") {
+    unit("goblin-hut", "blue", 9, 22);
   } else if (scenario === "footsteps") {
     for (const [card, x] of [
       ["knight", 4],
@@ -648,6 +650,15 @@ function render(now: number) {
       frame: collector ? (arena as any).units.get(collector.id)?.building?.frame : null,
       timer: collector?.spawnTimer ?? null,
       collections: battle.audioEvents.filter((event) => event.phase === "collect").length,
+    });
+  const hut = battle.entities.find((entity) => entity.card === "goblin-hut");
+  (document.querySelector("#destruction") as HTMLElement).dataset.goblinHut =
+    JSON.stringify({
+      frame: hut ? (arena as any).units.get(hut.id)?.building?.frame : null,
+      timer: hut?.spawnTimer ?? null,
+      spears: battle.entities.filter((entity) =>
+        entity.card === "spear-goblins" && entity.team === "blue" && entity.hp > 0
+      ).length,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.miner =
     JSON.stringify({

@@ -74,7 +74,7 @@ describe("archived Giant Skeleton", () => {
       .toBeGreaterThan(0);
     expect(screenShakePlan("giant-skeleton", "death-impact", "blue"))
       .toMatchObject([{ duration: 1, delay: 0 }]);
-    expect(CARDS).toHaveLength(69);
+    expect(CARDS).toHaveLength(70);
   });
 
   it("drops a visible bomb before ground-and-air splash and pushback", () => {

@@ -6,7 +6,7 @@ const json = (path: string) => JSON.parse(readFileSync(path, "utf8"));
 describe("bundled game artwork", () => {
   it("preserves both teams' building directions and Tesla's labeled state transitions", () => {
     const manifest = json("public/assets/buildings/manifest.json");
-    expect(manifest.files).toHaveLength(8);
+    expect(manifest.files).toHaveLength(9);
     for (const source of manifest.sourceTables)
       expect(
         createHash("sha256").update(readFileSync(source.path)).digest("hex"),
@@ -64,7 +64,8 @@ describe("bundled game artwork", () => {
         expect(clip.frames).toHaveLength(
           file.id === "tesla" ? 39 : file.id === "king" ? 98 :
             file.id === "bomb-tower" || file.id === "inferno-tower" ? 1 :
-              file.id === "elixir-collector" ? 35 : 19,
+              file.id === "elixir-collector" ? 35 :
+              file.id === "goblin-hut" ? 5245 : 19,
         );
         if (file.id === "tesla")
           expect(clip.labels).toEqual({
@@ -139,7 +140,7 @@ describe("bundled game artwork", () => {
     const destruction = json(client.output.path);
     for (const emitter of Object.values(destruction.emitters) as any[])
       for (const name of emitter.clips) expect(data.clips[name]).toBeDefined();
-  });
+  }, 20000);
   it("matches every imported card, character and sound to its recorded hash", () => {
     const manifest = json("public/assets/manifest.json");
     for (const file of manifest.files) {

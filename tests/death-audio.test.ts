@@ -38,8 +38,8 @@ describe("retained native death audio", () => {
     const source = csvGroups(
       readFileSync("reference/client/sounds.csv", "utf8"),
     );
-    expect(Object.keys(definitions.effects)).toHaveLength(59);
-    expect(Object.keys(definitions.sounds)).toHaveLength(49);
+    expect(Object.keys(definitions.effects)).toHaveLength(60);
+    expect(Object.keys(definitions.sounds)).toHaveLength(50);
     for (const [name, sound] of Object.entries(definitions.sounds)) {
       const row = source[name][0];
       expect(sound.sourceFiles.join(",")).toBe(row.FileNames);

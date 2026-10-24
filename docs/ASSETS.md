@@ -1,5 +1,11 @@
 # Asset provenance
 
+## Goblin Hut
+
+`npm run assets:goblin-hut` pins the archived Rare card and building rows: five elixir, 700 source hitpoints, one-second deployment, 60-second lifetime, and one Spear Goblin released every 4.95 seconds at a 0.4-tile forward offset. The browser scales the hut to the roster's level-11 Rare health curve (1,792 HP) and uses its existing level-11 Spear Goblin stats. The archived `SpawnCharacterLevelIndex=2` is retained in the data but does not independently override that normalized troop level.
+
+The card's archived `fire_furnace` portrait, both team exports of `building_goblin_hut`, deployment and death effects, and their original sound groups are imported from the pinned 1.8.1 client. Its 5,245-frame timeline repeats one static four-part frame after the first; that first frame references child 5, which is absent from the archived model. The importer skips only that missing child and retains the complete subsequent art. `reference/client/goblin-hut-manifest.json` records the source and generated-data hashes. The build loads the hut and spawned Spear Goblins in solo and browser-to-browser matches, including on phone browsers.
+
 ## Freeze card
 
 `npm run assets:freeze` pins the `Freeze` spell and area-effect rows from the retained 1.8.0 logic tables. They specify four elixir, Epic rarity, a 3,000-unit radius, a 4,000-ms area lifetime and buff duration, enemy-only targeting, and hits on ground, air, buildings and hidden targets. The browser uses these as a three-tile, four-second persistent area at its normalized card level. Archived per-level duration increments are not modeled. `reference/client/freeze-manifest.json` records source and output hashes.

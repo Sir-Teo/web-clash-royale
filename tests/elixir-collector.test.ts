@@ -36,7 +36,7 @@ describe("archived Elixir Collector", () => {
       actionFrame: 29, fps: 30, frames: 35,
       collectSound: "sound_elixircollector_get",
     });
-    expect(CARDS).toHaveLength(69);
+    expect(CARDS).toHaveLength(70);
     expect(CARD_MAP["elixir-collector"]).toMatchObject({
       kind: "building", rarity: "Rare", cost: 6,
       hp: 1485, damage: 0, range: 0, lifetime: 70,
