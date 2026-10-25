@@ -3,6 +3,7 @@ import type { CardId } from "./cards";
 import type { Point } from "./engine";
 
 export const BUILDING_RADIUS = 0.8;
+export const DEPLOY_TIME = 1;
 
 export function deploymentPositions(id: CardId, point: Point): Point[] {
   const count = CARD_MAP[id].count;

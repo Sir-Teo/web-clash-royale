@@ -9,8 +9,7 @@ for (const [scenario, label] of [
   test(`the ordinary AI timer defends the ${label}`, async ({ page }, info) => {
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
-    await page.goto("/tests/fixtures/combat.html");
-    await page.locator("#scenario").selectOption(`ai-defense-${scenario}`);
+    await page.goto(`/tests/fixtures/combat.html?scene=ai-defense-${scenario}`);
     await expect(page.locator("#status")).toContainText(
       `${expectedEffects} effects`,
       { timeout: 60000 },
@@ -85,8 +84,7 @@ for (const blocked of [false, true])
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
     const scene = `ai-defense-balloon${blocked ? "-blocked" : ""}`;
-    await page.goto("/tests/fixtures/combat.html");
-    await page.locator("#scenario").selectOption(scene);
+    await page.goto(`/tests/fixtures/combat.html?scene=${scene}`);
     await expect(page.locator("#status")).toContainText(
       `${expectedEffects} effects`,
       { timeout: 60000 },
@@ -145,8 +143,7 @@ for (const counter of ["missing", "unaffordable"])
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     const scene = `ai-defense-fallback-${counter}`;
-    await page.goto("/tests/fixtures/combat.html");
-    await page.locator("#scenario").selectOption(scene);
+    await page.goto(`/tests/fixtures/combat.html?scene=${scene}`);
     await expect(page.locator("#status")).toContainText(
       `${expectedEffects} effects`,
       { timeout: 60000 },
@@ -209,5 +206,65 @@ for (const counter of ["missing", "unaffordable"])
         path: info.outputPath(`ai-fallback-${counter}.png`),
         animations: "disabled",
       });
+    expect(errors).toEqual([]);
+  });
+
+for (const [lane, x] of [
+  ["left", 4],
+  ["right", 14],
+] as const)
+  test(`AI intercepts a moving Hog in the ${lane} lane through its ordinary timer`, async ({
+    page,
+  }, info) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    const scene = `ai-defense-moving-${lane}`;
+    await page.goto(`/tests/fixtures/combat.html?scene=${scene}`);
+    if (lane === "right") await page.reload();
+    await expect(page.locator("#scenario")).toHaveValue(scene);
+    await expect(page.locator("#status")).toContainText(
+      `${expectedEffects} effects`,
+      { timeout: 60000 },
+    );
+    const output = page.locator("#destruction");
+    const state = async () =>
+      JSON.parse((await output.getAttribute("data-ai-defense"))!);
+    const time = async () =>
+      JSON.parse((await output.getAttribute("data-state"))!).time;
+    const step = async () => {
+      const before = await time();
+      await page.locator("#second").click();
+      await expect.poll(time).toBeGreaterThan(before + 0.99);
+    };
+    await expect.poll(async () => (await state()).scene).toBe(scene);
+    const start = await state();
+    await step();
+    await step();
+    const moving = await state();
+    expect(moving.actions).toEqual([]);
+    expect(moving.targets[0].y).toBeLessThan(start.targets[0].y - 3);
+    await step();
+    const planned = await state();
+    expect(planned.actions).toHaveLength(1);
+    expect(planned.actions[0]).toMatchObject({ card: "mini-pekka", x });
+    expect(planned.actions[0].y).toBeLessThan(planned.targets[0].y);
+    for (let i = 0; i < 3 && !(await state()).guardHits.length; i++)
+      await step();
+    const hit = await state();
+    expect(hit.guardHits[0].value).toBe(720);
+    expect(hit.targets[0].hp).toBeLessThan(hit.targets[0].maxHp);
+    expect(hit.hogHits).toEqual([]);
+    expect(hit.towers.every((t: any) => t.hp === t.maxHp)).toBe(true);
+    if (info.project.name !== "mobile")
+      await page.screenshot({
+        path: info.outputPath(`ai-moving-hog-${lane}.png`),
+        animations: "disabled",
+      });
+    while ((await time()) < 8) await step();
+    const done = await state();
+    expect(done.targets).toEqual([]);
+    expect(done.actions).toEqual(planned.actions);
+    expect(done.hogHits).toEqual([]);
+    expect(done.towers.every((t: any) => t.hp === t.maxHp)).toBe(true);
     expect(errors).toEqual([]);
   });

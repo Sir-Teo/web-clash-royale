@@ -2,9 +2,14 @@ import { CARD_MAP, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
 import { areaSpellTarget } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell } from "./spell-targeting";
-import { BUILDING_RADIUS, deploymentPositions } from "./deployment";
+import {
+  BUILDING_RADIUS,
+  DEPLOY_TIME,
+  deploymentPositions,
+} from "./deployment";
 import { defensiveThreats } from "./defensive-threats";
 import { buildingLureTarget } from "./building-lure";
+import { meleeInterceptTarget } from "./melee-intercept";
 import {
   combatTraits,
   FIREBALL_SPEED,
@@ -475,7 +480,7 @@ export class Battle {
       speed: c.speed,
       target: null,
       age: 0,
-      deploy: 1,
+      deploy: DEPLOY_TIME,
       stun: 0,
       attack: 0,
       move: 0,
@@ -1515,7 +1520,22 @@ export class Battle {
       x = lure?.x ?? 9;
       y = lure?.y ?? 10;
     }
-    if (a.c.kind !== "spell") {
+    const intercept =
+      threat && a.c.kind === "troop"
+        ? meleeInterceptTarget(
+            a.id,
+            "red",
+            threat,
+            this.entities,
+            (point) => this.canPlace("red", a.id, point.x, point.y).ok,
+            this.areas,
+          )
+        : undefined;
+    if (intercept) {
+      x = intercept.x;
+      y = intercept.y;
+    }
+    if (a.c.kind !== "spell" && !intercept) {
       // A building can still occupy the preferred tile when the deck cycles.
       // Try nearby legal tiles instead of wasting every subsequent decision.
       const point = [

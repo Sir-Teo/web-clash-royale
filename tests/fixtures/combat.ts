@@ -4,6 +4,15 @@ import { Battle, STEP } from "../../src/game/engine";
 import type { Team } from "../../src/game/engine";
 import type { CardId } from "../../src/game/cards";
 import { CARDS } from "../../src/game/cards";
+const sceneSelect = document.querySelector<HTMLSelectElement>("#scenario")!;
+const initialScene = new URL(location.href).searchParams.get("scene");
+if (
+  initialScene &&
+  Array.from(sceneSelect.options).some(
+    (option) => option.value === initialScene,
+  )
+)
+  sceneSelect.value = initialScene;
 const arena = new Arena(document.querySelector("#arena")!);
 let chargeCues = 0;
 arena.onCharge = () => chargeCues++;
@@ -142,6 +151,16 @@ function setup() {
     battle.players.red.elixir = 3;
     // The fixture's red Tesla setup is not an AI decision.
     battle.actions = battle.actions.filter((a) => a.team !== "red");
+  } else if (scenario.startsWith("ai-defense-moving-")) {
+    unit("hog-rider", "blue", scenario.endsWith("left") ? 4 : 14, 17.1);
+    battle.players.red.hand = [
+      "mini-pekka",
+      "giant",
+      "pekka",
+      "three-musketeers",
+    ];
+    battle.players.red.queue = ["prince", "wizard", "witch", "balloon"];
+    battle.players.red.elixir = 4;
   } else if (scenario.startsWith("ai-defense-")) {
     if (
       scenario === "ai-defense-ground-swarm" ||
@@ -584,6 +603,12 @@ function render(now: number) {
         })),
       balloonHits: battle.events.filter(
         (e) => e.type === "hit" && e.card === "balloon",
+      ),
+      guardHits: battle.events.filter(
+        (e) => e.type === "hit" && e.card === "mini-pekka",
+      ),
+      hogHits: battle.events.filter(
+        (e) => e.type === "hit" && e.card === "hog-rider",
       ),
       elixir: battle.players.red.elixir,
       towers: battle.entities

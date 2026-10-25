@@ -49,8 +49,8 @@ describe("visible defensive pressure", () => {
     expect(b.actions.at(-1)).toMatchObject({
       card: "mini-pekka",
       team: "red",
-      y: 9.3,
     });
+    expect(b.actions.at(-1)!.y).toBeLessThan(hog.y);
     expect(b.actions.at(-1)!.x).toBeGreaterThan(13);
   });
   it("protects a King facing a lethal hit before a lethal Princess Tower attack", () => {
