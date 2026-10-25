@@ -9,7 +9,8 @@ import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targ
 import { defensiveThreats } from "./defensive-threats";
 import { buildingLureTarget } from "./building-lure";
 import { meleeInterceptTarget } from "./melee-intercept";
-import { fatalKingWindups, finishesKingBefore } from "./king-spell-race";
+import { finishesKingBefore } from "./king-spell-race";
+import { createKingDefense } from "./king-defense";
 import { attackFlight } from "./attack-flight";
 import { launchedKingDeadline } from "./king-damage";
 import { createMatchFinisher, MATCH_DAMAGE_HORIZON } from "./match-finisher";
@@ -2639,7 +2640,10 @@ export class Battle {
       (this.time >= 180 ||
         this.remaining <= MATCH_DAMAGE_HORIZON ||
         hasFriendlyLightning("red", this.areas)) &&
-      affordable.some((a) => isDamageSpell(a.played) || a.played === "poison")
+      affordable.some(
+        (a) => isDamageSpell(a.played) || a.played === "poison" ||
+          a.played === "freeze" || a.played === "tornado",
+      )
         ? createMatchFinisher(
             "red",
             this.entities,
@@ -2650,6 +2654,14 @@ export class Battle {
             this.time >= 180,
           )
         : undefined;
+    const kingDefense = affordable.some(
+      (a) => a.played === "freeze" || a.played === "tornado",
+    )
+      ? createKingDefense(
+          "red", this.entities, this.projectiles, this.areas,
+          finisher?.baseline?.step,
+        )
+      : undefined;
     const spellTargets = new Map<CardId, SpellTarget | undefined>(
       affordable
         .filter((a) => a.c.kind === "spell")
@@ -2675,6 +2687,7 @@ export class Battle {
                 a.cost ?? a.c.cost,
                 kingDeadline,
                 finisher,
+                kingDefense,
               ),
         ]),
     );
@@ -2686,11 +2699,7 @@ export class Battle {
     if (protection) {
       // A lethal hit can still lose the match when its flight ends too late.
       // Compare the known pending attack only when an affordable defense exists.
-      const deadline = Math.min(
-        ...fatalKingWindups("red", this.entities, this.areas).map(
-          (windup) => windup.step,
-        ),
-      );
+      const deadline = protection.kingThreatStep ?? Infinity;
       for (const a of affordable) {
         const target = spellTargets.get(a.id);
         const king =

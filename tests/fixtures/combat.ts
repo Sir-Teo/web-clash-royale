@@ -258,6 +258,21 @@ function setup() {
       battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
       battle.players.red.elixir = 3;
     }
+  } else if (scenario.startsWith("ai-combined-")) {
+    const king = battle.entities.find((e) => e.team === "red" && e.king)!;
+    Object.assign(king, { hp: 300, active: true, cooldown: 3 });
+    battle.entities.find((e) => e.team === "blue" && e.king)!.hp = 50;
+    const split = scenario === "ai-combined-split";
+    if (split) {
+      battle.entities = battle.entities.filter((e) => !(e.team === "red" && !e.king));
+      battle.players.blue.crowns = 2;
+    }
+    for (const x of split ? [4, 14] : [8.5, 9.5])
+      for (const e of unit(split ? "musketeer" : "lumberjack", "blue", x, split ? 7 : 4.5))
+        Object.assign(e, { hp: 200, deploy: split ? 2.4 : 2.3 });
+    battle.players.red.hand = ["rocket", scenario === "ai-combined-tornado" ? "tornado" : "freeze", "pekka", "pekka"];
+    battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
+    battle.players.red.elixir = 6;
   } else if (scenario.startsWith("ai-tornado-")) {
     if (scenario === "ai-tornado-air") {
       for (const e of unit("minions", "blue", 4, 10)) e.active = false;

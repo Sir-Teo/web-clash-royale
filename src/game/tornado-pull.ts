@@ -36,7 +36,25 @@ export function tornadoEscapeStep(
   areas: readonly AreaEffect[],
   proposed?: Point,
 ): number | undefined {
-  if (!attacker.pendingAttack) return;
+  return projectTornadoWindup(attacker, target, areas, proposed).cancelledStep;
+}
+
+export interface WindupProjection {
+  position: Point;
+  cancelledStep?: number;
+  releaseStep?: number;
+}
+
+/** The same control clocks also retain the release position of an attack
+ * that survives a pull, so its projectile flight can be recomputed. */
+export function projectTornadoWindup(
+  attacker: Entity,
+  target: Entity,
+  areas: readonly AreaEffect[],
+  proposed?: Point,
+): WindupProjection {
+  let position = { x: attacker.x, y: attacker.y };
+  if (!attacker.pendingAttack) return { position };
   const clouds = areas
     .filter(
       (a) =>
@@ -49,13 +67,13 @@ export function tornadoEscapeStep(
       id: -1,
       card: "tornado",
       team: target.team,
-      ...proposed,
+      x: proposed.x,
+      y: proposed.y,
       radius: tornado.radius,
       duration: tornado.duration,
       remaining: tornado.duration,
       hitAt: 0,
     });
-  let position = { x: attacker.x, y: attacker.y };
   let boost = attacker.rage?.remaining ?? 0,
     slow = attacker.slow?.remaining ?? 0,
     stun = attacker.stun;
@@ -103,11 +121,12 @@ export function tornadoEscapeStep(
       distance(position, target) >
         attacker.range + target.radius + attacker.radius * 0.35
     )
-      return step;
+      return { position, cancelledStep: step };
     remaining -=
       COMBAT_STEP *
       (boost >= 1e-8 ? rage.hitSpeedMultiplier : 1) *
       (slow >= 1e-8 ? iceWizard.hitSpeedMultiplier : 1);
-    if (remaining <= 1e-8) return;
+    if (remaining <= 1e-8) return { position, releaseStep: step };
   }
+  return { position };
 }

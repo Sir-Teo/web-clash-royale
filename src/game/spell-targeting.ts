@@ -23,6 +23,7 @@ export interface SpellTarget extends Point {
   value: number;
   lethalTower?: number;
   protectsKing?: boolean;
+  kingThreatStep?: number;
   matchDecisionStep?: number;
 }
 export const spellContains = (a: Point, b: Point, radius: number) =>

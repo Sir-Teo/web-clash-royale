@@ -4,7 +4,11 @@ import type { AreaEffect, Entity, Projectile, Team } from "./engine";
 import poison from "./poison-data.json" with { type: "json" };
 import { supportSpellTarget } from "./support-spell-targeting";
 import { tornadoSpellTarget } from "./tornado-targeting";
-import { fatalKingWindups } from "./king-spell-race";
+import {
+  createKingDefense,
+  kingDefenseScore,
+  type KingDefense,
+} from "./king-defense";
 import { createKingSpellRace, kingRacePriority } from "./king-damage";
 import type { MatchFinisher } from "./match-finisher";
 import { createSpellDamageReservation } from "./spell-reservations";
@@ -59,9 +63,17 @@ export function areaSpellTarget(
   cost = CARD_MAP[card].cost,
   kingDeadline = Infinity,
   finisher?: MatchFinisher,
+  kingDefense?: KingDefense,
 ): SpellTarget | undefined {
   if (card === "tornado")
-    return tornadoSpellTarget(team, entities, areas, projectiles, cost);
+    return tornadoSpellTarget(
+      team,
+      entities,
+      areas,
+      projectiles,
+      cost,
+      kingDefense,
+    );
   if (card === "heal" || card === "clone")
     return supportSpellTarget(card, team, entities, areas, projectiles, cost);
   if (card !== "rage" && card !== "freeze" && card !== "poison") return;
@@ -80,19 +92,16 @@ export function areaSpellTarget(
       ? createKingSpellRace(card, team, enemyKing, projectiles, areas, entities)
       : undefined;
   const radius = CARD_MAP[card].radius!;
-  const kingThreats = new Set(
+  const defense =
     card === "freeze"
-      ? fatalKingWindups(team, entities, areas).map(
-          (windup) => windup.attacker.id,
-        )
-      : [],
-  );
+      ? (kingDefense ?? createKingDefense(team, entities, projectiles, areas))
+      : undefined;
+  const kingThreats = new Set(defense?.threats.map((a) => a.attacker.id));
   const targets: {
     entity: Entity;
     value: number;
     penalty: number;
     lethal: boolean;
-    protectsKing?: boolean;
   }[] = [];
   if (card === "rage") {
     for (const e of friends) {
@@ -135,7 +144,7 @@ export function areaSpellTarget(
         continue;
       // Freeze cancels a windup before combat resolves. Released projectiles
       // and attacks already cancelled by stun cannot justify this override.
-      const protectsKing = kingThreats.has(e.id);
+      const urgentKingAttacker = kingThreats.has(e.id);
       const support = friends
         .filter(
           (friend) =>
@@ -146,13 +155,12 @@ export function areaSpellTarget(
             sum + bodyValue(friend) * (0.25 + 0.75 * health(friend)),
           0,
         );
-      if (support < 2 && !protectsKing) continue;
+      if (support < 2 && !urgentKingAttacker) continue;
       targets.push({
         entity: e,
         value: bodyValue(e) * (0.5 + 0.5 * health(e)),
         penalty: 0,
         lethal: false,
-        protectsKing,
       });
     }
   } else {
@@ -251,7 +259,6 @@ export function areaSpellTarget(
       }
       value += t.value;
       penalty += t.penalty;
-      protectsKing ||= !!t.protectsKing;
       if (
         (!finisher || (!finisher.tracksCrowns && !t.entity.king)) &&
         t.lethal &&
@@ -261,6 +268,8 @@ export function areaSpellTarget(
         king = !!t.entity.king;
       }
     }
+    const rescue = defense?.evaluate("freeze", point);
+    protectsKing = !!rescue?.improves;
     const threshold =
       card === "rage"
         ? (5 * cost) / CARD_MAP.rage.cost
@@ -284,7 +293,7 @@ export function areaSpellTarget(
           (king && race ? Math.min(100, value) : value) -
           penalty
         : protectsKing
-          ? 9_000 - cost + Math.min(100, value)
+          ? kingDefenseScore(rescue!, cost, value)
           : 3 + 2 * (value - threshold) - penalty);
     if (
       lethalTower === undefined &&
@@ -300,7 +309,9 @@ export function areaSpellTarget(
         value,
         ...(match ? { matchDecisionStep: match.matchDecisionStep } : {}),
         ...(lethalTower !== undefined ? { lethalTower } : {}),
-        ...(protectsKing ? { protectsKing: true } : {}),
+        ...(protectsKing
+          ? { protectsKing: true, kingThreatStep: defense!.baseline }
+          : {}),
       };
   }
   return best;

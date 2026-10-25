@@ -1,6 +1,59 @@
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
 
+for (const scene of [
+  "ai-combined-freeze",
+  "ai-combined-tornado",
+  "ai-combined-split",
+])
+  test(`${scene}: the ordinary AI timer defends enough combined King damage`, async ({
+    page,
+  }, info) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto(`/tests/fixtures/combat.html?scene=${scene}`);
+    await expect(page.locator("#status")).toContainText(
+      `${expectedEffects} effects`,
+      { timeout: 60000 },
+    );
+    const output = page.locator("#destruction");
+    const state = async () =>
+      JSON.parse((await output.getAttribute("data-ai-areas"))!);
+    const actions = async () =>
+      JSON.parse((await output.getAttribute("data-ai-defense"))!).actions;
+    for (let i = 0; i < 2; i++) {
+      const before = (await state()).time;
+      await page.locator("#second").click();
+      await expect
+        .poll(async () => (await state()).time)
+        .toBeGreaterThan(before + 0.99);
+    }
+    expect(await actions()).toEqual([]);
+    await page.locator("#second").click();
+    await expect.poll(async () => (await actions()).length).toBe(1);
+    expect((await actions())[0]).toMatchObject({
+      card: scene === "ai-combined-tornado" ? "tornado" : "freeze",
+      tick: 74,
+    });
+    const before = (await state()).time;
+    await page.locator("#second").click();
+    await expect
+      .poll(async () => (await state()).time)
+      .toBeGreaterThan(before + 0.99);
+    const result = await state();
+    expect(result.winner).toBeNull();
+    expect(result.kings.find((e: any) => e.team === "red").hp).toBe(
+      scene === "ai-combined-split" ? 82 : 300,
+    );
+    expect(await actions()).toHaveLength(1);
+    if (scene === "ai-combined-freeze")
+      await page.screenshot({
+        path: info.outputPath("ai-combined-king-defense.png"),
+        fullPage: true,
+      });
+    expect(errors).toEqual([]);
+  });
+
 for (const scene of ["ai-tornado-king", "ai-tornado-race", "ai-tornado-air"])
   test(`${scene}: Tornado chooses useful damage or a timely pull on the ordinary AI timer`, async ({
     page,

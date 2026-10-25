@@ -1,8 +1,11 @@
 import { CARD_MAP } from "./cards";
 import { aiBodyValue } from "./ai-body-value";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
-import { fatalKingWindups } from "./king-spell-race";
-import { launchedKingDeadline } from "./king-damage";
+import {
+  createKingDefense,
+  kingDefenseScore,
+  type KingDefense,
+} from "./king-defense";
 import { createSpellDamageReservation } from "./spell-reservations";
 import {
   hiddenSpellTarget,
@@ -10,7 +13,7 @@ import {
   spellContains,
   type SpellTarget,
 } from "./spell-targeting";
-import { tornadoEscapeStep, tornadoPull } from "./tornado-pull";
+import { tornadoPull } from "./tornado-pull";
 import tornado from "./tornado-data.json" with { type: "json" };
 
 const distance = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -22,6 +25,7 @@ export function tornadoSpellTarget(
   areas: readonly AreaEffect[],
   projectiles: readonly Projectile[],
   cost = CARD_MAP.tornado.cost,
+  kingDefense?: KingDefense,
 ): SpellTarget | undefined {
   const enemies = entities.filter(
     (e) =>
@@ -34,18 +38,8 @@ export function tornadoSpellTarget(
   const towers = entities.filter(
     (e) => e.hp > 0 && e.team === team && e.kind === "tower",
   );
-  const king = towers.find((e) => e.king);
-  const windups = king
-    ? fatalKingWindups(team, entities, areas).map((windup) => ({
-        ...windup,
-        controlled:
-          tornadoEscapeStep(windup.attacker, king, areas) !== undefined,
-      }))
-    : [];
-  const fatal = windups.filter((windup) => !windup.controlled);
-  const canProtect =
-    fatal.length > 0 &&
-    !Number.isFinite(launchedKingDeadline(team, entities, projectiles, areas));
+  const defense =
+    kingDefense ?? createKingDefense(team, entities, projectiles, areas);
   const reserve = createSpellDamageReservation(
     team,
     entities,
@@ -116,7 +110,8 @@ export function tornadoSpellTarget(
   for (const t of evaluated) {
     if (
       !t.nearTower ||
-      (!t.pressure && !fatal.some((f) => f.attacker.id === t.entity.id))
+      (!t.pressure &&
+        !defense.threats.some((f) => f.attacker.id === t.entity.id))
     )
       continue;
     const gap = distance(t.entity, t.nearTower);
@@ -129,12 +124,9 @@ export function tornadoSpellTarget(
   }
   let best: SpellTarget | undefined;
   for (const point of points.values()) {
-    const escapes = windups.map(({ attacker }) =>
-      tornadoEscapeStep(attacker, king!, areas, point),
-    );
+    const rescue = defense.evaluate("tornado", point);
     // A second pull must preserve a rescue the current areas already provide.
-    if (windups.some((w, i) => w.controlled && escapes[i] === undefined))
-      continue;
+    if (rescue.worsens) continue;
     let value = 0,
       penalty = 0;
     for (const t of evaluated) {
@@ -168,10 +160,9 @@ export function tornadoSpellTarget(
           );
       else if (gain < 0 || towardTower) penalty += t.control;
     }
-    const protectsKing =
-      canProtect && escapes.every((step) => step !== undefined);
+    const protectsKing = rescue.improves;
     const score = protectsKing
-      ? 9_000 - cost + Math.min(100, value)
+      ? kingDefenseScore(rescue, cost, value)
       : 3 + 2 * (value - cost * 0.9) - penalty;
     if (!protectsKing && (value < cost * 0.9 || score <= 0)) continue;
     if (!best || score > best.score + 1e-8)
@@ -179,7 +170,9 @@ export function tornadoSpellTarget(
         ...point,
         score,
         value,
-        ...(protectsKing ? { protectsKing: true } : {}),
+        ...(protectsKing
+          ? { protectsKing: true, kingThreatStep: defense.baseline }
+          : {}),
       };
   }
   return best;
