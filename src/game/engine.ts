@@ -9,11 +9,12 @@ import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targ
 import { defensiveThreats } from "./defensive-threats";
 import { buildingLureTarget } from "./building-lure";
 import { meleeInterceptTarget } from "./melee-intercept";
+import { fatalKingWindups, finishesKingBefore } from "./king-spell-race";
 import {
   combatTraits,
-  FIREBALL_SPEED,
+  COMBAT_STEP,
+  directSpellFlight,
   FIREBALL_KNOCKBACK,
-  ARROWS_SPEED,
   ARROWS_WAVES,
   ARROWS_WAVE_GAP,
   KING_ACTIVATION_TIME,
@@ -73,7 +74,7 @@ import type {
 } from "./combat-audio-events";
 export type Team = "blue" | "red";
 export type Mode = "classic" | "training" | "double";
-export const STEP = 1 / 30;
+export const STEP = COMBAT_STEP;
 export const other = (t: Team): Team => (t === "blue" ? "red" : "blue");
 export interface Point {
   x: number;
@@ -624,19 +625,17 @@ export class Battle {
           this.emitAudio("impact", team, id);
         return { ok: true, reason: "" };
       }
-      const origin = { x: 9, y: team === "blue" ? 30 : 2 };
+      const {
+        origin,
+        speed,
+        duration: flightDuration,
+      } = directSpellFlight(id, team, { x, y });
       const modern = this.rulesVersion >= 2;
-      const speed =
-        id === "rocket"
-          ? rocket.speed
-          : id === "fireball"
-            ? FIREBALL_SPEED
-            : ARROWS_SPEED;
       const duration =
         id === "zap"
           ? 0.15
           : modern
-            ? Math.max(STEP, dist(origin, { x, y }) / speed)
+            ? flightDuration
             : id === "arrows"
               ? 0.65
               : 0.9;
@@ -2682,6 +2681,44 @@ export class Battle {
               ),
         ]),
     );
+    const protection = affordable
+      .filter((a) => a.played === "freeze")
+      .map((a) => spellTargets.get(a.id))
+      .filter((target): target is SpellTarget => !!target?.protectsKing)
+      .sort((a, b) => b.score - a.score)[0];
+    if (protection) {
+      // A lethal hit can still lose the match when its flight ends too late.
+      // Compare the known melee race only when an affordable defense exists.
+      const deadline = Math.min(
+        ...fatalKingWindups("red", this.entities, this.areas)
+          .filter((windup) => windup.melee)
+          .map((windup) => windup.step),
+      );
+      for (const a of affordable) {
+        const target = spellTargets.get(a.id);
+        const king =
+          target?.lethalTower === undefined
+            ? undefined
+            : this.entities.find((e) => e.id === target.lethalTower && e.king);
+        if (
+          target &&
+          king &&
+          !finishesKingBefore(
+            a.played,
+            "red",
+            king,
+            target,
+            this.projectiles,
+            this.areas,
+            deadline,
+          )
+        )
+          spellTargets.set(a.id, {
+            ...target,
+            score: Math.min(target.score, protection.score - 1),
+          });
+      }
+    }
     // Preserve the baseline policy for additional archive spells until they
     // have dedicated targeting heuristics. Mirror uses its resolved card.
     const optimizedSpell = (id: CardId) => isDamageSpell(id) || isAreaSpell(id);

@@ -3,6 +3,7 @@ import { CARD_MAP, type CardId } from "./cards";
 import type { AreaEffect, Entity, Projectile, Team } from "./engine";
 import poison from "./poison-data.json" with { type: "json" };
 import { supportSpellTarget } from "./support-spell-targeting";
+import { fatalKingWindups } from "./king-spell-race";
 import {
   hiddenSpellTarget,
   pendingSpellDamage,
@@ -54,6 +55,13 @@ export function areaSpellTarget(
   );
   const enemies = living.filter((e) => e.team !== team);
   const radius = CARD_MAP[card].radius!;
+  const kingThreats = new Set(
+    card === "freeze"
+      ? fatalKingWindups(team, entities, areas).map(
+          (windup) => windup.attacker.id,
+        )
+      : [],
+  );
   const targets: {
     entity: Entity;
     value: number;
@@ -100,22 +108,9 @@ export function areaSpellTarget(
         (e.kind === "tower" && !e.active)
       )
         continue;
-      const pending = e.pendingAttack;
       // Freeze cancels a windup before combat resolves. Released projectiles
       // and attacks already cancelled by stun cannot justify this override.
-      const protectsKing =
-        e.active &&
-        e.stun <= 0 &&
-        !!pending &&
-        pending.remaining <= 1 &&
-        friends.some(
-          (friend) =>
-            friend.king &&
-            friend.id === pending.target &&
-            pending.damage >= friend.hp &&
-            Math.hypot(e.x - friend.x, e.y - friend.y) <=
-              e.range + friend.radius + e.radius * 0.35,
-        );
+      const protectsKing = kingThreats.has(e.id);
       const support = friends
         .filter(
           (friend) =>
@@ -230,6 +225,7 @@ export function areaSpellTarget(
         score,
         value,
         ...(lethalTower !== undefined ? { lethalTower } : {}),
+        ...(protectsKing ? { protectsKing: true } : {}),
       };
   }
   return best;

@@ -1,7 +1,11 @@
 import data from "./combat-data.json";
 import settings from "./combat-settings.json";
 import heal from "./heal-data.json" with { type: "json" };
-import type { Entity } from "./engine";
+import rocket from "./rocket-data.json" with { type: "json" };
+import type { CardId } from "./cards";
+import type { Entity, Point, Team } from "./engine";
+
+export const COMBAT_STEP = 1 / 30;
 
 export interface CombatTraits {
   source: string;
@@ -35,3 +39,22 @@ export const KING_ACTIVATION_TIME = settings.kingActivationSeconds;
 export const HEAL_PER_TICK = Math.round(
   ((heal.sourceHealPerSecond * 1152) / 450) * heal.healInterval,
 );
+
+/** Current-rule direct spell travel, shared by casting and AI timing. */
+export function directSpellFlight(card: CardId, team: Team, point: Point) {
+  const origin = { x: 9, y: team === "blue" ? 30 : 2 };
+  const speed =
+    card === "rocket"
+      ? rocket.speed
+      : card === "fireball"
+        ? FIREBALL_SPEED
+        : ARROWS_SPEED;
+  const duration =
+    card === "zap"
+      ? 0.15
+      : Math.max(
+          COMBAT_STEP,
+          Math.hypot(origin.x - point.x, origin.y - point.y) / speed,
+        );
+  return { origin, speed, duration };
+}

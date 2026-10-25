@@ -11,6 +11,7 @@ export interface SpellTarget extends Point {
   score: number;
   value: number;
   lethalTower?: number;
+  protectsKing?: boolean;
 }
 export const spellContains = (a: Point, b: Point, radius: number) =>
   (a.x - b.x) ** 2 + (a.y - b.y) ** 2 < radius ** 2;
