@@ -1,6 +1,9 @@
 import { aiBodyValue } from "./ai-body-value";
 import { CARD_MAP, type CardId } from "./cards";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
+import { directSpellFlight } from "./combat";
+import { impactSteps } from "./projectile-impacts";
+import { createSpellPullPaths } from "./spell-pull-paths";
 import rocket from "./rocket-data.json" with { type: "json" };
 import { createKingSpellRace, kingRacePriority } from "./king-damage";
 import type { MatchFinisher } from "./match-finisher";
@@ -57,7 +60,7 @@ export function spellCandidatePoints(
   return [...points.values()];
 }
 
-/** Evaluate visible current positions only; no simulation or random draws.
+/** Current positions plus known Tornado pulls; no simulation or random draws.
  * Unit value is measured per body (so swarms aren't counted as whole cards).
  * A pending friendly blast reserves damage at its fixed destination.
  */
@@ -134,6 +137,40 @@ export function damageSpellTarget(
     targets.map((t) => t.entity),
     radius,
   );
+  const castStep = (point: Point) =>
+    impactSteps(directSpellFlight(card, team, point).duration);
+  // This corner bounds the flight time of every legal aim point. Paths cover
+  // the whole flight, including a Rocket arriving after the pull expires.
+  const pullPath = createSpellPullPaths(
+    areas,
+    castStep({ x: 0.5, y: team === "red" ? 31.3 : 0.7 }) + 3,
+  );
+  const motions = new Map<Entity, readonly Point[]>();
+  if (pullPath)
+    for (const { entity } of targets) {
+      const path = pullPath(entity);
+      if (path) motions.set(entity, path);
+    }
+  if (motions.size) {
+    const led = targets.map(({ entity }) => {
+      const path = motions.get(entity);
+      let point: Point = entity;
+      if (path)
+        for (let i = 0; i < 6; i++) {
+          const next = path[Math.min(castStep(point), path.length) - 1];
+          if (Math.hypot(next.x - point.x, next.y - point.y) < 1e-6) break;
+          point = next;
+        }
+      return { ...entity, ...point };
+    });
+    const key = (p: Point) => `${p.x.toFixed(3)},${p.y.toFixed(3)}`;
+    const known = new Set(points.map(key));
+    for (const point of spellCandidatePoints(led, radius))
+      if (!known.has(key(point))) {
+        known.add(key(point));
+        points.push(point);
+      }
+  }
   // Precompute point-independent value once, keeping the candidate scan cheap
   // even on a board near the troop population limit.
   const evaluated = targets.map(({ entity: e, hp, shield }) => {
@@ -176,8 +213,10 @@ export function damageSpellTarget(
       penalty = 0,
       kingStep = Infinity,
       lethalTower: Entity | undefined;
+    const step = motions.size ? castStep(point) : 0;
     for (const target of evaluated) {
-      if (!spellContains(point, target.entity, target.radius)) continue;
+      const position = motions.get(target.entity)?.[step - 1] ?? target.entity;
+      if (!spellContains(point, position, target.radius)) continue;
       if (target.entity.king && race) {
         const step = race.stepAt(point);
         if (step < race.baseline) {

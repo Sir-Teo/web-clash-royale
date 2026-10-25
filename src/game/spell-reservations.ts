@@ -6,7 +6,7 @@ import {
   impactSteps,
   projectileDamagePackets,
 } from "./projectile-impacts";
-import { projectAreaFrames } from "./tornado-pull";
+import { createSpellPullPaths } from "./spell-pull-paths";
 import log from "./log-data.json" with { type: "json" };
 
 /** One read-only reservation context per decision. Lightning selects against
@@ -43,6 +43,7 @@ export function createSpellDamageReservation(
           }),
         )
       : 0;
+  const pullPath = createSpellPullPaths(areas, horizon);
   const strikes = currentLightningDamage(entities, areas, projectiles);
   const cache = new Map<Entity, number>();
   return (entity: Entity): number => {
@@ -55,21 +56,8 @@ export function createSpellDamageReservation(
       return 0;
     const known = cache.get(entity);
     if (known !== undefined) return known;
-    const path =
-      horizon &&
-      entity.kind === "troop" &&
-      entity.speed > 0 &&
-      pulls.some(
-        (a) =>
-          a.team !== entity.team &&
-          Math.hypot(a.x - entity.x, a.y - entity.y) < a.radius + entity.radius,
-      )
-        ? projectAreaFrames(entity, areas, horizon).map(
-            (frame) => frame.position,
-          )
-        : undefined;
     const packets = [
-      ...projectileDamagePackets(entity, shots, entities, path),
+      ...projectileDamagePackets(entity, shots, entities, pullPath?.(entity)),
       // Moving troops can leave a cloud. Reserve their already applied status,
       // while structures keep the stationary, non-stacking cloud timeline.
       ...poisonDamagePackets(
