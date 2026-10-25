@@ -13,6 +13,15 @@ let match: PeerMatch | undefined;
 let pulse = performance.now();
 let last = pulse;
 let held = false;
+// UI pulses clear the watchdog hold, not the player's explicit availability.
+let localAvailability = { active: true, connected: true };
+function updateHostAvailability() {
+  match?.availability(
+    "blue",
+    localAvailability.active && !held,
+    localAvailability.connected,
+  );
+}
 const pending: Partial<Record<Team, ServerMessage>> = {};
 const inflight = { blue: false, red: false };
 function emit(team: Team, message: ServerMessage) {
@@ -33,13 +42,16 @@ self.onmessage = (event: MessageEvent<PeerHostCommand>) => {
     match = new PeerMatch(m.id, m.mode, m.player, m.seed, emit);
   else if (m.type === "join") match?.join(m.player);
   else if (m.type === "command") match?.receive(m.team, m.message);
-  else if (m.type === "availability")
-    match?.availability(m.team, m.active, m.connected);
-  else if (m.type === "pulse") {
+  else if (m.type === "availability") {
+    if (m.team === "blue") {
+      localAvailability = { active: m.active, connected: m.connected };
+      updateHostAvailability();
+    } else match?.availability(m.team, m.active, m.connected);
+  } else if (m.type === "pulse") {
     pulse = performance.now();
     if (held) {
       held = false;
-      match?.availability("blue", true);
+      updateHostAvailability();
     }
   } else if (m.type === "consumed") {
     inflight[m.team] = false;
@@ -52,7 +64,7 @@ setInterval(() => {
   const now = performance.now();
   if (!held && now - pulse > 4000) {
     held = true;
-    match?.availability("blue", false);
+    updateHostAvailability();
   }
   match?.advance((now - last) / 1000);
   last = now;

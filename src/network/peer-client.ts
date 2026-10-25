@@ -50,6 +50,7 @@ export class PeerRoomClient {
   private pendingPlayer?: PeerPlayer;
   private lastReceived = 0;
   private opponentActive = true;
+  private gameplayAvailable = true;
   private joined = false;
   private remoteBudget = 60;
   private budgetAt = 0;
@@ -79,6 +80,14 @@ export class PeerRoomClient {
   }
   constructor() {
     document.addEventListener("visibilitychange", () => this.visibility());
+  }
+  private get active() {
+    return this.gameplayAvailable && !document.hidden;
+  }
+  setGameplayAvailable(available: boolean) {
+    if (this.gameplayAvailable === available) return;
+    this.gameplayAvailable = available;
+    this.visibility();
   }
   private changed(setup: PeerSetup) {
     this.setup = setup;
@@ -157,6 +166,7 @@ export class PeerRoomClient {
         player,
         seed: (crypto.getRandomValues(new Uint32Array(1))[0] % 2147483646) + 1,
       });
+      this.visibility();
       this.bind(pc.createDataChannel("royale", { ordered: true }), generation);
       await pc.setLocalDescription(await pc.createOffer());
       await this.gather(pc);
@@ -266,12 +276,12 @@ export class PeerRoomClient {
           version: PEER_PROTOCOL,
           player: this.player,
           id: this.id,
-          active: !document.hidden,
+          active: this.active,
         });
       this.timer = setInterval(() => {
         if (document.hidden) return;
         this.post({ type: "pulse" });
-        this.wire({ kind: "ping", at: performance.now(), active: true });
+        this.wire({ kind: "ping", at: performance.now(), active: this.active });
         if (this.joined && performance.now() - this.lastReceived > 8000)
           this.connection(false);
       }, 1000);
@@ -442,11 +452,11 @@ export class PeerRoomClient {
     this.post({
       type: "availability",
       team: "blue",
-      active: !document.hidden,
+      active: this.active,
       connected: true,
     });
     if (!document.hidden) this.post({ type: "pulse" });
-    this.wire({ kind: "visibility", active: !document.hidden });
+    this.wire({ kind: "visibility", active: this.active });
   }
   send(message: ClientMessage) {
     if (!this.connected) return false;

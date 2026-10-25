@@ -129,7 +129,9 @@ export class Arena {
   >();
   private artwork: T.Mesh[] = [];
   private contextLost = false;
+  private restoringContext = false;
   onContextLost: () => void = () => {};
+  onContextRestored: () => void = () => {};
   onCharge: (burst: MovementBurst) => void = () => {};
   crownTarget: (team: Team) => Point | null = () => null;
   constructor(readonly host: HTMLElement) {
@@ -152,10 +154,12 @@ export class Arena {
     this.renderer.domElement.addEventListener("webglcontextlost", (e) => {
       e.preventDefault();
       this.contextLost = true;
+      this.restoringContext = false;
       this.onContextLost();
     });
     this.renderer.domElement.addEventListener("webglcontextrestored", () => {
       this.contextLost = false;
+      this.restoringContext = true;
     });
     host.append(this.renderer.domElement);
     this.labels = document.createElement("div");
@@ -1408,6 +1412,12 @@ export class Arena {
     this.deployment.render(time, this.camera);
     this.positionPlacementFeedback();
     this.renderer.render(this.scene, this.camera);
+    // Re-uploading textures and compiling shaders can stall the first restored
+    // draw. Keep gameplay unavailable until that draw has actually returned.
+    if (this.restoringContext && !this.renderer.getContext().isContextLost()) {
+      this.restoringContext = false;
+      this.onContextRestored();
+    }
   }
   private impact(name: string, position: T.Vector3, life: number, age = 0) {
     if (this.impacts.length >= 120 || !this.battle || age >= life) return null;

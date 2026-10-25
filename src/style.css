@@ -72,6 +72,24 @@ a {
 .hidden {
   display: none !important;
 }
+.graphics-warning {
+  position: absolute;
+  z-index: 60;
+  top: 44%;
+  left: 14px;
+  right: 14px;
+  max-width: 410px;
+  margin: 0 auto;
+  padding: 16px;
+  border: 1px solid #d7a445;
+  border-radius: 10px;
+  background: #17283bf2;
+  color: #ffe3a5;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+  pointer-events: none;
+}
 .eyebrow {
   font-size: 10px;
   font-weight: 900;

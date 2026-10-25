@@ -231,6 +231,7 @@ let screen: "lobby" | "battle" | "replay" = "lobby";
 let mode: Mode = "classic";
 let selected = -1;
 let paused = false;
+let graphicsAvailable = true;
 let soundPaused = false;
 let modalPausedBattle = false;
 let speed = 1;
@@ -304,7 +305,7 @@ $("#app").innerHTML = `
      <div class="battle-announcements hidden" id="battle-announcements" role="img" aria-label="Battle announcement"></div>
      <div class="battle-intro hidden" id="battle-intro" role="img" aria-label="Battle introduction"></div>
      <section class="battle-ending hidden" id="battle-ending" aria-label="Battle ended"></section>
-     <div id="emote-layer"></div><div id="connection-warning"></div>
+     <div id="emote-layer"></div><div id="connection-warning"></div><p id="graphics-warning" class="graphics-warning" role="status" aria-live="polite" aria-atomic="true" hidden></p>
     </div>
     <div id="lobby-footer" class="chest-tray"><div class="chest-heading"><span>VICTORY CHESTS</span><b id="chest-count">0 / 4</b></div><div class="chest-slots" id="chest-slots"></div></div>
     <div id="battle-tray" class="battle-tray hidden"><div class="hand-row"><div class="next-card"><span>NEXT</span><div class="next-card-picture" data-native-card="" data-card-variant="thumbnail"><img id="next-card-img" alt="Next card"/>${nativeCardArt}</div><div class="native-next-cost" data-native-card="" data-card-variant="cost"><b id="next-card-cost"></b>${nativeCardArt}</div></div><div class="hand" id="hand"></div></div><div class="elixir-row">${elixirMarkup}</div><div class="tray-caption"><span id="hand-caption">Select a card, then tap your side of the arena</span><span><kbd>1</kbd>–<kbd>4</kbd> SELECT</span></div></div>
@@ -406,6 +407,38 @@ function toast(message: string, announce = true) {
     3000,
   );
 }
+function syncGraphicsStatus() {
+  const warning = $("#graphics-warning");
+  const message =
+    screen === "lobby"
+      ? "Graphics interrupted. Waiting for the arena to recover. Reload if it does not recover."
+      : multiplayer && !peerNetwork
+        ? "Graphics interrupted. Online battle continues. Recover graphics or surrender."
+        : "Graphics interrupted. Battle paused while the arena recovers. Reload if it does not recover.";
+  warning.hidden = graphicsAvailable;
+  if (warning.textContent !== message) warning.textContent = message;
+  $<HTMLButtonElement>("#battle-button").disabled = !graphicsAvailable;
+  const ready = document.querySelector<HTMLButtonElement>("#room-ready");
+  if (ready && !graphicsAvailable) ready.disabled = true;
+  const resume = document.querySelector<HTMLButtonElement>("#resume-button");
+  if (resume) {
+    resume.disabled = !graphicsAvailable;
+    let note = document.querySelector<HTMLElement>("#graphics-pause-note");
+    if (!graphicsAvailable && !note) {
+      note = document.createElement("p");
+      note.id = "graphics-pause-note";
+      note.className = "room-note";
+      note.setAttribute("role", "status");
+      resume.after(note);
+    }
+    if (note) {
+      const text = graphicsAvailable
+        ? "Graphics restored. Resume when ready."
+        : message;
+      if (note.textContent !== text) note.textContent = text;
+    }
+  }
+}
 function modal(title: string, body: string, key = "generic", wide = false) {
   if (
     !multiplayer &&
@@ -429,6 +462,7 @@ function modal(title: string, body: string, key = "generic", wide = false) {
   $(".modal-backdrop").addEventListener("click", (e) => {
     if (e.target === $(".modal-backdrop")) closeModal();
   });
+  syncGraphicsStatus();
 }
 function closeModal() {
   const wasResult = modalKey === "result";
@@ -439,7 +473,8 @@ function closeModal() {
     modalPausedBattle = false;
     paused = false;
     accumulator = 0;
-    if (screen === "battle" && !battle.winner) audio.startMusic();
+    if (graphicsAvailable && screen === "battle" && !battle.winner)
+      audio.startMusic();
   }
   if (wasResult && screen === "battle" && battle.winner) {
     lobby();
@@ -574,6 +609,10 @@ function startBattle(
   online = false,
   practice: ReturnType<typeof recordedPractice> | null = null,
 ) {
+  if (!online && !graphicsAvailable) {
+    toast("Wait for the arena graphics to recover before starting a battle.");
+    return;
+  }
   deploymentFeedback.reset();
   clearKeyboardAim(true);
   replayOwnerName = null;
@@ -650,7 +689,7 @@ function startBattle(
   nativeCards.reset(battle.time, battle.players.blue.hand);
   matchHud.reset(arena.effectTime, crownCounts());
   updateBattleUI(true);
-  audio.startMusic();
+  if (graphicsAvailable) audio.startMusic();
   if (!profile.seenTutorial) {
     profile.seenTutorial = true;
     saveProfile(profile);
@@ -713,6 +752,7 @@ function updateBattleUI(force = false) {
     });
   document.querySelectorAll<HTMLElement>("[data-slot]").forEach((e, i) => {
     (e as HTMLButtonElement).disabled =
+      !graphicsAvailable ||
       intro.clock.blocking ||
       (multiplayer &&
         (!network.connected || network.pending || !!network.room?.paused));
@@ -782,7 +822,13 @@ function beginKeyboardAim() {
   hover = { ...keyboardTarget };
 }
 function selectCard(slot: number, keyboard = false) {
-  if (screen !== "battle" || paused || battle.winner || intro.clock.blocking)
+  if (
+    !graphicsAvailable ||
+    screen !== "battle" ||
+    paused ||
+    battle.winner ||
+    intro.clock.blocking
+  )
     return;
   selected = selected === slot ? -1 : slot;
   clearKeyboardAim();
@@ -810,6 +856,7 @@ function selectCard(slot: number, keyboard = false) {
 }
 function refreshPlacement() {
   if (
+    !graphicsAvailable ||
     screen !== "battle" ||
     paused ||
     selected < 0 ||
@@ -843,6 +890,7 @@ function refreshPlacement() {
 }
 function deploy(point: Point) {
   if (
+    !graphicsAvailable ||
     selected < 0 ||
     screen !== "battle" ||
     paused ||
@@ -912,7 +960,7 @@ function togglePause() {
         closeModal();
         updateBattleUI();
       };
-      $("#resume-button").focus();
+      $(graphicsAvailable ? "#resume-button" : "#surrender-button").focus();
     } else closeModal();
   } else {
     syncReplayControl();
@@ -949,7 +997,7 @@ function showResult() {
   resultShown = true;
   audio.stopMusic();
   audio.stopEffects();
-  announcements.cue("Gameend Horn");
+  if (graphicsAvailable) announcements.cue("Gameend Horn");
   const wasMultiplayer = multiplayer;
   const reward = recordBattle(
       profile,
@@ -982,7 +1030,8 @@ function showResult() {
     show: () => {
       if (screen !== "battle" || battle !== completedBattle) return;
       ending.reset();
-      audio.play(win ? "win_tour_01" : "lose_tour_01", 0.45);
+      if (graphicsAvailable)
+        audio.play(win ? "win_tour_01" : "lose_tour_01", 0.45);
       modal(
         draw
           ? "A worthy battle."
@@ -1046,6 +1095,10 @@ function syncPeerRematch() {
   if (status.textContent !== message) status.textContent = message;
 }
 function playReplay(record: RecordEntry, ownerName?: string) {
+  if (!graphicsAvailable) {
+    toast("Wait for the arena graphics to recover before watching a replay.");
+    return;
+  }
   deploymentFeedback.reset();
   clearKeyboardAim(true);
   const playerName = ownerName ?? record.playerName ?? profile.name;
@@ -1451,7 +1504,7 @@ network.onMessage = (message) => {
       eventCursor = battle.events.at(-1)?.id ?? eventCursor;
       combatAudio.skip(battle.audioEvents);
     }
-    if (!document.hidden && !battle.winner) {
+    if (graphicsAvailable && !document.hidden && !battle.winner) {
       // Consume before another state replaces this snapshot or a graphics frame
       // delays presentation. The independent audio cursor prevents duplicates.
       combatAudio.consume(battle.audioEvents, battle.seed, battle.time);
@@ -1480,12 +1533,22 @@ network.onMessage = (message) => {
       } else toast(message.message);
     } else if (modalKey === "room") showMultiplayer();
   }
-  if (message.type === "emote" && screen === "battle" && !battle.winner)
+  if (
+    message.type === "emote" &&
+    graphicsAvailable &&
+    screen === "battle" &&
+    !battle.winner
+  )
     emotes.show(
       message.team === network.team ? "blue" : "red",
       message.kind ?? "laugh",
     );
-  if (message.type === "quick-chat" && screen === "battle" && !battle.winner)
+  if (
+    message.type === "quick-chat" &&
+    graphicsAvailable &&
+    screen === "battle" &&
+    !battle.winner
+  )
     emotes.show(message.team === network.team ? "blue" : "red", message.phrase);
 };
 
@@ -2048,7 +2111,7 @@ function showSettings() {
     profile.music = ($("#music-setting") as HTMLInputElement).checked;
     audio.setEnabled(profile.sound);
     audio.musicEnabled = profile.music;
-    if (screen === "battle" && !paused) audio.startMusic();
+    if (graphicsAvailable && screen === "battle" && !paused) audio.startMusic();
     if (!profile.music) audio.stopMusic();
     saveProfile(profile);
     refreshProfile();
@@ -2108,7 +2171,7 @@ function showHelp() {
 function updateCombatAudio() {
   combatAudio.update(
     battle.time,
-    paused || (multiplayer && !!network.room?.paused),
+    !graphicsAvailable || paused || (multiplayer && !!network.room?.paused),
     new Set(
       battle.entities
         .filter((entity) => entity.hp > 0)
@@ -2117,6 +2180,12 @@ function updateCombatAudio() {
   );
 }
 function processEvents() {
+  if (!graphicsAvailable) {
+    eventCursor = battle.events.at(-1)?.id ?? eventCursor;
+    combatAudio.skip(battle.audioEvents);
+    deathAudio.reset();
+    return;
+  }
   combatAudio.consume(battle.audioEvents, battle.seed, battle.time);
   for (const ev of battle.events) {
     if (ev.id <= eventCursor) continue;
@@ -2156,11 +2225,39 @@ try {
     };
   };
   arena.onContextLost = () => {
-    if (screen !== "lobby" && !paused) togglePause();
-    toast("Graphics paused. Reload if the arena does not recover.");
+    graphicsAvailable = false;
+    peerNetwork?.setGameplayAvailable(false);
+    cancelPointer();
+    selected = -1;
+    $("#hand-caption").textContent =
+      "Select a card, then tap your side of the arena";
+    $("#deploy-hint").textContent = "Select a card to deploy";
+    accumulator = 0;
+    audio.stopMusic();
+    audio.stopEffects();
+    emotes.suspend();
+    if (!multiplayer && screen !== "lobby" && !paused) togglePause();
+    syncGraphicsStatus();
+    updateBattleUI(true);
+  };
+  arena.onContextRestored = () => {
+    graphicsAvailable = true;
+    accumulator = 0;
+    syncGraphicsStatus();
+    if (modalKey === "room") showMultiplayer();
+    updateBattleUI(true);
+    if (!document.hidden && screen === "battle" && !paused && !battle.winner)
+      audio.startMusic();
+    toast("Arena graphics restored.");
+    // Do not turn time spent rebuilding graphics into catch-up simulation.
+    frameTime = performance.now();
+    lastRenderTime = lastFpsTime = frameTime;
+    fpsFrames = 0;
+    peerNetwork?.setGameplayAvailable(true);
   };
   arena.onCharge = (burst) => {
     if (
+      !graphicsAvailable ||
       screen === "lobby" ||
       paused ||
       (multiplayer && network.room?.paused) ||
@@ -2304,7 +2401,8 @@ document.querySelectorAll<HTMLButtonElement>("[data-nav]").forEach(
 $(".sound-toggle").onclick = () => {
   profile.sound = !profile.sound;
   audio.setEnabled(profile.sound);
-  if (profile.sound && screen === "battle" && !paused) audio.startMusic();
+  if (graphicsAvailable && profile.sound && screen === "battle" && !paused)
+    audio.startMusic();
   saveProfile(profile);
   refreshSound();
   audio.play("button_click_02");
@@ -2561,7 +2659,7 @@ function frame(now: number) {
   const elapsed = (now - frameTime) / 1000;
   const delta = Math.min(0.5, elapsed);
   frameTime = now;
-  if (screen !== "lobby" && !paused && !battle.winner) {
+  if (graphicsAvailable && screen !== "lobby" && !paused && !battle.winner) {
     const wasOpening = intro.clock.blocking;
     accumulator += intro.clock.advance(
       multiplayer && network.room?.paused ? 0 : delta * speed,
@@ -2587,7 +2685,8 @@ function frame(now: number) {
     if (!multiplayer) processEvents();
   }
   if (multiplayer) processEvents();
-  const presentationPaused = paused || (multiplayer && !!network.room?.paused);
+  const presentationPaused =
+    !graphicsAvailable || paused || (multiplayer && !!network.room?.paused);
   if (presentationPaused && !soundPaused) audio.stopEffects();
   soundPaused = presentationPaused;
   if (screen !== "lobby" && !battle.winner) {
@@ -2621,8 +2720,9 @@ function frame(now: number) {
       lastFpsTime = now;
     }
   }
-  if (now - lastUi > 90 && screen !== "lobby") {
-    updateBattleUI();
+  if (now - lastUi > 90) {
+    syncGraphicsStatus();
+    if (screen !== "lobby") updateBattleUI();
     if (multiplayer) updateConnection();
     lastUi = now;
   }
@@ -2650,9 +2750,9 @@ function frame(now: number) {
   connectionWarning.update(now / 1000);
   offlineUpdates.update();
   emotes.update(
-    paused ? 0 : delta,
+    presentationPaused ? 0 : delta,
     screen === "battle" &&
-      !paused &&
+      !presentationPaused &&
       !battle.winner &&
       !intro.clock.blocking &&
       (!multiplayer || network.connected),
@@ -2660,7 +2760,10 @@ function frame(now: number) {
   if (pendingResult) {
     if (pendingResult.battle !== battle || screen !== "battle")
       pendingResult = null;
-    else if (arena.effectTime >= pendingResult.time && ending.clock.finished) {
+    else if (
+      !graphicsAvailable ||
+      (arena.effectTime >= pendingResult.time && ending.clock.finished)
+    ) {
       const show = pendingResult.show;
       pendingResult = null;
       show();
@@ -2676,6 +2779,7 @@ Object.defineProperty(window, "__arena", {
       return {
         screen,
         paused,
+        graphicsAvailable,
         selected,
         time: battle.time,
         rulesVersion: battle.rulesVersion,
