@@ -152,6 +152,11 @@
       "sha256": "cd22e996b19bedcd3a2e69f3aaba20cc466af944f528e97f1193a909afb9b862"
     },
     {
+      "file": "portrait-three-musketeers.webp",
+      "bytes": 45010,
+      "sha256": "d4fe5116f23ef9b6383380d637216fe676ea11cc54bbc1c3cb314e6c64fc182d"
+    },
+    {
       "file": "portrait-mini-pekka.webp",
       "bytes": 33292,
       "sha256": "ae7a7e4846126922ca205d2abf5a948e23d2795a962656ed3b26cde0cfd6ee76"
@@ -278,8 +283,8 @@
     },
     {
       "file": "cards.json",
-      "bytes": 92453,
-      "sha256": "76d217e8c4465152c46dba96013cafea09d6ee44817a431230d0cf022a0c24df"
+      "bytes": 92797,
+      "sha256": "ba08318ef0b67a141ea826b92ce8f5267fe0ab625f509dc272d180c0778afcd2"
     }
   ]
 }

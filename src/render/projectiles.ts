@@ -19,7 +19,8 @@ export function projectileArt(p: Projectile) {
   if (["bomber", "balloon"].includes(p.style)) return "projectile_bomb";
   if (["cannon", "cannonball"].includes(p.style))
     return "projectile_cannonball_large";
-  if (p.style === "musketeer") return "projectile_cannonball_small";
+  if (p.style === "musketeer" || p.style === "three-musketeers")
+    return "projectile_cannonball_small";
   if (p.style === "rocket") return "projectile_rocket";
   if (p.style === "fireball") return "fireball_projectile1";
   if (p.style === "baby-dragon") return "dragon_projectile";

@@ -37,6 +37,18 @@
       "gravity": 0
     }
   },
+  "three-musketeers": {
+    "source": "Musketeer",
+    "windup": 0.5,
+    "sight": 6,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "MusketeerProjectile",
+      "speed": 16.666666666666668,
+      "homing": true,
+      "gravity": 0
+    }
+  },
   "mini-pekka": {
     "source": "MiniPekka",
     "windup": 0.5,

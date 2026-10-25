@@ -1,0 +1,45 @@
+{
+  "card": "three-musketeers",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/sc/chr_musketeer.bin",
+      "sha256": "8ceb69fb0d485a971f2990081d8d88823beade5453183190d15ec45fe691f4ca"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    }
+  ],
+  "observed": {
+    "cardRow": "ThreeMusketeers",
+    "unitRow": "Musketeer",
+    "cost": 9,
+    "count": 3,
+    "rarity": "Rare",
+    "icon": "three_musketeers",
+    "nativeProjectile": "MusketeerProjectile",
+    "deployFilter": "filter_deploy_unit_default",
+    "unitDeployTimeMs": 1000,
+    "unitDeployDelayMs": 300
+  },
+  "browserChoices": {
+    "unitStats": "Shares the existing curated normalized Musketeer HP, damage, movement speed, range and attack interval.",
+    "formation": "Existing golden-angle three-body placement; not a recovered native formation.",
+    "spriteAlias": "musketeer",
+    "projectileArt": "projectile_cannonball_small",
+    "opponent": "Musketeer Marshal uses a new Three Musketeers and Hog deck.",
+    "deploymentTiming": "Uses the existing common one-second deployment for all three bodies; the historical DeployDelay column scheduling is not reconstructed."
+  },
+  "limits": [
+    "Retained configuration and artwork establish these bindings, not native runtime scheduling or current live balance.",
+    "No new native code execution or decompilation was performed for this card."
+  ]
+}

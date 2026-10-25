@@ -42,7 +42,7 @@ test("named AI decks survive history and replay, and a reload avoids repeating t
   page.on("pageerror", (e) => errors.push(e.message));
   await page.locator("#battle-button").click();
   await expect(page.locator(".competitor.enemy b")).toHaveText(
-    "Prince Captain",
+    soloOpponent(1, "classic").name,
   );
   const first = await state(page),
     definition = SOLO_OPPONENTS.find(

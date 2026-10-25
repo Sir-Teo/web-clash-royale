@@ -471,6 +471,12 @@
       "sha256": "4dce8e5c833db04903b51b6495e774914ed3c7a8b0e26c14c1378bf6a18f5590"
     },
     {
+      "path": "cards/three-musketeers.png",
+      "source": "cards/three-musketeers.png",
+      "bytes": 150331,
+      "sha256": "562e00986f6e4f6e63ebf6a5a07d5342317b1aaac5e42875fc199ec4e5fede82"
+    },
+    {
       "path": "cards/valkyrie.png",
       "source": "cards/valkyrie.png",
       "bytes": 148663,

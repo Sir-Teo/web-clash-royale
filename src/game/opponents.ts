@@ -94,6 +94,20 @@ export const SOLO_OPPONENTS = [
       "valkyrie",
     ],
   },
+  {
+    name: "Musketeer Marshal",
+    style: "Three Musketeers",
+    deck: [
+      "three-musketeers",
+      "hog-rider",
+      "knight",
+      "skeletons",
+      "goblins",
+      "fireball",
+      "zap",
+      "tesla",
+    ],
+  },
 ] as const satisfies readonly SoloOpponent[];
 
 export function previousSoloOpponent(

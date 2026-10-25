@@ -229,7 +229,9 @@ export class SpriteLibrary {
         ? "skeletons"
         : id === "minion-horde"
           ? "minions"
-          : id,
+          : id === "three-musketeers"
+            ? "musketeer"
+            : id,
     );
     if (!asset) return null;
     const frame = Object.values(asset.data.clips)[0].frames[0];

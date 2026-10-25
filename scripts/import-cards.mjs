@@ -232,6 +232,7 @@ const portraitNames = {
   archers: "Archer",
   giant: "Giant",
   musketeer: "Musketeer",
+  "three-musketeers": "ThreeMusketeers",
   "mini-pekka": "MiniPekka",
   fireball: "Fireball",
   arrows: "Arrows",

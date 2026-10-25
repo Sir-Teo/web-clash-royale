@@ -283,7 +283,7 @@ describe("confirmed peer client loadouts", () => {
     expect(send).not.toHaveBeenCalled();
     expect(c.loadout).toEqual(host);
   });
-  it.each([undefined, 1, 2, PEER_PROTOCOL + 1])(
+  it.each([undefined, 1, 2, 3, PEER_PROTOCOL + 1])(
     "rejects incompatible peer welcome version %s with an update action",
     (version) => {
       const c = client();

@@ -349,7 +349,11 @@ export function troopModel(id: CardId, team: Team): Model {
       box(group, s * 0.4, 0.99, 0, 0.29, 0.32, 0.42, 0x879baa);
     }
     arms.push(sword(group, 0.48, 0.65, 0.23, 1.25));
-  } else if (id === "archers" || id === "musketeer") {
+  } else if (
+    id === "archers" ||
+    id === "musketeer" ||
+    id === "three-musketeers"
+  ) {
     humanoid(color);
     sphere(group, 0, 1.33, -0.06, 0.34, 0xa45ac1, 1.05, 1.1, 1.05);
     sphere(group, 0, 1.3, 0.15, 0.27, skin);

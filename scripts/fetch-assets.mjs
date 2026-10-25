@@ -7,6 +7,7 @@ const cards = [
   "archers",
   "giant",
   "musketeer",
+  "three-musketeers",
   "mini-pekka",
   "fireball",
   "arrows",

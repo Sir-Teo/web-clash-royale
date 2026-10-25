@@ -8,6 +8,7 @@ export type CardId =
   | "archers"
   | "giant"
   | "musketeer"
+  | "three-musketeers"
   | "mini-pekka"
   | "fireball"
   | "arrows"
@@ -93,6 +94,19 @@ const minionCard = (
     hitsAir: true,
     count,
   });
+// Both cards deploy the same normalized Musketeer unit.
+const musketeerCard = (
+  id: "musketeer" | "three-musketeers",
+  name: string,
+  cost: number,
+  count: number,
+  description: string,
+) =>
+  troop(id, name, cost, 720, 218, 1, 6, 1, description, {
+    rarity: "Rare",
+    hitsAir: true,
+    count,
+  });
 export const CARDS: Card[] = [
   troop(
     "knight",
@@ -129,17 +143,19 @@ export const CARDS: Card[] = [
     "Slow but durable, he only attacks buildings. Put a ranged troop behind him.",
     { rarity: "Rare", buildingsOnly: true },
   ),
-  troop(
+  musketeerCard(
     "musketeer",
     "Musketeer",
     4,
-    720,
-    218,
-    1,
-    6,
     1,
     "One shot, a whole lot of damage. A long-range defender against ground and air.",
-    { rarity: "Rare", hitsAir: true },
+  ),
+  musketeerCard(
+    "three-musketeers",
+    "Three Musketeers",
+    9,
+    3,
+    "Three long-range musketeers cover ground and air. A powerful formation with a steep elixir cost.",
   ),
   troop(
     "mini-pekka",

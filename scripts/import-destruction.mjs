@@ -246,6 +246,7 @@ landings["hog-rider"] = {
 };
 for (const [id, expected] of Object.entries({
   musketeer: "cannon_hit",
+  "three-musketeers": "cannon_hit",
   bomber: "BombTower_projectile_hit",
   "baby-dragon": "dragon_hit",
   wizard: "chr_wizard_projectile_hit",
@@ -300,7 +301,8 @@ if (
   poisonArea.ScaledEffect !== "Spell_poison_ground" ||
   poisonArea.OneShotEffect !== "Spell_poison_effect" ||
   poisonArea.LoopingEffect !== "Spell_poison_loop"
-) throw new Error("Recheck native Poison area effect bindings");
+)
+  throw new Error("Recheck native Poison area effect bindings");
 for (const [id, source] of [
   ["poison", poisonArea.OneShotEffect],
   ["poison-loop", poisonArea.LoopingEffect],
@@ -318,7 +320,8 @@ if (
   rageArea.ScaledEffect !== "Spell_rage_ground" ||
   rageArea.OneShotEffect !== "Spell_rage_effect" ||
   rageArea.LoopingEffect !== "Spell_rage_loop"
-) throw new Error("Recheck native Rage area effect bindings");
+)
+  throw new Error("Recheck native Rage area effect bindings");
 for (const [id, source] of [
   ["rage", rageArea.OneShotEffect],
   ["rage-loop", rageArea.LoopingEffect],
