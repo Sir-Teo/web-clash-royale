@@ -1,5 +1,63 @@
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
+import { CARD_MAP } from "../../src/game/cards";
+
+for (const scene of ["early", "shield", "late"])
+  test(`Lightning windup: the ordinary AI timer accounts for ${scene} Lightning`, async ({
+    page,
+  }, info) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto(
+      `/tests/fixtures/combat.html?scene=ai-lightning-windup-${scene}`,
+    );
+    await expect(page.locator("#status")).toContainText(
+      `${expectedEffects} effects`,
+      { timeout: 60000 },
+    );
+    const output = page.locator("#destruction");
+    const state = async () =>
+      JSON.parse((await output.getAttribute("data-ai-areas"))!);
+    const actions = async () =>
+      JSON.parse((await output.getAttribute("data-ai-defense"))!).actions;
+    for (let i = 0; i < 3; i++) {
+      const before = (await state()).time;
+      await page.locator("#second").click();
+      await expect
+        .poll(async () => (await state()).time)
+        .toBeGreaterThan(before + 0.99);
+      if (i < 2) expect(await actions()).toEqual([]);
+    }
+    const late = scene === "late";
+    expect(
+      (await actions()).map((a: any) => ({ card: a.card, tick: a.tick })),
+    ).toEqual([
+      { card: "lightning", tick: late ? 70 : 60 },
+      ...(late ? [{ card: "freeze", tick: 74 }] : []),
+    ]);
+    const result = await state();
+    expect(result.winner).toBeNull();
+    expect(result.kings.find((e: any) => e.team === "red").hp).toBe(
+      late
+        ? 300
+        : 300 -
+            CARD_MAP[scene === "shield" ? "dark-prince" : "lumberjack"].damage,
+    );
+    if (!late) {
+      const hand = JSON.parse((await output.getAttribute("data-ai-spells"))!);
+      expect(hand.hand).toContain("freeze");
+      expect(hand.elixir).toBeGreaterThan(4);
+      const remaining = result.entities.filter((e: any) => e.team === "blue");
+      expect(remaining).toHaveLength(scene === "shield" ? 2 : 0);
+      for (const body of remaining) expect(body.hp).toBe(200);
+    }
+    if (scene === "early")
+      await page.screenshot({
+        path: info.outputPath("ai-lightning-windup.png"),
+        fullPage: true,
+      });
+    expect(errors).toEqual([]);
+  });
 
 for (const card of ["freeze", "tornado"])
   test(`Lightning feedback: the ordinary AI timer holds ${card} to preserve its King`, async ({
@@ -180,14 +238,24 @@ for (const scene of ["ai-tornado-king", "ai-tornado-race", "ai-tornado-air"])
         .toBeGreaterThan(before + 0.99);
     }
     expect(await actions()).toEqual([]);
+    const beforeDecision = (await state()).time;
     await page.locator("#second").click();
-    await expect.poll(async () => (await actions()).length).toBe(1);
+    await expect
+      .poll(async () => (await state()).time, { timeout: 15000 })
+      .toBeGreaterThan(beforeDecision + 0.99);
+    expect(await actions()).toHaveLength(1);
     expect((await actions())[0]).toMatchObject({ card: "tornado", tick: 74 });
     expect((await state()).areas.some((a: any) => a.card === "tornado")).toBe(
       true,
     );
     if (scene === "ai-tornado-air") {
-      for (let i = 0; i < 3; i++) await page.locator("#second").click();
+      for (let i = 0; i < 3; i++) {
+        const before = (await state()).time;
+        await page.locator("#second").click();
+        await expect
+          .poll(async () => (await state()).time, { timeout: 15000 })
+          .toBeGreaterThan(before + 0.99);
+      }
       await expect.poll(async () => (await state()).entities.length).toBe(0);
     } else {
       expect((await state()).kings.find((e: any) => e.team === "red").hp).toBe(
@@ -203,7 +271,11 @@ for (const scene of ["ai-tornado-king", "ai-tornado-race", "ai-tornado-air"])
           path: info.outputPath("ai-tornado-defense.png"),
           fullPage: true,
         });
+      const before = (await state()).time;
       await page.locator("#second").click();
+      await expect
+        .poll(async () => (await state()).time, { timeout: 15000 })
+        .toBeGreaterThan(before + 0.99);
       expect((await state()).kings.find((e: any) => e.team === "red").hp).toBe(
         100,
       );

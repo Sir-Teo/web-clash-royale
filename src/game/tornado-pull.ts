@@ -53,6 +53,7 @@ export interface WindupFrame {
 }
 export interface WindupHealthFrame {
   beforeAlive: boolean;
+  beforeInterrupt?: boolean;
   afterAlive: boolean;
   interrupt: boolean;
   slow: number;
@@ -61,7 +62,71 @@ export type WindupHealthEvaluator = (
   attacker: Entity,
   frames: readonly WindupFrame[],
   areas: readonly AreaEffect[],
+  proposedIndex?: number,
 ) => readonly WindupHealthFrame[];
+
+/** Read-only area movement and control clocks, also used to place every
+ * possible Lightning target at its own position within each area update. */
+export function projectAreaFrames(
+  body: Entity,
+  areas: readonly AreaEffect[],
+  steps: number,
+): WindupFrame[] {
+  const clouds = areas.map((a) => ({ ...a }));
+  let position = { x: body.x, y: body.y };
+  let boost = body.rage?.remaining ?? 0,
+    slow = body.slow?.remaining ?? 0,
+    stun = body.stun;
+  const hidden = body.deploy <= 0 && body.burrow?.phase === "hidden";
+  const frames: WindupFrame[] = [];
+  for (let step = 1; step <= steps; step++) {
+    const areaPositions: Point[] = [];
+    for (const cloud of clouds) {
+      areaPositions.push(position);
+      if (cloud.remaining <= 0) continue;
+      const inside = distance(position, cloud) < cloud.radius + body.radius;
+      const age = cloud.duration - cloud.remaining;
+      if (
+        cloud.card === "ice-golem" &&
+        cloud.team !== body.team &&
+        inside &&
+        !body.dash
+      )
+        slow = Math.max(slow, iceGolem.slowDuration);
+      if (
+        cloud.card === "freeze" &&
+        cloud.team !== body.team &&
+        inside &&
+        !body.dash
+      )
+        stun = Math.max(stun, COMBAT_STEP * 2);
+      if (cloud.card === "rage" && age + 1e-8 >= (cloud.hitAt ?? 0)) {
+        cloud.hitAt = (cloud.hitAt ?? 0) + rage.areaHitInterval;
+        if (cloud.team === body.team && inside && body.kind === "troop")
+          boost = Math.max(boost, Math.min(rage.buffDuration, cloud.remaining));
+      }
+      if (cloud.card === "tornado" && age + 1e-8 >= (cloud.hitAt ?? 0)) {
+        cloud.hitAt = (cloud.hitAt ?? 0) + tornado.areaHitInterval;
+        if (
+          cloud.team !== body.team &&
+          inside &&
+          body.kind === "troop" &&
+          !hidden
+        )
+          position =
+            tornadoPull({ ...position, speed: body.speed }, cloud) ?? position;
+      }
+      cloud.remaining = Math.max(0, cloud.remaining - COMBAT_STEP);
+      if (cloud.card !== "ice-golem" && cloud.remaining < 1e-8)
+        cloud.remaining = 0;
+    }
+    boost = Math.max(0, boost - COMBAT_STEP);
+    slow = Math.max(0, slow - COMBAT_STEP);
+    stun = Math.max(0, stun - COMBAT_STEP);
+    frames.push({ position, areaPositions, boost, slow, stun });
+  }
+  return frames;
+}
 
 /** The same control clocks also retain the release position of an attack
  * that survives a pull, so its projectile flight can be recomputed. */
@@ -74,15 +139,19 @@ export function projectTornadoWindup(
 ): WindupProjection {
   let position = { x: attacker.x, y: attacker.y };
   if (!attacker.pendingAttack) return { position };
-  const clouds = areas
-    .filter(
-      (a) =>
-        a.remaining > 0 &&
-        ["tornado", "rage", "ice-golem", "freeze", "poison", "heal"].includes(
-          a.card,
-        ),
-    )
-    .map((a) => ({ ...a }));
+  const clouds = areas.filter(
+    (a) =>
+      a.remaining > 0 &&
+      [
+        "tornado",
+        "rage",
+        "ice-golem",
+        "freeze",
+        "poison",
+        "heal",
+        "lightning",
+      ].includes(a.card),
+  );
   if (proposed)
     clouds.push({
       id: -1,
@@ -95,12 +164,7 @@ export function projectTornadoWindup(
       remaining: tornado.duration,
       hitAt: 0,
     });
-  let boost = attacker.rage?.remaining ?? 0,
-    slow = attacker.slow?.remaining ?? 0,
-    stun = attacker.stun;
   let remaining = attacker.pendingAttack.remaining;
-  const initialAreas = health ? clouds.map((a) => ({ ...a })) : [];
-  const frames: WindupFrame[] = [];
   const limit = health
     ? Math.min(
         60,
@@ -112,88 +176,53 @@ export function projectTornadoWindup(
         ),
       )
     : 60;
-  for (let step = 1; step <= limit; step++) {
-    const areaPositions: Point[] = [];
-    for (const cloud of clouds) {
-      if (health) areaPositions.push(position);
-      if (cloud.remaining <= 0) continue;
-      const inside = distance(position, cloud) < cloud.radius + attacker.radius;
-      const age = cloud.duration - cloud.remaining;
-      if (
-        cloud.card === "ice-golem" &&
-        cloud.team !== attacker.team &&
-        inside &&
-        !attacker.dash
-      )
-        slow = Math.max(slow, iceGolem.slowDuration);
-      if (
-        cloud.card === "freeze" &&
-        cloud.team !== attacker.team &&
-        inside &&
-        !attacker.dash
-      )
-        stun = Math.max(stun, COMBAT_STEP * 2);
-      if (cloud.card === "rage" && age + 1e-8 >= (cloud.hitAt ?? 0)) {
-        cloud.hitAt = (cloud.hitAt ?? 0) + rage.areaHitInterval;
-        if (cloud.team === attacker.team && inside && attacker.kind === "troop")
-          boost = Math.max(boost, Math.min(rage.buffDuration, cloud.remaining));
-      }
-      if (cloud.card === "tornado" && age + 1e-8 >= (cloud.hitAt ?? 0)) {
-        cloud.hitAt = (cloud.hitAt ?? 0) + tornado.areaHitInterval;
-        if (cloud.team !== attacker.team && inside && attacker.kind === "troop")
-          position =
-            tornadoPull({ ...position, speed: attacker.speed }, cloud) ??
-            position;
-      }
-      cloud.remaining = Math.max(0, cloud.remaining - COMBAT_STEP);
-      if (cloud.card !== "ice-golem" && cloud.remaining < 1e-8)
-        cloud.remaining = 0;
-    }
-    boost = Math.max(0, boost - COMBAT_STEP);
-    slow = Math.max(0, slow - COMBAT_STEP);
-    stun = Math.max(0, stun - COMBAT_STEP);
-    if (health) {
-      frames.push({ position, areaPositions, boost, slow, stun });
-      continue;
-    }
+  const frames = projectAreaFrames(attacker, clouds, limit);
+  return resolveWindup(
+    attacker,
+    target,
+    frames,
+    health?.(
+      attacker,
+      frames,
+      clouds,
+      proposed ? clouds.length - 1 : undefined,
+    ),
+  );
+}
+
+/** Resolve only the current windup against prepared control and health frames. */
+export function resolveWindup(
+  attacker: Entity,
+  target: Entity,
+  frames: readonly WindupFrame[],
+  statuses?: readonly WindupHealthFrame[],
+): WindupProjection {
+  let position = { x: attacker.x, y: attacker.y };
+  if (!attacker.pendingAttack) return { position };
+  let remaining = attacker.pendingAttack.remaining;
+  let shotSlow = 0;
+  for (const [index, frame] of frames.entries()) {
+    const step = index + 1,
+      status = statuses?.[index];
+    position = frame.position;
+    shotSlow = Math.max(0, shotSlow - COMBAT_STEP);
     if (
-      stun > 0 ||
+      (status && (!status.beforeAlive || status.beforeInterrupt)) ||
+      frame.stun > 0 ||
       distance(position, target) >
         attacker.range + target.radius + attacker.radius * 0.35
     )
       return { position, cancelledStep: step };
     remaining -=
       COMBAT_STEP *
-      (boost >= 1e-8 ? rage.hitSpeedMultiplier : 1) *
-      (slow >= 1e-8 ? iceWizard.hitSpeedMultiplier : 1);
+      (frame.boost >= 1e-8 ? rage.hitSpeedMultiplier : 1) *
+      (Math.max(frame.slow, shotSlow) >= 1e-8
+        ? iceWizard.hitSpeedMultiplier
+        : 1);
     if (remaining <= 1e-8) return { position, releaseStep: step };
-  }
-  if (health) {
-    const statuses = health(attacker, frames, initialAreas);
-    let shotSlow = 0;
-    for (const [index, frame] of frames.entries()) {
-      const step = index + 1,
-        status = statuses[index];
-      position = frame.position;
-      shotSlow = Math.max(0, shotSlow - COMBAT_STEP);
-      if (
-        !status.beforeAlive ||
-        frame.stun > 0 ||
-        distance(position, target) >
-          attacker.range + target.radius + attacker.radius * 0.35
-      )
-        return { position, cancelledStep: step };
-      remaining -=
-        COMBAT_STEP *
-        (frame.boost >= 1e-8 ? rage.hitSpeedMultiplier : 1) *
-        (Math.max(frame.slow, shotSlow) >= 1e-8
-          ? iceWizard.hitSpeedMultiplier
-          : 1);
-      if (remaining <= 1e-8) return { position, releaseStep: step };
-      if (!status.afterAlive || status.interrupt)
-        return { position, cancelledStep: step };
-      shotSlow = Math.max(shotSlow, status.slow);
-    }
+    if (status && (!status.afterAlive || status.interrupt))
+      return { position, cancelledStep: step };
+    shotSlow = Math.max(shotSlow, status?.slow ?? 0);
   }
   return { position };
 }

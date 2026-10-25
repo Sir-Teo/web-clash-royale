@@ -27,7 +27,7 @@ export function selectLightningTarget(
     .sort(order)[0];
 }
 
-function strikeSteps(area: AreaEffect) {
+export function lightningStrikeSteps(area: AreaEffect) {
   let remaining = area.remaining;
   let next = area.hitAt ?? lightning.strikeInterval;
   const steps: number[] = [];
@@ -101,7 +101,9 @@ function healthContext(
 function projectAreas(
   entities: readonly Entity[],
   areas: readonly AreaEffect[],
-  eventsFor: ReturnType<typeof healthContext>,
+  eventsFor: (body: Entity) => readonly HealthPacket[],
+  positionAt?: (body: Entity, step: number, area: number) => Point,
+  throughStep = Infinity,
 ): Projection {
   const live = areas
     .map((area, index) => ({ area, index }))
@@ -110,15 +112,16 @@ function projectAreas(
   if (!live.length) return result;
   const slots = live
     .flatMap(({ area, index }) =>
-      strikeSteps(area).map((step) => ({ step, index, area })),
+      lightningStrikeSteps(area).map((step) => ({ step, index, area })),
     )
+    .filter((slot) => slot.step <= throughStep)
     .sort((a, b) => a.step - b.step || a.index - b.index);
   const states = entities
     .filter((e) =>
-      live.some(
-        ({ area }) =>
+      slots.some(
+        ({ area, step, index }) =>
           eligible(e, area.team, area.struck ?? []) &&
-          contains(area, e, area.radius),
+          contains(area, positionAt ? { ...e, ...positionAt(e, step, index) } : e, area.radius),
       ),
     )
     .map((entity) => ({
@@ -136,9 +139,14 @@ function projectAreas(
     for (const state of states) {
       while (
         state.cursor < state.events.length &&
-        state.events[state.cursor].step < slot.step
+        (state.events[state.cursor].step < slot.step ||
+          (state.events[state.cursor].step === slot.step &&
+            state.events[state.cursor].phase === -1 &&
+            state.events[state.cursor].order < slot.index))
       )
         apply(state.body, state.events[state.cursor++]);
+      if (positionAt)
+        Object.assign(state.body, positionAt(state.entity, slot.step, slot.index));
     }
     const history = struck.get(slot.index)!;
     const target = selectLightningTarget(
@@ -169,6 +177,19 @@ function projectAreas(
     });
   }
   return result;
+}
+
+/** Caller-supplied health and area-phase positions share the live selector.
+ * Same-frame area damage follows array order; status/combat/shot events wait
+ * until all Lightning pulses on that frame have selected their targets. */
+export function projectLightningDamage(
+  entities: readonly Entity[],
+  areas: readonly AreaEffect[],
+  eventsFor: (body: Entity) => readonly HealthPacket[],
+  positionAt: (body: Entity, step: number, area: number) => Point,
+  throughStep = Infinity,
+) {
+  return projectAreas(entities, areas, eventsFor, positionAt, throughStep).packets;
 }
 
 /** Fixed-position health projection. Released projectiles, current status
@@ -216,7 +237,7 @@ export function createLightningPlan(
       members.every((e) => eventsFor(e).length === 0)
     ) {
       result = { strikes: [], packets: new Map() };
-      const steps = strikeSteps(proposed);
+      const steps = lightningStrikeSteps(proposed);
       members
         .slice(0, steps.length)
         .forEach((entity, i) =>
