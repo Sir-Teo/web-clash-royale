@@ -40,6 +40,75 @@ const think = (battle: Battle) =>
   (battle as unknown as { think: () => void }).think();
 
 describe("AI emergency Freeze defense", () => {
+  it.each(["musketeer", "balloon", "sparky", "bowler", "executioner"] as const)(
+    "defends before a fatal %s projectile instead of launching a late Rocket",
+    (card) => {
+      const { battle, king, attacker, spawn } = setup();
+      if (card === "balloon") king.hp = 300;
+      attacker.hp = 0;
+      const ranged = spawn(
+        card,
+        "blue",
+        king.x,
+        king.y + (card === "balloon" ? 1 : 5.5),
+      );
+      Object.assign(ranged, {
+        hp: 200,
+        active: true,
+        cooldown: 100,
+        target: king.id,
+        pendingAttack: {
+          target: king.id,
+          remaining: 0.2,
+          damage: ranged.damage,
+        },
+      });
+      battle.entities.find((e) => e.team === "blue" && e.king)!.hp = 50;
+      battle.players.red.hand = ["rocket", "freeze", "pekka", "pekka"];
+      battle.players.red.elixir = 6;
+      think(battle);
+      expect(battle.actions.at(-1)?.card).toBe("freeze");
+      for (let i = 0; i < 120 && !battle.winner; i++) battle.step();
+      expect(king.hp).toBe(card === "balloon" ? 60 : 100);
+      expect(ranged.hp).toBeLessThanOrEqual(0);
+    },
+  );
+
+  it.each([
+    { card: "musketeer", distance: 5.5, expected: "zap" },
+    { card: "balloon", distance: 1, expected: "zap" },
+    { card: "sparky", distance: 3, expected: "freeze" },
+    { card: "bowler", distance: 3.5, expected: "freeze" },
+    { card: "bowler", distance: 6, expected: "zap" },
+    { card: "executioner", distance: 3.5, expected: "freeze" },
+    { card: "executioner", distance: 6, expected: "zap" },
+  ] as const)(
+    "uses the first $card contact at distance $distance when comparing Zap",
+    ({ card, distance, expected }) => {
+      const { battle, king, attacker, spawn } = setup();
+      attacker.hp = 0;
+      const ranged = spawn(card, "blue", king.x, king.y + distance);
+      Object.assign(ranged, {
+        hp: 200,
+        active: true,
+        cooldown: 100,
+        target: king.id,
+        pendingAttack: {
+          target: king.id,
+          remaining: 0.05,
+          damage: ranged.damage,
+        },
+      });
+      battle.entities.find((e) => e.team === "blue" && e.king)!.hp = 50;
+      battle.players.red.hand = ["zap", "freeze", "pekka", "pekka"];
+      think(battle);
+      expect(battle.actions.at(-1)?.card).toBe(expected);
+      for (let i = 0; i < 120 && !battle.winner; i++) battle.step();
+      expect(king.hp).toBe(100);
+      expect(battle.winner).toBe(expected === "zap" ? "red" : null);
+    },
+  );
+
   it.each(["rocket", "fireball", "arrows", "poison"] as const)(
     "defends the King instead of launching a %s finisher that would arrive after a fatal swing",
     (card) => {

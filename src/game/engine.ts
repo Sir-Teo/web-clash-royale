@@ -10,6 +10,7 @@ import { defensiveThreats } from "./defensive-threats";
 import { buildingLureTarget } from "./building-lure";
 import { meleeInterceptTarget } from "./melee-intercept";
 import { fatalKingWindups, finishesKingBefore } from "./king-spell-race";
+import { attackFlight } from "./attack-flight";
 import {
   combatTraits,
   COMBAT_STEP,
@@ -1818,13 +1819,7 @@ export class Battle {
     this.audioAttacks.delete(e.id);
     if (e.card === "sparky") {
       e.sparkyCharge = 0;
-      const dx = target.x - e.x, dy = target.y - e.y;
-      const length = Math.hypot(dx, dy) || 1;
-      const start = {
-        x: e.x + dx / length * sparky.projectileStart.radius,
-        y: e.y + dy / length * sparky.projectileStart.radius,
-      };
-      const duration = Math.max(STEP, dist(start, target) / sparky.projectile.speed);
+      const { start, duration } = attackFlight(e, target)!;
       this.projectiles.push({
         id: this.nextId++, team: e.team, x: e.x, y: e.y,
         tx: target.x, ty: target.y, target: target.id, damage,
@@ -1842,20 +1837,9 @@ export class Battle {
       return;
     }
     if (e.card === "executioner") {
-      const dx = target.x - e.x, dy = target.y - e.y;
-      const distance = Math.hypot(dx, dy) || 1;
-      const ux = dx / distance, uy = dy / distance;
       // The retained minimum and maximum travel values bound the endpoint;
       // the exact historical extension beyond the selected target is absent.
-      const reach = clamp(distance + 2, executioner.projectile.minDistance,
-        executioner.projectile.range);
-      const start = { x: e.x + ux * 0.6, y: e.y + uy * 0.6 };
-      const turn = {
-        x: clamp(e.x + ux * reach, 0.5, 17.5),
-        y: clamp(e.y + uy * reach, 0.6, 31.4),
-      };
-      const duration = Math.hypot(turn.x - start.x, turn.y - start.y) /
-        executioner.projectile.speed;
+      const { start, end: turn, duration } = attackFlight(e, target)!;
       this.projectiles.push({
         id: this.nextId++, team: e.team, x: e.x, y: e.y,
         tx: turn.x, ty: turn.y, turn, target: null, damage,
@@ -1889,13 +1873,11 @@ export class Battle {
       return;
     }
     if (e.card === "bowler") {
-      const dx = target.x - e.x, dy = target.y - e.y;
-      const length = Math.hypot(dx, dy) || 1;
-      const ux = dx / length, uy = dy / length;
-      const x = e.x + ux, y = e.y + uy;
-      const tx = clamp(x + ux * bowler.projectile.range, 0.5, 17.5);
-      const ty = clamp(y + uy * bowler.projectile.range, 0.6, 31.4);
-      const duration = Math.hypot(tx - x, ty - y) / bowler.projectile.speed;
+      const {
+        start: { x, y },
+        end: { x: tx, y: ty },
+        duration,
+      } = attackFlight(e, target)!;
       const p: Projectile = {
         id: this.nextId++, team: e.team, x, y, tx, ty, target: null,
         damage, remaining: duration, duration, splash: 0, air: false,
@@ -1941,14 +1923,11 @@ export class Battle {
     const traits = combatTraits(e);
     const p = traits.projectile;
     if (p || e.card === "balloon" || e.card === "tesla") {
-      const speed = p?.speed ?? (e.card === "tesla" ? 1000 : undefined);
-      const muzzleDistance = e.card === "x-bow" ? xBow.projectileStartRadius : 0;
-      const targetDistance = dist(e, target) || 1;
-      const launchX = e.x + (target.x - e.x) / targetDistance * muzzleDistance;
-      const launchY = e.y + (target.y - e.y) / targetDistance * muzzleDistance;
-      const duration = speed
-        ? Math.max(STEP, dist({ x: launchX, y: launchY }, target) / speed)
-        : 0.35;
+      const {
+        start: { x: launchX, y: launchY },
+        speed,
+        duration,
+      } = attackFlight(e, target)!;
       const defaultFromHeight =
         e.kind === "tower"
           ? e.king
@@ -2688,10 +2667,9 @@ export class Battle {
       .sort((a, b) => b.score - a.score)[0];
     if (protection) {
       // A lethal hit can still lose the match when its flight ends too late.
-      // Compare the known melee race only when an affordable defense exists.
+      // Compare the known pending attack only when an affordable defense exists.
       const deadline = Math.min(
         ...fatalKingWindups("red", this.entities, this.areas)
-          .filter((windup) => windup.melee)
           .map((windup) => windup.step),
       );
       for (const a of affordable) {

@@ -53,7 +53,7 @@ for (const card of ["rage", "freeze", "poison"] as const)
     expect(errors).toEqual([]);
   });
 
-for (const scene of ["ai-freeze-king", "ai-freeze-race"])
+for (const scene of ["ai-freeze-king", "ai-freeze-race", "ai-freeze-ranged"])
   test(`${scene}: AI Freeze interrupts a fatal King windup before a losing spell choice`, async ({
     page,
   }, info) => {
@@ -79,11 +79,12 @@ for (const scene of ["ai-freeze-king", "ai-freeze-race"])
     expect((await state()).actions).toEqual([]);
     await step();
     const defended = await state();
+    const attacker = scene === "ai-freeze-ranged" ? "musketeer" : "lumberjack";
     expect(defended.actions).toHaveLength(1);
     expect(defended.actions[0]).toMatchObject({ card: "freeze", team: "red" });
     expect(defended.kings.find((e: any) => e.team === "red").hp).toBe(100);
     expect(
-      defended.entities.find((e: any) => e.card === "lumberjack").stun,
+      defended.entities.find((e: any) => e.card === attacker).stun,
     ).toBeGreaterThan(0);
     expect(defended.entities.some((e: any) => e.clone)).toBe(false);
     await page.screenshot({
@@ -97,10 +98,49 @@ for (const scene of ["ai-freeze-king", "ai-freeze-race"])
     expect(survived.winner).toBeNull();
     expect(survived.kings.find((e: any) => e.team === "red").hp).toBe(100);
     expect(
-      survived.entities.some((e: any) => e.card === "lumberjack" && e.hp > 0),
+      survived.entities.some((e: any) => e.card === attacker && e.hp > 0),
     ).toBe(false);
     expect(survived.actions).toEqual(defended.actions);
     await page.waitForTimeout(160);
     expect(await state()).toEqual(survived);
     expect(errors).toEqual([]);
   });
+
+test("AI takes an earlier winning Zap before the ranged attack can arrive", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/tests/fixtures/combat.html?scene=ai-freeze-ranged-fast");
+  await expect(page.locator("#status")).toContainText(
+    `${expectedEffects} effects`,
+    { timeout: 60000 },
+  );
+  const output = page.locator("#destruction");
+  const state = async () =>
+    JSON.parse((await output.getAttribute("data-ai-areas"))!);
+  const spells = async () =>
+    JSON.parse((await output.getAttribute("data-ai-spells"))!);
+  const time = async () =>
+    JSON.parse((await output.getAttribute("data-state"))!).time;
+  for (let second = 0; second < 2; second++) {
+    const before = await time();
+    await page.locator("#second").click();
+    await expect.poll(time).toBeGreaterThan(before + 0.99);
+  }
+  expect((await spells()).actions).toEqual([]);
+  await page.locator("#second").click();
+  await expect.poll(async () => (await state()).winner).toBe("red");
+  expect((await spells()).actions).toEqual([
+    expect.objectContaining({ card: "zap", team: "red" }),
+  ]);
+  const won = await state();
+  expect(won.actions).toEqual([]);
+  expect(won.kings.find((e: any) => e.team === "red").hp).toBe(100);
+  expect(won.kings.find((e: any) => e.team === "blue")?.hp ?? 0).toBe(0);
+  await page.screenshot({
+    path: info.outputPath("ai-freeze-ranged-fast.png"),
+    fullPage: true,
+  });
+  expect(errors).toEqual([]);
+});

@@ -1,0 +1,4572 @@
+{
+  "sourceCommit": "f79e4c5",
+  "rulesFamily": "origin",
+  "rulesVersion": 16,
+  "description": "Captured before extracting projectile launch geometry; full launch packets and actual first target impact.",
+  "cases": [
+    {
+      "key": "ice-spirit/blue/0",
+      "releaseTick": 6,
+      "hitTick": 20,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 5.7,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 121,
+          "remaining": 0.48,
+          "duration": 0.48,
+          "splash": 1.5,
+          "air": true,
+          "style": "ice-spirit",
+          "stun": 1.5,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 5.7
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 4
+        }
+      ]
+    },
+    {
+      "key": "ice-spirit/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 20,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 10.936596498355327,
+          "y": 5.047468155356979,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 121,
+          "remaining": 0.48,
+          "duration": 0.48,
+          "splash": 1.5,
+          "air": true,
+          "style": "ice-spirit",
+          "stun": 1.5,
+          "source": 7,
+          "flight": {
+            "x": 10.936596498355327,
+            "y": 5.047468155356979
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 4
+        }
+      ]
+    },
+    {
+      "key": "ice-spirit/red/0",
+      "releaseTick": 6,
+      "hitTick": 20,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 26.3,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 121,
+          "remaining": 0.47999999999999987,
+          "duration": 0.47999999999999987,
+          "splash": 1.5,
+          "air": true,
+          "style": "ice-spirit",
+          "stun": 1.5,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 26.3
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 4
+        }
+      ]
+    },
+    {
+      "key": "ice-spirit/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 20,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 10.936596498355327,
+          "y": 26.95253184464302,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 121,
+          "remaining": 0.4800000000000002,
+          "duration": 0.4800000000000002,
+          "splash": 1.5,
+          "air": true,
+          "style": "ice-spirit",
+          "stun": 1.5,
+          "source": 7,
+          "flight": {
+            "x": 10.936596498355327,
+            "y": 26.95253184464302
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 4
+        }
+      ]
+    },
+    {
+      "key": "fire-spirits/blue/0",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 5.2,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 215,
+          "remaining": 0.405,
+          "duration": 0.405,
+          "splash": 1.5,
+          "air": true,
+          "style": "fire-spirits",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 5.2
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 4
+        }
+      ]
+    },
+    {
+      "key": "fire-spirits/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 10.634003295487307,
+          "y": 4.649426256082451,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 215,
+          "remaining": 0.4050000000000001,
+          "duration": 0.4050000000000001,
+          "splash": 1.5,
+          "air": true,
+          "style": "fire-spirits",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 10.634003295487307,
+            "y": 4.649426256082451
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 4
+        }
+      ]
+    },
+    {
+      "key": "fire-spirits/red/0",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 26.8,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 215,
+          "remaining": 0.40499999999999986,
+          "duration": 0.40499999999999986,
+          "splash": 1.5,
+          "air": true,
+          "style": "fire-spirits",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 26.8
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 4
+        }
+      ]
+    },
+    {
+      "key": "fire-spirits/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 10.634003295487307,
+          "y": 27.35057374391755,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 215,
+          "remaining": 0.40499999999999986,
+          "duration": 0.40499999999999986,
+          "splash": 1.5,
+          "air": true,
+          "style": "fire-spirits",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 10.634003295487307,
+            "y": 27.35057374391755
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 4
+        }
+      ]
+    },
+    {
+      "key": "archers/blue/0",
+      "releaseTick": 6,
+      "hitTick": 31,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 8.2,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 107,
+          "remaining": 0.8549999999999999,
+          "duration": 0.8549999999999999,
+          "splash": 0,
+          "air": true,
+          "style": "archers",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 8.2
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.6
+        }
+      ]
+    },
+    {
+      "key": "archers/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 31,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 12.449562512695426,
+          "y": 7.037677651729618,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 107,
+          "remaining": 0.8549999999999999,
+          "duration": 0.8549999999999999,
+          "splash": 0,
+          "air": true,
+          "style": "archers",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 12.449562512695426,
+            "y": 7.037677651729618
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.6
+        }
+      ]
+    },
+    {
+      "key": "archers/red/0",
+      "releaseTick": 6,
+      "hitTick": 31,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 23.8,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 107,
+          "remaining": 0.8549999999999999,
+          "duration": 0.8549999999999999,
+          "splash": 0,
+          "air": true,
+          "style": "archers",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 23.8
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.6
+        }
+      ]
+    },
+    {
+      "key": "archers/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 31,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 12.449562512695426,
+          "y": 24.962322348270384,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 107,
+          "remaining": 0.8549999999999998,
+          "duration": 0.8549999999999998,
+          "splash": 0,
+          "air": true,
+          "style": "archers",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 12.449562512695426,
+            "y": 24.962322348270384
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.6
+        }
+      ]
+    },
+    {
+      "key": "lava-hound/blue/0",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 5.2,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 54,
+          "remaining": 0.405,
+          "duration": 0.405,
+          "splash": 0,
+          "air": true,
+          "style": "lava-hound",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 5.2
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 6.8,
+          "toHeight": 1.8,
+          "arc": 2.5
+        }
+      ]
+    },
+    {
+      "key": "lava-hound/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 10.634003295487307,
+          "y": 4.649426256082451,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 54,
+          "remaining": 0.4050000000000001,
+          "duration": 0.4050000000000001,
+          "splash": 0,
+          "air": true,
+          "style": "lava-hound",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 10.634003295487307,
+            "y": 4.649426256082451
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 6.8,
+          "toHeight": 1.8,
+          "arc": 2.5
+        }
+      ]
+    },
+    {
+      "key": "lava-hound/red/0",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 26.8,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 54,
+          "remaining": 0.40499999999999986,
+          "duration": 0.40499999999999986,
+          "splash": 0,
+          "air": true,
+          "style": "lava-hound",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 26.8
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 6.8,
+          "toHeight": 1.8,
+          "arc": 2.5
+        }
+      ]
+    },
+    {
+      "key": "lava-hound/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 10.634003295487307,
+          "y": 27.35057374391755,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 54,
+          "remaining": 0.40499999999999986,
+          "duration": 0.40499999999999986,
+          "splash": 0,
+          "air": true,
+          "style": "lava-hound",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 10.634003295487307,
+            "y": 27.35057374391755
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 6.8,
+          "toHeight": 1.8,
+          "arc": 2.5
+        }
+      ]
+    },
+    {
+      "key": "royal-giant/blue/0",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 9.7,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 202,
+          "remaining": 0.43199999999999994,
+          "duration": 0.43199999999999994,
+          "splash": 0,
+          "air": false,
+          "style": "royal-giant",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 9.7
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "royal-giant/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 13.357342121299485,
+          "y": 8.231803349553203,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 202,
+          "remaining": 0.43200000000000005,
+          "duration": 0.43200000000000005,
+          "splash": 0,
+          "air": false,
+          "style": "royal-giant",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 13.357342121299485,
+            "y": 8.231803349553203
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "royal-giant/red/0",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 22.3,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 202,
+          "remaining": 0.43199999999999994,
+          "duration": 0.43199999999999994,
+          "splash": 0,
+          "air": false,
+          "style": "royal-giant",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 22.3
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "royal-giant/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 13.357342121299485,
+          "y": 23.768196650446797,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 202,
+          "remaining": 0.43200000000000005,
+          "duration": 0.43200000000000005,
+          "splash": 0,
+          "air": false,
+          "style": "royal-giant",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 13.357342121299485,
+            "y": 23.768196650446797
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "musketeer/blue/0",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 9.2,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 218,
+          "remaining": 0.4019999999999999,
+          "duration": 0.4019999999999999,
+          "splash": 0,
+          "air": true,
+          "style": "musketeer",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 9.2
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "musketeer/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 13.054748918431464,
+          "y": 7.833761450278675,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 218,
+          "remaining": 0.40199999999999997,
+          "duration": 0.40199999999999997,
+          "splash": 0,
+          "air": true,
+          "style": "musketeer",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 13.054748918431464,
+            "y": 7.833761450278675
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "musketeer/red/0",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 22.8,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 218,
+          "remaining": 0.4019999999999999,
+          "duration": 0.4019999999999999,
+          "splash": 0,
+          "air": true,
+          "style": "musketeer",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 22.8
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "musketeer/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 13.054748918431464,
+          "y": 24.166238549721324,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 218,
+          "remaining": 0.40199999999999997,
+          "duration": 0.40199999999999997,
+          "splash": 0,
+          "air": true,
+          "style": "musketeer",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 13.054748918431464,
+            "y": 24.166238549721324
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "three-musketeers/blue/0",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 9.2,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 218,
+          "remaining": 0.4019999999999999,
+          "duration": 0.4019999999999999,
+          "splash": 0,
+          "air": true,
+          "style": "three-musketeers",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 9.2
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "three-musketeers/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 13.054748918431464,
+          "y": 7.833761450278675,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 218,
+          "remaining": 0.40199999999999997,
+          "duration": 0.40199999999999997,
+          "splash": 0,
+          "air": true,
+          "style": "three-musketeers",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 13.054748918431464,
+            "y": 7.833761450278675
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "three-musketeers/red/0",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 22.8,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 218,
+          "remaining": 0.4019999999999999,
+          "duration": 0.4019999999999999,
+          "splash": 0,
+          "air": true,
+          "style": "three-musketeers",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 22.8
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "three-musketeers/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 18,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 13.054748918431464,
+          "y": 24.166238549721324,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 218,
+          "remaining": 0.40199999999999997,
+          "duration": 0.40199999999999997,
+          "splash": 0,
+          "air": true,
+          "style": "three-musketeers",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 13.054748918431464,
+            "y": 24.166238549721324
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "spear-goblins/blue/0",
+      "releaseTick": 6,
+      "hitTick": 35,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 8.2,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 65,
+          "remaining": 0.9771428571428571,
+          "duration": 0.9771428571428571,
+          "splash": 0,
+          "air": true,
+          "style": "spear-goblins",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 8.2
+          },
+          "speed": 5.833333333333333,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 1.5
+        }
+      ]
+    },
+    {
+      "key": "spear-goblins/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 35,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 12.449562512695426,
+          "y": 7.037677651729618,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 65,
+          "remaining": 0.9771428571428571,
+          "duration": 0.9771428571428571,
+          "splash": 0,
+          "air": true,
+          "style": "spear-goblins",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 12.449562512695426,
+            "y": 7.037677651729618
+          },
+          "speed": 5.833333333333333,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 1.5
+        }
+      ]
+    },
+    {
+      "key": "spear-goblins/red/0",
+      "releaseTick": 6,
+      "hitTick": 35,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 23.8,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 65,
+          "remaining": 0.9771428571428571,
+          "duration": 0.9771428571428571,
+          "splash": 0,
+          "air": true,
+          "style": "spear-goblins",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 23.8
+          },
+          "speed": 5.833333333333333,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 1.5
+        }
+      ]
+    },
+    {
+      "key": "spear-goblins/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 35,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 12.449562512695426,
+          "y": 24.962322348270384,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 65,
+          "remaining": 0.9771428571428569,
+          "duration": 0.9771428571428569,
+          "splash": 0,
+          "air": true,
+          "style": "spear-goblins",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 12.449562512695426,
+            "y": 24.962322348270384
+          },
+          "speed": 5.833333333333333,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 1.5
+        }
+      ]
+    },
+    {
+      "key": "dart-goblin/blue/0",
+      "releaseTick": 6,
+      "hitTick": 22,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 9.7,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 116,
+          "remaining": 0.5399999999999999,
+          "duration": 0.5399999999999999,
+          "splash": 0,
+          "air": true,
+          "style": "dart-goblin",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 9.7
+          },
+          "speed": 13.333333333333334,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 1.2
+        }
+      ]
+    },
+    {
+      "key": "dart-goblin/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 22,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 13.357342121299485,
+          "y": 8.231803349553203,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 116,
+          "remaining": 0.54,
+          "duration": 0.54,
+          "splash": 0,
+          "air": true,
+          "style": "dart-goblin",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 13.357342121299485,
+            "y": 8.231803349553203
+          },
+          "speed": 13.333333333333334,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 1.2
+        }
+      ]
+    },
+    {
+      "key": "dart-goblin/red/0",
+      "releaseTick": 6,
+      "hitTick": 22,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 22.3,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 116,
+          "remaining": 0.5399999999999999,
+          "duration": 0.5399999999999999,
+          "splash": 0,
+          "air": true,
+          "style": "dart-goblin",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 22.3
+          },
+          "speed": 13.333333333333334,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 1.2
+        }
+      ]
+    },
+    {
+      "key": "dart-goblin/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 22,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 13.357342121299485,
+          "y": 23.768196650446797,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 116,
+          "remaining": 0.54,
+          "duration": 0.54,
+          "splash": 0,
+          "air": true,
+          "style": "dart-goblin",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 13.357342121299485,
+            "y": 23.768196650446797
+          },
+          "speed": 13.333333333333334,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 1.2
+        }
+      ]
+    },
+    {
+      "key": "ice-wizard/blue/0",
+      "releaseTick": 6,
+      "hitTick": 21,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 8.7,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 76,
+          "remaining": 0.5314285714285714,
+          "duration": 0.5314285714285714,
+          "splash": 1,
+          "air": true,
+          "style": "ice-wizard",
+          "stun": 0,
+          "source": 7,
+          "slow": 2,
+          "flight": {
+            "x": 9,
+            "y": 8.7
+          },
+          "speed": 11.666666666666666,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.5
+        }
+      ]
+    },
+    {
+      "key": "ice-wizard/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 21,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 12.752155715563445,
+          "y": 7.435719551004147,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 76,
+          "remaining": 0.5314285714285715,
+          "duration": 0.5314285714285715,
+          "splash": 1,
+          "air": true,
+          "style": "ice-wizard",
+          "stun": 0,
+          "source": 7,
+          "slow": 2,
+          "flight": {
+            "x": 12.752155715563445,
+            "y": 7.435719551004147
+          },
+          "speed": 11.666666666666666,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.5
+        }
+      ]
+    },
+    {
+      "key": "ice-wizard/red/0",
+      "releaseTick": 6,
+      "hitTick": 21,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 23.3,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 76,
+          "remaining": 0.5314285714285714,
+          "duration": 0.5314285714285714,
+          "splash": 1,
+          "air": true,
+          "style": "ice-wizard",
+          "stun": 0,
+          "source": 7,
+          "slow": 2,
+          "flight": {
+            "x": 9,
+            "y": 23.3
+          },
+          "speed": 11.666666666666666,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.5
+        }
+      ]
+    },
+    {
+      "key": "ice-wizard/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 21,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 12.752155715563445,
+          "y": 24.564280448995852,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 76,
+          "remaining": 0.5314285714285716,
+          "duration": 0.5314285714285716,
+          "splash": 1,
+          "air": true,
+          "style": "ice-wizard",
+          "stun": 0,
+          "source": 7,
+          "slow": 2,
+          "flight": {
+            "x": 12.752155715563445,
+            "y": 24.564280448995852
+          },
+          "speed": 11.666666666666666,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.5
+        }
+      ]
+    },
+    {
+      "key": "princess/blue/0",
+      "releaseTick": 6,
+      "hitTick": 44,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 12.2,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 169,
+          "remaining": 1.2933333333333332,
+          "duration": 1.2933333333333332,
+          "splash": 2.5,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 12.2
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9
+        },
+        {
+          "id": 9,
+          "team": "blue",
+          "x": 9,
+          "y": 12.2,
+          "tx": 8.24,
+          "ty": 2.7800000000000002,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.2600811261361087,
+          "duration": 1.2600811261361087,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 12.2
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        },
+        {
+          "id": 10,
+          "team": "blue",
+          "x": 9,
+          "y": 12.2,
+          "tx": 8.62,
+          "ty": 2.64,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.2756732427319395,
+          "duration": 1.2756732427319395,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 12.2
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        },
+        {
+          "id": 11,
+          "team": "blue",
+          "x": 9,
+          "y": 12.2,
+          "tx": 9.38,
+          "ty": 2.64,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.2756732427319395,
+          "duration": 1.2756732427319395,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 12.2
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        },
+        {
+          "id": 12,
+          "team": "blue",
+          "x": 9,
+          "y": 12.2,
+          "tx": 9.76,
+          "ty": 2.7800000000000002,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.2600811261361087,
+          "duration": 1.2600811261361087,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 12.2
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        }
+      ]
+    },
+    {
+      "key": "princess/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 44,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 14.870308135639583,
+          "y": 10.222012845925843,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 169,
+          "remaining": 1.2933333333333334,
+          "duration": 1.2933333333333334,
+          "splash": 2.5,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 14.870308135639583,
+            "y": 10.222012845925843
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9
+        },
+        {
+          "id": 9,
+          "team": "blue",
+          "x": 14.870308135639583,
+          "y": 10.222012845925843,
+          "tx": 8.24,
+          "ty": 2.7800000000000002,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.3289564238150084,
+          "duration": 1.3289564238150084,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 14.870308135639583,
+            "y": 10.222012845925843
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        },
+        {
+          "id": 10,
+          "team": "blue",
+          "x": 14.870308135639583,
+          "y": 10.222012845925843,
+          "tx": 8.62,
+          "ty": 2.64,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.3101536506072822,
+          "duration": 1.3101536506072822,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 14.870308135639583,
+            "y": 10.222012845925843
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        },
+        {
+          "id": 11,
+          "team": "blue",
+          "x": 14.870308135639583,
+          "y": 10.222012845925843,
+          "tx": 9.38,
+          "ty": 2.64,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.2481481551664515,
+          "duration": 1.2481481551664515,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 14.870308135639583,
+            "y": 10.222012845925843
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        },
+        {
+          "id": 12,
+          "team": "blue",
+          "x": 14.870308135639583,
+          "y": 10.222012845925843,
+          "tx": 9.76,
+          "ty": 2.7800000000000002,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.2036891768603857,
+          "duration": 1.2036891768603857,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 14.870308135639583,
+            "y": 10.222012845925843
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        }
+      ]
+    },
+    {
+      "key": "princess/red/0",
+      "releaseTick": 6,
+      "hitTick": 44,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 19.8,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 169,
+          "remaining": 1.2933333333333332,
+          "duration": 1.2933333333333332,
+          "splash": 2.5,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 19.8
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9
+        },
+        {
+          "id": 9,
+          "team": "red",
+          "x": 9,
+          "y": 19.8,
+          "tx": 8.24,
+          "ty": 29.78,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.3345194724027905,
+          "duration": 1.3345194724027905,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 19.8
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        },
+        {
+          "id": 10,
+          "team": "red",
+          "x": 9,
+          "y": 19.8,
+          "tx": 8.62,
+          "ty": 29.64,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.312977955302796,
+          "duration": 1.312977955302796,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 19.8
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        },
+        {
+          "id": 11,
+          "team": "red",
+          "x": 9,
+          "y": 19.8,
+          "tx": 9.38,
+          "ty": 29.64,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.312977955302796,
+          "duration": 1.312977955302796,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 19.8
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        },
+        {
+          "id": 12,
+          "team": "red",
+          "x": 9,
+          "y": 19.8,
+          "tx": 9.76,
+          "ty": 29.78,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.3345194724027905,
+          "duration": 1.3345194724027905,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 19.8
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        }
+      ]
+    },
+    {
+      "key": "princess/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 44,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 14.870308135639583,
+          "y": 21.777987154074157,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 169,
+          "remaining": 1.2933333333333334,
+          "duration": 1.2933333333333334,
+          "splash": 2.5,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 14.870308135639583,
+            "y": 21.777987154074157
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9
+        },
+        {
+          "id": 9,
+          "team": "red",
+          "x": 14.870308135639583,
+          "y": 21.777987154074157,
+          "tx": 8.24,
+          "ty": 29.78,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.3855969948638867,
+          "duration": 1.3855969948638867,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 14.870308135639583,
+            "y": 21.777987154074157
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        },
+        {
+          "id": 10,
+          "team": "red",
+          "x": 14.870308135639583,
+          "y": 21.777987154074157,
+          "tx": 8.62,
+          "ty": 29.64,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.3391712049203857,
+          "duration": 1.3391712049203857,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 14.870308135639583,
+            "y": 21.777987154074157
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        },
+        {
+          "id": 11,
+          "team": "red",
+          "x": 14.870308135639583,
+          "y": 21.777987154074157,
+          "tx": 9.38,
+          "ty": 29.64,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.278573715173961,
+          "duration": 1.278573715173961,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 14.870308135639583,
+            "y": 21.777987154074157
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        },
+        {
+          "id": 12,
+          "team": "red",
+          "x": 14.870308135639583,
+          "y": 21.777987154074157,
+          "tx": 9.76,
+          "ty": 29.78,
+          "target": null,
+          "damage": 0,
+          "remaining": 1.2659468749783658,
+          "duration": 1.2659468749783658,
+          "splash": 0,
+          "air": true,
+          "style": "princess",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 14.870308135639583,
+            "y": 21.777987154074157
+          },
+          "speed": 7.5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0.9,
+          "decorative": true
+        }
+      ]
+    },
+    {
+      "key": "bomber/blue/0",
+      "releaseTick": 6,
+      "hitTick": 37,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 7.7,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 345,
+          "remaining": 1.04,
+          "duration": 1.04,
+          "splash": 1.5,
+          "air": false,
+          "style": "bomber",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 7.7
+          },
+          "speed": 5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 2
+        }
+      ]
+    },
+    {
+      "key": "bomber/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 37,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 12.146969309827405,
+          "y": 6.63963575245509,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 345,
+          "remaining": 1.04,
+          "duration": 1.04,
+          "splash": 1.5,
+          "air": false,
+          "style": "bomber",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 12.146969309827405,
+            "y": 6.63963575245509
+          },
+          "speed": 5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 2
+        }
+      ]
+    },
+    {
+      "key": "bomber/red/0",
+      "releaseTick": 6,
+      "hitTick": 37,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 24.3,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 345,
+          "remaining": 1.0399999999999998,
+          "duration": 1.0399999999999998,
+          "splash": 1.5,
+          "air": false,
+          "style": "bomber",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 24.3
+          },
+          "speed": 5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 2
+        }
+      ]
+    },
+    {
+      "key": "bomber/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 37,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 12.146969309827405,
+          "y": 25.360364247544908,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 345,
+          "remaining": 1.0400000000000003,
+          "duration": 1.0400000000000003,
+          "splash": 1.5,
+          "air": false,
+          "style": "bomber",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 12.146969309827405,
+            "y": 25.360364247544908
+          },
+          "speed": 5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 2
+        }
+      ]
+    },
+    {
+      "key": "baby-dragon/blue/0",
+      "releaseTick": 6,
+      "hitTick": 21,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 6.7,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 160,
+          "remaining": 0.504,
+          "duration": 0.504,
+          "splash": 1.2,
+          "air": true,
+          "style": "baby-dragon",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 6.7
+          },
+          "speed": 8.333333333333334,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 5.4,
+          "toHeight": 1.8,
+          "arc": 2.5
+        }
+      ]
+    },
+    {
+      "key": "baby-dragon/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 21,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 11.541782904091367,
+          "y": 5.843551953906035,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 160,
+          "remaining": 0.504,
+          "duration": 0.504,
+          "splash": 1.2,
+          "air": true,
+          "style": "baby-dragon",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 11.541782904091367,
+            "y": 5.843551953906035
+          },
+          "speed": 8.333333333333334,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 5.4,
+          "toHeight": 1.8,
+          "arc": 2.5
+        }
+      ]
+    },
+    {
+      "key": "baby-dragon/red/0",
+      "releaseTick": 6,
+      "hitTick": 21,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 25.3,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 160,
+          "remaining": 0.5039999999999999,
+          "duration": 0.5039999999999999,
+          "splash": 1.2,
+          "air": true,
+          "style": "baby-dragon",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 25.3
+          },
+          "speed": 8.333333333333334,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 5.4,
+          "toHeight": 1.8,
+          "arc": 2.5
+        }
+      ]
+    },
+    {
+      "key": "baby-dragon/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 21,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 11.541782904091367,
+          "y": 26.156448046093963,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 160,
+          "remaining": 0.5040000000000002,
+          "duration": 0.5040000000000002,
+          "splash": 1.2,
+          "air": true,
+          "style": "baby-dragon",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 11.541782904091367,
+            "y": 26.156448046093963
+          },
+          "speed": 8.333333333333334,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 5.4,
+          "toHeight": 1.8,
+          "arc": 2.5
+        }
+      ]
+    },
+    {
+      "key": "minions/blue/0",
+      "releaseTick": 6,
+      "hitTick": 10,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 5.2,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 102,
+          "remaining": 0.162,
+          "duration": 0.162,
+          "splash": 0,
+          "air": true,
+          "style": "minions",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 5.2
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.95,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "minions/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 10,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 10.634003295487307,
+          "y": 4.649426256082451,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 102,
+          "remaining": 0.16200000000000003,
+          "duration": 0.16200000000000003,
+          "splash": 0,
+          "air": true,
+          "style": "minions",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 10.634003295487307,
+            "y": 4.649426256082451
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.95,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "minions/red/0",
+      "releaseTick": 6,
+      "hitTick": 10,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 26.8,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 102,
+          "remaining": 0.16199999999999995,
+          "duration": 0.16199999999999995,
+          "splash": 0,
+          "air": true,
+          "style": "minions",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 26.8
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.95,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "minions/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 10,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 10.634003295487307,
+          "y": 27.35057374391755,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 102,
+          "remaining": 0.16199999999999995,
+          "duration": 0.16199999999999995,
+          "splash": 0,
+          "air": true,
+          "style": "minions",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 10.634003295487307,
+            "y": 27.35057374391755
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.95,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "mega-minion/blue/0",
+      "releaseTick": 6,
+      "hitTick": 10,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 5.2,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 320,
+          "remaining": 0.162,
+          "duration": 0.162,
+          "splash": 0,
+          "air": true,
+          "style": "mega-minion",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 5.2
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.95,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "mega-minion/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 10,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 10.634003295487307,
+          "y": 4.649426256082451,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 320,
+          "remaining": 0.16200000000000003,
+          "duration": 0.16200000000000003,
+          "splash": 0,
+          "air": true,
+          "style": "mega-minion",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 10.634003295487307,
+            "y": 4.649426256082451
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.95,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "mega-minion/red/0",
+      "releaseTick": 6,
+      "hitTick": 10,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 26.8,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 320,
+          "remaining": 0.16199999999999995,
+          "duration": 0.16199999999999995,
+          "splash": 0,
+          "air": true,
+          "style": "mega-minion",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 26.8
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.95,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "mega-minion/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 10,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 10.634003295487307,
+          "y": 27.35057374391755,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 320,
+          "remaining": 0.16199999999999995,
+          "duration": 0.16199999999999995,
+          "splash": 0,
+          "air": true,
+          "style": "mega-minion",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 10.634003295487307,
+            "y": 27.35057374391755
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.95,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "bowler/blue/0",
+      "releaseTick": 6,
+      "hitTick": 21,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 7.199999999999999,
+          "tx": 9,
+          "ty": 1.1999999999999993,
+          "target": null,
+          "damage": 290,
+          "remaining": 2.1176470588235294,
+          "duration": 2.1176470588235294,
+          "splash": 0,
+          "air": false,
+          "style": "bowler",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 7.199999999999999
+          },
+          "speed": 2.8333333333333335,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.9,
+          "toHeight": 0.9,
+          "arc": 0,
+          "knockback": 1,
+          "rollHits": []
+        }
+      ]
+    },
+    {
+      "key": "bowler/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 21,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 11.844376106959386,
+          "y": 6.241593853180563,
+          "tx": 8.213257672543147,
+          "ty": 1.465091061886227,
+          "target": null,
+          "damage": 290,
+          "remaining": 2.11764705882353,
+          "duration": 2.11764705882353,
+          "splash": 0,
+          "air": false,
+          "style": "bowler",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 11.844376106959386,
+            "y": 6.241593853180563
+          },
+          "speed": 2.8333333333333335,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.9,
+          "toHeight": 0.9,
+          "arc": 0,
+          "knockback": 1,
+          "rollHits": []
+        }
+      ]
+    },
+    {
+      "key": "bowler/red/0",
+      "releaseTick": 6,
+      "hitTick": 21,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 24.8,
+          "tx": 9,
+          "ty": 30.8,
+          "target": null,
+          "damage": 290,
+          "remaining": 2.1176470588235294,
+          "duration": 2.1176470588235294,
+          "splash": 0,
+          "air": false,
+          "style": "bowler",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 24.8
+          },
+          "speed": 2.8333333333333335,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.9,
+          "toHeight": 0.9,
+          "arc": 0,
+          "knockback": 1,
+          "rollHits": []
+        }
+      ]
+    },
+    {
+      "key": "bowler/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 21,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 11.844376106959386,
+          "y": 25.75840614681944,
+          "tx": 8.213257672543147,
+          "ty": 30.534908938113773,
+          "target": null,
+          "damage": 290,
+          "remaining": 2.1176470588235294,
+          "duration": 2.1176470588235294,
+          "splash": 0,
+          "air": false,
+          "style": "bowler",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 11.844376106959386,
+            "y": 25.75840614681944
+          },
+          "speed": 2.8333333333333335,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 0.9,
+          "toHeight": 0.9,
+          "arc": 0,
+          "knockback": 1,
+          "rollHits": []
+        }
+      ]
+    },
+    {
+      "key": "executioner/blue/0",
+      "releaseTick": 6,
+      "hitTick": 13,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 7.7,
+          "tx": 9,
+          "ty": 1.2000000000000002,
+          "turn": {
+            "x": 9,
+            "y": 1.2000000000000002
+          },
+          "target": null,
+          "damage": 161,
+          "remaining": 0.6436363636363637,
+          "duration": 0.6436363636363637,
+          "splash": 0,
+          "air": true,
+          "style": "executioner",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 7.1000000000000005
+          },
+          "speed": 9.166666666666666,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 3,
+          "toHeight": 3,
+          "arc": 0,
+          "rollHits": [],
+          "returning": false
+        }
+      ]
+    },
+    {
+      "key": "executioner/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 13,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 12.146969309827405,
+          "y": 6.63963575245509,
+          "tx": 8.213257672543149,
+          "ty": 1.465091061886227,
+          "turn": {
+            "x": 8.213257672543149,
+            "y": 1.465091061886227
+          },
+          "target": null,
+          "damage": 161,
+          "remaining": 0.6436363636363637,
+          "duration": 0.6436363636363637,
+          "splash": 0,
+          "air": true,
+          "style": "executioner",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 11.783857466385781,
+            "y": 6.161985473325657
+          },
+          "speed": 9.166666666666666,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 3,
+          "toHeight": 3,
+          "arc": 0,
+          "rollHits": [],
+          "returning": false
+        }
+      ]
+    },
+    {
+      "key": "executioner/red/0",
+      "releaseTick": 6,
+      "hitTick": 13,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 24.3,
+          "tx": 9,
+          "ty": 30.8,
+          "turn": {
+            "x": 9,
+            "y": 30.8
+          },
+          "target": null,
+          "damage": 161,
+          "remaining": 0.6436363636363636,
+          "duration": 0.6436363636363636,
+          "splash": 0,
+          "air": true,
+          "style": "executioner",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 24.900000000000002
+          },
+          "speed": 9.166666666666666,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 3,
+          "toHeight": 3,
+          "arc": 0,
+          "rollHits": [],
+          "returning": false
+        }
+      ]
+    },
+    {
+      "key": "executioner/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 13,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 12.146969309827405,
+          "y": 25.360364247544908,
+          "tx": 8.213257672543149,
+          "ty": 30.534908938113773,
+          "turn": {
+            "x": 8.213257672543149,
+            "y": 30.534908938113773
+          },
+          "target": null,
+          "damage": 161,
+          "remaining": 0.6436363636363637,
+          "duration": 0.6436363636363637,
+          "splash": 0,
+          "air": true,
+          "style": "executioner",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 11.783857466385781,
+            "y": 25.838014526674343
+          },
+          "speed": 9.166666666666666,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 3,
+          "toHeight": 3,
+          "arc": 0,
+          "rollHits": [],
+          "returning": false
+        }
+      ]
+    },
+    {
+      "key": "sparky/blue/0",
+      "releaseTick": 6,
+      "hitTick": 11,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 7.7,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 1573,
+          "remaining": 0.17142857142857143,
+          "duration": 0.17142857142857143,
+          "splash": 1.8,
+          "air": false,
+          "style": "sparky",
+          "stun": 0,
+          "source": 7,
+          "knockback": 0.75,
+          "flight": {
+            "x": 9,
+            "y": 6.5
+          },
+          "speed": 23.333333333333332,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "sparky/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 11,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 12.146969309827405,
+          "y": 6.63963575245509,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 1573,
+          "remaining": 0.1714285714285714,
+          "duration": 0.1714285714285714,
+          "splash": 1.8,
+          "air": false,
+          "style": "sparky",
+          "stun": 0,
+          "source": 7,
+          "knockback": 0.75,
+          "flight": {
+            "x": 11.420745622944157,
+            "y": 5.6843351941962235
+          },
+          "speed": 23.333333333333332,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "sparky/red/0",
+      "releaseTick": 6,
+      "hitTick": 11,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 24.3,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 1573,
+          "remaining": 0.17142857142857143,
+          "duration": 0.17142857142857143,
+          "splash": 1.8,
+          "air": false,
+          "style": "sparky",
+          "stun": 0,
+          "source": 7,
+          "knockback": 0.75,
+          "flight": {
+            "x": 9,
+            "y": 25.5
+          },
+          "speed": 23.333333333333332,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "sparky/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 11,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 12.146969309827405,
+          "y": 25.360364247544908,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 1573,
+          "remaining": 0.17142857142857154,
+          "duration": 0.17142857142857154,
+          "splash": 1.8,
+          "air": false,
+          "style": "sparky",
+          "stun": 0,
+          "source": 7,
+          "knockback": 0.75,
+          "flight": {
+            "x": 11.420745622944159,
+            "y": 26.315664805803774
+          },
+          "speed": 23.333333333333332,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "minion-horde/blue/0",
+      "releaseTick": 6,
+      "hitTick": 10,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 5.2,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 102,
+          "remaining": 0.162,
+          "duration": 0.162,
+          "splash": 0,
+          "air": true,
+          "style": "minion-horde",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 5.2
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.95,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "minion-horde/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 10,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 10.634003295487307,
+          "y": 4.649426256082451,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 102,
+          "remaining": 0.16200000000000003,
+          "duration": 0.16200000000000003,
+          "splash": 0,
+          "air": true,
+          "style": "minion-horde",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 10.634003295487307,
+            "y": 4.649426256082451
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.95,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "minion-horde/red/0",
+      "releaseTick": 6,
+      "hitTick": 10,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 26.8,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 102,
+          "remaining": 0.16199999999999995,
+          "duration": 0.16199999999999995,
+          "splash": 0,
+          "air": true,
+          "style": "minion-horde",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 26.8
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.95,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "minion-horde/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 10,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 10.634003295487307,
+          "y": 27.35057374391755,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 102,
+          "remaining": 0.16199999999999995,
+          "duration": 0.16199999999999995,
+          "splash": 0,
+          "air": true,
+          "style": "minion-horde",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 10.634003295487307,
+            "y": 27.35057374391755
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.95,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "witch/blue/0",
+      "releaseTick": 6,
+      "hitTick": 23,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 8.2,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 84,
+          "remaining": 0.57,
+          "duration": 0.57,
+          "splash": 1,
+          "air": true,
+          "style": "witch",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 8.2
+          },
+          "speed": 10,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "witch/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 23,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 12.449562512695426,
+          "y": 7.037677651729618,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 84,
+          "remaining": 0.57,
+          "duration": 0.57,
+          "splash": 1,
+          "air": true,
+          "style": "witch",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 12.449562512695426,
+            "y": 7.037677651729618
+          },
+          "speed": 10,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "witch/red/0",
+      "releaseTick": 6,
+      "hitTick": 23,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 23.8,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 84,
+          "remaining": 0.57,
+          "duration": 0.57,
+          "splash": 1,
+          "air": true,
+          "style": "witch",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 23.8
+          },
+          "speed": 10,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "witch/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 23,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 12.449562512695426,
+          "y": 24.962322348270384,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 84,
+          "remaining": 0.5699999999999998,
+          "duration": 0.5699999999999998,
+          "splash": 1,
+          "air": true,
+          "style": "witch",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 12.449562512695426,
+            "y": 24.962322348270384
+          },
+          "speed": 10,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "wizard/blue/0",
+      "releaseTick": 6,
+      "hitTick": 24,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 8.7,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 281,
+          "remaining": 0.6199999999999999,
+          "duration": 0.6199999999999999,
+          "splash": 1.2,
+          "air": true,
+          "style": "wizard",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 8.7
+          },
+          "speed": 10,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "wizard/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 24,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 12.752155715563445,
+          "y": 7.435719551004147,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 281,
+          "remaining": 0.62,
+          "duration": 0.62,
+          "splash": 1.2,
+          "air": true,
+          "style": "wizard",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 12.752155715563445,
+            "y": 7.435719551004147
+          },
+          "speed": 10,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "wizard/red/0",
+      "releaseTick": 6,
+      "hitTick": 24,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 23.3,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 281,
+          "remaining": 0.6199999999999999,
+          "duration": 0.6199999999999999,
+          "splash": 1.2,
+          "air": true,
+          "style": "wizard",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 23.3
+          },
+          "speed": 10,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "wizard/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 24,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 12.752155715563445,
+          "y": 24.564280448995852,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 281,
+          "remaining": 0.6200000000000002,
+          "duration": 0.6200000000000002,
+          "splash": 1.2,
+          "air": true,
+          "style": "wizard",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 12.752155715563445,
+            "y": 24.564280448995852
+          },
+          "speed": 10,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 0.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "balloon/blue/0",
+      "releaseTick": 6,
+      "hitTick": 16,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 3.3,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 966,
+          "remaining": 0.35,
+          "duration": 0.35,
+          "splash": 0,
+          "air": false,
+          "style": "balloon",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 3.3
+          },
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.45,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "balloon/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 16,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9.484149124588832,
+          "y": 3.136867038839245,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 966,
+          "remaining": 0.35,
+          "duration": 0.35,
+          "splash": 0,
+          "air": false,
+          "style": "balloon",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9.484149124588832,
+            "y": 3.136867038839245
+          },
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.45,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "balloon/red/0",
+      "releaseTick": 6,
+      "hitTick": 16,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 28.7,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 966,
+          "remaining": 0.35,
+          "duration": 0.35,
+          "splash": 0,
+          "air": false,
+          "style": "balloon",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 28.7
+          },
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.45,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "balloon/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 16,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9.484149124588832,
+          "y": 28.863132961160755,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 966,
+          "remaining": 0.35,
+          "duration": 0.35,
+          "splash": 0,
+          "air": false,
+          "style": "balloon",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9.484149124588832,
+            "y": 28.863132961160755
+          },
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.45,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "cannon/blue/0",
+      "releaseTick": 6,
+      "hitTick": 17,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 8.7,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 175,
+          "remaining": 0.37199999999999994,
+          "duration": 0.37199999999999994,
+          "splash": 0,
+          "air": false,
+          "style": "cannon",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 8.7
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.1,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "cannon/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 17,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 12.752155715563445,
+          "y": 7.435719551004147,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 175,
+          "remaining": 0.372,
+          "duration": 0.372,
+          "splash": 0,
+          "air": false,
+          "style": "cannon",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 12.752155715563445,
+            "y": 7.435719551004147
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.1,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "cannon/red/0",
+      "releaseTick": 6,
+      "hitTick": 17,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 23.3,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 175,
+          "remaining": 0.37199999999999994,
+          "duration": 0.37199999999999994,
+          "splash": 0,
+          "air": false,
+          "style": "cannon",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 23.3
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.1,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "cannon/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 17,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 12.752155715563445,
+          "y": 24.564280448995852,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 175,
+          "remaining": 0.3720000000000001,
+          "duration": 0.3720000000000001,
+          "splash": 0,
+          "air": false,
+          "style": "cannon",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 12.752155715563445,
+            "y": 24.564280448995852
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.1,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "tesla/blue/0",
+      "releaseTick": 6,
+      "hitTick": 6,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 8.7,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 230,
+          "remaining": 0.03333333333333333,
+          "duration": 0.03333333333333333,
+          "splash": 0,
+          "air": true,
+          "style": "tesla",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 8.7
+          },
+          "speed": 1000,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "tesla/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 6,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 12.752155715563445,
+          "y": 7.435719551004147,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 230,
+          "remaining": 0.03333333333333333,
+          "duration": 0.03333333333333333,
+          "splash": 0,
+          "air": true,
+          "style": "tesla",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 12.752155715563445,
+            "y": 7.435719551004147
+          },
+          "speed": 1000,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "tesla/red/0",
+      "releaseTick": 6,
+      "hitTick": 6,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 23.3,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 230,
+          "remaining": 0.03333333333333333,
+          "duration": 0.03333333333333333,
+          "splash": 0,
+          "air": true,
+          "style": "tesla",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 23.3
+          },
+          "speed": 1000,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "tesla/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 6,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 12.752155715563445,
+          "y": 24.564280448995852,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 230,
+          "remaining": 0.03333333333333333,
+          "duration": 0.03333333333333333,
+          "splash": 0,
+          "air": true,
+          "style": "tesla",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 12.752155715563445,
+            "y": 24.564280448995852
+          },
+          "speed": 1000,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 1.8,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "mortar/blue/0",
+      "releaseTick": 6,
+      "hitTick": 79,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 14.7,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 291,
+          "remaining": 2.44,
+          "duration": 2.44,
+          "splash": 2,
+          "air": false,
+          "style": "mortar",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 14.7
+          },
+          "speed": 5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 1,
+          "toHeight": 1.8,
+          "arc": 0.6
+        }
+      ]
+    },
+    {
+      "key": "mortar/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 79,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 16.383274149979684,
+          "y": 12.212222342298482,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 291,
+          "remaining": 2.44,
+          "duration": 2.44,
+          "splash": 2,
+          "air": false,
+          "style": "mortar",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 16.383274149979684,
+            "y": 12.212222342298482
+          },
+          "speed": 5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 1,
+          "toHeight": 1.8,
+          "arc": 0.6
+        }
+      ]
+    },
+    {
+      "key": "mortar/red/0",
+      "releaseTick": 6,
+      "hitTick": 79,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 17.3,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 291,
+          "remaining": 2.44,
+          "duration": 2.44,
+          "splash": 2,
+          "air": false,
+          "style": "mortar",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 17.3
+          },
+          "speed": 5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 1,
+          "toHeight": 1.8,
+          "arc": 0.6
+        }
+      ]
+    },
+    {
+      "key": "mortar/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 79,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 16.383274149979684,
+          "y": 19.78777765770152,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 291,
+          "remaining": 2.44,
+          "duration": 2.44,
+          "splash": 2,
+          "air": false,
+          "style": "mortar",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 16.383274149979684,
+            "y": 19.78777765770152
+          },
+          "speed": 5,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 1,
+          "toHeight": 1.8,
+          "arc": 0.6
+        }
+      ]
+    },
+    {
+      "key": "bomb-tower/blue/0",
+      "releaseTick": 6,
+      "hitTick": 30,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 9.2,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 256,
+          "remaining": 0.8039999999999998,
+          "duration": 0.8039999999999998,
+          "splash": 1.5,
+          "air": false,
+          "style": "bomb-tower",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 9.2
+          },
+          "speed": 8.333333333333334,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 4.5,
+          "toHeight": 1.8,
+          "arc": 2
+        }
+      ]
+    },
+    {
+      "key": "bomb-tower/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 30,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 13.054748918431464,
+          "y": 7.833761450278675,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 256,
+          "remaining": 0.8039999999999999,
+          "duration": 0.8039999999999999,
+          "splash": 1.5,
+          "air": false,
+          "style": "bomb-tower",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 13.054748918431464,
+            "y": 7.833761450278675
+          },
+          "speed": 8.333333333333334,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 4.5,
+          "toHeight": 1.8,
+          "arc": 2
+        }
+      ]
+    },
+    {
+      "key": "bomb-tower/red/0",
+      "releaseTick": 6,
+      "hitTick": 30,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 22.8,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 256,
+          "remaining": 0.8039999999999998,
+          "duration": 0.8039999999999998,
+          "splash": 1.5,
+          "air": false,
+          "style": "bomb-tower",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 22.8
+          },
+          "speed": 8.333333333333334,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 4.5,
+          "toHeight": 1.8,
+          "arc": 2
+        }
+      ]
+    },
+    {
+      "key": "bomb-tower/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 30,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 13.054748918431464,
+          "y": 24.166238549721324,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 256,
+          "remaining": 0.8039999999999999,
+          "duration": 0.8039999999999999,
+          "splash": 1.5,
+          "air": false,
+          "style": "bomb-tower",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 13.054748918431464,
+            "y": 24.166238549721324
+          },
+          "speed": 8.333333333333334,
+          "elapsed": 0,
+          "homing": false,
+          "fromHeight": 4.5,
+          "toHeight": 1.8,
+          "arc": 2
+        }
+      ]
+    },
+    {
+      "key": "x-bow/blue/0",
+      "releaseTick": 6,
+      "hitTick": 20,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 13.7,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 32,
+          "remaining": 0.48,
+          "duration": 0.48,
+          "splash": 0,
+          "air": false,
+          "style": "x-bow",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 13.7
+          },
+          "speed": 23.333333333333332,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 2.4,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "x-bow/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 20,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 15.778087744243644,
+          "y": 11.416138543749426,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 32,
+          "remaining": 0.4800000000000001,
+          "duration": 0.4800000000000001,
+          "splash": 0,
+          "air": false,
+          "style": "x-bow",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 15.778087744243644,
+            "y": 11.416138543749426
+          },
+          "speed": 23.333333333333332,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 2.4,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "x-bow/red/0",
+      "releaseTick": 6,
+      "hitTick": 20,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 18.3,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 32,
+          "remaining": 0.48,
+          "duration": 0.48,
+          "splash": 0,
+          "air": false,
+          "style": "x-bow",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 18.3
+          },
+          "speed": 23.333333333333332,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 2.4,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "x-bow/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 20,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 15.778087744243644,
+          "y": 20.583861456250574,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 32,
+          "remaining": 0.4800000000000001,
+          "duration": 0.4800000000000001,
+          "splash": 0,
+          "air": false,
+          "style": "x-bow",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 15.778087744243644,
+            "y": 20.583861456250574
+          },
+          "speed": 23.333333333333332,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 2.4,
+          "toHeight": 1.8,
+          "arc": 0
+        }
+      ]
+    },
+    {
+      "key": "lava-pup/blue/0",
+      "releaseTick": 6,
+      "hitTick": 15,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 9,
+          "y": 5.2,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 54,
+          "remaining": 0.324,
+          "duration": 0.324,
+          "splash": 0,
+          "air": true,
+          "style": "lava-pup",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 5.2
+          },
+          "speed": 8.333333333333334,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.6,
+          "toHeight": 1.8,
+          "arc": 2.5
+        }
+      ]
+    },
+    {
+      "key": "lava-pup/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 15,
+      "launches": [
+        {
+          "id": 8,
+          "team": "blue",
+          "x": 10.634003295487307,
+          "y": 4.649426256082451,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 54,
+          "remaining": 0.32400000000000007,
+          "duration": 0.32400000000000007,
+          "splash": 0,
+          "air": true,
+          "style": "lava-pup",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 10.634003295487307,
+            "y": 4.649426256082451
+          },
+          "speed": 8.333333333333334,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.6,
+          "toHeight": 1.8,
+          "arc": 2.5
+        }
+      ]
+    },
+    {
+      "key": "lava-pup/red/0",
+      "releaseTick": 6,
+      "hitTick": 15,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 9,
+          "y": 26.8,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 54,
+          "remaining": 0.3239999999999999,
+          "duration": 0.3239999999999999,
+          "splash": 0,
+          "air": true,
+          "style": "lava-pup",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 9,
+            "y": 26.8
+          },
+          "speed": 8.333333333333334,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.6,
+          "toHeight": 1.8,
+          "arc": 2.5
+        }
+      ]
+    },
+    {
+      "key": "lava-pup/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 15,
+      "launches": [
+        {
+          "id": 8,
+          "team": "red",
+          "x": 10.634003295487307,
+          "y": 27.35057374391755,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 54,
+          "remaining": 0.3239999999999999,
+          "duration": 0.3239999999999999,
+          "splash": 0,
+          "air": true,
+          "style": "lava-pup",
+          "stun": 0,
+          "source": 7,
+          "flight": {
+            "x": 10.634003295487307,
+            "y": 27.35057374391755
+          },
+          "speed": 8.333333333333334,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.6,
+          "toHeight": 1.8,
+          "arc": 2.5
+        }
+      ]
+    },
+    {
+      "key": "tower:king/blue/0",
+      "releaseTick": 6,
+      "hitTick": 19,
+      "launches": [
+        {
+          "id": 7,
+          "team": "blue",
+          "x": 9,
+          "y": 10.2,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 109,
+          "remaining": 0.4619999999999999,
+          "duration": 0.4619999999999999,
+          "splash": 0,
+          "air": true,
+          "style": "cannonball",
+          "stun": 0,
+          "source": 6,
+          "flight": {
+            "x": 9,
+            "y": 10.2
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.1,
+          "toHeight": 1.8,
+          "arc": 0.5
+        }
+      ]
+    },
+    {
+      "key": "tower:king/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 19,
+      "launches": [
+        {
+          "id": 7,
+          "team": "blue",
+          "x": 13.659935324167504,
+          "y": 8.629845248827731,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 109,
+          "remaining": 0.462,
+          "duration": 0.462,
+          "splash": 0,
+          "air": true,
+          "style": "cannonball",
+          "stun": 0,
+          "source": 6,
+          "flight": {
+            "x": 13.659935324167504,
+            "y": 8.629845248827731
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.1,
+          "toHeight": 1.8,
+          "arc": 0.5
+        }
+      ]
+    },
+    {
+      "key": "tower:king/red/0",
+      "releaseTick": 6,
+      "hitTick": 19,
+      "launches": [
+        {
+          "id": 7,
+          "team": "red",
+          "x": 9,
+          "y": 21.8,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 109,
+          "remaining": 0.4619999999999999,
+          "duration": 0.4619999999999999,
+          "splash": 0,
+          "air": true,
+          "style": "cannonball",
+          "stun": 0,
+          "source": 3,
+          "flight": {
+            "x": 9,
+            "y": 21.8
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.1,
+          "toHeight": 1.8,
+          "arc": 0.5
+        }
+      ]
+    },
+    {
+      "key": "tower:king/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 19,
+      "launches": [
+        {
+          "id": 7,
+          "team": "red",
+          "x": 13.659935324167504,
+          "y": 23.37015475117227,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 109,
+          "remaining": 0.462,
+          "duration": 0.462,
+          "splash": 0,
+          "air": true,
+          "style": "cannonball",
+          "stun": 0,
+          "source": 3,
+          "flight": {
+            "x": 13.659935324167504,
+            "y": 23.37015475117227
+          },
+          "speed": 16.666666666666668,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.1,
+          "toHeight": 1.8,
+          "arc": 0.5
+        }
+      ]
+    },
+    {
+      "key": "tower:princess/blue/0",
+      "releaseTick": 6,
+      "hitTick": 42,
+      "launches": [
+        {
+          "id": 7,
+          "team": "blue",
+          "x": 9,
+          "y": 10.7,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 109,
+          "remaining": 1.2299999999999998,
+          "duration": 1.2299999999999998,
+          "splash": 0,
+          "air": true,
+          "style": "arrow",
+          "stun": 0,
+          "source": 4,
+          "flight": {
+            "x": 9,
+            "y": 10.7
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.5,
+          "toHeight": 1.8,
+          "arc": 0.6
+        }
+      ]
+    },
+    {
+      "key": "tower:princess/blue/0.65",
+      "releaseTick": 6,
+      "hitTick": 42,
+      "launches": [
+        {
+          "id": 7,
+          "team": "blue",
+          "x": 13.962528527035523,
+          "y": 9.027887148102257,
+          "tx": 9,
+          "ty": 2.5,
+          "target": 3,
+          "damage": 109,
+          "remaining": 1.2299999999999998,
+          "duration": 1.2299999999999998,
+          "splash": 0,
+          "air": true,
+          "style": "arrow",
+          "stun": 0,
+          "source": 4,
+          "flight": {
+            "x": 13.962528527035523,
+            "y": 9.027887148102257
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.5,
+          "toHeight": 1.8,
+          "arc": 0.6
+        }
+      ]
+    },
+    {
+      "key": "tower:princess/red/0",
+      "releaseTick": 6,
+      "hitTick": 42,
+      "launches": [
+        {
+          "id": 7,
+          "team": "red",
+          "x": 9,
+          "y": 21.3,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 109,
+          "remaining": 1.2299999999999998,
+          "duration": 1.2299999999999998,
+          "splash": 0,
+          "air": true,
+          "style": "arrow",
+          "stun": 0,
+          "source": 1,
+          "flight": {
+            "x": 9,
+            "y": 21.3
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.5,
+          "toHeight": 1.8,
+          "arc": 0.6
+        }
+      ]
+    },
+    {
+      "key": "tower:princess/red/0.65",
+      "releaseTick": 6,
+      "hitTick": 42,
+      "launches": [
+        {
+          "id": 7,
+          "team": "red",
+          "x": 13.962528527035523,
+          "y": 22.97211285189774,
+          "tx": 9,
+          "ty": 29.5,
+          "target": 6,
+          "damage": 109,
+          "remaining": 1.2300000000000002,
+          "duration": 1.2300000000000002,
+          "splash": 0,
+          "air": true,
+          "style": "arrow",
+          "stun": 0,
+          "source": 1,
+          "flight": {
+            "x": 13.962528527035523,
+            "y": 22.97211285189774
+          },
+          "speed": 6.666666666666667,
+          "elapsed": 0,
+          "homing": true,
+          "fromHeight": 3.5,
+          "toHeight": 1.8,
+          "arc": 0.6
+        }
+      ]
+    }
+  ]
+}

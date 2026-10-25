@@ -1,7 +1,6 @@
 import { CARD_MAP, type CardId } from "./cards";
 import {
   COMBAT_STEP,
-  combatTraits,
   directSpellFlight,
   SPELL_CROWN_TOWER_DAMAGE_FRACTION,
 } from "./combat";
@@ -12,6 +11,7 @@ import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import poison from "./poison-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
 import miner from "./miner-data.json" with { type: "json" };
+import { attackHitSteps } from "./attack-flight";
 
 const contains = (area: Point & { radius: number }, body: Entity) =>
   Math.hypot(area.x - body.x, area.y - body.y) < area.radius + body.radius;
@@ -91,24 +91,19 @@ export function fatalKingWindups(
         COMBAT_STEP *
         (boost >= 1e-8 ? rage.hitSpeedMultiplier : 1) *
         (slow >= 1e-8 ? iceWizard.hitSpeedMultiplier : 1);
-      if (remaining <= 1e-8)
-        return [
-          {
-            attacker,
-            step,
-            melee:
-              !combatTraits(attacker).projectile &&
-              attacker.card !== "balloon" &&
-              attacker.card !== "tesla",
-          },
-        ];
+      if (remaining <= 1e-8) {
+        const flight = attackHitSteps(attacker, king);
+        return Number.isFinite(flight)
+          ? [{ attacker, step: step + flight - 1 }]
+          : [];
+      }
     }
     return [];
   });
 }
 
 /** Can this proposed finisher, together with already visible spell damage,
- * defeat the stationary enemy King strictly before the fatal melee step? */
+ * defeat the stationary enemy King strictly before the fatal impact step? */
 export function finishesKingBefore(
   card: CardId,
   team: Team,
