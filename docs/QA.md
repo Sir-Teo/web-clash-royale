@@ -1608,3 +1608,17 @@ The isolated full suite passes 1,490 tests across 163 files. TypeScript and the 
 All four focused browser cases pass across desktop Chromium and phone WebKit. The new case saves pasted controls, a cleaned-empty name, an emoji name and literal markup; each exported file opens the strict restore preview with the accepted name, cancellation preserves the current profile, and reload retains the final name. The existing failed-write/session-export/recovery/reload case stays green.
 
 Pages-prefixed production/offline checks also pass reload, the cached match worker, battle startup, scoped assets and all 278 native combat/death/music files. Root output is restored afterward. The pack remains 921 URLs/894 unique content groups with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.
+
+## Coalesced replay drag scrubbing
+
+A desktop browser reproduction dispatched nine timeline updates in one drag burst and rebuilt 11,491 simulation ticks to display the final position at tick 1,368. Pointer drags now retain only their latest target for the next animation frame, then flush the final position immediately on release, change or pointer cancellation. Keyboard/programmatic range changes and skip buttons keep their immediate behavior. A relative skip starts from a pending requested position when one exists. Replay simulation waits while a drag destination is pending; the user's pause/speed choice survives without the old position reaching completion first.
+
+The queue clears pending state before applying a seek, supports tick zero and invalidates stale callbacks. Lobby entry, restart and battle/replay replacement cancel queued work. Suspending the frame loop releases pointer ownership while retaining an unprocessed destination for resume. Individual canonical rebuilds still run synchronously; this removes redundant rebuilds rather than introducing replay checkpoints or a worker. No simulation, replay, profile or wire versions change.
+
+Six focused scheduler checks pass for latest-target batching, final flush, cancellation across requests, zero, empty operations and reentrant requests. The focused replay playback/boundary/completion checks and TypeScript/root production build also pass.
+
+All six rendered cases pass across desktop Chromium and phone WebKit. Both viewing perspectives reproduce the nine-update burst with exactly 1,368 simulated ticks and the same canonical time, hand, elixir, action count and troop count, reducing that burst's reconstruction steps by about 88%. Trusted native range drags retain their final position; relative skips consume the pending destination once; restart/exit cancel it. Pause, speed, local profile bytes and the existing keyboard/phone-layout checks stay intact. These are deterministic work counts, not a browser frame-rate guarantee.
+
+The isolated full suite passes 1,496 tests across 164 files. TypeScript and the root production build pass. Rendered checks and the full suite run separately.
+
+Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup, scoped assets and all 278 native combat/death/music files. Root production output is restored afterward. The pack remains 921 URLs/894 unique content groups with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.

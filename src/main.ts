@@ -144,6 +144,7 @@ import {
 } from "./game/replay-completion";
 import { Battle, STEP } from "./game/engine";
 import { createReplayPlayback } from "./replay-playback";
+import { ReplaySeekQueue } from "./ui/replay-seek-queue";
 import { previousSoloOpponent, soloOpponent } from "./game/opponents";
 import {
   recordedDecks,
@@ -251,6 +252,8 @@ let pendingResult: { battle: Battle; time: number; show: () => void } | null =
 let replayData: Replay | null = null;
 let replayRecord: RecordEntry | null = null;
 let replayOwnerName: string | null = null;
+const replaySeeks = new ReplaySeekQueue((tick) => seekReplay(tick));
+let replayScrubPointer: number | null = null;
 let lastUi = 0;
 let hover: Point | null = null;
 let keyboardTarget: Point | null = null;
@@ -569,6 +572,7 @@ function lobby() {
   enterLobby(false);
 }
 function enterLobby(keepPeerConnection: boolean) {
+  cancelReplaySeeks();
   deploymentFeedback.reset();
   practiceMatch = null;
   clearKeyboardAim(true);
@@ -619,6 +623,7 @@ function startBattle(
     toast("Wait for the arena graphics to recover before starting a battle.");
     return;
   }
+  cancelReplaySeeks();
   deploymentFeedback.reset();
   clearKeyboardAim(true);
   replayOwnerName = null;
@@ -1140,6 +1145,7 @@ function playReplay(record: RecordEntry, ownerName?: string) {
     toast("Wait for the arena graphics to recover before watching a replay.");
     return;
   }
+  cancelReplaySeeks();
   deploymentFeedback.reset();
   clearKeyboardAim(true);
   const playerName = ownerName ?? record.playerName ?? profile.name;
@@ -2589,6 +2595,7 @@ $("#replay-speed").onclick = () => {
 $("#replay-exit").onclick = lobby;
 function seekReplay(targetTick: number) {
   if (screen !== "replay" || !replayData) return;
+  replaySeeks.cancel();
   resetEnding();
   announcements.reset();
   intro.skip();
@@ -2606,14 +2613,34 @@ function seekReplay(targetTick: number) {
     audio.startMusic(battle.time);
   if (battle.winner) startEnding(true);
 }
-$("#replay-back").onclick = () => seekReplay(battle.tick - 10 / STEP);
-$("#replay-forward").onclick = () => seekReplay(battle.tick + 10 / STEP);
+function cancelReplaySeeks() {
+  replayScrubPointer = null;
+  replaySeeks.cancel();
+}
+function finishReplayScrub() {
+  replayScrubPointer = null;
+  replaySeeks.flush();
+}
+$("#replay-back").onclick = () =>
+  seekReplay((replaySeeks.target ?? battle.tick) - 10 / STEP);
+$("#replay-forward").onclick = () =>
+  seekReplay((replaySeeks.target ?? battle.tick) + 10 / STEP);
+$("#replay-seek").addEventListener("pointerdown", (event) => {
+  if (screen === "replay") replayScrubPointer = (event as PointerEvent).pointerId;
+});
+for (const type of ["pointerup", "pointercancel", "lostpointercapture"])
+  window.addEventListener(type, (event) => {
+    if ((event as PointerEvent).pointerId === replayScrubPointer)
+      finishReplayScrub();
+  });
+$("#replay-seek").addEventListener("change", () => replaySeeks.flush());
 $("#replay-seek").addEventListener("input", () => {
-  if (!replayData) return;
-  seekReplay(
+  if (screen !== "replay" || !replayData) return;
+  const target =
     (Number(($("#replay-seek") as HTMLInputElement).value) / 100) *
-      replayData.duration,
-  );
+    replayData.duration;
+  if (replayScrubPointer !== null) replaySeeks.request(target);
+  else seekReplay(target);
 });
 $("#about-button").onclick = () =>
   modal(
@@ -2730,7 +2757,8 @@ document.addEventListener("keydown", (e) => {
           ? 0
           : e.key === "End"
             ? replayData.duration
-            : battle.tick + (e.key === "ArrowLeft" ? -10 : 10) / STEP,
+            : (replaySeeks.target ?? battle.tick) +
+              (e.key === "ArrowLeft" ? -10 : 10) / STEP,
       );
     return;
   }
@@ -2782,6 +2810,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 function suspendFrameLoop() {
+  replayScrubPointer = null;
   deathAudio.reset();
   combatAudio.skip(battle.audioEvents);
   connectionWarning.suspend();
@@ -2839,7 +2868,13 @@ function frame(now: number) {
   const elapsed = (now - frameTime) / 1000;
   const delta = Math.min(0.5, elapsed);
   frameTime = now;
-  if (graphicsAvailable && screen !== "lobby" && !paused && !battle.winner) {
+  if (
+    graphicsAvailable &&
+    screen !== "lobby" &&
+    !paused &&
+    !battle.winner &&
+    !(screen === "replay" && replaySeeks.target !== undefined)
+  ) {
     const wasOpening = intro.clock.blocking;
     accumulator += intro.clock.advance(
       multiplayer && network.room?.paused ? 0 : Math.min(5, elapsed) * speed,
