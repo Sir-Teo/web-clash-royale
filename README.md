@@ -125,6 +125,8 @@ npm run dev
 
 `npm run check` runs simulation and persistence tests, type checking and a production build. `npm run test:e2e` runs desktop Chromium and phone Chromium/WebKit browser tests (install both once with `npx playwright install chromium webkit`). Assets and fonts are bundled locally. The production build generates an offline cache; after its first complete load, the game can reload and start battles without a network connection. `npm run assets:app-icons` regenerates the install and touch icons from `public/app-icon.svg`.
 
+Use `npm run test:fast` for quicker local iterations. It reuses unit-test workers with file isolation disabled. Run `npm run check` before committing to verify the tests with file isolation, type checking and the production build. Both unit commands accept file paths after `--` for focused checks.
+
 To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189 --strictPort` and then `npm run test:offline`.
 
 `npm run assets` refreshes cards, renders and audio. `npm run assets:sprites` imports complete native animation sequences and lossless textures; `npm run assets:scenery` reconstructs tower and arena textures from the retained metadata. No asset generation is needed for normal development.

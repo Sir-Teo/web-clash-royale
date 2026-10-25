@@ -9,6 +9,7 @@
     "preview": "vite preview --host 0.0.0.0",
     "deploy:hosting": "npm run build && firebase deploy --only hosting --project sincere-hybrid-203601 --non-interactive",
     "test": "vitest run",
+    "test:fast": "vitest run --no-isolate",
     "test:e2e": "playwright test",
     "check": "npm test && npm run build",
     "assets": "node scripts/fetch-assets.mjs",
