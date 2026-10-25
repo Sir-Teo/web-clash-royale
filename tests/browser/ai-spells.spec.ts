@@ -426,3 +426,65 @@ test("AI uses a nonlethal Zap to turn Lightning's last pulse into a King win", a
   });
   expect(errors).toEqual([]);
 });
+
+for (const scene of ["ai-log-ground", "ai-log-air", "ai-log-king"])
+  test(`${scene}: AI Log follows its ground corridor on the ordinary timer`, async ({
+    page,
+  }, info) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto(`/tests/fixtures/combat.html?scene=${scene}`);
+    await expect(page.locator("#status")).toContainText(
+      `${expectedEffects} effects`,
+      { timeout: 60000 },
+    );
+    const output = page.locator("#destruction");
+    const state = async () =>
+      JSON.parse((await output.getAttribute("data-ai-areas"))!);
+    const actions = async () =>
+      JSON.parse((await output.getAttribute("data-ai-defense"))!).actions;
+    for (let i = 0; i < 2; i++) {
+      const before = (await state()).time;
+      await page.locator("#second").click();
+      await expect
+        .poll(async () => (await state()).time)
+        .toBeGreaterThan(before + 0.99);
+    }
+    expect(await actions()).toEqual([]);
+    await page.locator("#second").click();
+    if (scene === "ai-log-air") {
+      await page.locator("#second").click();
+      expect(await actions()).toEqual([]);
+      expect((await state()).entities).toHaveLength(3);
+      expect(
+        (await state()).entities.every(
+          (e: any) => e.card === "minions" && e.hp === e.maxHp,
+        ),
+      ).toBe(true);
+    } else {
+      await expect.poll(async () => (await actions()).length).toBe(1);
+      expect((await actions())[0]).toMatchObject({ card: "log", tick: 74 });
+      expect((await actions())[0].y).toBeLessThanOrEqual(14.5);
+      if (scene === "ai-log-ground") {
+        await expect.poll(async () => (await state()).entities.length).toBe(0);
+        expect((await actions())[0].y).toBeLessThan(10);
+        await page.locator("#step").click();
+        await page.screenshot({
+          path: info.outputPath("ai-log-corridor.png"),
+          fullPage: true,
+        });
+      } else {
+        for (let i = 0; i < 4 && !(await state()).winner; i++)
+          await page.locator("#second").click();
+        await expect.poll(async () => (await state()).winner).toBe("red");
+        expect((await state()).reason).toBe("King Tower destroyed");
+        expect((await state()).crowns.red).toBe(3);
+        const spells = JSON.parse(
+          (await output.getAttribute("data-ai-spells"))!,
+        );
+        expect(spells.hand).toContain("mirror");
+        expect(await actions()).toHaveLength(1);
+      }
+    }
+    expect(errors).toEqual([]);
+  });

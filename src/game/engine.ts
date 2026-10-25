@@ -2816,7 +2816,7 @@ export class Battle {
         : undefined);
       if (!target) return;
       x = target.x;
-      y = a.played === "log" ? Math.min(14.5, target.y) : target.y;
+      y = target.y;
     }
     if (a.c.kind === "building") {
       const lure = buildingLures.get(a.id);

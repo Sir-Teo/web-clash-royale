@@ -258,6 +258,19 @@ function setup() {
       battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
       battle.players.red.elixir = 3;
     }
+  } else if (scenario.startsWith("ai-log-")) {
+    if (scenario === "ai-log-king") {
+      battle.entities.find((e) => e.team === "blue" && e.king)!.hp = 100;
+      battle.players.red.hand = ["mirror", "log", "pekka", "pekka"];
+      battle.players.red.lastPlayed = "log";
+      battle.players.red.elixir = 3;
+    } else {
+      for (const e of unit(scenario === "ai-log-air" ? "minions" : "goblins", "blue", 4, 10))
+        Object.assign(e, { active: false, speed: 0 });
+      battle.players.red.hand = ["log", "pekka", "pekka", "pekka"];
+      battle.players.red.elixir = 2;
+    }
+    battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
   } else if (scenario === "ai-lightning-combo") {
     const king = battle.entities.find((e) => e.team === "blue" && e.king)!;
     king.hp = 80;

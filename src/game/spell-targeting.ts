@@ -5,6 +5,7 @@ import rocket from "./rocket-data.json" with { type: "json" };
 import { createKingSpellRace, kingRacePriority } from "./king-damage";
 import type { MatchFinisher } from "./match-finisher";
 import { lightningSpellTarget } from "./lightning-targeting";
+import { logSpellTarget } from "./log-targeting";
 import { createSpellDamageReservation } from "./spell-reservations";
 export { pendingSpellDamage } from "./spell-reservations";
 
@@ -14,6 +15,7 @@ const DIRECT_SPELLS = new Set<CardId>([
   "zap",
   "rocket",
   "lightning",
+  "log",
 ]);
 export const isDamageSpell = (card: CardId) => DIRECT_SPELLS.has(card);
 export interface SpellTarget extends Point {
@@ -68,6 +70,16 @@ export function damageSpellTarget(
   kingDeadline = Infinity,
   finisher?: MatchFinisher,
 ): SpellTarget | undefined {
+  if (card === "log")
+    return logSpellTarget(
+      team,
+      entities,
+      projectiles,
+      areas,
+      cost,
+      kingDeadline,
+      finisher,
+    );
   if (card === "lightning")
     return lightningSpellTarget(
       team,

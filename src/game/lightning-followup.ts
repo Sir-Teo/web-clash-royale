@@ -2,6 +2,7 @@ import { CARD_MAP, type CardId } from "./cards";
 import { directSpellFlight } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import { lightningDamageMap } from "./lightning-strikes";
+import { logSpellContains, logSpellProjectile } from "./log-flight";
 import {
   impactSteps,
   projectileDamagePackets,
@@ -17,6 +18,7 @@ const FOLLOWUPS = new Set<CardId>([
   "arrows",
   "rocket",
   "poison",
+  "log",
 ]);
 export const isLightningFollowup = (card: CardId) => FOLLOWUPS.has(card);
 export const hasFriendlyLightning = (
@@ -36,6 +38,8 @@ export function createLightningFollowup(
   projectiles: readonly Projectile[],
   areas: readonly AreaEffect[],
 ) {
+  if (card === "log")
+    return createLogLightningFollowup(team, entities, projectiles, areas);
   const rules = CARD_MAP[card];
   const towers = entities.filter(
     (e) => e.team !== team && e.kind === "tower" && e.hp > 0,
@@ -103,6 +107,86 @@ export function createLightningFollowup(
         ...poisonDamagePackets(tower, proposedAreas),
         ...(strikes.get(tower.id) ?? []),
       ]);
+    cache.set(key, result);
+    return result;
+  };
+}
+
+/** Only a contact before a remaining friendly pulse can redirect Lightning.
+ * Rolling contact time depends on launch Y, while X only selects the lane. */
+function createLogLightningFollowup(
+  team: Team,
+  entities: readonly Entity[],
+  projectiles: readonly Projectile[],
+  areas: readonly AreaEffect[],
+) {
+  const clouds = areas.filter(
+    (a) => a.card === "lightning" && a.team === team && a.remaining > 0,
+  );
+  const horizon = Math.max(0, ...clouds.map((a) => impactSteps(a.remaining)));
+  const enemies = entities.filter((e) => e.team !== team && e.hp > 0);
+  const towers = enemies
+    .filter((e) => e.kind === "tower")
+    .map((entity) => ({
+      entity,
+      baseline: [
+        ...projectileDamagePackets(entity, projectiles, entities),
+        ...poisonDamagePackets(entity, areas),
+      ],
+    }));
+  const blockers = enemies.filter(
+    (e) =>
+      !e.air &&
+      !e.dash &&
+      !(e.deploy <= 0 && e.burrow?.phase === "hidden") &&
+      clouds.some(
+        (a) => Math.hypot(e.x - a.x, e.y - a.y) < a.radius + e.radius,
+      ),
+  );
+  const contacts = new Map<Entity, Map<number, readonly DamagePacket[]>>();
+  const cache = new Map<string, Map<number, readonly DamagePacket[]>>();
+  let baselineStrikes: ReturnType<typeof lightningDamageMap> | undefined;
+  const hitsAt = (entity: Entity, point: Point) => {
+    if (!logSpellContains(team, point, entity)) return [];
+    let positions = contacts.get(entity);
+    if (!positions) {
+      positions = new Map();
+      contacts.set(entity, positions);
+    }
+    let hits = positions.get(point.y);
+    if (!hits) {
+      hits = projectileDamagePackets(
+        entity,
+        [logSpellProjectile(team, point)],
+        entities,
+      ).map((hit) => ({ ...hit, order: projectiles.length }));
+      positions.set(point.y, hits);
+    }
+    return hits;
+  };
+  return (point: Point) => {
+    const towerHits = towers.map((t) => hitsAt(t.entity, point));
+    const early = blockers.flatMap((e) => {
+      const hit = hitsAt(e, point)[0];
+      return hit && hit.step <= horizon ? [`${e.id}:${hit.step}`] : [];
+    });
+    const key = `${towerHits.map((hits) => hits[0]?.step ?? 0).join(",")}/${early.join(",")}`;
+    const known = cache.get(key);
+    if (known) return known;
+    const strikes = early.length
+      ? lightningDamageMap(entities, areas, [
+          ...projectiles,
+          logSpellProjectile(team, point),
+        ])
+      : (baselineStrikes ??= lightningDamageMap(entities, areas, projectiles));
+    const result = new Map<number, readonly DamagePacket[]>();
+    towers.forEach((t, i) =>
+      result.set(t.entity.id, [
+        ...t.baseline,
+        ...towerHits[i],
+        ...(strikes.get(t.entity.id) ?? []),
+      ]),
+    );
     cache.set(key, result);
     return result;
   };

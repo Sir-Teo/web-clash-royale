@@ -10,6 +10,7 @@ import {
 import poison from "./poison-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
 import { createLightningPlan, lightningDamageMap } from "./lightning-strikes";
+import { logSpellContains, logSpellProjectile } from "./log-flight";
 import { poisonDamagePackets } from "./status-health";
 export { poisonDamagePackets } from "./status-health";
 import {
@@ -102,6 +103,25 @@ export function towerDamageForecast(
           followups.set(card, forecast);
         }
         return forecast(point).get(target.id) ?? baseline;
+      }
+      if (card === "log") {
+        if (!logSpellContains(team, point, target)) return baseline;
+        const hits = projectileDamagePackets(
+          target,
+          [logSpellProjectile(team, point)],
+          entities,
+        );
+        if (!hits.length) return baseline;
+        const key = `log:${hits[0].step}`;
+        let result = cache.get(key);
+        if (!result) {
+          result = [
+            ...baseline,
+            ...hits.map((hit) => ({ ...hit, order: projectiles.length })),
+          ];
+          cache.set(key, result);
+        }
+        return result;
       }
       if (card === "lightning") {
         if (!entities) return baseline;
