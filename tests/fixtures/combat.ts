@@ -318,6 +318,18 @@ function setup() {
     battle.players.red.hand = ["rocket", scenario === "ai-combined-tornado" ? "tornado" : "freeze", "pekka", "pekka"];
     battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
     battle.players.red.elixir = 6;
+  } else if (scenario.startsWith("ai-tornado-lightning-")) {
+    const king = battle.entities.find((e) => e.team === "blue" && e.king)!;
+    king.hp = 300;
+    const preserve = scenario.endsWith("preserve");
+    if (preserve)
+      for (const [card, x, y] of [["wizard", 12.2, 27.5], ["witch", 12.2, 31.3], ["musketeer", 11, 29.5]] as const)
+        for (const e of unit(card, "blue", x, y)) Object.assign(e, { hp: 100, active: false });
+    for (const [card, x, hp] of [["knight", 8, 900], ["knight", 10, 800], ["giant", preserve ? 13.4 : 13, 400]] as const)
+      for (const e of unit(card, "blue", x, king.y)) Object.assign(e, { hp, active: false });
+    battle.players.red.hand = ["tornado", "pekka", "pekka", "pekka"];
+    battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
+    battle.actions = [];
   } else if (scenario.startsWith("ai-tornado-")) {
     if (scenario === "ai-tornado-air") {
       for (const e of unit("minions", "blue", 4, 10)) e.active = false;
@@ -924,6 +936,11 @@ function advance(ticks: number) {
     else {
       if (sceneSelect.value.startsWith("ai-health-") && battle.tick === 72)
         battle.play("red", 0, 9, 4.5);
+      if (sceneSelect.value.startsWith("ai-tornado-lightning-") && battle.tick === 46) {
+        const king = battle.entities.find((e) => e.team === "blue" && e.king)!;
+        cast("lightning", "red", king.x, king.y);
+        battle.players.red.hand = ["tornado", "pekka", "pekka", "pekka"];
+      }
       if (sceneSelect.value.startsWith("ai-lightning-pull-") && (battle.tick === 46 || battle.tick === 73)) {
         const king = battle.entities.find((e) => e.team === "red" && e.king)!;
         const lightning = battle.tick === 46;

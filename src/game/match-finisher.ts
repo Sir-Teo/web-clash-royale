@@ -1,10 +1,12 @@
-import type { CardId } from "./cards";
+import { CARD_MAP, type CardId } from "./cards";
 import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import { towerDamageForecast, towerDamageState } from "./king-damage";
 import type { DamagePacket } from "./projectile-impacts";
 import poison from "./poison-data.json" with { type: "json" };
 import { currentLightningDamage } from "./windup-health";
+import { lightningStrikeSteps } from "./lightning-strikes";
+import lightning from "./lightning-data.json" with { type: "json" };
 import {
   createLightningFollowup,
   hasFriendlyLightning,
@@ -129,6 +131,38 @@ export function createMatchFinisher(
     return result;
   };
   const baseline = ending(towers.map((t) => t.state(t.forecast.baseline)));
+  // Ignore shields and pulse ordering for a cheap damage upper bound. If
+  // even that cannot fell a tower, moving blockers cannot end a match before
+  // a distant clock. A nearby clock can also turn on nonlethal damage.
+  const canFinishWithLightning =
+    reordersLightning &&
+    (clock <= horizon ||
+      towers.some((t) => {
+        if (t.entity.team === team) return false;
+        const possible = areas.reduce(
+          (damage, a) => {
+            if (
+              a.card !== "lightning" ||
+              a.team !== team ||
+              a.remaining <= 0 ||
+              (a.struck ?? []).includes(t.entity.id) ||
+              Math.hypot(a.x - t.entity.x, a.y - t.entity.y) >=
+                a.radius + t.entity.radius ||
+              !lightningStrikeSteps(a).length
+            )
+              return damage;
+            return (
+              damage +
+              CARD_MAP.lightning.damage * lightning.crownTowerDamageFraction
+            );
+          },
+          t.forecast.withoutLightning.reduce(
+            (damage, p) => damage + p.damage,
+            0,
+          ),
+        );
+        return possible + 1e-8 >= t.entity.hp;
+      }));
   const outcomeAt = (card: CardId, point: Point) => {
     if (reordersLightning && isLightningFollowup(card)) {
       let forecast = followups.get(card);
@@ -186,6 +220,7 @@ export function createMatchFinisher(
   ];
   return {
     baseline,
+    canFinishWithLightning,
     tracksCrowns: overtime || clock <= horizon,
     reordersLightning,
     outcomeAt,

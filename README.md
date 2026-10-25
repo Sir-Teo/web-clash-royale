@@ -30,7 +30,7 @@ Freeze and Tornado account for pending King hits changing an active enemy Lightn
 
 King defense also follows blockers moved by active Tornado spells. A Giant leaving Lightning’s circle can require immediate defense; a Giant entering it can absorb the pulse and let the AI save its Freeze.
 
-Lightning attacks and follow-up spells also track blockers moved by active Tornado spells. The AI compares the resulting pulse timing when choosing a finisher, reserving spell damage and racing an incoming King loss.
+Lightning attacks and follow-up spells also track blockers moved by active Tornado spells. Tornado can pull a blocker out of a pending bolt to finish the enemy King, and avoids pulling one in when that would spoil a known win. The AI compares the resulting pulse timing when choosing a finisher, reserving spell damage and racing an incoming King loss.
 
 The AI also accounts for friendly Lightning killing or stunning attackers before release, saving Freeze when the current pulse already prevents a King loss. This includes stuns after a shield breaks; a pulse arriving after the attackers release still requires defense.
 

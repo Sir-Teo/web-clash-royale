@@ -6,6 +6,7 @@ import {
   kingDefenseScore,
   type KingDefense,
 } from "./king-defense";
+import type { MatchFinisher } from "./match-finisher";
 import { createSpellDamageReservation } from "./spell-reservations";
 import {
   hiddenSpellTarget,
@@ -26,6 +27,7 @@ export function tornadoSpellTarget(
   projectiles: readonly Projectile[],
   cost = CARD_MAP.tornado.cost,
   kingDefense?: KingDefense,
+  finisher?: MatchFinisher,
 ): SpellTarget | undefined {
   const enemies = entities.filter(
     (e) =>
@@ -46,6 +48,22 @@ export function tornadoSpellTarget(
     projectiles,
     areas,
   );
+  const lightning = finisher
+    ? areas.filter(
+        (a) =>
+          a.card === "lightning" &&
+          a.team === team &&
+          a.remaining > 0 &&
+          entities.some(
+            (e) =>
+              e.kind === "tower" &&
+              e.team !== team &&
+              e.hp > 0 &&
+              !(a.struck ?? []).includes(e.id) &&
+              spellContains(a, e, a.radius + e.radius),
+          ),
+      )
+    : [];
   const evaluated = enemies.map((e) => {
     const reserved = reserve(e);
     const hp = Math.max(0, e.hp + (e.shield ?? 0) - reserved);
@@ -122,11 +140,34 @@ export function tornadoSpellTarget(
         y: t.entity.y + ((t.entity.y - t.nearTower.y) / gap) * reach,
       });
   }
+  // Pull blockers away from a pending circle even when their reserved damage
+  // leaves no ordinary removal value. Their movement can expose a tower.
+  for (const cloud of lightning) {
+    add(cloud);
+    for (const e of enemies) {
+      const gap = distance(e, cloud);
+      if (gap <= 1e-8) continue;
+      for (const reach of [3, 5])
+        add({
+          x: e.x + ((e.x - cloud.x) / gap) * reach,
+          y: e.y + ((e.y - cloud.y) / gap) * reach,
+        });
+    }
+  }
   let best: SpellTarget | undefined;
   for (const point of points.values()) {
     const rescue = defense.evaluate("tornado", point);
     // A second pull must preserve a rescue the current areas already provide.
     if (rescue.worsens) continue;
+    if (
+      lightning.length &&
+      !rescue.improves &&
+      finisher!.baseline?.winner === team
+    ) {
+      const ending = finisher!.outcomeAt("tornado", point);
+      if (ending?.winner !== team || ending.step > finisher!.baseline.step)
+        continue;
+    }
     let value = 0,
       penalty = 0;
     for (const t of evaluated) {
@@ -161,15 +202,21 @@ export function tornadoSpellTarget(
       else if (gain < 0 || towardTower) penalty += t.control;
     }
     const protectsKing = rescue.improves;
-    const score = protectsKing
-      ? kingDefenseScore(rescue, cost, value)
-      : 3 + 2 * (value - cost * 0.9) - penalty;
-    if (!protectsKing && (value < cost * 0.9 || score <= 0)) continue;
+    const match = lightning.length
+      ? finisher!.evaluate("tornado", point, cost, value)
+      : undefined;
+    const score =
+      match?.score ??
+      (protectsKing
+        ? kingDefenseScore(rescue, cost, value)
+        : 3 + 2 * (value - cost * 0.9) - penalty);
+    if (!match && !protectsKing && (value < cost * 0.9 || score <= 0)) continue;
     if (!best || score > best.score + 1e-8)
       best = {
         ...point,
         score,
         value,
+        ...(match ? { matchDecisionStep: match.matchDecisionStep } : {}),
         ...(protectsKing
           ? { protectsKing: true, kingThreatStep: defense.baseline }
           : {}),

@@ -73,6 +73,7 @@ export function areaSpellTarget(
       projectiles,
       cost,
       kingDefense,
+      finisher,
     );
   if (card === "heal" || card === "clone")
     return supportSpellTarget(card, team, entities, areas, projectiles, cost);

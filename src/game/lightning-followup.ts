@@ -1,7 +1,7 @@
 import { CARD_MAP, type CardId } from "./cards";
 import { directSpellFlight } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
-import { currentLightningDamage } from "./windup-health";
+import { currentLightningDamage, createWindupHealth } from "./windup-health";
 import { logSpellContains, logSpellProjectile } from "./log-flight";
 import {
   impactSteps,
@@ -11,6 +11,7 @@ import {
 import { poisonDamagePackets } from "./status-health";
 import poison from "./poison-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
+import tornado from "./tornado-data.json" with { type: "json" };
 
 const FOLLOWUPS = new Set<CardId>([
   "zap",
@@ -19,6 +20,7 @@ const FOLLOWUPS = new Set<CardId>([
   "rocket",
   "poison",
   "log",
+  "tornado",
 ]);
 export const isLightningFollowup = (card: CardId) => FOLLOWUPS.has(card);
 export const hasFriendlyLightning = (
@@ -45,10 +47,15 @@ export function createLightningFollowup(
     (e) => e.team !== team && e.kind === "tower" && e.hp > 0,
   );
   const cache = new Map<string, Map<number, readonly DamagePacket[]>>();
-  const moving = areas.some((a) => a.card === "tornado" && a.remaining > 0);
+  const pull =
+    card === "tornado" ? createWindupHealth(projectiles, entities) : undefined;
+  const moving =
+    !!pull || areas.some((a) => a.card === "tornado" && a.remaining > 0);
   return (point: Point) => {
     const flight =
-      card === "poison" ? undefined : directSpellFlight(card, team, point);
+      card === "poison" || pull
+        ? undefined
+        : directSpellFlight(card, team, point);
     const members = entities.filter(
       (e) =>
         e.hp > 0 &&
@@ -99,12 +106,26 @@ export function createLightningFollowup(
               remaining: poison.duration,
             },
           ]
-        : areas;
-    const strikes = currentLightningDamage(
-      entities,
-      proposedAreas,
-      proposedShots,
-    );
+        : pull
+          ? [
+              ...areas,
+              {
+                id: -1,
+                card: "tornado",
+                team,
+                x: point.x,
+                y: point.y,
+                radius: tornado.radius,
+                duration: tornado.duration,
+                remaining: tornado.duration,
+                hitAt: 0,
+                damageAt: tornado.damageInterval,
+              },
+            ]
+          : areas;
+    const strikes = pull
+      ? pull.lightning(proposedAreas, 60, areas.length)
+      : currentLightningDamage(entities, proposedAreas, proposedShots);
     const result = new Map<number, readonly DamagePacket[]>();
     for (const tower of towers)
       result.set(tower.id, [
