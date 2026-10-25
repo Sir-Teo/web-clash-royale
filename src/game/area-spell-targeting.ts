@@ -6,9 +6,9 @@ import { supportSpellTarget } from "./support-spell-targeting";
 import { fatalKingWindups } from "./king-spell-race";
 import { createKingSpellRace, kingRacePriority } from "./king-damage";
 import type { MatchFinisher } from "./match-finisher";
+import { createSpellDamageReservation } from "./spell-reservations";
 import {
   hiddenSpellTarget,
-  pendingSpellDamage,
   spellCandidatePoints,
   spellContains,
   type SpellTarget,
@@ -61,6 +61,10 @@ export function areaSpellTarget(
   if (card === "heal" || card === "clone")
     return supportSpellTarget(card, team, entities, areas, projectiles, cost);
   if (card !== "rage" && card !== "freeze" && card !== "poison") return;
+  const reservedDamage =
+    card === "poison"
+      ? createSpellDamageReservation(team, entities, projectiles, areas)
+      : undefined;
   const living = entities.filter((e) => e.hp > 0);
   const friends = living.filter(
     (e) => e.team === team && e.deploy <= 0 && !hiddenSpellTarget(e),
@@ -164,7 +168,7 @@ export function areaSpellTarget(
         targets.push({ entity: e, value: 0, penalty: 0, lethal: false });
         continue;
       }
-      const reserved = pendingSpellDamage(e, team, projectiles);
+      const reserved = reservedDamage!(e);
       const hp = Math.max(0, e.hp + (e.shield ?? 0) - reserved);
       let shield = Math.max(0, (e.shield ?? 0) - reserved);
       if (hp <= 1e-6 && !(e.king && race) && !(finisher && e.kind === "tower"))

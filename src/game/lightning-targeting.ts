@@ -11,9 +11,9 @@ import type { MatchFinisher } from "./match-finisher";
 import type { DamagePacket } from "./projectile-impacts";
 import lightning from "./lightning-data.json" with { type: "json" };
 import { createLightningPlan } from "./lightning-strikes";
+import { createSpellDamageReservation } from "./spell-reservations";
 import {
   hiddenSpellTarget,
-  pendingSpellDamage,
   spellCandidatePoints,
   spellContains,
   type SpellTarget,
@@ -37,6 +37,12 @@ export function lightningSpellTarget(
       .map((e) => [e.id, towerDamageForecast(e, projectiles, areas, entities)]),
   );
   const strikesAt = createLightningPlan(team, enemies);
+  const reservedDamage = createSpellDamageReservation(
+    team,
+    entities,
+    projectiles,
+    areas,
+  );
   let best: SpellTarget | undefined;
   for (const point of spellCandidatePoints(enemies, lightning.radius)) {
     let value = 0,
@@ -90,7 +96,7 @@ export function lightningSpellTarget(
           if (e.king && !e.active) penalty += cost + 8;
         }
       } else {
-        const reserved = pendingSpellDamage(e, team, projectiles, areas);
+        const reserved = reservedDamage(e);
         const hp = Math.max(0, e.hp + shield - reserved);
         const remainingShield = Math.max(0, shield - reserved);
         const damage =

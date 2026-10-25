@@ -288,3 +288,50 @@ for (const scene of ["ai-lightning", "ai-lightning-king"])
     expect(await actions()).toHaveLength(1);
     expect(errors).toEqual([]);
   });
+
+test("AI holds its newly drawn Fireball while Lightning finishes the tower", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/tests/fixtures/combat.html?scene=ai-lightning-followup");
+  await expect(page.locator("#status")).toContainText(
+    `${expectedEffects} effects`,
+    { timeout: 60000 },
+  );
+  const output = page.locator("#destruction");
+  const state = async () =>
+    JSON.parse((await output.getAttribute("data-ai-areas"))!);
+  const actions = async () =>
+    JSON.parse((await output.getAttribute("data-ai-defense"))!).actions;
+  const spells = async () =>
+    JSON.parse((await output.getAttribute("data-ai-spells"))!);
+  const target = (await spells()).towers.find((e: any) => e.hp === 100);
+  expect(target).toBeDefined();
+  for (let i = 0; i < 2; i++) {
+    const before = (await state()).time;
+    await page.locator("#second").click();
+    await expect
+      .poll(async () => (await state()).time)
+      .toBeGreaterThan(before + 0.99);
+  }
+  expect(await actions()).toEqual([]);
+  await page.locator("#second").click();
+  await expect.poll(async () => (await actions()).length).toBe(1);
+  expect((await actions())[0].card).toBe("lightning");
+  for (let i = 0; i < 2; i++) await page.locator("#second").click();
+  await expect.poll(async () => (await state()).time).toBe(5);
+  expect(await actions()).toHaveLength(1);
+  expect((await spells()).hand).toContain("fireball");
+  expect((await spells()).elixir).toBeGreaterThan(4);
+  expect((await spells()).crowns).toBe(1);
+  expect(
+    (await spells()).towers.find((e: any) => e.id === target.id)?.hp ?? 0,
+  ).toBe(0);
+  expect((await state()).entities).toEqual([]);
+  await page.screenshot({
+    path: info.outputPath("ai-lightning-followup.png"),
+    fullPage: true,
+  });
+  expect(errors).toEqual([]);
+});

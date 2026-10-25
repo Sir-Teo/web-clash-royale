@@ -1,12 +1,12 @@
 import { aiBodyValue } from "./ai-body-value";
 import { CARD_MAP, type CardId } from "./cards";
-import { SPELL_CROWN_TOWER_DAMAGE_FRACTION } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
-import poison from "./poison-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
 import { createKingSpellRace, kingRacePriority } from "./king-damage";
 import type { MatchFinisher } from "./match-finisher";
 import { lightningSpellTarget } from "./lightning-targeting";
+import { createSpellDamageReservation } from "./spell-reservations";
+export { pendingSpellDamage } from "./spell-reservations";
 
 const DIRECT_SPELLS = new Set<CardId>([
   "fireball",
@@ -54,61 +54,6 @@ export function spellCandidatePoints(
   return [...points.values()];
 }
 
-/** Conservative future damage at current positions. Poison overlaps refresh
- * one status; reserve the longest cloud, never the sum of overlapping clouds.
- */
-export function pendingSpellDamage(
-  entity: Entity,
-  team: Team,
-  projectiles: readonly Projectile[] = [],
-  areas: readonly AreaEffect[] = [],
-): number {
-  if (entity.team === team || hiddenSpellTarget(entity) || entity.dash)
-    return 0;
-  let shield = entity.shield ?? 0;
-  let shots = 0;
-  // Shields absorb an entire packet: damage beyond a shield's remaining HP
-  // never reaches the body. Preserve arrival order when reserving future hits.
-  const incoming = projectiles
-    .filter(
-      (p) =>
-        p.team === team &&
-        p.source === 0 &&
-        p.remaining > 0 &&
-        (p.air || !entity.air) &&
-        spellContains({ x: p.tx, y: p.ty }, entity, p.splash + entity.radius),
-    )
-    .sort((a, b) => a.remaining - b.remaining || a.id - b.id);
-  for (const p of incoming) {
-    const damage =
-      p.damage *
-      (entity.kind === "tower"
-        ? (p.towerDamageFraction ?? SPELL_CROWN_TOWER_DAMAGE_FRACTION)
-        : 1);
-    if (shield > 0) {
-      const absorbed = Math.min(shield, damage);
-      shots += absorbed;
-      shield -= absorbed;
-    } else shots += damage;
-  }
-  let cloud = 0;
-  if (entity.kind !== "troop")
-    for (const area of areas)
-      if (
-        area.team === team &&
-        area.card === "poison" &&
-        area.remaining > 0 &&
-        spellContains(area, entity, area.radius + entity.radius)
-      )
-        cloud = Math.max(
-          cloud,
-          Math.floor(area.remaining / poison.damageInterval) *
-            CARD_MAP.poison.damage *
-            (entity.kind === "tower" ? poison.crownTowerDamageFraction : 1),
-        );
-  return shots + cloud;
-}
-
 /** Evaluate visible current positions only; no simulation or random draws.
  * Unit value is measured per body (so swarms aren't counted as whole cards).
  * A pending friendly blast reserves damage at its fixed destination.
@@ -149,9 +94,15 @@ export function damageSpellTarget(
     !finisher && Number.isFinite(kingDeadline) && enemyKing
       ? createKingSpellRace(card, team, enemyKing, projectiles, areas, entities)
       : undefined;
+  const reservedDamage = createSpellDamageReservation(
+    team,
+    entities,
+    projectiles,
+    areas,
+  );
   const targets = enemies
     .map((entity) => {
-      const reserved = pendingSpellDamage(entity, team, projectiles, areas);
+      const reserved = reservedDamage(entity);
       return {
         entity,
         hp: Math.max(0, entity.hp + (entity.shield ?? 0) - reserved),

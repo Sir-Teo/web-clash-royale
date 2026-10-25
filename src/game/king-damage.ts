@@ -10,9 +10,9 @@ import {
 import poison from "./poison-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
 import lightning from "./lightning-data.json" with { type: "json" };
-import { lightningStrikes } from "./lightning-strikes";
+import { lightningStrikes, lightningDamageMap } from "./lightning-strikes";
 
-function poisonPackets(
+export function poisonDamagePackets(
   target: Entity,
   areas: readonly AreaEffect[],
 ): DamagePacket[] {
@@ -53,7 +53,9 @@ function poisonPackets(
       status.elapsed -= poison.damageInterval;
       packets.push({
         step,
-        damage: CARD_MAP.poison.damage * poison.crownTowerDamageFraction,
+        damage:
+          CARD_MAP.poison.damage *
+          (target.kind === "tower" ? poison.crownTowerDamageFraction : 1),
         phase: 0,
         born: 0,
         order: -1,
@@ -112,25 +114,9 @@ export function towerDamageForecast(
   entities?: readonly Entity[],
 ) {
   const shots = projectileDamagePackets(target, projectiles, entities);
-  const currentPoison = poisonPackets(target, areas);
+  const currentPoison = poisonDamagePackets(target, areas);
   const currentLightning = entities
-    ? areas.flatMap((area, order) =>
-        area.card === "lightning" &&
-        area.team !== target.team &&
-        area.remaining > 0
-          ? lightningStrikes(area.team, area, entities, area)
-              .filter((strike) => strike.entity.id === target.id)
-              .map(({ step }): DamagePacket => ({
-                step,
-                damage:
-                  CARD_MAP.lightning.damage *
-                  lightning.crownTowerDamageFraction,
-                phase: -1,
-                born: 0,
-                order,
-              }))
-          : [],
-      )
+    ? (lightningDamageMap(entities, areas).get(target.id) ?? [])
     : [];
   const baseline = [...shots, ...currentPoison, ...currentLightning];
   const cache = new Map<string, DamagePacket[]>();
@@ -161,7 +147,7 @@ export function towerDamageForecast(
       if (known !== undefined) return known;
       const packets =
         card === "poison"
-          ? poisonPackets(target, [
+          ? poisonDamagePackets(target, [
               ...areas,
               {
                 id: -1,
@@ -180,7 +166,11 @@ export function towerDamageForecast(
                 step,
                 damage:
                   CARD_MAP[card].damage *
-                  (card === "rocket" ? rocket.crownTowerDamageFraction : 0.4),
+                  (card === "rocket"
+                    ? rocket.crownTowerDamageFraction
+                    : card === "lightning"
+                      ? lightning.crownTowerDamageFraction
+                      : 0.4),
                 phase: card === "lightning" ? -1 : 1,
                 born: 0,
                 order: card === "lightning" ? areas.length : projectiles.length,

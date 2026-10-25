@@ -80,7 +80,7 @@ function setup() {
   battle = new Battle(selectedScene === "rage" ? {
     replay: { rulesFamily: "local", version: 5, seed: 12, mode: "classic",
       deck: STARTER_DECK, enemyDeck: STARTER_DECK, actions: [], duration: 0 },
-  } : { seed: selectedScene === "ai-spells-mirror" ? 2 : 12, ai: selectedScene.startsWith("ai-") });
+  } : { seed: selectedScene === "ai-lightning-followup" ? 1 : selectedScene === "ai-spells-mirror" ? 2 : 12, ai: selectedScene.startsWith("ai-") });
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   for (const t of battle.entities) t.active = false;
@@ -258,6 +258,13 @@ function setup() {
       battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
       battle.players.red.elixir = 3;
     }
+  } else if (scenario === "ai-lightning-followup") {
+    battle.entities.find((e) => e.team === "blue" && !e.king)!.hp = 100;
+    for (const [card, x, y] of [["witch", 3, 25], ["wizard", 5, 25]] as [CardId, number, number][])
+      for (const e of unit(card, "blue", x, y)) Object.assign(e, { active: false, speed: 0 });
+    battle.players.red.hand = ["lightning", "pekka", "pekka", "pekka"];
+    battle.players.red.queue = ["fireball", "pekka", "pekka", "pekka"];
+    battle.players.red.elixir = 10;
   } else if (scenario === "ai-lightning" || scenario === "ai-lightning-king") {
     if (scenario === "ai-lightning") {
       for (const [card, x, y] of [["wizard", 4, 9], ["witch", 6, 9], ["musketeer", 5, 11]] as [CardId, number, number][])

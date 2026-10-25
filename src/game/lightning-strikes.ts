@@ -1,6 +1,8 @@
 import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point, Team } from "./engine";
 import lightning from "./lightning-data.json" with { type: "json" };
+import { CARD_MAP } from "./cards";
+import type { DamagePacket } from "./projectile-impacts";
 
 const eligible = (e: Entity, team: Team, struck: readonly number[]) =>
   e.hp > 0 &&
@@ -58,3 +60,33 @@ export const lightningStrikes = (
   entities: readonly Entity[],
   area?: AreaEffect,
 ) => createLightningPlan(team, entities, area)(point, area?.radius);
+
+/** Prepare each area's selection once for a whole-board decision. */
+export function lightningDamageMap(
+  entities: readonly Entity[],
+  areas: readonly AreaEffect[],
+) {
+  const packets = new Map<number, DamagePacket[]>();
+  areas.forEach((area, order) => {
+    if (area.card !== "lightning" || area.remaining <= 0) return;
+    for (const { entity, step } of lightningStrikes(
+      area.team,
+      area,
+      entities,
+      area,
+    )) {
+      const hits = packets.get(entity.id) ?? [];
+      hits.push({
+        step,
+        damage:
+          CARD_MAP.lightning.damage *
+          (entity.kind === "tower" ? lightning.crownTowerDamageFraction : 1),
+        phase: -1,
+        born: 0,
+        order,
+      });
+      packets.set(entity.id, hits);
+    }
+  });
+  return packets;
+}

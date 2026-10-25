@@ -29,7 +29,7 @@ const touch = (from: Point, to: Point, target: Entity, radius: number) => {
   );
 };
 
-/** Damage from current projectiles against a stationary Crown Tower. Homing
+/** Damage from current projectiles against a stationary body. Homing
  * shots aimed at another troop are omitted; no entity or clock is advanced. */
 export function projectileDamagePackets(
   target: Entity,
@@ -40,6 +40,7 @@ export function projectileDamagePackets(
     if (
       p.team === target.team ||
       p.damage <= 0 ||
+      (!p.air && target.air) ||
       p.remaining <= 0 ||
       ["miner-travel", "rage-bottle", "goblin-barrel"].includes(p.style)
     )
@@ -146,7 +147,10 @@ export function projectileDamagePackets(
           result.push(
             packet(
               step,
-              p.damage * (p.style === "log" ? log.crownTowerDamageFraction : 1),
+              p.damage *
+                (p.style === "log" && target.kind === "tower"
+                  ? log.crownTowerDamageFraction
+                  : 1),
             ),
           );
           struck = true;
@@ -171,7 +175,7 @@ export function projectileDamagePackets(
       packet(
         arrival,
         p.damage *
-          (p.splash > 0 && p.source === 0
+          (p.splash > 0 && p.source === 0 && target.kind === "tower"
             ? (p.towerDamageFraction ?? SPELL_CROWN_TOWER_DAMAGE_FRACTION)
             : 1),
       ),
