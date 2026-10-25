@@ -7,6 +7,7 @@ import {
   observeFlight,
 } from "./helpers/ranged-flight";
 import { fatalKingWindups } from "../src/game/king-spell-race";
+import { launchedKingDeadline } from "../src/game/king-damage";
 
 describe("origin-16 projectile launch compatibility", () => {
   it("covers every ranged actor, both teams and straight/angled launches from the pre-refactor engine", () => {
@@ -33,5 +34,16 @@ describe("origin-16 projectile launch compatibility", () => {
       );
       expect(predicted).toHaveLength(1);
       expect(predicted[0].step).toBe(observed.hitTick);
+      if (observed.hitTick > observed.releaseTick) {
+        for (let tick = 0; tick < observed.releaseTick; tick++) battle.step();
+        expect(
+          launchedKingDeadline(
+            target.team,
+            battle.entities,
+            battle.projectiles,
+            battle.areas,
+          ),
+        ).toBe(observed.hitTick - observed.releaseTick);
+      }
     });
 });

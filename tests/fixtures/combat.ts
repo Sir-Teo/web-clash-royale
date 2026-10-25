@@ -258,6 +258,25 @@ function setup() {
       battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
       battle.players.red.elixir = 3;
     }
+  } else if (scenario === "ai-launched-poison" || scenario === "ai-launched-zap") {
+    const king = battle.entities.find((e) => e.team === "red" && e.king)!;
+    const enemyKing = battle.entities.find((e) => e.team === "blue" && e.king)!;
+    king.hp = 100;
+    enemyKing.hp = scenario === "ai-launched-poison" ? 40 : 50;
+    cast("rocket", "blue", king.x, king.y);
+    const incoming = battle.projectiles.at(-1)!;
+    // Start with a physically consistent shot already partway along its path.
+    const remaining = scenario === "ai-launched-poison" ? 4 : 2.8;
+    incoming.elapsed = incoming.duration - remaining;
+    incoming.remaining = remaining;
+    incoming.flight = {
+      x: incoming.x + (incoming.tx - incoming.x) * incoming.elapsed / incoming.duration,
+      y: incoming.y + (incoming.ty - incoming.y) * incoming.elapsed / incoming.duration,
+    };
+    if (scenario === "ai-launched-zap") cast("rocket", "red", enemyKing.x, enemyKing.y);
+    battle.players.red.hand = scenario === "ai-launched-poison"
+      ? ["arrows", "poison", "pekka", "pekka"] : ["zap", "arrows", "pekka", "pekka"];
+    battle.players.red.elixir = scenario === "ai-launched-poison" ? 4 : 3;
   } else if (scenario === "ai-spells" || scenario === "ai-spells-mirror") {
     // Let the ordinary AI timer choose its cast; no private think call here.
     const tower = battle.entities.find((e) => e.team === "blue" && !e.king)!;

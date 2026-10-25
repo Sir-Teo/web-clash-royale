@@ -4,6 +4,7 @@ import { SPELL_CROWN_TOWER_DAMAGE_FRACTION } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import poison from "./poison-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
+import { createKingSpellRace, kingRacePriority } from "./king-damage";
 
 const DIRECT_SPELLS = new Set<CardId>(["fireball", "arrows", "zap", "rocket"]);
 export const isDamageSpell = (card: CardId) => DIRECT_SPELLS.has(card);
@@ -101,6 +102,7 @@ export function damageSpellTarget(
   projectiles: readonly Projectile[] = [],
   areas: readonly AreaEffect[] = [],
   cost = CARD_MAP[card].cost,
+  kingDeadline = Infinity,
 ): SpellTarget | undefined {
   if (!isDamageSpell(card)) return;
   const rules = CARD_MAP[card],
@@ -113,6 +115,11 @@ export function damageSpellTarget(
       !e.dash &&
       (!e.air || rules.hitsAir),
   );
+  const enemyKing = enemies.find((e) => e.king);
+  const race =
+    Number.isFinite(kingDeadline) && enemyKing
+      ? createKingSpellRace(card, team, enemyKing, projectiles, areas, entities)
+      : undefined;
   const targets = enemies
     .map((entity) => {
       const reserved = pendingSpellDamage(entity, team, projectiles, areas);
@@ -122,7 +129,9 @@ export function damageSpellTarget(
         shield: Math.max(0, (entity.shield ?? 0) - reserved),
       };
     })
-    .filter((t) => t.hp > 1e-6);
+    .filter((t) =>
+      t.entity.king && race ? race.baseline >= kingDeadline : t.hp > 1e-6,
+    );
   if (!targets.length) return;
   const points = spellCandidatePoints(
     targets.map((t) => t.entity),
@@ -165,18 +174,36 @@ export function damageSpellTarget(
   for (const point of points) {
     let value = 0,
       penalty = 0,
+      kingStep = Infinity,
       lethalTower: Entity | undefined;
     for (const target of evaluated) {
       if (!spellContains(point, target.entity, target.radius)) continue;
+      if (target.entity.king && race) {
+        const step = race.stepAt(point);
+        if (step < race.baseline) {
+          lethalTower = target.entity;
+          kingStep = step;
+          continue;
+        }
+        value += target.value;
+        penalty += target.penalty;
+        continue;
+      }
       value += target.value;
       penalty += target.penalty;
       if (target.lethal && (!lethalTower || target.entity.king))
         lethalTower = target.entity;
     }
     // A guaranteed King kill wins the match, regardless of nearby troop value.
-    const score = lethalTower
-      ? (lethalTower.king ? 10_000 : 40) - cost + value - penalty
-      : 3 + 2 * (value - cost * 0.8) - penalty;
+    const score =
+      lethalTower?.king && race
+        ? kingRacePriority(kingStep, kingDeadline) -
+          cost +
+          Math.min(100, value) -
+          penalty
+        : lethalTower
+          ? (lethalTower.king ? 10_000 : 40) - cost + value - penalty
+          : 3 + 2 * (value - cost * 0.8) - penalty;
     if (!lethalTower && (value < cost * 0.8 || score <= 0)) continue;
     if (!best || score > best.score + 1e-8)
       best = {

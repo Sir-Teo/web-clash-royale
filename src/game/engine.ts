@@ -11,6 +11,7 @@ import { buildingLureTarget } from "./building-lure";
 import { meleeInterceptTarget } from "./melee-intercept";
 import { fatalKingWindups, finishesKingBefore } from "./king-spell-race";
 import { attackFlight } from "./attack-flight";
+import { launchedKingDeadline } from "./king-damage";
 import {
   combatTraits,
   COMBAT_STEP,
@@ -2636,6 +2637,11 @@ export class Battle {
       }))
       .filter((v) => v.cost !== null && v.cost <= p.elixir + 1e-6);
     if (!affordable.length) return;
+    const kingDeadline = affordable.some(
+      (a) => isDamageSpell(a.played) || a.played === "poison",
+    )
+      ? launchedKingDeadline("red", this.entities, this.projectiles, this.areas)
+      : Infinity;
     const spellTargets = new Map<CardId, SpellTarget | undefined>(
       affordable
         .filter((a) => a.c.kind === "spell")
@@ -2649,6 +2655,7 @@ export class Battle {
                 this.projectiles,
                 this.areas,
                 a.cost ?? a.c.cost,
+                kingDeadline,
               )
             : areaSpellTarget(
                 a.played,
@@ -2657,6 +2664,7 @@ export class Battle {
                 this.areas,
                 this.projectiles,
                 a.cost ?? a.c.cost,
+                kingDeadline,
               ),
         ]),
     );
@@ -2689,6 +2697,7 @@ export class Battle {
             this.projectiles,
             this.areas,
             deadline,
+            this.entities,
           )
         )
           spellTargets.set(a.id, {

@@ -4,6 +4,7 @@ import type { AreaEffect, Entity, Projectile, Team } from "./engine";
 import poison from "./poison-data.json" with { type: "json" };
 import { supportSpellTarget } from "./support-spell-targeting";
 import { fatalKingWindups } from "./king-spell-race";
+import { createKingSpellRace, kingRacePriority } from "./king-damage";
 import {
   hiddenSpellTarget,
   pendingSpellDamage,
@@ -45,6 +46,7 @@ export function areaSpellTarget(
   areas: readonly AreaEffect[] = [],
   projectiles: readonly Projectile[] = [],
   cost = CARD_MAP[card].cost,
+  kingDeadline = Infinity,
 ): SpellTarget | undefined {
   if (card === "heal" || card === "clone")
     return supportSpellTarget(card, team, entities, areas, projectiles, cost);
@@ -54,6 +56,11 @@ export function areaSpellTarget(
     (e) => e.team === team && e.deploy <= 0 && !hiddenSpellTarget(e),
   );
   const enemies = living.filter((e) => e.team !== team);
+  const enemyKing = enemies.find((e) => e.king);
+  const race =
+    card === "poison" && Number.isFinite(kingDeadline) && enemyKing
+      ? createKingSpellRace(card, team, enemyKing, projectiles, areas, entities)
+      : undefined;
   const radius = CARD_MAP[card].radius!;
   const kingThreats = new Set(
     card === "freeze"
@@ -132,11 +139,16 @@ export function areaSpellTarget(
     }
   } else {
     for (const e of enemies) {
-      if (hiddenSpellTarget(e) || covered(e, "poison", team, areas)) continue;
+      if (
+        hiddenSpellTarget(e) ||
+        (covered(e, "poison", team, areas) && !(e.king && race)) ||
+        (e.king && race && race.baseline < kingDeadline)
+      )
+        continue;
       const reserved = pendingSpellDamage(e, team, projectiles);
       const hp = Math.max(0, e.hp + (e.shield ?? 0) - reserved);
       let shield = Math.max(0, (e.shield ?? 0) - reserved);
-      if (hp <= 1e-6) continue;
+      if (hp <= 1e-6 && !(e.king && race)) continue;
       const fighting = friends.some((friend) => near(e, friend));
       const dwell =
         e.kind !== "troop"
@@ -186,9 +198,22 @@ export function areaSpellTarget(
       penalty = 0,
       king = false,
       protectsKing = false,
+      kingStep = Infinity,
       lethalTower: number | undefined;
     for (const t of targets) {
       if (!spellContains(point, t.entity, radius + t.entity.radius)) continue;
+      if (t.entity.king && race) {
+        const step = race.stepAt(point);
+        if (step < race.baseline) {
+          lethalTower = t.entity.id;
+          king = true;
+          kingStep = step;
+          continue;
+        }
+        value += t.value;
+        penalty += t.penalty;
+        continue;
+      }
       value += t.value;
       penalty += t.penalty;
       protectsKing ||= !!t.protectsKing;
@@ -205,10 +230,14 @@ export function areaSpellTarget(
     // support value. Bound the crowd bonus so that priority cannot invert.
     const score =
       lethalTower !== undefined
-        ? (king ? 10_000 : 40) -
+        ? (king && race
+            ? kingRacePriority(kingStep, kingDeadline)
+            : king
+              ? 10_000
+              : 40) -
           cost -
           poison.duration * 0.1 +
-          value -
+          (king && race ? Math.min(100, value) : value) -
           penalty
         : protectsKing
           ? 9_000 - cost + Math.min(100, value)
