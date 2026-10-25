@@ -296,7 +296,8 @@ function setup() {
   } else if (scenario.startsWith("ai-approach-")) {
     const card = scenario.endsWith("balloon") ? "balloon" : "hog-rider";
     const target = battle.entities.find(e => e.team === "red" && !e.king && e.lane === "left")!;
-    for (const e of unit(card, "blue", 3.5, card === "balloon" ? 20 : 13))
+    const y = scenario === "ai-approach-arrows-hog" ? 11 : card === "balloon" ? 20 : 13;
+    for (const e of unit(card, "blue", 3.5, y))
       Object.assign(e, { hp: card === "balloon" ? Math.min(CARD_MAP.rocket.damage, e.maxHp * 0.8) : CARD_MAP.fireball.damage, deploy: 2.4, target: target.id });
     battle.players.red.hand = [card === "balloon" ? "rocket" : "fireball", "three-musketeers", "three-musketeers", "three-musketeers"];
     battle.players.red.queue = ["three-musketeers", "three-musketeers", "three-musketeers", "three-musketeers"];
@@ -963,7 +964,9 @@ function advance(ticks: number) {
         battle.play("red", 0, 9, 4.5);
       if (sceneSelect.value.startsWith("ai-approach-") && battle.tick === 73) {
         const balloon = sceneSelect.value.endsWith("balloon");
-        cast("rage", "blue", 3.5, balloon ? 20 : 13);
+        const arrows = sceneSelect.value === "ai-approach-arrows-hog";
+        cast("rage", "blue", 3.5, balloon ? 20 : arrows ? 11 : 13);
+        if (arrows) cast("arrows", "red", 3.5, 15);
         if (sceneSelect.value === "ai-approach-crown-hog") {
           const target = battle.entities.find(e => e.team === "red" && !e.king && e.lane === "left")!;
           const hog = battle.entities.find(e => e.card === "hog-rider")!;

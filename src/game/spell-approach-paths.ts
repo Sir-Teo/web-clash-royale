@@ -15,7 +15,7 @@ const distance = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
 const inRange = (body: Entity, target: Entity) =>
   distance(body, target) <= body.range + target.radius + body.radius * 0.35;
 
-/** Stable Hog/Balloon approaches with ordinary homing damage shots only.
+/** Stable Hog/Balloon approaches with ordinary homing shots or plain Arrows.
  * Targets stay fixed; separation, future attacks and target changes are omitted. */
 export function createSpellApproachPaths(
   entities: readonly Entity[],
@@ -28,13 +28,18 @@ export function createSpellApproachPaths(
     projectiles.some(
       (p) =>
         p.remaining > 0 &&
-        (!p.homing ||
-          p.source === 0 ||
-          p.damage <= 0 ||
-          p.splash > 0 ||
+        (p.damage <= 0 ||
           p.stun > 0 ||
           (p.slow ?? 0) > 0 ||
-          (p.knockback ?? 0) > 0),
+          (p.knockback ?? 0) > 0 ||
+          !(
+            (p.homing && p.source !== 0 && p.splash === 0) ||
+            (!p.homing &&
+              p.source === 0 &&
+              p.style === "arrows" &&
+              p.splash > 0 &&
+              p.target === null)
+          )),
     ) ||
     areas.some((a) => a.remaining > 0 && !controls.has(a.card))
   )
@@ -43,6 +48,9 @@ export function createSpellApproachPaths(
   // effect. These side effects are outside the approach path's status clocks.
   // Ignore shields and healing here to keep this rejection conservative.
   const releasedByTarget = new Map<number, number>();
+  const arrows = projectiles.filter(
+    (p) => p.remaining > 0 && p.source === 0 && p.style === "arrows",
+  );
   for (const p of projectiles)
     if (p.remaining > 0 && p.target !== null)
       releasedByTarget.set(
@@ -53,7 +61,15 @@ export function createSpellApproachPaths(
     (e) =>
       e.kind === "troop" &&
       e.hp > 0 &&
-      (releasedByTarget.get(e.id) ?? 0) >= e.hp,
+      (releasedByTarget.get(e.id) ?? 0) +
+        // Another troop's route is unknown here. Any compatible blast may
+        // reach it; this upper bound deliberately omits distance and shields.
+        arrows.reduce(
+          (damage, p) =>
+            damage + (p.team !== e.team && (p.air || !e.air) ? p.damage : 0),
+          0,
+        ) >=
+        e.hp,
   );
   const cache = new Map<
     Entity,
