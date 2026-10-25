@@ -1622,3 +1622,15 @@ All six rendered cases pass across desktop Chromium and phone WebKit. Both viewi
 The isolated full suite passes 1,496 tests across 164 files. TypeScript and the root production build pass. Rendered checks and the full suite run separately.
 
 Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup, scoped assets and all 278 native combat/death/music files. Root production output is restored afterward. The pack remains 921 URLs/894 unique content groups with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.
+
+## Reused native UI image fitting within a frame
+
+Filtered SVG pieces previously fitted their image transform twice, and repeated shape references fitted it again within the same frame. The native UI renderer now keeps a lazy per-render map of polygon image markup. Outer part transforms, clipping/overlap, color filters, binding groups, IDs and text remain independent. The map is discarded after each invocation rather than retaining mutable geometry or paths across frames. The public `textureMatrix` calculation remains unchanged.
+
+Four new checks cover aliased/repeated polygons with independent clipping and tint, changed paths/prefixes/bindings/text, in-place geometry changes between renders and separate datasets sharing shape IDs. The isolated full suite passes 1,500 tests across 165 files; TypeScript and the root production build pass.
+
+An instrumented independent bundle of `22d054c` matches all 17,502 SVG/label hashes across nine retained UI datasets and all 74 card portraits, using two path/binding/overlap option sets. Virtual shape slots receive deterministic retained native shapes; text fitting is disabled in that Node comparison. Texture-fitting calls fall from 191,700 to 125,098 (about 35%). HUD fits fall from 1,568 to 632, and intro fits from 9,532 to 5,276. The comparison measures redundant work rather than browser frame rates; actual widget bindings, font fitting and animations are checked in browsers.
+
+All ten focused browser cases pass across desktop Chromium and phone WebKit, covering native portraits/reveals, elixir costs/spend/full-bar art, ending text/crown states/reduced motion, timer/crown updates and training intro/literal fitted labels. The phone HUD screenshot was inspected. Probe, unit/build and rendered checks run separately.
+
+Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup, scoped assets and all 278 native combat/death/music files. Root production output is restored afterward. The pack remains 921 URLs/894 unique content groups with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.

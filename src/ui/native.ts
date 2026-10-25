@@ -129,6 +129,10 @@ export function renderNativeFrame(
   },
 ) {
   const labels: string[] = [];
+  // Shapes can repeat under different part transforms and color filters.
+  // Share only their image markup within this render; callers may resize or
+  // replace native shapes before the next frame.
+  let images: Map<Shape, string> | undefined;
   const content = data.clips[name].frames[frame]
     .map((part, index) => {
       if (part.color[3] === 0 || options.omit?.includes(part.binding!))
@@ -160,13 +164,17 @@ export function renderNativeFrame(
             return `<polygon points="${points}" fill="${color(polygon.solid, part.color)}" opacity="${part.color[3] / 255}"/>`;
           const clip = `${options.prefix}-shape-${index}-${p}`,
             filter = `${options.prefix}-tint-${index}-${p}`;
-          const image = `<image href="${options.path}/${polygon.file}" width="${polygon.width}" height="${polygon.height}" transform="${matrix(textureMatrix(polygon))}"/>`;
+          let image = images?.get(polygon);
+          if (image === undefined) {
+            image = `<image href="${options.path}/${polygon.file}" width="${polygon.width}" height="${polygon.height}" transform="${matrix(textureMatrix(polygon))}"/>`;
+            (images ??= new Map()).set(polygon, image);
+          }
           if (
             part.color.slice(0, 3).every((n) => n === 0) &&
             part.color.slice(4).every((n) => n === 255)
           )
             return `<defs><clipPath id="${clip}"><polygon points="${points}"/></clipPath></defs><g clip-path="url(#${clip})" opacity="${part.color[3] / 255}">${image}</g>`;
-          return `<defs><clipPath id="${clip}"><polygon points="${points}"/></clipPath><filter id="${filter}" color-interpolation-filters="sRGB"><feComponentTransfer>${["R", "G", "B"].map((channel, i) => `<feFunc${channel} type="linear" slope="${part.color[4 + i] / 255}" intercept="${part.color[i] / 255}"/>`).join("")}<feFuncA type="linear" slope="${part.color[3] / 255}"/></feComponentTransfer></filter></defs><g clip-path="url(#${clip})" filter="url(#${filter})"><image href="${options.path}/${polygon.file}" width="${polygon.width}" height="${polygon.height}" transform="${matrix(textureMatrix(polygon))}"/></g>`;
+          return `<defs><clipPath id="${clip}"><polygon points="${points}"/></clipPath><filter id="${filter}" color-interpolation-filters="sRGB"><feComponentTransfer>${["R", "G", "B"].map((channel, i) => `<feFunc${channel} type="linear" slope="${part.color[4 + i] / 255}" intercept="${part.color[i] / 255}"/>`).join("")}<feFuncA type="linear" slope="${part.color[3] / 255}"/></feComponentTransfer></filter></defs><g clip-path="url(#${clip})" filter="url(#${filter})">${image}</g>`;
         })
         .join("");
       return `<g transform="${matrix(part.matrix)}">${pieces}</g>`;
