@@ -8,7 +8,6 @@ import {
   towerDamageForecast,
 } from "./king-damage";
 import type { MatchFinisher } from "./match-finisher";
-import type { DamagePacket } from "./projectile-impacts";
 import lightning from "./lightning-data.json" with { type: "json" };
 import { createLightningPlan } from "./lightning-strikes";
 import { createSpellDamageReservation } from "./spell-reservations";
@@ -36,7 +35,13 @@ export function lightningSpellTarget(
       .filter((e) => e.kind === "tower")
       .map((e) => [e.id, towerDamageForecast(e, projectiles, areas, entities)]),
   );
-  const strikesAt = createLightningPlan(team, enemies);
+  const strikesAt = createLightningPlan(
+    team,
+    entities,
+    undefined,
+    projectiles,
+    areas,
+  );
   const reservedDamage = createSpellDamageReservation(
     team,
     entities,
@@ -49,19 +54,36 @@ export function lightningSpellTarget(
       penalty = 0,
       kingStep = Infinity;
     let lethalTower: Entity | undefined;
-    const packets = new Map<number, DamagePacket[]>();
-    for (const { entity: e, step } of strikesAt(point)) {
+    const projection = strikesAt.project(point);
+    const packets = projection.packets;
+    const deaths = new Map<number, { baseline: number; proposed: number }>();
+    for (const e of enemies) {
+      if (e.kind !== "tower") continue;
+      const forecast = towers.get(e.id)!;
+      const baseline = kingDeathStep(e, forecast.baseline);
+      const proposed = kingDeathStep(e, [
+        ...forecast.withoutLightning,
+        ...(packets.get(e.id) ?? []),
+      ]);
+      deaths.set(e.id, { baseline, proposed });
+      if (proposed < baseline && (!lethalTower || e.king)) {
+        lethalTower = e;
+        kingStep = proposed;
+      }
+    }
+    for (const { entity: e } of projection.strikes) {
       // A live friendly cloud already covers this body. Keep it in the
       // selection order, but do not count its damage as new value again.
       if (
         e.dash ||
-        areas.some(
-          (a) =>
-            a.card === "lightning" &&
-            a.team === team &&
-            a.remaining > 0 &&
-            spellContains(a, e, a.radius + e.radius),
-        )
+        (e.kind !== "tower" &&
+          areas.some(
+            (a) =>
+              a.card === "lightning" &&
+              a.team === team &&
+              a.remaining > 0 &&
+              spellContains(a, e, a.radius + e.radius),
+          ))
       )
         continue;
       const packet =
@@ -69,23 +91,8 @@ export function lightningSpellTarget(
         (e.kind === "tower" ? lightning.crownTowerDamageFraction : 1);
       const shield = e.shield ?? 0;
       if (e.kind === "tower") {
-        const forecast = towers.get(e.id)!;
-        const hit: DamagePacket = {
-          step,
-          damage: packet,
-          phase: -1,
-          born: 0,
-          order: areas.length,
-        };
-        packets.set(e.id, [hit]);
-        const baseline = kingDeathStep(e, forecast.baseline);
-        const death = kingDeathStep(e, [...forecast.baseline, hit]);
-        if (death < baseline) {
-          if (!lethalTower || e.king) {
-            lethalTower = e;
-            kingStep = death;
-          }
-        } else if (!Number.isFinite(baseline)) {
+        const { baseline, proposed } = deaths.get(e.id)!;
+        if (proposed >= baseline && !Number.isFinite(baseline)) {
           value +=
             (Math.min(
               shield > 0 ? Math.min(shield, packet) : packet,
@@ -112,7 +119,7 @@ export function lightningSpellTarget(
           defense;
       }
     }
-    const match = finisher?.evaluateDamage(packets, cost, value);
+    const match = finisher?.evaluateDamage(packets, cost, value, true);
     // Once the King falls, later troop strikes add no winning value. Prefer
     // an earlier King pulse over incidental damage elsewhere in the circle.
     const kingBonus = lethalTower?.king

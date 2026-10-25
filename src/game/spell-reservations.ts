@@ -16,7 +16,7 @@ export function createSpellDamageReservation(
 ) {
   const shots = projectiles.filter((p) => p.team === team && p.source === 0);
   const friendlyAreas = areas.filter((a) => a.team === team);
-  const strikes = lightningDamageMap(entities, friendlyAreas);
+  const strikes = lightningDamageMap(entities, areas, projectiles);
   const cache = new Map<Entity, number>();
   return (entity: Entity): number => {
     if (

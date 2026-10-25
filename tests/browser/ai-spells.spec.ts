@@ -335,3 +335,50 @@ test("AI holds its newly drawn Fireball while Lightning finishes the tower", asy
   });
   expect(errors).toEqual([]);
 });
+
+test("AI Lightning predicts the health order after a Fireball clears its blockers", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/tests/fixtures/combat.html?scene=ai-lightning-health");
+  await expect(page.locator("#status")).toContainText(
+    `${expectedEffects} effects`,
+    { timeout: 60000 },
+  );
+  const output = page.locator("#destruction");
+  const state = async () =>
+    JSON.parse((await output.getAttribute("data-ai-areas"))!);
+  const actions = async () =>
+    JSON.parse((await output.getAttribute("data-ai-defense"))!).actions;
+  const original = await actions();
+  expect(original).toHaveLength(1);
+  expect(original[0].card).toBe("fireball");
+  expect((await state()).entities).toHaveLength(3);
+  for (let i = 0; i < 2; i++) {
+    const before = (await state()).time;
+    await page.locator("#second").click();
+    await expect
+      .poll(async () => (await state()).time)
+      .toBeGreaterThan(before + 0.99);
+  }
+  expect(await actions()).toEqual(original);
+  await page.locator("#second").click();
+  await expect.poll(async () => (await state()).winner).toBe("red");
+  expect((await actions()).map((a: any) => a.card)).toEqual([
+    "fireball",
+    "lightning",
+  ]);
+  expect((await state()).reason).toBe("King Tower destroyed");
+  expect((await state()).crowns.red).toBe(3);
+  expect((await state()).entities).toEqual([]);
+  expect(
+    (await state()).kings.find((e: any) => e.team === "blue")?.hp ?? 0,
+  ).toBe(0);
+  expect((await state()).time).toBeLessThan(3);
+  await page.screenshot({
+    path: info.outputPath("ai-lightning-health.png"),
+    fullPage: true,
+  });
+  expect(errors).toEqual([]);
+});

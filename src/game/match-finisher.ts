@@ -134,6 +134,16 @@ export function createMatchFinisher(
       matchDecisionStep: proposal?.step ?? Infinity,
     };
   };
+  const damageCache = [
+    new WeakMap<
+      ReadonlyMap<number, readonly DamagePacket[]>,
+      Ending | undefined
+    >(),
+    new WeakMap<
+      ReadonlyMap<number, readonly DamagePacket[]>,
+      Ending | undefined
+    >(),
+  ];
   return {
     baseline,
     outcomeAt,
@@ -141,21 +151,24 @@ export function createMatchFinisher(
       packets: ReadonlyMap<number, readonly DamagePacket[]>,
       cost: number,
       value: number,
+      replaceEnemyLightning = false,
     ) {
-      return assess(
-        ending(
+      const cache = damageCache[replaceEnemyLightning ? 1 : 0];
+      let result = cache.get(packets);
+      if (!cache.has(packets)) {
+        result = ending(
           towers.map((t) => {
+            const baseline =
+              replaceEnemyLightning && t.entity.team !== team
+                ? t.forecast.withoutLightning
+                : t.forecast.baseline;
             const hits = packets.get(t.entity.id);
-            return t.state(
-              hits?.length
-                ? [...t.forecast.baseline, ...hits]
-                : t.forecast.baseline,
-            );
+            return t.state(hits?.length ? [...baseline, ...hits] : baseline);
           }),
-        ),
-        cost,
-        value,
-      );
+        );
+        cache.set(packets, result);
+      }
+      return assess(result, cost, value);
     },
     evaluate(card: CardId, point: Point, cost: number, value: number) {
       return assess(outcomeAt(card, point), cost, value);

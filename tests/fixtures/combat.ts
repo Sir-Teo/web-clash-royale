@@ -258,6 +258,15 @@ function setup() {
       battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
       battle.players.red.elixir = 3;
     }
+  } else if (scenario === "ai-lightning-health") {
+    const king = battle.entities.find((e) => e.team === "blue" && e.king)!;
+    king.hp = 400;
+    for (let i = 0; i < 3; i++)
+      for (const e of unit("giant", "blue", king.x, king.y))
+        Object.assign(e, { hp: 600, active: false, speed: 0 });
+    cast("fireball", "red", king.x, king.y);
+    battle.players.red.hand = ["lightning", "pekka", "pekka", "pekka"];
+    battle.players.red.elixir = 6;
   } else if (scenario === "ai-lightning-followup") {
     battle.entities.find((e) => e.team === "blue" && !e.king)!.hp = 100;
     for (const [card, x, y] of [["witch", 3, 25], ["wizard", 5, 25]] as [CardId, number, number][])

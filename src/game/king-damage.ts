@@ -1,5 +1,5 @@
 import { CARD_MAP, type CardId } from "./cards";
-import { COMBAT_STEP, directSpellFlight } from "./combat";
+import { directSpellFlight } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import {
   projectileDamagePackets,
@@ -9,62 +9,9 @@ import {
 } from "./projectile-impacts";
 import poison from "./poison-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
-import lightning from "./lightning-data.json" with { type: "json" };
-import { lightningStrikes, lightningDamageMap } from "./lightning-strikes";
-
-export function poisonDamagePackets(
-  target: Entity,
-  areas: readonly AreaEffect[],
-): DamagePacket[] {
-  const clouds = areas
-    .filter(
-      (a) =>
-        a.card === "poison" &&
-        a.team !== target.team &&
-        a.remaining > 0 &&
-        Math.hypot(a.x - target.x, a.y - target.y) < a.radius + target.radius,
-    )
-    .map((a) => ({ ...a }));
-  let status = target.poison ? { ...target.poison } : undefined;
-  const horizon = Math.max(
-    status?.remaining ?? 0,
-    ...clouds.map((a) => a.remaining + poison.buffDuration),
-  );
-  const packets: DamagePacket[] = [];
-  for (
-    let step = 1;
-    step <= Math.ceil((horizon + COMBAT_STEP) / COMBAT_STEP);
-    step++
-  ) {
-    for (const cloud of clouds) {
-      if (cloud.remaining <= 0) continue;
-      if (cloud.duration - cloud.remaining + 1e-8 >= (cloud.hitAt ?? 0)) {
-        cloud.hitAt = (cloud.hitAt ?? 0) + poison.areaHitInterval;
-        status ??= { remaining: 0, elapsed: 0 };
-        status.remaining = poison.buffDuration;
-      }
-      cloud.remaining = Math.max(0, cloud.remaining - COMBAT_STEP);
-      if (cloud.remaining < 1e-8) cloud.remaining = 0;
-    }
-    if (!status) continue;
-    status.remaining = Math.max(0, status.remaining - COMBAT_STEP);
-    status.elapsed += COMBAT_STEP;
-    if (status.elapsed + 1e-8 >= poison.damageInterval) {
-      status.elapsed -= poison.damageInterval;
-      packets.push({
-        step,
-        damage:
-          CARD_MAP.poison.damage *
-          (target.kind === "tower" ? poison.crownTowerDamageFraction : 1),
-        phase: 0,
-        born: 0,
-        order: -1,
-      });
-    }
-    if (status.remaining < 1e-8) status = undefined;
-  }
-  return packets;
-}
+import { createLightningPlan, lightningDamageMap } from "./lightning-strikes";
+import { poisonDamagePackets } from "./status-health";
+export { poisonDamagePackets } from "./status-health";
 
 export function kingDeathStep(
   target: Entity,
@@ -116,32 +63,47 @@ export function towerDamageForecast(
   const shots = projectileDamagePackets(target, projectiles, entities);
   const currentPoison = poisonDamagePackets(target, areas);
   const currentLightning = entities
-    ? (lightningDamageMap(entities, areas).get(target.id) ?? [])
+    ? (lightningDamageMap(entities, areas, projectiles).get(target.id) ?? [])
     : [];
-  const baseline = [...shots, ...currentPoison, ...currentLightning];
+  const withoutLightning = [...shots, ...currentPoison];
+  const baseline = [...withoutLightning, ...currentLightning];
   const cache = new Map<string, DamagePacket[]>();
+  const lightningCache = new Map<readonly DamagePacket[], DamagePacket[]>();
+  const empty: readonly DamagePacket[] = [];
+  let lightningPlan: ReturnType<typeof createLightningPlan> | undefined;
   return {
     baseline,
+    withoutLightning,
     withSpell(card: CardId, team: Team, point: Point): readonly DamagePacket[] {
+      if (team === target.team) return baseline;
+      if (card === "lightning") {
+        if (!entities) return baseline;
+        lightningPlan ??= createLightningPlan(
+          team,
+          entities,
+          undefined,
+          projectiles,
+          areas,
+        );
+        const hits =
+          lightningPlan.project(point).packets.get(target.id) ?? empty;
+        let result = lightningCache.get(hits);
+        if (!result) {
+          result = [...withoutLightning, ...hits];
+          lightningCache.set(hits, result);
+        }
+        return result;
+      }
       const radius = CARD_MAP[card].radius ?? 0;
       if (
-        team === target.team ||
         Math.hypot(point.x - target.x, point.y - target.y) >=
-          radius + target.radius
+        radius + target.radius
       )
         return baseline;
-      const strike =
-        card === "lightning" && entities
-          ? lightningStrikes(team, point, entities).find(
-              (hit) => hit.entity.id === target.id,
-            )
-          : undefined;
-      if (card === "lightning" && !strike) return baseline;
       const step =
-        strike?.step ??
-        (card === "poison"
+        card === "poison"
           ? 0
-          : impactSteps(directSpellFlight(card, team, point).duration));
+          : impactSteps(directSpellFlight(card, team, point).duration);
       const key = `${card}:${step}`;
       const known = cache.get(key);
       if (known !== undefined) return known;
@@ -166,14 +128,10 @@ export function towerDamageForecast(
                 step,
                 damage:
                   CARD_MAP[card].damage *
-                  (card === "rocket"
-                    ? rocket.crownTowerDamageFraction
-                    : card === "lightning"
-                      ? lightning.crownTowerDamageFraction
-                      : 0.4),
-                phase: card === "lightning" ? -1 : 1,
+                  (card === "rocket" ? rocket.crownTowerDamageFraction : 0.4),
+                phase: 1,
                 born: 0,
-                order: card === "lightning" ? areas.length : projectiles.length,
+                order: projectiles.length,
               },
             ];
       const result = [...shots, ...currentLightning, ...packets];
