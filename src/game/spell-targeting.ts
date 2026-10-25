@@ -113,11 +113,20 @@ export function damageSpellTarget(
     !finisher && Number.isFinite(kingDeadline) && enemyKing
       ? createKingSpellRace(card, team, enemyKing, projectiles, areas, entities)
       : undefined;
+  const castStep = (point: Point) =>
+    impactSteps(directSpellFlight(card, team, point).duration);
+  // This corner bounds the flight time of every legal aim point. Paths cover
+  // the whole flight, including a Rocket arriving after the pull expires.
+  const pathSteps = castStep({ x: 0.5, y: team === "red" ? 31.3 : 0.7 }) + 3;
+  const motionPath =
+    createSpellPullPaths(areas, pathSteps) ??
+    createSpellApproachPaths(entities, areas, projectiles, pathSteps);
   const reservedDamage = createSpellDamageReservation(
     team,
     entities,
     projectiles,
     areas,
+    motionPath,
   );
   const targets = enemies
     .map((entity) => {
@@ -140,27 +149,19 @@ export function damageSpellTarget(
     targets.map((t) => t.entity),
     radius,
   );
-  const castStep = (point: Point) =>
-    impactSteps(directSpellFlight(card, team, point).duration);
-  // This corner bounds the flight time of every legal aim point. Paths cover
-  // the whole flight, including a Rocket arriving after the pull expires.
-  const pathSteps = castStep({ x: 0.5, y: team === "red" ? 31.3 : 0.7 }) + 3;
-  const pullPath =
-    createSpellPullPaths(areas, pathSteps) ??
-    createSpellApproachPaths(entities, areas, projectiles, pathSteps);
   const motions = new Map<Entity, readonly Point[]>();
   const lives = new Map<Entity, readonly WindupHealthFrame[]>();
-  const health = pullPath
+  const health = motionPath
     ? createWindupHealth(projectiles, entities)
     : undefined;
-  if (pullPath)
+  if (motionPath)
     for (const { entity } of targets) {
-      const path = pullPath(entity);
+      const path = motionPath(entity);
       if (path) {
         motions.set(entity, path);
         lives.set(
           entity,
-          health!.survival(entity, pullPath.frames(entity)!, areas),
+          health!.survival(entity, motionPath.frames(entity)!, areas),
         );
       }
     }
@@ -198,6 +199,8 @@ export function damageSpellTarget(
     if (e.kind === "tower")
       return {
         entity: e,
+        path: motions.get(e),
+        survival: lives.get(e),
         radius: radius + e.radius,
         value: hp <= damage + 1e-6 ? 0 : (Math.min(damage, hp) / e.maxHp) * 2,
         penalty: hp > damage + 1e-6 && e.king && !e.active ? cost + 8 : 0,
@@ -208,6 +211,8 @@ export function damageSpellTarget(
     const defense = (team === "red" ? e.y < 15 : e.y > 17) ? 1.2 : 1;
     return {
       entity: e,
+      path: motions.get(e),
+      survival: lives.get(e),
       radius: radius + e.radius,
       value:
         bodyCost *
@@ -228,10 +233,10 @@ export function damageSpellTarget(
       lethalTower: Entity | undefined;
     const step = motions.size ? castStep(point) : 0;
     for (const target of evaluated) {
-      const position = motions.get(target.entity)?.[step - 1] ?? target.entity;
+      const position = target.path?.[step - 1] ?? target.entity;
       if (
         !spellContains(point, position, target.radius) ||
-        lives.get(target.entity)?.[step - 1]?.afterAlive === false
+        target.survival?.[step - 1]?.afterAlive === false
       )
         continue;
       if (target.entity.king && race) {

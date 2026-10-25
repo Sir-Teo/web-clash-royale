@@ -1,4 +1,4 @@
-import type { AreaEffect, Entity, Projectile, Team } from "./engine";
+import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import { poisonDamagePackets } from "./king-damage";
 import { currentLightningDamage } from "./windup-health";
 import {
@@ -17,6 +17,7 @@ export function createSpellDamageReservation(
   entities: readonly Entity[],
   projectiles: readonly Projectile[] = [],
   areas: readonly AreaEffect[] = [],
+  preferredPath?: (entity: Entity) => readonly Point[] | undefined,
 ) {
   const shots = projectiles.filter(
     (p) => p.team === team && p.source === 0 && p.damage > 0 && p.remaining > 0,
@@ -57,8 +58,16 @@ export function createSpellDamageReservation(
       return 0;
     const known = cache.get(entity);
     if (known !== undefined) return known;
+    // A caller's longer, validated path has the same prefix. Short paths and
+    // destinations that only survive the released spell keep this context's
+    // independent horizon rather than losing a valid earlier reservation.
+    const preferred = shots.length ? preferredPath?.(entity) : undefined;
+    const path =
+      preferred && preferred.length >= horizon
+        ? preferred
+        : motionPath?.(entity);
     const packets = [
-      ...projectileDamagePackets(entity, shots, entities, motionPath?.(entity)),
+      ...projectileDamagePackets(entity, shots, entities, path),
       // Moving troops can leave a cloud. Reserve their already applied status,
       // while structures keep the stationary, non-stacking cloud timeline.
       ...poisonDamagePackets(
