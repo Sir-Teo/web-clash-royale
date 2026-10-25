@@ -9,8 +9,9 @@ interface Ending {
   winner: Team | "draw";
   step: number;
 }
+export const MATCH_DAMAGE_HORIZON = poison.duration + poison.buffDuration;
 
-/** Overtime endings from released damage and the proposed spell. Troop
+/** Nearby match endings from released damage and the proposed spell. Troop
  * movement and future attacks are deliberately outside this forecast. */
 export function createMatchFinisher(
   team: Team,
@@ -19,12 +20,11 @@ export function createMatchFinisher(
   areas: readonly AreaEffect[],
   crowns: Readonly<Record<Team, number>>,
   remaining: number,
+  overtime = true,
 ) {
   const enemy = team === "red" ? "blue" : "red";
   // Include the final clock only when it falls within the damage horizon.
-  const horizon = Math.ceil(
-    (poison.duration + poison.buffDuration) / COMBAT_STEP,
-  );
+  const horizon = Math.ceil(MATCH_DAMAGE_HORIZON / COMBAT_STEP);
   const clock = Math.max(1, Math.ceil((remaining - 1e-8) / COMBAT_STEP));
   let nextId = 0;
   const towers = entities
@@ -61,7 +61,7 @@ export function createMatchFinisher(
     const events = new Set(
       states.map((s) => s.death).filter((s) => s <= horizon),
     );
-    if (crowns.blue !== crowns.red) events.add(1);
+    if (overtime && crowns.blue !== crowns.red) events.add(1);
     if (clock <= horizon) events.add(clock);
     let result: Ending | undefined;
     for (const step of [...events].sort((a, b) => a - b)) {
@@ -84,11 +84,11 @@ export function createMatchFinisher(
         if (!t.entity.king && states[i].death <= step)
           score[t.entity.team === "red" ? "blue" : "red"]++;
       });
-      if (score.blue !== score.red) {
+      if ((overtime || step >= clock) && score.blue !== score.red) {
         result = { winner: score.blue > score.red ? "blue" : "red", step };
         break;
       }
-      if (step === clock) {
+      if (overtime && step === clock) {
         const lowest = (side: Team) =>
           Math.min(
             ...towers.flatMap((t, i) =>

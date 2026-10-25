@@ -12,7 +12,7 @@ import { meleeInterceptTarget } from "./melee-intercept";
 import { fatalKingWindups, finishesKingBefore } from "./king-spell-race";
 import { attackFlight } from "./attack-flight";
 import { launchedKingDeadline } from "./king-damage";
-import { createMatchFinisher } from "./match-finisher";
+import { createMatchFinisher, MATCH_DAMAGE_HORIZON } from "./match-finisher";
 import {
   combatTraits,
   COMBAT_STEP,
@@ -2644,7 +2644,7 @@ export class Battle {
       ? launchedKingDeadline("red", this.entities, this.projectiles, this.areas)
       : Infinity;
     const finisher =
-      this.time >= 180 &&
+      (this.time >= 180 || this.remaining <= MATCH_DAMAGE_HORIZON) &&
       affordable.some((a) => isDamageSpell(a.played) || a.played === "poison")
         ? createMatchFinisher(
             "red",
@@ -2653,6 +2653,7 @@ export class Battle {
             this.areas,
             { blue: this.players.blue.crowns, red: this.players.red.crowns },
             this.remaining,
+            this.time >= 180,
           )
         : undefined;
     const spellTargets = new Map<CardId, SpellTarget | undefined>(

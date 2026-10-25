@@ -183,3 +183,54 @@ for (const scene of ["ai-overtime", "ai-tiebreaker"])
     });
     expect(errors).toEqual([]);
   });
+
+for (const scene of ["ai-regulation", "ai-regulation-tie"])
+  test(`${scene}: AI uses the regulation clock to choose its finisher`, async ({
+    page,
+  }, info) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto(`/tests/fixtures/combat.html?scene=${scene}`);
+    await expect(page.locator("#status")).toContainText(
+      `${expectedEffects} effects`,
+      { timeout: 60000 },
+    );
+    const output = page.locator("#destruction");
+    const state = async () =>
+      JSON.parse((await output.getAttribute("data-ai-areas"))!);
+    const spells = async () =>
+      JSON.parse((await output.getAttribute("data-ai-spells"))!);
+    for (let i = 0; i < 2; i++) {
+      const before = (await state()).time;
+      await page.locator("#second").click();
+      await expect
+        .poll(async () => (await state()).time)
+        .toBeGreaterThan(before + 0.99);
+    }
+    expect((await spells()).actions).toEqual([]);
+    await page.locator("#second").click();
+    await expect.poll(async () => (await spells()).actions.length).toBe(1);
+    expect((await spells()).actions[0].card).toBe("zap");
+    expect((await state()).winner).toBeNull();
+    expect((await state()).crowns.red).toBe(1);
+    await page.locator("#second").click();
+    await expect.poll(async () => (await state()).phase).toBe("overtime");
+    const end = await state();
+    if (scene === "ai-regulation") {
+      expect(end.winner).toBe("red");
+      expect(end.reason).toBe("More crowns");
+      expect(end.time).toBe(180);
+      expect(end.crowns).toEqual({ blue: 0, red: 1 });
+    } else {
+      expect(end.winner).toBeNull();
+      expect(end.time).toBe(180.5);
+      expect(end.crowns).toEqual({ blue: 1, red: 1 });
+    }
+    expect((await spells()).actions).toHaveLength(1);
+    expect(end.kings.find((e: any) => e.team === "red").hp).toBe(100);
+    await page.screenshot({
+      path: info.outputPath(`${scene}.png`),
+      fullPage: true,
+    });
+    expect(errors).toEqual([]);
+  });

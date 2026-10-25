@@ -213,7 +213,7 @@ export function damageSpellTarget(
       if (!finisher && target.lethal && (!lethalTower || target.entity.king))
         lethalTower = target.entity;
     }
-    // Overtime uses the match forecast exclusively for lethal priority. A
+    // Near a match deadline, the forecast exclusively sets lethal priority. A
     // queued earlier victory must not fall back to the regulation kill score.
     const match = finisher?.evaluate(card, point, cost, value);
     const score =

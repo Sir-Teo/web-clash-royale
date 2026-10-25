@@ -258,6 +258,18 @@ function setup() {
       battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
       battle.players.red.elixir = 3;
     }
+  } else if (scenario === "ai-regulation" || scenario === "ai-regulation-tie") {
+    battle.tick = 5295;
+    battle.entities.find((e) => e.team === "red" && e.king)!.hp = 100;
+    battle.entities.find((e) => e.team === "blue" && e.king)!.hp = 300;
+    battle.entities.find((e) => e.team === "blue" && !e.king)!.hp = 50;
+    if (scenario === "ai-regulation-tie") {
+      const removed = battle.entities.find((e) => e.team === "red" && !e.king)!;
+      battle.entities = battle.entities.filter((e) => e.id !== removed.id);
+      battle.players.blue.crowns = 1;
+    }
+    battle.players.red.hand = ["rocket", "zap", "pekka", "pekka"];
+    battle.players.red.elixir = 6;
   } else if (
     scenario === "ai-overtime" ||
     scenario === "ai-tiebreaker" ||
@@ -1253,6 +1265,8 @@ function render(now: number) {
       winner: battle.winner,
       time: battle.time,
       reason: battle.reason,
+      phase: battle.phase,
+      crowns: { blue: battle.players.blue.crowns, red: battle.players.red.crowns },
       entities: battle.entities
         .filter((e) => e.kind !== "tower")
         .map((e) => ({
