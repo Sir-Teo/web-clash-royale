@@ -1,3 +1,4 @@
+import { advanceMovement } from "./movement";
 import { isPlayableCard } from "./playable-cards";
 import { LOCAL_REPLAY_CARDS } from "./replay-family";
 import { Battle as LegacyLocalBattle, type EngineOptions as LegacyLocalOptions } from "./legacy-local-engine";
@@ -2349,41 +2350,7 @@ export class Battle {
     e.move = 0;
   }
   private moveToward(e: Entity, target: Entity) {
-    let x = target.x,
-      y = target.y;
-    const crossing =
-      (e.y < 14.8 && target.y > 16) ||
-      (e.y > 17.2 && target.y < 16) ||
-      (e.y >= 14.8 && e.y <= 17.2);
-    if (crossing && !e.air && e.card !== "hog-rider") {
-      const bridge = e.x < 9 ? 4 : 14;
-      x = bridge;
-      y =
-        target.y < e.y
-          ? e.y > 17.2
-            ? 17.15
-            : 14.6
-          : e.y < 14.8
-            ? 14.85
-            : 17.4;
-    }
-    const dx = x - e.x,
-      dy = y - e.y,
-      d = Math.hypot(dx, dy);
-    if (d < 0.001) return;
-    const speed =
-      e.speed *
-      (e.rage ? rage.speedMultiplier : 1) *
-      (e.slow ? iceWizard.speedMultiplier : 1) *
-      (e.card === "prince" && e.move > 2.3 ? 1.8 :
-        e.card === "dark-prince" && e.move > darkPrince.chargeRange
-          ? darkPrince.chargeSpeedMultiplier :
-        e.card === "battle-ram" && e.move > battleRam.chargeRange
-          ? battleRam.chargeSpeedMultiplier : 1);
-    const move = Math.min(d, speed * STEP);
-    e.x = clamp(e.x + (dx / d) * move, 0.5, 17.5);
-    e.y = clamp(e.y + (dy / d) * move, 0.6, 31.4);
-    e.move += STEP;
+    advanceMovement(e, target);
   }
   private separate() {
     const units = this.entities.filter(

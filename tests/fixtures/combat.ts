@@ -3,7 +3,7 @@ import { Arena } from "../../src/render/arena";
 import { Battle, STEP } from "../../src/game/engine";
 import type { Entity, Team } from "../../src/game/engine";
 import type { CardId } from "../../src/game/cards";
-import { CARDS, STARTER_DECK } from "../../src/game/cards";
+import { CARD_MAP, CARDS, STARTER_DECK } from "../../src/game/cards";
 const sceneSelect = document.querySelector<HTMLSelectElement>("#scenario")!;
 const initialScene = new URL(location.href).searchParams.get("scene");
 if (
@@ -292,6 +292,14 @@ function setup() {
     battle.players.red.hand = [scenario.endsWith("freeze") ? "freeze" : "tornado", "pekka", "pekka", "pekka"];
     battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
     battle.players.red.elixir = 4;
+    battle.actions = [];
+  } else if (scenario.startsWith("ai-approach-")) {
+    const card = scenario.endsWith("balloon") ? "balloon" : "hog-rider";
+    const target = battle.entities.find(e => e.team === "red" && !e.king && e.lane === "left")!;
+    for (const e of unit(card, "blue", 3.5, card === "balloon" ? 20 : 13))
+      Object.assign(e, { hp: card === "balloon" ? Math.min(CARD_MAP.rocket.damage, e.maxHp * 0.8) : CARD_MAP.fireball.damage, deploy: 2.4, target: target.id });
+    battle.players.red.hand = [card === "balloon" ? "rocket" : "fireball", "three-musketeers", "three-musketeers", "three-musketeers"];
+    battle.players.red.queue = ["three-musketeers", "three-musketeers", "three-musketeers", "three-musketeers"];
     battle.actions = [];
   } else if (scenario.startsWith("ai-pulled-aim-")) {
     const rest: CardId = scenario.includes("doomed") ? "three-musketeers" : "pekka";
@@ -953,6 +961,13 @@ function advance(ticks: number) {
     else {
       if (sceneSelect.value.startsWith("ai-health-") && battle.tick === 72)
         battle.play("red", 0, 9, 4.5);
+      if (sceneSelect.value.startsWith("ai-approach-") && battle.tick === 73) {
+        const balloon = sceneSelect.value.endsWith("balloon");
+        cast("rage", "blue", 3.5, balloon ? 20 : 13);
+        battle.players.red.hand = [balloon ? "rocket" : "fireball", "three-musketeers", "three-musketeers", "three-musketeers"];
+        battle.players.red.queue = ["three-musketeers", "three-musketeers", "three-musketeers", "three-musketeers"];
+        battle.players.red.elixir = balloon ? 6 : 4;
+      }
       if (sceneSelect.value.startsWith("ai-pulled-aim-") && battle.tick === 73) {
         cast("tornado", "red", 10, 20);
         const card = sceneSelect.value.endsWith("rocket") ? "rocket" : "fireball";

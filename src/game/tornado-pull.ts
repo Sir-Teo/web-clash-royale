@@ -71,6 +71,7 @@ export function projectAreaFrames(
   body: Entity,
   areas: readonly AreaEffect[],
   steps: number,
+  advance?: (frame: WindupFrame) => Point,
 ): WindupFrame[] {
   const clouds = areas.map((a) => ({ ...a }));
   let position = { x: body.x, y: body.y };
@@ -123,7 +124,9 @@ export function projectAreaFrames(
     boost = Math.max(0, boost - COMBAT_STEP);
     slow = Math.max(0, slow - COMBAT_STEP);
     stun = Math.max(0, stun - COMBAT_STEP);
-    frames.push({ position, areaPositions, boost, slow, stun });
+    const frame = { position, areaPositions, boost, slow, stun };
+    if (advance) frame.position = position = advance(frame);
+    frames.push(frame);
   }
   return frames;
 }

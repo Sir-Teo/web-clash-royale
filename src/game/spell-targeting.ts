@@ -4,6 +4,7 @@ import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import { directSpellFlight } from "./combat";
 import { impactSteps } from "./projectile-impacts";
 import { createSpellPullPaths } from "./spell-pull-paths";
+import { createSpellApproachPaths } from "./spell-approach-paths";
 import { createWindupHealth } from "./windup-health";
 import type { WindupHealthFrame } from "./tornado-pull";
 import rocket from "./rocket-data.json" with { type: "json" };
@@ -143,10 +144,10 @@ export function damageSpellTarget(
     impactSteps(directSpellFlight(card, team, point).duration);
   // This corner bounds the flight time of every legal aim point. Paths cover
   // the whole flight, including a Rocket arriving after the pull expires.
-  const pullPath = createSpellPullPaths(
-    areas,
-    castStep({ x: 0.5, y: team === "red" ? 31.3 : 0.7 }) + 3,
-  );
+  const pathSteps = castStep({ x: 0.5, y: team === "red" ? 31.3 : 0.7 }) + 3;
+  const pullPath =
+    createSpellPullPaths(areas, pathSteps) ??
+    createSpellApproachPaths(entities, areas, projectiles, pathSteps);
   const motions = new Map<Entity, readonly Point[]>();
   const lives = new Map<Entity, readonly WindupHealthFrame[]>();
   const health = pullPath
