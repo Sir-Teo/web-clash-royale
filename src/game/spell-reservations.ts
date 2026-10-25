@@ -3,8 +3,11 @@ import { poisonDamagePackets } from "./king-damage";
 import { currentLightningDamage } from "./windup-health";
 import {
   damagePacketOrder,
+  impactSteps,
   projectileDamagePackets,
 } from "./projectile-impacts";
+import { projectAreaFrames } from "./tornado-pull";
+import log from "./log-data.json" with { type: "json" };
 
 /** One read-only reservation context per decision. Lightning selects against
  * the whole board once; per-body packet/shield work is cached on first use. */
@@ -14,8 +17,32 @@ export function createSpellDamageReservation(
   projectiles: readonly Projectile[] = [],
   areas: readonly AreaEffect[] = [],
 ) {
-  const shots = projectiles.filter((p) => p.team === team && p.source === 0);
+  const shots = projectiles.filter(
+    (p) => p.team === team && p.source === 0 && p.damage > 0 && p.remaining > 0,
+  );
   const friendlyAreas = areas.filter((a) => a.team === team);
+  const pulls = areas.filter((a) => a.card === "tornado" && a.remaining > 0);
+  // Cover each complete released trajectory, including delayed flights and
+  // the rolling child of a Log launch. This is longer than a current windup.
+  const horizon =
+    pulls.length && shots.length
+      ? Math.max(
+          ...shots.map((p) => {
+            const flight =
+              p.speed && p.flight
+                ? Math.hypot(p.tx - p.flight.x, p.ty - p.flight.y) / p.speed
+                : p.remaining;
+            return (
+              impactSteps(flight) +
+              (p.delay && p.delay > 1e-8 ? impactSteps(p.delay) : 0) +
+              (p.style === "log-launch"
+                ? impactSteps(log.rollingRange / log.rollingSpeed)
+                : 0) +
+              3
+            );
+          }),
+        )
+      : 0;
   const strikes = currentLightningDamage(entities, areas, projectiles);
   const cache = new Map<Entity, number>();
   return (entity: Entity): number => {
@@ -28,8 +55,21 @@ export function createSpellDamageReservation(
       return 0;
     const known = cache.get(entity);
     if (known !== undefined) return known;
+    const path =
+      horizon &&
+      entity.kind === "troop" &&
+      entity.speed > 0 &&
+      pulls.some(
+        (a) =>
+          a.team !== entity.team &&
+          Math.hypot(a.x - entity.x, a.y - entity.y) < a.radius + entity.radius,
+      )
+        ? projectAreaFrames(entity, areas, horizon).map(
+            (frame) => frame.position,
+          )
+        : undefined;
     const packets = [
-      ...projectileDamagePackets(entity, shots, entities),
+      ...projectileDamagePackets(entity, shots, entities, path),
       // Moving troops can leave a cloud. Reserve their already applied status,
       // while structures keep the stationary, non-stacking cloud timeline.
       ...poisonDamagePackets(
