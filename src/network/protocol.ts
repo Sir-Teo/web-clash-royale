@@ -12,7 +12,7 @@ import type {
   Team,
 } from "../game/engine";
 export const PROTOCOL = 1;
-export const PEER_PROTOCOL = 2;
+export const PEER_PROTOCOL = 3;
 export const RECONNECT_MS = 30_000;
 export type RoomPhase = "waiting" | "countdown" | "playing" | "finished";
 export interface RoomState {
@@ -20,7 +20,14 @@ export interface RoomState {
   phase: RoomPhase;
   mode: Mode;
   paused?: boolean;
-  players: { team: Team; name: string; ready: boolean; connected: boolean }[];
+  matchId?: string;
+  players: {
+    team: Team;
+    name: string;
+    ready: boolean;
+    connected: boolean;
+    rematch?: boolean;
+  }[];
 }
 export interface BattleSnapshot {
   tick: number;
@@ -35,7 +42,7 @@ export interface BattleSnapshot {
   reason: string;
   actionCount: number;
 }
-export type ClientMessage =
+export type ClientMessage = (
   | {
       type: "create";
       version: number;
@@ -53,11 +60,13 @@ export type ClientMessage =
   | { type: "resume"; version: number; code: string; token: string }
   | { type: "loadout"; name: string; deck: CardId[] }
   | { type: "ready"; ready: boolean }
+  | { type: "rematch"; ready: boolean; matchId: string }
   | { type: "play"; seq: number; card: CardId; x: number; y: number }
   | { type: "leave" | "surrender" }
   | { type: "emote"; kind?: EmoteKind }
   | { type: "quick-chat"; phrase: QuickChatKind }
-  | { type: "ping"; at: number };
+  | { type: "ping"; at: number }
+) & { matchId?: string };
 export type ServerMessage =
   | {
       type: "welcome";
@@ -74,10 +83,11 @@ export type ServerMessage =
       type: "state";
       state: BattleSnapshot;
       countdownMs: number;
+      matchId?: string;
       replay?: Replay;
     }
-  | { type: "ack"; seq: number; ok: boolean; reason: string }
+  | { type: "ack"; seq: number; ok: boolean; reason: string; matchId?: string }
   | { type: "error"; message: string; fatal?: boolean }
-  | { type: "emote"; team: Team; kind: EmoteKind }
-  | { type: "quick-chat"; team: Team; phrase: QuickChatKind }
+  | { type: "emote"; team: Team; kind: EmoteKind; matchId?: string }
+  | { type: "quick-chat"; team: Team; phrase: QuickChatKind; matchId?: string }
   | { type: "pong"; at: number };

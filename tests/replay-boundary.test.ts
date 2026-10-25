@@ -1,3 +1,4 @@
+import { sendPeerCommand } from "./helpers/peer-command";
 import { describe, expect, it } from "vitest";
 import { Battle, STEP, type Replay, type Team } from "../src/game/engine";
 import { CARD_MAP, STARTER_DECK, type CardId } from "../src/game/cards";
@@ -159,7 +160,7 @@ describe("recording final-tick commands", () => {
     );
     expect(host.join({ name: "Red", deck: STARTER_DECK })).toBe(true);
     for (const team of ["blue", "red"] as const)
-      host.receive(team, { type: "ready", ready: true });
+      sendPeerCommand(host, team, { type: "ready", ready: true });
     for (let i = 0; i < 120; i++) host.advance(STEP);
     const live = host.battle!;
     for (const team of ["blue", "red"] as const) {
@@ -168,7 +169,7 @@ describe("recording final-tick commands", () => {
           CARD_MAP[id].kind === "troop" &&
           CARD_MAP[id].cost <= live.players[team].elixir,
       )!;
-      host.receive(team, {
+      sendPeerCommand(host, team, {
         type: "play",
         seq: 1,
         card: id,
@@ -176,7 +177,7 @@ describe("recording final-tick commands", () => {
         y: team === "blue" ? 22 : 10,
       });
     }
-    host.receive("blue", { type: "surrender" });
+    sendPeerCommand(host, "blue", { type: "surrender" });
     expect(live.actions).toHaveLength(2);
     expect(live.winner).toBe("red");
     const data = live.exportReplay(),

@@ -518,9 +518,13 @@ function claimChest(index: number) {
 }
 
 function lobby() {
+  enterLobby(false);
+}
+function enterLobby(keepPeerConnection: boolean) {
   clearKeyboardAim(true);
   resetEnding();
-  if (initialized && (network.room || multiplayer)) network.leave();
+  if (!keepPeerConnection && initialized && (network.room || multiplayer))
+    network.leave();
   multiplayer = false;
   networkBattleCode = "";
   networkReplay = undefined;
@@ -921,6 +925,7 @@ function showResult() {
   combatAudio.skip(battle.audioEvents);
   startEnding();
   const completedBattle = battle;
+  const completedMatchId = networkBattleCode;
   resultShown = true;
   audio.stopMusic();
   audio.stopEffects();
@@ -959,7 +964,7 @@ function showResult() {
           : win
             ? "Victory is yours!"
             : "A crown to chase.",
-        `<div class="result-content ${win ? "victory" : "defeat"}"><div class="result-crown">${icon("crown")}</div><span class="eyebrow">${esc(battle.reason)}</span><div class="result-score"><span class="blue">${icon("crown")} ${battle.players.blue.crowns}</span><b>–</b><span class="red">${battle.players.red.crowns} ${icon("crown")}</span></div><p>${win ? "Your kingdom stands tall. Well played." : draw ? "An even battle. A rematch awaits." : "Every great king learns from a battle."}</p><div class="result-rewards"><div>${icon("trophy")}<b>${reward.trophies > 0 ? "+" : ""}${reward.trophies}</b><small>TROPHIES</small></div><div>${icon("coins")}<b>+${reward.gold}</b><small>GOLD</small></div>${reward.chest ? `<div><img src="${import.meta.env.BASE_URL}assets/chests/${reward.chest}.png" alt="${reward.chest} chest"/><b>+1</b><small>${reward.chest.toUpperCase()} CHEST</small></div>` : ""}</div><button class="primary-button" id="rematch">${icon("swords")} Battle again</button><div class="result-links"><button class="text-button" id="watch-replay">${icon("play")} Watch replay</button><button class="text-button" id="return-home">Back to arena ${icon("arrow-right")}</button></div></div>`,
+        `<div class="result-content ${win ? "victory" : "defeat"}"><div class="result-crown">${icon("crown")}</div><span class="eyebrow">${esc(battle.reason)}</span><div class="result-score"><span class="blue">${icon("crown")} ${battle.players.blue.crowns}</span><b>–</b><span class="red">${battle.players.red.crowns} ${icon("crown")}</span></div><p>${win ? "Your kingdom stands tall. Well played." : draw ? "An even battle. A rematch awaits." : "Every great king learns from a battle."}</p><div class="result-rewards"><div>${icon("trophy")}<b>${reward.trophies > 0 ? "+" : ""}${reward.trophies}</b><small>TROPHIES</small></div><div>${icon("coins")}<b>+${reward.gold}</b><small>GOLD</small></div>${reward.chest ? `<div><img src="${import.meta.env.BASE_URL}assets/chests/${reward.chest}.png" alt="${reward.chest} chest"/><b>+1</b><small>${reward.chest.toUpperCase()} CHEST</small></div>` : ""}</div>${wasMultiplayer && peerNetwork ? `<p id="rematch-status" role="status"></p>` : ""}<button class="primary-button" id="rematch">${icon("swords")} Battle again</button><div class="result-links"><button class="text-button" id="watch-replay">${icon("play")} Watch replay</button><button class="text-button" id="return-home">Back to arena ${icon("arrow-right")}</button></div></div>`,
         "result",
       );
       if (wasMultiplayer)
@@ -967,14 +972,53 @@ function showResult() {
           "<p>Friendly battle · no trophies or rewards</p>";
       $("#rematch").onclick = () => {
         if (wasMultiplayer) {
-          lobby();
-          showMultiplayer();
+          const peer = peerNetwork;
+          if (
+            peer?.connected &&
+            peer.room?.phase === "finished" &&
+            peer.room.players.every((p) => p.connected)
+          ) {
+            peer.send({
+              type: "rematch",
+              matchId: completedMatchId,
+              ready: !peer.room.players.find((p) => p.team === peer.team)
+                ?.rematch,
+            });
+          } else {
+            lobby();
+            showMultiplayer();
+          }
         } else startBattle();
       };
+      syncPeerRematch();
       $("#return-home").onclick = lobby;
       $("#watch-replay").onclick = () => playReplay(profile.history[0]);
     },
   };
+}
+function syncPeerRematch() {
+  const peer = peerNetwork;
+  if (!peer || !multiplayer || modalKey !== "result") return;
+  const status = document.querySelector<HTMLElement>("#rematch-status");
+  if (!status) return;
+  const own = peer.room?.players.find((p) => p.team === peer.team);
+  const friend = peer.room?.players.find((p) => p.team !== peer.team);
+  const connected = peer.connected && friend?.connected !== false;
+  const label = !connected
+    ? "Create a new invite"
+    : own?.rematch
+      ? "Cancel rematch request"
+      : "Play again with friend";
+  const message = !connected
+    ? "Your friend disconnected. Create a new invite to play again."
+    : own?.rematch
+      ? `Waiting for ${friend?.name ?? "your friend"} to play again.`
+      : friend?.rematch
+        ? `${friend.name} wants another battle.`
+        : "Both players must agree. You can change decks before the next battle.";
+  const button = $("#rematch");
+  if (button.textContent !== label) button.textContent = label;
+  if (status.textContent !== message) status.textContent = message;
 }
 function playReplay(record: RecordEntry, ownerName?: string) {
   clearKeyboardAim(true);
@@ -1320,8 +1364,10 @@ network.onConnection = (status) => {
       : status === "reconnecting"
         ? "Reconnecting…"
         : "";
-  if (multiplayer) updateConnection();
-  else if (modalKey === "room") {
+  if (multiplayer) {
+    updateConnection();
+    syncPeerRematch();
+  } else if (modalKey === "room") {
     $(".room-error").textContent = connectionStatus;
     document
       .querySelectorAll<HTMLButtonElement>(
@@ -1332,15 +1378,27 @@ network.onConnection = (status) => {
 };
 network.onMessage = (message) => {
   if (message.type === "room") {
+    if (
+      peerNetwork &&
+      screen === "battle" &&
+      battle.winner &&
+      message.room.phase === "waiting" &&
+      message.room.matchId !== networkBattleCode
+    ) {
+      enterLobby(true);
+      showMultiplayer();
+    }
+    syncPeerRematch();
     if (screen === "lobby" && message.room.phase === "waiting")
       peerNetwork?.updatePlayer({ name: profile.name, deck: profile.deck });
     if (screen === "lobby" && modalKey === "room") showMultiplayer();
     if (multiplayer) updateConnection();
   }
   if (message.type === "state") {
-    const joining = networkBattleCode !== network.room?.code || !multiplayer;
+    const matchId = message.matchId ?? network.room?.code;
+    const joining = networkBattleCode !== matchId || !multiplayer;
     if (joining) {
-      networkBattleCode = network.room!.code;
+      networkBattleCode = matchId!;
       startBattle(true);
     }
     if (message.replay) networkReplay = message.replay;
@@ -2556,6 +2614,7 @@ Object.defineProperty(window, "__arena", {
           ? {
               team: network.team,
               code: network.room?.code,
+              matchId: network.room?.matchId,
               connected: network.connected,
               phase: network.room?.phase,
               latency: network.latency,

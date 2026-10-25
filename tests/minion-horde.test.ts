@@ -1,3 +1,4 @@
+import { sendPeerCommand } from "./helpers/peer-command";
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
@@ -207,7 +208,7 @@ describe("Minion Horde", () => {
     );
     expect(host.join({ name: "Red", deck })).toBe(true);
     for (const team of ["blue", "red"] as const)
-      host.receive(team, { type: "ready", ready: true });
+      sendPeerCommand(host, team, { type: "ready", ready: true });
     for (let i = 0; i < 210; i++) host.advance(STEP);
     for (const team of ["blue", "red"] as const) {
       const command = {
@@ -217,12 +218,12 @@ describe("Minion Horde", () => {
         x: team === "blue" ? 4 : 14,
         y: team === "blue" ? 22 : 10,
       };
-      host.receive(team, command);
+      sendPeerCommand(host, team, command);
       expect(
         sent.findLast((e) => e.team === team && e.message.type === "ack")
           ?.message,
       ).toMatchObject({ ok: true });
-      host.receive(team, command);
+      sendPeerCommand(host, team, command);
     }
     expect(host.battle!.actions).toHaveLength(2);
     expect(

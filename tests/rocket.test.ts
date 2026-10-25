@@ -1,3 +1,4 @@
+import { sendPeerCommand } from "./helpers/peer-command";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
@@ -201,9 +202,15 @@ describe("archived Rocket", () => {
     );
     expect(host.join({ name: "Red", deck })).toBe(true);
     for (const team of ["blue", "red"] as const)
-      host.receive(team, { type: "ready", ready: true });
+      sendPeerCommand(host, team, { type: "ready", ready: true });
     for (let i = 0; i < 210; i++) host.advance(STEP);
-    host.receive("blue", { type: "play", seq: 1, card: "rocket", x: 4, y: 6 });
+    sendPeerCommand(host, "blue", {
+      type: "play",
+      seq: 1,
+      card: "rocket",
+      x: 4,
+      y: 6,
+    });
     expect(
       sent.findLast((e) => e.team === "blue" && e.message.type === "ack")
         ?.message,

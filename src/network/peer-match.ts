@@ -39,6 +39,7 @@ export class PeerMatch {
   private countdown = intro.actionFrame / intro.fps;
   private accumulator = 0;
   private frames = 0;
+  private round = 1;
   constructor(
     code: string,
     mode: Mode,
@@ -51,6 +52,7 @@ export class PeerMatch {
     this.players = { blue: structuredClone(host) };
     this.room = {
       code,
+      matchId: `${code}:1`,
       mode,
       phase: "waiting",
       players: [
@@ -93,6 +95,8 @@ export class PeerMatch {
     const p = this.room.players.find((p) => p.team === team);
     const connectionChanged = !!p && p.connected !== connected;
     if (p) p.connected = connected;
+    if (!connected && this.room.phase === "finished")
+      for (const player of this.room.players) player.rematch = false;
     const paused = !this.available.blue || !this.available.red;
     if (this.room.paused !== paused || connectionChanged) {
       this.room.paused = paused;
@@ -121,6 +125,7 @@ export class PeerMatch {
       };
       this.emit(team, {
         type: "state",
+        matchId: this.room.matchId,
         state: s,
         countdownMs: Math.max(0, this.countdown * 1000),
         ...(this.battle.winner ? { replay: this.battle.exportReplay() } : {}),
@@ -136,7 +141,36 @@ export class PeerMatch {
   }
   receive(team: Team, m: ClientMessage) {
     if (!this.players[team] || !m || typeof m !== "object") return;
-    if (m.type === "ping") {
+    if (m.type !== "ping" && m.matchId !== this.room.matchId) return;
+    if (m.type === "rematch") {
+      if (
+        this.room.phase !== "finished" ||
+        m.matchId !== this.room.matchId ||
+        typeof m.ready !== "boolean" ||
+        !this.room.players.every((p) => p.connected)
+      )
+        return;
+      const player = this.room.players.find((p) => p.team === team)!;
+      if (player.rematch === m.ready) return;
+      player.rematch = m.ready;
+      if (this.players.red && this.room.players.every((p) => p.rematch)) {
+        this.round++;
+        this.room.matchId = `${this.room.code}:${this.round}`;
+        this.room.phase = "waiting";
+        this.room.paused = !this.available.blue || !this.available.red;
+        this.battle = undefined;
+        // A fresh seeded match, with no old elapsed time, audio or reaction budget.
+        this.seed = (this.seed * 48271) % 2147483647;
+        this.elapsed = this.accumulator = this.frames = 0;
+        this.countdown = intro.actionFrame / intro.fps;
+        this.reactions = { blue: -Infinity, red: -Infinity };
+        for (const p of this.room.players) {
+          p.ready = false;
+          p.rematch = false;
+        }
+      }
+      this.changed();
+    } else if (m.type === "ping") {
       if (Number.isFinite(m.at)) this.emit(team, { type: "pong", at: m.at });
     } else if (m.type === "loadout" && this.room.phase === "waiting") {
       if (!this.players.red) return;
@@ -199,10 +233,20 @@ export class PeerMatch {
     ) {
       if (m.type === "emote" && isEmote(m.kind ?? "laugh")) {
         this.reactions[team] = this.elapsed;
-        this.broadcast({ type: "emote", team, kind: m.kind ?? "laugh" });
+        this.broadcast({
+          type: "emote",
+          matchId: this.room.matchId,
+          team,
+          kind: m.kind ?? "laugh",
+        });
       } else if (m.type === "quick-chat" && isQuickChat(m.phrase)) {
         this.reactions[team] = this.elapsed;
-        this.broadcast({ type: "quick-chat", team, phrase: m.phrase });
+        this.broadcast({
+          type: "quick-chat",
+          matchId: this.room.matchId,
+          team,
+          phrase: m.phrase,
+        });
       }
     } else if (m.type === "play") {
       if (
@@ -228,7 +272,12 @@ export class PeerMatch {
                 ? "Waiting for both players."
                 : "The battle is starting.",
             };
-      this.emit(team, { type: "ack", seq: m.seq, ...result });
+      this.emit(team, {
+        type: "ack",
+        matchId: this.room.matchId,
+        seq: m.seq,
+        ...result,
+      });
       if (result.ok) this.state();
     }
   }

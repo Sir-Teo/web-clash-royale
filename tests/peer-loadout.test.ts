@@ -1,3 +1,4 @@
+import { sendPeerCommand as send } from "./helpers/peer-command";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { PeerMatch, type PeerPlayer } from "../src/network/peer-match";
 import { PeerRoomClient } from "../src/network/peer-client";
@@ -30,8 +31,8 @@ const command = (p: PeerPlayer) => ({
   deck: [...p.deck],
 });
 const start = (game: PeerMatch) => {
-  game.receive("blue", { type: "ready", ready: true });
-  game.receive("red", { type: "ready", ready: true });
+  send(game, "blue", { type: "ready", ready: true });
+  send(game, "red", { type: "ready", ready: true });
 };
 
 describe("waiting peer loadouts", () => {
@@ -39,12 +40,12 @@ describe("waiting peer loadouts", () => {
     "accepts %s changes and clears both Ready checks",
     (team) => {
       const { game, events } = match();
-      game.receive(team === "blue" ? "red" : "blue", {
+      send(game, team === "blue" ? "red" : "blue", {
         type: "ready",
         ready: true,
       });
       events.length = 0;
-      game.receive(team, command(next));
+      send(game, team, command(next));
       expect(game.room.players.every((p) => !p.ready)).toBe(true);
       expect(game.room.players.find((p) => p.team === team)?.name).toBe(
         next.name,
@@ -72,23 +73,23 @@ describe("waiting peer loadouts", () => {
   );
   it("keeps readiness and emits nothing when the loadout is unchanged", () => {
     const { game, events } = match();
-    game.receive("blue", { type: "ready", ready: true });
+    send(game, "blue", { type: "ready", ready: true });
     events.length = 0;
-    game.receive("blue", command(host));
+    send(game, "blue", command(host));
     expect(game.room.players[0].ready).toBe(true);
     expect(events).toEqual([]);
   });
   it("recognizes card order changes even when the card set and name stay the same", () => {
     const { game } = match();
-    game.receive("red", { type: "ready", ready: true });
-    game.receive("blue", command({ ...host, deck: [...host.deck].reverse() }));
+    send(game, "red", { type: "ready", ready: true });
+    send(game, "blue", command({ ...host, deck: [...host.deck].reverse() }));
     expect(game.room.players.every((p) => !p.ready)).toBe(true);
     start(game);
     expect(game.battle?.deck).toEqual([...host.deck].reverse());
   });
   it("rejects invalid names, unsupported cards and duplicate decks without changing readiness", () => {
     const { game, events } = match();
-    game.receive("red", { type: "ready", ready: true });
+    send(game, "red", { type: "ready", ready: true });
     const room = structuredClone(game.room);
     for (const invalid of [
       { ...next, name: "" },
@@ -99,7 +100,7 @@ describe("waiting peer loadouts", () => {
       { ...next, deck: null },
     ]) {
       events.length = 0;
-      game.receive("red", { type: "loadout", ...invalid } as any);
+      send(game, "red", { type: "loadout", ...invalid } as any);
       expect(game.room).toEqual(room);
       expect(events).toEqual([
         {
@@ -116,7 +117,7 @@ describe("waiting peer loadouts", () => {
   });
   it("does not confirm a loadout or join the host before a friend connects", () => {
     const { game, events } = match(false);
-    game.receive("blue", command(next));
+    send(game, "blue", command(next));
     expect(events).toEqual([]);
     game.join(guest);
     start(game);
@@ -129,7 +130,7 @@ describe("waiting peer loadouts", () => {
     )!.message as Extract<ServerMessage, { type: "welcome" }>;
     joined.deck.reverse();
     const submitted = command(next);
-    game.receive("red", submitted);
+    send(game, "red", submitted);
     submitted.deck.reverse();
     const accepted = events
       .filter((e) => e.team === "red" && e.message.type === "welcome")
@@ -145,28 +146,28 @@ describe("waiting peer loadouts", () => {
     for (const phase of ["countdown", "playing", "finished"]) {
       expect(game.room.phase).toBe(phase);
       events.length = 0;
-      game.receive("blue", command(next));
+      send(game, "blue", command(next));
       expect(events).toEqual([]);
       expect(game.room.players[0].name).toBe(host.name);
       expect(game.battle?.deck).toEqual(host.deck);
       if (phase === "countdown")
         for (let i = 0; i < 120; i++) game.advance(STEP);
-      if (phase === "playing") game.receive("red", { type: "surrender" });
+      if (phase === "playing") send(game, "red", { type: "surrender" });
     }
     expect(game.battle?.exportReplay().deck).toEqual(host.deck);
   });
   it("reconstructs actual plays from both updated decks exactly from their recording", () => {
     const { game } = match();
-    game.receive("blue", command(next));
+    send(game, "blue", command(next));
     const red = { ...guest, deck: [...guest.deck].reverse() };
-    game.receive("red", command(red));
+    send(game, "red", command(red));
     start(game);
     for (let i = 0; i < 120; i++) game.advance(STEP);
     for (const team of ["blue", "red"] as const) {
       const card = game.battle!.players[team].hand.find(
         (id) => CARD_MAP[id].kind === "troop" && CARD_MAP[id].cost <= 5,
       )!;
-      game.receive(team, {
+      send(game, team, {
         type: "play",
         seq: 1,
         card,
@@ -282,7 +283,7 @@ describe("confirmed peer client loadouts", () => {
     expect(send).not.toHaveBeenCalled();
     expect(c.loadout).toEqual(host);
   });
-  it.each([undefined, 1, 3])(
+  it.each([undefined, 1, 2, PEER_PROTOCOL + 1])(
     "rejects incompatible peer welcome version %s with an update action",
     (version) => {
       const c = client();

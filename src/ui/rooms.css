@@ -298,3 +298,10 @@ body.in-battle {
     width: calc((100% - 21px) / 4);
   }
 }
+
+#rematch-status {
+  margin: 0 0 14px;
+  color: #b4c7e0;
+  font-size: 12px;
+  line-height: 1.5;
+}

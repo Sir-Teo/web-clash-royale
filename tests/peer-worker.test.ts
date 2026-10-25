@@ -33,12 +33,20 @@ it("retains a coherent snapshot while the UI has not acknowledged the previous o
   send({
     type: "command",
     team: "blue",
-    message: { type: "ready", ready: true },
+    message: {
+      type: "ready",
+      matchId: "1234567890abcdef12345678:1",
+      ready: true,
+    },
   });
   send({
     type: "command",
     team: "red",
-    message: { type: "ready", ready: true },
+    message: {
+      type: "ready",
+      matchId: "1234567890abcdef12345678:1",
+      ready: true,
+    },
   });
   vi.advanceTimersByTime(3950);
   // One snapshot in flight per team, despite over a hundred simulation updates.

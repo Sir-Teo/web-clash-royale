@@ -285,7 +285,7 @@ export class PeerRoomClient {
     channel.onclose = () => {
       if (generation === this.generation && this.setup !== "idle") {
         if (this.room?.phase === "finished") {
-          this.connected = false;
+          this.connection(false);
           clearInterval(this.timer);
         } else
           this.fail(
@@ -365,6 +365,14 @@ export class PeerRoomClient {
     // Worker liveness can change while an invite is still being exchanged.
     // Do not replace that form with a one-player room before the handshake.
     if (!this.joined && message.type !== "welcome") return;
+    if (
+      (message.type === "state" ||
+        message.type === "ack" ||
+        message.type === "emote" ||
+        message.type === "quick-chat") &&
+      message.matchId !== this.room?.matchId
+    )
+      return;
     if (message.type === "welcome") {
       const accepted = { name: message.name, deck: message.deck };
       if (message.peerVersion !== PEER_PROTOCOL || !validPeerPlayer(accepted)) {
@@ -439,6 +447,9 @@ export class PeerRoomClient {
   }
   send(message: ClientMessage) {
     if (!this.connected) return false;
+    const matchId = message.matchId ?? this.room?.matchId;
+    if (!matchId) return false;
+    message = { ...message, matchId };
     if (this.team === "blue") {
       this.post({ type: "command", team: "blue", message });
       return true;

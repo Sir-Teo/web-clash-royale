@@ -1,3 +1,4 @@
+import { sendPeerCommand as send } from "./helpers/peer-command";
 import { describe, expect, it } from "vitest";
 import { PeerMatch } from "../src/network/peer-match";
 import { STARTER_DECK } from "../src/game/cards";
@@ -22,8 +23,8 @@ function match() {
   );
   const start = () => {
     expect(game.join({ ...player, name: "Queen" })).toBe(true);
-    game.receive("blue", { type: "ready", ready: true });
-    game.receive("red", { type: "ready", ready: true });
+    send(game, "blue", { type: "ready", ready: true });
+    send(game, "red", { type: "ready", ready: true });
     for (let i = 0; i < 120; i++) game.advance(STEP);
   };
   return { game, events, start };
@@ -32,11 +33,11 @@ describe("browser-owned friendly match", () => {
   it("requires two valid players and both ready checks before starting", () => {
     const { game } = match();
     expect(game.join({ ...player, deck: Array(8).fill("knight") })).toBe(false);
-    game.receive("blue", { type: "ready", ready: true });
+    send(game, "blue", { type: "ready", ready: true });
     expect(game.battle).toBeUndefined();
     expect(game.join(player)).toBe(true);
     expect(game.join(player)).toBe(false);
-    game.receive("red", { type: "ready", ready: true });
+    send(game, "red", { type: "ready", ready: true });
     expect(game.room.phase).toBe("countdown");
     expect(game.battle?.tick).toBe(0);
     game.advance(0.5);
@@ -53,11 +54,11 @@ describe("browser-owned friendly match", () => {
         c === "minions" ||
         c === "fireball",
     )!;
-    game.receive("red", { type: "play", seq: 1, card, x: 4, y: 8 });
+    send(game, "red", { type: "play", seq: 1, card, x: 4, y: 8 });
     expect(b.actions.length).toBe(1);
-    game.receive("red", { type: "play", seq: 1, card, x: 4, y: 8 });
+    send(game, "red", { type: "play", seq: 1, card, x: 4, y: 8 });
     expect(b.actions.length).toBe(1);
-    game.receive("blue", {
+    send(game, "blue", {
       type: "play",
       seq: 2,
       card: "knight",
@@ -92,18 +93,18 @@ describe("browser-owned friendly match", () => {
   it("shares one reaction cooldown and produces the same final replay for both perspectives", () => {
     const { game, events, start } = match();
     start();
-    game.receive("blue", { type: "emote", kind: "thumbs" });
-    game.receive("blue", { type: "quick-chat", phrase: "good-luck" });
+    send(game, "blue", { type: "emote", kind: "thumbs" });
+    send(game, "blue", { type: "quick-chat", phrase: "good-luck" });
     expect(events.filter((e) => e.message.type === "emote")).toHaveLength(2);
     expect(events.filter((e) => e.message.type === "quick-chat")).toHaveLength(
       0,
     );
     for (let i = 0; i < 80; i++) game.advance(STEP);
-    game.receive("blue", { type: "quick-chat", phrase: "good-luck" });
+    send(game, "blue", { type: "quick-chat", phrase: "good-luck" });
     expect(events.filter((e) => e.message.type === "quick-chat")).toHaveLength(
       2,
     );
-    game.receive("red", { type: "surrender" });
+    send(game, "red", { type: "surrender" });
     const endings = events.filter(
       (e) => e.message.type === "state" && e.message.replay,
     );

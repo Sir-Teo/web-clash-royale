@@ -1,3 +1,4 @@
+import { sendPeerCommand } from "./helpers/peer-command";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
@@ -142,11 +143,11 @@ describe("native Poison card", () => {
       (team, message) => messages.push({ team, message: structuredClone(message) }),
     );
     expect(host.join({ name: "Red", deck })).toBe(true);
-    host.receive("blue", { type: "ready", ready: true });
-    host.receive("red", { type: "ready", ready: true });
+    sendPeerCommand(host, "blue", { type: "ready", ready: true });
+    sendPeerCommand(host, "red", { type: "ready", ready: true });
     for (let i = 0; i < 120; i++) host.advance(STEP);
     expect(host.room.phase).toBe("playing");
-    host.receive("blue", { type: "play", seq: 1, card: "poison", x: 4, y: 22 });
+    sendPeerCommand(host, "blue", { type: "play", seq: 1, card: "poison", x: 4, y: 22 });
     expect(messages.findLast(({ team, message }) => team === "blue" && message.type === "ack")?.message)
       .toMatchObject({ ok: true });
     const states = messages.filter(({ message }) => message.type === "state");
