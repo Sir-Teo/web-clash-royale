@@ -15,6 +15,7 @@ import { launchedKingDeadline } from "./king-damage";
 import { createMatchFinisher, MATCH_DAMAGE_HORIZON } from "./match-finisher";
 import { selectLightningTarget } from "./lightning-strikes";
 import { hasFriendlyLightning } from "./lightning-followup";
+import { tornadoPull } from "./tornado-pull";
 import {
   combatTraits,
   COMBAT_STEP,
@@ -1112,18 +1113,10 @@ export class Battle {
           )
             continue;
           if (pull) {
-            const dx = area.x - entity.x;
-            const dy = area.y - entity.y;
-            const distance = Math.hypot(dx, dy);
-            if (distance > 0.001) {
-              const travel = Math.min(
-                distance,
-                entity.speed *
-                  tornado.attractPercentage *
-                  tornado.areaHitInterval,
-              );
-              entity.x = clamp(entity.x + (dx / distance) * travel, 0.5, 17.5);
-              entity.y = clamp(entity.y + (dy / distance) * travel, 0.6, 31.4);
+            const position = tornadoPull(entity, area);
+            if (position) {
+              entity.x = position.x;
+              entity.y = position.y;
               entity.move = 0;
             }
           }
@@ -2686,7 +2679,7 @@ export class Battle {
         ]),
     );
     const protection = affordable
-      .filter((a) => a.played === "freeze")
+      .filter((a) => a.played === "freeze" || a.played === "tornado")
       .map((a) => spellTargets.get(a.id))
       .filter((target): target is SpellTarget => !!target?.protectsKing)
       .sort((a, b) => b.score - a.score)[0];

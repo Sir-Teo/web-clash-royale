@@ -258,6 +258,22 @@ function setup() {
       battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
       battle.players.red.elixir = 3;
     }
+  } else if (scenario.startsWith("ai-tornado-")) {
+    if (scenario === "ai-tornado-air") {
+      for (const e of unit("minions", "blue", 4, 10)) e.active = false;
+      battle.players.red.hand = ["tornado", "pekka", "pekka", "pekka"];
+      battle.players.red.elixir = 3;
+    } else {
+      const king = battle.entities.find((e) => e.team === "red" && e.king)!;
+      Object.assign(king, { hp: 100, active: true, cooldown: 3 });
+      for (const e of unit("lumberjack", "blue", king.x, king.y + 2))
+        Object.assign(e, { hp: 200, deploy: 2.3 });
+      const race = scenario === "ai-tornado-race";
+      if (race) battle.entities.find((e) => e.team === "blue" && e.king)!.hp = 50;
+      battle.players.red.hand = race ? ["rocket", "tornado", "pekka", "pekka"] : ["tornado", "pekka", "pekka", "pekka"];
+      battle.players.red.elixir = race ? 6 : 3;
+    }
+    battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
   } else if (scenario.startsWith("ai-log-")) {
     if (scenario === "ai-log-king") {
       battle.entities.find((e) => e.team === "blue" && e.king)!.hp = 100;

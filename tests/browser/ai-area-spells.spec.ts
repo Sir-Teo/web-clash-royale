@@ -1,6 +1,63 @@
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
 
+for (const scene of ["ai-tornado-king", "ai-tornado-race", "ai-tornado-air"])
+  test(`${scene}: Tornado chooses useful damage or a timely pull on the ordinary AI timer`, async ({
+    page,
+  }, info) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto(`/tests/fixtures/combat.html?scene=${scene}`);
+    await expect(page.locator("#status")).toContainText(
+      `${expectedEffects} effects`,
+      { timeout: 60000 },
+    );
+    const output = page.locator("#destruction");
+    const state = async () =>
+      JSON.parse((await output.getAttribute("data-ai-areas"))!);
+    const actions = async () =>
+      JSON.parse((await output.getAttribute("data-ai-defense"))!).actions;
+    for (let i = 0; i < 2; i++) {
+      const before = (await state()).time;
+      await page.locator("#second").click();
+      await expect
+        .poll(async () => (await state()).time)
+        .toBeGreaterThan(before + 0.99);
+    }
+    expect(await actions()).toEqual([]);
+    await page.locator("#second").click();
+    await expect.poll(async () => (await actions()).length).toBe(1);
+    expect((await actions())[0]).toMatchObject({ card: "tornado", tick: 74 });
+    expect((await state()).areas.some((a: any) => a.card === "tornado")).toBe(
+      true,
+    );
+    if (scene === "ai-tornado-air") {
+      for (let i = 0; i < 3; i++) await page.locator("#second").click();
+      await expect.poll(async () => (await state()).entities.length).toBe(0);
+    } else {
+      expect((await state()).kings.find((e: any) => e.team === "red").hp).toBe(
+        100,
+      );
+      expect((await state()).winner).toBeNull();
+      const attacker = (await state()).entities.find(
+        (e: any) => e.card === "lumberjack",
+      );
+      expect(attacker.y).toBeGreaterThan(4.8);
+      if (scene === "ai-tornado-king")
+        await page.screenshot({
+          path: info.outputPath("ai-tornado-defense.png"),
+          fullPage: true,
+        });
+      await page.locator("#second").click();
+      expect((await state()).kings.find((e: any) => e.team === "red").hp).toBe(
+        100,
+      );
+      expect((await state()).winner).toBeNull();
+    }
+    expect(await actions()).toHaveLength(1);
+    expect(errors).toEqual([]);
+  });
+
 for (const card of ["rage", "freeze", "poison"] as const)
   test(`the AI uses ${card} for its intended role and avoids refreshing a covered group`, async ({
     page,

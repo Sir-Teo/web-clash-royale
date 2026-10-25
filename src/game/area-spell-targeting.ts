@@ -3,6 +3,7 @@ import { CARD_MAP, type CardId } from "./cards";
 import type { AreaEffect, Entity, Projectile, Team } from "./engine";
 import poison from "./poison-data.json" with { type: "json" };
 import { supportSpellTarget } from "./support-spell-targeting";
+import { tornadoSpellTarget } from "./tornado-targeting";
 import { fatalKingWindups } from "./king-spell-race";
 import { createKingSpellRace, kingRacePriority } from "./king-damage";
 import type { MatchFinisher } from "./match-finisher";
@@ -21,6 +22,7 @@ const AREA_SPELLS = new Set<CardId>([
   "poison",
   "heal",
   "clone",
+  "tornado",
 ]);
 export const isAreaSpell = (card: CardId) => AREA_SPELLS.has(card);
 const covered = (
@@ -58,6 +60,8 @@ export function areaSpellTarget(
   kingDeadline = Infinity,
   finisher?: MatchFinisher,
 ): SpellTarget | undefined {
+  if (card === "tornado")
+    return tornadoSpellTarget(team, entities, areas, projectiles, cost);
   if (card === "heal" || card === "clone")
     return supportSpellTarget(card, team, entities, areas, projectiles, cost);
   if (card !== "rage" && card !== "freeze" && card !== "poison") return;
