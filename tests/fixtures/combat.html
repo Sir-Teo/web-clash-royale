@@ -10,6 +10,7 @@
         src: url("/assets/ui/supercell-magic.ttf") format("truetype");
       }
       body {
+        color-scheme: dark;
         margin: 0;
         height: 100dvh;
         display: flex;
@@ -25,6 +26,18 @@
         align-items: center;
         gap: 12px;
         flex-wrap: wrap;
+      }
+      #scene-control {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        max-width: 100%;
+      }
+      #scenario {
+        width: 360px;
+        min-width: 0;
+        max-width: 100%;
       }
       button,
       select {
@@ -76,7 +89,7 @@
   <body>
     <header>
       <b>Combat inspection</b
-      ><label
+      ><label id="scene-control"
         >Scene
         <select id="scenario">
           <option value="volley">Fireball &amp; Arrows</option>

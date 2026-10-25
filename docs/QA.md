@@ -1512,3 +1512,9 @@ An independent bundle of `636bef4` runs the same genuine Tornado at tick 73 and 
 All eight browser cases pass across desktop Chromium and phone WebKit. Both new scenes verify accepted command ticks, an aim ahead of the current group, three living targets before impact and their removal after the native spell arrives. Both inward/outward Fireball reservation scenes remain green after the shared-path extraction. No push or deployment was performed.
 
 Pages-prefixed production/offline checks pass for reload, the cached browser match worker, battle startup, scoped assets and all 278 native combat/death/music files. The root output is restored afterward. The offline pack remains 921 URLs/894 unique content groups with 8.1 MB of duplicate bytes omitted.
+
+## Combat inspection controls on phones
+
+The combat inspection fixture now declares its dark color scheme for native form controls and lets the scene label/select shrink within the viewport. Phone WebKit previously painted white text on a light native selector and expanded a 390-pixel viewport's full-page capture to 453 pixels. The reviewed capture now stays at 390 pixels, with a readable selected scene and all controls visible. Hidden card/attack configuration labels retain their existing behavior because the layout rule applies only to the scene label.
+
+The existing Rocket/Tornado AI browser scenario passes on desktop Chromium and phone WebKit. The reviewed phone capture is `docs/screenshots/phone-combat-inspection-controls.png`. This changes the development fixture's controls; production gameplay and build output are unchanged from the preceding verified checkpoint.
