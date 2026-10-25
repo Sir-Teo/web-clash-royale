@@ -1,6 +1,7 @@
 import type { AreaEffect, Entity, Point, Projectile } from "./engine";
 import { COMBAT_STEP } from "./combat";
 import { advanceMovement } from "./movement";
+import { projectileDamagePackets } from "./projectile-impacts";
 import { projectAreaFrames, type WindupFrame } from "./tornado-pull";
 import rage from "./rage-data.json" with { type: "json" };
 
@@ -14,7 +15,7 @@ const distance = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
 const inRange = (body: Entity, target: Entity) =>
   distance(body, target) <= body.range + target.radius + body.radius * 0.35;
 
-/** Stable Hog/Balloon approaches without current shots or damaging areas.
+/** Stable Hog/Balloon approaches with ordinary homing damage shots only.
  * Targets stay fixed; separation, future attacks and target changes are omitted. */
 export function createSpellApproachPaths(
   entities: readonly Entity[],
@@ -24,10 +25,36 @@ export function createSpellApproachPaths(
 ) {
   if (
     steps <= 0 ||
-    projectiles.some((p) => p.remaining > 0) ||
+    projectiles.some(
+      (p) =>
+        p.remaining > 0 &&
+        (!p.homing ||
+          p.source === 0 ||
+          p.damage <= 0 ||
+          p.splash > 0 ||
+          p.stun > 0 ||
+          (p.slow ?? 0) > 0 ||
+          (p.knockback ?? 0) > 0),
+    ) ||
     areas.some((a) => a.remaining > 0 && !controls.has(a.card))
   )
     return;
+  // Another troop's current death can create bodies, damage or a Rage/slow
+  // effect. These side effects are outside the approach path's status clocks.
+  // Ignore shields and healing here to keep this rejection conservative.
+  const releasedByTarget = new Map<number, number>();
+  for (const p of projectiles)
+    if (p.remaining > 0 && p.target !== null)
+      releasedByTarget.set(
+        p.target,
+        (releasedByTarget.get(p.target) ?? 0) + p.damage,
+      );
+  const doomedOthers = entities.filter(
+    (e) =>
+      e.kind === "troop" &&
+      e.hp > 0 &&
+      (releasedByTarget.get(e.id) ?? 0) >= e.hp,
+  );
   const cache = new Map<
     Entity,
     { positions: readonly Point[]; frames: readonly WindupFrame[] }
@@ -42,6 +69,7 @@ export function createSpellApproachPaths(
       (body.card !== "hog-rider" && body.card !== "balloon")
     )
       return;
+    if (doomedOthers.some((e) => e.id !== body.id)) return;
     if (entities.some((e) => e.team !== body.team && e.hp > 0 && e.burrow))
       return;
     const known = cache.get(body);
@@ -104,7 +132,10 @@ export function createSpellApproachPaths(
     const decay = target.lifetime
       ? (target.maxHp * horizon) / target.lifetime
       : 0;
-    if (target.hp <= body.damage * hits + decay + 1e-8) return;
+    const released = projectileDamagePackets(target, projectiles, entities)
+      .filter((packet) => packet.step <= steps)
+      .reduce((damage, packet) => damage + packet.damage, 0);
+    if (target.hp <= body.damage * hits + decay + released + 1e-8) return;
     const mover = { ...body };
     let deploy = body.deploy;
     const frames = projectAreaFrames(body, areas, steps, (frame) => {

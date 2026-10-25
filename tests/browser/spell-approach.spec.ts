@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
 
-for (const card of ["balloon", "hog"]) {
+for (const card of ["balloon", "hog", "crown-hog"]) {
   test(`${card}: the ordinary AI timer leads the Raged approach`, async ({
     page,
   }, info) => {

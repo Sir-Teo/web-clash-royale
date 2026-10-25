@@ -964,6 +964,14 @@ function advance(ticks: number) {
       if (sceneSelect.value.startsWith("ai-approach-") && battle.tick === 73) {
         const balloon = sceneSelect.value.endsWith("balloon");
         cast("rage", "blue", 3.5, balloon ? 20 : 13);
+        if (sceneSelect.value === "ai-approach-crown-hog") {
+          const target = battle.entities.find(e => e.team === "red" && !e.king && e.lane === "left")!;
+          const hog = battle.entities.find(e => e.card === "hog-rider")!;
+          Object.assign(target, {
+            active: true, target: hog.id, cooldown: 1,
+            pendingAttack: { target: hog.id, remaining: STEP, damage: target.damage },
+          });
+        }
         battle.players.red.hand = [balloon ? "rocket" : "fireball", "three-musketeers", "three-musketeers", "three-musketeers"];
         battle.players.red.queue = ["three-musketeers", "three-musketeers", "three-musketeers", "three-musketeers"];
         battle.players.red.elixir = balloon ? 6 : 4;
