@@ -83,6 +83,9 @@ async function deploy(page: Page) {
   await expect
     .poll(async () => (await state(page)).actions)
     .toBe(current.actions + 1);
+  await expect(page.locator("#keyboard-deployment-status")).toHaveText(
+    `${CARD_MAP[current.hand[slot] as CardId].name} deployed.`,
+  );
 }
 for (const reverse of [false, true])
   test(`friends play three distinct rounds on one connection${reverse ? " with the project browser as guest" : ""}`, async ({

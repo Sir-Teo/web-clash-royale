@@ -178,6 +178,7 @@ import type { Profile, RecordEntry } from "./game/profile";
 import { GameAudio } from "./game/audio";
 import { NativeDeathAudio } from "./game/death-audio";
 import { NativeCombatAudio } from "./game/combat-audio";
+import { DeploymentFeedback } from "./ui/deployment-feedback";
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) =>
   document.querySelector<T>(s)!;
@@ -207,6 +208,7 @@ function saveProfile(value: Profile) {
 let battlePlayerName = profile.name;
 const deathAudio = new NativeDeathAudio(audio);
 const combatAudio = new NativeCombatAudio(audio);
+const deploymentFeedback = new DeploymentFeedback();
 audio.enabled = profile.sound;
 audio.musicEnabled = profile.music;
 let initialized = false;
@@ -390,7 +392,8 @@ function refreshIcons() {
   nativeCards.hydrate();
   createIcons({ icons, attrs: { "stroke-width": 1.8 } });
 }
-function toast(message: string) {
+function toast(message: string, announce = true) {
+  $("#toast").setAttribute("aria-hidden", String(!announce));
   $("#toast").textContent = message;
   $("#toast").classList.add("visible");
   window.clearTimeout(toastTimer);
@@ -521,6 +524,7 @@ function lobby() {
   enterLobby(false);
 }
 function enterLobby(keepPeerConnection: boolean) {
+  deploymentFeedback.reset();
   practiceMatch = null;
   clearKeyboardAim(true);
   resetEnding();
@@ -566,6 +570,7 @@ function startBattle(
   online = false,
   practice: ReturnType<typeof recordedPractice> | null = null,
 ) {
+  deploymentFeedback.reset();
   clearKeyboardAim(true);
   replayOwnerName = null;
   const loadout = online ? peerNetwork?.loadout : null;
@@ -851,9 +856,10 @@ function deploy(point: Point) {
   if (result.ok) {
     const fromKeyboard = keyboardAiming;
     clearKeyboardAim();
-    if (fromKeyboard)
-      $("#keyboard-deployment-status").textContent =
-        `${CARD_MAP[id].name} ${multiplayer ? "placement submitted" : "deployed"}.`;
+    if (multiplayer || fromKeyboard)
+      $("#keyboard-deployment-status").textContent = multiplayer
+        ? deploymentFeedback.submit(network.playSequence, id)
+        : `${CARD_MAP[id].name} deployed.`;
     selected = -1;
     arena.showPlacement(null, null);
     $("#hand-caption").textContent =
@@ -1036,6 +1042,7 @@ function syncPeerRematch() {
   if (status.textContent !== message) status.textContent = message;
 }
 function playReplay(record: RecordEntry, ownerName?: string) {
+  deploymentFeedback.reset();
   clearKeyboardAim(true);
   const playerName = ownerName ?? record.playerName ?? profile.name;
   resetEnding();
@@ -1447,7 +1454,19 @@ network.onMessage = (message) => {
       updateCombatAudio();
     }
   }
-  if (message.type === "ack" && !message.ok) toast(message.reason);
+  if (message.type === "ack") {
+    const receipt = deploymentFeedback.acknowledge(message);
+    const status = $("#keyboard-deployment-status");
+    const ownsStatus =
+      !!receipt &&
+      multiplayer &&
+      screen === "battle" &&
+      !battle.winner &&
+      status.textContent === receipt.submitted;
+    if (ownsStatus) status.textContent = receipt!.announcement;
+    if (!message.ok)
+      toast(receipt?.announcement ?? message.reason, !ownsStatus);
+  }
   if (message.type === "error") {
     roomError = message.message;
     if (multiplayer) {

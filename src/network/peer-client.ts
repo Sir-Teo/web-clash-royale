@@ -40,6 +40,9 @@ export class PeerRoomClient {
   private timeout?: ReturnType<typeof setTimeout>;
   private generation = 0;
   private seq = 0;
+  get playSequence() {
+    return this.seq;
+  }
   private packet = 0;
   private id = "";
   private mode: Mode = "classic";

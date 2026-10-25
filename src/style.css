@@ -2614,6 +2614,7 @@ kbd {
   margin-top: 25px;
 }
 .toast {
+  width: max-content;
   position: fixed;
   z-index: 300;
   bottom: 35px;

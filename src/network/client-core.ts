@@ -22,6 +22,9 @@ export class DirectRoomClient {
   private heartbeat: ReturnType<typeof setInterval> | undefined;
   private lastMessage = 0;
   private seq = Date.now();
+  get playSequence() {
+    return this.seq;
+  }
   constructor(private deliveryResponsive: () => boolean = () => true) {}
   get saved() {
     try {
