@@ -9,6 +9,7 @@ import {
 import { projectTornadoWindup, type WindupProjection } from "./tornado-pull";
 import miner from "./miner-data.json" with { type: "json" };
 import freeze from "./freeze-data.json" with { type: "json" };
+import { createWindupHealth } from "./windup-health";
 
 /** Complete current attack packet, including both Executioner passes. The
  * release frame already advances a projectile; melee precedes projectiles. */
@@ -82,7 +83,7 @@ export function kingDefenseScore(
 }
 
 /** One read-only context per decision: released damage plus every eligible
- * current King windup. No new attacks, attacker health or separation is run. */
+ * current King windup. No new attacks or separation is run. */
 export function createKingDefense(
   team: Team,
   entities: readonly Entity[],
@@ -91,6 +92,7 @@ export function createKingDefense(
   knownEndingStep = Infinity,
 ) {
   const king = entities.find((e) => e.hp > 0 && e.team === team && e.king);
+  const health = createWindupHealth(projectiles, entities);
   const released = king
     ? towerDamageForecast(king, projectiles, areas, entities).baseline
     : [];
@@ -111,7 +113,13 @@ export function createKingDefense(
           pending.remaining > 1
         )
           return [];
-        const projection = projectTornadoWindup(attacker, king, areas);
+        const projection = projectTornadoWindup(
+          attacker,
+          king,
+          areas,
+          undefined,
+          health,
+        );
         const order = projectiles.length + index;
         return [
           {
@@ -174,6 +182,7 @@ export function createKingDefense(
           king,
           clouds,
           card === "tornado" ? point : undefined,
+          health,
         ),
         a.order,
       ),

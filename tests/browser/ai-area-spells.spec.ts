@@ -2,6 +2,65 @@ import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
 
 for (const scene of [
+  "ai-health-fireball",
+  "ai-health-shield",
+  "ai-health-late",
+])
+  test(`${scene}: the AI accounts for actual incoming damage before defending`, async ({
+    page,
+  }, info) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto(`/tests/fixtures/combat.html?scene=${scene}`);
+    await expect(page.locator("#status")).toContainText(
+      `${expectedEffects} effects`,
+      { timeout: 60000 },
+    );
+    const output = page.locator("#destruction");
+    const state = async () =>
+      JSON.parse((await output.getAttribute("data-ai-areas"))!);
+    const actions = async () =>
+      JSON.parse((await output.getAttribute("data-ai-defense"))!).actions;
+    for (let i = 0; i < 3; i++) {
+      const before = (await state()).time;
+      await page.locator("#second").click();
+      await expect
+        .poll(async () => (await state()).time)
+        .toBeGreaterThan(before + 0.99);
+      if (i < 2) expect(await actions()).toEqual([]);
+    }
+    const defend = scene !== "ai-health-fireball";
+    expect(
+      (await actions()).map((a: any) => ({ card: a.card, tick: a.tick })),
+    ).toEqual([
+      {
+        card:
+          scene === "ai-health-shield"
+            ? "arrows"
+            : scene === "ai-health-late"
+              ? "rocket"
+              : "fireball",
+        tick: 72,
+      },
+      ...(defend ? [{ card: "freeze", tick: 74 }] : []),
+    ]);
+    const result = await state();
+    expect(result.winner).toBeNull();
+    expect(result.kings.find((e: any) => e.team === "red").hp).toBe(300);
+    if (!defend) {
+      expect(result.entities.filter((e: any) => e.team === "blue")).toEqual([]);
+      const hand = JSON.parse((await output.getAttribute("data-ai-spells"))!);
+      expect(hand.hand).toContain("freeze");
+      expect(hand.elixir).toBeGreaterThan(4);
+      await page.screenshot({
+        path: info.outputPath("ai-health-queued-damage.png"),
+        fullPage: true,
+      });
+    }
+    expect(errors).toEqual([]);
+  });
+
+for (const scene of [
   "ai-combined-freeze",
   "ai-combined-tornado",
   "ai-combined-split",

@@ -29,14 +29,16 @@ const touch = (from: Point, to: Point, target: Entity, radius: number) => {
   );
 };
 
-/** Damage from current projectiles against a stationary body. Homing
- * shots aimed at another troop are omitted; no entity or clock is advanced. */
+/** Damage from current projectiles against a fixed body or its supplied
+ * per-step path. Homing shots aimed at another troop are omitted; inputs stay
+ * untouched. Path positions are after areas and before projectile updates. */
 export function projectileDamagePackets(
   target: Entity,
   projectiles: readonly Projectile[],
   entities?: readonly Entity[],
+  path?: readonly Point[],
 ): DamagePacket[] {
-  const one = (p: Projectile, order: number): DamagePacket[] => {
+  const one = (p: Projectile, order: number, offset = 0): DamagePacket[] => {
     if (
       p.team === target.team ||
       p.damage <= 0 ||
@@ -47,7 +49,7 @@ export function projectileDamagePackets(
       return [];
     const delay = p.delay && p.delay > 1e-8 ? impactSteps(p.delay) : 0;
     const packet = (step: number, damage: number, born = 0): DamagePacket => ({
-      step: step + delay,
+      step: step + delay + offset,
       damage,
       phase: 1,
       born,
@@ -68,11 +70,34 @@ export function projectileDamagePackets(
       (!entities || locked?.kind === "troop")
     )
       return [];
-    const end =
+    let end =
       p.homing && locked ? { x: locked.x, y: locked.y } : { x: p.tx, y: p.ty };
     const duration =
       p.speed && p.flight ? distance(p.flight, end) / p.speed : p.remaining;
-    const arrival = impactSteps(duration);
+    let arrival = impactSteps(duration);
+    if (path && p.homing && p.target === target.id && p.speed && p.flight) {
+      let position = { ...p.flight };
+      let arrived = false;
+      for (let step = 1; offset + delay + step <= path.length; step++) {
+        const destination = path[offset + delay + step - 1];
+        const gap = distance(position, destination);
+        const travel = Math.min(gap, p.speed * COMBAT_STEP);
+        if (gap > 0)
+          position = {
+            x: position.x + ((destination.x - position.x) / gap) * travel,
+            y: position.y + ((destination.y - position.y) / gap) * travel,
+          };
+        if ((gap - travel) / p.speed <= 1e-8) {
+          arrival = step;
+          end = destination;
+          arrived = true;
+          break;
+        }
+      }
+      if (!arrived) return [];
+    } else if (path && p.homing && p.target === target.id) {
+      end = path[offset + delay + arrival - 1] ?? end;
+    }
     if (p.style === "log-launch") {
       const range = Math.min(
         log.rollingRange,
@@ -94,10 +119,9 @@ export function projectileDamagePackets(
         delay: undefined,
         rollHits: [],
       };
-      return one(child, order).map((hit) => ({
+      return one(child, order, offset + delay + arrival).map((hit) => ({
         ...hit,
-        step: hit.step + delay + arrival,
-        born: delay + arrival,
+        born: offset + delay + arrival,
       }));
     }
     if (["log", "bowler", "executioner"].includes(p.style)) {
@@ -116,6 +140,10 @@ export function projectileDamagePackets(
         ) + 3;
       const result: DamagePacket[] = [];
       for (let step = 1; step <= limit; step++) {
+        if (path && offset + delay + step > path.length) break;
+        const body = path
+          ? { ...target, ...path[offset + delay + step - 1] }
+          : target;
         const gap = distance(position, destination),
           travel = Math.min(gap, speed * COMBAT_STEP);
         const next =
@@ -127,20 +155,19 @@ export function projectileDamagePackets(
             : { ...position };
         const hit =
           p.style === "log"
-            ? Math.abs(target.x - p.x) <
-                log.collisionHalfWidth + target.radius &&
-              target.y >=
+            ? Math.abs(body.x - p.x) < log.collisionHalfWidth + target.radius &&
+              body.y >=
                 Math.min(position.y, next.y) -
                   log.collisionRadius -
                   target.radius &&
-              target.y <=
+              body.y <=
                 Math.max(position.y, next.y) +
                   log.collisionRadius +
                   target.radius
             : touch(
                 position,
                 next,
-                target,
+                body,
                 axe ? executioner.projectile.radius : bowler.projectile.radius,
               );
         if (!struck && hit) {
@@ -165,9 +192,13 @@ export function projectileDamagePackets(
       }
       return result;
     }
+    if (path && offset + delay + arrival > path.length) return [];
+    const body = path
+      ? { ...target, ...path[offset + delay + arrival - 1] }
+      : target;
     if (
       p.splash > 0
-        ? distance(end, target) >= p.splash + target.radius
+        ? distance(end, body) >= p.splash + target.radius
         : p.target !== target.id
     )
       return [];
@@ -181,7 +212,7 @@ export function projectileDamagePackets(
       ),
     ];
   };
-  return projectiles.flatMap(one);
+  return projectiles.flatMap((p, order) => one(p, order));
 }
 
 export const damagePacketOrder = (a: DamagePacket, b: DamagePacket) =>

@@ -44,6 +44,24 @@ export interface WindupProjection {
   cancelledStep?: number;
   releaseStep?: number;
 }
+export interface WindupFrame {
+  position: Point;
+  areaPositions: readonly Point[];
+  boost: number;
+  slow: number;
+  stun: number;
+}
+export interface WindupHealthFrame {
+  beforeAlive: boolean;
+  afterAlive: boolean;
+  interrupt: boolean;
+  slow: number;
+}
+export type WindupHealthEvaluator = (
+  attacker: Entity,
+  frames: readonly WindupFrame[],
+  areas: readonly AreaEffect[],
+) => readonly WindupHealthFrame[];
 
 /** The same control clocks also retain the release position of an attack
  * that survives a pull, so its projectile flight can be recomputed. */
@@ -52,6 +70,7 @@ export function projectTornadoWindup(
   target: Entity,
   areas: readonly AreaEffect[],
   proposed?: Point,
+  health?: WindupHealthEvaluator,
 ): WindupProjection {
   let position = { x: attacker.x, y: attacker.y };
   if (!attacker.pendingAttack) return { position };
@@ -59,7 +78,9 @@ export function projectTornadoWindup(
     .filter(
       (a) =>
         a.remaining > 0 &&
-        ["tornado", "rage", "ice-golem", "freeze"].includes(a.card),
+        ["tornado", "rage", "ice-golem", "freeze", "poison", "heal"].includes(
+          a.card,
+        ),
     )
     .map((a) => ({ ...a }));
   if (proposed)
@@ -78,8 +99,23 @@ export function projectTornadoWindup(
     slow = attacker.slow?.remaining ?? 0,
     stun = attacker.stun;
   let remaining = attacker.pendingAttack.remaining;
-  for (let step = 1; step <= 60; step++) {
+  const initialAreas = health ? clouds.map((a) => ({ ...a })) : [];
+  const frames: WindupFrame[] = [];
+  const limit = health
+    ? Math.min(
+        60,
+        Math.max(
+          1,
+          Math.ceil(
+            (remaining + 1e-8) / (COMBAT_STEP * iceWizard.hitSpeedMultiplier),
+          ),
+        ),
+      )
+    : 60;
+  for (let step = 1; step <= limit; step++) {
+    const areaPositions: Point[] = [];
     for (const cloud of clouds) {
+      if (health) areaPositions.push(position);
       if (cloud.remaining <= 0) continue;
       const inside = distance(position, cloud) < cloud.radius + attacker.radius;
       const age = cloud.duration - cloud.remaining;
@@ -116,6 +152,10 @@ export function projectTornadoWindup(
     boost = Math.max(0, boost - COMBAT_STEP);
     slow = Math.max(0, slow - COMBAT_STEP);
     stun = Math.max(0, stun - COMBAT_STEP);
+    if (health) {
+      frames.push({ position, areaPositions, boost, slow, stun });
+      continue;
+    }
     if (
       stun > 0 ||
       distance(position, target) >
@@ -127,6 +167,33 @@ export function projectTornadoWindup(
       (boost >= 1e-8 ? rage.hitSpeedMultiplier : 1) *
       (slow >= 1e-8 ? iceWizard.hitSpeedMultiplier : 1);
     if (remaining <= 1e-8) return { position, releaseStep: step };
+  }
+  if (health) {
+    const statuses = health(attacker, frames, initialAreas);
+    let shotSlow = 0;
+    for (const [index, frame] of frames.entries()) {
+      const step = index + 1,
+        status = statuses[index];
+      position = frame.position;
+      shotSlow = Math.max(0, shotSlow - COMBAT_STEP);
+      if (
+        !status.beforeAlive ||
+        frame.stun > 0 ||
+        distance(position, target) >
+          attacker.range + target.radius + attacker.radius * 0.35
+      )
+        return { position, cancelledStep: step };
+      remaining -=
+        COMBAT_STEP *
+        (frame.boost >= 1e-8 ? rage.hitSpeedMultiplier : 1) *
+        (Math.max(frame.slow, shotSlow) >= 1e-8
+          ? iceWizard.hitSpeedMultiplier
+          : 1);
+      if (remaining <= 1e-8) return { position, releaseStep: step };
+      if (!status.afterAlive || status.interrupt)
+        return { position, cancelledStep: step };
+      shotSlow = Math.max(shotSlow, status.slow);
+    }
   }
   return { position };
 }

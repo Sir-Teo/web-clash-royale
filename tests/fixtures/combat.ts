@@ -258,6 +258,16 @@ function setup() {
       battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
       battle.players.red.elixir = 3;
     }
+  } else if (scenario.startsWith("ai-health-")) {
+    const king = battle.entities.find((e) => e.team === "red" && e.king)!;
+    Object.assign(king, { hp: 300, active: true, cooldown: 3 });
+    const shield = scenario === "ai-health-shield";
+    for (const x of [8.5, 9.5])
+      for (const e of unit(shield ? "dark-prince" : "lumberjack", "blue", x, 4.5))
+        Object.assign(e, { hp: 200, deploy: 2.3 });
+    battle.players.red.hand = [shield ? "arrows" : scenario === "ai-health-late" ? "rocket" : "fireball", "freeze", "pekka", "pekka"];
+    battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
+    battle.players.red.elixir = shield ? 7 : scenario === "ai-health-late" ? 10 : 8;
   } else if (scenario.startsWith("ai-combined-")) {
     const king = battle.entities.find((e) => e.team === "red" && e.king)!;
     Object.assign(king, { hp: 300, active: true, cooldown: 3 });
@@ -876,7 +886,11 @@ document.querySelector("#attackers")!.addEventListener("click", () => {
 function advance(ticks: number) {
   for (let i = 0; i < ticks; i++) {
     if (battle.winner) extraVisualTime += STEP;
-    else battle.step();
+    else {
+      if (sceneSelect.value.startsWith("ai-health-") && battle.tick === 72)
+        battle.play("red", 0, 9, 4.5);
+      battle.step();
+    }
   }
 }
 document.querySelector("#step")!.addEventListener("click", () => advance(3));
