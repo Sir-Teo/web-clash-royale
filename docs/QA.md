@@ -1,6 +1,6 @@
 # Verification
 
-Current integration results are recorded in [INTEGRATION.md](INTEGRATION.md). The checkpoint descriptions below preserve historical results from both development lines, including their original roster sizes, test counts, cache versions and deployment evidence.
+Integration results are recorded in [INTEGRATION.md](INTEGRATION.md). The checkpoint descriptions below preserve results from both development lines and subsequent work, including their original roster sizes, test counts, cache versions and deployment evidence.
 
 ```sh
 npm ci
@@ -1196,3 +1196,14 @@ A full 155-case desktop Chromium sweep against the development server produced 1
 The manifest now resolves its start URL, scope and icons relative to its own location. A root production build and a `/web-clash-royale/` production build each pass TypeScript compilation and the complete offline reload: service-worker control, manifest/icon decoding, battle startup and all 278 native combat/death/music files. A separate Chromium check of the prefixed build resolves all three icons below `/web-clash-royale/` with no manifest parse errors. The root build has 921 cached files. Physical home-screen installation remains unverified.
 
 The refreshed `https://sir-teo-clash.web.app/` build matches local HTML, manifest and three browser icon files byte for byte. Chromium reports no hosted manifest or installability errors. Hosted Mobile Safari passes the six-size touch/rotation suite, and hosted Chromium-to-WebKit direct peer play passes pairing, synchronized combat, pause and replay. The Pages-prefixed build and offline behavior were verified locally.
+
+
+## Friendly Heal and Clone AI
+
+Heal and Clone now choose friendly troop groups instead of inheriting the generic enemy-centered spell fallback. Heal values useful body restoration, subtracts one existing healing timeline and checks fatal incoming projectile/Poison packets before its next tick. Clone chooses an advancing or engaged group, checks its actual separated copy positions and avoids known one-hitpoint hazards. Both support troops still deploying, leave structures ineligible and account for Mirror's actual elixir cost. Other persistent-spell thresholds now receive that resolved cost too. Shared healing and separation helpers preserve existing combat values.
+
+Twenty new model checks bring the full suite to 798 passing tests across 137 files. Coverage includes healthy/structural/shield exclusions, cloud overlap, fatal damage ordering, deploy timing, mirrored affordability, actual healing/copies, inherited Poison, air/ground splash counters, offset-specific survival, read-only planning, legal placement and reversed perspective. Two complete seeded battles produce natural AI Heal/Clone casts using ordinary commands, then reproduce every final snapshot and audio event through replay. The existing seventeen-opponent battles and original-local-engine golden replay remain green. No persistent/wire field or combat rules version changes; new recordings remain origin version 16.
+
+Twenty-four distinct browser cases pass across desktop Chromium, phone Chromium and phone WebKit: existing AI Rage/Freeze/Poison, new AI Heal/Clone through the ordinary decision timer, native Clone rendering and real-hand Heal/Clone controls. The support cases verify deployment is still pending before the decision, useful healing or two one-hitpoint copies afterward, correct coverage of the actual troop positions and a stable paused scene. The final twelve-case support/hand batch passes after replacing this worktree's dependency symlink with its own lockfile install; development fonts load without the previous file-access errors. The new support spec is included in desktop and phone WebKit CI. Inspected previews are `docs/screenshots/desktop-ai-heal.png`, `desktop-ai-clone.png`, `phone-ai-heal.png` and `phone-ai-clone.png`.
+
+Type checking and production compilation pass. The Pages-prefixed production build passes offline reload, cached browser match worker, battle startup, scoped requests, manifest/icons and all 278 native combat/death/music files. The cache remains 921 URLs/894 unique content groups with 8.1 MB of duplicate bytes omitted. Root production output is restored after the prefixed check. These checks establish targeting and playback behavior; they do not measure win rate or physical-phone performance. No push or deployment was performed.

@@ -18,6 +18,19 @@ import elixirCollector from "./elixir-collector-data.json" with { type: "json" }
 // Historical default; cards with archived delays keep their own timing.
 export const DEPLOY_TIME = 1;
 export const BUILDING_RADIUS = 0.8;
+/** Shared Clone separation for the simulation and read-only AI forecasts. */
+export function clonePosition(entity: Point, center: Point, team: Team): Point {
+  return {
+    x: Math.max(
+      0.5,
+      Math.min(17.5, entity.x + (entity.x < center.x ? -0.25 : 0.25)),
+    ),
+    y: Math.max(
+      0.7,
+      Math.min(31.3, entity.y + (team === "blue" ? -0.65 : 0.65)),
+    ),
+  };
+}
 export const deploymentRadius = (id: CardId) =>
   (collisionRadii.cards as Record<string, number>)[id];
 export function deploymentTime(id: CardId): number {

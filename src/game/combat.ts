@@ -1,5 +1,6 @@
 import data from "./combat-data.json";
 import settings from "./combat-settings.json";
+import heal from "./heal-data.json" with { type: "json" };
 import type { Entity } from "./engine";
 
 export interface CombatTraits {
@@ -30,3 +31,7 @@ export const SPELL_CROWN_TOWER_DAMAGE_FRACTION = 0.3;
 export const ARROWS_WAVES = 3;
 export const ARROWS_WAVE_GAP = 0.2;
 export const KING_ACTIVATION_TIME = settings.kingActivationSeconds;
+// The level-11 Rare conversion, rounded once per source healing tick.
+export const HEAL_PER_TICK = Math.round(
+  ((heal.sourceHealPerSecond * 1152) / 450) * heal.healInterval,
+);

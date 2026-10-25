@@ -143,8 +143,8 @@ function setup() {
     unit("archers", "red", 14, 10);
     cast("arrows", "blue", 4, 12);
     cast("fireball", "blue", 14, 12);
-  } else if (["ai-rage", "ai-freeze", "ai-poison"].includes(scenario)) {
-    const card = scenario.slice(3) as "rage" | "freeze" | "poison";
+  } else if (["ai-rage", "ai-freeze", "ai-poison", "ai-heal", "ai-clone"].includes(scenario)) {
+    const card = scenario.slice(3) as "rage" | "freeze" | "poison" | "heal" | "clone";
     if (card === "rage") {
       for (const e of unit("giant", "red", 4, 20)) {
         e.active = false;
@@ -159,6 +159,16 @@ function setup() {
         e.active = false;
         e.speed = 0;
       }
+    } else if (card === "heal" || card === "clone") {
+      for (const [i, id] of (card === "heal"
+        ? ["musketeer", "musketeer"] as const
+        : ["giant", "witch"] as const).entries())
+        for (const e of unit(id, "red", 4 + i, 20)) {
+          e.active = false;
+          e.speed = 0;
+          e.deploy = 3;
+          if (card === "heal") e.hp = e.maxHp * 0.2;
+        }
     } else {
       for (const id of ["wizard", "witch"] as const)
         for (const e of unit(id, "blue", id === "wizard" ? 4 : 5, 23)) {
@@ -168,7 +178,8 @@ function setup() {
     }
     battle.players.red.hand = [card, "pekka", "pekka", "pekka"];
     battle.players.red.queue[0] = card;
-    battle.players.red.elixir = card === "rage" ? 2 : 10;
+    battle.players.red.elixir = card === "rage" ? 2
+      : card === "heal" || card === "clone" ? 3 : 10;
   } else if (scenario.startsWith("ai-defense-balloon")) {
     unit("balloon", "blue", 14, 14.2);
     if (scenario.endsWith("blocked"))
@@ -1154,7 +1165,7 @@ function render(now: number) {
       scene: (document.querySelector("#scenario") as HTMLSelectElement).value,
       actions: battle.actions.filter(
         (a) =>
-          a.team === "red" && ["rage", "freeze", "poison"].includes(a.card),
+          a.team === "red" && ["rage", "freeze", "poison", "heal", "clone"].includes(a.card),
       ),
       areas: battle.areas,
       entities: battle.entities
@@ -1165,6 +1176,14 @@ function render(now: number) {
           stun: e.stun,
           rage: e.rage,
           poison: e.poison,
+          heal: e.heal,
+          clone: e.clone,
+          hp: e.hp,
+          maxHp: e.maxHp,
+          x: e.x,
+          y: e.y,
+          radius: e.radius,
+          deploy: e.deploy,
         })),
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.aiSpells =

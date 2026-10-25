@@ -1,5 +1,5 @@
 import { CARD_MAP, type CardId } from "../game/cards";
-import { FIREBALL_KNOCKBACK } from "../game/combat";
+import { FIREBALL_KNOCKBACK, HEAL_PER_TICK } from "../game/combat";
 import freeze from "../game/freeze-data.json" with { type: "json" };
 import poison from "../game/poison-data.json" with { type: "json" };
 import rage from "../game/rage-data.json" with { type: "json" };
@@ -65,13 +65,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
   if (id === "heal")
     return {
       stats: [
-        stat(
-          "Healing per second",
-          Math.round(
-            ((heal.sourceHealPerSecond * 1152) / 450) * heal.healInterval,
-          ) / heal.healInterval,
-          "heart",
-        ),
+        stat("Healing per second", HEAL_PER_TICK / heal.healInterval, "heart"),
         stat("Duration", seconds(heal.duration), "timer"),
         stat("Linger", `Up to ${seconds(heal.buffDuration)}`, "timer"),
         radius,

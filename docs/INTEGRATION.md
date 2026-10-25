@@ -63,3 +63,8 @@ Peer checks used separate local browser contexts. Hosted CI, physical devices an
 ## Historical evidence
 
 `docs/QA.md` preserves separate validation histories for both parents. Local Rocket/Rage reconstruction records in `reference/client` describe that branch's earlier design choices; current generated inputs follow the archived-roster schemas. Both previously reviewed phone Rocket captures are retained: the local one is `phone-local-rocket-flight.png`, while `phone-rocket-flight.png` is the archived-roster capture. Neither is new visual verification of this integration.
+
+
+## Subsequent AI support work
+
+After the integration checkpoint, dedicated friendly Heal/Clone targeting replaces those two spells' generic fallback. Mirror-aware area-spell costs, deterministic full-match regressions and desktop/phone previews are recorded in the **Friendly Heal and Clone AI** checkpoint in [QA.md](QA.md). The integration validation counts above describe the merge itself; the later checkpoint passes 798 unit tests and 24 distinct browser cases.

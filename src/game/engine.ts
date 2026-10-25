@@ -3,8 +3,8 @@ import { LOCAL_REPLAY_CARDS } from "./replay-family";
 import { Battle as LegacyLocalBattle, type EngineOptions as LegacyLocalOptions } from "./legacy-local-engine";
 import { CARD_MAP, LEGACY_BALLOON_STATS, LEGACY_BUILDING_STATS, LEGACY_CARD_SPLASH, LEGACY_CARD_STATS, LEGACY_CARD_VITALS, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
-import { deploymentPositions } from "./deployment";
-import { areaSpellTarget } from "./area-spell-targeting";
+import { clonePosition, deploymentPositions } from "./deployment";
+import { areaSpellTarget, isAreaSpell } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targeting";
 import { defensiveThreats } from "./defensive-threats";
 import { buildingLureTarget } from "./building-lure";
@@ -17,6 +17,7 @@ import {
   ARROWS_WAVES,
   ARROWS_WAVE_GAP,
   KING_ACTIVATION_TIME,
+  HEAL_PER_TICK,
 } from "./combat";
 import { TOWER_SITES } from "./arena-layout";
 import { audioProfile } from "./combat-audio-events";
@@ -997,16 +998,7 @@ export class Battle {
           cloned.push(entity.id);
           // The archived area selects friendly troops but does not retain the
           // native clone offset. Keep a small forward separation in this arena.
-          const x = clamp(
-            entity.x + (entity.x < area.x ? -0.25 : 0.25),
-            0.5,
-            17.5,
-          );
-          const y = clamp(
-            entity.y + (area.team === "blue" ? -0.65 : 0.65),
-            0.7,
-            31.3,
-          );
+          const { x, y } = clonePosition(entity, area, area.team);
           this.entities.push({
             ...structuredClone(entity),
             id: this.nextId++,
@@ -1200,8 +1192,7 @@ export class Battle {
           status.elapsed -= heal.healInterval;
           // The archived buff is 100 HP/s at its base Rare level. Match the
           // roster's level-11 Rare conversion used for other source values.
-          const amount = Math.round(heal.sourceHealPerSecond * 1152 / 450 * heal.healInterval);
-          entity.hp = Math.min(entity.maxHp, entity.hp + amount);
+          entity.hp = Math.min(entity.maxHp, entity.hp + HEAL_PER_TICK);
         }
         if (status.remaining < 1e-8 || entity.hp <= 0)
           entity.heal = undefined;
@@ -2686,12 +2677,13 @@ export class Battle {
                 this.entities,
                 this.areas,
                 this.projectiles,
+                a.cost ?? a.c.cost,
               ),
         ]),
     );
     // Preserve the baseline policy for additional archive spells until they
     // have dedicated targeting heuristics. Mirror uses its resolved card.
-    const optimizedSpells = new Set<CardId>(["fireball", "arrows", "zap", "rocket", "freeze", "poison", "rage"]);
+    const optimizedSpell = (id: CardId) => isDamageSpell(id) || isAreaSpell(id);
     const hasSpellTarget = [...spellTargets.values()].some(Boolean);
     const threats = defensiveThreats("red", this.entities);
     let threat = threats[0];
@@ -2737,7 +2729,7 @@ export class Battle {
         let score = jitter;
         const target = spellTargets.get(a.id);
         if (a.c.kind === "spell") {
-          if (optimizedSpells.has(a.played))
+          if (optimizedSpell(a.played))
             score = target ? target.score + jitter * 0.1 : -Infinity;
           else if (threat) {
             const nearby = threats.filter((e) => dist(e, threat) < (a.c.radius ?? 2.5));
@@ -2774,7 +2766,7 @@ export class Battle {
     let x = lane + (this.random() - 0.5) * 1.4,
       y = threat ? clamp(threat.y + 1.3, 4, 13.8) : a.c.buildingsOnly ? 3.5 : 9;
     if (a.c.kind === "spell") {
-      const target = a.target ?? (!optimizedSpells.has(a.played)
+      const target = a.target ?? (!optimizedSpell(a.played)
         ? threat ?? this.entities.find((e) => e.team === "blue" && e.kind === "tower" && !e.king && e.hp > 0)
         : undefined);
       if (!target) return;

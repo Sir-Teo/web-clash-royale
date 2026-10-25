@@ -2,6 +2,7 @@ import { aiBodyValue as bodyValue } from "./ai-body-value";
 import { CARD_MAP, type CardId } from "./cards";
 import type { AreaEffect, Entity, Projectile, Team } from "./engine";
 import poison from "./poison-data.json" with { type: "json" };
+import { supportSpellTarget } from "./support-spell-targeting";
 import {
   hiddenSpellTarget,
   pendingSpellDamage,
@@ -11,6 +12,8 @@ import {
 } from "./spell-targeting";
 
 const health = (e: Entity) => Math.max(0, Math.min(1, e.hp / e.maxHp));
+const AREA_SPELLS = new Set<CardId>(["rage", "freeze", "poison", "heal", "clone"]);
+export const isAreaSpell = (card: CardId) => AREA_SPELLS.has(card);
 const covered = (
   e: Entity,
   card: AreaEffect["card"],
@@ -40,7 +43,10 @@ export function areaSpellTarget(
   entities: readonly Entity[],
   areas: readonly AreaEffect[] = [],
   projectiles: readonly Projectile[] = [],
+  cost = CARD_MAP[card].cost,
 ): SpellTarget | undefined {
+  if (card === "heal" || card === "clone")
+    return supportSpellTarget(card, team, entities, areas, projectiles, cost);
   if (card !== "rage" && card !== "freeze" && card !== "poison") return;
   const living = entities.filter((e) => e.hp > 0);
   const friends = living.filter(
@@ -177,11 +183,13 @@ export function areaSpellTarget(
       }
     }
     const threshold =
-      card === "rage" ? 5 : CARD_MAP[card].cost * (card === "poison" ? 0.8 : 1);
+      card === "rage"
+        ? (5 * cost) / CARD_MAP.rage.cost
+        : cost * (card === "poison" ? 0.8 : 1);
     const score =
       lethalTower !== undefined
         ? (king ? 10_000 : 40) -
-          CARD_MAP[card].cost -
+          cost -
           poison.duration * 0.1 +
           value -
           penalty
