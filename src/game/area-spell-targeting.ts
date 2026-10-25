@@ -269,6 +269,7 @@ export function areaSpellTarget(
       }
     }
     const rescue = defense?.evaluate("freeze", point);
+    if (rescue?.worsens) continue;
     protectsKing = !!rescue?.improves;
     const threshold =
       card === "rage"

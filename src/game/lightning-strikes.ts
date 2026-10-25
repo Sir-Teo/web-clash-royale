@@ -2,7 +2,7 @@ import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import lightning from "./lightning-data.json" with { type: "json" };
 import { CARD_MAP } from "./cards";
-import type { DamagePacket } from "./projectile-impacts";
+import { damagePacketOrder, type DamagePacket } from "./projectile-impacts";
 import { healthPackets, type HealthPacket } from "./status-health";
 
 const eligible = (e: Entity, team: Team, struck: readonly number[]) =>
@@ -259,15 +259,36 @@ export const lightningStrikes = (
     areas,
   )(point, area?.radius);
 
+/** Reuse released health timelines while testing counterfactual pending hits.
+ * Additional packets affect selection only before a pulse, never on its frame.
+ * They are inputs to ranking, not part of the returned Lightning damage. */
+export function createLightningDamageForecast(
+  entities: readonly Entity[],
+  areas: readonly AreaEffect[],
+  projectiles: readonly Projectile[] = [],
+) {
+  const eventsFor = healthContext(entities, projectiles, areas);
+  return (
+    additional: ReadonlyMap<number, readonly HealthPacket[]> = new Map(),
+  ) =>
+    projectAreas(entities, areas, (body) => {
+      const extra = additional.get(body.id);
+      return extra?.length
+        ? [...eventsFor(body), ...extra].sort(damagePacketOrder)
+        : eventsFor(body);
+    }).packets;
+}
+
 /** Prepare each area's selection once for a whole-board decision. */
 export function lightningDamageMap(
   entities: readonly Entity[],
   areas: readonly AreaEffect[],
   projectiles: readonly Projectile[] = [],
+  additional: ReadonlyMap<number, readonly HealthPacket[]> = new Map(),
 ) {
-  return projectAreas(
+  return createLightningDamageForecast(
     entities,
     areas,
-    healthContext(entities, projectiles, areas),
-  ).packets;
+    projectiles,
+  )(additional);
 }

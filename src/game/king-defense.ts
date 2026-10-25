@@ -10,6 +10,7 @@ import { projectTornadoWindup, type WindupProjection } from "./tornado-pull";
 import miner from "./miner-data.json" with { type: "json" };
 import freeze from "./freeze-data.json" with { type: "json" };
 import { createWindupHealth } from "./windup-health";
+import { createLightningDamageForecast } from "./lightning-strikes";
 
 /** Complete current attack packet, including both Executioner passes. The
  * release frame already advances a projectile; melee precedes projectiles. */
@@ -94,8 +95,13 @@ export function createKingDefense(
   const king = entities.find((e) => e.hp > 0 && e.team === team && e.king);
   const health = createWindupHealth(projectiles, entities);
   const released = king
-    ? towerDamageForecast(king, projectiles, areas, entities).baseline
-    : [];
+    ? towerDamageForecast(king, projectiles, areas, entities)
+    : undefined;
+  const lightningForecast = areas.some(
+    (a) => a.card === "lightning" && a.team !== team && a.remaining > 0,
+  )
+    ? createLightningDamageForecast(entities, areas, projectiles)
+    : undefined;
   const attempts = king
     ? entities.flatMap((attacker, index) => {
         const pending = attacker.pendingAttack;
@@ -130,9 +136,21 @@ export function createKingDefense(
         ];
       })
     : [];
-  const baseline = king
-    ? kingDeathStep(king, [...released, ...attempts.flatMap((a) => a.packets)])
-    : Infinity;
+  const deathWith = (pending: DamagePacket[]) => {
+    if (!king || !released) return Infinity;
+    // A surviving hit before a pulse changes current HP and can redirect it.
+    // Evaluate the original and proposed timelines independently; same-step
+    // Combat and projectile packets remain after Lightning's area phase.
+    const packets = lightningForecast
+      ? [
+          ...released.withoutLightning,
+          ...(lightningForecast(new Map([[king.id, pending]])).get(king.id) ??
+            []),
+        ]
+      : released.baseline;
+    return kingDeathStep(king, [...packets, ...pending]);
+  };
+  const baseline = deathWith(attempts.flatMap((a) => a.packets));
   const opposingKing = entities.find(
     (e) => e.hp > 0 && e.team !== team && e.king,
   );
@@ -192,7 +210,7 @@ export function createKingDefense(
       .join("/");
     const known = cache.get(key);
     if (known) return known;
-    const deathStep = kingDeathStep(king, [...released, ...pending.flat()]);
+    const deathStep = deathWith(pending.flat());
     const result = {
       baseline,
       deathStep,

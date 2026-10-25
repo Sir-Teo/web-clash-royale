@@ -1,6 +1,49 @@
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
 
+for (const card of ["freeze", "tornado"])
+  test(`Lightning feedback: the ordinary AI timer holds ${card} to preserve its King`, async ({
+    page,
+  }, info) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto(
+      `/tests/fixtures/combat.html?scene=ai-lightning-defense-${card}`,
+    );
+    await expect(page.locator("#status")).toContainText(
+      `${expectedEffects} effects`,
+      {
+        timeout: 60000,
+      },
+    );
+    const output = page.locator("#destruction");
+    const state = async () =>
+      JSON.parse((await output.getAttribute("data-ai-areas"))!);
+    const actions = async () =>
+      JSON.parse((await output.getAttribute("data-ai-defense"))!).actions;
+    for (let i = 0; i < 3; i++) {
+      const before = (await state()).time;
+      await page.locator("#second").click();
+      await expect
+        .poll(async () => (await state()).time)
+        .toBeGreaterThan(before + 0.99);
+      expect(await actions()).toEqual([]);
+    }
+    const result = await state();
+    expect(result.winner).toBeNull();
+    expect(result.kings.find((e: any) => e.team === "red").hp).toBe(58);
+    expect(result.entities.filter((e: any) => e.team === "red")).toEqual([]);
+    const hand = JSON.parse((await output.getAttribute("data-ai-spells"))!);
+    expect(hand.hand).toContain(card);
+    expect(hand.elixir).toBeGreaterThan(4);
+    if (card === "tornado")
+      await page.screenshot({
+        path: info.outputPath("ai-lightning-defense-feedback.png"),
+        fullPage: true,
+      });
+    expect(errors).toEqual([]);
+  });
+
 for (const scene of [
   "ai-health-fireball",
   "ai-health-shield",
