@@ -12,6 +12,7 @@ import { meleeInterceptTarget } from "./melee-intercept";
 import { fatalKingWindups, finishesKingBefore } from "./king-spell-race";
 import { attackFlight } from "./attack-flight";
 import { launchedKingDeadline } from "./king-damage";
+import { createMatchFinisher } from "./match-finisher";
 import {
   combatTraits,
   COMBAT_STEP,
@@ -2642,6 +2643,18 @@ export class Battle {
     )
       ? launchedKingDeadline("red", this.entities, this.projectiles, this.areas)
       : Infinity;
+    const finisher =
+      this.time >= 180 &&
+      affordable.some((a) => isDamageSpell(a.played) || a.played === "poison")
+        ? createMatchFinisher(
+            "red",
+            this.entities,
+            this.projectiles,
+            this.areas,
+            { blue: this.players.blue.crowns, red: this.players.red.crowns },
+            this.remaining,
+          )
+        : undefined;
     const spellTargets = new Map<CardId, SpellTarget | undefined>(
       affordable
         .filter((a) => a.c.kind === "spell")
@@ -2656,6 +2669,7 @@ export class Battle {
                 this.areas,
                 a.cost ?? a.c.cost,
                 kingDeadline,
+                finisher,
               )
             : areaSpellTarget(
                 a.played,
@@ -2665,6 +2679,7 @@ export class Battle {
                 this.projectiles,
                 a.cost ?? a.c.cost,
                 kingDeadline,
+                finisher,
               ),
         ]),
     );
@@ -2677,8 +2692,9 @@ export class Battle {
       // A lethal hit can still lose the match when its flight ends too late.
       // Compare the known pending attack only when an affordable defense exists.
       const deadline = Math.min(
-        ...fatalKingWindups("red", this.entities, this.areas)
-          .map((windup) => windup.step),
+        ...fatalKingWindups("red", this.entities, this.areas).map(
+          (windup) => windup.step,
+        ),
       );
       for (const a of affordable) {
         const target = spellTargets.get(a.id);
@@ -2688,17 +2704,19 @@ export class Battle {
             : this.entities.find((e) => e.id === target.lethalTower && e.king);
         if (
           target &&
-          king &&
-          !finishesKingBefore(
-            a.played,
-            "red",
-            king,
-            target,
-            this.projectiles,
-            this.areas,
-            deadline,
-            this.entities,
-          )
+          (target.matchDecisionStep !== undefined
+            ? target.matchDecisionStep >= deadline
+            : king &&
+              !finishesKingBefore(
+                a.played,
+                "red",
+                king,
+                target,
+                this.projectiles,
+                this.areas,
+                deadline,
+                this.entities,
+              ))
         )
           spellTargets.set(a.id, {
             ...target,

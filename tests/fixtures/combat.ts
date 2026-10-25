@@ -258,6 +258,44 @@ function setup() {
       battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
       battle.players.red.elixir = 3;
     }
+  } else if (
+    scenario === "ai-overtime" ||
+    scenario === "ai-tiebreaker" ||
+    scenario === "ai-overtime-reserved"
+  ) {
+    const king = battle.entities.find((e) => e.team === "red" && e.king)!;
+    const enemyKing = battle.entities.find((e) => e.team === "blue" && e.king)!;
+    const princess = battle.entities.find((e) => e.team === "blue" && !e.king)!;
+    if (scenario !== "ai-tiebreaker") {
+      const reserved = scenario === "ai-overtime-reserved";
+      battle.tick = 6000;
+      king.hp = 100;
+      enemyKing.hp = reserved ? 50 : 300;
+      princess.hp = 50;
+      const target = reserved ? princess : king;
+      cast("rocket", reserved ? "red" : "blue", target.x, target.y);
+      const incoming = battle.projectiles.at(-1)!;
+      incoming.remaining = reserved ? 2.6 : 3;
+      incoming.elapsed = incoming.duration - incoming.remaining;
+      incoming.flight = {
+        x:
+          incoming.x +
+          ((incoming.tx - incoming.x) * incoming.elapsed) / incoming.duration,
+        y:
+          incoming.y +
+          ((incoming.ty - incoming.y) * incoming.elapsed) / incoming.duration,
+      };
+      battle.players.red.hand = reserved
+        ? ["zap", "pekka", "pekka", "pekka"]
+        : ["rocket", "zap", "pekka", "pekka"];
+      battle.players.red.elixir = reserved ? 2 : 6;
+    } else {
+      battle.tick = 8919;
+      king.hp = 80;
+      princess.hp = 100;
+      battle.players.red.hand = ["zap", "pekka", "pekka", "pekka"];
+      battle.players.red.elixir = 2;
+    }
   } else if (scenario === "ai-launched-poison" || scenario === "ai-launched-zap") {
     const king = battle.entities.find((e) => e.team === "red" && e.king)!;
     const enemyKing = battle.entities.find((e) => e.team === "blue" && e.king)!;
@@ -1213,6 +1251,8 @@ function render(now: number) {
       kings: battle.entities.filter((e) => e.king)
         .map((e) => ({ team: e.team, hp: e.hp })),
       winner: battle.winner,
+      time: battle.time,
+      reason: battle.reason,
       entities: battle.entities
         .filter((e) => e.kind !== "tower")
         .map((e) => ({
@@ -1240,7 +1280,7 @@ function render(now: number) {
       ),
       towers: battle.entities
         .filter((e) => e.team === "blue" && e.kind === "tower")
-        .map((e) => ({ id: e.id, hp: e.hp, x: e.x, y: e.y })),
+        .map((e) => ({ id: e.id, hp: e.hp, x: e.x, y: e.y, radius: e.radius })),
       crowns: battle.players.red.crowns,
       elixir: battle.players.red.elixir,
       hand: battle.players.red.hand,

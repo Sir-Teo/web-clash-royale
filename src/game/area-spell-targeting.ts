@@ -5,6 +5,7 @@ import poison from "./poison-data.json" with { type: "json" };
 import { supportSpellTarget } from "./support-spell-targeting";
 import { fatalKingWindups } from "./king-spell-race";
 import { createKingSpellRace, kingRacePriority } from "./king-damage";
+import type { MatchFinisher } from "./match-finisher";
 import {
   hiddenSpellTarget,
   pendingSpellDamage,
@@ -14,7 +15,13 @@ import {
 } from "./spell-targeting";
 
 const health = (e: Entity) => Math.max(0, Math.min(1, e.hp / e.maxHp));
-const AREA_SPELLS = new Set<CardId>(["rage", "freeze", "poison", "heal", "clone"]);
+const AREA_SPELLS = new Set<CardId>([
+  "rage",
+  "freeze",
+  "poison",
+  "heal",
+  "clone",
+]);
 export const isAreaSpell = (card: CardId) => AREA_SPELLS.has(card);
 const covered = (
   e: Entity,
@@ -35,7 +42,9 @@ const near = (a: Entity, b: Entity, extra = 0) =>
 const canHit = (a: Entity, b: Entity) => {
   if (a.kind === "tower") return true;
   const card = CARD_MAP[a.card as CardId];
-  return (!card.buildingsOnly || b.kind !== "troop") && (!b.air || !!card.hitsAir);
+  return (
+    (!card.buildingsOnly || b.kind !== "troop") && (!b.air || !!card.hitsAir)
+  );
 };
 
 /** Current-position support heuristics; no simulation or random draws. */
@@ -47,6 +56,7 @@ export function areaSpellTarget(
   projectiles: readonly Projectile[] = [],
   cost = CARD_MAP[card].cost,
   kingDeadline = Infinity,
+  finisher?: MatchFinisher,
 ): SpellTarget | undefined {
   if (card === "heal" || card === "clone")
     return supportSpellTarget(card, team, entities, areas, projectiles, cost);
@@ -58,7 +68,7 @@ export function areaSpellTarget(
   const enemies = living.filter((e) => e.team !== team);
   const enemyKing = enemies.find((e) => e.king);
   const race =
-    card === "poison" && Number.isFinite(kingDeadline) && enemyKing
+    !finisher && card === "poison" && Number.isFinite(kingDeadline) && enemyKing
       ? createKingSpellRace(card, team, enemyKing, projectiles, areas, entities)
       : undefined;
   const radius = CARD_MAP[card].radius!;
@@ -139,16 +149,26 @@ export function areaSpellTarget(
     }
   } else {
     for (const e of enemies) {
+      const alreadyCovered = covered(e, "poison", team, areas);
       if (
         hiddenSpellTarget(e) ||
-        (covered(e, "poison", team, areas) && !(e.king && race)) ||
-        (e.king && race && race.baseline < kingDeadline)
+        (alreadyCovered &&
+          !(e.king && race) &&
+          !(finisher && e.kind === "tower")) ||
+        (!finisher && e.king && race && race.baseline < kingDeadline)
       )
         continue;
+      if (finisher && alreadyCovered && e.kind === "tower") {
+        // Keep the center for a possible useful refresh, without counting
+        // an existing cloud's tower damage again as ordinary spell value.
+        targets.push({ entity: e, value: 0, penalty: 0, lethal: false });
+        continue;
+      }
       const reserved = pendingSpellDamage(e, team, projectiles);
       const hp = Math.max(0, e.hp + (e.shield ?? 0) - reserved);
       let shield = Math.max(0, (e.shield ?? 0) - reserved);
-      if (hp <= 1e-6 && !(e.king && race)) continue;
+      if (hp <= 1e-6 && !(e.king && race) && !(finisher && e.kind === "tower"))
+        continue;
       const fighting = friends.some((friend) => near(e, friend));
       const dwell =
         e.kind !== "troop"
@@ -157,7 +177,8 @@ export function areaSpellTarget(
             ? 4
             : Math.min(3, (2 * radius) / Math.max(0.1, e.speed));
       const ticks = Math.floor(dwell / poison.damageInterval);
-      const packet = CARD_MAP.poison.damage *
+      const packet =
+        CARD_MAP.poison.damage *
         (e.kind === "tower" ? poison.crownTowerDamageFraction : 1);
       let damage = 0;
       for (let i = 0; i < ticks; i++) {
@@ -165,7 +186,7 @@ export function areaSpellTarget(
         damage += hit;
         shield = Math.max(0, shield - hit);
       }
-      const lethal = e.kind === "tower" && hp <= damage + 1e-6;
+      const lethal = e.kind === "tower" && hp > 1e-6 && hp <= damage + 1e-6;
       const defense = (team === "red" ? e.y < 15 : e.y > 17) ? 1.2 : 1;
       const value =
         e.kind === "tower"
@@ -175,7 +196,8 @@ export function areaSpellTarget(
           : bodyValue(e) *
             Math.min(
               1,
-              Math.min(damage, hp) / (e.maxHp + (e.maxShield ?? 0)) + (hp <= damage ? 0.35 : 0),
+              Math.min(damage, hp) / (e.maxHp + (e.maxShield ?? 0)) +
+                (hp <= damage ? 0.35 : 0),
             ) *
             defense;
       targets.push({
@@ -217,7 +239,11 @@ export function areaSpellTarget(
       value += t.value;
       penalty += t.penalty;
       protectsKing ||= !!t.protectsKing;
-      if (t.lethal && (lethalTower === undefined || t.entity.king)) {
+      if (
+        !finisher &&
+        t.lethal &&
+        (lethalTower === undefined || t.entity.king)
+      ) {
         lethalTower = t.entity.id;
         king = !!t.entity.king;
       }
@@ -228,8 +254,13 @@ export function areaSpellTarget(
         : cost * (card === "poison" ? 0.8 : 1);
     // Keep emergency protection below a winning King hit, above ordinary
     // support value. Bound the crowd bonus so that priority cannot invert.
+    const match =
+      card === "poison"
+        ? finisher?.evaluate(card, point, cost, value)
+        : undefined;
     const score =
-      lethalTower !== undefined
+      match?.score ??
+      (lethalTower !== undefined
         ? (king && race
             ? kingRacePriority(kingStep, kingDeadline)
             : king
@@ -241,10 +272,11 @@ export function areaSpellTarget(
           penalty
         : protectsKing
           ? 9_000 - cost + Math.min(100, value)
-          : 3 + 2 * (value - threshold) - penalty;
+          : 3 + 2 * (value - threshold) - penalty);
     if (
       lethalTower === undefined &&
       !protectsKing &&
+      !match &&
       (value < threshold || score <= 0)
     )
       continue;
@@ -253,6 +285,7 @@ export function areaSpellTarget(
         ...point,
         score,
         value,
+        ...(match ? { matchDecisionStep: match.matchDecisionStep } : {}),
         ...(lethalTower !== undefined ? { lethalTower } : {}),
         ...(protectsKing ? { protectsKing: true } : {}),
       };

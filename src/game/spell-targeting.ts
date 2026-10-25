@@ -5,6 +5,7 @@ import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import poison from "./poison-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
 import { createKingSpellRace, kingRacePriority } from "./king-damage";
+import type { MatchFinisher } from "./match-finisher";
 
 const DIRECT_SPELLS = new Set<CardId>(["fireball", "arrows", "zap", "rocket"]);
 export const isDamageSpell = (card: CardId) => DIRECT_SPELLS.has(card);
@@ -13,6 +14,7 @@ export interface SpellTarget extends Point {
   value: number;
   lethalTower?: number;
   protectsKing?: boolean;
+  matchDecisionStep?: number;
 }
 export const spellContains = (a: Point, b: Point, radius: number) =>
   (a.x - b.x) ** 2 + (a.y - b.y) ** 2 < radius ** 2;
@@ -54,19 +56,28 @@ export function pendingSpellDamage(
   projectiles: readonly Projectile[] = [],
   areas: readonly AreaEffect[] = [],
 ): number {
-  if (entity.team === team || hiddenSpellTarget(entity) || entity.dash) return 0;
+  if (entity.team === team || hiddenSpellTarget(entity) || entity.dash)
+    return 0;
   let shield = entity.shield ?? 0;
   let shots = 0;
   // Shields absorb an entire packet: damage beyond a shield's remaining HP
   // never reaches the body. Preserve arrival order when reserving future hits.
-  const incoming = projectiles.filter((p) =>
-    p.team === team && p.source === 0 && p.remaining > 0 &&
-    (p.air || !entity.air) &&
-    spellContains({ x: p.tx, y: p.ty }, entity, p.splash + entity.radius),
-  ).sort((a, b) => a.remaining - b.remaining || a.id - b.id);
+  const incoming = projectiles
+    .filter(
+      (p) =>
+        p.team === team &&
+        p.source === 0 &&
+        p.remaining > 0 &&
+        (p.air || !entity.air) &&
+        spellContains({ x: p.tx, y: p.ty }, entity, p.splash + entity.radius),
+    )
+    .sort((a, b) => a.remaining - b.remaining || a.id - b.id);
   for (const p of incoming) {
-    const damage = p.damage * (entity.kind === "tower"
-      ? (p.towerDamageFraction ?? SPELL_CROWN_TOWER_DAMAGE_FRACTION) : 1);
+    const damage =
+      p.damage *
+      (entity.kind === "tower"
+        ? (p.towerDamageFraction ?? SPELL_CROWN_TOWER_DAMAGE_FRACTION)
+        : 1);
     if (shield > 0) {
       const absorbed = Math.min(shield, damage);
       shots += absorbed;
@@ -103,6 +114,7 @@ export function damageSpellTarget(
   areas: readonly AreaEffect[] = [],
   cost = CARD_MAP[card].cost,
   kingDeadline = Infinity,
+  finisher?: MatchFinisher,
 ): SpellTarget | undefined {
   if (!isDamageSpell(card)) return;
   const rules = CARD_MAP[card],
@@ -117,7 +129,7 @@ export function damageSpellTarget(
   );
   const enemyKing = enemies.find((e) => e.king);
   const race =
-    Number.isFinite(kingDeadline) && enemyKing
+    !finisher && Number.isFinite(kingDeadline) && enemyKing
       ? createKingSpellRace(card, team, enemyKing, projectiles, areas, entities)
       : undefined;
   const targets = enemies
@@ -130,7 +142,11 @@ export function damageSpellTarget(
       };
     })
     .filter((t) =>
-      t.entity.king && race ? race.baseline >= kingDeadline : t.hp > 1e-6,
+      finisher && t.entity.kind === "tower"
+        ? true
+        : t.entity.king && race
+          ? race.baseline >= kingDeadline
+          : t.hp > 1e-6,
     );
   if (!targets.length) return;
   const points = spellCandidatePoints(
@@ -154,7 +170,7 @@ export function damageSpellTarget(
         radius: radius + e.radius,
         value: hp <= damage + 1e-6 ? 0 : (Math.min(damage, hp) / e.maxHp) * 2,
         penalty: hp > damage + 1e-6 && e.king && !e.active ? cost + 8 : 0,
-        lethal: e.kind === "tower" && hp <= damage + 1e-6,
+        lethal: hp > 1e-6 && hp <= damage + 1e-6,
       };
     const bodyCost = aiBodyValue(e);
     const removal = hp <= damage + 1e-6 ? 0.35 : 0;
@@ -164,7 +180,10 @@ export function damageSpellTarget(
       radius: radius + e.radius,
       value:
         bodyCost *
-        Math.min(1, Math.min(damage, hp) / (e.maxHp + (e.maxShield ?? 0)) + removal) *
+        Math.min(
+          1,
+          Math.min(damage, hp) / (e.maxHp + (e.maxShield ?? 0)) + removal,
+        ) *
         defense,
       penalty: 0,
       lethal: false,
@@ -191,25 +210,29 @@ export function damageSpellTarget(
       }
       value += target.value;
       penalty += target.penalty;
-      if (target.lethal && (!lethalTower || target.entity.king))
+      if (!finisher && target.lethal && (!lethalTower || target.entity.king))
         lethalTower = target.entity;
     }
-    // A guaranteed King kill wins the match, regardless of nearby troop value.
+    // Overtime uses the match forecast exclusively for lethal priority. A
+    // queued earlier victory must not fall back to the regulation kill score.
+    const match = finisher?.evaluate(card, point, cost, value);
     const score =
-      lethalTower?.king && race
+      match?.score ??
+      (lethalTower?.king && race
         ? kingRacePriority(kingStep, kingDeadline) -
           cost +
           Math.min(100, value) -
           penalty
         : lethalTower
           ? (lethalTower.king ? 10_000 : 40) - cost + value - penalty
-          : 3 + 2 * (value - cost * 0.8) - penalty;
-    if (!lethalTower && (value < cost * 0.8 || score <= 0)) continue;
+          : 3 + 2 * (value - cost * 0.8) - penalty);
+    if (!match && !lethalTower && (value < cost * 0.8 || score <= 0)) continue;
     if (!best || score > best.score + 1e-8)
       best = {
         ...point,
         score,
         value,
+        ...(match ? { matchDecisionStep: match.matchDecisionStep } : {}),
         ...(lethalTower ? { lethalTower: lethalTower.id } : {}),
       };
   }

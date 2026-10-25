@@ -66,15 +66,24 @@ export function kingDeathStep(
   target: Entity,
   packets: readonly DamagePacket[],
 ): number {
+  return towerDamageState(target, packets).deathStep;
+}
+
+export function towerDamageState(
+  target: Entity,
+  packets: readonly DamagePacket[],
+  throughStep = Infinity,
+) {
   let hp = target.hp,
     shield = target.shield ?? 0;
-  if (hp <= 0) return 0;
+  if (hp <= 0) return { hp, shield, deathStep: 0 };
   for (const packet of [...packets].sort(damagePacketOrder)) {
+    if (packet.step > throughStep) break;
     if (shield > 0) shield = Math.max(0, shield - packet.damage);
     else hp -= packet.damage;
-    if (hp <= 0) return packet.step;
+    if (hp <= 0) return { hp, shield, deathStep: packet.step };
   }
-  return Infinity;
+  return { hp, shield, deathStep: Infinity };
 }
 
 export function launchedKingDeadline(
@@ -94,9 +103,7 @@ export function launchedKingDeadline(
 
 /** Cache by arrival step, keeping future damage scans outside the candidate
  * point loop. Poison refreshes one clock; King positions remain stationary. */
-export function createKingSpellRace(
-  card: CardId,
-  team: Team,
+export function towerDamageForecast(
   target: Entity,
   projectiles: readonly Projectile[],
   areas: readonly AreaEffect[],
@@ -104,22 +111,24 @@ export function createKingSpellRace(
 ) {
   const shots = projectileDamagePackets(target, projectiles, entities);
   const currentPoison = poisonPackets(target, areas);
-  const baseline = kingDeathStep(target, [...shots, ...currentPoison]);
-  const cache = new Map<number, number>();
+  const baseline = [...shots, ...currentPoison];
+  const cache = new Map<string, DamagePacket[]>();
   return {
     baseline,
-    stepAt(point: Point): number {
+    withSpell(card: CardId, team: Team, point: Point): readonly DamagePacket[] {
       const radius = CARD_MAP[card].radius ?? 0;
       if (
+        team === target.team ||
         Math.hypot(point.x - target.x, point.y - target.y) >=
-        radius + target.radius
+          radius + target.radius
       )
         return baseline;
       const step =
         card === "poison"
           ? 0
           : impactSteps(directSpellFlight(card, team, point).duration);
-      const known = cache.get(step);
+      const key = `${card}:${step}`;
+      const known = cache.get(key);
       if (known !== undefined) return known;
       const packets =
         card === "poison"
@@ -147,10 +156,34 @@ export function createKingSpellRace(
                 order: projectiles.length,
               },
             ];
-      const result = kingDeathStep(target, [...shots, ...packets]);
-      cache.set(step, result);
+      const result = [...shots, ...packets];
+      cache.set(key, result);
       return result;
     },
+  };
+}
+
+export function createKingSpellRace(
+  card: CardId,
+  team: Team,
+  target: Entity,
+  projectiles: readonly Projectile[],
+  areas: readonly AreaEffect[],
+  entities?: readonly Entity[],
+) {
+  const forecast = towerDamageForecast(target, projectiles, areas, entities);
+  const cache = new Map<readonly DamagePacket[], number>();
+  const death = (packets: readonly DamagePacket[]) => {
+    let step = cache.get(packets);
+    if (step === undefined) {
+      step = kingDeathStep(target, packets);
+      cache.set(packets, step);
+    }
+    return step;
+  };
+  return {
+    baseline: death(forecast.baseline),
+    stepAt: (point: Point) => death(forecast.withSpell(card, team, point)),
   };
 }
 

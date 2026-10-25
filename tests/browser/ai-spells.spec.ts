@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
+import { CARD_MAP } from "../../src/game/cards";
 
 for (const scene of ["ai-spells", "ai-spells-mirror"])
   test(`${scene}: the ordinary AI timer casts a cheaper tower finisher and waits for its in-flight damage`, async ({
@@ -57,6 +58,33 @@ for (const scene of ["ai-spells", "ai-spells-mirror"])
     expect(errors).toEqual([]);
   });
 
+test("the ordinary timer holds Zap for an earlier queued overtime win", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/tests/fixtures/combat.html?scene=ai-overtime-reserved");
+  await expect(page.locator("#status")).toContainText(
+    `${expectedEffects} effects`,
+    { timeout: 60000 },
+  );
+  const output = page.locator("#destruction");
+  const state = async () =>
+    JSON.parse((await output.getAttribute("data-ai-areas"))!);
+  const spells = async () =>
+    JSON.parse((await output.getAttribute("data-ai-spells"))!);
+  const original = (await spells()).actions;
+  expect(original).toHaveLength(1);
+  expect(original[0].card).toBe("rocket");
+  for (let i = 0; i < 3; i++) await page.locator("#second").click();
+  await expect.poll(async () => (await state()).winner).toBe("red");
+  expect((await spells()).actions).toEqual(original);
+  expect((await spells()).hand).toContain("zap");
+  expect((await state()).reason).toBe("Sudden death");
+  expect((await state()).time).toBeCloseTo(202.6);
+  expect(errors).toEqual([]);
+});
+
 for (const card of ["poison", "zap"] as const)
   test(`the AI wins the launched-shot race with ${card} on its ordinary timer`, async ({
     page,
@@ -94,6 +122,63 @@ for (const card of ["poison", "zap"] as const)
     expect(won.kings.find((e: any) => e.team === "blue")?.hp ?? 0).toBe(0);
     await page.screenshot({
       path: info.outputPath(`ai-launched-${card}.png`),
+      fullPage: true,
+    });
+    expect(errors).toEqual([]);
+  });
+
+for (const scene of ["ai-overtime", "ai-tiebreaker"])
+  test(`${scene}: the ordinary timer chooses Zap to win the match`, async ({
+    page,
+  }, info) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto(`/tests/fixtures/combat.html?scene=${scene}`);
+    await expect(page.locator("#status")).toContainText(
+      `${expectedEffects} effects`,
+      { timeout: 60000 },
+    );
+    const output = page.locator("#destruction");
+    const state = async () =>
+      JSON.parse((await output.getAttribute("data-ai-areas"))!);
+    const spells = async () =>
+      JSON.parse((await output.getAttribute("data-ai-spells"))!);
+    const time = async () =>
+      JSON.parse((await output.getAttribute("data-state"))!).time;
+    const princess = (await spells()).towers.find(
+      (e: any) => e.hp === (scene === "ai-overtime" ? 50 : 100),
+    );
+    expect(princess).toBeDefined();
+    for (let i = 0; i < 2; i++) {
+      const before = await time();
+      await page.locator("#second").click();
+      await expect.poll(time).toBeGreaterThan(before + 0.99);
+    }
+    expect((await spells()).actions).toEqual([]);
+    await page.locator("#second").click();
+    await expect.poll(async () => (await state()).winner).toBe("red");
+    expect((await spells()).actions).toHaveLength(1);
+    const cast = (await spells()).actions[0];
+    expect(cast.card).toBe("zap");
+    expect(Math.hypot(cast.x - princess.x, cast.y - princess.y)).toBeLessThan(
+      CARD_MAP.zap.radius! + princess.radius,
+    );
+    expect((await state()).kings.find((e: any) => e.team === "red").hp).toBe(
+      scene === "ai-overtime" ? 100 : 80,
+    );
+    expect(
+      (await spells()).towers.find((e: any) => e.id === princess.id)?.hp ?? 0,
+    ).toBeCloseTo(scene === "ai-overtime" ? 0 : 23.2);
+    if (scene === "ai-overtime") {
+      expect((await state()).time).toBeGreaterThan(202.5);
+      expect((await state()).time).toBeLessThan(203);
+      expect((await state()).reason).toBe("Sudden death");
+    } else {
+      expect((await state()).time).toBe(300);
+      expect((await state()).reason).toBe("Tiebreaker");
+    }
+    await page.screenshot({
+      path: info.outputPath(`${scene}.png`),
       fullPage: true,
     });
     expect(errors).toEqual([]);
