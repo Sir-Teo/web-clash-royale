@@ -1,7 +1,7 @@
 import { CARD_MAP, type CardId } from "./cards";
 import { directSpellFlight } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
-import { lightningDamageMap } from "./lightning-strikes";
+import { currentLightningDamage } from "./windup-health";
 import { logSpellContains, logSpellProjectile } from "./log-flight";
 import {
   impactSteps,
@@ -30,7 +30,7 @@ export const hasFriendlyLightning = (
   );
 
 /** A proposed current-rule spell can redirect an existing Lightning pulse.
- * Cache equivalent affected bodies and impact steps, holding positions fixed. */
+ * Current Tornado pulls affect pulse membership and projectile contacts. */
 export function createLightningFollowup(
   card: CardId,
   team: Team,
@@ -45,6 +45,7 @@ export function createLightningFollowup(
     (e) => e.team !== team && e.kind === "tower" && e.hp > 0,
   );
   const cache = new Map<string, Map<number, readonly DamagePacket[]>>();
+  const moving = areas.some((a) => a.card === "tornado" && a.remaining > 0);
   return (point: Point) => {
     const flight =
       card === "poison" ? undefined : directSpellFlight(card, team, point);
@@ -56,7 +57,7 @@ export function createLightningFollowup(
         Math.hypot(e.x - point.x, e.y - point.y) <
           (rules.radius ?? 0) + e.radius,
     );
-    const key = `${flight ? impactSteps(flight.duration) : 0}:${members.map((e) => e.id).join(",")}`;
+    const key = `${moving ? `${point.x},${point.y}/` : ""}${flight ? impactSteps(flight.duration) : 0}:${members.map((e) => e.id).join(",")}`;
     const known = cache.get(key);
     if (known) return known;
     const proposedShots: readonly Projectile[] = flight
@@ -99,7 +100,11 @@ export function createLightningFollowup(
             },
           ]
         : areas;
-    const strikes = lightningDamageMap(entities, proposedAreas, proposedShots);
+    const strikes = currentLightningDamage(
+      entities,
+      proposedAreas,
+      proposedShots,
+    );
     const result = new Map<number, readonly DamagePacket[]>();
     for (const tower of towers)
       result.set(tower.id, [
@@ -143,9 +148,10 @@ function createLogLightningFollowup(
         (a) => Math.hypot(e.x - a.x, e.y - a.y) < a.radius + e.radius,
       ),
   );
+  const moving = areas.some((a) => a.card === "tornado" && a.remaining > 0);
   const contacts = new Map<Entity, Map<number, readonly DamagePacket[]>>();
   const cache = new Map<string, Map<number, readonly DamagePacket[]>>();
-  let baselineStrikes: ReturnType<typeof lightningDamageMap> | undefined;
+  let baselineStrikes: ReturnType<typeof currentLightningDamage> | undefined;
   const hitsAt = (entity: Entity, point: Point) => {
     if (!logSpellContains(team, point, entity)) return [];
     let positions = contacts.get(entity);
@@ -165,6 +171,22 @@ function createLogLightningFollowup(
     return hits;
   };
   return (point: Point) => {
+    if (moving) {
+      const key = `moving:${point.x},${point.y}`;
+      const known = cache.get(key);
+      if (known) return known;
+      const shots = [...projectiles, logSpellProjectile(team, point)];
+      const strikes = currentLightningDamage(entities, areas, shots);
+      const result = new Map<number, readonly DamagePacket[]>();
+      for (const { entity } of towers)
+        result.set(entity.id, [
+          ...projectileDamagePackets(entity, shots, entities),
+          ...poisonDamagePackets(entity, areas),
+          ...(strikes.get(entity.id) ?? []),
+        ]);
+      cache.set(key, result);
+      return result;
+    }
     const towerHits = towers.map((t) => hitsAt(t.entity, point));
     const early = blockers.flatMap((e) => {
       const hit = hitsAt(e, point)[0];
@@ -174,11 +196,15 @@ function createLogLightningFollowup(
     const known = cache.get(key);
     if (known) return known;
     const strikes = early.length
-      ? lightningDamageMap(entities, areas, [
+      ? currentLightningDamage(entities, areas, [
           ...projectiles,
           logSpellProjectile(team, point),
         ])
-      : (baselineStrikes ??= lightningDamageMap(entities, areas, projectiles));
+      : (baselineStrikes ??= currentLightningDamage(
+          entities,
+          areas,
+          projectiles,
+        ));
     const result = new Map<number, readonly DamagePacket[]>();
     towers.forEach((t, i) =>
       result.set(t.entity.id, [

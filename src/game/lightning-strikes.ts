@@ -121,7 +121,11 @@ function projectAreas(
       slots.some(
         ({ area, step, index }) =>
           eligible(e, area.team, area.struck ?? []) &&
-          contains(area, positionAt ? { ...e, ...positionAt(e, step, index) } : e, area.radius),
+          contains(
+            area,
+            positionAt ? { ...e, ...positionAt(e, step, index) } : e,
+            area.radius,
+          ),
       ),
     )
     .map((entity) => ({
@@ -146,7 +150,10 @@ function projectAreas(
       )
         apply(state.body, state.events[state.cursor++]);
       if (positionAt)
-        Object.assign(state.body, positionAt(state.entity, slot.step, slot.index));
+        Object.assign(
+          state.body,
+          positionAt(state.entity, slot.step, slot.index),
+        );
     }
     const history = struck.get(slot.index)!;
     const target = selectLightningTarget(
@@ -189,17 +196,18 @@ export function projectLightningDamage(
   positionAt: (body: Entity, step: number, area: number) => Point,
   throughStep = Infinity,
 ) {
-  return projectAreas(entities, areas, eventsFor, positionAt, throughStep).packets;
+  return projectAreas(entities, areas, eventsFor, positionAt, throughStep);
 }
 
-/** Fixed-position health projection. Released projectiles, current status
- * clocks and earlier Lightning pulses can change the next selected body. */
+/** Shared Lightning plan. The default holds positions fixed; a supplied
+ * health projector follows current pulls through the full area sequence. */
 export function createLightningPlan(
   team: Team,
   entities: readonly Entity[],
   area?: AreaEffect,
   projectiles: readonly Projectile[] = [],
   areas: readonly AreaEffect[] = [],
+  projectHealth?: (clouds: readonly AreaEffect[]) => Projection,
 ) {
   const template: AreaEffect = area ?? {
     id: -1,
@@ -222,38 +230,52 @@ export function createLightningPlan(
     .filter((e) => eligible(e, team, template.struck ?? []))
     .sort(order);
   const eventsFor = healthContext(entities, projectiles, areas);
+  const enemyIds = projectHealth
+    ? new Set(entities.filter((e) => e.team !== team).map((e) => e.id))
+    : undefined;
   const cache = new Map<string, Projection>();
   const project = (point: Point, radius = template.radius): Projection => {
     const members = ordered.filter((e) => contains(point, e, radius));
-    const key = members.map((e) => e.id).join(",");
+    const key = projectHealth
+      ? `${point.x},${point.y},${radius}`
+      : members.map((e) => e.id).join(",");
     const known = cache.get(key);
     if (known) return known;
     const proposed = { ...template, x: point.x, y: point.y, radius };
     const combined = [...current];
     combined[index] = proposed;
     let result: Projection;
-    if (
+    let selectedIndex = index;
+    if (projectHealth) {
+      const clouds = [...areas];
+      selectedIndex = area ? clouds.findIndex((a) => a.id === area.id) : -1;
+      if (selectedIndex < 0) selectedIndex = clouds.length;
+      clouds[selectedIndex] = proposed;
+      const full = projectHealth(clouds);
+      result = {
+        strikes: full.strikes,
+        packets: new Map([...full.packets].filter(([id]) => enemyIds!.has(id))),
+      };
+    } else if (
       combined.length === 1 &&
       members.every((e) => eventsFor(e).length === 0)
     ) {
       result = { strikes: [], packets: new Map() };
       const steps = lightningStrikeSteps(proposed);
-      members
-        .slice(0, steps.length)
-        .forEach((entity, i) =>
-          append(result, {
-            entity,
-            step: steps[i],
-            hp: entity.hp,
-            shield: entity.shield ?? 0,
-            area: index,
-            damage: entity.dash ? 0 : damageFor(entity),
-          }),
-        );
+      members.slice(0, steps.length).forEach((entity, i) =>
+        append(result, {
+          entity,
+          step: steps[i],
+          hp: entity.hp,
+          shield: entity.shield ?? 0,
+          area: index,
+          damage: entity.dash ? 0 : damageFor(entity),
+        }),
+      );
     } else result = projectAreas(entities, combined, eventsFor);
     const selection = {
       ...result,
-      strikes: result.strikes.filter((hit) => hit.area === index),
+      strikes: result.strikes.filter((hit) => hit.area === selectedIndex),
     };
     cache.set(key, selection);
     return selection;

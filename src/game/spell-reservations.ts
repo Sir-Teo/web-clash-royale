@@ -1,6 +1,6 @@
 import type { AreaEffect, Entity, Projectile, Team } from "./engine";
 import { poisonDamagePackets } from "./king-damage";
-import { lightningDamageMap } from "./lightning-strikes";
+import { currentLightningDamage } from "./windup-health";
 import {
   damagePacketOrder,
   projectileDamagePackets,
@@ -16,7 +16,7 @@ export function createSpellDamageReservation(
 ) {
   const shots = projectiles.filter((p) => p.team === team && p.source === 0);
   const friendlyAreas = areas.filter((a) => a.team === team);
-  const strikes = lightningDamageMap(entities, areas, projectiles);
+  const strikes = currentLightningDamage(entities, areas, projectiles);
   const cache = new Map<Entity, number>();
   return (entity: Entity): number => {
     if (

@@ -1,6 +1,6 @@
 import { CARD_MAP } from "./cards";
 import { COMBAT_STEP, HEAL_PER_TICK, combatTraits } from "./combat";
-import type { AreaEffect, Entity, Point, Projectile } from "./engine";
+import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import {
   damagePacketOrder,
   projectileDamagePackets,
@@ -15,6 +15,7 @@ import {
 } from "./tornado-pull";
 import { healthPackets, type HealthPacket } from "./status-health";
 import {
+  createLightningPlan,
   lightningDamageMap,
   lightningStrikeSteps,
   projectLightningDamage,
@@ -221,7 +222,7 @@ export function createWindupHealth(
   projectiles: readonly Projectile[],
   entities: readonly Entity[],
 ) {
-  const cache = new Map<string, Map<number, DamagePacket[]>>();
+  const cache = new Map<string, ReturnType<typeof projectLightningDamage>>();
   const normalize = (areas: readonly AreaEffect[]) =>
     JSON.stringify(
       areas.map((a) => (a.card === "freeze" ? { card: "freeze" } : a)),
@@ -233,7 +234,7 @@ export function createWindupHealth(
     events?: HealthPacket[];
   };
   const backgrounds = new Map<string, Map<Entity, HealthPath>>();
-  const lightning = (
+  const projectLightning = (
     areas: readonly AreaEffect[],
     through = 60,
     proposedIndex?: number,
@@ -248,7 +249,11 @@ export function createWindupHealth(
           ? areas[proposedIndex]
           : undefined;
       const backgroundAreas = proposed ? areas.slice(0, -1) : areas;
-      const backgroundKey = normalize(backgroundAreas);
+      const backgroundKey = JSON.stringify(
+        backgroundAreas.map((a) =>
+          a.card === "freeze" || a.card === "lightning" ? { card: a.card } : a,
+        ),
+      );
       let background = backgrounds.get(backgroundKey);
       if (!background) {
         background = new Map();
@@ -328,6 +333,8 @@ export function createWindupHealth(
     }
     return forecast;
   };
+  const lightning = (...args: Parameters<typeof projectLightning>) =>
+    projectLightning(...args).packets;
   const evaluate: WindupHealthEvaluator = (
     attacker,
     frames,
@@ -377,7 +384,7 @@ export function createWindupHealth(
       strikes,
     ).statuses;
   };
-  return Object.assign(evaluate, { lightning });
+  return Object.assign(evaluate, { lightning, projectLightning });
 }
 
 /** Released Lightning follows current pulls; boards without Tornado retain
@@ -390,4 +397,25 @@ export function currentLightningDamage(
   return areas.some((a) => a.card === "tornado" && a.remaining > 0)
     ? createWindupHealth(projectiles, entities).lightning(areas)
     : lightningDamageMap(entities, areas, projectiles);
+}
+
+/** Proposed Lightning shares current pull and health paths with its baseline. */
+export function createMovingLightningPlan(
+  team: Team,
+  entities: readonly Entity[],
+  area?: AreaEffect,
+  projectiles: readonly Projectile[] = [],
+  areas: readonly AreaEffect[] = [],
+) {
+  const context = areas.some((a) => a.card === "tornado" && a.remaining > 0)
+    ? createWindupHealth(projectiles, entities)
+    : undefined;
+  return createLightningPlan(
+    team,
+    entities,
+    area,
+    projectiles,
+    areas,
+    context ? (clouds) => context.projectLightning(clouds) : undefined,
+  );
 }

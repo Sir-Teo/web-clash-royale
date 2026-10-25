@@ -9,8 +9,10 @@ import {
 } from "./projectile-impacts";
 import poison from "./poison-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
-import { createLightningPlan, lightningDamageMap } from "./lightning-strikes";
-import { currentLightningDamage } from "./windup-health";
+import {
+  currentLightningDamage,
+  createMovingLightningPlan,
+} from "./windup-health";
 import { logSpellContains, logSpellProjectile } from "./log-flight";
 import { poisonDamagePackets } from "./status-health";
 export { poisonDamagePackets } from "./status-health";
@@ -78,7 +80,7 @@ export function towerDamageForecast(
   const currentPoison = poisonDamagePackets(target, areas);
   const currentLightning = entities
     ? ((
-        lightningPackets ?? lightningDamageMap(entities, areas, projectiles)
+        lightningPackets ?? currentLightningDamage(entities, areas, projectiles)
       ).get(target.id) ?? [])
     : [];
   const withoutLightning = [...shots, ...currentPoison];
@@ -86,7 +88,7 @@ export function towerDamageForecast(
   const cache = new Map<string, DamagePacket[]>();
   const lightningCache = new Map<readonly DamagePacket[], DamagePacket[]>();
   const empty: readonly DamagePacket[] = [];
-  let lightningPlan: ReturnType<typeof createLightningPlan> | undefined;
+  let lightningPlan: ReturnType<typeof createMovingLightningPlan> | undefined;
   const followups = new Map<
     CardId,
     ReturnType<typeof createLightningFollowup>
@@ -135,7 +137,7 @@ export function towerDamageForecast(
       }
       if (card === "lightning") {
         if (!entities) return baseline;
-        lightningPlan ??= createLightningPlan(
+        lightningPlan ??= createMovingLightningPlan(
           team,
           entities,
           undefined,

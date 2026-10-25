@@ -9,7 +9,7 @@ import {
 } from "./king-damage";
 import type { MatchFinisher } from "./match-finisher";
 import lightning from "./lightning-data.json" with { type: "json" };
-import { createLightningPlan } from "./lightning-strikes";
+import { createMovingLightningPlan } from "./windup-health";
 import { createSpellDamageReservation } from "./spell-reservations";
 import {
   hiddenSpellTarget,
@@ -35,7 +35,7 @@ export function lightningSpellTarget(
       .filter((e) => e.kind === "tower")
       .map((e) => [e.id, towerDamageForecast(e, projectiles, areas, entities)]),
   );
-  const strikesAt = createLightningPlan(
+  const strikesAt = createMovingLightningPlan(
     team,
     entities,
     undefined,
