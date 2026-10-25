@@ -265,6 +265,8 @@ for (const reverse of [false, true])
       expect(red.replay.perspective).toBe("red");
       expect(blue.opponent).toBe("Red Later");
       expect(red.opponent).toBe("Blue Final");
+      expect(blue.playerName).toBe("Blue Final");
+      expect(red.playerName).toBe("Red Later");
       expect(blue.replay.actions).toHaveLength(1);
       expect(errors).toEqual([]);
     } finally {

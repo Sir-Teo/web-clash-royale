@@ -377,10 +377,8 @@ function startEnding(hold = false) {
   emotes.reset();
   endingBattle = battle;
   endingFrameTime = arena.effectTime;
-  const player = multiplayer
-    ? (network.room?.players.find((p) => p.team === network.team)?.name ??
-      profile.name)
-    : (replayOwnerName ?? profile.name);
+  const player =
+    screen === "battle" ? battlePlayerName : (replayOwnerName ?? profile.name);
   ending.start(endResult(battle, player, opponentName), hold);
 }
 $(".match-timer").append($("#elixir-rate"));
@@ -451,7 +449,7 @@ function refreshProfile() {
         (e.textContent = e.closest(".match-bottom")
           ? screen === "replay"
             ? (replayOwnerName ?? profile.name)
-            : screen === "battle" && multiplayer
+            : screen === "battle"
               ? battlePlayerName
               : profile.name
           : profile.name),
@@ -937,6 +935,7 @@ function showResult() {
       wasMultiplayer
         ? {
             friendly: true,
+            playerName: battlePlayerName,
             opponent: opponentName,
             opponentType: "friend",
             matchId: networkBattleCode,
@@ -944,7 +943,11 @@ function showResult() {
               ? { ...networkReplay, perspective: network.team }
               : undefined,
           }
-        : { opponent: opponentName, opponentType: "ai" },
+        : {
+            playerName: battlePlayerName,
+            opponent: opponentName,
+            opponentType: "ai",
+          },
     ),
     win = battle.winner === "blue",
     draw = battle.winner === "draw";
@@ -1022,8 +1025,7 @@ function syncPeerRematch() {
 }
 function playReplay(record: RecordEntry, ownerName?: string) {
   clearKeyboardAim(true);
-  replayOwnerName = ownerName ?? null;
-  $(".match-bottom .player-name").textContent = replayOwnerName ?? profile.name;
+  const playerName = ownerName ?? record.playerName ?? profile.name;
   resetEnding();
   if (network.room) network.leave();
   multiplayer = false;
@@ -1038,6 +1040,8 @@ function playReplay(record: RecordEntry, ownerName?: string) {
         : "Training guild";
   closeModal();
   screen = "replay";
+  replayOwnerName = playerName;
+  $(".match-bottom .player-name").textContent = playerName;
   replayRecord = record;
   replayData = record.replay;
   resultShown = true;
@@ -1837,7 +1841,7 @@ function showMatchDetails(index: number, state: Partial<MatchDeckView> = {}) {
   const decks = recordedDecks(record);
   const editable = screen === "lobby";
   const section = (side: "yours" | "opponent") =>
-    `<section class="match-deck-panel" data-match-side="${side}" aria-label="${side === "yours" ? "Your recorded deck" : "Opponent recorded deck"}"><div class="match-deck-heading"><div><h3>${side === "yours" ? "Your deck" : "Opponent deck"}</h3><p>${side === "yours" ? "Your starting eight" : esc(record.opponent ?? "Royal Trainer")}</p></div><span><i class="tiny-drop"></i> ${averageCost(decks[side]).toFixed(1)} average</span></div><div class="match-deck-grid">${decks[side].map((id) => cardHTML(id, `data-match-card="${id}"`)).join("")}</div>${editable ? `<button class="secondary-button" data-use-match-deck="${side}" aria-describedby="match-copy-note">${icon("layers-2")} ${side === "yours" ? "Use your recorded deck" : "Use opponent deck"}</button>` : ""}</section>`;
+    `<section class="match-deck-panel" data-match-side="${side}" aria-label="${side === "yours" ? "Your recorded deck" : "Opponent recorded deck"}"><div class="match-deck-heading"><div><h3>${side === "yours" ? "Your deck" : "Opponent deck"}</h3><p>${side === "yours" ? esc(record.playerName ?? "Your starting eight") : esc(record.opponent ?? "Royal Trainer")}</p></div><span><i class="tiny-drop"></i> ${averageCost(decks[side]).toFixed(1)} average</span></div><div class="match-deck-grid">${decks[side].map((id) => cardHTML(id, `data-match-card="${id}"`)).join("")}</div>${editable ? `<button class="secondary-button" data-use-match-deck="${side}" aria-describedby="match-copy-note">${icon("layers-2")} ${side === "yours" ? "Use your recorded deck" : "Use opponent deck"}</button>` : ""}</section>`;
   modal(
     "Battle details",
     `<div class="match-details"><div class="match-result ${record.winner === "blue" ? "win" : record.winner === "red" ? "loss" : "draw"}"><div><strong>${record.winner === "blue" ? "Victory" : record.winner === "red" ? "Defeat" : "Draw"}</strong><span>vs ${esc(record.opponent ?? "Royal Trainer")}</span></div><b aria-label="Your crowns ${record.crowns[0]}, opponent crowns ${record.crowns[1]}">${record.crowns[0]} ${icon("crown")} ${record.crowns[1]}</b></div><p class="match-metadata">${modeNames[record.mode]} · ${clock(record.replay.duration * STEP)} played<br>${esc(new Date(record.date).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }))}</p>${editable ? `<div class="match-copy-target"><label for="match-deck-slot">Destination battle deck</label><div class="match-deck-choice"><select id="match-deck-slot" aria-describedby="match-copy-note">${profile.decks.map((_, slot) => `<option value="${slot}" ${view.slot === slot ? "selected" : ""}>Battle deck ${slot + 1}${profile.activeDeck === slot ? " (active)" : ""}</option>`).join("")}</select>${icon("chevron-down")}</div><p id="match-copy-note">Replaces battle deck ${view.slot + 1} and selects it.</p></div>` : ""}<div class="match-decks">${section("yours")}${section("opponent")}</div>${view.notice ? `<div class="match-deck-status" role="status"><span id="match-deck-notice">${esc(view.notice)}</span>${view.undo ? `<button class="text-button" id="undo-match-deck" aria-describedby="match-deck-notice">Undo deck change</button>` : ""}</div>` : ""}<div class="replay-export"><button class="secondary-button" id="export-replay-file">${icon("hard-drive-download")} Export replay</button><p>Save this recording to watch in another browser.</p><p class="replay-file-error" role="alert" hidden></p></div><div class="match-details-actions"><button class="text-button" id="match-log">Back to battle log</button><button class="primary-button" id="match-replay">${icon("play")} Watch this replay</button></div></div>`,

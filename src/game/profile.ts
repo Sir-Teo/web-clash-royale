@@ -2,6 +2,7 @@ import { CARDS, CARD_MAP, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
 import type { Battle, Mode, Replay } from "./engine";
 export interface RecordEntry {
+  playerName?: string;
   opponent?: string;
   opponentType?: "ai" | "friend";
   matchId?: string;
@@ -78,6 +79,14 @@ export const validDeck = (a: unknown): a is CardId[] =>
   a.length === 8 &&
   new Set(a).size === 8 &&
   a.every((v) => typeof v === "string" && Object.hasOwn(CARD_MAP, v));
+function normalizePlayerName(value: string) {
+  return (
+    value
+      .replace(/[\u0000-\u001f\u007f]/g, "")
+      .trim()
+      .slice(0, 18) || "Sir Teo"
+  );
+}
 export function validRecordEntry(value: unknown): value is RecordEntry {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const r = value as RecordEntry;
@@ -87,6 +96,12 @@ export function validRecordEntry(value: unknown): value is RecordEntry {
     typeof r.date === "string" &&
     Number.isFinite(Date.parse(r.date)) &&
     ["classic", "double", "training"].includes(r.mode) &&
+    (r.playerName === undefined ||
+      (typeof r.playerName === "string" &&
+        r.playerName.length > 0 &&
+        r.playerName.length <= 18 &&
+        r.playerName === r.playerName.trim() &&
+        !/[\u0000-\u001f\u007f]/.test(r.playerName))) &&
     (r.opponent === undefined || typeof r.opponent === "string") &&
     (r.opponentType === undefined ||
       ["ai", "friend"].includes(r.opponentType)) &&
@@ -146,11 +161,7 @@ function decodeProfile(raw: string): Profile | null {
       if (Number.isFinite(saved[key]) && saved[key] >= 0)
         p[key] = Math.floor(saved[key]);
     if (typeof saved.name === "string")
-      p.name =
-        saved.name
-          .replace(/[\u0000-\u001f\u007f]/g, "")
-          .trim()
-          .slice(0, 18) || p.name;
+      p.name = normalizePlayerName(saved.name);
     for (const key of [
       "sound",
       "music",
@@ -245,6 +256,7 @@ export function recordBattle(
   b: Battle,
   options?: {
     friendly?: boolean;
+    playerName?: string;
     opponent?: string;
     opponentType?: "ai" | "friend";
     matchId?: string;
@@ -278,6 +290,7 @@ export function recordBattle(
     p.chests.push(chest as "silver" | "gold" | "magical");
   }
   p.history.unshift({
+    playerName: normalizePlayerName(options?.playerName ?? p.name),
     id: Date.now(),
     winner: b.winner,
     crowns: [b.players.blue.crowns, b.players.red.crowns],

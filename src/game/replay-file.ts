@@ -77,6 +77,7 @@ export function importReplayFile(text: string): SharedReplay {
     throw invalid();
   const record = {
     ...match,
+    playerName: saved.playerName,
     id: Date.parse(match.date),
   } as unknown as RecordEntry;
   if (
@@ -132,7 +133,12 @@ export function exportReplayFile(
     replay,
   };
   const output = JSON.stringify(
-    { format: "browser-royale-replay", version: 1, playerName, match },
+    {
+      format: "browser-royale-replay",
+      version: 1,
+      playerName: record.playerName ?? playerName,
+      match,
+    },
     null,
     2,
   );
