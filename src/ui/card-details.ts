@@ -1,5 +1,9 @@
 import { CARD_MAP, type CardId } from "../game/cards";
-import { FIREBALL_KNOCKBACK, HEAL_PER_TICK } from "../game/combat";
+import {
+  cardShieldHitpoints,
+  FIREBALL_KNOCKBACK,
+  HEAL_PER_TICK,
+} from "../game/combat";
 import freeze from "../game/freeze-data.json" with { type: "json" };
 import poison from "../game/poison-data.json" with { type: "json" };
 import rage from "../game/rage-data.json" with { type: "json" };
@@ -226,9 +230,29 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
             : "Knockback applies to eligible troops.",
     };
   }
+  const shield = cardShieldHitpoints(id);
+  const note = [
+    c.count > 1
+      ? "Each troop has its own hitpoints. Damage is per troop, per hit."
+      : "",
+    shield > 0
+      ? "Shield hitpoints are separate. A hit that breaks the shield does not damage the body."
+      : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
   return {
     stats: [
       stat(c.count > 1 ? "Hitpoints per troop" : "Hitpoints", c.hp, "heart"),
+      ...(shield > 0
+        ? [
+            stat(
+              c.count > 1 ? "Shield per troop" : "Shield hitpoints",
+              shield,
+              "heart",
+            ),
+          ]
+        : []),
       stat(
         c.count > 1 ? "Damage per troop" : "Damage per hit",
         c.damage,
@@ -242,10 +266,6 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
         : stat("Count", c.count, "users"),
       cost,
     ],
-    ...(c.count > 1
-      ? {
-          note: "Each troop has its own hitpoints. Damage is per troop, per hit.",
-        }
-      : {}),
+    ...(note ? { note } : {}),
   };
 }

@@ -38,7 +38,7 @@ In **Cards**, search plain names such as “pekka” or “Mini Pekka”, combin
 
 Use **Undo** and **Redo** to restore the latest 50 replacements and card moves from the current builder visit. **Ctrl/Cmd + Z** undoes; **Ctrl/Cmd + Shift + Z** or **Ctrl + Y** redoes. Search and code fields keep their normal text undo. Inspection and viewing deck codes retain the edit history; adopting a different deck clears older edits. Closing and reopening the builder starts a fresh undo history while retaining your saved deck.
 
-Card details show current arena stats: per-troop swarm health and damage, hit intervals, building lifetimes, Crown Tower spell damage, and timed spell effects. Rage identifies friendly targets and its boost; Poison shows damage per second and lingering time.
+Card details show current arena stats: per-troop swarm health and damage, separate shield hitpoints for Guards and Dark Prince, hit intervals, building lifetimes, Crown Tower spell damage, and timed spell effects. Shielded troop details explain that a hit that breaks the shield does not damage the body. Rage identifies friendly targets and its boost; Poison shows damage per second and lingering time.
 
 Three Musketeers adds three ranged Musketeer bodies for nine elixir, using the same normalized stats, native animations, projectiles and lifecycle sounds as the four-elixir Musketeer. It has its own original card portrait. Each body can attack ground and air; Fireball leaves the same remaining health as an ordinary Musketeer, and follow-up damage can clear the group. Musketeer Marshal brings it in a Hog-supported solo deck. The trio uses the game's existing compact deployment pattern.
 

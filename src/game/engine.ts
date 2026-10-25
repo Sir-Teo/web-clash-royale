@@ -20,6 +20,7 @@ import { hasFriendlyLightning } from "./lightning-followup";
 import { tornadoPull } from "./tornado-pull";
 import {
   combatTraits,
+  cardShieldHitpoints,
   COMBAT_STEP,
   directSpellFlight,
   FIREBALL_KNOCKBACK,
@@ -752,6 +753,7 @@ export class Battle {
     const legacyBalloon = this.rulesVersion < 10 && id === "balloon"
       ? LEGACY_BALLOON_STATS : undefined;
     const hp = legacyVitals?.hp ?? c.hp;
+    const shield = cardShieldHitpoints(id);
     const legacyRadius = c.kind === "building" ? 0.8 :
       hp > 3000 ? 0.55 : c.count > 2 ? 0.25 : 0.37;
     this.entities.push({
@@ -763,13 +765,7 @@ export class Battle {
       kind: c.kind === "building" ? "building" : "troop",
       hp,
       maxHp: hp,
-      ...(id === "dark-prince" ? {
-        shield: Math.round(darkPrince.sourceShieldHitpoints * 1.1 ** 5),
-        maxShield: Math.round(darkPrince.sourceShieldHitpoints * 1.1 ** 5),
-      } : id === "guards" ? {
-        shield: Math.round(guards.sourceShieldHitpoints * 1.1 ** 5),
-        maxShield: Math.round(guards.sourceShieldHitpoints * 1.1 ** 5),
-      } : {}),
+      ...(shield ? { shield, maxShield: shield } : {}),
       radius: this.rulesVersion >= 15
         ? (collisionRadii.cards as Record<string, number>)[id]
         : legacyRadius,

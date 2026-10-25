@@ -1634,3 +1634,15 @@ An instrumented independent bundle of `22d054c` matches all 17,502 SVG/label has
 All ten focused browser cases pass across desktop Chromium and phone WebKit, covering native portraits/reveals, elixir costs/spend/full-bar art, ending text/crown states/reduced motion, timer/crown updates and training intro/literal fitted labels. The phone HUD screenshot was inspected. Probe, unit/build and rendered checks run separately.
 
 Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup, scoped assets and all 278 native combat/death/music files. Root production output is restored afterward. The pack remains 921 URLs/894 unique content groups with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.
+
+## Shield hitpoints in troop details
+
+Guards and Dark Prince details now show their starting shield hitpoints separately from body HP: 242 per Guard and 322 for Dark Prince. The note explains that a hit breaking a shield does not damage the body; Guards retain the per-troop/per-hit clarification. `cardShieldHitpoints` supplies both the existing entity spawn values and the detail rows, replacing duplicated spawn calculations without changing their result. Other cards receive no shield row. No combat values, simulation rules or replay/wire versions change.
+
+Three new checks cover both shielded cards and the rest of the roster. The native impact cases compare detail rows with every spawned body's actual HP/shield, break the shields with a real Fireball while retaining full body HP, then apply a real Zap to body health. The focused detail/Guards/Dark Prince checks pass.
+
+The isolated full suite passes 1,503 tests across 165 files. TypeScript and the root production build pass, including the existing shield, clone, movement and historical replay checks.
+
+All six focused card-detail browser cases pass across desktop Chromium and phone WebKit: shielded troops, existing spell effects and shared-deck swarm/building inspection. The new case verifies both shield/body rows, the shield-break explanation, per-troop wording, unchanged stored decks/progress and no horizontal overflow at 320 pixels. The phone Guards screenshot was inspected. Unit/build and rendered checks run separately.
+
+Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup, scoped assets and all 278 native combat/death/music files. Root production output is restored afterward. Formatting cleanup preserves the exact compiled test code while keeping the diff focused on the new coverage. No push or deployment was performed.

@@ -142,4 +142,61 @@ describe("current card detail stats", () => {
     expect(cardDetails("rage").note).toContain("Buildings and Crown Towers are unaffected");
     expect(rows("rage")).not.toHaveProperty("Damage");
   });
+
+  it.each(["guards", "dark-prince"] as const)(
+    "shows %s shield health separately and matches a native breaking hit",
+    (id) => {
+      const battle = new Battle({ seed: 4, ai: false });
+      battle.entities.forEach((e) => (e.active = false));
+      battle.players.red.hand[0] = id;
+      battle.players.red.elixir = 10;
+      expect(battle.play("red", 0, 9, 10).ok).toBe(true);
+      const units = battle.entities.filter((e) => e.card === id);
+      for (const unit of units)
+        Object.assign(unit, { active: false, deploy: 0 });
+      expect(units).toHaveLength(CARD_MAP[id].count);
+      const stats = rows(id);
+      for (const unit of units) {
+        expect(
+          numeric(
+            stats[id === "guards" ? "Shield per troop" : "Shield hitpoints"],
+          ),
+        ).toBe(unit.shield);
+        expect(unit.maxShield).toBe(unit.shield);
+        expect(
+          numeric(stats[id === "guards" ? "Hitpoints per troop" : "Hitpoints"]),
+        ).toBe(unit.hp);
+      }
+      expect(cardDetails(id).note).toContain(
+        "A hit that breaks the shield does not damage the body.",
+      );
+      const blast = (card: "fireball" | "zap") => {
+        battle.players.blue.hand[0] = card;
+        battle.players.blue.elixir = 10;
+        expect(battle.play("blue", 0, 9, 10).ok).toBe(true);
+        let ticks = 0;
+        while (battle.projectiles.length && ticks++ < 150) battle.step();
+        expect(battle.projectiles).toHaveLength(0);
+      };
+      blast("fireball");
+      for (const unit of units) {
+        expect(unit.shield).toBe(0);
+        expect(unit.hp).toBe(CARD_MAP[id].hp);
+      }
+      blast("zap");
+      for (const unit of units)
+        expect(unit.hp).toBe(
+          Math.max(0, CARD_MAP[id].hp - CARD_MAP.zap.damage),
+        );
+    },
+  );
+
+  it("keeps shield statistics out of cards that have no starting shield", () => {
+    for (const card of CARDS.filter(
+      (c) => !["guards", "dark-prince"].includes(c.id),
+    )) {
+      expect(rows(card.id)).not.toHaveProperty("Shield hitpoints");
+      expect(rows(card.id)).not.toHaveProperty("Shield per troop");
+    }
+  });
 });

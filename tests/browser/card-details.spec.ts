@@ -183,3 +183,62 @@ test("shared-deck card inspection shows per-troop stats and building lifetimes w
     before,
   );
 });
+
+test("shielded troop details separate body and shield hitpoints without changing the deck", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  if (info.project.name !== "desktop")
+    await page.setViewportSize({ width: 320, height: 740 });
+  const before = await page.evaluate((key) => localStorage.getItem(key), key);
+  await page.locator('[data-nav="cards"]').click();
+  for (const [id, query, expected] of [
+    [
+      "guards",
+      "Guards",
+      { "Hitpoints per troop": "105", "Shield per troop": "242", Count: "3" },
+    ],
+    [
+      "dark-prince",
+      "Dark Prince",
+      { Hitpoints: "1,184", "Shield hitpoints": "322", Count: "1" },
+    ],
+  ] as const) {
+    await page.locator("#card-search").fill(query);
+    await page.locator(`[data-collection="${id}"]`).click();
+    for (const [label, value] of Object.entries(expected))
+      await expect(page.locator(`[data-card-stat="${label}"] b`)).toHaveText(
+        value,
+      );
+    await expect(page.locator(".card-rule-note")).toContainText(
+      "Shield hitpoints are separate.",
+    );
+    await expect(page.locator(".card-rule-note")).toContainText(
+      "A hit that breaks the shield does not damage the body.",
+    );
+    if (id === "guards")
+      await expect(page.locator(".card-rule-note")).toContainText(
+        "Damage is per troop, per hit.",
+      );
+    expect(
+      await page
+        .locator(".modal")
+        .evaluate((element) => element.scrollWidth > element.clientWidth),
+    ).toBe(false);
+    if (id === "guards") {
+      await page.locator(".stat-grid").scrollIntoViewIfNeeded();
+      await page.screenshot({
+        path: info.outputPath("guards-shield-details.png"),
+        animations: "disabled",
+      });
+    }
+    await page
+      .getByRole("button", { name: "Back to collection", exact: true })
+      .click();
+  }
+  expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(
+    before,
+  );
+  expect(errors).toEqual([]);
+});

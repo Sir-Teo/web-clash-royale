@@ -2,6 +2,8 @@ import data from "./combat-data.json";
 import settings from "./combat-settings.json";
 import heal from "./heal-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
+import guards from "./guards-data.json" with { type: "json" };
+import darkPrince from "./dark-prince-data.json" with { type: "json" };
 import type { CardId } from "./cards";
 import type { Entity, Point, Team } from "./engine";
 
@@ -39,6 +41,15 @@ export const KING_ACTIVATION_TIME = settings.kingActivationSeconds;
 export const HEAL_PER_TICK = Math.round(
   ((heal.sourceHealPerSecond * 1152) / 450) * heal.healInterval,
 );
+
+/** Starting shields are separate from troop body health. */
+export function cardShieldHitpoints(id: CardId): number {
+  if (id === "dark-prince")
+    return Math.round(darkPrince.sourceShieldHitpoints * 1.1 ** 5);
+  if (id === "guards")
+    return Math.round(guards.sourceShieldHitpoints * 1.1 ** 5);
+  return 0;
+}
 
 /** Current-rule direct spell travel, shared by casting and AI timing. */
 export function directSpellFlight(card: CardId, team: Team, point: Point) {
