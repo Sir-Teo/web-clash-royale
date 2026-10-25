@@ -80,7 +80,7 @@ function setup() {
   battle = new Battle(selectedScene === "rage" ? {
     replay: { rulesFamily: "local", version: 5, seed: 12, mode: "classic",
       deck: STARTER_DECK, enemyDeck: STARTER_DECK, actions: [], duration: 0 },
-  } : { seed: selectedScene === "ai-lightning-followup" ? 1 : selectedScene === "ai-spells-mirror" ? 2 : 12, ai: selectedScene.startsWith("ai-") });
+  } : { seed: selectedScene === "ai-lightning-combo" ? 8 : selectedScene === "ai-lightning-followup" ? 1 : selectedScene === "ai-spells-mirror" ? 2 : 12, ai: selectedScene.startsWith("ai-") });
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   for (const t of battle.entities) t.active = false;
@@ -258,6 +258,15 @@ function setup() {
       battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
       battle.players.red.elixir = 3;
     }
+  } else if (scenario === "ai-lightning-combo") {
+    const king = battle.entities.find((e) => e.team === "blue" && e.king)!;
+    king.hp = 80;
+    for (const card of ["wizard", "witch", "musketeer"] as CardId[])
+      for (const e of unit(card, "blue", king.x, king.y))
+        Object.assign(e, { hp: 100, active: false, speed: 0 });
+    battle.players.red.hand = ["lightning", "pekka", "pekka", "pekka"];
+    battle.players.red.queue = ["zap", "pekka", "pekka", "pekka"];
+    battle.players.red.elixir = 10;
   } else if (scenario === "ai-lightning-health") {
     const king = battle.entities.find((e) => e.team === "blue" && e.king)!;
     king.hp = 400;

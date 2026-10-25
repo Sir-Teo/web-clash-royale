@@ -4,6 +4,11 @@ import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import { towerDamageForecast, towerDamageState } from "./king-damage";
 import type { DamagePacket } from "./projectile-impacts";
 import poison from "./poison-data.json" with { type: "json" };
+import {
+  createLightningFollowup,
+  hasFriendlyLightning,
+  isLightningFollowup,
+} from "./lightning-followup";
 
 interface Ending {
   winner: Team | "draw";
@@ -26,6 +31,11 @@ export function createMatchFinisher(
   // Include the final clock only when it falls within the damage horizon.
   const horizon = Math.ceil(MATCH_DAMAGE_HORIZON / COMBAT_STEP);
   const clock = Math.max(1, Math.ceil((remaining - 1e-8) / COMBAT_STEP));
+  const reordersLightning = hasFriendlyLightning(team, areas);
+  const followups = new Map<
+    CardId,
+    ReturnType<typeof createLightningFollowup>
+  >();
   let nextId = 0;
   const towers = entities
     .filter((e) => e.kind === "tower" && e.hp > 0)
@@ -111,8 +121,30 @@ export function createMatchFinisher(
     return result;
   };
   const baseline = ending(towers.map((t) => t.state(t.forecast.baseline)));
-  const outcomeAt = (card: CardId, point: Point) =>
-    ending(towers.map((t) => t.state(t.forecast.withSpell(card, team, point))));
+  const outcomeAt = (card: CardId, point: Point) => {
+    if (reordersLightning && isLightningFollowup(card)) {
+      let forecast = followups.get(card);
+      if (!forecast) {
+        forecast = createLightningFollowup(
+          card,
+          team,
+          entities,
+          projectiles,
+          areas,
+        );
+        followups.set(card, forecast);
+      }
+      const packets = forecast(point);
+      return ending(
+        towers.map((t) =>
+          t.state(packets.get(t.entity.id) ?? t.forecast.baseline),
+        ),
+      );
+    }
+    return ending(
+      towers.map((t) => t.state(t.forecast.withSpell(card, team, point))),
+    );
+  };
   const assess = (
     proposal: Ending | undefined,
     cost: number,
@@ -146,6 +178,8 @@ export function createMatchFinisher(
   ];
   return {
     baseline,
+    tracksCrowns: overtime || clock <= horizon,
+    reordersLightning,
     outcomeAt,
     evaluateDamage(
       packets: ReadonlyMap<number, readonly DamagePacket[]>,

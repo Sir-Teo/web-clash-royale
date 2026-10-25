@@ -12,6 +12,11 @@ import rocket from "./rocket-data.json" with { type: "json" };
 import { createLightningPlan, lightningDamageMap } from "./lightning-strikes";
 import { poisonDamagePackets } from "./status-health";
 export { poisonDamagePackets } from "./status-health";
+import {
+  createLightningFollowup,
+  hasFriendlyLightning,
+  isLightningFollowup,
+} from "./lightning-followup";
 
 export function kingDeathStep(
   target: Entity,
@@ -71,11 +76,33 @@ export function towerDamageForecast(
   const lightningCache = new Map<readonly DamagePacket[], DamagePacket[]>();
   const empty: readonly DamagePacket[] = [];
   let lightningPlan: ReturnType<typeof createLightningPlan> | undefined;
+  const followups = new Map<
+    CardId,
+    ReturnType<typeof createLightningFollowup>
+  >();
   return {
     baseline,
     withoutLightning,
     withSpell(card: CardId, team: Team, point: Point): readonly DamagePacket[] {
       if (team === target.team) return baseline;
+      if (
+        entities &&
+        isLightningFollowup(card) &&
+        hasFriendlyLightning(team, areas)
+      ) {
+        let forecast = followups.get(card);
+        if (!forecast) {
+          forecast = createLightningFollowup(
+            card,
+            team,
+            entities,
+            projectiles,
+            areas,
+          );
+          followups.set(card, forecast);
+        }
+        return forecast(point).get(target.id) ?? baseline;
+      }
       if (card === "lightning") {
         if (!entities) return baseline;
         lightningPlan ??= createLightningPlan(

@@ -14,6 +14,7 @@ import { attackFlight } from "./attack-flight";
 import { launchedKingDeadline } from "./king-damage";
 import { createMatchFinisher, MATCH_DAMAGE_HORIZON } from "./match-finisher";
 import { selectLightningTarget } from "./lightning-strikes";
+import { hasFriendlyLightning } from "./lightning-followup";
 import {
   combatTraits,
   COMBAT_STEP,
@@ -2642,7 +2643,9 @@ export class Battle {
       ? launchedKingDeadline("red", this.entities, this.projectiles, this.areas)
       : Infinity;
     const finisher =
-      (this.time >= 180 || this.remaining <= MATCH_DAMAGE_HORIZON) &&
+      (this.time >= 180 ||
+        this.remaining <= MATCH_DAMAGE_HORIZON ||
+        hasFriendlyLightning("red", this.areas)) &&
       affordable.some((a) => isDamageSpell(a.played) || a.played === "poison")
         ? createMatchFinisher(
             "red",

@@ -126,19 +126,18 @@ export function lightningSpellTarget(
       ? (lightning.duration / COMBAT_STEP - kingStep) * 0.01 +
         Math.min(value, 0.1)
       : Math.min(value, 100);
+    const ordinaryFinisher =
+      lethalTower &&
+      (!finisher || (!finisher.tracksCrowns && !lethalTower.king));
     const score =
       match?.score ??
-      (lethalTower && !finisher
-        ? (lethalTower.king ? kingRacePriority(kingStep, kingDeadline) : 40) -
+      (ordinaryFinisher
+        ? (lethalTower?.king ? kingRacePriority(kingStep, kingDeadline) : 40) -
           cost +
           kingBonus -
           penalty
         : 3 + 2 * (value - cost * 0.8) - penalty);
-    if (
-      !match &&
-      (!lethalTower || finisher) &&
-      (value < cost * 0.8 || score <= 0)
-    )
+    if (!match && !ordinaryFinisher && (value < cost * 0.8 || score <= 0))
       continue;
     if (!best || score > best.score + 1e-8)
       best = {

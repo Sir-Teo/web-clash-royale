@@ -110,7 +110,7 @@ export function damageSpellTarget(
       };
     })
     .filter((t) =>
-      finisher && t.entity.kind === "tower"
+      finisher?.reordersLightning || (finisher && t.entity.kind === "tower")
         ? true
         : t.entity.king && race
           ? race.baseline >= kingDeadline
@@ -141,7 +141,7 @@ export function damageSpellTarget(
         lethal: hp > 1e-6 && hp <= damage + 1e-6,
       };
     const bodyCost = aiBodyValue(e);
-    const removal = hp <= damage + 1e-6 ? 0.35 : 0;
+    const removal = hp > 1e-6 && hp <= damage + 1e-6 ? 0.35 : 0;
     const defense = (team === "red" ? e.y < 15 : e.y > 17) ? 1.2 : 1;
     return {
       entity: e,
@@ -178,7 +178,11 @@ export function damageSpellTarget(
       }
       value += target.value;
       penalty += target.penalty;
-      if (!finisher && target.lethal && (!lethalTower || target.entity.king))
+      if (
+        (!finisher || (!finisher.tracksCrowns && !target.entity.king)) &&
+        target.lethal &&
+        (!lethalTower || target.entity.king)
+      )
         lethalTower = target.entity;
     }
     // Near a match deadline, the forecast exclusively sets lethal priority. A

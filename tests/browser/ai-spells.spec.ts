@@ -382,3 +382,47 @@ test("AI Lightning predicts the health order after a Fireball clears its blocker
   });
   expect(errors).toEqual([]);
 });
+
+test("AI uses a nonlethal Zap to turn Lightning's last pulse into a King win", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/tests/fixtures/combat.html?scene=ai-lightning-combo");
+  await expect(page.locator("#status")).toContainText(
+    `${expectedEffects} effects`,
+    { timeout: 60000 },
+  );
+  const output = page.locator("#destruction");
+  const state = async () =>
+    JSON.parse((await output.getAttribute("data-ai-areas"))!);
+  const actions = async () =>
+    JSON.parse((await output.getAttribute("data-ai-defense"))!).actions;
+  for (let i = 0; i < 2; i++) {
+    const before = (await state()).time;
+    await page.locator("#second").click();
+    await expect
+      .poll(async () => (await state()).time)
+      .toBeGreaterThan(before + 0.99);
+  }
+  expect(await actions()).toEqual([]);
+  await page.locator("#second").click();
+  await expect.poll(async () => (await actions()).length).toBe(1);
+  expect((await actions())[0].card).toBe("lightning");
+  expect((await state()).kings.find((e: any) => e.team === "blue").hp).toBe(80);
+  await page.locator("#second").click();
+  await expect.poll(async () => (await state()).winner).toBe("red");
+  expect((await actions()).map((a: any) => a.card)).toEqual([
+    "lightning",
+    "zap",
+  ]);
+  expect((await state()).time).toBe(3.9);
+  expect((await state()).reason).toBe("King Tower destroyed");
+  expect((await state()).crowns.red).toBe(3);
+  expect((await state()).entities).toEqual([]);
+  await page.screenshot({
+    path: info.outputPath("ai-lightning-combo.png"),
+    fullPage: true,
+  });
+  expect(errors).toEqual([]);
+});

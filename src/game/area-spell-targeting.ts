@@ -171,7 +171,12 @@ export function areaSpellTarget(
       const reserved = reservedDamage!(e);
       const hp = Math.max(0, e.hp + (e.shield ?? 0) - reserved);
       let shield = Math.max(0, (e.shield ?? 0) - reserved);
-      if (hp <= 1e-6 && !(e.king && race) && !(finisher && e.kind === "tower"))
+      if (
+        hp <= 1e-6 &&
+        !(e.king && race) &&
+        !(finisher && e.kind === "tower") &&
+        !finisher?.reordersLightning
+      )
         continue;
       const fighting = friends.some((friend) => near(e, friend));
       const dwell =
@@ -201,7 +206,7 @@ export function areaSpellTarget(
             Math.min(
               1,
               Math.min(damage, hp) / (e.maxHp + (e.maxShield ?? 0)) +
-                (hp <= damage ? 0.35 : 0),
+                (hp > 1e-6 && hp <= damage ? 0.35 : 0),
             ) *
             defense;
       targets.push({
@@ -244,7 +249,7 @@ export function areaSpellTarget(
       penalty += t.penalty;
       protectsKing ||= !!t.protectsKing;
       if (
-        !finisher &&
+        (!finisher || (!finisher.tracksCrowns && !t.entity.king)) &&
         t.lethal &&
         (lethalTower === undefined || t.entity.king)
       ) {
