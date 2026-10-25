@@ -242,6 +242,9 @@ let accumulator = 0;
 let frameTime = performance.now();
 let frameHandle: number | undefined;
 let lastRenderTime = frameTime;
+let renderedBattle: Battle | undefined;
+let renderedTick = -1;
+let renderedFrozen = false;
 let lastFpsTime = frameTime;
 let fpsFrames = 0;
 let animationTime = 0;
@@ -2826,6 +2829,7 @@ function suspendFrameLoop() {
 }
 function resumeFrameLoop() {
   if (document.hidden || frameHandle !== undefined) return;
+  arena.requestFrame();
   frameTime = performance.now();
   lastRenderTime = lastFpsTime = frameTime;
   fpsFrames = 0;
@@ -2916,7 +2920,16 @@ function frame(now: number) {
     deathAudio.update(battle.time, presentationPaused);
   }
   const idle = screen === "lobby" || presentationPaused || !!battle.winner;
-  if (!idle || now - lastRenderTime >= 1000 / 30 - 0.5) {
+  const frozen = paused && !multiplayer && screen !== "lobby" && !battle.winner;
+  const frozenChanged = !renderedFrozen || arena.needsFrame || renderedBattle !== battle ||
+    renderedTick !== battle.tick;
+  if (frozen && !frozenChanged) {
+    // Keep presentation clocks current while the saved canvas is at rest.
+    // Resuming must not age effects by the wall time spent paused.
+    lastRenderTime = lastFpsTime = now;
+    fpsFrames = fps = 0;
+    arena.adaptResolution(0, false);
+  } else if (!idle || now - lastRenderTime >= 1000 / 30 - 0.5) {
     const renderElapsed = Math.max(0, (now - lastRenderTime) / 1000);
     const renderDelta = Math.min(renderElapsed, 0.1);
     lastRenderTime = now;
@@ -2934,6 +2947,9 @@ function frame(now: number) {
           ? 0
           : renderElapsed * speed,
     );
+    renderedBattle = battle;
+    renderedTick = battle.tick;
+    renderedFrozen = frozen;
     frameCount++;
     fpsFrames++;
     if (now - lastFpsTime >= 1000) {
@@ -3053,6 +3069,7 @@ Object.defineProperty(window, "__arena", {
         })),
         fps,
         renderedFrames: frameCount,
+        renderPending: arena.needsFrame,
         animationTime,
         frameLoopRunning: frameHandle !== undefined,
         drawCalls: arena.renderer.info.render.calls,

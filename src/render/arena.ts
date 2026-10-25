@@ -170,6 +170,9 @@ export class Arena {
   >();
   private contextLost = false;
   private restoringContext = false;
+  private frameRequested = true;
+  private loadingAssets = true;
+  private lastReducedMotion = this.reducedMotion.matches;
   private readonly maxPixelRatio = Math.min(window.devicePixelRatio, 2);
   private slowFrames = 0;
   private fastFrames = 0;
@@ -211,6 +214,7 @@ export class Arena {
       this.contextLost = false;
       this.restoringContext = true;
       this.renderer.shadowMap.needsUpdate = true;
+      this.requestFrame();
     });
     host.append(this.renderer.domElement);
     this.labels = document.createElement("div");
@@ -302,6 +306,7 @@ export class Arena {
       this.health.load(),
       this.loadArtwork(),
     ]).then(() => {
+      this.loadingAssets = false;
       if (!this.destroyed && this.battle) this.setBattle(this.battle);
     });
   }
@@ -585,6 +590,7 @@ export class Arena {
     this.waterWaves.geometry.attributes.instanceOpacity.needsUpdate = true;
   }
   setBattle(battle: Battle) {
+    this.requestFrame();
     this.spriteBatcher.clear();
     this.groundBatcher.clear();
     this.entityById.clear();
@@ -635,6 +641,14 @@ export class Arena {
     this.particles.clear();
     this.battle = battle;
     this.lastEvent = battle.events.at(-1)?.id ?? 0;
+  }
+  /** Repaint a frozen scene after an external presentation change. */
+  requestFrame() {
+    this.frameRequested = true;
+  }
+  get needsFrame() {
+    return this.frameRequested || this.loadingAssets || this.restoringContext ||
+      this.lastReducedMotion !== this.reducedMotion.matches;
   }
   get loadedAnimations() {
     return this.sprites.assets.size;
@@ -845,6 +859,7 @@ export class Arena {
     this.camera.bottom = -h / 2;
     this.camera.clearViewOffset();
     this.camera.updateProjectionMatrix();
+    this.requestFrame();
   }
   adaptResolution(fps: number, active: boolean) {
     if (!active) {
@@ -928,6 +943,8 @@ export class Arena {
     valid = true,
     reason = "",
   ) {
+    // The HUD repeatedly hides an already absent preview while paused.
+    if (id || this.placement) this.requestFrame();
     this.placement = id ? { card: id, point, valid, reason } : null;
     this.block.visible = !!id && CARD_MAP[id].kind !== "spell";
     this.cursor.visible = !!id && !!point;
@@ -988,6 +1005,9 @@ export class Arena {
   }
   render(dt: number, time: number, effectDelta = dt) {
     if (this.destroyed || this.contextLost) return;
+    // Consume before drawing so callbacks can request a subsequent frame.
+    this.frameRequested = false;
+    this.lastReducedMotion = this.reducedMotion.matches;
     this.updateWaterWaves(dt, time);
     for (let i = 0; i < this.flags.length; i++) {
       const f = this.flags[i],
