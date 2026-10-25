@@ -68,6 +68,9 @@ async function init(page: Page, name: string) {
   await page.locator("#friend-button").click();
 }
 async function deploy(page: Page) {
+  await expect
+    .poll(async () => (await state(page)).intro.blocking, { timeout: 15000 })
+    .toBe(false);
   const current = await state(page);
   const slot = current.hand.findIndex(
     (id: CardId) =>
@@ -75,6 +78,7 @@ async function deploy(page: Page) {
   );
   expect(slot).toBeGreaterThanOrEqual(0);
   await page.keyboard.press(String(slot + 1));
+  await expect.poll(async () => (await state(page)).selected).toBe(slot);
   await page.keyboard.press("Enter");
   await expect
     .poll(async () => (await state(page)).actions)

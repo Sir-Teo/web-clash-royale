@@ -242,3 +242,16 @@
     align-items: stretch;
   }
 }
+
+.match-practice-note {
+  margin: 10px 0 0;
+  color: #a9bdd3;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.result-content > .practice-result-note {
+  margin: 0 0 16px;
+  font-size: 12px;
+  line-height: 1.6;
+}

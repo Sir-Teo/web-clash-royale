@@ -175,6 +175,7 @@ test("inspects recorded cards, copies and undoes a deck, persists it and replays
   expect((await saved(page)).history).toEqual(before.history);
   await expect(page.locator("[data-use-match-deck]")).toHaveCount(0);
   await expect(page.locator("#match-deck-slot")).toHaveCount(0);
+  await expect(page.locator("#practice-recorded-deck")).toHaveCount(0);
   expect(errors).toEqual([]);
 });
 
@@ -194,7 +195,9 @@ test("red-side friend details show and copy the opponent's canonical blue deck",
     "Your crowns 3, opponent crowns 0",
   );
   await expect(
-    page.locator('.match-deck-panel[data-match-side="opponent"] p'),
+    page.locator(
+      '.match-deck-panel[data-match-side="opponent"] .match-deck-heading p',
+    ),
   ).toHaveText("<b>Blue & King</b>");
   await expect(page.locator(".match-result span b")).toHaveCount(0);
   await page
@@ -257,6 +260,10 @@ test("log and deck details fit small phones and landscape with keyboard focus co
   for (const button of [
     destination,
     page.getByRole("button", { name: "Use opponent deck", exact: true }),
+    page.getByRole("button", {
+      name: "Practice against this deck",
+      exact: true,
+    }),
     last,
   ]) {
     await button.scrollIntoViewIfNeeded();

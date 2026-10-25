@@ -144,6 +144,7 @@ import { createReplayPlayback } from "./replay-playback";
 import { previousSoloOpponent, soloOpponent } from "./game/opponents";
 import {
   recordedDecks,
+  recordedPractice,
   restoreDeckSelection,
   useRecordedDeck,
   useDeck,
@@ -219,6 +220,7 @@ let connectionStatus = "";
 let lanOrigin = "";
 let networkBattleCode = "";
 let opponentName = "Royal Trainer";
+let practiceMatch: ReturnType<typeof recordedPractice> | null = null;
 let arena: Arena;
 let battle: Battle;
 let screen: "lobby" | "battle" | "replay" = "lobby";
@@ -519,6 +521,7 @@ function lobby() {
   enterLobby(false);
 }
 function enterLobby(keepPeerConnection: boolean) {
+  practiceMatch = null;
   clearKeyboardAim(true);
   resetEnding();
   if (!keepPeerConnection && initialized && (network.room || multiplayer))
@@ -559,7 +562,10 @@ function enterLobby(keepPeerConnection: boolean) {
   $(".mode-select").classList.remove("hidden");
   refreshProfile();
 }
-function startBattle(online = false) {
+function startBattle(
+  online = false,
+  practice: ReturnType<typeof recordedPractice> | null = null,
+) {
   clearKeyboardAim(true);
   replayOwnerName = null;
   const loadout = online ? peerNetwork?.loadout : null;
@@ -575,6 +581,8 @@ function startBattle(online = false) {
   networkReplay = undefined;
   replaySource = null;
   closeModal();
+  practiceMatch =
+    !online && practice ? { ...practice, deck: [...practice.deck] } : null;
   screen = "battle";
   paused = false;
   speed = 1;
@@ -592,11 +600,12 @@ function startBattle(online = false) {
   const seed = Math.floor(Math.random() * 2147483646) + 1;
   const opponent = online
     ? undefined
-    : soloOpponent(seed, mode, previousSoloOpponent(profile.history));
+    : (practiceMatch ??
+      soloOpponent(seed, mode, previousSoloOpponent(profile.history)));
   battle = new Battle({
     deck: loadout?.deck ?? profile.deck,
     enemyDeck: opponent?.deck,
-    mode: online ? (network.room?.mode ?? mode) : mode,
+    mode: online ? (network.room?.mode ?? mode) : (practiceMatch?.mode ?? mode),
     ai: !online,
     seed,
   });
@@ -608,7 +617,9 @@ function startBattle(online = false) {
   $(".competitor.enemy b").textContent = opponentName;
   $(".competitor.enemy div > span").textContent = online
     ? "Friendly battle"
-    : `${opponent!.style} · AI opponent`;
+    : practiceMatch
+      ? "Recorded deck · Practice AI"
+      : `${opponent!.style} · AI opponent`;
   $("#pause-button").setAttribute(
     "aria-label",
     online ? "Battle options" : "Pause battle",
@@ -924,6 +935,7 @@ function showResult() {
   startEnding();
   const completedBattle = battle;
   const completedMatchId = networkBattleCode;
+  const completedPractice = practiceMatch;
   resultShown = true;
   audio.stopMusic();
   audio.stopEffects();
@@ -967,7 +979,7 @@ function showResult() {
           : win
             ? "Victory is yours!"
             : "A crown to chase.",
-        `<div class="result-content ${win ? "victory" : "defeat"}"><div class="result-crown">${icon("crown")}</div><span class="eyebrow">${esc(battle.reason)}</span><div class="result-score"><span class="blue">${icon("crown")} ${battle.players.blue.crowns}</span><b>–</b><span class="red">${battle.players.red.crowns} ${icon("crown")}</span></div><p>${win ? "Your kingdom stands tall. Well played." : draw ? "An even battle. A rematch awaits." : "Every great king learns from a battle."}</p><div class="result-rewards"><div>${icon("trophy")}<b>${reward.trophies > 0 ? "+" : ""}${reward.trophies}</b><small>TROPHIES</small></div><div>${icon("coins")}<b>+${reward.gold}</b><small>GOLD</small></div>${reward.chest ? `<div><img src="${import.meta.env.BASE_URL}assets/chests/${reward.chest}.png" alt="${reward.chest} chest"/><b>+1</b><small>${reward.chest.toUpperCase()} CHEST</small></div>` : ""}</div>${wasMultiplayer && peerNetwork ? `<p id="rematch-status" role="status"></p>` : ""}<button class="primary-button" id="rematch">${icon("swords")} Battle again</button><div class="result-links"><button class="text-button" id="watch-replay">${icon("play")} Watch replay</button><button class="text-button" id="return-home">Back to arena ${icon("arrow-right")}</button></div></div>`,
+        `<div class="result-content ${win ? "victory" : "defeat"}"><div class="result-crown">${icon("crown")}</div><span class="eyebrow">${esc(battle.reason)}</span><div class="result-score"><span class="blue">${icon("crown")} ${battle.players.blue.crowns}</span><b>–</b><span class="red">${battle.players.red.crowns} ${icon("crown")}</span></div><p>${win ? "Your kingdom stands tall. Well played." : draw ? "An even battle. A rematch awaits." : "Every great king learns from a battle."}</p><div class="result-rewards"><div>${icon("trophy")}<b>${reward.trophies > 0 ? "+" : ""}${reward.trophies}</b><small>TROPHIES</small></div><div>${icon("coins")}<b>+${reward.gold}</b><small>GOLD</small></div>${reward.chest ? `<div><img src="${import.meta.env.BASE_URL}assets/chests/${reward.chest}.png" alt="${reward.chest} chest"/><b>+1</b><small>${reward.chest.toUpperCase()} CHEST</small></div>` : ""}</div>${completedPractice ? `<p class="practice-result-note">Practice AI · no trophies or rewards</p>` : ""}${wasMultiplayer && peerNetwork ? `<p id="rematch-status" role="status"></p>` : ""}<button class="primary-button" id="rematch">${icon("swords")} ${completedPractice ? "Practice again" : "Battle again"}</button><div class="result-links"><button class="text-button" id="watch-replay">${icon("play")} Watch replay</button><button class="text-button" id="return-home">Back to arena ${icon("arrow-right")}</button></div></div>`,
         "result",
       );
       if (wasMultiplayer)
@@ -991,7 +1003,7 @@ function showResult() {
             lobby();
             showMultiplayer();
           }
-        } else startBattle();
+        } else startBattle(false, completedPractice);
       };
       syncPeerRematch();
       $("#return-home").onclick = lobby;
@@ -1841,7 +1853,7 @@ function showMatchDetails(index: number, state: Partial<MatchDeckView> = {}) {
   const decks = recordedDecks(record);
   const editable = screen === "lobby";
   const section = (side: "yours" | "opponent") =>
-    `<section class="match-deck-panel" data-match-side="${side}" aria-label="${side === "yours" ? "Your recorded deck" : "Opponent recorded deck"}"><div class="match-deck-heading"><div><h3>${side === "yours" ? "Your deck" : "Opponent deck"}</h3><p>${side === "yours" ? esc(record.playerName ?? "Your starting eight") : esc(record.opponent ?? "Royal Trainer")}</p></div><span><i class="tiny-drop"></i> ${averageCost(decks[side]).toFixed(1)} average</span></div><div class="match-deck-grid">${decks[side].map((id) => cardHTML(id, `data-match-card="${id}"`)).join("")}</div>${editable ? `<button class="secondary-button" data-use-match-deck="${side}" aria-describedby="match-copy-note">${icon("layers-2")} ${side === "yours" ? "Use your recorded deck" : "Use opponent deck"}</button>` : ""}</section>`;
+    `<section class="match-deck-panel" data-match-side="${side}" aria-label="${side === "yours" ? "Your recorded deck" : "Opponent recorded deck"}"><div class="match-deck-heading"><div><h3>${side === "yours" ? "Your deck" : "Opponent deck"}</h3><p>${side === "yours" ? esc(record.playerName ?? "Your starting eight") : esc(record.opponent ?? "Royal Trainer")}</p></div><span><i class="tiny-drop"></i> ${averageCost(decks[side]).toFixed(1)} average</span></div><div class="match-deck-grid">${decks[side].map((id) => cardHTML(id, `data-match-card="${id}"`)).join("")}</div>${editable ? `<button class="secondary-button" data-use-match-deck="${side}" aria-describedby="match-copy-note">${icon("layers-2")} ${side === "yours" ? "Use your recorded deck" : "Use opponent deck"}</button>${side === "opponent" ? `<button class="secondary-button" id="practice-recorded-deck" aria-describedby="practice-recorded-note">${icon("target")} Practice against this deck</button><p class="match-practice-note" id="practice-recorded-note">Training AI uses this recorded deck against your active deck. No trophies or rewards.</p>` : ""}` : ""}</section>`;
   modal(
     "Battle details",
     `<div class="match-details"><div class="match-result ${record.winner === "blue" ? "win" : record.winner === "red" ? "loss" : "draw"}"><div><strong>${record.winner === "blue" ? "Victory" : record.winner === "red" ? "Defeat" : "Draw"}</strong><span>vs ${esc(record.opponent ?? "Royal Trainer")}</span></div><b aria-label="Your crowns ${record.crowns[0]}, opponent crowns ${record.crowns[1]}">${record.crowns[0]} ${icon("crown")} ${record.crowns[1]}</b></div><p class="match-metadata">${modeNames[record.mode]} · ${clock(record.replay.duration * STEP)} played<br>${esc(new Date(record.date).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }))}</p>${editable ? `<div class="match-copy-target"><label for="match-deck-slot">Destination battle deck</label><div class="match-deck-choice"><select id="match-deck-slot" aria-describedby="match-copy-note">${profile.decks.map((_, slot) => `<option value="${slot}" ${view.slot === slot ? "selected" : ""}>Battle deck ${slot + 1}${profile.activeDeck === slot ? " (active)" : ""}</option>`).join("")}</select>${icon("chevron-down")}</div><p id="match-copy-note">Replaces battle deck ${view.slot + 1} and selects it.</p></div>` : ""}<div class="match-decks">${section("yours")}${section("opponent")}</div>${view.notice ? `<div class="match-deck-status" role="status"><span id="match-deck-notice">${esc(view.notice)}</span>${view.undo ? `<button class="text-button" id="undo-match-deck" aria-describedby="match-deck-notice">Undo deck change</button>` : ""}</div>` : ""}<div class="replay-export"><button class="secondary-button" id="export-replay-file">${icon("hard-drive-download")} Export replay</button><p>Save this recording to watch in another browser.</p><p class="replay-file-error" role="alert" hidden></p></div><div class="match-details-actions"><button class="text-button" id="match-log">Back to battle log</button><button class="primary-button" id="match-replay">${icon("play")} Watch this replay</button></div></div>`,
@@ -1874,6 +1886,9 @@ function showMatchDetails(index: number, state: Partial<MatchDeckView> = {}) {
         );
     });
   if (!editable) return;
+  $("#practice-recorded-deck").onclick = () => {
+    if (screen === "lobby") startBattle(false, recordedPractice(record));
+  };
   $("#match-deck-slot").onchange = () => {
     view.slot = Number($<HTMLSelectElement>("#match-deck-slot").value);
     $("#match-copy-note").textContent =

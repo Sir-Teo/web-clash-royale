@@ -375,3 +375,11 @@ Replay-file version 1 retains its existing schema: export chooses the recorded n
 Musketeer Marshal adds a seventh solo archetype with Three Musketeers, Hog Rider, Knight, Skeletons, Goblins, Fireball, Zap and Tesla. Training and existing saved deck IDs remain intact; recorded enemy decks continue to define historical opponents. Current native card/profile counts follow the expanded roster, while the 19 loaded actor assets and 110 effect exports stay unchanged.
 
 Direct peer protocol 4 rejects earlier clients before play, since an older renderer may not recognize the new card ID in a hidden opponent deck. CR1 signaling, legacy WebSocket protocol 1 and replay rules/file formats retain their existing versions. Current card validation, deck codes, recording, projected snapshots and replay files accept the new explicit ID.
+
+### Practice against recorded opponents
+
+`recordedPractice` resolves the opponent deck through `recordedDecks`, including canonical blue opponents from red-side friendly recordings, validates it and returns an independent array with Training mode and the recorded opponent name. Battle details exposes this action only from the lobby. The current active player deck enters a new Battle with current rules, normal shuffle/AI and a newly drawn seed; the original commands and outcome are not replayed. The lobby’s chosen Classic/Double/Training mode stays separate from this per-match override.
+
+The live header labels the recorded name as Practice AI. Result handling captures the practice setup before opening the ending dialog; Practice again passes that captured setup into the next match after closing the old result, whose cleanup may re-enter the lobby. Starting any normal or online battle and entering the lobby clear the active override. Returning home or exiting its replay therefore restores ordinary opponent selection and the chosen lobby mode.
+
+Practice results use existing Training progression: trophies, gold and chests stay unchanged, while battle/win/crown statistics and normal history continue to record play. New recordings use the current player identity, canonical blue perspective, the exact recorded opponent deck and `opponentType=ai`; no prior friendly match ID is reused. Profile, replay and wire schemas need no changes.

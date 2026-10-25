@@ -17,6 +17,19 @@ export function recordedDecks(record: RecordEntry) {
   };
 }
 
+/** A new Training match faces the viewer's recorded opponent, including red-side guests. */
+export function recordedPractice(record: RecordEntry) {
+  const deck = recordedDecks(record).opponent;
+  if (!validDeck(deck))
+    throw new Error("This recording has no valid opponent deck.");
+  return {
+    name: record.opponent ?? "Royal Trainer",
+    style: "Recorded deck",
+    mode: "training" as const,
+    deck,
+  };
+}
+
 export function useRecordedDeck(
   profile: Profile,
   record: RecordEntry,
