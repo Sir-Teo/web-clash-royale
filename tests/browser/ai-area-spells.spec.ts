@@ -7,8 +7,7 @@ for (const card of ["rage", "freeze", "poison"] as const)
   }) => {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
-    await page.goto("/tests/fixtures/combat.html");
-    await page.locator("#scenario").selectOption(`ai-${card}`);
+    await page.goto(`/tests/fixtures/combat.html?scene=ai-${card}`);
     await expect(page.locator("#status")).toContainText(
       `${expectedEffects} effects`,
       { timeout: 60000 },
@@ -53,3 +52,54 @@ for (const card of ["rage", "freeze", "poison"] as const)
     ).toHaveLength(1);
     expect(errors).toEqual([]);
   });
+
+test("AI Freeze interrupts a fatal King windup before copying a distant push", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/tests/fixtures/combat.html?scene=ai-freeze-king");
+  await expect(page.locator("#status")).toContainText(
+    `${expectedEffects} effects`,
+    { timeout: 60000 },
+  );
+  const output = page.locator("#destruction");
+  const state = async () =>
+    JSON.parse((await output.getAttribute("data-ai-areas"))!);
+  const time = async () =>
+    JSON.parse((await output.getAttribute("data-state"))!).time;
+  const step = async () => {
+    const before = await time();
+    await page.locator("#second").click();
+    await expect.poll(time).toBeGreaterThan(before + 0.99);
+  };
+  await step();
+  await step();
+  expect((await state()).actions).toEqual([]);
+  await step();
+  const defended = await state();
+  expect(defended.actions).toHaveLength(1);
+  expect(defended.actions[0]).toMatchObject({ card: "freeze", team: "red" });
+  expect(defended.kings.find((e: any) => e.team === "red").hp).toBe(100);
+  expect(
+    defended.entities.find((e: any) => e.card === "lumberjack").stun,
+  ).toBeGreaterThan(0);
+  expect(defended.entities.some((e: any) => e.clone)).toBe(false);
+  await page.screenshot({
+    path: info.outputPath("ai-freeze-king.png"),
+    fullPage: true,
+  });
+  await step();
+  await step();
+  await step();
+  const survived = await state();
+  expect(survived.winner).toBeNull();
+  expect(survived.kings.find((e: any) => e.team === "red").hp).toBe(100);
+  expect(
+    survived.entities.some((e: any) => e.card === "lumberjack" && e.hp > 0),
+  ).toBe(false);
+  expect(survived.actions).toEqual(defended.actions);
+  await page.waitForTimeout(160);
+  expect(await state()).toEqual(survived);
+  expect(errors).toEqual([]);
+});

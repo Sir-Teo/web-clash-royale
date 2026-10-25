@@ -143,6 +143,19 @@ function setup() {
     unit("archers", "red", 14, 10);
     cast("arrows", "blue", 4, 12);
     cast("fireball", "blue", 14, 12);
+  } else if (scenario === "ai-freeze-king") {
+    const king = battle.entities.find((e) => e.team === "red" && e.king)!;
+    Object.assign(king, { hp: 100, active: true, cooldown: 3 });
+    for (const [i, id] of (["giant", "witch"] as const).entries())
+      for (const e of unit(id, "red", 4 + i, 20)) {
+        e.active = false;
+        e.speed = 0;
+      }
+    for (const e of unit("lumberjack", "blue", king.x, king.y + 2))
+      Object.assign(e, { hp: 200, deploy: 2.3 });
+    battle.players.red.hand = ["freeze", "clone", "pekka", "pekka"];
+    battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
+    battle.players.red.elixir = 4;
   } else if (["ai-rage", "ai-freeze", "ai-poison", "ai-heal", "ai-clone"].includes(scenario)) {
     const card = scenario.slice(3) as "rage" | "freeze" | "poison" | "heal" | "clone";
     if (card === "rage") {
@@ -1172,6 +1185,9 @@ function render(now: number) {
           a.team === "red" && ["rage", "freeze", "poison", "heal", "clone"].includes(a.card),
       ),
       areas: battle.areas,
+      kings: battle.entities.filter((e) => e.king)
+        .map((e) => ({ team: e.team, hp: e.hp })),
+      winner: battle.winner,
       entities: battle.entities
         .filter((e) => e.kind !== "tower")
         .map((e) => ({

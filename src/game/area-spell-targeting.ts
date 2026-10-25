@@ -59,6 +59,7 @@ export function areaSpellTarget(
     value: number;
     penalty: number;
     lethal: boolean;
+    protectsKing?: boolean;
   }[] = [];
   if (card === "rage") {
     for (const e of friends) {
@@ -99,6 +100,22 @@ export function areaSpellTarget(
         (e.kind === "tower" && !e.active)
       )
         continue;
+      const pending = e.pendingAttack;
+      // Freeze cancels a windup before combat resolves. Released projectiles
+      // and attacks already cancelled by stun cannot justify this override.
+      const protectsKing =
+        e.active &&
+        e.stun <= 0 &&
+        !!pending &&
+        pending.remaining <= 1 &&
+        friends.some(
+          (friend) =>
+            friend.king &&
+            friend.id === pending.target &&
+            pending.damage >= friend.hp &&
+            Math.hypot(e.x - friend.x, e.y - friend.y) <=
+              e.range + friend.radius + e.radius * 0.35,
+        );
       const support = friends
         .filter(
           (friend) =>
@@ -109,12 +126,13 @@ export function areaSpellTarget(
             sum + bodyValue(friend) * (0.25 + 0.75 * health(friend)),
           0,
         );
-      if (support < 2) continue;
+      if (support < 2 && !protectsKing) continue;
       targets.push({
         entity: e,
         value: bodyValue(e) * (0.5 + 0.5 * health(e)),
         penalty: 0,
         lethal: false,
+        protectsKing,
       });
     }
   } else {
@@ -172,11 +190,13 @@ export function areaSpellTarget(
     let value = 0,
       penalty = 0,
       king = false,
+      protectsKing = false,
       lethalTower: number | undefined;
     for (const t of targets) {
       if (!spellContains(point, t.entity, radius + t.entity.radius)) continue;
       value += t.value;
       penalty += t.penalty;
+      protectsKing ||= !!t.protectsKing;
       if (t.lethal && (lethalTower === undefined || t.entity.king)) {
         lethalTower = t.entity.id;
         king = !!t.entity.king;
@@ -186,6 +206,8 @@ export function areaSpellTarget(
       card === "rage"
         ? (5 * cost) / CARD_MAP.rage.cost
         : cost * (card === "poison" ? 0.8 : 1);
+    // Keep emergency protection below a winning King hit, above ordinary
+    // support value. Bound the crowd bonus so that priority cannot invert.
     const score =
       lethalTower !== undefined
         ? (king ? 10_000 : 40) -
@@ -193,8 +215,14 @@ export function areaSpellTarget(
           poison.duration * 0.1 +
           value -
           penalty
-        : 3 + 2 * (value - threshold) - penalty;
-    if (lethalTower === undefined && (value < threshold || score <= 0))
+        : protectsKing
+          ? 9_000 - cost + Math.min(100, value)
+          : 3 + 2 * (value - threshold) - penalty;
+    if (
+      lethalTower === undefined &&
+      !protectsKing &&
+      (value < threshold || score <= 0)
+    )
       continue;
     if (!best || score > best.score + 1e-8)
       best = {
