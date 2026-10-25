@@ -30,6 +30,8 @@ Freeze and Tornado account for pending King hits changing an active enemy Lightn
 
 King defense also follows blockers moved by active Tornado spells. A Giant leaving Lightning’s circle can require immediate defense; a Giant entering it can absorb the pulse and let the AI save its Freeze.
 
+The same incoming prediction informs urgent spell races and match-ending checks for friendly Crown Towers.
+
 The AI also accounts for friendly Lightning killing or stunning attackers before release, saving Freeze when the current pulse already prevents a King loss. This includes stuns after a shield breaks; a pulse arriving after the attackers release still requires defense.
 
 In **Cards**, search plain names such as “pekka” or “Mini Pekka”, combine card type with elixir cost, and sort by elixir or name. The result count follows the active filters. Tap a collection card to inspect it; **Back to collection** preserves the search, filters and sort order. Select a deck card to move or replace it; select it again to cancel and return to inspection. Opening the builder again from the lobby starts with the full collection.

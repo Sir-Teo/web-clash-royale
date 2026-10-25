@@ -10,6 +10,7 @@ import {
 import poison from "./poison-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
 import { createLightningPlan, lightningDamageMap } from "./lightning-strikes";
+import { currentLightningDamage } from "./windup-health";
 import { logSpellContains, logSpellProjectile } from "./log-flight";
 import { poisonDamagePackets } from "./status-health";
 export { poisonDamagePackets } from "./status-health";
@@ -53,7 +54,13 @@ export function launchedKingDeadline(
   return king
     ? kingDeathStep(
         king,
-        towerDamageForecast(king, projectiles, areas, entities).baseline,
+        towerDamageForecast(
+          king,
+          projectiles,
+          areas,
+          entities,
+          currentLightningDamage(entities, areas, projectiles),
+        ).baseline,
       )
     : Infinity;
 }
@@ -65,11 +72,14 @@ export function towerDamageForecast(
   projectiles: readonly Projectile[],
   areas: readonly AreaEffect[],
   entities?: readonly Entity[],
+  lightningPackets?: ReadonlyMap<number, readonly DamagePacket[]>,
 ) {
   const shots = projectileDamagePackets(target, projectiles, entities);
   const currentPoison = poisonDamagePackets(target, areas);
   const currentLightning = entities
-    ? (lightningDamageMap(entities, areas, projectiles).get(target.id) ?? [])
+    ? ((
+        lightningPackets ?? lightningDamageMap(entities, areas, projectiles)
+      ).get(target.id) ?? [])
     : [];
   const withoutLightning = [...shots, ...currentPoison];
   const baseline = [...withoutLightning, ...currentLightning];

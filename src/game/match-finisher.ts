@@ -4,6 +4,8 @@ import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import { towerDamageForecast, towerDamageState } from "./king-damage";
 import type { DamagePacket } from "./projectile-impacts";
 import poison from "./poison-data.json" with { type: "json" };
+import { currentLightningDamage } from "./windup-health";
+import { lightningDamageMap } from "./lightning-strikes";
 import {
   createLightningFollowup,
   hasFriendlyLightning,
@@ -37,10 +39,22 @@ export function createMatchFinisher(
     ReturnType<typeof createLightningFollowup>
   >();
   let nextId = 0;
+  const lightningPackets = currentLightningDamage(entities, areas, projectiles);
+  const offensiveLightningPackets = areas.some(
+    (a) => a.card === "tornado" && a.remaining > 0,
+  )
+    ? lightningDamageMap(entities, areas, projectiles)
+    : lightningPackets;
   const towers = entities
     .filter((e) => e.kind === "tower" && e.hp > 0)
     .map((e) => {
-      const forecast = towerDamageForecast(e, projectiles, areas, entities);
+      const forecast = towerDamageForecast(
+        e,
+        projectiles,
+        areas,
+        entities,
+        e.team === team ? lightningPackets : offensiveLightningPackets,
+      );
       const cache = new Map<
         readonly DamagePacket[],
         {

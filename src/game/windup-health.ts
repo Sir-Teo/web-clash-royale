@@ -15,6 +15,7 @@ import {
 } from "./tornado-pull";
 import { healthPackets, type HealthPacket } from "./status-health";
 import {
+  lightningDamageMap,
   lightningStrikeSteps,
   projectLightningDamage,
 } from "./lightning-strikes";
@@ -377,4 +378,16 @@ export function createWindupHealth(
     ).statuses;
   };
   return Object.assign(evaluate, { lightning });
+}
+
+/** Released Lightning follows current pulls; boards without Tornado retain
+ * the fixed-position projection and its existing fast path. */
+export function currentLightningDamage(
+  entities: readonly Entity[],
+  areas: readonly AreaEffect[],
+  projectiles: readonly Projectile[] = [],
+) {
+  return areas.some((a) => a.card === "tornado" && a.remaining > 0)
+    ? createWindupHealth(projectiles, entities).lightning(areas)
+    : lightningDamageMap(entities, areas, projectiles);
 }

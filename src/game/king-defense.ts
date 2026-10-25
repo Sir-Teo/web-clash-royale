@@ -94,8 +94,9 @@ export function createKingDefense(
 ) {
   const king = entities.find((e) => e.hp > 0 && e.team === team && e.king);
   const health = createWindupHealth(projectiles, entities);
+  // The shared health context below supplies the King's Lightning packets.
   const released = king
-    ? towerDamageForecast(king, projectiles, areas, entities)
+    ? towerDamageForecast(king, projectiles, areas, entities, new Map())
     : undefined;
   const tracksLightning = areas.some(
     (a) => a.card === "lightning" && a.team !== team && a.remaining > 0,

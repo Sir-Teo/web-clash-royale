@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { Battle, type AreaEffect, type Team } from "../src/game/engine";
 import { type CardId, CARD_MAP } from "../src/game/cards";
 import { createKingDefense } from "../src/game/king-defense";
+import { launchedKingDeadline } from "../src/game/king-damage";
+import { createMatchFinisher } from "../src/game/match-finisher";
 
 function setup(team: Team = "red", inward = false) {
   const battle = new Battle({ seed: 12, ai: false });
@@ -83,6 +85,44 @@ function setup(team: Team = "red", inward = false) {
 }
 
 describe("King Lightning targets follow current pulls", () => {
+  it.each([false, true])(
+    "incoming deadlines and friendly-tower endings follow pulls (%s)",
+    (inward) => {
+      const s = setup("red", inward);
+      s.king.hp = 300;
+      s.attacker.pendingAttack = undefined;
+      s.attacker.active = false;
+      const before = JSON.stringify(s.battle);
+      expect(
+        launchedKingDeadline(
+          "red",
+          s.battle.entities,
+          s.battle.projectiles,
+          s.battle.areas,
+        ),
+      ).toBe(inward ? Infinity : 13);
+      const finisher = createMatchFinisher(
+        "red",
+        s.battle.entities,
+        s.battle.projectiles,
+        s.battle.areas,
+        { blue: 0, red: 0 },
+        100,
+        false,
+      );
+      const ending = finisher.baseline;
+      expect(ending).toEqual(inward ? undefined : { winner: "blue", step: 13 });
+      expect(finisher.evaluate("zap", { x: 1, y: 16 }, 2, 0)).toBeUndefined();
+      expect(
+        finisher.evaluate("lightning", { x: 1, y: 16 }, 6, 0),
+      ).toBeUndefined();
+      expect(JSON.stringify(s.battle)).toBe(before);
+      s.step(13);
+      expect(s.lightning.struck).toEqual([inward ? s.giant.id : s.king.id]);
+      expect(s.battle.winner).toBe(inward ? null : s.enemy);
+    },
+  );
+
   it.each(["red", "blue"] as const)(
     "predicts a blocker leaving before the fatal last pulse (%s)",
     (team) => {
