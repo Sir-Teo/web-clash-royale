@@ -137,3 +137,77 @@ for (const blocked of [false, true])
     ).toBeNull();
     expect(errors).toEqual([]);
   });
+
+for (const counter of ["missing", "unaffordable"])
+  test(`AI defends a supported lane while its air counter is ${counter}`, async ({
+    page,
+  }, info) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    const scene = `ai-defense-fallback-${counter}`;
+    await page.goto("/tests/fixtures/combat.html");
+    await page.locator("#scenario").selectOption(scene);
+    await expect(page.locator("#status")).toContainText(
+      `${expectedEffects} effects`,
+      { timeout: 60000 },
+    );
+    const output = page.locator("#destruction");
+    const state = async () =>
+      JSON.parse((await output.getAttribute("data-ai-defense"))!);
+    const time = async () =>
+      JSON.parse((await output.getAttribute("data-state"))!).time;
+    const step = async () => {
+      const before = await time();
+      await page.locator("#second").click();
+      await expect.poll(time).toBeGreaterThan(before + 0.99);
+    };
+    await expect.poll(async () => (await state()).scene).toBe(scene);
+    const before = await state();
+    const primary = before.targets.find(
+      (e: any) => e.id === before.priority[0],
+    );
+    expect(primary.card).toBe("minion-horde");
+    expect(
+      before.targets.filter((e: any) => e.card === "minion-horde"),
+    ).toHaveLength(6);
+    await step();
+    await step();
+    expect((await state()).actions).toEqual([]);
+    await step();
+    const result = await state();
+    expect(result.actions).toHaveLength(1);
+    expect(result.actions[0]).toMatchObject({
+      card: "knight",
+      team: "red",
+      y: 9.3,
+    });
+    expect(result.actions[0].x).toBeGreaterThan(13);
+    expect(result.actions[0].x).toBeLessThan(15);
+    expect(result.elixir).toBeGreaterThanOrEqual(0);
+    expect(result.elixir).toBeLessThan(2);
+    for (
+      let i = 0;
+      i < 3 &&
+      (await state()).targets.find((e: any) => e.card === "hog-rider").hp ===
+        before.targets.find((e: any) => e.card === "hog-rider").hp;
+      i++
+    )
+      await step();
+    const defended = await state(),
+      hog = defended.targets.find((e: any) => e.card === "hog-rider");
+    expect(hog.hp).toBeLessThan(hog.maxHp);
+    expect(
+      defended.defenders.find((e: any) => e.card === "knight")?.target,
+    ).toBe(hog.id);
+    expect(
+      defended.targets
+        .filter((e: any) => e.card === "minion-horde")
+        .every((e: any) => e.hp === e.maxHp),
+    ).toBe(true);
+    if (info.project.name === "desktop")
+      await page.screenshot({
+        path: info.outputPath(`ai-fallback-${counter}.png`),
+        animations: "disabled",
+      });
+    expect(errors).toEqual([]);
+  });

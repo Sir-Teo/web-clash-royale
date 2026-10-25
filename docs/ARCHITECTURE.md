@@ -285,6 +285,10 @@ Aiming has focus ownership: the handler requires the focused live battlefield an
 
 Nearby attackers aimed at the same Crown Tower contribute shared pressure, with linear distance falloff to zero at three tiles. Each candidate uses its own neighborhood, so chains do not merge an entire lane into one push. Existing health and delay discounts apply before summing support. A Princess Tower finishing-hit urgency contributes its largest weighted bonus once, rather than multiplying the same loss by every swarm body. An actual imminent lethal King attacker sorts first independently of group pressure. These calculations remain estimates rather than a forward combat simulation.
 
+`Battle.think` first prepares its existing useful spell choices. Without one, it follows the pressure ranking until an affordable non-building-seeker can hit the attacker or a legal ground-building lure can intercept it. This lets ground defenders answer another lane when the dominant air push cannot be answered by the hand. If no supported push exists, the top threat remains the scoring context; the AI still avoids spending inappropriate building-seekers. A useful spell retains the original first-threat context and spell scoring, even when another lane has a direct defender. Building-lure legality and existing target commitments keep their current policy.
+
+Affordability now uses the same `1e-6` elixir tolerance as normal deployment. This changes only AI card eligibility near a floating-point boundary; normal spending and regeneration rules are unchanged.
+
 `Battle.think` retains one score jitter draw per affordable card, its placement draw and decision cadence. Defensive troop centers follow the chosen attacker’s X coordinate, and their minimum Y moves from 8 to 4 for central or deep attacks. Defensive buildings retain their center tile and nearby legal-placement fallback. Splash bonuses now count nearby, hittable threats instead of unrelated bodies across the arena. Recorded commands remain authoritative, so historical replays and friendly human battles do not run this policy.
 
 

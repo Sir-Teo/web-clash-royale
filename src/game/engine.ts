@@ -1407,26 +1407,8 @@ export class Battle {
     const p = this.players.red;
     const affordable = p.hand
       .map((id, slot) => ({ id, slot, c: CARD_MAP[id] }))
-      .filter((v) => v.c.cost <= p.elixir);
+      .filter((v) => v.c.cost <= p.elixir + 1e-6);
     if (!affordable.length) return;
-    const threats = defensiveThreats("red", this.entities);
-    const threat = threats[0];
-    const buildingLures = new Map(
-      affordable
-        .filter((a) => a.c.kind === "building")
-        .map((a) => [
-          a.id,
-          threat
-            ? buildingLureTarget(
-                a.id,
-                "red",
-                threat,
-                this.entities,
-                (point) => this.canPlace("red", a.id, point.x, point.y).ok,
-              )
-            : undefined,
-        ]),
-    );
     const spellTargets = new Map(
       affordable
         .filter((a) => a.c.kind === "spell")
@@ -1449,12 +1431,44 @@ export class Battle {
               ),
         ]),
     );
-    if (
-      !threat &&
-      p.elixir < 6 &&
-      this.mode !== "training" &&
-      ![...spellTargets.values()].some(Boolean)
-    )
+    const hasSpellTarget = [...spellTargets.values()].some(Boolean);
+    const threats = defensiveThreats("red", this.entities);
+    let threat = threats[0];
+    let buildingLures = new Map<CardId, Point | undefined>();
+    for (const enemy of threats) {
+      const lures = new Map(
+        affordable
+          .filter((a) => a.c.kind === "building")
+          .map((a) => [
+            a.id,
+            buildingLureTarget(
+              a.id,
+              "red",
+              enemy,
+              this.entities,
+              (point) => this.canPlace("red", a.id, point.x, point.y).ok,
+            ),
+          ]),
+      );
+      if (enemy === threat) buildingLures = lures;
+      // Preserve useful spell choices and pressure order. Without a spell or
+      // an affordable air response, defend the next supported push instead.
+      if (
+        hasSpellTarget ||
+        affordable.some(
+          (a) =>
+            a.c.kind !== "spell" &&
+            !a.c.buildingsOnly &&
+            (!enemy.air || a.c.hitsAir),
+        ) ||
+        [...lures.values()].some(Boolean)
+      ) {
+        threat = enemy;
+        buildingLures = lures;
+        break;
+      }
+    }
+    if (!threat && p.elixir < 6 && this.mode !== "training" && !hasSpellTarget)
       return;
     const scored = affordable
       .map((a) => {

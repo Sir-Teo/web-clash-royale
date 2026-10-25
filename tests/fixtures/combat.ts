@@ -1,3 +1,4 @@
+import { defensiveThreats } from "../../src/game/defensive-threats";
 import { Arena } from "../../src/render/arena";
 import { Battle, STEP } from "../../src/game/engine";
 import type { Team } from "../../src/game/engine";
@@ -144,7 +145,8 @@ function setup() {
   } else if (scenario.startsWith("ai-defense-")) {
     if (
       scenario === "ai-defense-ground-swarm" ||
-      scenario === "ai-defense-air-swarm"
+      scenario === "ai-defense-air-swarm" ||
+      scenario.startsWith("ai-defense-fallback-")
     ) {
       const card =
         scenario === "ai-defense-ground-swarm"
@@ -170,6 +172,13 @@ function setup() {
           ? ["mini-pekka", "baby-dragon", "musketeer", "giant"]
           : ["mini-pekka", "knight", "giant", "hog-rider"];
     battle.players.red.elixir = 4;
+    if (scenario.startsWith("ai-defense-fallback-")) {
+      battle.players.red.hand = scenario.endsWith("unaffordable")
+        ? ["knight", "musketeer", "giant", "hog-rider"]
+        : ["knight", "mini-pekka", "giant", "hog-rider"];
+      battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
+      battle.players.red.elixir = 3;
+    }
   } else if (scenario === "ai-spells") {
     // Let the ordinary AI timer choose its cast; no private think call here.
     const tower = battle.entities.find((e) => e.team === "blue" && !e.king)!;
@@ -537,6 +546,20 @@ function render(now: number) {
     JSON.stringify({
       scene: (document.querySelector("#scenario") as HTMLSelectElement).value,
       actions: battle.actions.filter((a) => a.team === "red"),
+      priority: (
+        document.querySelector("#scenario") as HTMLSelectElement
+      ).value.startsWith("ai-defense-")
+        ? defensiveThreats("red", battle.entities).map((e) => e.id)
+        : [],
+      defenders: battle.entities
+        .filter((e) => e.team === "red" && e.kind === "troop" && e.hp > 0)
+        .map((e) => ({
+          id: e.id,
+          card: e.card,
+          x: e.x,
+          y: e.y,
+          target: e.target,
+        })),
       targets: battle.entities
         .filter((e) => e.team === "blue" && e.kind === "troop" && e.hp > 0)
         .map((e) => ({
@@ -545,6 +568,8 @@ function render(now: number) {
           x: e.x,
           y: e.y,
           target: e.target,
+          hp: e.hp,
+          maxHp: e.maxHp,
         })),
       buildings: battle.entities
         .filter((e) => e.team === "red" && e.kind === "building")
