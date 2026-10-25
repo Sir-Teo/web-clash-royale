@@ -48,7 +48,10 @@ describe("individual replay files", () => {
       const text = exportReplayFile(original, "Sender King"),
         restored = importReplayFile(text);
       expect(restored.playerName).toBe("Sender King");
-      expect(restored.record.replay).toEqual(replay);
+      expect(restored.record.replay).toEqual({
+        ...replay,
+        rulesFamily: replay.rulesFamily ?? "origin",
+      });
       expect(restored.record).toMatchObject({
         date: original.date,
         winner: original.winner,
@@ -89,7 +92,7 @@ describe("individual replay files", () => {
     p.version = 2;
     expect(() => importReplayFile(JSON.stringify(p))).toThrow(/replay/i);
     p.version = 1;
-    p.match.replay.version = 6;
+    p.match.replay.version = 17;
     expect(() => importReplayFile(JSON.stringify(p))).toThrow(/invalid/i);
   });
   it("bounds file bytes, names and recording duration", () => {

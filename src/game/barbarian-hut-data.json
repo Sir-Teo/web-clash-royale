@@ -1,0 +1,23 @@
+{
+  "sourceCard": "BarbarianHut",
+  "rarity": "Rare",
+  "cost": 7,
+  "sourceHitpoints": 1100,
+  "deployTime": 1,
+  "lifetime": 60,
+  "spawnNumber": 2,
+  "spawnInterval": 0.5,
+  "spawnPause": 13.5,
+  "spawnCharacter": "Barbarian",
+  "spawnCharacterLevelIndex": 2,
+  "unitDeployTime": 1,
+  "unitDeployDelay": 0.4,
+  "spawnRadius": 0.4,
+  "fps": 30,
+  "blueFrames": 1,
+  "redFrames": 1,
+  "blueExport": "building_barbarian_hut_blue",
+  "redExport": "building_barbarian_hut_red",
+  "spawnEffect": "goblin_hut_deploy",
+  "deathEffect": "goblin_hut_die"
+}

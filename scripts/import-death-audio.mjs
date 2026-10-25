@@ -28,7 +28,7 @@ const profilesBytes = await readFile(profilesPath);
 sources.push({ path: profilesPath, sha256: hash(profilesBytes) });
 const roots = { tower: "TowerExplode", king: "King_player_die" };
 for (const [id, profile] of Object.entries(JSON.parse(profilesBytes))) {
-  if (id.endsWith("-tower")) continue;
+  if (id === "king-tower" || id === "princess-tower") continue;
   roots[id] = (
     tables.characters[profile.source] ?? tables.buildings[profile.source]
   ).DeathEffect;
@@ -79,7 +79,7 @@ function composition(name, team, delay = 0, ancestry = []) {
       sound(row.Sound);
       cues.push({ sound: row.Sound, delay: time });
     }
-    if (row.Type === "Effect")
+    if (row.Type === "Effect" && row.Effect)
       cues.push(...composition(row.Effect, team, time, [...ancestry, name]));
     return cues;
   });

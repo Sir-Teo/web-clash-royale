@@ -107,12 +107,53 @@
             AI occupied Balloon distraction
           </option>
           <option value="rocket">Rocket flight and blast</option>
+          <option value="rocket-trail">Rocket trail and explosion</option>
           <option value="fireball">Fireball explosion</option>
+          <option value="lightning">Lightning target strikes</option>
+          <option value="log">The Log rolling impact</option>
+          <option value="tornado">Tornado native whirl and pull</option>
+          <option value="goblin-barrel">
+            Goblin Barrel flight and landing
+          </option>
+          <option value="graveyard">
+            Graveyard native ground and spawning
+          </option>
+          <option value="clone">Clone hologram and area</option>
           <option value="spell-impacts">Zap &amp; Arrows impacts</option>
           <option value="freeze">Freeze area and snow</option>
+          <option value="rage-troops">Rage troops</option>
           <option value="rage">Rage area and friendly buffs</option>
           <option value="poison">Poison area and skulls</option>
           <option value="attack-impacts">Projectile hit effects</option>
+          <option value="elixir-collector">Elixir Collector pump cycle</option>
+          <option value="goblin-hut">Goblin Hut spawning</option>
+          <option value="tombstone">Tombstone spawn and death burst</option>
+          <option value="furnace">Furnace Fire Spirit waves</option>
+          <option value="barbarian-hut">Barbarian Hut waves</option>
+          <option value="miner">Miner underground travel</option>
+          <option value="bowler">Bowler rolling boulder</option>
+          <option value="dark-prince">Dark Prince shield and charge</option>
+          <option value="guards">Guards shield and formation</option>
+          <option value="battle-ram">
+            Battle Ram charge and Barbarian release
+          </option>
+          <option value="ice-wizard">
+            Ice Wizard native projectile and slow
+          </option>
+          <option value="executioner">Executioner returning axe</option>
+          <option value="sparky">Sparky charging cannon</option>
+          <option value="lumberjack">Lumberjack falling Rage bottle</option>
+          <option value="bats">Bats flying swarm and native wiggle</option>
+          <option value="night-witch">
+            Night Witch Bat summons and death release
+          </option>
+          <option value="bandit">Bandit untouchable dash</option>
+          <option value="golem">Golem explosion and Golemite split</option>
+          <option value="ice-golem">Ice Golem death slow</option>
+          <option value="giant-skeleton">Giant Skeleton timed bomb</option>
+          <option value="lava-hound">
+            Lava Hound flight and six Lava Pups
+          </option>
           <option value="footsteps">Footstep dust</option>
           <option value="hog-jump">Hog Rider river jump</option>
           <option value="ranged">Ranged projectiles</option>
@@ -126,6 +167,13 @@
         </select></label
       ><button id="play">Play</button><button id="step">Step 0.1s</button
       ><button id="second">Step 1s</button><button id="reset">Reset</button
+      ><button id="kill-night-witch" hidden>Defeat Night Witch</button
+      ><button id="kill-tombstone" hidden>Destroy Tombstone</button
+      ><button id="kill-golem" hidden>Defeat Golem</button
+      ><button id="kill-ice-golem" hidden>Defeat Ice Golem</button
+      ><button id="kill-giant-skeleton" hidden>Defeat Giant Skeleton</button
+      ><button id="kill-lava-hound" hidden>Defeat Lava Hound</button
+      ><button id="break-shield" hidden>Break shield</button
       ><button id="attackers" hidden>Toggle attackers</button
       ><button id="wake" hidden>Zap Kings</button
       ><button id="princess" hidden>Destroy Princess Towers</button
@@ -139,11 +187,18 @@
         >Attacker
         <select id="attack-card">
           <option value="giant">Giant</option>
+          <option value="ice-spirit">Ice Spirit</option>
+          <option value="fire-spirits">Fire Spirits</option>
           <option value="musketeer">Musketeer</option>
           <option value="bomber">Bomber</option>
           <option value="baby-dragon">Baby Dragon</option>
+          <option value="inferno-dragon">Inferno Dragon</option>
+          <option value="inferno-tower">Inferno Tower</option>
+          <option value="x-bow">X-Bow</option>
+          <option value="electro-wizard">Electro Wizard</option>
           <option value="wizard">Wizard</option>
           <option value="cannon">Cannon</option>
+          <option value="bomb-tower">Bomb Tower</option>
           <option value="balloon">Balloon</option>
           <option value="tesla">Tesla</option>
         </select></label
@@ -153,6 +208,7 @@
       ><button id="rage-cast" hidden>Cast Rage both sides</button
       ><button id="rage-towers" hidden>Rage Princess Towers</button
       ><button id="poison-cast" hidden>Cast Poison both sides</button
+      ><button id="tornado-cast" hidden>Cast Tornado</button
       ><button id="poison-towers" hidden>Poison Princess Towers</button
       ><button id="freeze-towers" hidden>Freeze Princess Towers</button
       ><small id="status">Loading</small><small id="buildings"></small

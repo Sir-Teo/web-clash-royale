@@ -1,5 +1,7 @@
 import { test, expect, type Page, type Locator } from "@playwright/test";
-import { STARTER_DECK, PRESETS } from "../../src/game/cards";
+import { STARTER_DECK, PRESETS, CARDS } from "../../src/game/cards";
+const fourCostTroops = CARDS.filter((card) => card.kind === "troop" && card.cost === 4)
+  .sort((a, b) => a.name.localeCompare(b.name)).map((card) => card.id);
 const key = "browser-royale.profile.v1";
 const saved = (page: Page) =>
   page.evaluate((key) => localStorage.getItem(key), key);
@@ -168,7 +170,7 @@ test("plain-name search and combined collection filters preserve inspection stat
   await page.getByRole("textbox", { name: "Search cards" }).fill("pekka");
   expect(await collectionIds(page)).toEqual(["mini-pekka", "pekka"]);
   await expect(page.locator("#collection-results")).toHaveText(
-    "Showing 2 of 30 cards.",
+    `Showing 2 of ${CARDS.length} cards.`,
   );
   await page.getByRole("textbox", { name: "Search cards" }).fill("Mini Pekka");
   expect(await collectionIds(page)).toEqual(["mini-pekka"]);
@@ -178,7 +180,7 @@ test("plain-name search and combined collection filters preserve inspection stat
     .selectOption("cost-desc");
   expect((await collectionIds(page))[0]).toBe("three-musketeers");
   await page.getByLabel("Sort cards", { exact: true }).selectOption("cost-asc");
-  expect((await collectionIds(page))[0]).toBe("skeletons");
+  expect((await collectionIds(page))[0]).toBe("ice-spirit");
   await page.getByLabel("Elixir cost", { exact: true }).selectOption("4");
   await page.locator('[data-filter="troop"]').click();
   await expect(page.locator('[data-filter="troop"]')).toHaveAttribute(
@@ -193,15 +195,9 @@ test("plain-name search and combined collection filters preserve inspection stat
   await sort.focus();
   await sort.selectOption("name");
   await expect(sort).toBeFocused();
-  expect(await collectionIds(page)).toEqual([
-    "baby-dragon",
-    "hog-rider",
-    "mini-pekka",
-    "musketeer",
-    "valkyrie",
-  ]);
+  expect(await collectionIds(page)).toEqual(fourCostTroops);
   await expect(page.locator("#collection-results")).toHaveText(
-    "Showing 5 of 30 cards.",
+    `Showing ${fourCostTroops.length} of ${CARDS.length} cards.`,
   );
   const dragon = page.locator('[data-collection="baby-dragon"]');
   await dragon.focus();
@@ -217,7 +213,7 @@ test("plain-name search and combined collection filters preserve inspection stat
     "4",
   );
   await expect(sort).toHaveValue("name");
-  await expect(page.locator("[data-collection]")).toHaveCount(5);
+  await expect(page.locator("[data-collection]")).toHaveCount(fourCostTroops.length);
   await page.locator("#deck-codes").click();
   await page.locator("#deck-code-back").click();
   await expect(sort).toHaveValue("name");
@@ -231,7 +227,7 @@ test("plain-name search and combined collection filters preserve inspection stat
   await expect(page.getByLabel("Elixir cost", { exact: true })).toHaveValue(
     "all",
   );
-  await expect(page.locator("[data-collection]")).toHaveCount(30);
+  await expect(page.locator("[data-collection]")).toHaveCount(CARDS.length);
 });
 
 test("collection cost and sorting fit small screens and keep a filtered replacement in its saved slot", async ({
@@ -253,7 +249,7 @@ test("collection cost and sorting fit small screens and keep a filtered replacem
     .fill("no such card");
   await expect(page.locator("[data-collection]")).toHaveCount(0);
   await expect(page.locator("#collection-results")).toHaveText(
-    "Showing 0 of 30 cards.",
+    `Showing 0 of ${CARDS.length} cards.`,
   );
   await expect(
     page.getByText("No cards match these filters.", { exact: true }),

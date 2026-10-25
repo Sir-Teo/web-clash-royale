@@ -1,4 +1,6 @@
+import { CARD_MAP } from "../../src/game/cards";
 import { test, expect } from "@playwright/test";
+const number = (value: number) => new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(value);
 const deck = [
   "rage",
   "freeze",
@@ -42,7 +44,7 @@ test("spell details describe their actual damage, allegiance and timed effects",
         "Speed boost": "+35%",
         Duration: "6 s",
         Linger: "Up to 2 s",
-        Targets: "Friendly air & ground",
+        Targets: "Friendly air & ground troops",
       },
     ],
     [
@@ -64,13 +66,13 @@ test("spell details describe their actual damage, allegiance and timed effects",
     ],
     [
       "fireball",
-      { Damage: "689", "Crown Tower damage": "206.7", Knockback: "1.8 tiles" },
+      { Damage: "689", "Crown Tower damage": number(CARD_MAP.fireball.damage * 0.4), Knockback: "1.8 tiles" },
     ],
     [
       "arrows",
-      { "Volley damage": "366", "Crown Tower damage": "109.8", Waves: "3" },
+      { "Volley damage": "366", "Crown Tower damage": number(CARD_MAP.arrows.damage * 0.4), Waves: "1" },
     ],
-    ["zap", { Damage: "192", "Crown Tower damage": "57.6", Stun: "0.5 s" }],
+    ["zap", { Damage: "192", "Crown Tower damage": number(CARD_MAP.zap.damage * 0.4), Stun: "0.5 s" }],
   ] as const;
   for (const [id, expected] of cases) {
     await page.locator(`#deck-preview [data-card-info="${id}"]`).click();
@@ -159,7 +161,7 @@ test("shared-deck card inspection shows per-troop stats and building lifetimes w
     ["cannon", { Hitpoints: "824", Lifetime: "30 s", Targets: "Ground" }],
     [
       "tesla",
-      { Hitpoints: "1,152", Lifetime: "30 s", Targets: "Air & ground" },
+      { Hitpoints: "1,152", Lifetime: `${CARD_MAP.tesla.lifetime} s`, Targets: "Air & ground" },
     ],
   ] as const) {
     await page.locator(`[data-code-card="${id}"]`).click();

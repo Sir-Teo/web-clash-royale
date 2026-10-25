@@ -81,7 +81,7 @@ describe("native effect blending", () => {
     );
     const geometry = spriteGeometry(asset, frame);
     expect(new Set(geometry.groups.map((g) => g.materialIndex))).toEqual(
-      new Set([0, 6]),
+      new Set([0, data.textures.length * 3]),
     );
     let vertexCount = 0;
     for (const group of geometry.groups) {

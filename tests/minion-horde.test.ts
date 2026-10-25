@@ -116,7 +116,7 @@ describe("Minion Horde", () => {
   it("deploys six independent flying bodies for one card play and one five-elixir payment", () => {
     const b = battle();
     play(b, "blue", "minion-horde", 4, 23);
-    const troops = b.entities.filter((e) => e.card === "minion-horde");
+    const troops = b.entities.filter((e) => e.card === "minions");
     expect(troops).toHaveLength(6);
     expect(new Set(troops.map((e) => e.id)).size).toBe(6);
     expect(troops.map(({ x, y }) => ({ x, y }))).toEqual(
@@ -129,7 +129,7 @@ describe("Minion Horde", () => {
     expect(b.actions).toHaveLength(1);
     expect(
       b.audioEvents.filter(
-        (e) => e.profile === "minion-horde" && e.phase === "spawn",
+        (e) => e.profile === "minions" && e.phase === "spawn",
       ),
     ).toHaveLength(6);
     expect(
@@ -157,7 +157,7 @@ describe("Minion Horde", () => {
       }
       const before = enemy.reduce((n, e) => n + e.hp, 0);
       step(b, 16);
-      const spits = b.projectiles.filter((p) => p.style === "minion-horde");
+      const spits = b.projectiles.filter((p) => p.style === "minions");
       expect(spits.length).toBeGreaterThan(0);
       expect(
         spits.every(
@@ -171,7 +171,7 @@ describe("Minion Horde", () => {
       if (target === "knight")
         expect(
           b.entities
-            .filter((e) => e.card === "minion-horde")
+            .filter((e) => e.card === "minions")
             .every((e) => e.hp === e.maxHp),
         ).toBe(true);
     },
@@ -179,14 +179,14 @@ describe("Minion Horde", () => {
   it("loses all six flying bodies to the complete Arrows volley", () => {
     const b = battle();
     play(b, "blue", "minion-horde", 4, 23);
-    for (const e of b.entities.filter((e) => e.card === "minion-horde"))
+    for (const e of b.entities.filter((e) => e.card === "minions"))
       e.speed = 0;
     play(b, "red", "arrows", 4, 23);
     step(b, 100);
-    expect(b.entities.filter((e) => e.card === "minion-horde")).toHaveLength(0);
+    expect(b.entities.filter((e) => e.card === "minions")).toHaveLength(0);
     expect(
       b.audioEvents.filter(
-        (e) => e.profile === "minion-horde" && e.phase === "death",
+        (e) => e.profile === "minions" && e.phase === "death",
       ),
     ).toHaveLength(6);
   });
@@ -227,7 +227,7 @@ describe("Minion Horde", () => {
     }
     expect(host.battle!.actions).toHaveLength(2);
     expect(
-      host.battle!.entities.filter((e) => e.card === "minion-horde"),
+      host.battle!.entities.filter((e) => e.card === "minions"),
     ).toHaveLength(12);
     const packet = sent.findLast(
       (e) => e.team === "red" && e.message.type === "state",
@@ -236,7 +236,7 @@ describe("Minion Horde", () => {
     const guest = perspective(packet.state, "red");
     expect(
       guest.entities.filter(
-        (e) => e.card === "minion-horde" && e.team === "blue",
+        (e) => e.card === "minions" && e.team === "blue",
       ),
     ).toHaveLength(6);
     expect(guest.players.red.elixir).toBe(0);

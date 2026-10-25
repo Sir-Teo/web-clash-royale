@@ -58,7 +58,6 @@ function sound(name) {
   // Keep row order and duplicates: each row is a separately authored variant.
   sounds[name] = rows.map((row) => {
     for (const key of [
-      "Loop",
       "PlayVariationsInSequence",
       "PlayVariationsInSequenceManualReset",
     ])
@@ -79,6 +78,7 @@ function sound(name) {
       startDelay: pair("StartDelayMinMs", "StartDelayMaxMs", 1000),
       maximum: Number(row.MaximumByType),
       repeat: Number(row.MaxRepeatMs) / 1000,
+      loop: row.Loop?.toLowerCase() === "true",
       priority: Number(row.Priority),
       padding: Number(row.PadEmpyToEndMs) / 1000,
     };
@@ -155,30 +155,74 @@ for (const [id, profile] of Object.entries(JSON.parse(profilesBytes))) {
     "impact-special": [row.DamageEffectSpecial],
     cast: [card?.CastSound && `sound:${card.CastSound}`, card?.Effect],
     spawn: [row.SpawnEffect],
+    ...(id === "elixir-collector" ? {
+      collect: ["sound:sound_elixircollector_get"],
+    } : {}),
     summon: [row.SpawnCharacterEffect],
     appear: [row.AppearEffect],
     hide: [row.HideEffect],
+    ...(row.ShieldLostEffect ? { "shield-lost": [row.ShieldLostEffect] } : {}),
     "death-impact": [deathSpawn?.DeathEffect],
     "death-spawn": [deathSpawn?.SpawnEffect],
+    ...(id === "bandit" ? {
+      "dash-start": [row.DashStartEffect],
+      "dash-travel": [row.DashEffect],
+      "dash-end": [row.LandingEffect],
+    } : {}),
+    ...(id === "sparky" ? {
+      "load-1": [row.LoadAttackEffect1],
+      "load-2": [row.LoadAttackEffect2],
+      "load-3": [row.LoadAttackEffect3],
+      "load-ready": [row.LoadAttackEffectReady],
+    } : {}),
   });
   if (binding)
     profiles[id].cardSource = { table: binding.table, row: binding.row };
 }
 for (const [id, { table, row: name }] of Object.entries(cardBindings)) {
+  if (table === "spells_characters" && !profiles[id]) {
+    const row = tables.spells_characters[name];
+    if (!row) throw new Error(`Unknown card source ${name}`);
+    profiles[id] = phases(name, {
+      attack: [],
+      charge: [],
+      launch: [],
+      impact: [],
+      "impact-special": [],
+      cast: [row.CastSound && `sound:${row.CastSound}`, row.Effect],
+      spawn: [],
+      summon: [],
+      appear: [],
+      hide: [],
+      "death-impact": [],
+      "death-spawn": [],
+    });
+    profiles[id].cardSource = { table, row: name };
+  }
   if (table !== "spells_other") continue;
   const row = tables.spells_other[name];
-  const projectile =
-    tables.projectiles[row.CustomFirstProjectile || row.Projectile];
   const area = tables.area_effect_objects[row.AreaEffectObject];
+  const projectile =
+    tables.projectiles[
+      row.CustomFirstProjectile || row.Projectile || area?.Projectile
+    ];
+  const rolling =
+    id === "log" ? tables.projectiles[projectile?.SpawnProjectile] : null;
   profiles[id] = phases(name, {
     attack: [],
     charge: [],
-    launch: [],
+    launch: [rolling?.TrailEffect],
     impact: [projectile?.HitEffect, area?.OneShotEffect],
-    "impact-special": [],
-    cast: [row.CastSound && `sound:${row.CastSound}`, row.Effect],
+    "impact-special": [rolling?.DeathEffect],
+    cast: [
+      row.CastSound && `sound:${row.CastSound}`,
+      row.Effect,
+      id === "tornado" || id === "graveyard" || id === "clone" || id === "heal"
+        ? area?.ScaledEffect
+        : null,
+    ],
     spawn: [],
-    summon: [],
+    summon: [id === "graveyard" ? area?.SpawnEffect : null],
     appear: [],
     hide: [],
     "death-impact": [],

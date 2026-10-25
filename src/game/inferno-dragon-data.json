@@ -1,0 +1,35 @@
+{
+  "card": "InfernoDragon",
+  "character": "InfernoDragon",
+  "rarity": "Legendary",
+  "cost": 4,
+  "sourceHitpoints": 1000,
+  "sourceDamage": [
+    30,
+    100,
+    350
+  ],
+  "stageDurations": [
+    2,
+    2
+  ],
+  "sourceSpeed": 60,
+  "sourceRange": 4000,
+  "sourceHitSpeed": 400,
+  "sourceFlyingHeight": 4000,
+  "hitsAir": true,
+  "beams": [
+    "inferno_dragon_beam_lvl1",
+    "inferno_dragon_beam_lvl2",
+    "inferno_dragon_beam_lvl3"
+  ],
+  "flames": [
+    "inferno_dragon_muzzle",
+    "inferno_dragon_muzzle_stage2",
+    "inferno_dragon_muzzle_stage3"
+  ],
+  "hitEffect": "inferno_hit_effect",
+  "blueExport": "inferno_dragon",
+  "redExport": "inferno_dragon_red",
+  "deployFilter": "filter_deploy_unit_legendary"
+}

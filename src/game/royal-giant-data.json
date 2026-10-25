@@ -1,0 +1,17 @@
+{
+  "card": "RoyalGiant",
+  "character": "RoyalGiant",
+  "projectile": "RoyalGiantProjectile",
+  "rarity": "Common",
+  "cost": 6,
+  "sourceHitpoints": 1200,
+  "sourceDamage": 75,
+  "sourceSpeed": 45,
+  "sourceRange": 6500,
+  "sourceHitSpeed": 1700,
+  "projectileSpeed": 1000,
+  "projectileExport": "projectile_cannonball_large",
+  "buildingsOnly": true,
+  "blueExport": "royalGiant",
+  "redExport": "royalGiant_red"
+}

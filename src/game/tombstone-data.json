@@ -1,0 +1,22 @@
+{
+  "card": "Tombstone",
+  "rarity": "Rare",
+  "cost": 3,
+  "sourceHitpoints": 240,
+  "deployTime": 1,
+  "lifetime": 40,
+  "spawnNumber": 1,
+  "spawnPause": 2.95,
+  "spawnCharacter": "Skeleton",
+  "spawnCharacterLevelIndex": 2,
+  "deathSpawnCount": 4,
+  "deathSpawnCharacter": "Skeleton",
+  "spawnRadius": 0.4,
+  "fps": 30,
+  "blueFrames": 60,
+  "redFrames": 70,
+  "blueExport": "building_tombstone_blue",
+  "redExport": "building_tombstone_red",
+  "spawnEffect": "tombstone_deploy",
+  "deathEffect": "tombstone_die"
+}

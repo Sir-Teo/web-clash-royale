@@ -1,3 +1,4 @@
+import { expectedAnimations } from "./native-assets";
 import { test, expect, type Page } from "@playwright/test";
 import { readFile, readFileSync } from "node:fs";
 import { promisify } from "node:util";
@@ -40,7 +41,7 @@ async function init(page: Page, history: unknown[] = []) {
       },
       { timeout: 60000 },
     )
-    .toEqual([2, 5, 19]);
+    .toEqual([2, 5, expectedAnimations]);
 }
 async function rename(page: Page, name: string) {
   await page.locator("#arena-settings").click();

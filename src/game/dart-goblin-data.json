@@ -1,0 +1,19 @@
+{
+  "card": "BlowdartGoblin",
+  "character": "BlowdartGoblin",
+  "projectile": "BlowdartGoblinProjectile",
+  "rarity": "Rare",
+  "cost": 3,
+  "sourceHitpoints": 123,
+  "sourceDamage": 53,
+  "sourceSpeed": 120,
+  "sourceRange": 6500,
+  "sourceHitSpeed": 700,
+  "hitsAir": true,
+  "projectileSpeed": 800,
+  "projectileExport": "projectile_arrow_basic",
+  "projectileHitEffect": "BlowdartArrowHit",
+  "projectileTrailEffect": "BlowdartProjectileEmitter",
+  "blueExport": "goblin_blowdart",
+  "redExport": "goblin_blowdart_red"
+}

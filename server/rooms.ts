@@ -1,10 +1,11 @@
+import { isPlayableCard } from "../src/game/playable-cards";
 import type { Server } from "node:http";
 import { randomBytes, randomInt } from "node:crypto";
 import { performance } from "node:perf_hooks";
 import { WebSocket, WebSocketServer } from "ws";
 import { Battle, other, STEP } from "../src/game/engine";
 import type { Mode, Team } from "../src/game/engine";
-import { CARD_MAP, STARTER_DECK } from "../src/game/cards";
+import { STARTER_DECK } from "../src/game/cards";
 import type { CardId } from "../src/game/cards";
 import { PROTOCOL, RECONNECT_MS } from "../src/network/protocol";
 import { EMOTE_COOLDOWN, isEmote, isQuickChat } from "../src/game/emotes";
@@ -51,7 +52,7 @@ const validDeck = (deck: unknown): deck is CardId[] =>
   Array.isArray(deck) &&
   deck.length === 8 &&
   new Set(deck).size === 8 &&
-  deck.every((c) => typeof c === "string" && Object.hasOwn(CARD_MAP, c));
+  deck.every(isPlayableCard);
 const validName = (name: unknown): name is string =>
   typeof name === "string" &&
   name.trim().length > 0 &&
@@ -323,8 +324,7 @@ export function attachRooms(
       p.seq = m.seq;
       const b = r.battle;
       const valid =
-        typeof m.card === "string" &&
-        Object.hasOwn(CARD_MAP, m.card) &&
+        isPlayableCard(m.card) &&
         typeof m.x === "number" &&
         typeof m.y === "number" &&
         Number.isFinite(m.x) &&

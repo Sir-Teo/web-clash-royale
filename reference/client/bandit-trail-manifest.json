@@ -1,0 +1,18 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/client/particle_emitters.csv",
+      "sha256": "5d086e26d80b8a50be2c99b84c17057c25d402159d9721c9b256cc50f0c2e0f6"
+    },
+    {
+      "path": "reference/sc/chr_bandit.bin",
+      "sha256": "4da4adfd47514230cc5ef3f08d3005933a5e75086bbd05129e04c427b1122371"
+    }
+  ],
+  "output": {
+    "path": "src/render/bandit-trail-data.json",
+    "sha256": "a6144e511b18a4ddb9b5cca1f82e4bbbc53495bea5311adce111a7f778d35834"
+  }
+}

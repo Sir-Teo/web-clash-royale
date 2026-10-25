@@ -1,0 +1,26 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "reference/sc/chr_princess.bin",
+      "sha256": "4efbc493b84ef3638642a2cacf21d63bfcb1a77927afae5719c56d64e3307db9"
+    }
+  ],
+  "output": {
+    "path": "src/game/princess-data.json",
+    "sha256": "2f58a3b32fbf1e75dd401c5b6f0f711434a9f13af5934ebe7941e060f16b1b54"
+  }
+}

@@ -1,4 +1,5 @@
 import type { Replay } from "./engine";
+import { migrateLocalRecord } from "./replay-family";
 import { validRecordEntry, type RecordEntry } from "./profile";
 
 export const MAX_REPLAY_BYTES = 512_000;
@@ -65,6 +66,7 @@ export function importReplayFile(text: string): SharedReplay {
   if (
     !keys(replay, [
       "version",
+      "rulesFamily",
       "seed",
       "mode",
       "deck",
@@ -75,11 +77,14 @@ export function importReplayFile(text: string): SharedReplay {
     ])
   )
     throw invalid();
-  const record = {
-    ...match,
-    playerName: saved.playerName,
-    id: Date.parse(match.date),
-  } as unknown as RecordEntry;
+  const record = migrateLocalRecord(
+    {
+      ...match,
+      playerName: saved.playerName,
+      id: Date.parse(match.date),
+    },
+    true,
+  ) as RecordEntry;
   if (
     !validRecordEntry(record) ||
     !record.replay.actions.every(
@@ -107,6 +112,7 @@ export function exportReplayFile(
   const r = record.replay;
   const replay: Replay = {
     version: r.version,
+    rulesFamily: r.rulesFamily ?? "origin",
     seed: r.seed,
     mode: r.mode,
     deck: [...r.deck],

@@ -1,0 +1,23 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_barbarian",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/sc/chr_barbarian.bin",
+      "sha256": "5dd9558e9c001db44b5994c7115542064d7e5ea07b5e2fed5e418791481a1936"
+    }
+  ],
+  "output": {
+    "path": "src/game/barbarians-data.json",
+    "sha256": "95fbd3538387d7e04df3849bec478f6539bd3460e980b9f68683f565344cf93b"
+  }
+}

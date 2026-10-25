@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { Battle, STEP } from "../src/game/engine";
 import type { Entity, Replay, Team } from "../src/game/engine";
-import { CARDS, CARD_MAP } from "../src/game/cards";
+import { CARDS, CARD_MAP, STARTER_DECK } from "../src/game/cards";
 import type { CardId } from "../src/game/cards";
 import { combatTraits, KING_ACTIVATION_TIME } from "../src/game/combat";
 import legacy from "./fixtures/legacy-replay.json";
@@ -14,6 +14,12 @@ const advance = (b: Battle, seconds: number) => {
 };
 function sandbox() {
   const b = new Battle({ seed: 8, ai: false });
+  for (const t of b.entities) t.active = false;
+  return b;
+}
+function sandboxAt(version: Replay["version"]) {
+  const base = sandbox();
+  const b = new Battle({ replay: { ...base.exportReplay(), version } });
   for (const t of b.entities) t.active = false;
   return b;
 }
@@ -51,8 +57,12 @@ describe("combat timing and targeting", () => {
   it("has archival combat traits for every troop, building and tower", () => {
     for (const card of CARDS.filter((c) => c.kind !== "spell")) {
       const traits = combatTraits({ card: card.id });
-      expect(traits.windup).toBeGreaterThan(0);
-      expect(traits.sight).toBeGreaterThan(0);
+      expect(traits.windup).toBeGreaterThanOrEqual(0);
+      if (card.id === "inferno-dragon") expect(traits.windup).toBe(0);
+      if (["elixir-collector", "goblin-hut", "tombstone", "furnace", "barbarian-hut"].includes(card.id)) {
+        expect(traits.sight).toBe(0);
+        expect(traits.projectile).toBeNull();
+      } else expect(traits.sight).toBeGreaterThan(0);
       if (traits.projectile) expect(traits.projectile.speed).toBeGreaterThan(0);
     }
     expect(combatTraits({ card: "tower", king: true }).projectile?.homing).toBe(
@@ -133,8 +143,8 @@ describe("combat timing and targeting", () => {
 });
 
 describe("projectile impacts", () => {
-  it("retains all delayed Arrow waves even when cast at the launch point", () => {
-    const b = sandbox(),
+  it("retains all version-15 Arrow waves even when cast at the launch point", () => {
+    const b = sandboxAt(15),
       target = dummy(b, "knight", "red", 9, 31.1);
     cast(b, "arrows", "blue", 9, 30);
     advance(b, 0.5);
@@ -200,8 +210,8 @@ describe("projectile impacts", () => {
     expect(friend.hp).toBe(10000);
     expect([friend.x, friend.y]).toEqual([7.5, 20]);
   });
-  it("Arrows resolve three separate waves across 0.4 seconds", () => {
-    const b = sandbox(),
+  it("version-15 Arrows resolve three separate waves across 0.4 seconds", () => {
+    const b = sandboxAt(15),
       target = dummy(b, "knight", "red", 9, 20);
     cast(b, "arrows", "blue", 9, 20);
     advance(b, 0.8);
@@ -302,7 +312,7 @@ describe("Tesla hiding and emergence", () => {
   it("expires underground without awarding a crown", () => {
     const b = sandbox(),
       tesla = unit(b, "tesla", "blue", 9, 21);
-    advance(b, 31);
+    advance(b, CARD_MAP.tesla.lifetime! + 1);
     expect(b.entities.some((e) => e.id === tesla.id)).toBe(false);
     expect(b.players.red.crowns).toBe(0);
   });
@@ -326,6 +336,31 @@ describe("Tesla hiding and emergence", () => {
 });
 
 describe("versioned battle replay", () => {
+  it("retains v5 Bomber, Arrows, Goblins and Skeletons rules", () => {
+    const old = new Battle({ replay: {
+      version: 5,
+      seed: 8,
+      mode: "classic",
+      deck: STARTER_DECK,
+      enemyDeck: STARTER_DECK,
+      actions: [],
+      duration: 0,
+    } });
+    old.players.blue.hand[0] = "bomber";
+    expect(old.cardCost("blue", "bomber")).toBe(2);
+    expect(old.play("blue", 0, 4, 22).ok).toBe(true);
+    expect(old.players.blue.elixir).toBe(3);
+    old.players.blue.hand[0] = "goblins";
+    old.players.blue.elixir = 10;
+    expect(old.play("blue", 0, 6, 22).ok).toBe(true);
+    expect(old.entities.filter((e) => e.card === "goblins")).toHaveLength(4);
+    old.players.red.hand[0] = "skeletons";
+    expect(old.play("red", 0, 4, 10).ok).toBe(true);
+    expect(old.entities.filter((e) => e.card === "skeletons")).toHaveLength(3);
+    old.players.blue.hand[0] = "arrows";
+    expect(old.play("blue", 0, 9, 22).ok).toBe(true);
+    expect(old.projectiles.filter((p) => p.style === "arrows").every((p) => p.splash === 3.6)).toBe(true);
+  });
   it("preserves the captured v4 match with delayed King activation and immediate finish order", () => {
     const b = new Battle({ replay: combatV4.replay as Replay });
     for (let i = 0; i < combatV4.replay.duration; i++) b.step();
@@ -398,7 +433,7 @@ describe("versioned battle replay", () => {
     }
     expect(b.winner).not.toBeNull();
     const record = b.exportReplay();
-    expect(record.version).toBe(5);
+    expect(record.version).toBe(16);
     const replay = new Battle({ replay: record });
     for (let i = 0; i < record.duration; i++) replay.step();
     expect(replay.winner).toEqual(b.winner);

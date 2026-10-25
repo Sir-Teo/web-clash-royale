@@ -37,13 +37,13 @@ describe("portable progress backups", () => {
     for (const fixture of [legacy, combatV2, combatV3, combatV4])
       profile.history.push({
         ...profile.history[0],
-        replay: fixture.replay as any,
+        replay: { ...fixture.replay, rulesFamily: "origin" } as any,
       });
     vi.mocked(localStorage.setItem).mockClear();
     const restored = importProgress(exportProgress(profile));
     expect(restored).toEqual(profile);
     expect(restored.history.map((entry) => entry.replay.version)).toEqual([
-      5, 1, 2, 3, 4,
+      16, 1, 2, 3, 4,
     ]);
     expect(localStorage.setItem).not.toHaveBeenCalled();
     restored.deck[0] = "knight";

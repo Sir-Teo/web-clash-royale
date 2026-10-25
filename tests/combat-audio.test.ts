@@ -75,10 +75,10 @@ describe("native combat audio evidence", () => {
     const manifest = JSON.parse(
       readFileSync("reference/client/combat-audio-manifest.json", "utf8"),
     );
-    expect(manifest.audioFiles).toHaveLength(118);
+    expect(manifest.audioFiles).toHaveLength(270);
     expect(manifest.sources).toHaveLength(11);
-    expect(Object.keys(definitions.profiles)).toHaveLength(32);
-    expect(Object.keys(definitions.sounds)).toHaveLength(98);
+    expect(Object.keys(definitions.profiles)).toHaveLength(78);
+    expect(Object.keys(definitions.sounds)).toHaveLength(250);
     for (const file of [
       ...manifest.sources,
       ...manifest.audioFiles,
@@ -109,6 +109,7 @@ describe("native combat audio evidence", () => {
         ]);
         expect(sound.maximum).toBe(Number(row.MaximumByType));
         expect(sound.repeat).toBe(Number(row.MaxRepeatMs) / 1000);
+        expect(sound.loop).toBe(row.Loop?.toLowerCase() === "true");
         expect(sound.priority).toBe(Number(row.Priority));
         expect(sound.padding).toBe(Number(row.PadEmpyToEndMs) / 1000);
       }
@@ -547,8 +548,11 @@ describe("canonical combat presentation events", () => {
       ),
     ).toBe(false);
   });
-  it("preserves simulation IDs and the three Arrows waves while transporting team-relative cues", () => {
-    const battle = arena();
+  it("preserves version-15 Arrows waves and simulation IDs while transporting team-relative cues", () => {
+    const battle = new Battle({
+      replay: { ...arena().exportReplay(), version: 15 },
+    });
+    for (const tower of battle.entities) tower.active = false;
     battle.players.blue.hand[0] = "arrows";
     battle.play("blue", 0, 4, 6);
     expect(battle.events[0].id).toBe(7);

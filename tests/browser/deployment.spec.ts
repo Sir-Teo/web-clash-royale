@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { expectedAnimations } from "./native-assets";
 
 test("native deployment formations and invalid placement feedback work through the hand", async ({
   page,
@@ -32,7 +33,7 @@ test("native deployment formations and invalid placement feedback work through t
         page.evaluate(() => (window as any).__arena?.state.loadedAnimations),
       { timeout: 30000 },
     )
-    .toBe(19);
+    .toBe(expectedAnimations);
   await page.locator("#battle-button").click();
   const group = page
     .locator("#hand .game-card")

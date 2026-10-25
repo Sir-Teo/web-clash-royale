@@ -1,0 +1,18 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/sc/effects.bin",
+      "sha256": "1a9b0a2efe99578cd03fb9d8673ddb042aa067ba9f9fc0d3a253e15c2e9c7b7c"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    }
+  ],
+  "output": {
+    "path": "src/render/bat-wiggle-data.json",
+    "sha256": "69bc0d8fe62a9fca0aa1e963cecf2367292f05535bc43bcd67e467e228d1de14"
+  }
+}

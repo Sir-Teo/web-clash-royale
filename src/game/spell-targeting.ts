@@ -1,3 +1,4 @@
+import { aiBodyValue } from "./ai-body-value";
 import { CARD_MAP, type CardId } from "./cards";
 import { SPELL_CROWN_TOWER_DAMAGE_FRACTION } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
@@ -51,24 +52,25 @@ export function pendingSpellDamage(
   projectiles: readonly Projectile[] = [],
   areas: readonly AreaEffect[] = [],
 ): number {
-  if (entity.team === team || hiddenSpellTarget(entity)) return 0;
-  const shots = projectiles.reduce((sum, p) => {
-    if (
-      p.team !== team ||
-      p.source !== 0 ||
-      p.remaining <= 0 ||
-      (!p.air && entity.air) ||
-      !spellContains({ x: p.tx, y: p.ty }, entity, p.splash + entity.radius)
-    )
-      return sum;
-    return (
-      sum +
-      p.damage *
-        (entity.kind === "tower"
-          ? (p.crownTowerDamageFraction ?? SPELL_CROWN_TOWER_DAMAGE_FRACTION)
-          : 1)
-    );
-  }, 0);
+  if (entity.team === team || hiddenSpellTarget(entity) || entity.dash) return 0;
+  let shield = entity.shield ?? 0;
+  let shots = 0;
+  // Shields absorb an entire packet: damage beyond a shield's remaining HP
+  // never reaches the body. Preserve arrival order when reserving future hits.
+  const incoming = projectiles.filter((p) =>
+    p.team === team && p.source === 0 && p.remaining > 0 &&
+    (p.air || !entity.air) &&
+    spellContains({ x: p.tx, y: p.ty }, entity, p.splash + entity.radius),
+  ).sort((a, b) => a.remaining - b.remaining || a.id - b.id);
+  for (const p of incoming) {
+    const damage = p.damage * (entity.kind === "tower"
+      ? (p.towerDamageFraction ?? SPELL_CROWN_TOWER_DAMAGE_FRACTION) : 1);
+    if (shield > 0) {
+      const absorbed = Math.min(shield, damage);
+      shots += absorbed;
+      shield -= absorbed;
+    } else shots += damage;
+  }
   let cloud = 0;
   if (entity.kind !== "troop")
     for (const area of areas)
@@ -106,12 +108,17 @@ export function damageSpellTarget(
       e.team !== team &&
       e.hp > 0 &&
       !hiddenSpellTarget(e) &&
+      !e.dash &&
       (!e.air || rules.hitsAir),
   );
   const targets = enemies
     .map((entity) => {
       const reserved = pendingSpellDamage(entity, team, projectiles, areas);
-      return { entity, hp: Math.max(0, entity.hp - reserved) };
+      return {
+        entity,
+        hp: Math.max(0, entity.hp + (entity.shield ?? 0) - reserved),
+        shield: Math.max(0, (entity.shield ?? 0) - reserved),
+      };
     })
     .filter((t) => t.hp > 1e-6);
   if (!targets.length) return;
@@ -121,14 +128,15 @@ export function damageSpellTarget(
   );
   // Precompute point-independent value once, keeping the candidate scan cheap
   // even on a board near the troop population limit.
-  const evaluated = targets.map(({ entity: e, hp }) => {
-    const damage =
+  const evaluated = targets.map(({ entity: e, hp, shield }) => {
+    const packet =
       rules.damage *
       (e.kind === "tower"
         ? card === "rocket"
           ? rocket.crownTowerDamageFraction
-          : SPELL_CROWN_TOWER_DAMAGE_FRACTION
+          : 0.4
         : 1);
+    const damage = shield > 0 ? Math.min(shield, packet) : packet;
     if (e.kind === "tower")
       return {
         entity: e,
@@ -137,8 +145,7 @@ export function damageSpellTarget(
         penalty: hp > damage + 1e-6 && e.king && !e.active ? rules.cost + 8 : 0,
         lethal: e.kind === "tower" && hp <= damage + 1e-6,
       };
-    const source = CARD_MAP[e.card as CardId],
-      bodyCost = source.cost / source.count;
+    const bodyCost = aiBodyValue(e);
     const removal = hp <= damage + 1e-6 ? 0.35 : 0;
     const defense = (team === "red" ? e.y < 15 : e.y > 17) ? 1.2 : 1;
     return {
@@ -146,7 +153,7 @@ export function damageSpellTarget(
       radius: radius + e.radius,
       value:
         bodyCost *
-        Math.min(1, Math.min(damage, hp) / e.maxHp + removal) *
+        Math.min(1, Math.min(damage, hp) / (e.maxHp + (e.maxShield ?? 0)) + removal) *
         defense,
       penalty: 0,
       lethal: false,

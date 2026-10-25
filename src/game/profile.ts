@@ -1,4 +1,6 @@
-import { CARDS, CARD_MAP, STARTER_DECK } from "./cards";
+import { isPlayableCard } from "./playable-cards";
+import { CARDS, STARTER_DECK } from "./cards";
+import { LOCAL_REPLAY_CARDS, migrateLocalRecord } from "./replay-family";
 import type { CardId } from "./cards";
 import type { Battle, Mode, Replay } from "./engine";
 export interface RecordEntry {
@@ -78,7 +80,7 @@ export const validDeck = (a: unknown): a is CardId[] =>
   Array.isArray(a) &&
   a.length === 8 &&
   new Set(a).size === 8 &&
-  a.every((v) => typeof v === "string" && Object.hasOwn(CARD_MAP, v));
+  a.every(isPlayableCard);
 function normalizePlayerName(value: string) {
   return (
     value
@@ -112,7 +114,12 @@ export function validRecordEntry(value: unknown): value is RecordEntry {
     Array.isArray(r.crowns) &&
     r.crowns.length === 2 &&
     r.crowns.every((n) => Number.isInteger(n) && n >= 0 && n <= 3) &&
-    [1, 2, 3, 4, 5].includes(r.replay?.version) &&
+    (r.replay?.rulesFamily === undefined ||
+      ["local", "origin"].includes(r.replay.rulesFamily)) &&
+    (r.replay?.rulesFamily !== "local" || r.replay.version <= 5) &&
+    Number.isInteger(r.replay?.version) &&
+    r.replay.version >= 1 &&
+    r.replay.version <= 16 &&
     Number.isSafeInteger(r.replay.seed) &&
     r.replay.mode === r.mode &&
     Number.isInteger(r.replay.duration) &&
@@ -120,6 +127,10 @@ export function validRecordEntry(value: unknown): value is RecordEntry {
     r.replay.duration <= 9000 &&
     validDeck(r.replay.deck) &&
     validDeck(r.replay.enemyDeck) &&
+    (r.replay.rulesFamily !== "local" ||
+      [...r.replay.deck, ...r.replay.enemyDeck].every((id) =>
+        LOCAL_REPLAY_CARDS.has(id),
+      )) &&
     Array.isArray(r.replay.actions) &&
     r.replay.actions.length <= 2000 &&
     r.replay.actions.every(
@@ -130,8 +141,8 @@ export function validRecordEntry(value: unknown): value is RecordEntry {
         a.tick <= r.replay.duration &&
         (index === 0 || a.tick >= actions[index - 1].tick) &&
         ["blue", "red"].includes(a.team) &&
-        typeof a.card === "string" &&
-        Object.hasOwn(CARD_MAP, a.card) &&
+        isPlayableCard(a.card) &&
+        (r.replay.rulesFamily !== "local" || LOCAL_REPLAY_CARDS.has(a.card)) &&
         Number.isFinite(a.x) &&
         Number.isFinite(a.y),
     )
@@ -193,7 +204,10 @@ function decodeProfile(raw: string): Profile | null {
           .slice(0, 4)
       : [];
     p.history = Array.isArray(saved.history)
-      ? saved.history.filter(validRecordEntry).slice(0, 10)
+      ? saved.history
+          .map((r: unknown) => migrateLocalRecord(r))
+          .filter(validRecordEntry)
+          .slice(0, 10)
       : [];
   } catch {
     return null;
@@ -204,7 +218,20 @@ function decodeProfile(raw: string): Profile | null {
 export const MAX_BACKUP_BYTES = 2_000_000;
 export function exportProgress(profile: Profile): string {
   return JSON.stringify(
-    { format: "browser-royale-progress", version: 1, profile },
+    {
+      format: "browser-royale-progress",
+      version: 1,
+      profile: {
+        ...profile,
+        history: profile.history.map((record) => ({
+          ...record,
+          replay: {
+            ...record.replay,
+            rulesFamily: record.replay.rulesFamily ?? "origin",
+          },
+        })),
+      },
+    },
     null,
     2,
   );
@@ -227,6 +254,10 @@ export function importProgress(text: string): Profile {
   )
     throw new Error(
       "Choose a Browser Arena progress backup exported by this game.",
+    );
+  if (Array.isArray(saved.profile.history))
+    saved.profile.history = saved.profile.history.map((r: unknown) =>
+      migrateLocalRecord(r, true),
     );
   const profile = decodeProfile(JSON.stringify(saved.profile));
   if (

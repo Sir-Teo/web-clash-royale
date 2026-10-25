@@ -1,6 +1,10 @@
 import * as T from "three";
 import type { CardId } from "../game/cards";
 import type { Entity } from "../game/engine";
+import darkPrince from "../game/dark-prince-data.json" with { type: "json" };
+import battleRam from "../game/battle-ram-data.json" with { type: "json" };
+import executioner from "../game/executioner-data.json" with { type: "json" };
+import textureAliases from "./texture-aliases.json" with { type: "json" };
 import { facing, selectClip, animationFrame } from "./animation";
 import { hasNativeDeployFilter } from "./deploy-filter";
 import type { AnimationClip } from "./animation";
@@ -17,7 +21,7 @@ interface FramePart {
 }
 // SC1 DisplayObjectInstance values: normal, multiply, screen, additive.
 export const SPRITE_BLENDS = [0, 3, 4, 8] as const;
-export type SpriteId = CardId | "tower-princess";
+export type SpriteId = CardId | "tower-princess" | "dark-prince-shield" | "guards-shield";
 export interface SpriteData {
   version: 2;
   textures: { file: string; width: number; height: number }[];
@@ -44,32 +48,53 @@ export interface AnimatedSprite {
 }
 export type SpriteState = Pick<
   Entity,
-  | "id"
-  | "card"
-  | "team"
-  | "x"
-  | "y"
-  | "attack"
-  | "interval"
-  | "move"
-  | "deploy"
-  | "animationTime"
->;
+  "id" | "card" | "team" | "x" | "y" | "attack" | "interval" | "move" | "deploy" | "dash"
+> & { animationTime?: number };
 const heights: Partial<Record<SpriteId, number>> = {
   knight: 1.65,
+  barbarians: 1.75,
+  "elite-barbarians": 1.75,
   wizard: 1.8,
+  "ice-wizard": 1.8,
+  "ice-spirit": 1.05,
+  "fire-spirits": 1.25,
+  "ice-golem": 1.75,
+  princess: 1.7,
   archers: 1.55,
   giant: 2.7,
+  "giant-skeleton": 2.8,
+  golem: 3.3,
+  golemite: 1.55,
+  "lava-hound": 3.0,
+  "lava-pup": 1.3,
+  "royal-giant": 2.8,
   musketeer: 1.9,
   "mini-pekka": 1.75,
   goblins: 1.3,
+  "dart-goblin": 1.5,
   "spear-goblins": 1.35,
   skeletons: 1.15,
+  guards: 1.45,
+  "guards-shield": 1.45,
   bomber: 1.5,
   valkyrie: 1.9,
   "hog-rider": 2.1,
   "baby-dragon": 2.3,
   minions: 1.5,
+  "mega-minion": 2,
+  "inferno-dragon": 2.05,
+  "electro-wizard": 1.8,
+  miner: 1.65,
+  bowler: 2.4,
+  "dark-prince": 2.1,
+  "dark-prince-shield": 2.1,
+  "battle-ram": 2.5,
+  executioner: 2.2,
+  sparky: 2.3,
+  lumberjack: 2.1,
+  bats: 1.15,
+  "night-witch": 1.95,
+  bandit: 1.75,
   witch: 2.1,
   prince: 2.25,
   pekka: 2.7,
@@ -189,6 +214,24 @@ export class SpriteLibrary {
   assets = new Map<SpriteId, SpriteAsset>();
   private loader = new T.TextureLoader();
   async load() {
+    const textureLoads = new Map<string, Promise<T.Texture>>();
+    const loadTexture = (file: string) => {
+      const canonical = (textureAliases as Record<string, string>)[file] ?? file;
+      let pending = textureLoads.get(canonical);
+      if (!pending) {
+        pending = this.loader.loadAsync(
+          `${import.meta.env.BASE_URL}assets/animations/${canonical}`,
+        ).then((texture) => {
+          texture.colorSpace = T.SRGBColorSpace;
+          texture.minFilter = T.LinearFilter;
+          texture.magFilter = T.LinearFilter;
+          texture.generateMipmaps = false;
+          return texture;
+        });
+        textureLoads.set(canonical, pending);
+      }
+      return pending;
+    };
     await Promise.all(
       (Object.keys(heights) as SpriteId[]).map(async (id) => {
         try {
@@ -197,19 +240,7 @@ export class SpriteLibrary {
           );
           if (!response.ok) throw new Error(`Missing animation ${id}`);
           const data: SpriteData = await response.json();
-          const textures = await Promise.all(
-            data.textures.map((t) =>
-              this.loader.loadAsync(
-                `${import.meta.env.BASE_URL}assets/animations/${t.file}`,
-              ),
-            ),
-          );
-          for (const texture of textures) {
-            texture.colorSpace = T.SRGBColorSpace;
-            texture.minFilter = T.LinearFilter;
-            texture.magFilter = T.LinearFilter;
-            texture.generateMipmaps = false;
-          }
+          const textures = await Promise.all(data.textures.map((t) => loadTexture(t.file)));
           this.assets.set(id, {
             data,
             textures,
@@ -225,13 +256,9 @@ export class SpriteLibrary {
   }
   make(id: SpriteId): AnimatedSprite | null {
     const asset = this.assets.get(
-      id === "skeleton-army"
-        ? "skeletons"
-        : id === "minion-horde"
-          ? "minions"
-          : id === "three-musketeers"
-            ? "musketeer"
-            : id,
+      id === "skeleton-army" ? "skeletons" :
+      id === "minion-horde" ? "minions" :
+      id === "three-musketeers" ? "musketeer" : id,
     );
     if (!asset) return null;
     const frame = Object.values(asset.data.clips)[0].frames[0];
@@ -258,37 +285,46 @@ export class SpriteLibrary {
       sprite.facingY = e.team === "blue" ? -1 : 1;
     }
     const { direction, flip } = facing(sprite.facingX, sprite.facingY);
+    const attackAge = e.interval - e.attack;
     const kind =
+      e.card === "bandit" && e.dash ? "dash" :
+      e.card === "lumberjack" && e.deploy > 0 ? "deploy" :
       e.attack > 0 && !moving
-        ? "attack"
+        ? e.card === "executioner" && attackAge >= 1 ? "attacking" : "attack"
         : moving
-          ? e.card === "prince" && e.move > 2.3
+          ? (e.card === "prince" && e.move > 2.3) ||
+            (e.card === "dark-prince" && e.move > darkPrince.chargeRange)
+            || (e.card === "battle-ram" && e.move > battleRam.chargeRange)
             ? "charge"
             : "run"
           : "idle";
     const clip = selectClip(sprite.asset.data.clips, e.team, kind, direction);
-    const elapsed =
-      kind === "attack"
-        ? e.interval - e.attack
-        : (e.animationTime ?? time) + e.id * 0.13;
-    const frame = animationFrame(clip, elapsed, kind === "attack", e.interval);
+    const elapsed = kind === "dash" ? e.dash!.elapsed :
+      kind === "deploy" ? 1 - e.deploy :
+      kind === "attack" ? attackAge :
+      kind === "attacking" ? attackAge - 1 : (e.animationTime ?? time) + e.id * 0.13;
+    const frame = animationFrame(clip, elapsed,
+      kind === "attack" || kind === "attacking" || kind === "deploy" || kind === "dash",
+      kind === "dash" ? 0.7 : kind === "deploy" ? 1 :
+        kind === "attacking" ? executioner.projectile.visualTime : e.interval);
     if (frame !== sprite.lastFrame) {
       sprite.mesh.geometry = spriteGeometry(sprite.asset, frame);
       sprite.lastFrame = frame;
     }
     sprite.mesh.quaternion.copy(camera.quaternion);
     const scale =
-      e.deploy > 0 && !hasNativeDeployFilter(e.card)
+      e.deploy > 0 && !hasNativeDeployFilter(e.card) && e.card !== "lumberjack"
         ? Math.max(0.05, 1 - e.deploy)
         : 1;
     sprite.mesh.scale.set(flip ? -scale : scale, scale, scale);
   }
   destroy() {
     for (const asset of this.assets.values()) {
-      asset.textures.forEach((texture) => texture.dispose());
       asset.materials.forEach((material) => material.dispose());
       asset.geometry.forEach((geometry) => geometry.dispose());
     }
+    for (const texture of new Set([...this.assets.values()].flatMap((asset) => asset.textures)))
+      texture.dispose();
     this.assets.clear();
   }
 }

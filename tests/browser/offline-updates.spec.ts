@@ -89,9 +89,9 @@ async function publish(page: Page) {
     await (window as any).updatesReady;
     await (await navigator.serviceWorker.getRegistration())!.update();
   });
-  await page.waitForFunction(
+  await expect.poll(() => page.evaluate(
     async () => !!(await navigator.serviceWorker.getRegistration())?.waiting,
-  );
+  )).toBe(true);
 }
 async function lateWorker(page: Page, release: number) {
   return page.evaluate(

@@ -1,0 +1,47 @@
+{
+  "minions": {
+    "source": "Minion",
+    "flyingHeight": 1.5,
+    "projectileStartZ": 0.45
+  },
+  "minion-horde": {
+    "source": "Minion",
+    "flyingHeight": 1.5,
+    "projectileStartZ": 0.45
+  },
+  "mega-minion": {
+    "source": "MegaMinion",
+    "flyingHeight": 1.5,
+    "projectileStartZ": 0.45
+  },
+  "bats": {
+    "source": "Bat",
+    "flyingHeight": 2,
+    "projectileStartZ": 0.35
+  },
+  "balloon": {
+    "source": "Balloon",
+    "flyingHeight": 3,
+    "projectileStartZ": 0.45
+  },
+  "baby-dragon": {
+    "source": "BabyDragon",
+    "flyingHeight": 3.5,
+    "projectileStartZ": 1.9
+  },
+  "inferno-dragon": {
+    "source": "InfernoDragon",
+    "flyingHeight": 4,
+    "projectileStartZ": 0.45
+  },
+  "lava-hound": {
+    "source": "LavaHound",
+    "flyingHeight": 5,
+    "projectileStartZ": 1.8
+  },
+  "lava-pup": {
+    "source": "LavaPups",
+    "flyingHeight": 3.5,
+    "projectileStartZ": 0.1
+  }
+}

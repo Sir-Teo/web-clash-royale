@@ -1,0 +1,39 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/sc/chr_golem.bin",
+      "sha256": "9e6b93c2fbae2e2b2c78549989cbc51b808c408217aff1a1d1a4ba624adae69b"
+    },
+    {
+      "path": "reference/sc/chr_golem_tex.png",
+      "sha256": "f45b40ee9f6c80b41db1c087338f20f4ec4d78658dbbd0c8c09a7376dc6d937f"
+    },
+    {
+      "path": "reference/sc/chr_golemite.bin",
+      "sha256": "2af5873112c212016c0e0ed7dea11ca8dc91a4ca5314dd12536f27a2617cec6c"
+    },
+    {
+      "path": "reference/sc/chr_golemite_tex.png",
+      "sha256": "366c5c8f18c9e13852ca53887d08b57a6e2556a1512328b591666329d17d8593"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    }
+  ],
+  "output": {
+    "path": "src/game/golem-data.json",
+    "sha256": "0f6cfd67c477cbd18ecd7b9766a3332d36612f9c198bf6365ee58d318fe9652e"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "card": "SkeletonWarriors",
+  "character": "SkeletonWarrior",
+  "rarity": "Epic",
+  "cost": 3,
+  "count": 3,
+  "sourceHitpoints": 65,
+  "sourceShieldHitpoints": 150,
+  "sourceDamage": 65,
+  "sourceSpeed": 90,
+  "sourceRange": 1.6,
+  "sourceHitSpeed": 1.2,
+  "sourceLoadTime": 0.8,
+  "sourceDeployTime": 1,
+  "deployDelay": 0.4,
+  "summonRadius": 0.8,
+  "healthBar": "Shield_small",
+  "shieldBreakEffect": "skeleton_warrior_lose_shield",
+  "blueExport": "skeletonWarrior_blue",
+  "redExport": "skeletonWarrior",
+  "blueShieldExport": "skeletonWarrior_blue_shield",
+  "redShieldExport": "skeletonWarrior_shield"
+}

@@ -1,6 +1,7 @@
+import { CARDS } from "../../src/game/cards";
 import { test, expect } from "@playwright/test";
 import sharp from "sharp";
-import { expectedCards } from "./native-assets";
+import { expectedCards, expectedAnimations } from "./native-assets";
 const card = "three-musketeers",
   key = "browser-royale.profile.v1";
 test("Three Musketeers persist, require nine elixir and render three native bodies through replay", async ({
@@ -58,7 +59,7 @@ test("Three Musketeers persist, require nine elixir and render three native bodi
     "data-native-card",
     card,
   );
-  await expect.poll(async () => (await state()).loadedCards).toBe(30);
+  await expect.poll(async () => (await state()).loadedCards).toBe(CARDS.length);
   await expect
     .poll(() =>
       page
@@ -112,8 +113,8 @@ test("Three Musketeers persist, require nine elixir and render three native bodi
     .toBe(false);
   await expect
     .poll(async () => (await state()).loadedAnimations, { timeout: 30000 })
-    .toBe(19);
-  await expect.poll(async () => (await state()).loadedCards).toBe(30);
+    .toBe(expectedAnimations);
+  await expect.poll(async () => (await state()).loadedCards).toBe(CARDS.length);
   const slot = (await state()).hand.indexOf(card);
   expect(slot).toBeGreaterThanOrEqual(0);
   await page.keyboard.press(String(slot + 1));

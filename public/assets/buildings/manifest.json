@@ -38,6 +38,132 @@
       "frames": 38
     },
     {
+      "id": "mortar",
+      "source": "building_mortar",
+      "metadataSha256": "e80c80a2287417fb236258a4bc15877ffc60d859de41a597f735c1027535ede2",
+      "dataSha256": "0047845767bc66c0677779f7f8aec1b26531b4ff6ba03b92f4da0ac02946ca62",
+      "textures": [
+        {
+          "file": "mortar-0.webp",
+          "sha256": "a5b3abdc6f6230671bf6c940f0c21ca101b39ce472c8cc03cac238d5282a19e2",
+          "originalSha256": "f7c89ccf9502947e19790f1720211d439850732e8fb8eeda1034b012c538ebf7"
+        }
+      ],
+      "frames": 10
+    },
+    {
+      "id": "bomb-tower",
+      "source": "building_bomb_tower",
+      "metadataSha256": "637b4fc6d45e555f5959c0a9bd76485044caeaf63014ee7fb35e25d42789cf66",
+      "dataSha256": "7998c51e81936f4c0eb83f76f55e450e60dcf977954bade0841f5f8efed2e017",
+      "textures": [
+        {
+          "file": "bomb-tower-0.webp",
+          "sha256": "a995e0a4402122b7394077985e13097269e31536afb84a70dbe21504c6d9a99d",
+          "originalSha256": "3dd8adaaad023865dd6ba86696d620c1d86c430225ddf4254a2e95b816a52faf"
+        }
+      ],
+      "frames": 3
+    },
+    {
+      "id": "inferno-tower",
+      "source": "building_inferno_tower",
+      "metadataSha256": "684d313daf9671364b229a8ad70a045ff84834ec966a0271c02ef68b955c868b",
+      "dataSha256": "08070e1ad41b5c870f0d99520fc4400d8fa8b2bfa8c9ce33c7ec5a63dbf60012",
+      "textures": [
+        {
+          "file": "inferno-tower-0.webp",
+          "sha256": "b07b6de2c4565299d070597bb9ecf235a0cf10322781293da51ab38f302e6212",
+          "originalSha256": "9b5c2ad1f352b8c95266afec2d2c7c4e47e93271e5b1869183c42185c26c1f99"
+        }
+      ],
+      "frames": 2
+    },
+    {
+      "id": "x-bow",
+      "source": "building_xbow",
+      "metadataSha256": "f88d6d4f0ce9943e27a9bb9bdfe6d44199f0a655c770f901d3c267d55eadcd50",
+      "dataSha256": "5e579a9753d93ea4b3c4ae14d714b6d4295e54f88174b3635578b38c6ce8c317",
+      "textures": [
+        {
+          "file": "x-bow-0.webp",
+          "sha256": "f0c07b020e56e0ec9203a8714c7e0a16bbf95e97f8fc130ab4e6ea8df3114cb3",
+          "originalSha256": "fa0b40c06811213bab0ee1640fcc85f5627ba73355891700858b76eccbfb9d48"
+        }
+      ],
+      "frames": 38
+    },
+    {
+      "id": "elixir-collector",
+      "source": "building_elixir_collector",
+      "metadataSha256": "cbaf8c2f4d6cd6e61b513b89b2202dc3c42b6cb817a1f30eb8726f53fae8baa6",
+      "dataSha256": "a43fe77579a5ff15d69978404e304babdf53318d847e57915bf931ff1762ee4f",
+      "textures": [
+        {
+          "file": "elixir-collector-0.webp",
+          "sha256": "4dd9ea9c86be8f2b7af433d8c6abe6ff3b419498dd124a950774aab3330ceeb2",
+          "originalSha256": "d65c0d92ae3d37b090604fd9c1eb5451f591e65ab3ab99f557431966a5be6bea"
+        }
+      ],
+      "frames": 66
+    },
+    {
+      "id": "goblin-hut",
+      "source": "building_goblin_hut",
+      "metadataSha256": "2bf581500a420cfa03edc3796459f666713e6b70b4c27cab06412f7599dd3b61",
+      "dataSha256": "6228b4bd24d061faefc804c617be3e9006e8d1e9c7c478da762e317ab9602ebd",
+      "textures": [
+        {
+          "file": "goblin-hut-0.webp",
+          "sha256": "3ea00c19e1472d35a48475ddf295f6aff7d6739109361c51bff95952d29292eb",
+          "originalSha256": "e0d93dcb7563d7ca795884657ba8331712a1ea3616416edd09705ae1653d6814"
+        }
+      ],
+      "frames": 2
+    },
+    {
+      "id": "tombstone",
+      "source": "building_tombstone",
+      "metadataSha256": "e36dcc29a05b307c67f3658a09b7ebea58cca0346a58fd9c0ab50e14b1ab15e6",
+      "dataSha256": "4991a99faeb146d304d39cfb63234eb0e627e576f05d47748d862d05c87e7228",
+      "textures": [
+        {
+          "file": "tombstone-0.webp",
+          "sha256": "a6fc20106b451326030bbb583da027c6480e08291664ea4a190394b462cc33d5",
+          "originalSha256": "74e2150c5bedcb1bb49fed12fa054896df98537df22fa8a4a68b1a3d441446b7"
+        }
+      ],
+      "frames": 98
+    },
+    {
+      "id": "furnace",
+      "source": "building_firespirit_hut",
+      "metadataSha256": "93123cadeab5b8da501687e170eabba68fe75d06a736971af3dd37da7258b2b0",
+      "dataSha256": "a613e57b386d163dff62d869caea89b14888138615465a0992b2918ec831941d",
+      "textures": [
+        {
+          "file": "furnace-0.webp",
+          "sha256": "cd8ea4a21cb61b2424245061959b1b4c31a00ce6b8f7578055d46a4cae0066ee",
+          "originalSha256": "0dea7afacec5019ced05466df454aa1a3d849648ae8bfab5151ce89b022fb86c"
+        }
+      ],
+      "frames": 600
+    },
+    {
+      "id": "barbarian-hut",
+      "source": "building_barbarian_hut",
+      "metadataSha256": "d25641f343dfcfb90297ecb780e1f39eb7a8b7a834d3c144b587765b2fdb2a0f",
+      "dataSha256": "5ff41c38e81a8bdbe2379d5b46d3da1c0ca5193b5dfe298f7b36d6b2c839da51",
+      "textures": [
+        {
+          "file": "barbarian-hut-0.webp",
+          "sha256": "7836a36724ae1036ea2806b02ad46ec705759886e65139d9868efcef8acd8fd9",
+          "originalSha256": "3ffc5fcf542c631e240e86cce7e79c8d35532a6c2f43a917e42aa0904ccd1922"
+        }
+      ],
+      "frames": 2
+    },
+    {
       "id": "king",
       "source": "building_tower",
       "metadataSha256": "0096da89499bf03437a1caa2a88c811b293a5a3067fe571e1ef12bafadbf7962",

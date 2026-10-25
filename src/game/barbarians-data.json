@@ -1,0 +1,14 @@
+{
+  "card": "Barbarians",
+  "character": "Barbarian",
+  "rarity": "Common",
+  "cost": 5,
+  "count": 4,
+  "sourceHitpoints": 300,
+  "sourceDamage": 75,
+  "sourceSpeed": 60,
+  "sourceRange": 700,
+  "sourceHitSpeed": 1500,
+  "blueExport": "barbarian1",
+  "redExport": "barbarian1_enemy"
+}

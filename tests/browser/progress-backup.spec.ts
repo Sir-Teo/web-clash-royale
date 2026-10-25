@@ -60,7 +60,10 @@ test("exports a file, previews and cancels restoration, then restores all saved 
     gold: 3456,
     trophies: 123,
   });
-  expect(backup.profile.history[0].replay).toEqual(fixture.replay);
+  // Bare history has no local provenance; export pins its origin default.
+  expect(backup.profile.history[0].replay).toEqual({
+    ...fixture.replay, rulesFamily: "origin",
+  });
   await page.getByLabel("PLAYER NAME", { exact: true }).fill("Current King");
   await page
     .getByRole("button", { name: "Save settings", exact: true })

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { expectedCards } from "./native-assets";
+import { CARDS } from "../../src/game/cards";
 
 test("native portraits use separate frames and the draw animation freezes and settles", async ({
   page,
@@ -7,17 +7,14 @@ test("native portraits use separate frames and the draw animation freezes and se
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/tests/fixtures/cards.html");
-  await expect(page.locator("#status")).toContainText(
-    `${expectedCards} native portraits`,
-    {
-      timeout: 30000,
-    },
-  );
-  await expect(page.locator("#gallery .native-card-ready")).toHaveCount(
-    expectedCards,
-  );
+  await expect(page.locator("#status")).toContainText(`${CARDS.length} native portraits`, {
+    timeout: 30000,
+  });
+  await expect(page.locator("#gallery .native-card-ready")).toHaveCount(CARDS.length);
   const knight = page.locator('#gallery [data-native-card="knight"]');
   await expect(knight.locator("text")).toHaveText(["3", "Knight", "Level 11"]);
+  await expect(page.locator('#gallery [data-native-card="bomber"] text'))
+    .toHaveText(["3", "Bomber", "Level 11"]);
   await knight.click();
   await expect(knight).toHaveAttribute("data-card-clip", "deck-selected");
   const hand = page.locator('#hand [data-slot="0"]');
@@ -40,6 +37,28 @@ test("native portraits use separate frames and the draw animation freezes and se
   expect(errors).toEqual([]);
 });
 
+test("deck builder hydrates every collection card after opening and searching", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/");
+  await expect.poll(
+    () => page.evaluate(() => (window as any).__arena?.state.loadedCards),
+    { timeout: 30000 },
+  ).toBe(CARDS.length);
+  await page.locator("#edit-deck").click();
+  await expect(page.locator("#collection-grid [data-collection]"))
+    .toHaveCount(CARDS.length);
+  await expect(page.locator("#collection-grid .native-card-ready"))
+    .toHaveCount(CARDS.length);
+  await expect(page.locator('#collection-grid [data-collection="ice-spirit"]'))
+    .toHaveClass(/native-card-ready/);
+  await page.locator("#card-search").fill("Ice Spirit");
+  await expect(page.locator("#collection-grid [data-collection]")).toHaveCount(1);
+  await expect(page.locator('#collection-grid [data-collection="ice-spirit"]'))
+    .toHaveClass(/native-card-ready/);
+  expect(errors).toEqual([]);
+});
+
 test("card selection and deployment preserve readable costs and touch targets across phone rotations", async ({
   page,
 }, info) => {
@@ -51,7 +70,7 @@ test("card selection and deployment preserve readable costs and touch targets ac
       () => page.evaluate(() => (window as any).__arena?.state.loadedCards),
       { timeout: 30000 },
     )
-    .toBe(expectedCards);
+    .toBe(CARDS.length);
   await expect(page.locator("#deck-preview .native-card-ready")).toHaveCount(8);
   await page.locator('#deck-preview [data-card-info="knight"]').click();
   await expect(page.locator(".detail-art.native-card-ready text")).toHaveText([
@@ -195,10 +214,8 @@ test("unavailable native cards retain usable fallback artwork and deployment con
   await page.goto("/");
   await expect(page.locator("#deck-preview .game-card")).toHaveCount(8);
   await expect(page.locator("#deck-preview .native-card-ready")).toHaveCount(0);
-  expect(
-    await page
-      .locator("#deck-preview .game-card img")
-      .first()
+  await expect.poll(() =>
+    page.locator("#deck-preview .game-card img").first()
       .evaluate((e: HTMLImageElement) => e.complete && e.naturalWidth > 0),
   ).toBe(true);
   await page.locator("#battle-button").click();

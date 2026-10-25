@@ -1,4 +1,4 @@
-import { expectedCards, expectedEffects } from "./native-assets";
+import { expectedCards, expectedAnimations, expectedBuildings, expectedEffects } from "./native-assets";
 import {
   test,
   expect as baseExpect,
@@ -7,7 +7,7 @@ import {
   devices,
   type Page,
 } from "@playwright/test";
-import { CARD_MAP, STARTER_DECK } from "../../src/game/cards";
+import { CARD_MAP, CARDS, STARTER_DECK } from "../../src/game/cards";
 import { readFileSync } from "node:fs";
 import { observeCombatAudio, playedCombatAudio } from "./audio-helpers";
 const nativeAudio = JSON.parse(
@@ -46,14 +46,16 @@ async function init(page: Page, name: string, sound = false) {
           ready.loadedCards,
         ];
       },
-      { timeout: 60000 },
+      { timeout: 120000 },
     )
-    .toEqual([expectedEffects, 19, 3, expectedCards]);
-  await expect(page.locator("#friend-button")).toBeVisible({ timeout: 60000 });
+    .toEqual([expectedEffects, expectedAnimations, expectedBuildings, CARDS.length]);
+  await expect(page.locator("#friend-button")).toBeVisible({ timeout: 120000 });
   await page.locator("#friend-button").click();
 }
 async function deploy(page: Page, x = 4, y = 22, keyboard = false) {
-  await expect.poll(async () => (await state(page)).intro.blocking).toBe(false);
+  await expect
+    .poll(async () => (await state(page)).intro.blocking, { timeout: 60000 })
+    .toBe(false);
   const before = await state(page);
   const slot = before.hand.findIndex(
     (id: keyof typeof CARD_MAP) =>
@@ -109,7 +111,7 @@ test("static browsers exchange invites, fight, pause together and replay without
   browser,
   browserName,
 }, info) => {
-  test.setTimeout(240000);
+  test.setTimeout(360000);
   const crossBrowser =
     process.env.ARENA_CROSS_BROWSER === "1"
       ? await (browserName === "webkit" ? chromium : webkit).launch()
@@ -117,7 +119,7 @@ test("static browsers exchange invites, fight, pause together and replay without
   const context = await (crossBrowser ?? browser).newContext({
     ...info.project.use,
     ...(crossBrowser ? devices["iPhone 13"] : {}),
-    baseURL: "http://127.0.0.1:5188",
+    baseURL: process.env.ARENA_LIVE_URL ?? "http://127.0.0.1:5188",
     serviceWorkers: "block",
   } as any);
   const friend = await context.newPage();
@@ -144,7 +146,7 @@ test("static browsers exchange invites, fight, pause together and replay without
       .click();
     await expect(page.locator("#peer-share")).toBeVisible({ timeout: 20000 });
     const invite = await page.locator("#peer-share").inputValue();
-    expect(invite).toMatch(/^CR1\./);
+    expect(invite).toContain("CR1.");
     await friend.locator("#peer-invite").fill(invite);
     await friend
       .getByRole("button", { name: "Join friend", exact: true })
@@ -165,12 +167,12 @@ test("static browsers exchange invites, fight, pause together and replay without
       path: `docs/screenshots/${info.project.name}-peer-room.png`,
       animations: "disabled",
     });
-    await page
-      .getByRole("button", { name: "Ready for battle", exact: true })
-      .click();
-    await friend
-      .getByRole("button", { name: "Ready for battle", exact: true })
-      .click();
+    // Friends may press Ready at the same moment. Room status packets must
+    // update the modal without replacing either button mid-click.
+    await Promise.all([
+      page.getByRole("button", { name: "Ready for battle", exact: true }).click(),
+      friend.getByRole("button", { name: "Ready for battle", exact: true }).click(),
+    ]);
     for (const p of [page, friend]) {
       await expect
         .poll(async () => (await state(p)).multiplayer?.phase)

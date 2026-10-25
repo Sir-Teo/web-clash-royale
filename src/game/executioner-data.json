@@ -1,0 +1,29 @@
+{
+  "card": "AxeMan",
+  "rarity": "Epic",
+  "cost": 5,
+  "sourceHitpoints": 760,
+  "sourceSpeed": 60,
+  "sourceRange": 4.5,
+  "sourceHitSpeed": 0.9,
+  "sourceLoadTime": 0.4,
+  "blueExport": "axe_man",
+  "redExport": "axe_man_red",
+  "projectile": {
+    "source": "AxeManProjectile",
+    "speed": 9.166666666666666,
+    "damage": 100,
+    "radius": 1,
+    "range": 6.5,
+    "minDistance": 4.5,
+    "height": 3,
+    "visualTime": 1.5,
+    "export": "executioner_projectile",
+    "shadowExport": "bowler_projectile_shadow",
+    "hitEffect": "axe_man_projectile_hit",
+    "deathEffect": "axe_man_projectile_die",
+    "trailEffect": "AxeProjectileEmitter",
+    "hitsAir": true,
+    "hitsGround": true
+  }
+}

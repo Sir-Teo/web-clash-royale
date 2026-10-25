@@ -1,0 +1,31 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_electro_wizard",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/character_buffs.csv",
+      "sha256": "fbcc636e6c8025ca0f36aab524b868806b2a6a8606186b622410a5f46fba9bbe"
+    },
+    {
+      "path": "reference/logic/area_effect_objects.csv",
+      "sha256": "f060f967d137942bd8d2e61edb1a96c4455bf833f7cab7187be3e391d352ec65"
+    },
+    {
+      "path": "reference/sc/chr_electro_wizard.bin",
+      "sha256": "07ffb1b1a89239a268e3e8c08034451110956e1a4ccd5ed7be58d83e7f0c3f45"
+    }
+  ],
+  "output": {
+    "path": "src/game/electro-wizard-data.json",
+    "sha256": "db53d05d344e84f9290d4b7034e89b73ec3263b890db280fa0925c8857120c46"
+  }
+}

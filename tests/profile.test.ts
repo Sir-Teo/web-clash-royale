@@ -155,15 +155,56 @@ describe("local progress", () => {
     p.history.push({ ...old, id: 3, replay: combatV2.replay as Replay });
     p.history.push({ ...old, id: 4, replay: combatV3.replay as Replay });
     p.history.push({ ...old, id: 5, replay: combatV4.replay as Replay });
+    p.history.push({ ...old, id: 6, replay: { ...old.replay, version: 5 } });
+    p.history.push({ ...old, id: 7, replay: { ...old.replay, version: 6 } });
+    p.history.push({ ...old, id: 8, replay: { ...old.replay, version: 7 } });
+    p.history.push({ ...old, id: 9, replay: { ...old.replay, version: 8 } });
+    p.history.push({ ...old, id: 10, replay: { ...old.replay, version: 9 } });
+    p.history.push({ ...old, id: 11, replay: { ...old.replay, version: 10 } });
+    p.history.push({ ...old, id: 12, replay: { ...old.replay, version: 11 } });
+    p.history.push({ ...old, id: 13, replay: { ...old.replay, version: 12 } });
+    p.history.push({ ...old, id: 14, replay: { ...old.replay, version: 13 } });
+    p.history.push({ ...old, id: 15, replay: { ...old.replay, version: 14 } });
+    p.history.push({ ...old, id: 16, replay: { ...old.replay, version: 15 } });
     saveProfile(p);
     expect(loadProfile().history.map((r) => r.replay.version)).toEqual([
-      5, 1, 2, 3, 4,
+      16, 1, 2, 3, 4, 5, 6, 7, 8, 9,
     ]);
     const raw = JSON.parse(data.get("browser-royale.profile.v1")!);
+    raw.history.shift();
+    data.set("browser-royale.profile.v1", JSON.stringify(raw));
+    expect(loadProfile().history.map((r) => r.replay.version)).toEqual([
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+    ]);
+    raw.history.shift();
+    data.set("browser-royale.profile.v1", JSON.stringify(raw));
+    expect(loadProfile().history.map((r) => r.replay.version)).toEqual([
+      2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+    ]);
+    raw.history.shift();
+    data.set("browser-royale.profile.v1", JSON.stringify(raw));
+    expect(loadProfile().history.map((r) => r.replay.version)).toEqual([
+      3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+    ]);
+    raw.history.shift();
+    data.set("browser-royale.profile.v1", JSON.stringify(raw));
+    expect(loadProfile().history.map((r) => r.replay.version)).toEqual([
+      4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+    ]);
+    raw.history.shift();
+    data.set("browser-royale.profile.v1", JSON.stringify(raw));
+    expect(loadProfile().history.map((r) => r.replay.version)).toEqual([
+      5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+    ]);
+    raw.history.shift();
+    data.set("browser-royale.profile.v1", JSON.stringify(raw));
+    expect(loadProfile().history.map((r) => r.replay.version)).toEqual([
+      6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+    ]);
     raw.history[0].replay.version = 99;
     data.set("browser-royale.profile.v1", JSON.stringify(raw));
     expect(loadProfile().history.map((r) => r.replay.version)).toEqual([
-      1, 2, 3, 4,
+      7, 8, 9, 10, 11, 12, 13, 14, 15,
     ]);
   });
   it("recovers from corrupt data and rejects duplicate deck cards", () => {

@@ -1,0 +1,42 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_buildings.csv",
+      "sha256": "f302372ce1d0870e3edb37d0520be9164865eb207ea600910616b9cbf024f456"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "reference/client/effects.csv",
+      "sha256": "22591ef669cb9af6535a10caae5b7f7f8b5b79c81630aeb3381a04bfef298985"
+    },
+    {
+      "path": "reference/sc/building_xbow.bin",
+      "sha256": "f88d6d4f0ce9943e27a9bb9bdfe6d44199f0a655c770f901d3c267d55eadcd50"
+    },
+    {
+      "path": "reference/sc/building_xbow_tex.png",
+      "sha256": "fa0b40c06811213bab0ee1640fcc85f5627ba73355891700858b76eccbfb9d48"
+    },
+    {
+      "path": "reference/sc/effects.bin",
+      "sha256": "1a9b0a2efe99578cd03fb9d8673ddb042aa067ba9f9fc0d3a253e15c2e9c7b7c"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    }
+  ],
+  "output": {
+    "path": "src/game/x-bow-data.json",
+    "sha256": "af13a15c394e9edd4c09935f1c8aa1c6ce9ad77ac884e9a9ca462992f0460bb8"
+  }
+}

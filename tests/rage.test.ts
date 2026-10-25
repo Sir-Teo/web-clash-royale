@@ -2,19 +2,20 @@ import { sendPeerCommand } from "./helpers/peer-command";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { Battle, STEP, type Team } from "../src/game/engine";
-import { CARD_MAP, STARTER_DECK, type CardId } from "../src/game/cards";
+import { Battle, STEP, type Team } from "../src/game/legacy-local-engine";
+import { CARD_MAP, STARTER_DECK, type CardId } from "../src/game/legacy-local-cards";
 import {
   applySnapshot,
   perspective,
   snapshot,
 } from "../src/network/perspective";
-import rage from "../src/game/rage-data.json";
+import { rage } from "../src/game/legacy-local-rules";
 import audio from "../src/game/combat-audio-data.json";
 import effects from "../src/render/destruction-data.json";
 import { PeerMatch } from "../src/network/peer-match";
 import type { ServerMessage } from "../src/network/protocol";
 
+// Historical local-family mechanics; the public dispatch is covered by the golden replay.
 const deck: CardId[] = [
   "rage",
   "witch",
@@ -70,6 +71,7 @@ describe("archived Rage", () => {
       duration: 6,
       buffDuration: 2,
       capBuffTimeToAreaEffectTime: true,
+
       areaHitInterval: 0.3,
       hitSpeedMultiplier: 1.35,
       speedMultiplier: 1.35,

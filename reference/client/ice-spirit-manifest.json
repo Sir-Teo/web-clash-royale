@@ -1,0 +1,39 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_ice_spirits",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "reference/sc/chr_ice_spirits.bin",
+      "sha256": "4c22eda6f327dbc047e8154342407637c667d3a049d3e7ad877b9a4cc7cb4f57"
+    },
+    {
+      "path": "reference/sc/chr_ice_spirits_tex.png",
+      "sha256": "a7cc49ca99653071f3aeffbe6364045faee5f6aa09d662b9eeba3a65bdbe7b7c"
+    },
+    {
+      "path": "reference/sc/ui-spells.bin",
+      "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    },
+    {
+      "path": "reference/sc/effects.bin",
+      "sha256": "1a9b0a2efe99578cd03fb9d8673ddb042aa067ba9f9fc0d3a253e15c2e9c7b7c"
+    }
+  ],
+  "output": {
+    "path": "src/game/ice-spirit-data.json",
+    "sha256": "8702fe337de37cc43680e27c4b818592e475036aa95f2700296d9561f69ba53e"
+  }
+}

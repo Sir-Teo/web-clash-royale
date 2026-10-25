@@ -40,11 +40,11 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "e9b192a9b651a1a4a3c50e38c5213831f46a2d9ef7272cb13dfd4119a35901cc"
+      "sha256": "e538686581e80101518c0b24373ad0024a0cfb9878f35bf80ee22dfad079cc54"
     },
     {
       "path": "public/assets/ui/cards/cards.json",
-      "sha256": "ba08318ef0b67a141ea826b92ce8f5267fe0ab625f509dc272d180c0778afcd2"
+      "sha256": "f1b2cb232984f6c87e2f53182a2ee35318cb1d01598609dcc5f9c604b2b6d7f7"
     }
   ],
   "ignoredEnemyVersions": [
@@ -88,6 +88,72 @@
       "sha256": "556ee756ea723ef55ffa4fc02afa0e52f8961b7c3c8fb93edf533939b56086d0"
     },
     {
+      "path": "public/assets/audio/axe_impact_01.ogg",
+      "source": "sfx/axe_impact_01.ogg",
+      "bytes": 4999,
+      "sha256": "40cd5d17d554a1890bb084426914a39ae0d83acb73949c1ebcf6dc081e2e00ea"
+    },
+    {
+      "path": "public/assets/audio/axeswing_01.ogg",
+      "source": "sfx/axeswing_01.ogg",
+      "bytes": 4968,
+      "sha256": "f7c9ef2bf6b42e4ce793167d4b179fc29c64b134bf14466ab8500bc3fce2ac67"
+    },
+    {
+      "path": "public/assets/audio/b_knight_atk_01.ogg",
+      "source": "sfx/b_knight_atk_01.ogg",
+      "bytes": 5543,
+      "sha256": "182865225d990e66f081384b796aec7525776fd7e892642300c133dbccdee272"
+    },
+    {
+      "path": "public/assets/audio/b_knight_atk_02.ogg",
+      "source": "sfx/b_knight_atk_02.ogg",
+      "bytes": 7212,
+      "sha256": "d3ebca1bd2911b962b12a0d18fc1c7b66b613701d82a7a47d3cc9cfc25b1e900"
+    },
+    {
+      "path": "public/assets/audio/b_knight_atk_03.ogg",
+      "source": "sfx/b_knight_atk_03.ogg",
+      "bytes": 5751,
+      "sha256": "5b51454b1b2508183b2a4de817348bc65a23d0f6ee643b680121d24f1120958c"
+    },
+    {
+      "path": "public/assets/audio/b_knight_atk_04.ogg",
+      "source": "sfx/b_knight_atk_04.ogg",
+      "bytes": 7197,
+      "sha256": "245bb39d0b17cc1387a1b5cb95aed4482666dc914385b2fd31f3fac000c48c2f"
+    },
+    {
+      "path": "public/assets/audio/b_knight_atk_charge_01.ogg",
+      "source": "sfx/b_knight_atk_charge_01.ogg",
+      "bytes": 7213,
+      "sha256": "e77b56fb0f81475acd001c5b329e5fe7aa467ad2ce855d71fffade7c86d332c9"
+    },
+    {
+      "path": "public/assets/audio/b_knight_atk_charge_02.ogg",
+      "source": "sfx/b_knight_atk_charge_02.ogg",
+      "bytes": 7177,
+      "sha256": "eb9533e257f3fdb63aac527a6e19fa55ca9b9db25d8da81af35dfe6a096260db"
+    },
+    {
+      "path": "public/assets/audio/b_knight_deploy_01.ogg",
+      "source": "sfx/b_knight_deploy_01.ogg",
+      "bytes": 8353,
+      "sha256": "ec613036478b368c852d24093159023499afc573ce77cdb5bdcc4b32d753d7b0"
+    },
+    {
+      "path": "public/assets/audio/b_knight_deploy_02.ogg",
+      "source": "sfx/b_knight_deploy_02.ogg",
+      "bytes": 7473,
+      "sha256": "50787cf8803129f43801ea6de287c221ca8ebc3346ac31fde0d7f1f2ceb6a171"
+    },
+    {
+      "path": "public/assets/audio/b_knight_deploy_03.ogg",
+      "source": "sfx/b_knight_deploy_03.ogg",
+      "bytes": 7567,
+      "sha256": "edd814bd0313f619373fb2e365498ff2648c5b21c8546f7cb71bc86d1913594e"
+    },
+    {
       "path": "public/assets/audio/baby_dragon_deploy_end_11.ogg",
       "source": "sfx/baby_dragon_deploy_end_11.ogg",
       "bytes": 6613,
@@ -104,6 +170,162 @@
       "source": "sfx/babydragon_deploy_01.ogg",
       "bytes": 8668,
       "sha256": "4bb713adf208f815fd3688cc584a785868a5261f693e55724079a1276540b3fc"
+    },
+    {
+      "path": "public/assets/audio/bandit_atk_vo_01.ogg",
+      "source": "sfx/bandit_atk_vo_01.ogg",
+      "bytes": 4938,
+      "sha256": "b24d9c116c7d7c972e42b11c924cf9c7c67b03447a31bff3258b896d9771c858"
+    },
+    {
+      "path": "public/assets/audio/bandit_atk_vo_02.ogg",
+      "source": "sfx/bandit_atk_vo_02.ogg",
+      "bytes": 5468,
+      "sha256": "9f8ec9f02c736f0b0f686edd715201da0a452283876532accaa3a30fa7751bbf"
+    },
+    {
+      "path": "public/assets/audio/bandit_bat_hit_01.ogg",
+      "source": "sfx/bandit_bat_hit_01.ogg",
+      "bytes": 4616,
+      "sha256": "4b82721cc83c166a9f4ab2291c15b632225248a59abbc4a98c90a458a79bb2d7"
+    },
+    {
+      "path": "public/assets/audio/bandit_dash_03.ogg",
+      "source": "sfx/bandit_dash_03.ogg",
+      "bytes": 7765,
+      "sha256": "ae630ea3f54a2793f4320d566d309c8518f3a40c557b02e8294ec172b1d5d644"
+    },
+    {
+      "path": "public/assets/audio/bandit_deploy_01.ogg",
+      "source": "sfx/bandit_deploy_01.ogg",
+      "bytes": 8518,
+      "sha256": "45e58bb96a33a69ce5cb2673cb8b44c02e60191c8cb2b3c7c2464bdbc48e58ba"
+    },
+    {
+      "path": "public/assets/audio/bandit_slam_01.ogg",
+      "source": "sfx/bandit_slam_01.ogg",
+      "bytes": 7427,
+      "sha256": "9001877bdd2a0f4e3c94e6ec7037ec5bb971268d85b6a6c67a4751dde01ad87a"
+    },
+    {
+      "path": "public/assets/audio/bandit_sneaky_laugh_05.ogg",
+      "source": "sfx/bandit_sneaky_laugh_05.ogg",
+      "bytes": 6061,
+      "sha256": "e43a25b28535262ef821e533453f1d3e54a17e7041ba59a8d6bdb9c1f39fd482"
+    },
+    {
+      "path": "public/assets/audio/barbarian_attack_02.ogg",
+      "source": "sfx/barbarian_attack_02.ogg",
+      "bytes": 6185,
+      "sha256": "26cadb451b60c87e81f9141b8683cb1281402cb09e5cf8926d78f929830a083b"
+    },
+    {
+      "path": "public/assets/audio/barbarian_attack_03.ogg",
+      "source": "sfx/barbarian_attack_03.ogg",
+      "bytes": 6846,
+      "sha256": "4317fb70efa3d7d9e70f863e4967787fe579be178ec896fe1516272c4e8a95fb"
+    },
+    {
+      "path": "public/assets/audio/barbarian_attack_04.ogg",
+      "source": "sfx/barbarian_attack_04.ogg",
+      "bytes": 7107,
+      "sha256": "8e882249a8d8f7c74e7c45e4d3f76934cce1531e08318209c6c0f8c28b368c32"
+    },
+    {
+      "path": "public/assets/audio/barbarian_attack_05.ogg",
+      "source": "sfx/barbarian_attack_05.ogg",
+      "bytes": 6470,
+      "sha256": "5464f7f6d2553c11d45b1dd9552adfccb028da5a2aa362a60d24198030cab422"
+    },
+    {
+      "path": "public/assets/audio/barbarian_attack_06.ogg",
+      "source": "sfx/barbarian_attack_06.ogg",
+      "bytes": 6691,
+      "sha256": "f5121d3fae67df65e0b4739f64a15c9156169c246f23ae834f9102eee226fc57"
+    },
+    {
+      "path": "public/assets/audio/barbarian_attack_07.ogg",
+      "source": "sfx/barbarian_attack_07.ogg",
+      "bytes": 6716,
+      "sha256": "cc7cc96627ff338317fe4a307ca747365bd311d8e320cdad8fdbcdcbae4b60b3"
+    },
+    {
+      "path": "public/assets/audio/barbarian_attack_08.ogg",
+      "source": "sfx/barbarian_attack_08.ogg",
+      "bytes": 7514,
+      "sha256": "196d8e4cb1f136f31685cba77f4c330e1ccc507a02d52e3a8ae4ebae65bf99c0"
+    },
+    {
+      "path": "public/assets/audio/barrel_drawback_14.ogg",
+      "source": "sfx/barrel_drawback_14.ogg",
+      "bytes": 19734,
+      "sha256": "9aa3d36b2c8300649b883d45bf81223ea404835c20b72e37c7c24566508edbca"
+    },
+    {
+      "path": "public/assets/audio/barrel_explosion_02.ogg",
+      "source": "sfx/barrel_explosion_02.ogg",
+      "bytes": 9555,
+      "sha256": "271eb95e9777e27fff39c16451046fd2d4fac4b3afb7085e4c7e3c7e445a3226"
+    },
+    {
+      "path": "public/assets/audio/bat_atk_01.ogg",
+      "source": "sfx/bat_atk_01.ogg",
+      "bytes": 6417,
+      "sha256": "6aa2d4c34a17ff50cfc099136f0abd1103dab7418bd6ea372d33e580f00d22e9"
+    },
+    {
+      "path": "public/assets/audio/bat_deploy_01.ogg",
+      "source": "sfx/bat_deploy_01.ogg",
+      "bytes": 5797,
+      "sha256": "d010094b994731181025ff6dcaf8e170b9b35e14ef49275aeb001689642bc640"
+    },
+    {
+      "path": "public/assets/audio/battleram_charge_01.ogg",
+      "source": "sfx/battleram_charge_01.ogg",
+      "bytes": 11026,
+      "sha256": "7eab86961ae50508d1839dd4fc2ca21b31056ff7db21fb9c1270559bcc46e7ac"
+    },
+    {
+      "path": "public/assets/audio/battleram_deploy_01.ogg",
+      "source": "sfx/battleram_deploy_01.ogg",
+      "bytes": 8611,
+      "sha256": "e5f3dc09d76d9f62755dd28c2bcf88d8beb93a978c24e065b161b8688b08be6b"
+    },
+    {
+      "path": "public/assets/audio/big_skeleton_hit_01.ogg",
+      "source": "sfx/big_skeleton_hit_01.ogg",
+      "bytes": 8837,
+      "sha256": "560b3bf32f831430e5dca65a9553cc2d0e088a6c9f8f84c1fe9499fafaccf324"
+    },
+    {
+      "path": "public/assets/audio/big_skeleton_summon_01.ogg",
+      "source": "sfx/big_skeleton_summon_01.ogg",
+      "bytes": 9072,
+      "sha256": "8425c7b07fab07d3672bb10c1ed8d2e919e97c1cef1316cf499653542bcdf626"
+    },
+    {
+      "path": "public/assets/audio/blowdart_deploy_01.ogg",
+      "source": "sfx/blowdart_deploy_01.ogg",
+      "bytes": 9121,
+      "sha256": "b8668c011c54e3f47767b554927d7df5fa459b4cc8fd392366a993c2e6126d8f"
+    },
+    {
+      "path": "public/assets/audio/blowdart_gob_jump_01.ogg",
+      "source": "sfx/blowdart_gob_jump_01.ogg",
+      "bytes": 4743,
+      "sha256": "405a3dfc37a1786c9b2ec627fa594bcff85f7e98ccff91283802c4244b90bc81"
+    },
+    {
+      "path": "public/assets/audio/blowdart_goblin_atk_02.ogg",
+      "source": "sfx/blowdart_goblin_atk_02.ogg",
+      "bytes": 5642,
+      "sha256": "f592c9e68a4e8e3ec13e789a7bae988267d117b22938978bd28b7109201578ae"
+    },
+    {
+      "path": "public/assets/audio/blowdart_hit_01.ogg",
+      "source": "sfx/blowdart_hit_01.ogg",
+      "bytes": 9050,
+      "sha256": "cad4888dbeed20be2bc431bd26848cd6395d0b455d91559199780db3b6225c6b"
     },
     {
       "path": "public/assets/audio/bomb_drop_01.ogg",
@@ -124,6 +346,42 @@
       "sha256": "0fe352f18fb44498995ef979c5954e8fdf2dab668d26e1985d3fbce11a277d1e"
     },
     {
+      "path": "public/assets/audio/bowl_atk_01.ogg",
+      "source": "sfx/bowl_atk_01.ogg",
+      "bytes": 14998,
+      "sha256": "71d6766a3ce3e0532317c5fc190e1bbf6c032c3505fb137f93d5d33ce42012d5"
+    },
+    {
+      "path": "public/assets/audio/bowl_atk_02.ogg",
+      "source": "sfx/bowl_atk_02.ogg",
+      "bytes": 13205,
+      "sha256": "4b9267bdba73f03dfe14926cb2749aaff98804023d3557dacc09a7cadc19a209"
+    },
+    {
+      "path": "public/assets/audio/bowl_atk_03.ogg",
+      "source": "sfx/bowl_atk_03.ogg",
+      "bytes": 13314,
+      "sha256": "fb7abfed5ab7a1e165fabfbee3fc9a894480665ee5e4ec2a06c8521011e0b2f3"
+    },
+    {
+      "path": "public/assets/audio/bowl_atk_04.ogg",
+      "source": "sfx/bowl_atk_04.ogg",
+      "bytes": 13293,
+      "sha256": "c90fa7b5e6949c6679d6e5898f599bfa7d5ac37f140514db0ed8d4d41aa2c216"
+    },
+    {
+      "path": "public/assets/audio/bowl_atk_05.ogg",
+      "source": "sfx/bowl_atk_05.ogg",
+      "bytes": 12159,
+      "sha256": "3ba010ff06151c497030e8d36887c7906cf62458fac5b2139c2c01f040b9cc4d"
+    },
+    {
+      "path": "public/assets/audio/bowler_deploy_vo_01.ogg",
+      "source": "sfx/bowler_deploy_vo_01.ogg",
+      "bytes": 9796,
+      "sha256": "64d49c367519d240ea3f32a756c28e5ce9432f24d664b70bf3f779e00ba4503b"
+    },
+    {
       "path": "public/assets/audio/building_place_01.ogg",
       "source": "sfx/building_place_01.ogg",
       "bytes": 7351,
@@ -142,16 +400,88 @@
       "sha256": "8b074ef91f3213f21bfa1b86d2fc808c1b876e98feac66c390670d688b3aa51d"
     },
     {
+      "path": "public/assets/audio/cemetary_deploy_01.ogg",
+      "source": "sfx/cemetary_deploy_01.ogg",
+      "bytes": 16076,
+      "sha256": "06a0a9c773a06ba35e9364244c02d3b3cc11f358e5d6dc75f86c83ffdda5ab94"
+    },
+    {
       "path": "public/assets/audio/clash_archer_deploy_01.ogg",
       "source": "sfx/clash_archer_deploy_01.ogg",
       "bytes": 6736,
       "sha256": "c9eb08a19d7db65972f866a8594d9ffa451b2f99e005f337766775202766f55c"
     },
     {
+      "path": "public/assets/audio/clone_spell_01.ogg",
+      "source": "sfx/clone_spell_01.ogg",
+      "bytes": 9699,
+      "sha256": "e0f210213f0570d9cc283cde9beddace16c4a3085fee01b895eae45894a61c33"
+    },
+    {
+      "path": "public/assets/audio/dark_prince_atk_01.ogg",
+      "source": "sfx/dark_prince_atk_01.ogg",
+      "bytes": 6309,
+      "sha256": "044c7fdc719e6b1eee8c4ce252aaa3a26e30d8ad071fcf0a4b54b2e5340d176d"
+    },
+    {
+      "path": "public/assets/audio/dark_prince_atk_hit_01.ogg",
+      "source": "sfx/dark_prince_atk_hit_01.ogg",
+      "bytes": 6062,
+      "sha256": "dbeb0eb9f3eb9387daeca253b08ff45f44c85550323a2f4de12b07ee47984d72"
+    },
+    {
+      "path": "public/assets/audio/dark_prince_charge_jing_02.ogg",
+      "source": "sfx/dark_prince_charge_jing_02.ogg",
+      "bytes": 7669,
+      "sha256": "72669d766ec2e5e9e10f088e75e1b56e6a22f93a7de31b8a748f5050de070619"
+    },
+    {
+      "path": "public/assets/audio/dark_prince_deploy_01.ogg",
+      "source": "sfx/dark_prince_deploy_01.ogg",
+      "bytes": 10635,
+      "sha256": "6ffaeeb087c83f582e6aa8b93d91e41f4174c98775ac4e605ad99efff03d3123"
+    },
+    {
+      "path": "public/assets/audio/dark_prince_shield_01.ogg",
+      "source": "sfx/dark_prince_shield_01.ogg",
+      "bytes": 9204,
+      "sha256": "c8a7952bcdd2a55cb7110ea21c515ce258900bb4dc9cb216f4cd20d42b1bd4ec"
+    },
+    {
+      "path": "public/assets/audio/dark_prince_shield_lost_01.ogg",
+      "source": "sfx/dark_prince_shield_lost_01.ogg",
+      "bytes": 6784,
+      "sha256": "fff7e00e33cee7dd5110855720f0927501d026d2c6e356455d56748b8fd7203c"
+    },
+    {
       "path": "public/assets/audio/deploy_balloon_06.ogg",
       "source": "sfx/deploy_balloon_06.ogg",
       "bytes": 17505,
       "sha256": "e23218067d2b99cc8d15ff6d758c2c2732f5e20e2cd6d601d833a6b530d10a1d"
+    },
+    {
+      "path": "public/assets/audio/deploy_barbarians_01.ogg",
+      "source": "sfx/deploy_barbarians_01.ogg",
+      "bytes": 8189,
+      "sha256": "3c0e45c8f116da6426feba8670b5c43e8f2dbb59efa91d502432392bd80c628d"
+    },
+    {
+      "path": "public/assets/audio/deploy_executioner_01.ogg",
+      "source": "sfx/deploy_executioner_01.ogg",
+      "bytes": 8691,
+      "sha256": "4f4b1d5bb8967982b36db601ce87e5523dee93414124919a00c33e0376c2007e"
+    },
+    {
+      "path": "public/assets/audio/deploy_ice_golem_01.ogg",
+      "source": "sfx/deploy_ice_golem_01.ogg",
+      "bytes": 12824,
+      "sha256": "677c704d3e6038eb1f87f57b728efd60c308df62f8bebcacfb7a1217ddc2fdab"
+    },
+    {
+      "path": "public/assets/audio/deploy_lava_hound_02.ogg",
+      "source": "sfx/deploy_lava_hound_02.ogg",
+      "bytes": 9911,
+      "sha256": "1bdf0624e6eb2df02d75f0bc4aabc0ed8252cd07d0c9df37a77f309a898d7552"
     },
     {
       "path": "public/assets/audio/deploy_skeleton_01.ogg",
@@ -178,6 +508,66 @@
       "sha256": "fc41f7905e797f79d7d1a46801dc439dd1889459e3e2a62b938fcd5d04d4e696"
     },
     {
+      "path": "public/assets/audio/dw_atk_01.ogg",
+      "source": "sfx/dw_atk_01.ogg",
+      "bytes": 6859,
+      "sha256": "280707ec3888ca27922721e7e2a307fc6f94fefc89d25c58226ef1744a1833d6"
+    },
+    {
+      "path": "public/assets/audio/dw_deploy_01.ogg",
+      "source": "sfx/dw_deploy_01.ogg",
+      "bytes": 11357,
+      "sha256": "37ee556c6b5651c60c0cae6ee7b66bdc528b6169ac4916c3d8bac6cca0403bfd"
+    },
+    {
+      "path": "public/assets/audio/electro_wiz_atk_01.ogg",
+      "source": "sfx/electro_wiz_atk_01.ogg",
+      "bytes": 9439,
+      "sha256": "76ab3f764a93d0ac21062e77020a3c267f246532dca76cfc0d53e38c57bd106e"
+    },
+    {
+      "path": "public/assets/audio/electro_wiz_atk_02.ogg",
+      "source": "sfx/electro_wiz_atk_02.ogg",
+      "bytes": 8831,
+      "sha256": "d72665f5b4804c31ff9237a8227f5e98e60e5b17ff479b087b07284573ce62dd"
+    },
+    {
+      "path": "public/assets/audio/electro_wiz_atk_03.ogg",
+      "source": "sfx/electro_wiz_atk_03.ogg",
+      "bytes": 9181,
+      "sha256": "2b81966ad7f00d3b67346a41ca04e226c9c9c2f1142d1488b9a7879ee4b9e06a"
+    },
+    {
+      "path": "public/assets/audio/electro_wiz_atk_04.ogg",
+      "source": "sfx/electro_wiz_atk_04.ogg",
+      "bytes": 8084,
+      "sha256": "cd5be2c3f594831ee48032ac8aa5edd7247fc7dfefff662703d02b363b639d75"
+    },
+    {
+      "path": "public/assets/audio/electro_wiz_atk_05.ogg",
+      "source": "sfx/electro_wiz_atk_05.ogg",
+      "bytes": 7370,
+      "sha256": "e3d6a4262ae3f47a19518fa98cb16758237e0b625f4d6333c5471c27c571751d"
+    },
+    {
+      "path": "public/assets/audio/electro_wiz_deploy_01.ogg",
+      "source": "sfx/electro_wiz_deploy_01.ogg",
+      "bytes": 12277,
+      "sha256": "ec0ca1f292db7157c9f110e9eeaca957b80d770e255fd618f08f30bca89ddae5"
+    },
+    {
+      "path": "public/assets/audio/elite_barbs_deploy_01.ogg",
+      "source": "sfx/elite_barbs_deploy_01.ogg",
+      "bytes": 10218,
+      "sha256": "05fc64dd6fb0931e4fa004d0955d58d21ba10525d622824ae1fe2237ca52f7b5"
+    },
+    {
+      "path": "public/assets/audio/elixir_collector_place_02.ogg",
+      "source": "sfx/elixir_collector_place_02.ogg",
+      "bytes": 6377,
+      "sha256": "e35b2ac6e660964dd82a3e944024a4633134195d5e5f3fe6dc8065d920d12ed2"
+    },
+    {
       "path": "public/assets/audio/explosion_01.ogg",
       "source": "sfx/explosion_01.ogg",
       "bytes": 12667,
@@ -194,6 +584,30 @@
       "source": "sfx/fire_ball_explo_02.ogg",
       "bytes": 18534,
       "sha256": "f4eb0012b52f0b4a142770d69d2caac2ccbcaedf4ddf3a336ce4f94dfed63ed8"
+    },
+    {
+      "path": "public/assets/audio/fire_hut_place_01.ogg",
+      "source": "sfx/fire_hut_place_01.ogg",
+      "bytes": 20309,
+      "sha256": "2953a201cb393a2d0e07e8ce96eba1d6863e077851e16588d9f7442f884209b5"
+    },
+    {
+      "path": "public/assets/audio/fire_spirit_attack_01.ogg",
+      "source": "sfx/fire_spirit_attack_01.ogg",
+      "bytes": 7258,
+      "sha256": "04fb825d9edcdb7d10f2893dc96e57e75c7fa9eed2c35b1bc2283cb9215ef790"
+    },
+    {
+      "path": "public/assets/audio/fire_spirit_deploy_01.ogg",
+      "source": "sfx/fire_spirit_deploy_01.ogg",
+      "bytes": 7389,
+      "sha256": "c6c06f6b4772539733011c4a2c4811414cea63d2faf5f3580be34b834fe68252"
+    },
+    {
+      "path": "public/assets/audio/fire_spirit_deploy_02.ogg",
+      "source": "sfx/fire_spirit_deploy_02.ogg",
+      "bytes": 7131,
+      "sha256": "aa76140edc67e3b9adafeca2c9ff46841d0d8fb40d1eddd294798bff1b926a21"
     },
     {
       "path": "public/assets/audio/fireball_hit_01.ogg",
@@ -232,6 +646,12 @@
       "sha256": "56d458283376d0ed8b330836d76852862942d2a75c99c381d1427101819fcbe1"
     },
     {
+      "path": "public/assets/audio/get_elixir_02.ogg",
+      "source": "sfx/get_elixir_02.ogg",
+      "bytes": 8341,
+      "sha256": "790583e9f0819dc2babbb6c63a0536bcfe8fb9770f3a93b1d39cd1e1f29c49c2"
+    },
+    {
       "path": "public/assets/audio/giant_attack_swing_01.ogg",
       "source": "sfx/giant_attack_swing_01.ogg",
       "bytes": 7664,
@@ -262,6 +682,12 @@
       "sha256": "aaf37453b16f44d4338e2ec1dab80205d72a9ec4eed4cc41b1c7d9525dc734ee"
     },
     {
+      "path": "public/assets/audio/giant_skelly_dep_vo_01.ogg",
+      "source": "sfx/giant_skelly_dep_vo_01.ogg",
+      "bytes": 8685,
+      "sha256": "1c30594de654fd6e3c8ab3334d7ca81b9bea8ab038e62dcf2de1c437bb76a100"
+    },
+    {
       "path": "public/assets/audio/gob_attack_01v2.ogg",
       "source": "sfx/gob_attack_01v2.ogg",
       "bytes": 5413,
@@ -284,6 +710,36 @@
       "source": "sfx/goblin_deploy_14.ogg",
       "bytes": 7801,
       "sha256": "3d0f03976e8ec876b38f79b72b40402e552eb09926d74be6bec745d8e24d6482"
+    },
+    {
+      "path": "public/assets/audio/golem_atk_01.ogg",
+      "source": "sfx/golem_atk_01.ogg",
+      "bytes": 8337,
+      "sha256": "992fa2a15e7d28e13f9d4184be5f52840d071520314064baab18e49bd20f3ee7"
+    },
+    {
+      "path": "public/assets/audio/golem_atk_hit_01.ogg",
+      "source": "sfx/golem_atk_hit_01.ogg",
+      "bytes": 9422,
+      "sha256": "921c75b33f97f55f73b90fb0b244040a32b1f42040ce723d16f31e15eb5b8014"
+    },
+    {
+      "path": "public/assets/audio/golem_deploy_01.ogg",
+      "source": "sfx/golem_deploy_01.ogg",
+      "bytes": 17088,
+      "sha256": "5e3abf6b6df78d64b6fb694e33989fc8bcb53f14678cf0618c66b75c4db7c24b"
+    },
+    {
+      "path": "public/assets/audio/golem_die_01.ogg",
+      "source": "sfx/golem_die_01.ogg",
+      "bytes": 16285,
+      "sha256": "c6040efec8f8f6e663612ddf92359e3d1d0b570bd5038751414eb84de8a0b5ab"
+    },
+    {
+      "path": "public/assets/audio/heal_magic_03.ogg",
+      "source": "sfx/heal_magic_03.ogg",
+      "bytes": 16178,
+      "sha256": "92508489ca05404c3dee57e5b68952f346fb2aded7bb24f023deb184b86fa1f6"
     },
     {
       "path": "public/assets/audio/hogrider_atk_01.ogg",
@@ -316,10 +772,106 @@
       "sha256": "3544538274674aa2853e75009bb91448c6bbde9c198b1735eb7168cb7707e147"
     },
     {
+      "path": "public/assets/audio/ice_golem_atk_01.ogg",
+      "source": "sfx/ice_golem_atk_01.ogg",
+      "bytes": 10381,
+      "sha256": "6b4aa994da9b634eef5a651a158ffdc1b65f7e012427dabee3d1f36ea993e4a1"
+    },
+    {
+      "path": "public/assets/audio/ice_mage_impact_02.ogg",
+      "source": "sfx/ice_mage_impact_02.ogg",
+      "bytes": 7979,
+      "sha256": "afc08e6947ff598ea6743ed69d2c2071273af0d88d16cf328128a023aced9c01"
+    },
+    {
+      "path": "public/assets/audio/ice_sp_deploy_01.ogg",
+      "source": "sfx/ice_sp_deploy_01.ogg",
+      "bytes": 10030,
+      "sha256": "934a08d5bf2162f3b402a1d3a2f0eb26f912bc890918014817e0ff574d8dbabb"
+    },
+    {
+      "path": "public/assets/audio/ice_sp_deploy_02.ogg",
+      "source": "sfx/ice_sp_deploy_02.ogg",
+      "bytes": 10367,
+      "sha256": "a59c6d3053356cd6d9be25be9ce739c49d453c5e14df598d97030e507e19c6c5"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_atk_01.ogg",
+      "source": "sfx/ice_wiz_atk_01.ogg",
+      "bytes": 7031,
+      "sha256": "ba50f12cc3cba90c169d0adfef2a3840bfe67e246a0460ba9331eb8fb35a2828"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_atk_02.ogg",
+      "source": "sfx/ice_wiz_atk_02.ogg",
+      "bytes": 7855,
+      "sha256": "7f0905e95795d60ea6f2d159e2b4cb8082ba84cf08a25f91b4a34c5a78b9bb3f"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_atk_03.ogg",
+      "source": "sfx/ice_wiz_atk_03.ogg",
+      "bytes": 7339,
+      "sha256": "e2420582367eb04abdc8840c84413f29d6e4813546194a0ea992a12f3e2a8f5e"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_atk_05.ogg",
+      "source": "sfx/ice_wiz_atk_05.ogg",
+      "bytes": 7255,
+      "sha256": "8b2aa7cd3486e8386809f1a607ad828efa51322b32760fb7225a937c4962b8b1"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_atk_07.ogg",
+      "source": "sfx/ice_wiz_atk_07.ogg",
+      "bytes": 8671,
+      "sha256": "944dc078b84d054578b675606f82c452ea2e47fb89b87c098e283b1c95ee27cd"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_atk_08.ogg",
+      "source": "sfx/ice_wiz_atk_08.ogg",
+      "bytes": 8381,
+      "sha256": "1af10dc3e0bee4310674e5bfac00567bb5f10c04a69f1925fc0923d5364ee7aa"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_dep_01.ogg",
+      "source": "sfx/ice_wiz_dep_01.ogg",
+      "bytes": 9097,
+      "sha256": "285c776a75d70dcfd1c3b634804fd70fb0c51b148e4ff881529f3e77a50d310f"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_dep_04.ogg",
+      "source": "sfx/ice_wiz_dep_04.ogg",
+      "bytes": 8036,
+      "sha256": "658bdcd48c32f21de166c3a4d9f92de4fca93db8009899cf9ce8c1bb955cbcc9"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_deploy_01.ogg",
+      "source": "sfx/ice_wiz_deploy_01.ogg",
+      "bytes": 11004,
+      "sha256": "c7f3dd42a50f8aee51e5b6d45622f7ffff2f36804066a17b365103de14596037"
+    },
+    {
+      "path": "public/assets/audio/ice_wiz_land_01.ogg",
+      "source": "sfx/ice_wiz_land_01.ogg",
+      "bytes": 8237,
+      "sha256": "444f19ccbaa9b460c087a60f717ed764edc5aa1aa100347f0c1b408b40758123"
+    },
+    {
+      "path": "public/assets/audio/icemage_attack_03.ogg",
+      "source": "sfx/icemage_attack_03.ogg",
+      "bytes": 13211,
+      "sha256": "0bb144217bfbbf1b15fcf9a7e1f9793c80b9bfa8b4aaa9ee0343f18e2eca38b3"
+    },
+    {
       "path": "public/assets/audio/king_fire_06.ogg",
       "source": "sfx/king_fire_06.ogg",
       "bytes": 8970,
       "sha256": "ca19a249c51d764b3ec3b458768c8dd5f41de81a363123a125197d2a96e354bb"
+    },
+    {
+      "path": "public/assets/audio/knighchargehit01.ogg",
+      "source": "sfx/knighchargehit01.ogg",
+      "bytes": 11231,
+      "sha256": "490b28c40aece246bf026b049a895d10d1c661699b918d8cce90406a1f4055e5"
     },
     {
       "path": "public/assets/audio/knight_attack_hack_01.ogg",
@@ -376,6 +928,96 @@
       "sha256": "8d732d958cf7fe45ba250248ae771f988f4792e879a37289328158f667f36588"
     },
     {
+      "path": "public/assets/audio/laser_loop_02.ogg",
+      "source": "sfx/laser_loop_02.ogg",
+      "bytes": 13368,
+      "sha256": "ebef2f3a2d60890134339e404b3bdf229f9ee26f650134425307466ec9b9dcd4"
+    },
+    {
+      "path": "public/assets/audio/lava_hound_deploy_01.ogg",
+      "source": "sfx/lava_hound_deploy_01.ogg",
+      "bytes": 10794,
+      "sha256": "a47ecb71157c094b195bf90028237cb0b9d2ace4b6928a59246acb460b31e03a"
+    },
+    {
+      "path": "public/assets/audio/lava_pup_atk_01.ogg",
+      "source": "sfx/lava_pup_atk_01.ogg",
+      "bytes": 8310,
+      "sha256": "c25888e522f3d17d8e30bac26d12ce7f5a7a607ab4b991182bfd8f79e104f91e"
+    },
+    {
+      "path": "public/assets/audio/lava_pups_appear_01.ogg",
+      "source": "sfx/lava_pups_appear_01.ogg",
+      "bytes": 9713,
+      "sha256": "2501f9eb35cc957207d07e0742fa8fcb708723b508902c54ff22b725c21a2254"
+    },
+    {
+      "path": "public/assets/audio/laval_hound_atk_02.ogg",
+      "source": "sfx/laval_hound_atk_02.ogg",
+      "bytes": 10722,
+      "sha256": "80956cb77053124d26108d061df17fd7c4b826a1897ebb417d6f3dea17e51195"
+    },
+    {
+      "path": "public/assets/audio/laval_hound_atk_03.ogg",
+      "source": "sfx/laval_hound_atk_03.ogg",
+      "bytes": 9604,
+      "sha256": "eee9a1131bff7783a584bcea23e2a28bc0db99ff7866e420653f429301d1e403"
+    },
+    {
+      "path": "public/assets/audio/lightning_02.ogg",
+      "source": "sfx/lightning_02.ogg",
+      "bytes": 12689,
+      "sha256": "178e16438ccef119ed84c454ffe806be7cd0f39e82d190762ceb6c399d1aa63e"
+    },
+    {
+      "path": "public/assets/audio/log_impact_01.ogg",
+      "source": "sfx/log_impact_01.ogg",
+      "bytes": 5723,
+      "sha256": "eff4a8671ad11d88bc2900008155b3199e6080208149201bfca8c71b7d1c1881"
+    },
+    {
+      "path": "public/assets/audio/log_vocal_01.ogg",
+      "source": "sfx/log_vocal_01.ogg",
+      "bytes": 10057,
+      "sha256": "856d792b6b28e4a0b8c0e2cf35f8a76ebf75b48a5957cd8337e598bcb0994325"
+    },
+    {
+      "path": "public/assets/audio/logroll01.ogg",
+      "source": "sfx/logroll01.ogg",
+      "bytes": 31860,
+      "sha256": "06806f4c63073ff5eef209c02de5fbd211449dd800fb8237e0494c8c86b1f37d"
+    },
+    {
+      "path": "public/assets/audio/miner_atk_01.ogg",
+      "source": "sfx/miner_atk_01.ogg",
+      "bytes": 5535,
+      "sha256": "549fde840cc24bd7b6fd8ab1a1443e91563e406b4a999764697a7b062338a5f5"
+    },
+    {
+      "path": "public/assets/audio/miner_atk_vo_01.ogg",
+      "source": "sfx/miner_atk_vo_01.ogg",
+      "bytes": 6414,
+      "sha256": "657b46c841345ed6349c7c0bd0f93defc8c04cf8d6e02aeddb9542e082dbdf3b"
+    },
+    {
+      "path": "public/assets/audio/miner_dig_up_01.ogg",
+      "source": "sfx/miner_dig_up_01.ogg",
+      "bytes": 9848,
+      "sha256": "47425665bc83eac403476ab58aee790e3b766c4b71038774892f54ae91fae0fc"
+    },
+    {
+      "path": "public/assets/audio/miner_hit_01.ogg",
+      "source": "sfx/miner_hit_01.ogg",
+      "bytes": 4696,
+      "sha256": "594623d33d3a0d1f31c5f29c461613ef0a59ce9aa627942339d33ea25c3a37f8"
+    },
+    {
+      "path": "public/assets/audio/miner_up_vo_01.ogg",
+      "source": "sfx/miner_up_vo_01.ogg",
+      "bytes": 5235,
+      "sha256": "9923c9fc571a9563e06be9ab766699c1a31af352fea81776ac3131b5e88e85ee"
+    },
+    {
       "path": "public/assets/audio/mini_pekka_atk_12.ogg",
       "source": "sfx/mini_pekka_atk_12.ogg",
       "bytes": 7331,
@@ -406,6 +1048,18 @@
       "sha256": "50c996a28c2be9ce37b0fa81454274fa82c51b6260b054205f27ee2dda9288d2"
     },
     {
+      "path": "public/assets/audio/mortar_deploy.ogg",
+      "source": "sfx/mortar_deploy.ogg",
+      "bytes": 6387,
+      "sha256": "092295e2afa30706e9ec0ace23c123eec3950fcd3deed90e7581dc33cdbaeb3e"
+    },
+    {
+      "path": "public/assets/audio/mortar_fire_03.ogg",
+      "source": "sfx/mortar_fire_03.ogg",
+      "bytes": 13201,
+      "sha256": "7bb3960cb1cceef0b62ff7b3008b9a27d2592be8f599e6940ec31d68039d3b29"
+    },
+    {
       "path": "public/assets/audio/musket_fire_02.ogg",
       "source": "sfx/musket_fire_02.ogg",
       "bytes": 8808,
@@ -430,6 +1084,36 @@
       "sha256": "25aa7f82e849d7fc13602c14ec7a712014460dabe308f39d81cb275fccd89e57"
     },
     {
+      "path": "public/assets/audio/npc_die_02.ogg",
+      "source": "sfx/npc_die_02.ogg",
+      "bytes": 8823,
+      "sha256": "ca1525f4d64a20d1963aea03d937160277a30362bcc84d6e08328a5acd11b167"
+    },
+    {
+      "path": "public/assets/audio/npc_die_04.ogg",
+      "source": "sfx/npc_die_04.ogg",
+      "bytes": 7543,
+      "sha256": "32c3929456e38f7b82791af02bde01629920bfd4f3e8903a3bdc7f06af118df7"
+    },
+    {
+      "path": "public/assets/audio/p_archer_dep_01.ogg",
+      "source": "sfx/p_archer_dep_01.ogg",
+      "bytes": 8347,
+      "sha256": "40cfab10faacde467621cb40edee8f29bef392c29226e3560f2d2cc413679d1b"
+    },
+    {
+      "path": "public/assets/audio/p_archer_hit_01.ogg",
+      "source": "sfx/p_archer_hit_01.ogg",
+      "bytes": 7506,
+      "sha256": "a89bcac41813f91fb8c24b9d951425a21d47ab02f6eb256b96fe4da4d740616a"
+    },
+    {
+      "path": "public/assets/audio/p_flame_arrow_03.ogg",
+      "source": "sfx/p_flame_arrow_03.ogg",
+      "bytes": 9760,
+      "sha256": "aa8e19141b78c503ba506a8e9eaa1acf3f47b0c6ea0e2d65064b8387012da8ba"
+    },
+    {
       "path": "public/assets/audio/pekka_atk_01.ogg",
       "source": "sfx/pekka_atk_01.ogg",
       "bytes": 8053,
@@ -452,6 +1136,12 @@
       "source": "sfx/pekka_deploy_end_03.ogg",
       "bytes": 15975,
       "sha256": "2b35457fd04d1917251f5f41f4f0abf12cca32b73188baac729e7a871f2bb518"
+    },
+    {
+      "path": "public/assets/audio/place_inferno_02.ogg",
+      "source": "sfx/place_inferno_02.ogg",
+      "bytes": 17905,
+      "sha256": "c1c926a00115140107481384771706693e50d20511a7e20662081d7af1aeeb3d"
     },
     {
       "path": "public/assets/audio/poison_spell_01.ogg",
@@ -502,6 +1192,48 @@
       "sha256": "8a353b4cdc66c8309cc82d5ddc381caa5628f7a17ed5f704314112556b182437"
     },
     {
+      "path": "public/assets/audio/princess_archer_atk_vo_03.ogg",
+      "source": "sfx/princess_archer_atk_vo_03.ogg",
+      "bytes": 6524,
+      "sha256": "3cb4baa3493ade03031d0aaaaa13e89a83c7b65b75e12247dc0daa503a31f44a"
+    },
+    {
+      "path": "public/assets/audio/princess_archer_atk_vo_06.ogg",
+      "source": "sfx/princess_archer_atk_vo_06.ogg",
+      "bytes": 6687,
+      "sha256": "e4f2daad133c4c9b1ce61c3507c47434bd3491df6d50ad434dd1f824ddd63ced"
+    },
+    {
+      "path": "public/assets/audio/princess_archer_dep_vo_01.ogg",
+      "source": "sfx/princess_archer_dep_vo_01.ogg",
+      "bytes": 5980,
+      "sha256": "3b4d40666bb77825fcd6fd40505dfb5da3d8a1e377b79e2cb1eba7e550655138"
+    },
+    {
+      "path": "public/assets/audio/princess_archer_dep_vo_02.ogg",
+      "source": "sfx/princess_archer_dep_vo_02.ogg",
+      "bytes": 6959,
+      "sha256": "0ff5843632cf0f5168a57ad3b58ce8fec8583d077312cd677f556d63ea0282e3"
+    },
+    {
+      "path": "public/assets/audio/princess_archer_dep_vo_03.ogg",
+      "source": "sfx/princess_archer_dep_vo_03.ogg",
+      "bytes": 7360,
+      "sha256": "1f245a17b62e108c5a4d7d7ae87b3b7ac3a7d45590752211b12d1eb699b956d5"
+    },
+    {
+      "path": "public/assets/audio/princess_archer_dep_vo_04.ogg",
+      "source": "sfx/princess_archer_dep_vo_04.ogg",
+      "bytes": 7541,
+      "sha256": "eb2c46964db3f68ff1ab935623d941bfc70c054e1fe639923ffd90d7d805d7a3"
+    },
+    {
+      "path": "public/assets/audio/rage_barb_deploy_02.ogg",
+      "source": "sfx/rage_barb_deploy_02.ogg",
+      "bytes": 6661,
+      "sha256": "4b0de3ceeb2bde9032cca88a59b2aa31220c6796d42b8eac0baf843bb32b5645"
+    },
+    {
       "path": "public/assets/audio/rage_spell_01.ogg",
       "source": "sfx/rage_spell_01.ogg",
       "bytes": 23039,
@@ -524,6 +1256,90 @@
       "source": "sfx/rocket_launch_02v2.ogg",
       "bytes": 24073,
       "sha256": "5cc4fdf0a1841b25b9dffd390ef6a01bbcc946c637cdaf20ace06b3f868d7c5e"
+    },
+    {
+      "path": "public/assets/audio/royal_giant_deploy_01.ogg",
+      "source": "sfx/royal_giant_deploy_01.ogg",
+      "bytes": 9525,
+      "sha256": "ccfbeb03457e50f172de3602323743871278fbdc8a0b6e4104fe510bf373d05c"
+    },
+    {
+      "path": "public/assets/audio/royal_giant_projectile_hit_01.ogg",
+      "source": "sfx/royal_giant_projectile_hit_01.ogg",
+      "bytes": 6065,
+      "sha256": "3ab88a9e77ab1ed6af54b0d26e764d8e543db9d791501b5cc0c4105e5626df3e"
+    },
+    {
+      "path": "public/assets/audio/royal_min_atk_01.ogg",
+      "source": "sfx/royal_min_atk_01.ogg",
+      "bytes": 7239,
+      "sha256": "afca9e1a8edf305783d7b959681283e46aa2003576b49a6b9c92135dff22fc81"
+    },
+    {
+      "path": "public/assets/audio/royal_min_dep_01.ogg",
+      "source": "sfx/royal_min_dep_01.ogg",
+      "bytes": 7599,
+      "sha256": "840eb480846a094c2b5edfa9f2760dc977dc0df63a88d7f590b4c166fc1a73c0"
+    },
+    {
+      "path": "public/assets/audio/royale_tornado_01.ogg",
+      "source": "sfx/royale_tornado_01.ogg",
+      "bytes": 18757,
+      "sha256": "b1e1195d9990ed3587dcef87b1daa4f3febf1079dbcf599803d85c392c51ae1d"
+    },
+    {
+      "path": "public/assets/audio/royalgiant_fire_01.ogg",
+      "source": "sfx/royalgiant_fire_01.ogg",
+      "bytes": 7144,
+      "sha256": "2c60e2bff7064d0fa3fa2ed85708e94306ed33bc7ddde800a83a02fd8490fd31"
+    },
+    {
+      "path": "public/assets/audio/royalgiant_fire_02.ogg",
+      "source": "sfx/royalgiant_fire_02.ogg",
+      "bytes": 7451,
+      "sha256": "df742846a7f6951631630fef16bfbf7a9f23220cf1834e2f9d6452ea55e2d403"
+    },
+    {
+      "path": "public/assets/audio/royalgiant_fire_03.ogg",
+      "source": "sfx/royalgiant_fire_03.ogg",
+      "bytes": 6541,
+      "sha256": "afa6891493f2df2104dc1a0251765db10c460080d0da3943e18ae134b53adf11"
+    },
+    {
+      "path": "public/assets/audio/royalgiant_fire_04.ogg",
+      "source": "sfx/royalgiant_fire_04.ogg",
+      "bytes": 7465,
+      "sha256": "7d17a17ba351e067426faab9f46d15a470e7fa35431618f957a02c604f0da675"
+    },
+    {
+      "path": "public/assets/audio/royalgiant_fire_05.ogg",
+      "source": "sfx/royalgiant_fire_05.ogg",
+      "bytes": 7261,
+      "sha256": "5c4ad5a2b66b638027d26beef26b115733b8afe46127071b52b23161360f5aef"
+    },
+    {
+      "path": "public/assets/audio/shield_skele_atk_02.ogg",
+      "source": "sfx/shield_skele_atk_02.ogg",
+      "bytes": 5458,
+      "sha256": "3980c22105002d0da2f8e533afd1c1471003d60d7b224d77e7fde9ba71941556"
+    },
+    {
+      "path": "public/assets/audio/shield_skele_lost_02.ogg",
+      "source": "sfx/shield_skele_lost_02.ogg",
+      "bytes": 7049,
+      "sha256": "9e4edd854813bb6ba30520168baefa4bb89ba6c8f16f1fda4ded77fdfe10fcb5"
+    },
+    {
+      "path": "public/assets/audio/skele_warrior_dep_02.ogg",
+      "source": "sfx/skele_warrior_dep_02.ogg",
+      "bytes": 7644,
+      "sha256": "4f741799328602b838e496a27da1ea3408f26df38a1a0f76d78d62e668b9a243"
+    },
+    {
+      "path": "public/assets/audio/skeleton_arm_swing_02.ogg",
+      "source": "sfx/skeleton_arm_swing_02.ogg",
+      "bytes": 6469,
+      "sha256": "b26d51d9eaad96a6b50699e02a5c5b4f1a3b654fd68f3244d8e2acb0e34a09a7"
     },
     {
       "path": "public/assets/audio/skeleton_atk_03.ogg",
@@ -598,6 +1414,12 @@
       "sha256": "6ebb54420e0c3887e7f77871b8de5f17dc0aee2108261f1a96477511cec04aa8"
     },
     {
+      "path": "public/assets/audio/stone_golem_deploy_02.ogg",
+      "source": "sfx/stone_golem_deploy_02.ogg",
+      "bytes": 9111,
+      "sha256": "a9c88d40b15eec71a178069fb5592939e35888664028fd89d6d1d5727426b8d9"
+    },
+    {
       "path": "public/assets/audio/summon_witch_01.ogg",
       "source": "sfx/summon_witch_01.ogg",
       "bytes": 8595,
@@ -644,6 +1466,12 @@
       "source": "sfx/tinymite_attack_06.ogg",
       "bytes": 5893,
       "sha256": "adc4f1c65fc5013c5b5d6e569a5ce49f3d4b9be755e52a6d9c6a890a09ea7b0e"
+    },
+    {
+      "path": "public/assets/audio/tombstone_deploy_01.ogg",
+      "source": "sfx/tombstone_deploy_01.ogg",
+      "bytes": 12103,
+      "sha256": "7a0d0b705daf52eb033d96efe104f337df64db75da08e28a2606a4e3b2c069de"
     },
     {
       "path": "public/assets/audio/valkyrie_atk_04.ogg",
@@ -760,14 +1588,98 @@
       "sha256": "67026df0ebbe9a00b8d978e0b56113c8f41ab1cf807a2f82fb5c29e2a724da62"
     },
     {
+      "path": "public/assets/audio/woodsman_atk_01.ogg",
+      "source": "sfx/woodsman_atk_01.ogg",
+      "bytes": 7592,
+      "sha256": "6f6c47fdb8f8e16dc1721b6d858a0f70de372db3791e6e78e37d9de68595973a"
+    },
+    {
+      "path": "public/assets/audio/woodsman_atk_02.ogg",
+      "source": "sfx/woodsman_atk_02.ogg",
+      "bytes": 6075,
+      "sha256": "ae5d3a71bff85d46f650314df858fde3f7b2bca2680fc76d27e80364161c403d"
+    },
+    {
+      "path": "public/assets/audio/woodsman_atk_03.ogg",
+      "source": "sfx/woodsman_atk_03.ogg",
+      "bytes": 6901,
+      "sha256": "25db8dcbc9f560e21fb0ec912e0ea08a9712239fe836bfa7be02ef75bce765b1"
+    },
+    {
+      "path": "public/assets/audio/woodsman_atk_04.ogg",
+      "source": "sfx/woodsman_atk_04.ogg",
+      "bytes": 7371,
+      "sha256": "a6e7e99bfb7ae98f17164b42808cb27a8cc8aab0ddb10fa1bf273c976d9155d1"
+    },
+    {
+      "path": "public/assets/audio/woodsman_atk_05.ogg",
+      "source": "sfx/woodsman_atk_05.ogg",
+      "bytes": 7125,
+      "sha256": "ecd7daa6ac5d6a169318c006d32a0c26a43608b14514f29d587be8831ecd2256"
+    },
+    {
+      "path": "public/assets/audio/woodsman_atk_06.ogg",
+      "source": "sfx/woodsman_atk_06.ogg",
+      "bytes": 5941,
+      "sha256": "73732766dc775228399f3445ce70095ec6b79f30a3845406a47918db95b94fd4"
+    },
+    {
+      "path": "public/assets/audio/woodsman_atk_07.ogg",
+      "source": "sfx/woodsman_atk_07.ogg",
+      "bytes": 6144,
+      "sha256": "c14aee839c7ec82637aae95a7b96abea4d6f4f8f1fbc97043102bf03d28634b2"
+    },
+    {
+      "path": "public/assets/audio/woodsman_deploy_01.ogg",
+      "source": "sfx/woodsman_deploy_01.ogg",
+      "bytes": 11987,
+      "sha256": "eb79f3fd0f04851b05a48cf32ec2378e412bfd7ff45719192b80110ee8ea3e10"
+    },
+    {
+      "path": "public/assets/audio/xbow_fire_01.ogg",
+      "source": "sfx/xbow_fire_01.ogg",
+      "bytes": 5242,
+      "sha256": "29a5088e24e688fd295bfc427a00fd135261bd1ae585f62826f792f967bcc74d"
+    },
+    {
+      "path": "public/assets/audio/xbow_place_02.ogg",
+      "source": "sfx/xbow_place_02.ogg",
+      "bytes": 6280,
+      "sha256": "ab6d8852cea0140b561e718bcc00b7d21ce8fd7d5a65057f56e9f8e8d8019f94"
+    },
+    {
       "path": "public/assets/audio/zap_02.ogg",
       "source": "sfx/zap_02.ogg",
       "bytes": 12938,
       "sha256": "252a588cf53af35d0c2edc639d76d52d224c202555ce205c5c248f43de48be6f"
+    },
+    {
+      "path": "public/assets/audio/zap_discarge_03.ogg",
+      "source": "sfx/zap_discarge_03.ogg",
+      "bytes": 15765,
+      "sha256": "bdcd21ed6e5870375bff3916d363c28d241a9d844728a4ada93ac05bcf3ffd13"
+    },
+    {
+      "path": "public/assets/audio/zap_machine_charge_06.ogg",
+      "source": "sfx/zap_machine_charge_06.ogg",
+      "bytes": 10192,
+      "sha256": "b3220bff6db7cdd0beba03c279e74ae3aca116cb55ceff77e188bae9d27e03ef"
+    },
+    {
+      "path": "public/assets/audio/zappy_drop_01.ogg",
+      "source": "sfx/zappy_drop_01.ogg",
+      "bytes": 15538,
+      "sha256": "3ddd0d236e50716b8e833e316b822acd93c674c0bfc1c3a9dc21972faac7eb62"
+    },
+    {
+      "path": "public/assets/audio/zappyshot_01.ogg",
+      "source": "sfx/zappyshot_01.ogg",
+      "bytes": 9347,
+      "sha256": "fdf8599838e187b54a9fba69eebb604add51211b1e64c90ee5de3258e6d76638"
     }
   ],
   "output": {
     "path": "src/game/combat-audio-data.json",
-    "sha256": "69635cd464e1e3eaa8dd43269df93e174b4b9faddf4162a09f04cac1df7127a7"
+    "sha256": "072bbf7455f1c05deb5aa32a0c44489a5879d8316ec9668dc8a4333e54bc93a5"
   }
 }

@@ -67,7 +67,7 @@ test("Rage can be added to a deck and cast through the real battle controls", as
     .poll(() =>
       page.evaluate(() => (window as any).__arena.state.rageStructures.length),
     )
-    .toBeGreaterThan(0);
+    .toBe(0);
   await page.getByRole("button", { name: "Pause battle", exact: true }).click();
   const held = await page.evaluate(
     () => (window as any).__arena.state.rageAreas,

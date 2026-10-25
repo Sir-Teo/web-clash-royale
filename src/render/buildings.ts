@@ -4,6 +4,8 @@ import { makeMaterial, spriteGeometry } from "./sprites";
 import type { SpriteAsset, SpriteData } from "./sprites";
 import type { AnimationClip } from "./animation";
 import { KING_ACTIVATION_TIME } from "../game/combat";
+import xBow from "../game/x-bow-data.json" with { type: "json" };
+import elixirCollector from "../game/elixir-collector-data.json" with { type: "json" };
 
 export interface BuildingSprite {
   mesh: T.Mesh<T.BufferGeometry, T.MeshBasicMaterial[]>;
@@ -11,6 +13,10 @@ export interface BuildingSprite {
   clip: AnimationClip & { labels: Record<string, number> };
   frame: number;
   princess?: {
+    front: T.Mesh<T.BufferGeometry, T.MeshBasicMaterial[]>;
+    height: number;
+  };
+  attached?: {
     front: T.Mesh<T.BufferGeometry, T.MeshBasicMaterial[]>;
     height: number;
   };
@@ -27,7 +33,7 @@ export class BuildingLibrary {
   async load() {
     const loader = new T.TextureLoader();
     await Promise.all(
-      ["cannon", "tesla", "king"].map(async (id) => {
+      ["cannon", "tesla", "mortar", "bomb-tower", "inferno-tower", "x-bow", "elixir-collector", "goblin-hut", "tombstone", "furnace", "barbarian-hut", "king"].map(async (id) => {
         try {
           const response = await fetch(
             `${import.meta.env.BASE_URL}assets/buildings/${id}.json`,
@@ -59,7 +65,16 @@ export class BuildingLibrary {
             }),
             geometry: new Map(),
             scale:
-              (id === "king" ? 3.5 : 2.2) / (data.bounds[2] - data.bounds[0]),
+              (id === "king" ? 3.5 : id === "mortar" ? 2.8 :
+                id === "bomb-tower" ? 2.5 :
+                id === "x-bow" ? 2.8 :
+                id === "elixir-collector" ? 2.5 :
+                id === "goblin-hut" ? 2.5 :
+                id === "tombstone" ? 2.3 :
+                id === "furnace" ? 2.5 :
+                id === "barbarian-hut" ? 2.7 :
+                id === "inferno-tower" ? 2.4 : 2.2) /
+              (data.bounds[2] - data.bounds[0]),
           });
         } catch (error) {
           console.warn(`Using static building artwork for ${id}`, error);
@@ -88,7 +103,12 @@ export class BuildingLibrary {
       }
       asset = this.princessAsset;
     }
-    const key = id === "princess" ? `princess-${team}` : team;
+    const key =
+      id === "princess"
+        ? `princess-${team}`
+        : id === "mortar"
+          ? `${team}-idle-1`
+          : team;
     const clip = asset.data.clips[key] as BuildingSprite["clip"],
       frame = clip.frames[0];
     const mesh = new T.Mesh(spriteGeometry(asset, frame), asset.materials);
@@ -106,6 +126,19 @@ export class BuildingLibrary {
       sprite.princess = {
         front,
         height: asset.data.attachedCharacterHeight ?? 2.2,
+      };
+    }
+    if (id === "bomb-tower") {
+      const front = new T.Mesh(
+        spriteGeometry(asset, asset.data.clips[`${team}-top`].frames[0]),
+        asset.materials,
+      );
+      front.position.z = 0.02;
+      front.renderOrder = 1;
+      mesh.add(front);
+      sprite.attached = {
+        front,
+        height: asset.data.attachedCharacterHeight ?? 3.2,
       };
     }
     if (id === "king") {
@@ -159,11 +192,11 @@ export class BuildingLibrary {
     camera: T.Camera,
     time = 0,
   ) {
-    if (e.card === "cannon" && target) {
+    if ((e.card === "cannon" || e.card === "x-bow") && target) {
       const angle = Math.atan2(target.x - e.x, -(target.y - e.y));
       this.frame(sprite, Math.round((Math.abs(angle) / Math.PI) * 18));
       sprite.mesh.scale.x = angle < 0 ? -1 : 1;
-    } else if (e.card === "cannon") {
+    } else if (e.card === "cannon" || e.card === "x-bow") {
       this.frame(sprite, e.team === "blue" ? 0 : 18);
       sprite.mesh.scale.x = 1;
     } else if (e.king) {
@@ -208,6 +241,51 @@ export class BuildingLibrary {
           parts.front.visible = true;
         }
       }
+    } else if (e.card === "mortar") {
+      const angle = target
+        ? Math.atan2(target.x - e.x, -(target.y - e.y))
+        : e.team === "blue"
+          ? 0
+          : Math.PI;
+      const direction = Math.min(
+        5,
+        1 + Math.round((Math.abs(angle) / Math.PI) * 4),
+      );
+      const state =
+        e.pendingAttack && e.pendingAttack.remaining < 0.1 ? "attack" : "idle";
+      const clip = sprite.asset.data.clips[`${e.team}-${state}-${direction}`];
+      if (clip) {
+        sprite.clip = clip as BuildingSprite["clip"];
+        const progress =
+          state === "attack"
+            ? Math.floor((0.1 - e.pendingAttack!.remaining) * clip.fps)
+            : Math.floor(time * clip.fps);
+        this.frame(sprite, progress % clip.frames.length);
+      }
+      sprite.mesh.scale.x = angle < 0 ? -1 : 1;
+    } else if (e.card === "furnace") {
+      this.frame(sprite, Math.floor(e.age * sprite.clip.fps) % sprite.clip.frames.length);
+    } else if (e.card === "tombstone") {
+      const firstIdle = (sprite.clip.labels.deploy_end ?? 20) + 1;
+      const frame = e.deploy > 0
+        ? Math.floor((1 - e.deploy) * sprite.clip.fps)
+        : firstIdle + Math.floor(Math.max(0, e.age - 1) * sprite.clip.fps) %
+          (sprite.clip.frames.length - firstIdle);
+      this.frame(sprite, frame);
+    } else if (e.card === "goblin-hut") {
+      this.frame(sprite, Math.min(sprite.clip.frames.length - 1,
+        Math.floor(e.age * sprite.clip.fps)));
+    } else if (e.card === "elixir-collector") {
+      const recovery = (elixirCollector.frames - elixirCollector.actionFrame - 1) /
+        elixirCollector.fps;
+      const frame = e.deploy > 0 ? 0 : e.attack > 0
+        ? elixirCollector.actionFrame + 1 +
+          Math.floor((recovery - e.attack) * elixirCollector.fps + 1e-6)
+        : e.spawnTimer <= elixirCollector.actionFrame / elixirCollector.fps
+          ? elixirCollector.actionFrame -
+            Math.floor(e.spawnTimer * elixirCollector.fps + 1e-6)
+          : 0;
+      this.frame(sprite, frame);
     } else if (e.card === "tesla") {
       const labels = sprite.clip.labels,
         state = e.burrow;
@@ -227,7 +305,11 @@ export class BuildingLibrary {
         );
     }
     sprite.mesh.quaternion.copy(camera.quaternion);
-    const scale = e.deploy > 0 ? Math.max(0.05, 1 - e.deploy) : 1;
+    const scale =
+      e.deploy > 0
+        ? Math.max(0.05, 1 - e.deploy / (e.card === "mortar" ? 4 :
+          e.card === "x-bow" ? xBow.deployTime : 1))
+        : 1;
     sprite.mesh.scale.set(
       sprite.mesh.scale.x < 0 ? -scale : scale,
       scale,

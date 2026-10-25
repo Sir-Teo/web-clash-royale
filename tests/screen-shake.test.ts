@@ -40,6 +40,7 @@ describe("native impact shake", () => {
         ["fireball", "impact", 0.8],
         ["rocket", "impact", 1.5],
         ["zap", "impact", 0.25],
+        ["lightning", "impact", 1],
         ["balloon", "impact", 0.35],
         ["balloon", "death-impact", 1],
         ["princess-tower", "death", 1],

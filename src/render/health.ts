@@ -79,7 +79,8 @@ export class HealthLibrary {
           };
         });
       const unitNames = Object.keys(data.clips).filter((n) =>
-        /^hp_(player|enemy)_(small|medium|high|number)$/.test(n),
+        /^hp_(player|enemy)_(small|medium|high|number)$/.test(n) ||
+        /^hp_shield_(player|enemy)_(medium|number)$/.test(n),
       );
       const textIds = [
         ...new Set(

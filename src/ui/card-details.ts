@@ -1,13 +1,16 @@
 import { CARD_MAP, type CardId } from "../game/cards";
-import {
-  ARROWS_WAVES,
-  FIREBALL_KNOCKBACK,
-  SPELL_CROWN_TOWER_DAMAGE_FRACTION,
-} from "../game/combat";
+import { FIREBALL_KNOCKBACK } from "../game/combat";
 import freeze from "../game/freeze-data.json" with { type: "json" };
 import poison from "../game/poison-data.json" with { type: "json" };
 import rage from "../game/rage-data.json" with { type: "json" };
 import rocket from "../game/rocket-data.json" with { type: "json" };
+import mirror from "../game/mirror-data.json" with { type: "json" };
+import clone from "../game/clone-data.json" with { type: "json" };
+import graveyard from "../game/graveyard-data.json" with { type: "json" };
+import log from "../game/log-data.json" with { type: "json" };
+import lightning from "../game/lightning-data.json" with { type: "json" };
+import tornado from "../game/tornado-data.json" with { type: "json" };
+import heal from "../game/heal-data.json" with { type: "json" };
 
 type StatIcon =
   "heart" | "swords" | "timer" | "scan" | "crosshair" | "users" | "droplet";
@@ -35,8 +38,11 @@ const stat = (
 export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
   const c = CARD_MAP[id];
   const cost = stat("Elixir", c.cost, "droplet");
-  const allegiance =
-    id === "rage" ? "Friendly " : c.kind === "spell" ? "Enemy " : "";
+  const allegiance = ["rage", "heal", "clone"].includes(id)
+    ? "Friendly "
+    : c.kind === "spell"
+      ? "Enemy "
+      : "";
   const targetType = c.buildingsOnly
     ? "Buildings"
     : c.hitsAir
@@ -48,6 +54,110 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
     "crosshair",
   );
   const radius = stat("Radius", tiles(c.radius ?? 0), "scan");
+  if (id === "mirror")
+    return {
+      stats: [
+        stat("Elixir", `Previous card + ${mirror.surcharge}`, "droplet"),
+        stat("Effect", "Repeat previous card", "users"),
+      ],
+      note: "Play another card first. Copies its targeting and deployment rules.",
+    };
+  if (id === "heal")
+    return {
+      stats: [
+        stat(
+          "Healing per second",
+          Math.round(
+            ((heal.sourceHealPerSecond * 1152) / 450) * heal.healInterval,
+          ) / heal.healInterval,
+          "heart",
+        ),
+        stat("Duration", seconds(heal.duration), "timer"),
+        stat("Linger", `Up to ${seconds(heal.buffDuration)}`, "timer"),
+        radius,
+        stat("Targets", "Friendly air & ground troops", "crosshair"),
+        cost,
+      ],
+      note: "Restores troop health up to its maximum. Buildings are unaffected.",
+    };
+  if (id === "clone")
+    return {
+      stats: [
+        stat("Copy hitpoints", 1, "heart"),
+        radius,
+        stat("Targets", "Friendly air & ground troops", "crosshair"),
+        stat("Deploy delay", seconds(clone.buffDuration), "timer"),
+        cost,
+      ],
+      note: "Copies troop combat stats with one hitpoint and no shield. Buildings and existing clones are unaffected.",
+    };
+  if (id === "goblin-barrel")
+    return {
+      stats: [
+        stat("Summons", "3 Goblins", "users"),
+        stat("Hitpoints per Goblin", CARD_MAP.goblins.hp, "heart"),
+        stat("Damage per Goblin", CARD_MAP.goblins.damage, "swords"),
+        radius,
+        cost,
+      ],
+      note: "The barrel deals no impact damage; its Goblins attack after landing.",
+    };
+  if (id === "graveyard")
+    return {
+      stats: [
+        stat("Summons", "Skeletons", "users"),
+        stat("Duration", seconds(graveyard.duration), "timer"),
+        stat("First spawn", seconds(graveyard.spawnInitialDelay), "timer"),
+        stat("Spawn interval", seconds(graveyard.spawnInterval), "timer"),
+        radius,
+        cost,
+      ],
+      note: "Summons Skeletons throughout the area; the spell deals no direct damage.",
+    };
+  if (id === "tornado")
+    return {
+      stats: [
+        stat("Damage per second", c.damage / tornado.damageInterval, "swords"),
+        stat("Duration", seconds(tornado.duration), "timer"),
+        radius,
+        stat("Targets", "Enemy air & ground troops", "crosshair"),
+        cost,
+      ],
+      note: "Pulls troops toward the center. Buildings and Crown Towers are unaffected.",
+    };
+  if (id === "lightning")
+    return {
+      stats: [
+        stat("Damage per strike", c.damage, "swords"),
+        stat(
+          "Crown Tower damage",
+          c.damage * lightning.crownTowerDamageFraction,
+          "swords",
+        ),
+        stat("Maximum targets", 3, "users"),
+        stat("Stun", seconds(lightning.stunDuration), "timer"),
+        radius,
+        targets,
+        cost,
+      ],
+      note: "Strikes the highest-health eligible enemies in the area.",
+    };
+  if (id === "log")
+    return {
+      stats: [
+        stat("Damage", c.damage, "swords"),
+        stat(
+          "Crown Tower damage",
+          c.damage * log.crownTowerDamageFraction,
+          "swords",
+        ),
+        stat("Rolling range", tiles(log.rollingRange), "scan"),
+        stat("Knockback", tiles(log.knockback), "scan"),
+        targets,
+        cost,
+      ],
+      note: "Rolls through ground enemies and knocks eligible troops backward.",
+    };
   if (id === "freeze")
     return {
       stats: [
@@ -71,10 +181,10 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
         stat("Duration", seconds(rage.duration), "timer"),
         stat("Linger", `Up to ${seconds(rage.buffDuration)}`, "timer"),
         radius,
-        targets,
+        stat("Targets", "Friendly air & ground troops", "crosshair"),
         cost,
       ],
-      note: "Boosts movement, attacks and spawning. The boost ends when the area expires.",
+      note: "Boosts troop movement, attacks and spawning. Buildings and Crown Towers are unaffected. The boost ends when the area expires.",
     };
   if (id === "poison") {
     const dps = c.damage / poison.damageInterval;
@@ -96,10 +206,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
     };
   }
   if (c.kind === "spell") {
-    const fraction =
-      id === "rocket"
-        ? rocket.crownTowerDamageFraction
-        : SPELL_CROWN_TOWER_DAMAGE_FRACTION;
+    const fraction = id === "rocket" ? rocket.crownTowerDamageFraction : 0.4;
     return {
       stats: [
         stat(id === "arrows" ? "Volley damage" : "Damage", c.damage, "swords"),
@@ -107,7 +214,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
         radius,
         targets,
         id === "arrows"
-          ? stat("Waves", ARROWS_WAVES, "users")
+          ? stat("Waves", 1, "users")
           : id === "zap"
             ? stat("Stun", seconds(c.stun ?? 0), "timer")
             : stat(
@@ -119,7 +226,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
       ],
       note:
         id === "arrows"
-          ? "Damage is the total across all three waves."
+          ? "A single flight of 15 arrows deals the full volley damage once."
           : id === "zap"
             ? "Stuns enemies and resets their attacks."
             : "Knockback applies to eligible troops.",

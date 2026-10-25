@@ -20,7 +20,7 @@
     },
     {
       "path": "src/game/combat-data.json",
-      "sha256": "e9b192a9b651a1a4a3c50e38c5213831f46a2d9ef7272cb13dfd4119a35901cc"
+      "sha256": "e538686581e80101518c0b24373ad0024a0cfb9878f35bf80ee22dfad079cc54"
     }
   ],
   "audioSource": "https://github.com/RoyaleAPI/cr-api-assets",
@@ -39,10 +39,28 @@
       "sha256": "548f9e71f8bb1c40ef72d3e9363eac9f1f97bafeff17d6b29b8aac0fcf51a93b"
     },
     {
+      "path": "public/assets/audio/building_explode_01.ogg",
+      "source": "sfx/building_explode_01.ogg",
+      "bytes": 14172,
+      "sha256": "8db3927f5469c9c1bd3c486335a4a276e812173d8af693f0c0072d3103a1f245"
+    },
+    {
+      "path": "public/assets/audio/dark_prince_death_01.ogg",
+      "source": "sfx/dark_prince_death_01.ogg",
+      "bytes": 8681,
+      "sha256": "1a035b0d0349bcda476225aba4ef38a09296b0269e6adb88da84c1223bbf9ca2"
+    },
+    {
       "path": "public/assets/audio/dummy_01.ogg",
       "source": "sfx/dummy_01.ogg",
       "bytes": 3558,
       "sha256": "fc41f7905e797f79d7d1a46801dc439dd1889459e3e2a62b938fcd5d04d4e696"
+    },
+    {
+      "path": "public/assets/audio/golem_die_01.ogg",
+      "source": "sfx/golem_die_01.ogg",
+      "bytes": 16285,
+      "sha256": "c6040efec8f8f6e663612ddf92359e3d1d0b570bd5038751414eb84de8a0b5ab"
     },
     {
       "path": "public/assets/audio/knight_death_01.ogg",
@@ -65,6 +83,6 @@
   ],
   "output": {
     "path": "src/game/death-audio-data.json",
-    "sha256": "0801bccfbc18c6d02f4fce0193a613d40dfa5cd6f6e2209dc391136c0f23c757"
+    "sha256": "3ee887b062818eb3fb1a5f2b0b86e0f9c33ffa9e7fba1d84ffb86af239e7f0e9"
   }
 }

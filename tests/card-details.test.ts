@@ -23,13 +23,13 @@ describe("current card detail stats", () => {
     for (const c of CARDS) {
       const stats = cardDetails(c.id).stats;
       expect(new Set(stats.map((row) => row.label)).size).toBe(stats.length);
-      expect(stats.length).toBeGreaterThanOrEqual(6);
+      expect(stats.length).toBeGreaterThanOrEqual(c.id === "mirror" ? 2 : c.kind === "spell" ? 5 : 6);
       expect(
         stats.every(
           (row) => row.value && !/NaN|undefined|Infinity/.test(row.value),
         ),
       ).toBe(true);
-      expect(rows(c.id).Elixir).toBe(String(c.cost));
+      expect(rows(c.id).Elixir).toBe(c.id === "mirror" ? "Previous card + 1" : String(c.cost));
       expect(rows(c.id)).not.toHaveProperty("Area damage");
     }
   });
@@ -50,7 +50,7 @@ describe("current card detail stats", () => {
     expect(rows("knight")).toMatchObject({
       Hitpoints: "1,666",
       "Damage per hit": "202",
-      "Hit interval": "1.2 s",
+      "Hit interval": "1.1 s",
       Targets: "Ground",
     });
     expect(rows("cannon")).toMatchObject({
@@ -60,7 +60,7 @@ describe("current card detail stats", () => {
       Targets: "Ground",
     });
     expect(rows("tesla")).toMatchObject({
-      Lifetime: "30 s",
+      Lifetime: `${CARD_MAP.tesla.lifetime} s`,
       Targets: "Air & ground",
     });
     expect(rows("cannon")).not.toHaveProperty("Count");
@@ -83,7 +83,10 @@ describe("current card detail stats", () => {
         numeric(stats["Crown Tower damage"]),
         8,
       );
-      if (id === "arrows") expect(stats.Waves).toBe("3");
+      if (id === "arrows") {
+        expect(stats.Waves).toBe("1");
+        expect(cardDetails(id).note).toBe("A single flight of 15 arrows deals the full volley damage once.");
+      }
       if (id === "zap") expect(stats.Stun).toBe("0.5 s");
     },
   );
@@ -128,14 +131,15 @@ describe("current card detail stats", () => {
     const battle = cast("rage");
     expect(rage.hitSpeedMultiplier).toBe(rage.speedMultiplier);
     expect(rage.spawnSpeedMultiplier).toBe(rage.speedMultiplier);
-    expect(rage.capBuffTimeToAreaEffectTime).toBe(true);
+    expect(rage.capBuffToAreaTime).toBe(true);
     expect(rows("rage")).toMatchObject({
       "Speed boost": "+35%",
       Duration: `${battle.areas[0].duration} s`,
       Linger: "Up to 2 s",
-      Targets: "Friendly air & ground",
+      Targets: "Friendly air & ground troops",
     });
     expect(cardDetails("rage").note).toContain("ends when the area expires");
+    expect(cardDetails("rage").note).toContain("Buildings and Crown Towers are unaffected");
     expect(rows("rage")).not.toHaveProperty("Damage");
   });
 });

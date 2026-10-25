@@ -1,3 +1,4 @@
+import { expectedBuildings } from "./native-assets";
 import { expect, test } from "@playwright/test";
 
 test.skip(
@@ -33,10 +34,11 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/");
   await page.waitForFunction(() => !!(window as any).__arena);
   await page.waitForFunction(
-    () =>
-      (window as any).__arena.state.loadedBuildings === 3 &&
+    (count) =>
+      (window as any).__arena.state.loadedBuildings === count &&
       (window as any).__arena.state.nativePrincessTowers === 4 &&
       (window as any).__arena.state.nativeTowerPrincesses === 4,
+    expectedBuildings,
   );
   await expect(
     page.getByRole("button", { name: "Update game", exact: true }),

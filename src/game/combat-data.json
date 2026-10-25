@@ -25,6 +25,20 @@
     "ignoresKnockback": true,
     "projectile": null
   },
+  "giant-skeleton": {
+    "source": "GiantSkeleton",
+    "windup": 0.5,
+    "sight": 5,
+    "ignoresKnockback": true,
+    "projectile": null
+  },
+  "guards": {
+    "source": "SkeletonWarrior",
+    "windup": 0.4,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
   "musketeer": {
     "source": "Musketeer",
     "windup": 0.5,
@@ -59,6 +73,196 @@
   "goblins": {
     "source": "Goblin",
     "windup": 0.2,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "goblin-gang": {
+    "source": "Goblin",
+    "windup": 0.2,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "barbarians": {
+    "source": "Barbarian",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "elite-barbarians": {
+    "source": "AngryBarbarian",
+    "windup": 0.4,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "royal-giant": {
+    "source": "RoyalGiant",
+    "windup": 0.7,
+    "sight": 7.5,
+    "ignoresKnockback": true,
+    "projectile": {
+      "source": "RoyalGiantProjectile",
+      "speed": 16.666666666666668,
+      "homing": true,
+      "gravity": 0
+    }
+  },
+  "mega-minion": {
+    "source": "MegaMinion",
+    "windup": 0.4,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "MegaMinionSpit",
+      "speed": 16.666666666666668,
+      "homing": true,
+      "gravity": 0
+    }
+  },
+  "dart-goblin": {
+    "source": "BlowdartGoblin",
+    "windup": 0.3,
+    "sight": 7.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "BlowdartGoblinProjectile",
+      "speed": 13.333333333333334,
+      "homing": true,
+      "gravity": 120
+    }
+  },
+  "ice-wizard": {
+    "source": "IceWizard",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "ice_wizardProjectile",
+      "speed": 11.666666666666666,
+      "homing": true,
+      "gravity": 50
+    }
+  },
+  "ice-spirit": {
+    "source": "IceSpirits",
+    "windup": 0.2,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "IceSpiritsProjectile",
+      "speed": 6.666666666666667,
+      "homing": true,
+      "gravity": 400
+    }
+  },
+  "fire-spirits": {
+    "source": "FireSpirits",
+    "windup": 0.2,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "FireSpiritsProjectile",
+      "speed": 6.666666666666667,
+      "homing": true,
+      "gravity": 400
+    }
+  },
+  "ice-golem": {
+    "source": "IceGolemite",
+    "windup": 1,
+    "sight": 7,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "princess": {
+    "source": "Princess",
+    "windup": 0.5,
+    "sight": 9.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "PrincessProjectileDeco",
+      "speed": 7.5,
+      "homing": false,
+      "gravity": 90
+    }
+  },
+  "inferno-dragon": {
+    "source": "InfernoDragon",
+    "windup": 0,
+    "sight": 5.5,
+    "ignoresKnockback": true,
+    "projectile": null
+  },
+  "electro-wizard": {
+    "source": "ElectroWizard",
+    "windup": 0.3,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "miner": {
+    "source": "Miner",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "bowler": {
+    "source": "Bowler",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": true,
+    "projectile": {
+      "source": "BowlerProjectile",
+      "speed": 2.8333333333333335,
+      "homing": false,
+      "gravity": 0
+    }
+  },
+  "dark-prince": {
+    "source": "DarkPrince",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": true,
+    "projectile": null
+  },
+  "battle-ram": {
+    "source": "BattleRam",
+    "windup": 0.35,
+    "sight": 5.5,
+    "ignoresKnockback": true,
+    "projectile": null
+  },
+  "executioner": {
+    "source": "AxeMan",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "AxeManProjectile",
+      "speed": 9.166666666666666,
+      "homing": false,
+      "gravity": 0
+    }
+  },
+  "sparky": {
+    "source": "ZapMachine",
+    "windup": 0.5,
+    "sight": 5,
+    "ignoresKnockback": true,
+    "projectile": {
+      "source": "ZapMachineProjectile",
+      "speed": 23.333333333333332,
+      "homing": true,
+      "gravity": 0
+    }
+  },
+  "lumberjack": {
+    "source": "RageBarbarian",
+    "windup": 0.4,
     "sight": 5.5,
     "ignoresKnockback": false,
     "projectile": null
@@ -151,6 +355,65 @@
       "gravity": 0
     }
   },
+  "bats": {
+    "source": "Bat",
+    "windup": 0.5,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "night-witch": {
+    "source": "DarkWitch",
+    "windup": 0.6,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "bandit": {
+    "source": "Assassin",
+    "windup": 0.4,
+    "sight": 6,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "golem": {
+    "source": "Golem",
+    "windup": 1,
+    "sight": 7,
+    "ignoresKnockback": true,
+    "projectile": null
+  },
+  "golemite": {
+    "source": "Golemite",
+    "windup": 1,
+    "sight": 7,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "lava-hound": {
+    "source": "LavaHound",
+    "windup": 1,
+    "sight": 5.5,
+    "ignoresKnockback": true,
+    "projectile": {
+      "source": "LavaHoundProjectile",
+      "speed": 6.666666666666667,
+      "homing": true,
+      "gravity": 250
+    }
+  },
+  "lava-pup": {
+    "source": "LavaPups",
+    "windup": 0.8,
+    "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "LavaPupProjectile",
+      "speed": 8.333333333333334,
+      "homing": true,
+      "gravity": 250
+    }
+  },
   "witch": {
     "source": "Witch",
     "windup": 0.5,
@@ -212,6 +475,84 @@
     "source": "Tesla",
     "windup": 0.7,
     "sight": 5.5,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "mortar": {
+    "source": "Mortar",
+    "windup": 1,
+    "sight": 11.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "MortarProjectile",
+      "speed": 5,
+      "homing": false,
+      "gravity": 60
+    }
+  },
+  "bomb-tower": {
+    "source": "BombTower",
+    "windup": 0.5,
+    "sight": 6,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "BombTowerProjectile",
+      "speed": 8.333333333333334,
+      "homing": false,
+      "gravity": 200
+    }
+  },
+  "inferno-tower": {
+    "source": "InfernoTower",
+    "windup": 0,
+    "sight": 6,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "x-bow": {
+    "source": "Xbow",
+    "windup": 0.3,
+    "sight": 11.5,
+    "ignoresKnockback": false,
+    "projectile": {
+      "source": "xbow_projectile",
+      "speed": 23.333333333333332,
+      "homing": true,
+      "gravity": 0
+    }
+  },
+  "elixir-collector": {
+    "source": "ElixirCollector",
+    "windup": 0,
+    "sight": 0,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "goblin-hut": {
+    "source": "GoblinHut",
+    "windup": 10,
+    "sight": 0,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "tombstone": {
+    "source": "Tombstone",
+    "windup": 10,
+    "sight": 0,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "furnace": {
+    "source": "FirespiritHut",
+    "windup": 10,
+    "sight": 0,
+    "ignoresKnockback": false,
+    "projectile": null
+  },
+  "barbarian-hut": {
+    "source": "BarbarianHut",
+    "windup": 10,
+    "sight": 0,
     "ignoresKnockback": false,
     "projectile": null
   },

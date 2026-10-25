@@ -28,6 +28,9 @@ const buildingTable = await readFile(buildingsPath);
 const princessRow = csvRows(buildingTable.toString()).find(
   (row) => row.Name === "PrincessTower",
 );
+const bombTowerRow = csvRows(buildingTable.toString()).find(
+  (row) => row.Name === "BombTower",
+);
 
 const manifest = {
   source: "https://github.com/smlbiobot/cr",
@@ -39,6 +42,15 @@ const manifest = {
 for (const [id, name] of Object.entries({
   tesla: "building_tesla",
   cannon: "building_basic_cannon",
+  mortar: "building_mortar",
+  "bomb-tower": "building_bomb_tower",
+  "inferno-tower": "building_inferno_tower",
+  "x-bow": "building_xbow",
+  "elixir-collector": "building_elixir_collector",
+  "goblin-hut": "building_goblin_hut",
+  tombstone: "building_tombstone",
+  furnace: "building_firespirit_hut",
+  "barbarian-hut": "building_barbarian_hut",
   king: "building_tower",
 })) {
   const metadata = await readFile(`reference/sc/${name}.bin`),
@@ -62,6 +74,9 @@ for (const [id, name] of Object.entries({
         { shape: ref, matrix: matrix.map(round), color: color.map(round) },
       ];
     }
+    // The archived Goblin Hut references absent child 5 only in its first
+    // frame. All later frames contain its complete four-part structure.
+    if (id === "goblin-hut" && ref === 5) return [];
     const clip = data.clips[ref];
     if (!clip?.frames.length)
       throw new Error(`Missing SC child ${ref} in ${name}`);
@@ -111,12 +126,30 @@ for (const [id, name] of Object.entries({
           "princess-blue-front": "StarTower_top_blue",
           "princess-red-front": "StarTower_top_red",
         }
-      : Object.fromEntries(
-          Object.keys(data.names).map((name) => [
-            /red|enemy/.test(name) ? "red" : "blue",
-            name,
-          ]),
-        );
+      : id === "bomb-tower"
+        ? {
+            blue: "building_bomb_tower_blue",
+            red: "building_bomb_tower_red",
+            "blue-top": "building_bomb_tower_top_blue",
+            "red-top": "building_bomb_tower_top_red",
+          }
+      : id === "mortar"
+        ? Object.fromEntries(
+            ["blue", "red"].flatMap((team) =>
+              ["idle", "attack"].flatMap((state) =>
+                Array.from({ length: 5 }, (_, i) => [
+                  `${team}-${state}-${i + 1}`,
+                  `building_mortar1${team === "red" ? "_enemy" : ""}_${state}1_${i + 1}`,
+                ]),
+              ),
+            ),
+          )
+        : Object.fromEntries(
+            Object.keys(data.names).map((name) => [
+              /red|enemy/.test(name) ? "red" : "blue",
+              name,
+            ]),
+          );
   for (const [team, exp] of Object.entries(exports)) {
     const ref = data.names[exp],
       clip = data.clips[ref];
@@ -187,9 +220,30 @@ for (const [id, name] of Object.entries({
       }
     }
   }
-  const bounds = JSON.parse(
-    await readFile(`reference/sc/${id}-blue.json`, "utf8"),
-  ).bounds;
+  const bounds =
+    id === "mortar" || id === "bomb-tower" || id === "inferno-tower" ||
+    id === "x-bow" || id === "elixir-collector" || id === "goblin-hut" ||
+    id === "tombstone" || id === "furnace" || id === "barbarian-hut"
+      ? (() => {
+          const b = [Infinity, Infinity, -Infinity, -Infinity];
+          for (const parts of frames)
+            for (const part of parts)
+              for (const polygon of data.shapes[part.shape])
+                for (const [x, y] of polygon.xy) {
+                  const m = part.matrix;
+                  const px = m[0] * x + m[2] * y + m[4];
+                  const py = m[1] * x + m[3] * y + m[5];
+                  b[0] = Math.min(b[0], px);
+                  b[1] = Math.min(b[1], py);
+                  b[2] = Math.max(b[2], px);
+                  b[3] = Math.max(b[3], py);
+                }
+          if (!b.every(Number.isFinite))
+            throw new Error(`Missing ${id} geometry`);
+          return b.map(round);
+        })()
+      : JSON.parse(await readFile(`reference/sc/${id}-blue.json`, "utf8"))
+          .bounds;
   const shapes = Object.fromEntries(
     [...usedShapes].map((ref) => [
       ref,
@@ -237,7 +291,12 @@ for (const [id, name] of Object.entries({
           attachedCharacterHeight:
             Number(princessRow.AttachedCharacterHeight) / 1000,
         }
-      : {}),
+      : id === "bomb-tower"
+        ? {
+            attachedCharacterHeight:
+              Number(bombTowerRow.AttachedCharacterHeight) / 1000,
+          }
+        : {}),
     textures,
     bounds,
     anchor: [0, 0],

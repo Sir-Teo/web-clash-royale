@@ -1,3 +1,4 @@
+import { impactEffect, destructionPlan } from "../src/render/destruction";
 import { SOLO_OPPONENTS } from "../src/game/opponents";
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
@@ -77,7 +78,7 @@ describe("Three Musketeers", () => {
     step(b, 8 / STEP);
     expect(b.actions[0]).toMatchObject({ team: "red", card });
     expect(
-      b.entities.filter((e) => e.team === "red" && e.card === card),
+      b.entities.filter((e) => e.team === "red" && e.card === "musketeer"),
     ).toHaveLength(3);
     expect(b.players.red.elixir).toBeGreaterThanOrEqual(0);
   });
@@ -154,8 +155,9 @@ describe("Three Musketeers", () => {
     expect(destruction.deployments[card]).toEqual(
       destruction.deployments.musketeer,
     );
-    expect(destruction.impacts[`hit:${card}`]).toEqual(
-      destruction.impacts["hit:musketeer"],
+    expect(impactEffect(card)).toBe("hit:musketeer");
+    expect(destructionPlan(impactEffect(card)!, 42)).toEqual(
+      destructionPlan(impactEffect("musketeer")!, 42),
     );
     const health = JSON.parse(
       readFileSync("public/assets/ui/health/health.json", "utf8"),
@@ -172,7 +174,7 @@ describe("Three Musketeers", () => {
     expect(b.actions).toHaveLength(0);
     b.players.blue.elixir = 9;
     expect(b.play("blue", 0, 4, 23).ok).toBe(true);
-    const troops = b.entities.filter((e) => e.card === card);
+    const troops = b.entities.filter((e) => e.card === "musketeer");
     expect(troops).toHaveLength(3);
     expect(troops.map(({ x, y }) => ({ x, y }))).toEqual(
       deploymentPositions(card, { x: 4, y: 23 }),
@@ -187,7 +189,7 @@ describe("Three Musketeers", () => {
       b.audioEvents.filter((e) => e.profile === card && e.phase === "cast"),
     ).toHaveLength(1);
     expect(
-      b.audioEvents.filter((e) => e.profile === card && e.phase === "spawn"),
+      b.audioEvents.filter((e) => e.profile === "musketeer" && e.phase === "spawn"),
     ).toHaveLength(3);
   });
   it.each(["knight", "minions"] as const)(
@@ -209,13 +211,13 @@ describe("Three Musketeers", () => {
         ),
         before = enemies.reduce((sum, e) => sum + e.hp, 0);
       step(b, 16);
-      const shots = b.projectiles.filter((p) => p.style === card);
+      const shots = b.projectiles.filter((p) => p.style === "musketeer");
       expect(shots).toHaveLength(3);
       expect(
         shots.every((p) => projectileArt(p) === "projectile_cannonball_small"),
       ).toBe(true);
       expect(
-        b.audioEvents.filter((e) => e.profile === card && e.phase === "launch"),
+        b.audioEvents.filter((e) => e.profile === "musketeer" && e.phase === "launch"),
       ).toHaveLength(3);
       step(b, 25);
       expect(
@@ -226,17 +228,17 @@ describe("Three Musketeers", () => {
   it("survives Fireball with ordinary Musketeer health, then emits one native death per body", () => {
     const b = battle();
     play(b, "blue", card, 4, 23);
-    for (const e of b.entities.filter((e) => e.card === card)) e.speed = 0;
+    for (const e of b.entities.filter((e) => e.card === "musketeer")) e.speed = 0;
     play(b, "red", "fireball", 4, 23);
     step(b, 100);
-    const troops = b.entities.filter((e) => e.card === card);
+    const troops = b.entities.filter((e) => e.card === "musketeer");
     expect(troops).toHaveLength(3);
     expect(troops.every((e) => e.hp === 31)).toBe(true);
     play(b, "red", "arrows", 4, 23);
     step(b, 100);
-    expect(b.entities.filter((e) => e.card === card)).toHaveLength(0);
+    expect(b.entities.filter((e) => e.card === "musketeer")).toHaveLength(0);
     expect(
-      b.audioEvents.filter((e) => e.profile === card && e.phase === "death"),
+      b.audioEvents.filter((e) => e.profile === "musketeer" && e.phase === "death"),
     ).toHaveLength(3);
   });
   it("validates nine-elixir deployments from both direct peers without leaking the enemy hand", () => {
@@ -270,7 +272,7 @@ describe("Three Musketeers", () => {
       sendPeerCommand(host, team, command);
     }
     expect(host.battle!.actions).toHaveLength(2);
-    expect(host.battle!.entities.filter((e) => e.card === card)).toHaveLength(
+    expect(host.battle!.entities.filter((e) => e.card === "musketeer")).toHaveLength(
       6,
     );
     const packet = events.findLast(
@@ -279,7 +281,7 @@ describe("Three Musketeers", () => {
     if (packet.type !== "state") throw Error("missing state");
     const view = perspective(packet.state, "red");
     expect(
-      view.entities.filter((e) => e.card === card && e.team === "blue"),
+      view.entities.filter((e) => e.card === "musketeer" && e.team === "blue"),
     ).toHaveLength(3);
     expect(view.players.red.elixir).toBe(0);
     expect(view.players.blue.hand).toEqual(host.battle!.players.red.hand);

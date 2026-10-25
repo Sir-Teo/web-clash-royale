@@ -114,7 +114,7 @@ describe("AI persistent area spell targets", () => {
       ),
     ).toBeDefined();
   });
-  it("uses Rage on engaged friendly defenses without boosting an idle King", () => {
+  it("boosts engaged friendly troops while excluding buildings and Crown Towers", () => {
     const b = new Battle({ ai: false });
     const king = b.entities.find((e) => e.team === "red" && e.king)!;
     expect(areaSpellTarget("rage", "red", [king])).toBeUndefined();
@@ -123,7 +123,9 @@ describe("AI persistent area spell targets", () => {
     const attacker = unit(11, "giant", tower.x, tower.y + 2, { team: "blue" });
     expect(
       areaSpellTarget("rage", "red", [tower, cannon, attacker]),
-    ).toBeDefined();
+    ).toBeUndefined();
+    const defender = unit(12, "pekka", tower.x, tower.y);
+    expect(areaSpellTarget("rage", "red", [defender, attacker])).toBeDefined();
     expect(areaSpellTarget("rage", "red", [cannon, attacker])).toBeUndefined();
   });
   it("freezes a defender only when a meaningful friendly fight can benefit", () => {

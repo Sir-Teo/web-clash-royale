@@ -32,8 +32,15 @@ const buildingsBytes = await readFile("reference/logic/buildings.csv");
 const balloon = csvRows(buildingsBytes.toString()).find(
   (r) => r.Name === "BalloonBomb",
 );
+const giantSkeletonBomb = csvRows(buildingsBytes.toString()).find(
+  (r) => r.Name === "GiantSkeletonBomb",
+);
 if (balloon.FileName !== "sc/building_mega_bomb.sc")
   throw new Error("Unexpected Balloon bomb resource");
+if (giantSkeletonBomb?.FileName !== "sc/building_mega_bomb.sc" ||
+    giantSkeletonBomb.BlueExportName !== "giant_skeleton_bomb_blue" ||
+    giantSkeletonBomb.RedExportName !== "giant_skeleton_bomb_red")
+  throw new Error("Recheck Giant Skeleton bomb resource");
 const textures = [],
   hashes = [],
   sources = [],
@@ -42,7 +49,15 @@ const textures = [],
 const frames = [],
   frameLookup = new Map(),
   clips = {};
-for (const resource of ["effects", "building_mega_bomb"]) {
+for (const resource of [
+  "effects",
+  "building_mega_bomb",
+  "chr_valkyrie",
+  "chr_battle_ram",
+  "chr_zap_machine",
+  "building_rage_bottle",
+  "spell_goblin_barrel",
+]) {
   const path = `reference/sc/${resource}.bin`,
     metadata = await readFile(path),
     data = parseSC(metadata);
@@ -53,7 +68,9 @@ for (const resource of ["effects", "building_mega_bomb"]) {
   const textureOffset = textures.length;
   sources.push({
     path,
-    source: `${directory}${resource}`,
+    source: `${["chr_battle_ram", "chr_zap_machine", "building_rage_bottle"].includes(resource)
+      ? "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/"
+      : directory}${resource}`,
     sha256: sha256(metadata),
   });
   function flatten(
@@ -107,17 +124,46 @@ for (const resource of ["effects", "building_mega_bomb"]) {
             "projectile_spear_360",
             "projectile_bomb",
             "projectile_cannonball_large",
+            "catapult_projectile1",
             "projectile_cannonball_small",
+            "ice_wizard_projectile",
+            "projectile_icespirit",
+            "projectile_firespirit",
+            "projectile_princess",
+            "projectile_arrow_shadow",
+            "inferno_beam",
+            "inferno_beam_stage2",
+            "inferno_beam_stage3",
+            "inferno_dragon_beam",
+            "inferno_dragon_beam1",
+            "inferno_dragon_beam2",
+            "inferno_shoot",
+            "inferno_shoot_st2",
+            "inferno_shoot_st3",
+            "inferno_hit_lines",
+            "electro_wiz_beam",
+            "miner_trail",
+            "bowler_projectile",
+            "bowler_projectile_shadow",
+            "executioner_projectile",
+            "zapMachine_projectile",
             "dragon_projectile",
             "Tower_projectile1",
             "fireball_small",
             "fireball_projectile1",
+            "projectile_rocket",
+            "projectile_shadow_rocket",
+            "log_projectile",
+            "log_roll_projectile",
+            "log_roll_projectile_red",
+            "log_projectile_shadow",
             "tesla_beam",
             "zap_bolt1",
             "lightning_bolt",
             "effect_Hit1",
             "ExplosionGroundGlowBlue",
             "fireball_trail1",
+            "fireball_trail3",
             "explosion_cloud_1",
             "Smoke_puff_01",
             "crown_rotate_anim",
@@ -132,14 +178,59 @@ for (const resource of ["effects", "building_mega_bomb"]) {
             "rage_effect_ground",
             "spell_rage_radius_blue",
             "spell_rage_radius_red",
-            "projectile_rocket",
-            "projectile_shadow_rocket",
+            "spell_tornado_radius_blue",
+            "spell_tornado_radius_red",
+            "Graveyard_ground_area_blue",
+            "Graveyard_ground_area_red",
+            "spell_graveyard_radius_blue",
+            "spell_graveyard_radius_red",
+            "clone_effect_ground",
+            "spell_clone_radius_blue",
+            "spell_clone_radius_red",
+            "filter_hologram",
+            "filter_hologram_character",
           ]),
         ]
-      : [balloon.BlueExportName, balloon.RedExportName, ...emitterExports];
+      : resource === "building_mega_bomb"
+        ? [balloon.BlueExportName, balloon.RedExportName,
+            giantSkeletonBomb.BlueExportName, giantSkeletonBomb.RedExportName,
+            ...emitterExports]
+        : resource === "spell_goblin_barrel"
+          ? ["spell_goblin_barrel_projectile", "Barrel_shadow"]
+          : resource === "building_rage_bottle"
+            ? ["rage_bottle_fall"]
+          : emitterExports;
   for (const name of exports) {
-    const ref = data.names[name],
+    let ref = data.names[name],
       source = data.clips[ref];
+    // The Valkyrie whirl export is a one-frame wrapper around the actual
+    // 27-frame child. Flatten that child so the original visual animation is
+    // retained instead of an empty first frame.
+    if (resource === "chr_valkyrie" && name === "whirl_animation_fx") {
+      const child = source?.frames[0]?.[0]?.id;
+      if (child !== 434 || data.clips[child]?.frames.length !== 27)
+        throw new Error("Recheck native Tornado whirl wrapper");
+      // Keep flattening through the wrapper to retain its 80% X scale and
+      // authored offset; only the timing/length comes from the child.
+      source = {
+        ...source,
+        fps: data.clips[child].fps,
+        frames: data.clips[child].frames,
+      };
+    }
+    if (
+      resource === "spell_goblin_barrel" &&
+      name === "spell_goblin_barrel_projectile"
+    ) {
+      const child = source?.frames[0]?.[0]?.id;
+      if (child !== 15 || data.clips[child]?.frames.length !== 194)
+        throw new Error("Recheck native Goblin Barrel animation wrapper");
+      source = {
+        ...source,
+        fps: data.clips[child].fps,
+        frames: data.clips[child].frames,
+      };
+    }
     if (!source?.frames.length) throw new Error(`Missing effect ${name}`);
     const sequence = source.frames.map((_, i) => {
       const parts = flatten(ref, i),
@@ -165,6 +256,9 @@ for (const resource of ["effects", "building_mega_bomb"]) {
           bounds[3] = Math.max(bounds[3], py);
         }
     if (clips[name]) throw new Error(`Duplicate effect export ${name}`);
+    // A native export can intentionally have no drawable polygons (the blue
+    // fire placeholder in Ice Wizard's emitter is one such frame).
+    if (!bounds.every(Number.isFinite)) bounds.fill(0);
     clips[name] = {
       source: name,
       fps: source.fps,
@@ -179,14 +273,18 @@ for (const resource of ["effects", "building_mega_bomb"]) {
     );
   }
   for (let i = 0; i < data.textures.length; i++) {
-    const name = `${resource}_tex${"_".repeat(i)}.png`,
+    const name = resource === "chr_battle_ram"
+      ? "chr_battle_ram_highres_tex.png"
+      : `${resource}_tex${"_".repeat(i)}.png`,
       path = `/tmp/browser-royale-sprites/${name}`;
     let original;
     try {
       original = await readFile(path);
     } catch {
       const r = await fetch(
-        `https://raw.githubusercontent.com/smlbiobot/cr/${commit}/${directory}${name}`,
+        `https://raw.githubusercontent.com/smlbiobot/cr/${commit}/${["chr_battle_ram", "chr_zap_machine", "building_rage_bottle"].includes(resource)
+          ? "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/"
+          : directory}${name}`,
       );
       if (!r.ok) throw new Error(`Missing effects texture ${r.status}`);
       original = Buffer.from(await r.arrayBuffer());
@@ -202,7 +300,9 @@ for (const resource of ["effects", "building_mega_bomb"]) {
       file,
       sha256: sha256(texture),
       originalSha256: sha256(original),
-      source: `${directory}${name}`,
+      source: `${["chr_battle_ram", "chr_zap_machine", "building_rage_bottle"].includes(resource)
+        ? "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/"
+        : directory}${name}`,
     });
   }
   Object.assign(

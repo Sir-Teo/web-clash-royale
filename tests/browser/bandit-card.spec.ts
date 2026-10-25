@@ -1,0 +1,37 @@
+import { test, expect } from "@playwright/test";
+import { expectedEffects } from "./native-assets";
+
+test("Bandit dashes with native blue art, effects and heavy landing hit", async ({ page }, info) => {
+  test.setTimeout(120000);
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/tests/fixtures/combat.html");
+  await page.locator("#scenario").selectOption("bandit");
+  await expect(page.locator("#status")).toContainText(`${expectedEffects} effects`, { timeout: 60000 });
+  const data = async () => JSON.parse((await page.locator("#destruction").getAttribute("data-bandit"))!);
+  const time = async () => JSON.parse((await page.locator("#destruction").getAttribute("data-state"))!).time;
+  await expect.poll(async () => (await data()).unit?.card).toBe("bandit");
+  const before = await time();
+  await page.locator("#step").click();
+  await expect.poll(time).toBeGreaterThan(before + 0.09);
+  expect((await data()).unit.dash).toBeTruthy();
+  expect((await data()).start).toBe(1);
+  expect((await data()).cues).toContain("dash-travel");
+  expect((await data()).filter).toMatchObject([{ applied: true }]);
+  expect((await data()).trail.length).toBeGreaterThan(1);
+  const halfway = await time();
+  await page.locator("#step").click({ clickCount: 2 });
+  await expect.poll(time).toBeGreaterThan(halfway + 0.19);
+  expect((await data()).trail.length).toBeGreaterThanOrEqual(6);
+  await page.screenshot({ path: info.outputPath("bandit-dash.png"), fullPage: true });
+  const second = await time();
+  await page.locator("#second").click();
+  await expect.poll(time).toBeGreaterThan(second + 0.99);
+  expect((await data()).unit.dash).toBeUndefined();
+  expect((await data()).target.hp).toBe(10000 - Math.round(320 * 1.1 ** 2));
+  expect((await data()).end).toBe(1);
+  expect((await data()).special).toBe(1);
+  expect((await data()).filter).toHaveLength(0);
+  await page.screenshot({ path: info.outputPath("bandit-landing.png"), fullPage: true });
+  expect(errors).toEqual([]);
+});

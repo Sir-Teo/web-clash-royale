@@ -31,7 +31,7 @@ const tower = (b: Battle, lane: "left" | "right") =>
 function split() {
   const b = battle();
   const chip = unit(b, "skeletons", 4, 1, { hp: 1 });
-  const hog = unit(b, "hog-rider", 14, 8);
+  const hog = unit(b, "hog-rider", 14, 10);
   tower(b, "right").hp = 100;
   return { b, chip, hog };
 }
@@ -158,7 +158,7 @@ describe("visible defensive pressure", () => {
   it("does not count an airborne cluster as splash value for a ground-only defender", () => {
     const b = battle();
     tower(b, "right").hp = 100;
-    const hog = unit(b, "hog-rider", 14, 8);
+    const hog = unit(b, "hog-rider", 14, 10);
     for (let i = 0; i < 3; i++)
       unit(b, "minions", 14 + (i - 1) * 0.3, 8.7, { hp: 1 });
     expect(defensiveThreats("red", b.entities)[0]).toBe(hog);
@@ -208,13 +208,13 @@ describe("visible defensive pressure", () => {
   it("does not join distant bodies through a chain of intermediate attackers", () => {
     const b = battle();
     for (const y of [1, 3.8, 6.6, 9.4, 12.2]) unit(b, "skeletons", 4, y);
-    const hog = unit(b, "hog-rider", 14, 8);
+    const hog = unit(b, "hog-rider", 14, 10);
     expect(defensiveThreats("red", b.entities)[0]).toBe(hog);
   });
   it("discounts a near-dead swarm rather than counting every body at full strength", () => {
     const b = battle();
     swarm(b, "minion-horde", 6, 1);
-    const hog = unit(b, "hog-rider", 14, 8);
+    const hog = unit(b, "hog-rider", 14, 10);
     expect(defensiveThreats("red", b.entities)[0]).toBe(hog);
   });
   it("keeps the actual lethal King attacker ahead of even a large lethal Princess Tower swarm", () => {
@@ -230,7 +230,7 @@ describe("visible defensive pressure", () => {
     const b = battle();
     swarm(b, "skeleton-army", 15);
     tower(b, "right").hp = 100;
-    const hog = unit(b, "hog-rider", 14, 8);
+    const hog = unit(b, "hog-rider", 14, 10);
     expect(defensiveThreats("red", b.entities)[0]).toBe(hog);
   });
   it("retains swarm ordering after view rotation without mutation or random draws", () => {

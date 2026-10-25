@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { expectedCards } from "./native-assets";
+import { expectedCards, expectedAnimations } from "./native-assets";
 
 test("Minion Horde saves from the editor, previews six native flyers and survives replay seeking", async ({
   page,
@@ -58,7 +58,7 @@ test("Minion Horde saves from the editor, previews six native flyers and survive
       () => page.evaluate(() => (window as any).__arena.state.loadedAnimations),
       { timeout: 30000 },
     )
-    .toBe(19);
+    .toBe(expectedAnimations);
   await page.locator('#hand [data-native-card="minion-horde"]').click();
   const point = await page.evaluate(() =>
     (window as any).__arena.project(4, 22),

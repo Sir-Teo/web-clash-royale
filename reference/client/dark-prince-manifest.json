@@ -1,0 +1,23 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_black_knight",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/sc/chr_black_knight.bin",
+      "sha256": "8c7e05ad2c596fbb4748e127c941c384b8dc5c7a766a6a797eaa6af52ff0536e"
+    }
+  ],
+  "output": {
+    "path": "src/game/dark-prince-data.json",
+    "sha256": "f334e9fe9809de00ad188d783255b0afa85813c5e4c3dcb573c9551727363f7e"
+  }
+}

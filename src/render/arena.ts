@@ -1,5 +1,5 @@
 import * as T from "three";
-import { Battle } from "../game/engine";
+import { Battle, entityVisualHeight } from "../game/engine";
 import type { Entity, Point, Team } from "../game/engine";
 import { CARD_MAP } from "../game/cards";
 import type { CardId } from "../game/cards";
@@ -16,10 +16,21 @@ import {
 } from "./models";
 import type { Model } from "./models";
 import { SpriteLibrary } from "./sprites";
+import { SpriteBatcher } from "./sprite-batcher";
+import { GroundBatcher } from "./ground-batcher";
+import { LegacyParticles } from "./legacy-particles";
 import type { AnimatedSprite } from "./sprites";
 import { EffectLibrary } from "./effects";
 import type { EffectSprite } from "./effects";
-import { makeProjectile, updateProjectile } from "./projectiles";
+import {
+  makeProjectile,
+  rocketFlightPoint,
+  logFlightPoint,
+  curvedFlightPoint,
+  executionerFlightPoint,
+  executionerFlightSeconds,
+  updateProjectile,
+} from "./projectiles";
 import type { ProjectileVisual } from "./projectiles";
 import { DeploymentPreview } from "./deployment";
 import { BuildingLibrary } from "./buildings";
@@ -27,18 +38,23 @@ import type { BuildingSprite } from "./buildings";
 import { destroyedTowerSites, TOWER_SITES } from "../game/arena-layout";
 import { DestructionEffects, deathEffect, impactEffect } from "./destruction";
 import { NativeDeploymentEffects } from "./deployment-effects";
-import { NativeProjectileTrails } from "./projectile-trails";
 import { NativeLaunchEffects } from "./launch-effects";
 import { NativeMovementEffects } from "./movement-effects";
+import { NativeContinuousEffects } from "./continuous-effects";
 import type { MovementBurst } from "./movement-effects";
 import { hogJumpHeight, NativeHogLandings } from "./hog-jump";
 import { NativeChargeMarkers } from "./charge-marker";
 import { NativeChargeFilter } from "./charge-filter";
 import { NativeDeployFilter } from "./deploy-filter";
+import { NativeBatWiggle } from "./bat-wiggle";
+import { NativeBanditFilter } from "./bandit-filter";
+import { NativeBanditTrail } from "./bandit-trail";
 import { NativeColdFilter, NativeColdStructures } from "./cold-filter";
-import { NativeRageFilter } from "./rage-filter";
-import rageRules from "../game/rage-data.json" with { type: "json" };
+import { NativeInfernoBeams } from "./inferno-beam";
+import { NativeMinerTrails } from "./miner-trails";
 import { NativePoisonFilter } from "./poison-filter";
+import { NativeRageFilter } from "./rage-filter";
+import { NativeCloneFilter } from "./clone-filter";
 import type { ColdStructurePart } from "./cold-filter";
 import { SpriteFilterStack } from "./sprite-filter";
 import { NativeSpellAreas } from "./spell-areas";
@@ -50,6 +66,8 @@ interface Visual {
   object: T.Group;
   model?: Model;
   sprite?: AnimatedSprite;
+  shadow?: T.Mesh;
+  ring?: T.Mesh;
   archer?: AnimatedSprite;
   building?: BuildingSprite;
   art?: T.Mesh;
@@ -59,19 +77,32 @@ interface Visual {
   healthFill?: T.Mesh;
   nativeHealth?: HealthSprite;
 }
-interface Particle {
-  mesh: T.Mesh;
-  velocity: T.Vector3;
-  life: number;
-  max: number;
-}
 export class Arena {
   readonly renderer: T.WebGLRenderer;
   readonly scene = new T.Scene();
   readonly camera: T.OrthographicCamera;
   private root = new T.Group();
   private units = new Map<number, Visual>();
+  private entityById = new Map<number, Entity>();
+  private spriteBatcher = new SpriteBatcher(this.scene);
+  private groundBatcher = new GroundBatcher(this.scene);
+  private shadowGeometry = new T.CircleGeometry(1, 16);
+  private ringGeometry = new T.RingGeometry(1.1, 1.35, 24);
+  private shadowMaterial = new T.MeshBasicMaterial({
+    color: 0x173721, transparent: true, opacity: 0.22, depthWrite: false,
+  });
+  private ringMaterials: Record<Team, T.MeshBasicMaterial> = {
+    blue: new T.MeshBasicMaterial({
+      color: teamColor("blue"), transparent: true, opacity: 0.8,
+      depthWrite: false, side: T.DoubleSide,
+    }),
+    red: new T.MeshBasicMaterial({
+      color: teamColor("red"), transparent: true, opacity: 0.8,
+      depthWrite: false, side: T.DoubleSide,
+    }),
+  };
   private shots = new Map<number, ProjectileVisual>();
+  private trailCycles = new Map<number, number>();
   private effects = new EffectLibrary();
   private buildings = new BuildingLibrary();
   private health = new HealthLibrary();
@@ -82,24 +113,34 @@ export class Arena {
   );
   private destruction = new DestructionEffects(this.scene, this.effects);
   private deploymentEffects = new NativeDeploymentEffects();
-  private projectileTrails = new NativeProjectileTrails();
   private launchEffects = new NativeLaunchEffects();
   private movementEffects = new NativeMovementEffects();
+  private continuousEffects = new NativeContinuousEffects();
   private chargeMarkers: NativeChargeMarkers;
   private spriteFilters = new SpriteFilterStack();
   private chargeFilter = new NativeChargeFilter(this.spriteFilters);
   private deployFilter = new NativeDeployFilter(this.spriteFilters);
+  private batWiggle = new NativeBatWiggle(this.spriteFilters);
+  private banditFilter = new NativeBanditFilter(this.spriteFilters);
+  private banditTrail = new NativeBanditTrail(this.scene);
+  private cloneFilter = new NativeCloneFilter(this.spriteFilters);
   private coldFilter = new NativeColdFilter(this.spriteFilters);
-  private rageFilter = new NativeRageFilter(this.spriteFilters);
   private poisonFilter = new NativePoisonFilter(this.spriteFilters);
+  private rageFilter = new NativeRageFilter(this.spriteFilters);
   private coldStructures = new NativeColdStructures();
+  private infernoBeams = new NativeInfernoBeams(this.scene, this.effects);
+  private minerTrails = new NativeMinerTrails(this.scene, this.effects);
   private spellAreas = new NativeSpellAreas(this.scene, this.effects);
   private hogLandings = new NativeHogLandings();
   private crowns = new CrownEffects(this.scene, this.effects);
   private rubble = new Map<string, T.Mesh>();
   private impacts: { sprite: EffectSprite; start: number; life: number }[] = [];
-  private particles: Particle[] = [];
-  private waters: T.Mesh[] = [];
+  private particles = new LegacyParticles(this.scene);
+  private waterWaves: T.InstancedMesh | null = null;
+  private wavePositions = new Float32Array(20);
+  private waveOpacities = new Float32Array(20);
+  private waveMatrix = new T.Matrix4();
+  private lastWaveTime = Number.NaN;
   private flags: T.Mesh[] = [];
   private observer: ResizeObserver;
   private ray = new T.Raycaster();
@@ -127,22 +168,31 @@ export class Arena {
     string,
     { texture: T.Texture; aspect: number; anchor: [number, number] }
   >();
-  private artwork: T.Mesh[] = [];
   private contextLost = false;
   private restoringContext = false;
+  private readonly maxPixelRatio = Math.min(window.devicePixelRatio, 2);
+  private slowFrames = 0;
+  private fastFrames = 0;
+  private resolutionCooldown = 0;
   onContextLost: () => void = () => {};
   onContextRestored: () => void = () => {};
   onCharge: (burst: MovementBurst) => void = () => {};
   crownTarget: (team: Team) => Point | null = () => null;
   constructor(readonly host: HTMLElement) {
+    this.shadowGeometry.userData.shared = true;
+    this.ringGeometry.userData.shared = true;
     this.renderer = new T.WebGLRenderer({
       antialias: true,
       alpha: true,
       powerPreference: "high-performance",
     });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setPixelRatio(this.maxPixelRatio);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = T.PCFSoftShadowMap;
+    // The diorama is static. Troops and effects use their own ground shadows,
+    // so rebuilding the 2048px sun map on every frame only stalls the GPU.
+    this.renderer.shadowMap.autoUpdate = false;
+    this.renderer.shadowMap.needsUpdate = true;
     this.renderer.outputColorSpace = T.SRGBColorSpace;
     this.renderer.toneMapping = T.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 0.95;
@@ -160,6 +210,7 @@ export class Arena {
     this.renderer.domElement.addEventListener("webglcontextrestored", () => {
       this.contextLost = false;
       this.restoringContext = true;
+      this.renderer.shadowMap.needsUpdate = true;
     });
     host.append(this.renderer.domElement);
     this.labels = document.createElement("div");
@@ -329,18 +380,29 @@ export class Arena {
             toneMapped: false,
             side: T.DoubleSide,
           });
-          for (const point of item.positions) {
-            const geometry = new T.PlaneGeometry(item.width, item.height);
-            geometry.translate(
-              (0.5 - item.anchor[0]) * item.width,
-              (0.5 - item.anchor[1]) * item.height,
-              0,
-            );
-            const mesh = new T.Mesh(geometry, material);
-            mesh.position.set(point.x - 9, 0.15, point.y - 16);
-            this.scene.add(mesh);
-            this.artwork.push(mesh);
+          const geometry = new T.PlaneGeometry(item.width, item.height);
+          geometry.translate(
+            (0.5 - item.anchor[0]) * item.width,
+            (0.5 - item.anchor[1]) * item.height,
+            0,
+          );
+          const mesh = new T.InstancedMesh(
+            geometry,
+            material,
+            item.positions.length,
+          );
+          mesh.instanceMatrix.setUsage(T.StaticDrawUsage);
+          const matrix = new T.Matrix4();
+          const position = new T.Vector3();
+          const scale = new T.Vector3(1, 1, 1);
+          for (let i = 0; i < item.positions.length; i++) {
+            const point = item.positions[i];
+            position.set(point.x - 9, 0.15, point.y - 16);
+            matrix.compose(position, this.camera.quaternion, scale);
+            mesh.setMatrixAt(i, matrix);
           }
+          mesh.computeBoundingSphere();
+          this.scene.add(mesh);
         }),
       );
     } catch {
@@ -400,21 +462,30 @@ export class Arena {
     water.position.set(0, 0.1, 0);
     water.receiveShadow = true;
     r.add(water);
-    for (let i = 0; i < 20; i++) {
-      const wave = new T.Mesh(
-        new T.PlaneGeometry(0.35 + (i % 4) * 0.28, 0.055),
-        new T.MeshBasicMaterial({
-          color: 0xbcf1e5,
-          transparent: true,
-          opacity: 0.25,
-          depthWrite: false,
-        }),
-      );
-      wave.rotation.x = -Math.PI / 2;
-      wave.position.set(-10 + i * 1.1, 0.13, Math.sin(i * 12) * 1);
-      r.add(wave);
-      this.waters.push(wave);
-    }
+    const waveGeometry = new T.PlaneGeometry(1, 0.055);
+    waveGeometry.rotateX(-Math.PI / 2);
+    waveGeometry.setAttribute(
+      "instanceOpacity",
+      new T.InstancedBufferAttribute(this.waveOpacities, 1),
+    );
+    const waveMaterial = new T.MeshBasicMaterial({
+      color: 0xbcf1e5,
+      transparent: true,
+      opacity: 1,
+      depthWrite: false,
+    });
+    waveMaterial.onBeforeCompile = (shader) => {
+      shader.vertexShader = shader.vertexShader
+        .replace("#include <common>", "#include <common>\nattribute float instanceOpacity;\nvarying float vInstanceOpacity;")
+        .replace("#include <begin_vertex>", "#include <begin_vertex>\nvInstanceOpacity = instanceOpacity;");
+      shader.fragmentShader = shader.fragmentShader
+        .replace("#include <common>", "#include <common>\nvarying float vInstanceOpacity;")
+        .replace("#include <alphamap_fragment>", "#include <alphamap_fragment>\ndiffuseColor.a *= vInstanceOpacity;");
+    };
+    this.waterWaves = new T.InstancedMesh(waveGeometry, waveMaterial, 20);
+    for (let i = 0; i < 20; i++) this.wavePositions[i] = -10 + i * 1.1;
+    this.updateWaterWaves(0, 0);
+    r.add(this.waterWaves);
     for (const z of [-1.6, 1.6])
       for (let x = -9.5; x <= 9.5; x += 1) {
         if (Math.abs(x + 5) < 1.2 || Math.abs(x - 5) < 1.2) continue;
@@ -496,20 +567,44 @@ export class Arena {
         z = -1.3 + Math.floor(i / 2) * 0.48;
       sphere(r, x, 0.1, z, 0.3, 0x8a9c8e, 1, 0.55, 0.7);
     }
-    batchGeometry(r, [...this.waters, ...this.flags]);
+    batchGeometry(r, [this.waterWaves, ...this.flags]);
+  }
+  private updateWaterWaves(dt: number, time: number) {
+    if (!this.waterWaves || (dt === 0 && time === this.lastWaveTime)) return;
+    this.lastWaveTime = time;
+    for (let i = 0; i < 20; i++) {
+      let x = this.wavePositions[i] + dt * 0.35;
+      if (x > 10) x = -10;
+      this.wavePositions[i] = x;
+      this.waveMatrix.makeScale(0.35 + (i % 4) * 0.28, 1, 1);
+      this.waveMatrix.setPosition(x, 0.13, Math.sin(i * 12));
+      this.waterWaves.setMatrixAt(i, this.waveMatrix);
+      this.waveOpacities[i] = 0.2 + Math.sin(time * 1.8 + i) * 0.12;
+    }
+    this.waterWaves.instanceMatrix.needsUpdate = true;
+    this.waterWaves.geometry.attributes.instanceOpacity.needsUpdate = true;
   }
   setBattle(battle: Battle) {
+    this.spriteBatcher.clear();
+    this.groundBatcher.clear();
+    this.entityById.clear();
     this.deploymentEffects.reset(battle.audioEvents);
     this.launchEffects.reset(battle.audioEvents);
-    this.projectileTrails.reset();
     this.movementEffects.reset();
+    this.continuousEffects.reset();
     this.chargeMarkers.clear();
     this.chargeFilter.clear();
     this.deployFilter.clear();
+    this.batWiggle.clear();
+    this.banditFilter.clear();
+    this.banditTrail.clear();
+    this.cloneFilter.clear();
     this.coldFilter.clear();
     this.poisonFilter.clear();
     this.rageFilter.clear();
     this.coldStructures.clear();
+    this.infernoBeams.clear();
+    this.minerTrails.clear();
     this.spriteFilters.clear();
     this.spellAreas.clear();
     this.hogLandings.reset();
@@ -528,18 +623,16 @@ export class Arena {
       this.disposeObject(v.object);
     }
     this.units.clear();
+    this.renderer.shadowMap.needsUpdate = true;
     for (const p of this.shots.values()) {
       this.scene.remove(p.object);
       this.disposeObject(p.object);
     }
     this.shots.clear();
+    this.trailCycles.clear();
     for (const impact of this.impacts) this.scene.remove(impact.sprite.mesh);
     this.impacts = [];
-    for (const p of this.particles) {
-      this.scene.remove(p.mesh);
-      p.mesh.geometry.dispose();
-    }
-    this.particles = [];
+    this.particles.clear();
     this.battle = battle;
     this.lastEvent = battle.events.at(-1)?.id ?? 0;
   }
@@ -562,6 +655,12 @@ export class Arena {
   get nativePrincessTowers() {
     return [...this.units.values()].filter((v) => v.building?.princess).length;
   }
+  get nativeBombTowerBombers() {
+    const asset = this.sprites.assets.get("bomber");
+    return [...this.units.values()].filter(
+      (v) => v.building?.attached && asset && v.archer?.asset === asset,
+    ).length;
+  }
   get crownState() {
     return this.crowns.state;
   }
@@ -582,6 +681,30 @@ export class Arena {
       })),
     }));
   }
+  get infernoBeamState() {
+    return this.infernoBeams.state;
+  }
+  get minerTrailState() {
+    return this.minerTrails.state;
+  }
+  get darkPrinceState() {
+    return this.shieldTroopState("dark-prince", "dark-prince-shield");
+  }
+  get guardsState() {
+    return this.shieldTroopState("guards", "guards-shield");
+  }
+  private shieldTroopState(card: CardId, shieldArt: "dark-prince-shield" | "guards-shield") {
+    return this.battle?.entities.filter((e) => e.card === card).map((e) => {
+      const visual = this.units.get(e.id);
+      return {
+        id: e.id, hp: e.hp, shield: e.shield ?? 0,
+        art: visual?.sprite?.asset === this.sprites.assets.get(shieldArt)
+          ? "shielded" : "unshielded",
+        health: visual?.nativeHealth?.mesh.visible
+          ? visual.nativeHealth.mesh.userData.health?.name : null,
+      };
+    }) ?? [];
+  }
   get loadedHealth() {
     return this.health.loaded;
   }
@@ -599,7 +722,7 @@ export class Arena {
     return this.buildings.assets.size;
   }
   get particleCount() {
-    return this.particles.length + this.destruction.count;
+    return this.particles.count + this.destruction.count;
   }
   get destructionState() {
     return {
@@ -612,26 +735,38 @@ export class Arena {
       tails: this.destruction.tailState,
     };
   }
+  get impactSpriteState() {
+    return this.impacts.map((impact) => ({
+      name: impact.sprite.name,
+      frame: impact.sprite.frame,
+    }));
+  }
   get chargeFilterState() {
     return this.chargeFilter.state;
   }
   get deployFilterState() {
     return this.deployFilter.state;
   }
+  get batWiggleState() {
+    return this.batWiggle.state;
+  }
+  get banditFilterState() {
+    return this.banditFilter.state;
+  }
+  get banditTrailState() {
+    return this.banditTrail.state;
+  }
   get coldFilterState() {
     return this.coldFilter.state;
+  }
+  get poisonFilterState() {
+    return this.poisonFilter.state;
   }
   get rageFilterState() {
     return this.rageFilter.state;
   }
   get rageStructureState() {
     return this.coldStructures.rageState;
-  }
-  get rageAreaState() {
-    return this.spellAreas.state.filter((area) => area.card === "rage");
-  }
-  get poisonFilterState() {
-    return this.poisonFilter.state;
   }
   get coldStructureState() {
     return this.coldStructures.state;
@@ -667,6 +802,21 @@ export class Arena {
   get poisonAreaState() {
     return this.spellAreas.state.filter((area) => area.card === "poison");
   }
+  get rageAreaState() {
+    return this.spellAreas.state.filter((area) => area.card === "rage");
+  }
+  get tornadoAreaState() {
+    return this.spellAreas.state.filter((area) => area.card === "tornado");
+  }
+  get graveyardAreaState() {
+    return this.spellAreas.state.filter((area) => area.card === "graveyard");
+  }
+  get cloneFilterState() {
+    return this.cloneFilter.state;
+  }
+  get cloneAreaState() {
+    return this.spellAreas.state.filter((area) => area.card === "clone");
+  }
   get placementState() {
     return this.placement
       ? {
@@ -695,6 +845,33 @@ export class Arena {
     this.camera.bottom = -h / 2;
     this.camera.clearViewOffset();
     this.camera.updateProjectionMatrix();
+  }
+  adaptResolution(fps: number, active: boolean) {
+    if (!active) {
+      this.slowFrames = 0;
+      this.fastFrames = 0;
+      return;
+    }
+    if (this.resolutionCooldown > 0) {
+      this.resolutionCooldown--;
+      return;
+    }
+    this.slowFrames = fps < 42 ? this.slowFrames + 1 : 0;
+    this.fastFrames = fps > 52 ? this.fastFrames + 1 : 0;
+    const current = this.renderer.getPixelRatio();
+    const minimum = this.maxPixelRatio > 1 ? 1 : 0.75;
+    if (this.slowFrames >= 3 && current > minimum) {
+      const target = fps < 22
+        ? minimum
+        : Math.max(minimum, this.maxPixelRatio - 0.5);
+      if (target < current) this.renderer.setPixelRatio(target);
+      this.slowFrames = 0;
+      this.resolutionCooldown = 8;
+    } else if (this.fastFrames >= 8 && current < this.maxPixelRatio) {
+      this.renderer.setPixelRatio(Math.min(this.maxPixelRatio, current + 0.25));
+      this.fastFrames = 0;
+      this.resolutionCooldown = 8;
+    }
   }
   point(clientX: number, clientY: number): Point | null {
     const rect = this.renderer.domElement.getBoundingClientRect();
@@ -796,7 +973,9 @@ export class Arena {
     const p = this.screen(
       point.x,
       point.y,
-      CARD_MAP[this.placement!.card].air ? 5 : 3.2,
+      CARD_MAP[this.placement!.card].air
+        ? entityVisualHeight({ card: this.placement!.card, air: true }) + 3.2
+        : 3.2,
     );
     const x = T.MathUtils.clamp(p.x, 92, Math.max(92, this.width - 92));
     const labelHeight = this.placementFeedback.offsetHeight;
@@ -809,13 +988,7 @@ export class Arena {
   }
   render(dt: number, time: number, effectDelta = dt) {
     if (this.destroyed || this.contextLost) return;
-    for (let i = 0; i < this.waters.length; i++) {
-      const wave = this.waters[i];
-      wave.position.x += dt * 0.35;
-      if (wave.position.x > 10) wave.position.x = -10;
-      (wave.material as T.MeshBasicMaterial).opacity =
-        0.2 + Math.sin(time * 1.8 + i) * 0.12;
-    }
+    this.updateWaterWaves(dt, time);
     for (let i = 0; i < this.flags.length; i++) {
       const f = this.flags[i],
         positions = f.geometry.attributes.position,
@@ -834,6 +1007,9 @@ export class Arena {
     }
     const b = this.battle;
     if (!b) return;
+    const entityById = this.entityById;
+    entityById.clear();
+    for (const entity of b.entities) entityById.set(entity.id, entity);
     this.shake.consume(b.audioEvents, b.seed, b.time);
     const shake = this.shake.update(effectDelta, this.reducedMotion.matches);
     // Native effect points share the renderer's existing 30-points-per-tile
@@ -879,8 +1055,6 @@ export class Arena {
           new T.Vector3(0, 0, 1).applyQuaternion(this.camera.quaternion).y,
         );
     }
-    for (const mesh of this.artwork)
-      mesh.quaternion.copy(this.camera.quaternion);
     const alive = new Set<number>();
     for (const e of b.entities) {
       alive.add(e.id);
@@ -889,6 +1063,7 @@ export class Arena {
         let object: T.Group,
           model: Model | undefined,
           sprite: AnimatedSprite | undefined,
+          shadow: T.Mesh | undefined,
           towerArcher: AnimatedSprite | undefined,
           buildingSprite: BuildingSprite | undefined,
           art: T.Mesh | undefined;
@@ -959,19 +1134,15 @@ export class Arena {
         else if (e.kind === "building")
           object = buildingModel(e.card as CardId, e.team);
         else {
-          sprite = this.sprites.make(e.card as CardId) ?? undefined;
+          sprite = this.sprites.make(
+            e.shield && e.card === "dark-prince" ? "dark-prince-shield" :
+            e.shield && e.card === "guards" ? "guards-shield" : e.card as CardId,
+          ) ?? undefined;
           if (sprite) {
             object = new T.Group();
             object.add(sprite.mesh);
-            const shadow = new T.Mesh(
-              new T.CircleGeometry(e.radius * 1.2, 16),
-              new T.MeshBasicMaterial({
-                color: 0x173721,
-                transparent: true,
-                opacity: 0.22,
-                depthWrite: false,
-              }),
-            );
+            shadow = new T.Mesh(this.shadowGeometry, this.shadowMaterial);
+            shadow.scale.setScalar(e.radius * 1.2);
             shadow.rotation.x = -Math.PI / 2;
             shadow.position.y = 0.02;
             object.add(shadow);
@@ -997,15 +1168,31 @@ export class Arena {
               buildingSprite.mesh.add(archer.mesh);
             } else object.add(archer.mesh);
           }
+        } else if (e.card === "bomb-tower" && buildingSprite?.attached) {
+          const bomber = this.sprites.make("bomber");
+          if (bomber) {
+            towerArcher = bomber;
+            bomber.mesh.position.set(
+              0,
+              buildingSprite.attached.height,
+              0,
+            );
+            bomber.mesh.position.applyQuaternion(
+              this.camera.quaternion.clone().invert(),
+            );
+            bomber.mesh.position.z = 0.01;
+            buildingSprite.mesh.add(bomber.mesh);
+          }
         }
         // Rebuilt/seeked entities may already be old while the clock is paused.
         // Initialize their actual position before any movement interpolation.
-        object.position.set(e.x - 9, e.air ? 2.2 : 0.2, e.y - 16);
+        object.position.set(e.x - 9, entityVisualHeight(e), e.y - 16);
         this.scene.add(object);
         v = {
           object,
           model,
           sprite,
+          shadow,
           art,
           archer: towerArcher,
           building: buildingSprite,
@@ -1018,19 +1205,12 @@ export class Arena {
           this.labels.append(label);
           v.label = label;
         } else {
-          const ring = new T.Mesh(
-            new T.RingGeometry(e.radius * 1.1, e.radius * 1.35, 24),
-            new T.MeshBasicMaterial({
-              color: teamColor(e.team),
-              transparent: true,
-              opacity: 0.8,
-              depthWrite: false,
-              side: T.DoubleSide,
-            }),
-          );
+          const ring = new T.Mesh(this.ringGeometry, this.ringMaterials[e.team]);
+          ring.scale.setScalar(e.radius);
           ring.rotation.x = -Math.PI / 2;
           ring.position.y = 0.03;
           object.add(ring);
+          v.ring = ring;
           v.nativeHealth = this.health.make(e) ?? undefined;
           if (v.nativeHealth) this.scene.add(v.nativeHealth.mesh);
           else {
@@ -1055,8 +1235,9 @@ export class Arena {
           }
         }
         this.units.set(e.id, v);
+        if (v.model) this.renderer.shadowMap.needsUpdate = true;
       }
-      this.updateUnit(v, e, dt, time);
+      this.updateUnit(v, e, entityById.get(e.target ?? -1), dt, time);
     }
     for (const [id, v] of this.units)
       if (!alive.has(id)) {
@@ -1065,11 +1246,34 @@ export class Arena {
         v.label?.remove();
         if (v.nativeHealth) this.scene.remove(v.nativeHealth.mesh);
         this.units.delete(id);
+        if (v.model) this.renderer.shadowMap.needsUpdate = true;
       }
-    for (const burst of this.projectileTrails.consume(b.projectiles, b.seed))
-      this.destruction.trail(burst);
+    this.infernoBeams.update(b.entities, this.camera);
+    this.minerTrails.update(b.projectiles, this.camera);
     const liveShots = new Set<number>();
     for (const p of b.projectiles) {
+      if (p.style === "miner-travel") {
+        if (!this.trailCycles.has(p.id) && this.effects.asset) {
+          this.destruction.burstAlong(
+            "trail:miner",
+            (seconds) => {
+              const progress = Math.min(1, seconds / p.duration);
+              return new T.Vector3(
+                p.x + (p.tx - p.x) * progress - 9,
+                0.2,
+                p.y + (p.ty - p.y) * progress - 16,
+              );
+            },
+            p.duration,
+            0,
+            b.seed ^ p.id,
+            p.team,
+            p.elapsed ?? 0,
+          );
+          this.trailCycles.set(p.id, 0);
+        }
+        continue;
+      }
       liveShots.add(p.id);
       let shot = this.shots.get(p.id);
       if (!shot) {
@@ -1077,8 +1281,136 @@ export class Arena {
         this.shots.set(p.id, shot);
         this.scene.add(shot.object);
       }
-      const target = b.entities.find((e) => e.id === p.target && e.hp > 0);
+      const candidate = entityById.get(p.target ?? -1);
+      const target = candidate && candidate.hp > 0 ? candidate : undefined;
       updateProjectile(shot, p, this.effects, this.camera, target);
+      if (p.style === "rocket" && p.speed && this.effects.asset) {
+        const age = p.elapsed ?? 0;
+        const cycle = Math.floor((age + 1e-8) / 0.8);
+        const last = this.trailCycles.get(p.id) ?? -1;
+        const duration = Math.hypot(p.tx - p.x, p.ty - p.y) / p.speed;
+        for (let i = last + 1; i <= cycle; i++)
+          this.destruction.burstAlong(
+            "trail:rocket",
+            (seconds) => rocketFlightPoint(p, seconds),
+            duration,
+            i * 0.8,
+            b.seed ^ p.id ^ Math.imul(i, 0x9e3779b9),
+            p.team,
+            age,
+          );
+        this.trailCycles.set(p.id, cycle);
+      }
+      if (p.style === "log" && p.speed && this.effects.asset) {
+        const age = p.elapsed ?? 0;
+        const cycle = Math.floor((age + 1e-8) / 0.8);
+        const last = this.trailCycles.get(p.id) ?? -1;
+        for (let i = last + 1; i <= cycle; i++)
+          this.destruction.burstAlong(
+            "trail:log",
+            (seconds) => logFlightPoint(p, seconds),
+            p.duration,
+            i * 0.8,
+            b.seed ^ p.id ^ Math.imul(i, 0x9e3779b9),
+            p.team,
+            age,
+          );
+        this.trailCycles.set(p.id, cycle);
+      }
+      if (p.style === "bowler" && p.speed && this.effects.asset) {
+        const age = p.elapsed ?? 0;
+        const cycle = Math.floor((age + 1e-8) / 0.36);
+        const last = this.trailCycles.get(p.id) ?? -1;
+        for (let i = last + 1; i <= cycle; i++)
+          this.destruction.burstAlong(
+            "trail:bowler",
+            (seconds) => curvedFlightPoint(p, seconds),
+            p.duration,
+            i * 0.36,
+            b.seed ^ p.id ^ Math.imul(i, 0x9e3779b9),
+            p.team,
+            age,
+          );
+        this.trailCycles.set(p.id, cycle);
+      }
+      if (p.style === "executioner" && p.speed && this.effects.asset &&
+          !this.trailCycles.has(p.id)) {
+        this.destruction.burstAlong(
+          "trail:executioner",
+          (seconds) => executionerFlightPoint(p, seconds),
+          executionerFlightSeconds(p),
+          0, b.seed ^ p.id, p.team, p.elapsed ?? 0,
+        );
+        this.trailCycles.set(p.id, 0);
+      }
+      if (p.style === "sparky" && p.speed && this.effects.asset &&
+          !this.trailCycles.has(p.id)) {
+        this.destruction.burstAlong(
+          "trail:sparky",
+          (seconds) => curvedFlightPoint(p, seconds),
+          p.duration, 0, b.seed ^ p.id, p.team, p.elapsed ?? 0,
+        );
+        this.trailCycles.set(p.id, 0);
+      }
+      if (p.style === "dart-goblin" && p.speed && this.effects.asset) {
+        // The source emitter lays fifteen fragments across one short dart flight.
+        // Rebuilding a late snapshot retains only fragments still alive.
+        if (!this.trailCycles.has(p.id)) {
+          const duration = Math.hypot(p.tx - p.x, p.ty - p.y) / p.speed;
+          this.destruction.burstAlong(
+            "trail:dart-goblin",
+            (seconds) => rocketFlightPoint(p, seconds),
+            duration,
+            0,
+            b.seed ^ p.id,
+            p.team,
+            p.elapsed ?? 0,
+          );
+          this.trailCycles.set(p.id, 0);
+        }
+      }
+      if ((p.style === "ice-wizard" || p.style === "ice-spirit" ||
+           p.style === "fire-spirits") &&
+          p.speed && this.effects.asset) {
+        if (!this.trailCycles.has(p.id)) {
+          const duration = Math.hypot(p.tx - p.x, p.ty - p.y) / p.speed;
+          this.destruction.burstAlong(
+            p.style === "ice-spirit" ? "trail:ice-spirit" :
+              p.style === "fire-spirits" ? "trail:fire-spirits" : "trail:ice-wizard",
+            (seconds) => curvedFlightPoint(p, seconds),
+            duration,
+            0,
+            b.seed ^ p.id,
+            p.team,
+            p.elapsed ?? 0,
+          );
+          this.trailCycles.set(p.id, 0);
+        }
+      }
+      if ((p.style === "lava-hound" || p.style === "lava-pup") &&
+          p.speed && this.effects.asset && !this.trailCycles.has(p.id)) {
+        this.destruction.burstAlong(
+          p.style === "lava-hound" ? "trail:lava-hound" : "trail:lava-pup",
+          (seconds) => curvedFlightPoint(p, seconds),
+          p.duration, 0, b.seed ^ p.id, p.team, p.elapsed ?? 0,
+        );
+        this.trailCycles.set(p.id, 0);
+      }
+      if (p.style === "princess" && p.speed && this.effects.asset) {
+        if (!this.trailCycles.has(p.id)) {
+          const duration = Math.hypot(p.tx - p.x, p.ty - p.y) / p.speed;
+          this.destruction.burstAlong(
+            "trail:princess",
+            (seconds) => curvedFlightPoint(p, seconds),
+            duration,
+            0,
+            b.seed ^ p.id,
+            p.team,
+            p.elapsed ?? 0,
+          );
+          this.trailCycles.set(p.id, 0);
+        }
+      }
       if (
         dt > 0 &&
         !b.winner &&
@@ -1099,12 +1431,24 @@ export class Arena {
         this.scene.remove(s.object);
         this.disposeObject(s.object);
         this.shots.delete(id);
+        this.trailCycles.delete(id);
       }
+    const liveProjectiles = new Set(b.projectiles.map((projectile) => projectile.id));
+    for (const id of this.trailCycles.keys())
+      if (!liveProjectiles.has(id)) this.trailCycles.delete(id);
     for (const event of b.events) {
       if (event.id <= this.lastEvent) continue;
       this.lastEvent = event.id;
       const eventAge = Math.max(0, b.time - event.time);
       const pos = new T.Vector3(event.x - 9, 0.6, event.y - 16);
+      if (event.type === "spell" && event.effect === "miner-travel")
+        this.destruction.burst(
+          "miner-travel",
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
       if (event.type === "spell" && event.card === "freeze") {
         for (const effect of ["freeze", "freeze-loop"] as const)
           this.destruction.burst(
@@ -1115,29 +1459,14 @@ export class Arena {
             eventAge,
           );
       }
-      if (event.type === "spell" && event.card === "rage") {
-        const origin = new T.Vector3(event.x - 9, 0.2, event.y - 16);
+      if (event.type === "spell" && event.card === "heal")
         this.destruction.burst(
-          "rage",
-          origin,
+          "heal",
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
           b.seed ^ event.id,
           event.team,
           eventAge,
         );
-        // Reconstruct the short looping emitter at each area hit interval.
-        for (
-          let index = 0;
-          index < Math.ceil(rageRules.duration / rageRules.areaHitInterval);
-          index++
-        )
-          this.destruction.burst(
-            "rage-loop",
-            origin,
-            b.seed ^ event.id ^ Math.imul(index, 0x9e3779b9),
-            event.team,
-            eventAge - index * rageRules.areaHitInterval,
-          );
-      }
       if (event.type === "spell" && event.card === "poison") {
         const origin = new T.Vector3(event.x - 9, 0.2, event.y - 16);
         this.destruction.burst(
@@ -1159,13 +1488,100 @@ export class Arena {
             eventAge - offset,
           );
       }
+      if (event.type === "spell" && event.card === "rage") {
+        const origin = new T.Vector3(event.x - 9, 0.2, event.y - 16);
+        this.destruction.burst(
+          "rage",
+          origin,
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
+        for (const [index, offset] of [0, 3].entries())
+          this.destruction.burst(
+            "rage-loop",
+            origin,
+            b.seed ^ event.id ^ Math.imul(index, 0x9e3779b9),
+            event.team,
+            eventAge - offset,
+          );
+      }
+      if (event.type === "spell" && event.card === "tornado")
+        this.destruction.burst(
+          "tornado",
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
+      if (event.type === "spell" && event.card === "graveyard")
+        this.destruction.burst(
+          "graveyard",
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
+      if (event.type === "spell" && event.card === "clone")
+        this.destruction.burst(
+          "clone",
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
+      if (event.type === "spell" && event.card === "ice-golem") {
+        const origin = new T.Vector3(event.x - 9, 0.2, event.y - 16);
+        this.destruction.burst(
+          "ice-golem-slow", origin, b.seed ^ event.id, event.team, eventAge,
+        );
+        for (const [index, offset] of [0, 1].entries())
+          this.destruction.burst(
+            "ice-golem-ground", origin,
+            b.seed ^ event.id ^ Math.imul(index, 0x9e3779b9),
+            event.team, eventAge - offset,
+          );
+      }
+      if (event.type === "spell" && event.effect === "summon:night-witch")
+        this.destruction.burst(
+          "summon:night-witch",
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
+      if (event.type === "spell" &&
+          (event.effect === "dash-start:bandit" || event.effect === "dash-end:bandit"))
+        this.destruction.burst(
+          event.effect,
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
+      if (event.type === "deploy" && event.effect === "graveyard-appear")
+        this.destruction.burst(
+          "graveyard-appear",
+          new T.Vector3(event.x - 9, 0.2, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
+      if (event.type === "deploy" && event.effect === "clone-appear")
+        this.destruction.burst(
+          "clone-appear",
+          new T.Vector3(event.x - 9, 0.35, event.y - 16),
+          b.seed ^ event.id,
+          event.team,
+          eventAge,
+        );
       if (event.type === "hit") {
         const impactPosition = new T.Vector3(
           event.x - 9,
           event.height ?? 0.6,
           event.y - 16,
         );
-        if (event.card === "tesla" && event.origin) {
+        if ((event.card === "tesla" || event.card === "electro-wizard") && event.origin) {
           const origin = new T.Vector3(
             event.origin.x - 9,
             event.origin.height,
@@ -1175,14 +1591,23 @@ export class Arena {
             .clone()
             .sub(origin)
             .applyQuaternion(this.camera.quaternion.clone().invert());
-          const beam = this.impact("tesla_beam", origin, 0.3, eventAge);
+          const electro = event.card === "electro-wizard";
+          const name = electro ? "electro_wiz_beam" : "tesla_beam";
+          const beam = this.impact(name, origin, electro ? 0.27 : 0.3, eventAge);
           if (beam) {
-            beam.mesh.rotateZ(Math.atan2(direction.y, direction.x));
-            beam.mesh.scale.set(
-              Math.hypot(direction.x, direction.y) / 2.7,
-              0.7,
-              1,
-            );
+            const angle = Math.atan2(direction.y, direction.x);
+            if (electro) {
+              const bounds = (this.effects.asset!.data.clips[name] as unknown as { bounds: number[] }).bounds;
+              const scale = Math.hypot(direction.x, direction.y) / ((bounds[2] - bounds[0]) / 30);
+              const offset = new T.Vector3(
+                Math.cos(angle) * -bounds[0] / 30 * scale,
+                Math.sin(angle) * -bounds[0] / 30 * scale,
+                0,
+              ).applyQuaternion(this.camera.quaternion);
+              beam.mesh.position.add(offset);
+              beam.mesh.scale.set(scale, 1, 1);
+            } else beam.mesh.scale.set(Math.hypot(direction.x, direction.y) / 2.7, 0.7, 1);
+            beam.mesh.rotateZ(angle);
           }
         }
         const nativeImpact = event.effect ?? impactEffect(event.card ?? "");
@@ -1210,7 +1635,7 @@ export class Arena {
           );
           continue;
         }
-        if (event.card === "tesla" && event.origin) {
+        if ((event.card === "tesla" || event.card === "electro-wizard") && event.origin) {
           continue;
         } else if (event.card === "zap") {
           const bolt = this.impact(
@@ -1265,8 +1690,8 @@ export class Arena {
             effect,
             new T.Vector3(
               event.x - 9,
-              event.card && event.card !== "tower" && CARD_MAP[event.card].air
-                ? 2.2
+              event.card && event.card !== "tower"
+                ? entityVisualHeight({ card: event.card, air: !!CARD_MAP[event.card].air })
                 : 0.2,
               event.y - 16,
             ),
@@ -1303,18 +1728,7 @@ export class Arena {
           );
       }
     }
-    for (const p of this.particles) {
-      p.life -= dt;
-      p.velocity.y -= dt * 5;
-      p.mesh.position.addScaledVector(p.velocity, dt);
-      p.mesh.scale.setScalar(Math.max(0, p.life / p.max));
-    }
-    const dead = this.particles.filter((p) => p.life <= 0);
-    for (const p of dead) {
-      this.scene.remove(p.mesh);
-      p.mesh.geometry.dispose();
-    }
-    this.particles = this.particles.filter((p) => p.life > 0);
+    this.particles.update(dt);
     this.impacts = this.impacts.filter((impact) => {
       const age = this.destruction.time - impact.start;
       if (age >= impact.life) {
@@ -1372,8 +1786,19 @@ export class Arena {
         this.chargeMarkers.burst(burst.actor, this.destruction.time, burst.age);
         this.chargeFilter.burst(burst.actor, this.destruction.time, burst.age);
         this.onCharge(burst);
-      }
+      } else if (burst.effect === "charge:dark-prince" ||
+                 burst.effect === "charge:battle-ram") this.onCharge(burst);
     }
+    if (this.effects.asset)
+      for (const burst of this.continuousEffects.consume(b.entities, b.seed))
+        this.destruction.burstContinuous(
+          burst.effect,
+          burst.component,
+          new T.Vector3(burst.origin.x - 9, 0.12, burst.origin.y - 16),
+          burst.seed,
+          burst.team,
+          burst.age,
+        );
     for (const burst of this.hogLandings.consume(b.entities, b.seed, b.time))
       this.destruction.burst(
         burst.effect,
@@ -1384,6 +1809,11 @@ export class Arena {
       );
     this.chargeMarkers.update(b.entities, this.destruction.time, this.width);
     this.deployFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
+    this.batWiggle.update(b.entities, (id) => this.units.get(id)?.sprite);
+    this.banditFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
+    this.banditTrail.update(b.events, b.entities, b.time,
+      this.sprites.assets.get("bandit"), this.camera);
+    this.cloneFilter.update(b.entities, (id) => this.units.get(id)?.sprite);
     this.spellAreas.update(b.areas);
     this.chargeFilter.update(
       b.entities,
@@ -1395,12 +1825,12 @@ export class Arena {
       this.destruction.time,
       (id) => this.units.get(id)?.sprite,
     );
-    this.rageFilter.update(
+    this.poisonFilter.update(
       b.entities,
       this.destruction.time,
       (id) => this.units.get(id)?.sprite,
     );
-    this.poisonFilter.update(
+    this.rageFilter.update(
       b.entities,
       this.destruction.time,
       (id) => this.units.get(id)?.sprite,
@@ -1411,12 +1841,26 @@ export class Arena {
     this.destruction.update(0, this.camera);
     this.deployment.render(time, this.camera);
     this.positionPlacementFeedback();
-    this.renderer.render(this.scene, this.camera);
-    // Re-uploading textures and compiling shaders can stall the first restored
-    // draw. Keep gameplay unavailable until that draw has actually returned.
-    if (this.restoringContext && !this.renderer.getContext().isContextLost()) {
-      this.restoringContext = false;
-      this.onContextRestored();
+    for (const unit of this.units.values())
+      if (unit.model) {
+        this.renderer.shadowMap.needsUpdate = true;
+        break;
+      }
+    try {
+      if (this.units.size >= 20) {
+        this.spriteBatcher.prepare(this.units.values(), this.camera);
+        this.groundBatcher.prepare(this.units.values());
+      } else this.spriteBatcher.idle();
+      this.renderer.render(this.scene, this.camera);
+      // Texture uploads and shader compilation can stall the first restored draw.
+      // Gameplay becomes available only after that draw returns successfully.
+      if (this.restoringContext && !this.renderer.getContext().isContextLost()) {
+        this.restoringContext = false;
+        this.onContextRestored();
+      }
+    } finally {
+      this.spriteBatcher.finish();
+      this.groundBatcher.finish();
     }
   }
   private impact(name: string, position: T.Vector3, life: number, age = 0) {
@@ -1429,9 +1873,9 @@ export class Arena {
     this.impacts.push({ sprite, start: this.destruction.time - age, life });
     return sprite;
   }
-  private updateUnit(v: Visual, e: Entity, dt: number, time: number) {
+  private updateUnit(v: Visual, e: Entity, target: Entity | undefined, dt: number, time: number) {
     const o = v.object;
-    const y = e.air ? 2.2 : 0.2;
+    const y = entityVisualHeight(e);
     const jump = hogJumpHeight(e);
     const oldX = o.position.x,
       oldZ = o.position.z;
@@ -1450,9 +1894,24 @@ export class Arena {
         : moving && e.kind === "troop"
           ? Math.abs(Math.sin(time * 9 + e.id)) * 0.05
           : 0);
+    // Keep the original ground-unit marker plane as air units rise and bob.
+    if (v.shadow) v.shadow.position.y = 0.22 - o.position.y;
+    if (v.ring) v.ring.position.y = 0.23 - o.position.y;
     if (v.sprite) {
+      if (e.card === "dark-prince" || e.card === "guards") {
+        const source = e.shield ?
+          e.card === "guards" ? "guards-shield" : "dark-prince-shield" : e.card;
+        if (v.sprite.asset !== this.sprites.assets.get(source)) {
+          const next = this.sprites.make(source);
+          if (next) {
+            o.remove(v.sprite.mesh);
+            o.add(next.mesh);
+            v.sprite = next;
+          }
+        }
+      }
+      v.sprite.mesh.position.x = 0;
       v.sprite.mesh.position.y = jump;
-      const target = this.battle?.entities.find((t) => t.id === e.target);
       this.sprites.update(v.sprite, e, target, moving, time, this.camera, {
         x: o.position.x - oldX,
         y: o.position.z - oldZ,
@@ -1462,14 +1921,14 @@ export class Arena {
       this.buildings.update(
         v.building,
         e,
-        this.battle?.entities.find((t) => t.id === e.target),
+        target,
         this.camera,
         time,
       );
     if (v.archer) {
-      const target = this.battle?.entities.find((t) => t.id === e.target);
       this.sprites.update(v.archer, e, target, false, time, this.camera);
-      if (v.building?.princess) v.archer.mesh.quaternion.identity();
+      if (v.building?.princess || v.building?.attached)
+        v.archer.mesh.quaternion.identity();
     }
     if (v.art) {
       v.art.quaternion.copy(this.camera.quaternion);
@@ -1514,7 +1973,6 @@ export class Arena {
       v.healthFill.position.x = -(1 - e.hp / e.maxHp) * 0.425;
     }
     if (e.kind !== "tower" && !v.sprite && !v.art && !v.building) {
-      const target = this.battle?.entities.find((t) => t.id === e.target);
       const targetAngle = target
         ? Math.atan2(target.x - e.x, target.y - e.y)
         : e.team === "blue"
@@ -1572,20 +2030,7 @@ export class Arena {
     life: number,
     speed: number,
   ) {
-    if (this.particles.length > 400) return;
-    const mesh = new T.Mesh(new T.IcosahedronGeometry(size, 0), mat(color));
-    mesh.position.copy(pos);
-    this.scene.add(mesh);
-    this.particles.push({
-      mesh,
-      velocity: new T.Vector3(
-        (Math.random() - 0.5) * speed,
-        Math.random() * speed,
-        (Math.random() - 0.5) * speed,
-      ),
-      life,
-      max: life,
-    });
+    this.particles.burst(pos, color, size, life, speed);
   }
   private disposeObject(object: T.Object3D) {
     object.traverse((o) => {
@@ -1596,6 +2041,15 @@ export class Arena {
   destroy() {
     this.destroyed = true;
     this.observer.disconnect();
+    this.spriteBatcher.clear();
+    this.groundBatcher.clear();
+    this.shadowGeometry.dispose();
+    this.ringGeometry.dispose();
+    this.shadowMaterial.dispose();
+    this.ringMaterials.blue.dispose();
+    this.ringMaterials.red.dispose();
+    this.entityById.clear();
+    this.particles.destroy();
     this.scene.traverse((o) => {
       if (o instanceof T.Mesh && !o.geometry.userData.shared)
         o.geometry.dispose();
@@ -1606,10 +2060,16 @@ export class Arena {
     this.chargeMarkers.destroy();
     this.chargeFilter.clear();
     this.deployFilter.clear();
+    this.batWiggle.clear();
+    this.banditFilter.clear();
+    this.banditTrail.clear();
+    this.cloneFilter.clear();
     this.coldFilter.clear();
     this.poisonFilter.clear();
     this.rageFilter.clear();
     this.coldStructures.clear();
+    this.infernoBeams.clear();
+    this.minerTrails.clear();
     this.spriteFilters.clear();
     this.spellAreas.clear();
     this.placementFeedback.remove();

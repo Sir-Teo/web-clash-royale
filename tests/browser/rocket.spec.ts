@@ -24,12 +24,20 @@ test("Rocket native flight and moving trails pause, rebuild and expire after bot
       .poll(async () => (await state()).time)
       .toBeGreaterThan(before + 0.99);
   };
-  await expect.poll(async () => (await rockets()).shots.length).toBe(2);
-  expect(
-    (await rockets()).shots.every(
-      (p: any) => p.sprites[0].name === "projectile_rocket",
-    ),
-  ).toBe(true);
+  // Scene changes repaint on the next frame; the previous volley also has
+  // two shots, so its count alone cannot establish Rocket readiness.
+  await expect
+    .poll(
+      async () =>
+        (await rockets()).shots.map((shot: any) =>
+          shot.sprites.map((sprite: any) => sprite.name),
+        ),
+      { timeout: 30000 },
+    )
+    .toEqual([
+      ["projectile_rocket", "projectile_shadow_rocket"],
+      ["projectile_rocket", "projectile_shadow_rocket"],
+    ]);
   await step();
   await step();
   const held = await state(),

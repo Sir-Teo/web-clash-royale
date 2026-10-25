@@ -286,7 +286,7 @@ $("#app").innerHTML = `
   <header class="topbar">
    <a class="brand" href="#" aria-label="Clash Royale home"><span class="brand-shield">${icon("crown")}</span><span><b>CLASH <em>ROYALE</em></b><small>BROWSER ARENA</small></span></a>
    <nav class="primary-nav" aria-label="Main navigation"><button data-nav="battle" class="active">${icon("swords")}<span>Battle</span></button><button data-nav="cards">${icon("layers-2")}<span>Cards</span><b>${CARDS.length}</b></button><button data-nav="history">${icon("history")}<span>Battle log</span></button></nav>
-   <div class="top-actions"><div class="gold-wallet" title="Gold earned from battles and chests"><span class="coin">${icon("coins")}</span><b id="gold">${fmt(profile.gold)}</b><span class="wallet-label">GOLD</span></div><button class="icon-button sound-toggle" aria-label="Toggle sound">${icon(profile.sound ? "volume-2" : "volume-x")}</button><button class="avatar" data-settings aria-label="Player settings">T<span></span></button></div>
+   <div class="top-actions"><div class="gold-wallet" title="Gold earned from battles and chests"><span class="coin">${icon("coins")}</span><b id="gold">${fmt(profile.gold)}</b><span class="wallet-label">GOLD</span></div><button class="icon-button sound-toggle" aria-label="Toggle sound effects">${icon(profile.sound ? "volume-2" : "volume-x")}</button><button class="avatar" data-settings aria-label="Player settings">T<span></span></button></div>
   </header>
   <div class="workspace">
    <aside class="left-sidebar">
@@ -394,7 +394,9 @@ function startEnding(hold = false) {
   ending.start(endResult(battle, player, opponentName), hold);
 }
 $(".match-timer").append($("#elixir-rate"));
-announcements.onCue = (file, volume) => audio.play(file, volume);
+announcements.onCue = (file, volume) => {
+  if (graphicsAvailable) audio.play(file, volume);
+};
 
 function refreshIcons() {
   nativeCards.hydrate();
@@ -476,8 +478,8 @@ function closeModal() {
     modalPausedBattle = false;
     paused = false;
     accumulator = 0;
-    if (graphicsAvailable && screen === "battle" && !battle.winner)
-      audio.startMusic();
+    if (graphicsAvailable && screen !== "lobby" && !battle.winner)
+      audio.startMusic(battle.time);
   }
   if (wasResult && screen === "battle" && battle.winner) {
     lobby();
@@ -692,7 +694,7 @@ function startBattle(
   nativeCards.reset(battle.time, battle.players.blue.hand);
   matchHud.reset(arena.effectTime, crownCounts());
   updateBattleUI(true);
-  if (graphicsAvailable) audio.startMusic();
+  if (graphicsAvailable) audio.startMusic(battle.time);
   if (!profile.seenTutorial) {
     profile.seenTutorial = true;
     saveProfile(profile);
@@ -731,7 +733,13 @@ function updateBattleUI(force = false) {
           selectCard(Number(e.dataset.slot), true);
       });
       e.addEventListener("pointerdown", (event) => {
-        if (screen !== "battle" || paused || intro.clock.blocking) return;
+        if (
+          !graphicsAvailable ||
+          screen !== "battle" ||
+          paused ||
+          intro.clock.blocking
+        )
+          return;
         if (!event.isPrimary || pointerDown) return;
         clearKeyboardAim();
         activeSlot = Number(e.dataset.slot);
@@ -746,20 +754,34 @@ function updateBattleUI(force = false) {
   const next = CARD_MAP[p.queue[0]];
   $("#next-card-img").setAttribute("src", cardArt(next.id));
   $("#next-card-img").setAttribute("alt", `Next card: ${next.name}`);
-  $("#next-card-cost").textContent = String(next.cost);
+  $("#next-card-cost").textContent = String(
+    battle.cardCost("blue", next.id) ?? "?",
+  );
   document
     .querySelectorAll<HTMLElement>(".next-card [data-native-card]")
     .forEach((e) => {
       e.dataset.nativeCard = next.id;
+      e.dataset.cardCost = String(battle.cardCost("blue", next.id) ?? "?");
+      e.dataset.mirrorCard = next.id === "mirror" ? (p.lastPlayed ?? "") : "";
       nativeCards.draw(e);
     });
   document.querySelectorAll<HTMLElement>("[data-slot]").forEach((e, i) => {
+    const id = p.hand[i];
+    const cost = battle.cardCost("blue", id);
+    e.dataset.cardCost = String(cost ?? "?");
+    e.dataset.mirrorCard = id === "mirror" ? (p.lastPlayed ?? "") : "";
+    e.querySelector<HTMLElement>(".cost")!.textContent = String(cost ?? "?");
+    e.setAttribute(
+      "aria-label",
+      `${CARD_MAP[id].name}, ${cost ?? "unknown"} elixir${id === "mirror" && p.lastPlayed ? `, repeats ${CARD_MAP[p.lastPlayed].name}` : ""}`,
+    );
     (e as HTMLButtonElement).disabled =
       !graphicsAvailable ||
       intro.clock.blocking ||
+      cost === null ||
       (multiplayer &&
         (!network.connected || network.pending || !!network.room?.paused));
-    e.classList.toggle("unaffordable", CARD_MAP[p.hand[i]].cost > p.elixir);
+    e.classList.toggle("unaffordable", cost === null || cost > p.elixir);
     e.classList.toggle("selected", selected === i);
     e.setAttribute("aria-pressed", String(selected === i));
   });
@@ -846,13 +868,20 @@ function selectCard(slot: number, keyboard = false) {
     $("#deploy-hint").textContent = "Select a card to deploy";
     arena.showPlacement(null, null);
   } else {
-    const c = CARD_MAP[battle.players.blue.hand[selected]];
+    const id = battle.players.blue.hand[selected];
+    const repeated = battle.cardForPlay("blue", id);
+    const c = CARD_MAP[repeated ?? id];
+    const cost = battle.cardCost("blue", id);
     $("#hand-caption").textContent =
-      `${c.name} · ${c.cost} elixir · ${c.kind === "spell" ? "Target anywhere" : "Deploy on the blue half"}`;
+      cost === null
+        ? "Play another card before Mirror"
+        : `${id === "mirror" ? `Mirror → ${c.name}` : c.name} · ${cost} elixir · ${c.kind === "spell" ? "Target anywhere" : "Deploy on the blue half"}`;
     $("#deploy-hint").textContent =
-      c.kind === "spell"
-        ? `${c.name} · Target anywhere`
-        : `${c.name} · Deploy on your side`;
+      cost === null
+        ? "Play another card before Mirror"
+        : c.kind === "spell"
+          ? `${c.name} · Target anywhere`
+          : `${c.name} · Deploy on your side`;
     refreshPlacement();
   }
   updateBattleUI();
@@ -870,22 +899,28 @@ function refreshPlacement() {
     return;
   }
   const id = battle.players.blue.hand[selected],
-    cost = CARD_MAP[id].cost;
+    cost = battle.cardCost("blue", id),
+    repeated = battle.cardForPlay("blue", id);
   const place = hover
     ? battle.canPlace("blue", id, hover.x, hover.y)
-    : { ok: true, reason: "" };
-  const affordable = battle.players.blue.elixir + 1e-6 >= cost;
+    : repeated
+      ? { ok: true, reason: "" }
+      : { ok: false, reason: "Play another card before Mirror." };
+  const affordable = cost !== null && battle.players.blue.elixir + 1e-6 >= cost;
   const c = CARD_MAP[id];
-  const caption = `${c.name} · ${cost} elixir · ${keyboardAiming ? "Arrows aim · Shift moves farther · Enter deploys" : c.kind === "spell" ? "Target anywhere" : "Deploy on the blue half"}`;
+  const playedCard = CARD_MAP[repeated ?? id];
+  const name =
+    id === "mirror" && repeated ? `Mirror → ${playedCard.name}` : c.name;
+  const caption = `${name} · ${cost ?? "?"} elixir · ${keyboardAiming ? "Arrows aim · Shift moves farther · Enter deploys" : playedCard.kind === "spell" ? "Target anywhere" : "Deploy on the blue half"}`;
   if ($("#hand-caption").textContent !== caption)
     $("#hand-caption").textContent = caption;
   if (keyboardAiming && hover) {
-    const message = `${c.name}, ${cost} elixir. Target column ${Number(hover.x.toFixed(1))}, row ${Number(hover.y.toFixed(1))}. ${!place.ok ? place.reason : !affordable ? `You need ${cost} elixir.` : "Placement valid. Enter deploys."}`;
+    const message = `${name}, ${cost ?? "unknown"} elixir. Target column ${Number(hover.x.toFixed(1))}, row ${Number(hover.y.toFixed(1))}. ${!place.ok ? place.reason : !affordable ? `You need ${cost} elixir.` : "Placement valid. Enter deploys."}`;
     if ($("#keyboard-deployment-status").textContent !== message)
       $("#keyboard-deployment-status").textContent = message;
   }
   arena.showPlacement(
-    id,
+    repeated ?? id,
     hover,
     place.ok && affordable,
     !place.ok ? place.reason : !affordable ? `You need ${cost} elixir` : "",
@@ -967,6 +1002,8 @@ function togglePause() {
     } else closeModal();
   } else {
     syncReplayControl();
+    if (paused) audio.stopMusic();
+    else if (graphicsAvailable && !battle.winner) audio.startMusic(battle.time);
   }
 }
 function syncReplayControl() {
@@ -1156,6 +1193,7 @@ function playReplay(record: RecordEntry, ownerName?: string) {
   nativeCards.reset(battle.time, battle.players.blue.hand);
   matchHud.reset(arena.effectTime, crownCounts());
   updateBattleUI(true);
+  audio.startMusic(battle.time);
   refreshIcons();
 }
 function createReplayBattle(replay: Replay, targetTick = 0) {
@@ -1325,7 +1363,7 @@ function showPeerMultiplayer() {
     '<p class="modal-footnote">Keep both game tabs open. Battles pause when either player switches apps. Some remote networks block direct play; try the same Wi-Fi if connecting fails.</p>';
   let content = "";
   if (room) {
-    content = `<div class="room-banner">${icon("swords")}<span>${modeNames[room.mode]} · Level 11</span></div><p class="room-note">Connected directly. Deck or name changes clear both Ready checks.</p><div class="room-players">${room.players.map((p) => `<div class="room-player ${p.team}">${icon("shield")}<div><b>${esc(p.name)}</b><span>${p.ready ? "Ready for battle" : "Preparing deck"}</span></div>${icon(p.ready ? "check" : "swords")}</div>`).join("")}</div>${loadout ? `<section class="room-deck" aria-label="Your confirmed battle deck"><h3>Your battle deck</h3><div class="match-deck-grid">${loadout.deck.map((id) => cardHTML(id, `data-peer-card="${id}"`)).join("")}</div></section>` : ""}<button id="room-ready" class="primary-button" ${!peer.connected ? "disabled" : ""}>${room.players.find((p) => p.team === peer.team)?.ready ? "Cancel ready" : "Ready for battle"}</button>`;
+    content = `<div class="room-banner">${icon("swords")}<span>${modeNames[room.mode]} · Level 11</span></div><p class="room-note">Connected directly. Deck or name changes clear both Ready checks.</p><div class="room-players">${room.players.map((p) => `<div class="room-player ${p.team}">${icon("shield")}<div><b>${esc(p.name)}</b><span>${p.ready ? "Ready for battle" : "Preparing deck"}</span></div>${icon(p.ready ? "check" : "swords")}</div>`).join("")}</div>${loadout ? `<section class="room-deck" data-peer-deck="${loadout.deck.join(",")}" aria-label="Your confirmed battle deck"><h3>Your battle deck</h3><div class="match-deck-grid">${loadout.deck.map((id) => cardHTML(id, `data-peer-card="${id}"`)).join("")}</div></section>` : ""}<button id="room-ready" class="primary-button" ${!peer.connected ? "disabled" : ""}>${room.players.find((p) => p.team === peer.team)?.ready ? "Cancel ready" : "Ready for battle"}</button>`;
   } else if (peer.setup === "gathering" || peer.setup === "connecting") {
     content = `<div class="room-banner">${icon("users")}<span>${peer.setup === "gathering" ? "Preparing your connection…" : "Connecting to your friend…"}</span></div><p class="room-note" role="status">${peer.setup === "gathering" ? "This usually takes a few seconds." : "Keep this tab open on both devices."}</p>`;
   } else if (peer.setup === "offer" || peer.setup === "answer") {
@@ -1426,6 +1464,7 @@ function showPeerMultiplayer() {
     ?.addEventListener("click", () => {
       const ready = !peer.room?.players.find((p) => p.team === peer.team)
         ?.ready;
+      if (ready && !graphicsAvailable) return;
       if (ready && !peer.updatePlayer(player())) {
         roomError =
           "Could not confirm your deck. Check your name and connection, then try Ready again.";
@@ -1435,6 +1474,55 @@ function showPeerMultiplayer() {
       roomError = "";
       peer.send({ type: "ready", ready });
     });
+}
+// Room packets can arrive while a friend presses Ready. Keep the button node
+// and its click listener in place so a simultaneous status update cannot drop
+// that press between pointer-down and click (notably across Chrome/WebKit).
+function refreshPeerRoom() {
+  const peer = peerNetwork;
+  const room = peer?.room;
+  const ready = document.querySelector<HTMLButtonElement>("#room-ready");
+  const list = document.querySelector<HTMLElement>(".room-players");
+  if (!peer || !room || !ready || !list) return false;
+  const rows = room.players.map((player) => ({
+    player,
+    row: list.querySelector<HTMLElement>(`.room-player.${player.team}`),
+  }));
+  if (rows.some(({ row }) => !row)) return false;
+  for (const { player, row } of rows) {
+    const name = row!.querySelector<HTMLElement>("b");
+    const status = row!.querySelector<HTMLElement>("div > span");
+    const symbol = row!.lastElementChild;
+    if (!name || !status || !symbol) return false;
+    name.textContent = player.name;
+    status.textContent = player.ready ? "Ready for battle" : "Preparing deck";
+    symbol.outerHTML = icon(player.ready ? "check" : "swords");
+  }
+  ready.textContent = room.players.find((player) => player.team === peer.team)
+    ?.ready
+    ? "Cancel ready"
+    : "Ready for battle";
+  ready.disabled = !graphicsAvailable || !peer.connected;
+  const deck = document.querySelector<HTMLElement>(".room-deck");
+  const loadout = peer.loadout;
+  if (loadout && deck && deck.dataset.peerDeck !== loadout.deck.join(",")) {
+    deck.dataset.peerDeck = loadout.deck.join(",");
+    deck.querySelector<HTMLElement>(".match-deck-grid")!.innerHTML =
+      loadout.deck.map((id) => cardHTML(id, `data-peer-card="${id}"`)).join("");
+    deck
+      .querySelectorAll<HTMLButtonElement>("[data-peer-card]")
+      .forEach((button) => {
+        button.onclick = () =>
+          showCard(
+            button.dataset.peerCard as CardId,
+            showPeerMultiplayer,
+            "Back to friend lobby",
+          );
+      });
+  }
+  refreshIcons();
+  syncGraphicsStatus();
+  return true;
 }
 if (peerNetwork)
   peerNetwork.onSetup = () => {
@@ -1474,7 +1562,8 @@ network.onMessage = (message) => {
     syncPeerRematch();
     if (screen === "lobby" && message.room.phase === "waiting")
       peerNetwork?.updatePlayer({ name: profile.name, deck: profile.deck });
-    if (screen === "lobby" && modalKey === "room") showMultiplayer();
+    if (screen === "lobby" && modalKey === "room" && !refreshPeerRoom())
+      showMultiplayer();
     if (multiplayer) updateConnection();
   }
   if (message.type === "state") {
@@ -1877,6 +1966,7 @@ function renderCollection() {
         .map((s) => `<div>${s}</div>`)
         .join("")
     : '<p class="empty-state">No cards match these filters.</p>';
+  nativeCards.hydrate($("#collection-grid"));
   document.querySelectorAll<HTMLButtonElement>("[data-collection]").forEach(
     (e) =>
       (e.onclick = () => {
@@ -2163,7 +2253,8 @@ function showSettings() {
     profile.music = ($("#music-setting") as HTMLInputElement).checked;
     audio.setEnabled(profile.sound);
     audio.musicEnabled = profile.music;
-    if (graphicsAvailable && screen === "battle" && !paused) audio.startMusic();
+    if (graphicsAvailable && screen !== "lobby" && !paused && !battle.winner)
+      audio.startMusic(battle.time);
     if (!profile.music) audio.stopMusic();
     saveProfile(profile);
     refreshProfile();
@@ -2207,7 +2298,7 @@ function refreshSound() {
   $(".sound-toggle").innerHTML = icon(profile.sound ? "volume-2" : "volume-x");
   $(".sound-toggle").setAttribute(
     "aria-label",
-    profile.sound ? "Mute sound" : "Enable sound",
+    profile.sound ? "Mute sound effects" : "Enable sound effects",
   );
   refreshIcons();
 }
@@ -2249,7 +2340,11 @@ function processEvents() {
       ev.card &&
       ev.card !== "tower"
     )
-      elixir.spend(CARD_MAP[ev.card].cost, ev.time, battle.players.blue.elixir);
+      elixir.spend(
+        ev.value ?? battle.cardCost(ev.team, ev.card) ?? CARD_MAP[ev.card].cost,
+        ev.time,
+        battle.players.blue.elixir,
+      );
     if (ev.type === "crown") {
       audio.play("1st_crown_01", 0.35);
     }
@@ -2299,7 +2394,7 @@ try {
     if (modalKey === "room") showMultiplayer();
     updateBattleUI(true);
     if (!document.hidden && screen === "battle" && !paused && !battle.winner)
-      audio.startMusic();
+      audio.startMusic(battle.time);
     toast("Arena graphics restored.");
     // Do not turn time spent rebuilding graphics into catch-up simulation.
     frameTime = performance.now();
@@ -2321,6 +2416,11 @@ try {
       burst.team,
       battle.time - burst.age,
       burst.age,
+      burst.effect === "charge:dark-prince"
+        ? "dark-prince"
+        : burst.effect === "charge:battle-ram"
+          ? "battle-ram"
+          : "prince",
     );
     // A slow render may advance match time before the next frame. Flush the
     // newly observed cue with its visible charge animation now.
@@ -2453,8 +2553,6 @@ document.querySelectorAll<HTMLButtonElement>("[data-nav]").forEach(
 $(".sound-toggle").onclick = () => {
   profile.sound = !profile.sound;
   audio.setEnabled(profile.sound);
-  if (graphicsAvailable && profile.sound && screen === "battle" && !paused)
-    audio.startMusic();
   saveProfile(profile);
   refreshSound();
   audio.play("button_click_02");
@@ -2496,6 +2594,8 @@ function seekReplay(targetTick: number) {
   matchHud.reset(arena.effectTime, crownCounts());
   accumulator = 0;
   updateBattleUI(true);
+  if (graphicsAvailable && !paused && !battle.winner)
+    audio.startMusic(battle.time);
   if (battle.winner) startEnding(true);
 }
 $("#replay-back").onclick = () => seekReplay(battle.tick - 10 / STEP);
@@ -2734,7 +2834,7 @@ function frame(now: number) {
   if (graphicsAvailable && screen !== "lobby" && !paused && !battle.winner) {
     const wasOpening = intro.clock.blocking;
     accumulator += intro.clock.advance(
-      multiplayer && network.room?.paused ? 0 : delta * speed,
+      multiplayer && network.room?.paused ? 0 : Math.min(5, elapsed) * speed,
     );
     if (wasOpening && !intro.clock.blocking) {
       announcements.cue("match start");
@@ -2759,6 +2859,13 @@ function frame(now: number) {
   if (multiplayer) processEvents();
   const presentationPaused =
     !graphicsAvailable || paused || (multiplayer && !!network.room?.paused);
+  audio.syncMusic(
+    battle.time,
+    screen !== "lobby" &&
+      !presentationPaused &&
+      !battle.winner &&
+      (!multiplayer || network.connected),
+  );
   if (presentationPaused && !soundPaused) audio.stopEffects();
   soundPaused = presentationPaused;
   if (screen !== "lobby" && !battle.winner) {
@@ -2788,6 +2895,13 @@ function frame(now: number) {
     fpsFrames++;
     if (now - lastFpsTime >= 1000) {
       fps = Math.round((fpsFrames * 1000) / (now - lastFpsTime));
+      arena.adaptResolution(
+        fps,
+        screen === "battle" &&
+          !presentationPaused &&
+          !battle.winner &&
+          !intro.clock.blocking,
+      );
       fpsFrames = 0;
       lastFpsTime = now;
     }
@@ -2811,7 +2925,9 @@ function frame(now: number) {
       battle.time,
       battle.players.blue.elixir,
       battle.multiplier,
-      selected >= 0 ? CARD_MAP[battle.players.blue.hand[selected]].cost : null,
+      selected >= 0
+        ? battle.cardCost("blue", battle.players.blue.hand[selected])
+        : null,
     );
   if (screen === "replay" && battle.winner) startEnding();
   ending.update(
@@ -2855,14 +2971,20 @@ Object.defineProperty(window, "__arena", {
         selected,
         time: battle.time,
         rulesVersion: battle.rulesVersion,
+        rulesFamily: battle.rulesFamily,
         winner: battle.winner,
         reason: battle.reason,
         loadedEmotes: emotes.loaded,
+        music: audio.musicState,
         emotes: emotes.state,
         elixir: battle.players.blue.elixir,
         hand: [...battle.players.blue.hand],
         opponentName,
         enemyDeck: multiplayer ? undefined : [...battle.enemyDeck],
+        lastPlayed: battle.players.blue.lastPlayed ?? null,
+        handCosts: battle.players.blue.hand.map((id) =>
+          battle.cardCost("blue", id),
+        ),
         troops: battle.entities.filter((e) => e.kind === "troop").length,
         actions: multiplayer
           ? network.actionCount
@@ -2878,23 +3000,24 @@ Object.defineProperty(window, "__arena", {
               transport: network.transport,
             }
           : null,
-        units: multiplayer
-          ? battle.entities.map((e) => ({
-              id: e.id,
-              team: e.team,
-              x: e.x,
-              y: e.y,
-              hp: e.hp,
-              card: e.card,
-            }))
-          : [],
+        units: battle.entities.map((e) => ({
+          id: e.id,
+          team: e.team,
+          x: e.x,
+          y: e.y,
+          hp: e.hp,
+          card: e.card,
+        })),
         fps,
         renderedFrames: frameCount,
         animationTime,
         frameLoopRunning: frameHandle !== undefined,
         drawCalls: arena.renderer.info.render.calls,
+        renderPixelRatio: arena.renderer.getPixelRatio(),
         loadedEffects: arena.loadedEffects,
         projectileArtwork: arena.projectileState,
+        infernoBeams: arena.infernoBeamState,
+        minerTrails: arena.minerTrailState,
         loadedAnnouncements: announcements.loaded,
         loadedIntros: intro.loaded,
         loadedElixir: elixir.loaded,
@@ -2920,13 +3043,36 @@ Object.defineProperty(window, "__arena", {
         rageFilter: arena.rageFilterState,
         rageStructures: arena.rageStructureState,
         poisonAreas: arena.poisonAreaState,
+        healAreas: battle.areas.filter((area) => area.card === "heal"),
         poisonFilter: arena.poisonFilterState,
+
+        tornadoAreas: arena.tornadoAreaState,
+        graveyardAreas: arena.graveyardAreaState,
+        cloneAreas: arena.cloneAreaState,
+        cloneFilter: arena.cloneFilterState,
+        graveyardBirths: battle.events.filter(
+          (event) => event.effect === "graveyard-appear",
+        ).length,
+        lightningAreas: battle.areas
+          .filter((area) => area.card === "lightning")
+          .map((area) => ({
+            team: area.team,
+            x: area.x,
+            y: area.y,
+            remaining: area.remaining,
+            struck: area.struck?.length ?? 0,
+          })),
+        lightningHits: battle.events.filter(
+          (event) => event.type === "hit" && event.card === "lightning",
+        ).length,
+
         poisonStructures: arena.poisonStructureState,
         shake: arena.shakeState,
         placement: arena.placementState,
         loadedAnimations: arena.loadedAnimations,
         nativeTowerPrincesses: arena.nativeTowerPrincesses,
         nativePrincessTowers: arena.nativePrincessTowers,
+        nativeBombTowerBombers: arena.nativeBombTowerBombers,
         crownFlights: arena.crownState,
       };
     },

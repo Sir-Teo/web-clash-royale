@@ -1,6 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { expectedCards } from "./native-assets";
-import { CARD_MAP } from "../../src/game/cards";
+import { CARD_MAP, CARDS } from "../../src/game/cards";
 import type { CardId } from "../../src/game/cards";
 
 test.use({ actionTimeout: 20000 });
@@ -35,7 +34,7 @@ test("Freeze can be chosen and cast from the real phone and desktop hand", async
   const state = () => page.evaluate(() => (window as any).__arena?.state);
   await expect
     .poll(async () => (await state())?.loadedCards, { timeout: 60000 })
-    .toBe(expectedCards);
+    .toBe(CARDS.length);
   await expect(
     page.locator('#deck-preview [data-card-info="freeze"]'),
   ).toBeVisible();
@@ -47,7 +46,7 @@ test("Freeze can be chosen and cast from the real phone and desktop hand", async
   ]);
   await page.getByRole("button", { name: "Close dialog", exact: true }).click();
   await page.locator("#battle-button").click();
-  await expect.poll(async () => (await state())?.intro.blocking).toBe(false);
+  await expect.poll(async () => (await state())?.intro.blocking, { timeout: 60000 }).toBe(false);
   const tap = async (x: number, y: number) => {
     const point = await page.evaluate(
       ({ x, y }) => (window as any).__arena.project(x, y),

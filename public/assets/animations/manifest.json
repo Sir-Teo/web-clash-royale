@@ -21,6 +21,346 @@
       "uniqueFrames": 486
     },
     {
+      "id": "barbarians",
+      "source": "chr_barbarian",
+      "metadataSha256": "5dd9558e9c001db44b5994c7115542064d7e5ea07b5e2fed5e418791481a1936",
+      "dataSha256": "b52870a02bc7ca7cde11ca0a6f38e8e1eb8e0831eafd93a40b26aa7ea5b8cd96",
+      "textures": [
+        {
+          "file": "barbarians-0.webp",
+          "sha256": "d481d034c696f87b006febeeabc54e8dea8fe65efac80cf8a25a990ed7b0becb",
+          "originalSha256": "f9fe0cff5faf9779470fb4d7a972a4dadb084919cf7f97cb7bea4dba35d72da8"
+        }
+      ],
+      "shapes": 342,
+      "clips": 54,
+      "frames": 711,
+      "uniqueFrames": 342
+    },
+    {
+      "id": "elite-barbarians",
+      "source": "chr_barbarian",
+      "metadataSha256": "5dd9558e9c001db44b5994c7115542064d7e5ea07b5e2fed5e418791481a1936",
+      "dataSha256": "be039ebd9697dab08be319ede99f5b567a362ebc980de9f97494476737f5d62c",
+      "textures": [
+        {
+          "file": "barbarians-0.webp",
+          "sha256": "d481d034c696f87b006febeeabc54e8dea8fe65efac80cf8a25a990ed7b0becb",
+          "originalSha256": "f9fe0cff5faf9779470fb4d7a972a4dadb084919cf7f97cb7bea4dba35d72da8"
+        }
+      ],
+      "shapes": 342,
+      "clips": 54,
+      "frames": 720,
+      "uniqueFrames": 342
+    },
+    {
+      "id": "royal-giant",
+      "source": "chr_royal_giant",
+      "metadataSha256": "a35000fedc4954ea95e34ce00286c9c591d929d753070b52bce497545502edaf",
+      "dataSha256": "be38eb6b608b2d49f2eed21f4bdc7d8e6a9fe89da33661129809b316d918b3ad",
+      "textures": [
+        {
+          "file": "royal-giant-0.webp",
+          "sha256": "03101276c602ceda117b9f24ec8a0037411bff9a883e8a81b078267a56d7d2d5",
+          "originalSha256": "252446a18961f99c936f6b48cdacfe871df43e32fc0c8a0dcb6d2ce82bf2d584"
+        }
+      ],
+      "shapes": 477,
+      "clips": 54,
+      "frames": 2916,
+      "uniqueFrames": 1244
+    },
+    {
+      "id": "mega-minion",
+      "source": "chr_mega_minion",
+      "metadataSha256": "5d62b1b6ffc07f197ab3f86eb982570c7fd27ed1d34d6f23c3869d484ee46c4d",
+      "dataSha256": "9ffe215d76c29d5f943c5e4fcc31fc4136a9d5589dad47d3062403fbc0aa003f",
+      "textures": [
+        {
+          "file": "mega-minion-0.webp",
+          "sha256": "2f1264a73abf0e68b9eaba5faaba268f8f292de06f2feada99889d4d182b70bb",
+          "originalSha256": "48b4d8bb8a2aa3d938a88fba77f7e8b240f221377bd6e2aebcc23a6eec1afc18"
+        }
+      ],
+      "shapes": 252,
+      "clips": 54,
+      "frames": 1620,
+      "uniqueFrames": 361
+    },
+    {
+      "id": "dart-goblin",
+      "source": "chr_goblin_blowdart",
+      "metadataSha256": "2a23a93af572dd11afedef93d0985efdaed2611137ee36663cd976b43f69aada",
+      "dataSha256": "46dd3544e33b5c5bd8687684228df84ff7f0f65db5da99ab22f35655e98bc19b",
+      "textures": [
+        {
+          "file": "dart-goblin-0.webp",
+          "sha256": "1f6fea4d7fbd806f40a48368ce51e7abe3ba935ff552159043033b6c32a7dd17",
+          "originalSha256": "6f8bef845487def195f26dfa8f4ebea1879d6b213164593cdeb66655781fc12f"
+        }
+      ],
+      "shapes": 252,
+      "clips": 54,
+      "frames": 1368,
+      "uniqueFrames": 918
+    },
+    {
+      "id": "ice-wizard",
+      "source": "chr_ice_wizard",
+      "metadataSha256": "7b1e93cd364b92477fc87f404920569accaac781d48e6a5d8ccef25faccfccd6",
+      "dataSha256": "4141711dcbf98fe66e5b67c3eb1b4798d500227ca6415607845edd278a34b7c6",
+      "textures": [
+        {
+          "file": "ice-wizard-0.webp",
+          "sha256": "4d537bcc1a1120589d16366e17a004ab70aa3a3491d1ccfc185d4f3d7b2be47d",
+          "originalSha256": "1af231c75f82d072d1f1642c606b9101439421c7a2ca5b8d848265254ad46abd"
+        }
+      ],
+      "shapes": 335,
+      "clips": 54,
+      "frames": 1458,
+      "uniqueFrames": 1260
+    },
+    {
+      "id": "ice-spirit",
+      "source": "chr_ice_spirits",
+      "metadataSha256": "4c22eda6f327dbc047e8154342407637c667d3a049d3e7ad877b9a4cc7cb4f57",
+      "dataSha256": "5420b7cdf1bd21c3d8ae02dad6bb5de18f1ff274653f7085c017f5d66f6b8fe8",
+      "textures": [
+        {
+          "file": "ice-spirit-0.webp",
+          "sha256": "dd19ab0949f67c9f30d8598571c5e7455926968c5e5a5e6830b3470e32ff79f4",
+          "originalSha256": "a7cc49ca99653071f3aeffbe6364045faee5f6aa09d662b9eeba3a65bdbe7b7c"
+        }
+      ],
+      "shapes": 82,
+      "clips": 27,
+      "frames": 935,
+      "uniqueFrames": 815
+    },
+    {
+      "id": "fire-spirits",
+      "source": "chr_fire_firespirit",
+      "metadataSha256": "c9ec75ebe062685e3a528e2ddd7018096263a36518037bf1c7865cba0cd4df20",
+      "dataSha256": "204777d80eb78bee5e30f528c0273c7f9a2ce9503ac66f3601ae09c6136df4b6",
+      "textures": [
+        {
+          "file": "fire-spirits-0.webp",
+          "sha256": "b615562ad83473d70b926fd7691af71668b1efe7303d720b2eea2924fddcd528",
+          "originalSha256": "2feba3029413964906edf96458edb5e698c110fce55ff706f86bbd9c4e8cc1d4"
+        }
+      ],
+      "shapes": 82,
+      "clips": 27,
+      "frames": 675,
+      "uniqueFrames": 423
+    },
+    {
+      "id": "ice-golem",
+      "source": "chr_snowman",
+      "metadataSha256": "3d168f2c36e1ecf99c1b9ec6dd3fdff048033f6d1f07f0fd1f0b8a7e22eef3ff",
+      "dataSha256": "faf53b9b389e41f6613ac7f012811a45a698af54326cc39d4b4ca588c694fe56",
+      "textures": [
+        {
+          "file": "ice-golem-0.webp",
+          "sha256": "0c26e5b7729da54608ee0ab4f8ba78ab8e495fdd0ae482032995e3c9fae6c2e2",
+          "originalSha256": "f620b048e9c915020f135b7cbef6aa86e51ec3c8d2675bd1d074fcb0d078012b"
+        }
+      ],
+      "shapes": 342,
+      "clips": 54,
+      "frames": 1872,
+      "uniqueFrames": 1378
+    },
+    {
+      "id": "princess",
+      "source": "chr_princess",
+      "metadataSha256": "4efbc493b84ef3638642a2cacf21d63bfcb1a77927afae5719c56d64e3307db9",
+      "dataSha256": "e8fcc2a36bbd17e8a4d4dcf0e050d69c587fff3e31b36322f6ebb1266847a385",
+      "textures": [
+        {
+          "file": "princess-0.webp",
+          "sha256": "754dfbd4ba30996382eacc98eb5734e5deaf8ea4bbb65818587908b9bf03f12a",
+          "originalSha256": "6c3383dddc95b065df4dbf517b32366fca654b9ae3bb49499c121ff288ebf930"
+        }
+      ],
+      "shapes": 409,
+      "clips": 54,
+      "frames": 1584,
+      "uniqueFrames": 1230
+    },
+    {
+      "id": "inferno-dragon",
+      "source": "chr_baby_dragon",
+      "metadataSha256": "9d8d74eff5463e27df6bb4db13b9a93aeafb0bbba8f32b1ee582e526ce679190",
+      "dataSha256": "85c4f999de9c374a06df14984bceb8a8a1472752de8711f66f73c7301fd10540",
+      "textures": [
+        {
+          "file": "inferno-dragon-0.webp",
+          "sha256": "b49d1f374060d5e42445c257b76cf83f01f7b48f973948ed9edf6c9344fb7803",
+          "originalSha256": "88c172db5ebce4e847b4f341d7fc59b58de1bb2e8eb3b269a1d92fcdab927ca5"
+        }
+      ],
+      "shapes": 273,
+      "clips": 54,
+      "frames": 1296,
+      "uniqueFrames": 1117
+    },
+    {
+      "id": "electro-wizard",
+      "source": "chr_electro_wizard",
+      "metadataSha256": "07ffb1b1a89239a268e3e8c08034451110956e1a4ccd5ed7be58d83e7f0c3f45",
+      "dataSha256": "e77b84315c8d530a8c664d8c2eccbbd7a7ba1e914b58415c75dc6bdb7926c188",
+      "textures": [
+        {
+          "file": "electro-wizard-0.webp",
+          "sha256": "8b4bb0ecf76bab4709fda9d540fe1ba4527ba2d6f104e063cf9df0bec336c8cb",
+          "originalSha256": "daa5d899ec7e223edebd0029948917ab3dd4f2f0d0ca1214af19037ed1995e2e"
+        }
+      ],
+      "shapes": 301,
+      "clips": 54,
+      "frames": 2718,
+      "uniqueFrames": 1827
+    },
+    {
+      "id": "miner",
+      "source": "chr_miner",
+      "metadataSha256": "05f63f618ee9e58ab5572cc9c2e93fe7f8264bc01d29f9f4f19c0f93be144284",
+      "dataSha256": "d24175241e1caceb0d15d637dfb5bee9980220b14389fbbc7d874078e4429cd5",
+      "textures": [
+        {
+          "file": "miner-0.webp",
+          "sha256": "209960a49c12348360fd356c77506436503d730d4064e13d08e3401351ffa132",
+          "originalSha256": "16bf805d19ff6701e2cc13226695b5ea47c423e04dc9fbf1e3eb3c87183c2df6"
+        }
+      ],
+      "shapes": 415,
+      "clips": 54,
+      "frames": 1476,
+      "uniqueFrames": 810
+    },
+    {
+      "id": "bowler",
+      "source": "chr_bowler",
+      "metadataSha256": "f057c9b308890b6b08ef1d814bb51c68441d89251411479c4fbb89697603514a",
+      "dataSha256": "60112ef05f1e067ad31262911f3babdfcecacc4479445fb24092aef1aafb5e95",
+      "textures": [
+        {
+          "file": "bowler-0.webp",
+          "sha256": "bc761db9ef5d22dbf30c8df041b330894bec24fa4a4acad95f300ccc9ee60133",
+          "originalSha256": "0695211ca59aefed5c5c45037de4bfe17d05dd841d8f7d69198aa8a8183ed8c7"
+        }
+      ],
+      "shapes": 486,
+      "clips": 54,
+      "frames": 1746,
+      "uniqueFrames": 963
+    },
+    {
+      "id": "dark-prince",
+      "source": "chr_black_knight",
+      "metadataSha256": "8c7e05ad2c596fbb4748e127c941c384b8dc5c7a766a6a797eaa6af52ff0536e",
+      "dataSha256": "eefcef958b5ef6872ba2622fc94ef439fdd74857bc581414b06fba8500a13f50",
+      "textures": [
+        {
+          "file": "dark-prince-0.webp",
+          "sha256": "7d953bb2d327dbbd4aa62e446abf8f873698375458282df9ba02e497af24b46e",
+          "originalSha256": "2f6f290575cb560ee07dc48b83f9e1d9fbcc4e10b6e79b88465145bd7d5941f0"
+        }
+      ],
+      "shapes": 504,
+      "clips": 72,
+      "frames": 1152,
+      "uniqueFrames": 504
+    },
+    {
+      "id": "dark-prince-shield",
+      "source": "chr_black_knight",
+      "metadataSha256": "8c7e05ad2c596fbb4748e127c941c384b8dc5c7a766a6a797eaa6af52ff0536e",
+      "dataSha256": "6fad553b93a5427584abb1067f4d1cca73b8b2e0664ecb28ee42b73b133af9c4",
+      "textures": [
+        {
+          "file": "dark-prince-shield-0.webp",
+          "sha256": "7d953bb2d327dbbd4aa62e446abf8f873698375458282df9ba02e497af24b46e",
+          "originalSha256": "2f6f290575cb560ee07dc48b83f9e1d9fbcc4e10b6e79b88465145bd7d5941f0"
+        }
+      ],
+      "shapes": 512,
+      "clips": 72,
+      "frames": 1152,
+      "uniqueFrames": 512
+    },
+    {
+      "id": "battle-ram",
+      "source": "chr_battle_ram",
+      "metadataSha256": "caf3c5867408a06bbdbd2eb0b83baf914f3392a5d812a9b4dc0c842e702fde1c",
+      "dataSha256": "e8f1fa64aace61732429ca7863f2b1fe1abc81d48a17dfaf1606431f3fc99c3b",
+      "textures": [
+        {
+          "file": "battle-ram-0.webp",
+          "sha256": "2e6002d77cc4ef40b88f2bf3bd2ab070182e4c527f2c5ed423d6460a9ffe74ad",
+          "originalSha256": "88a5c6039ca9cc3c9b3299dfe77595b52152b1dfdf0fce4085e3fcf6c6204606"
+        }
+      ],
+      "shapes": 243,
+      "clips": 72,
+      "frames": 1296,
+      "uniqueFrames": 626
+    },
+    {
+      "id": "executioner",
+      "source": "chr_axe_man",
+      "metadataSha256": "2f6e9f63623dc0c0fcec9bfc10cbb84bda0ecc18d9da65c13ced1dbc436f76de",
+      "dataSha256": "2e2017c84a958a0f81bb80635bc1c9907483808b6f3518eba8a6f1cac42962fc",
+      "textures": [
+        {
+          "file": "executioner-0.webp",
+          "sha256": "1017eb49a5d7d8faf5e51c076a96c743320798c4222f4a2719a0c255e1233521",
+          "originalSha256": "ea014d99e48086cfe463cc09ba1d295ca41801e7957ae2d51e70ffd0ea913849"
+        }
+      ],
+      "shapes": 360,
+      "clips": 72,
+      "frames": 4048,
+      "uniqueFrames": 1872
+    },
+    {
+      "id": "sparky",
+      "source": "chr_zap_machine",
+      "metadataSha256": "71c20b1e60d89e4f64aa8fae509cf377eb0de54f184a80386b9be6b998a3dfef",
+      "dataSha256": "13662e3bb9e058fbf4bd594333c2ab12fbae3fbc44fb36d6a8dc5c2b779af2f8",
+      "textures": [
+        {
+          "file": "sparky-0.webp",
+          "sha256": "b8c0d83eb6f6705235190addd2bf34b0d522b011b4d610afc12e1f3e1c05f785",
+          "originalSha256": "2a9b2afd6590c91a9f03afb1befa014dbc71dd22e6903d74b09911789b4f8f98"
+        }
+      ],
+      "shapes": 113,
+      "clips": 54,
+      "frames": 1098,
+      "uniqueFrames": 1030
+    },
+    {
+      "id": "lumberjack",
+      "source": "chr_rage_barbarian",
+      "metadataSha256": "117dfde3149a52da77d07a35e941844dc64cba76c95ef0b3ac9a32eb1246fc50",
+      "dataSha256": "a86f3a2085833fe60687b6e6eb9477d7558a797e0bbfb72653d9630c4490ad74",
+      "textures": [
+        {
+          "file": "lumberjack-0.webp",
+          "sha256": "c415b9e130bf7be0bb0b3ae812a899c61a9b132609317eac0839f098773de2e4",
+          "originalSha256": "97ee67acde145cb795fdf5a07cf17efeaeee59a4a74a5ac7d5d335cb255c0bff"
+        }
+      ],
+      "shapes": 346,
+      "clips": 58,
+      "frames": 1452,
+      "uniqueFrames": 772
+    },
+    {
       "id": "archers",
       "source": "chr_archer",
       "metadataSha256": "dbab1bdb415bd71dd89f249273ddacf6fb52318eabf0f8f9ddb7e741234a1fad",
@@ -53,6 +393,57 @@
       "clips": 54,
       "frames": 1674,
       "uniqueFrames": 1016
+    },
+    {
+      "id": "giant-skeleton",
+      "source": "chr_giant_skeleton",
+      "metadataSha256": "b74b822c5283b78d38969fb58c4dbb1418e4e38137c945214c2de7d076a70dda",
+      "dataSha256": "148262c63d3c32178ffcbcbafe30ca6dd333c13c3d28b1895ae941db0905bfa6",
+      "textures": [
+        {
+          "file": "giant-skeleton-0.webp",
+          "sha256": "5ab938dd7d80c8b367a1edcc298b7bea3a39ed8f7692d58a7eff492d8e200eec",
+          "originalSha256": "84f28e7d70a8ef1afd01421cbeabf217270c042d6d8639eab11a8de586b41c9a"
+        }
+      ],
+      "shapes": 450,
+      "clips": 54,
+      "frames": 954,
+      "uniqueFrames": 459
+    },
+    {
+      "id": "guards",
+      "source": "chr_skeleton_warrior",
+      "metadataSha256": "f2a0d9637be7fe94586bbc323d7da658dd846977a56a4d47166366ef21a4082d",
+      "dataSha256": "b24d1029001a657bc8777242ee0f59cf8dcc8601eca8f3066bbea100866551ca",
+      "textures": [
+        {
+          "file": "guards-0.webp",
+          "sha256": "aec508260d1801fa1e1eeec3fa2af0d539a699dc995cc354f299be47b348bb4c",
+          "originalSha256": "fa52b1a8a886680cb2c0ead840e0dc31db65f1f59e61fd0e50aa4fc8e2833e78"
+        }
+      ],
+      "shapes": 360,
+      "clips": 54,
+      "frames": 720,
+      "uniqueFrames": 360
+    },
+    {
+      "id": "guards-shield",
+      "source": "chr_skeleton_warrior",
+      "metadataSha256": "f2a0d9637be7fe94586bbc323d7da658dd846977a56a4d47166366ef21a4082d",
+      "dataSha256": "e7a5b4adaf7caf9305bcea809bed2311e7e320754c51193c43472ca386721041",
+      "textures": [
+        {
+          "file": "guards-0.webp",
+          "sha256": "aec508260d1801fa1e1eeec3fa2af0d539a699dc995cc354f299be47b348bb4c",
+          "originalSha256": "fa52b1a8a886680cb2c0ead840e0dc31db65f1f59e61fd0e50aa4fc8e2833e78"
+        }
+      ],
+      "shapes": 360,
+      "clips": 54,
+      "frames": 720,
+      "uniqueFrames": 360
     },
     {
       "id": "musketeer",
@@ -223,6 +614,125 @@
       "clips": 54,
       "frames": 828,
       "uniqueFrames": 282
+    },
+    {
+      "id": "bats",
+      "source": "chr_bats",
+      "metadataSha256": "68bb1fd803d00d48eff37987f6781b312567d98870ecf667cbc81359e577034d",
+      "dataSha256": "005d5eb977fa7f50b0bdbc6c6dfa895d0473b041e93ae9fb1d20f7477e740aa2",
+      "textures": [
+        {
+          "file": "bats-0.webp",
+          "sha256": "3a5a4ae7ae070304a9622fb341ee69a7f13d08cf9597ca515fb48c1706035b37",
+          "originalSha256": "18e6337faada1c32b602fb899968b79ccdccd6611684b63972211d4f4e1496fd"
+        }
+      ],
+      "shapes": 90,
+      "clips": 27,
+      "frames": 612,
+      "uniqueFrames": 90
+    },
+    {
+      "id": "night-witch",
+      "source": "chr_dark_witch",
+      "metadataSha256": "9a451b913c7ff7e89972406ea2da9cda80b5570e6d8b60c9434d2f989ebdfef8",
+      "dataSha256": "167d1ba0e122d486cf4ecd7295157072eb7baeb0d72afa484212fb39bdf3cdcd",
+      "textures": [
+        {
+          "file": "night-witch-0.webp",
+          "sha256": "dfc9b1c535a7f62a93eeedfff2870f57f326aa85fa69a546f96395d848c7531c",
+          "originalSha256": "464fcc11d4897d797bb1ac038c54aa734144cfb361838789638e541f2e5ac862"
+        }
+      ],
+      "shapes": 344,
+      "clips": 54,
+      "frames": 2692,
+      "uniqueFrames": 1242
+    },
+    {
+      "id": "bandit",
+      "source": "chr_bandit",
+      "metadataSha256": "4da4adfd47514230cc5ef3f08d3005933a5e75086bbd05129e04c427b1122371",
+      "dataSha256": "cee84cb7266e3349ac78e18903d4e060abfc9944c976766108de1d38b74c38b5",
+      "textures": [
+        {
+          "file": "bandit-0.webp",
+          "sha256": "3d0878ff9d35ba923e9928f40e0d6d17db214e2ac5620d47562fbf398be65718",
+          "originalSha256": "e7dc968be2cf844ec7268e19093a04896542ff2b3d4cf6c4d3d8173abad0417a"
+        }
+      ],
+      "shapes": 325,
+      "clips": 72,
+      "frames": 1800,
+      "uniqueFrames": 900
+    },
+    {
+      "id": "golem",
+      "source": "chr_golem",
+      "metadataSha256": "9e6b93c2fbae2e2b2c78549989cbc51b808c408217aff1a1d1a4ba624adae69b",
+      "dataSha256": "17e46fac07d636f9ee154139050bd8d9d3a7c195b9d58287c5039431a2399bcc",
+      "textures": [
+        {
+          "file": "golem-0.webp",
+          "sha256": "162fecf36d586e2df878866d6cbb4e3be23df5d0427c3b59c41c0a4923415cf9",
+          "originalSha256": "f45b40ee9f6c80b41db1c087338f20f4ec4d78658dbbd0c8c09a7376dc6d937f"
+        }
+      ],
+      "shapes": 361,
+      "clips": 54,
+      "frames": 2232,
+      "uniqueFrames": 1440
+    },
+    {
+      "id": "golemite",
+      "source": "chr_golemite",
+      "metadataSha256": "2af5873112c212016c0e0ed7dea11ca8dc91a4ca5314dd12536f27a2617cec6c",
+      "dataSha256": "e18577965e757437063fb78b6b71e4ecc84ef0d4cd0b63f303907340f395533c",
+      "textures": [
+        {
+          "file": "golemite-0.webp",
+          "sha256": "1054267bc58ae3f78bab061b6d11a44cca4201040ec9cee8dae712f5c83edb0b",
+          "originalSha256": "366c5c8f18c9e13852ca53887d08b57a6e2556a1512328b591666329d17d8593"
+        }
+      ],
+      "shapes": 361,
+      "clips": 54,
+      "frames": 1628,
+      "uniqueFrames": 962
+    },
+    {
+      "id": "lava-hound",
+      "source": "chr_lava_hound",
+      "metadataSha256": "99dda4d63debdd6071cf5e2542db8163f44b2224f2727abc8c53ffe4bb5f2a23",
+      "dataSha256": "e10903131be42145d0f3fdf6875e9f0b349d12c3f4db12e58bb0cd8b74d4bc9d",
+      "textures": [
+        {
+          "file": "lava-hound-0.webp",
+          "sha256": "caf66d03712f916f7d4d37296f3fdaf650010accaa37cdb990cd49370cbfb14e",
+          "originalSha256": "0ce67932f73f6491d558b43025921b569062489e5a14263cbb10a423c44742fc"
+        }
+      ],
+      "shapes": 306,
+      "clips": 54,
+      "frames": 1350,
+      "uniqueFrames": 306
+    },
+    {
+      "id": "lava-pup",
+      "source": "chr_lava_pups",
+      "metadataSha256": "678c500a4b529662eb8ebf73eeb977236930285b50864b14dc24503f3ba8ad86",
+      "dataSha256": "a42cf08cc9b7ec2091fbfee3d3c0a655ca7046a95ee1e7c296b42fba6dad5e08",
+      "textures": [
+        {
+          "file": "lava-pup-0.webp",
+          "sha256": "bada9a80cd9844d3c8e4f99020ac92760ea3ff5d30c8cf86a4e3fdab47d4747e",
+          "originalSha256": "07c15a098ce9d41373dff48d08a7f282ac10c62f933a6b0f1d68e21000bb578d"
+        }
+      ],
+      "shapes": 163,
+      "clips": 27,
+      "frames": 828,
+      "uniqueFrames": 510
     },
     {
       "id": "witch",

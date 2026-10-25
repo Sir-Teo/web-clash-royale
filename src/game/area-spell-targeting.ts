@@ -1,3 +1,4 @@
+import { aiBodyValue as bodyValue } from "./ai-body-value";
 import { CARD_MAP, type CardId } from "./cards";
 import type { AreaEffect, Entity, Projectile, Team } from "./engine";
 import poison from "./poison-data.json" with { type: "json" };
@@ -9,12 +10,6 @@ import {
   type SpellTarget,
 } from "./spell-targeting";
 
-const bodyValue = (e: Entity) =>
-  e.kind === "tower"
-    ? e.king
-      ? 6
-      : 4
-    : CARD_MAP[e.card as CardId].cost / CARD_MAP[e.card as CardId].count;
 const health = (e: Entity) => Math.max(0, Math.min(1, e.hp / e.maxHp));
 const covered = (
   e: Entity,
@@ -32,8 +27,11 @@ const covered = (
   );
 const near = (a: Entity, b: Entity, extra = 0) =>
   spellContains(a, b, a.range + a.radius + b.radius + extra);
-const canHit = (a: Entity, b: Entity) =>
-  !b.air || a.kind === "tower" || !!CARD_MAP[a.card as CardId].hitsAir;
+const canHit = (a: Entity, b: Entity) => {
+  if (a.kind === "tower") return true;
+  const card = CARD_MAP[a.card as CardId];
+  return (!card.buildingsOnly || b.kind !== "troop") && (!b.air || !!card.hitsAir);
+};
 
 /** Current-position support heuristics; no simulation or random draws. */
 export function areaSpellTarget(
@@ -59,6 +57,7 @@ export function areaSpellTarget(
   if (card === "rage") {
     for (const e of friends) {
       if (
+        e.kind !== "troop" ||
         e.stun > 1 ||
         (e.rage?.remaining ?? 0) > 0.5 ||
         covered(e, "rage", team, areas) ||
@@ -76,8 +75,7 @@ export function areaSpellTarget(
       );
       const advancing =
         e.kind === "troop" && (team === "red" ? e.y >= 10 : e.y <= 22);
-      if ((!engaged && !advancing) || (e.kind === "tower" && !e.active))
-        continue;
+      if (!engaged && !advancing) continue;
       targets.push({
         entity: e,
         value: bodyValue(e) * (0.25 + 0.75 * health(e)),
@@ -89,6 +87,7 @@ export function areaSpellTarget(
     for (const e of enemies) {
       if (
         e.deploy > 0 ||
+        !!e.dash ||
         e.stun > 0.3 ||
         covered(e, "freeze", team, areas, 0.3) ||
         (e.kind === "tower" && !e.active)
@@ -115,7 +114,9 @@ export function areaSpellTarget(
   } else {
     for (const e of enemies) {
       if (hiddenSpellTarget(e) || covered(e, "poison", team, areas)) continue;
-      const hp = Math.max(0, e.hp - pendingSpellDamage(e, team, projectiles));
+      const reserved = pendingSpellDamage(e, team, projectiles);
+      const hp = Math.max(0, e.hp + (e.shield ?? 0) - reserved);
+      let shield = Math.max(0, (e.shield ?? 0) - reserved);
       if (hp <= 1e-6) continue;
       const fighting = friends.some((friend) => near(e, friend));
       const dwell =
@@ -125,10 +126,14 @@ export function areaSpellTarget(
             ? 4
             : Math.min(3, (2 * radius) / Math.max(0.1, e.speed));
       const ticks = Math.floor(dwell / poison.damageInterval);
-      const damage =
-        CARD_MAP.poison.damage *
-        ticks *
+      const packet = CARD_MAP.poison.damage *
         (e.kind === "tower" ? poison.crownTowerDamageFraction : 1);
+      let damage = 0;
+      for (let i = 0; i < ticks; i++) {
+        const hit = shield > 0 ? Math.min(shield, packet) : packet;
+        damage += hit;
+        shield = Math.max(0, shield - hit);
+      }
       const lethal = e.kind === "tower" && hp <= damage + 1e-6;
       const defense = (team === "red" ? e.y < 15 : e.y > 17) ? 1.2 : 1;
       const value =
@@ -139,7 +144,7 @@ export function areaSpellTarget(
           : bodyValue(e) *
             Math.min(
               1,
-              Math.min(damage, hp) / e.maxHp + (hp <= damage ? 0.35 : 0),
+              Math.min(damage, hp) / (e.maxHp + (e.maxShield ?? 0)) + (hp <= damage ? 0.35 : 0),
             ) *
             defense;
       targets.push({

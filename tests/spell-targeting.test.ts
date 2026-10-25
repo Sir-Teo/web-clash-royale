@@ -68,7 +68,7 @@ function shot(
     style: "rocket",
     stun: 0,
     source: 0,
-    crownTowerDamageFraction: 0.4,
+    towerDamageFraction: 0.4,
     ...extra,
   };
 }
@@ -78,7 +78,7 @@ describe("AI damaging spell targets", () => {
   it.each(["fireball", "arrows", "zap", "rocket"] as const)(
     "uses %s's actual Crown Tower damage to identify a lethal target",
     (card) => {
-      const damage = CARD_MAP[card].damage * (card === "rocket" ? 0.4 : 0.3);
+      const damage = CARD_MAP[card].damage * 0.4;
       expect(
         damageSpellTarget(card, "red", [tower(damage)])?.lethalTower,
       ).toBeDefined();
@@ -139,7 +139,7 @@ describe("AI damaging spell targets", () => {
     const waves = Array.from({ length: 3 }, (_, i) =>
       shot(small.x, small.y, 130, {
         id: 99 + i,
-        crownTowerDamageFraction: undefined,
+        towerDamageFraction: undefined,
         style: "arrows",
         delay: i * 0.2,
       }),

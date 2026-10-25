@@ -73,6 +73,7 @@ import type { Entity } from "../game/engine";
 import { KING_ACTIVATION_TIME } from "../game/combat";
 export function healthSelection(data: HealthData, e: Entity) {
   const side = e.team === "blue" ? "player" : "enemy";
+  const shielded = !!e.shield && !!e.maxShield;
   let kind: string,
     frame = 0;
   if (e.kind === "tower") {
@@ -90,20 +91,20 @@ export function healthSelection(data: HealthData, e: Entity) {
       );
     }
   } else {
-    kind =
-      e.hp >= e.maxHp
-        ? "number"
-        : (data.profiles[e.card]?.healthBar || "Medium").toLowerCase();
+    kind = e.hp >= e.maxHp && (!shielded || e.shield === e.maxShield)
+      ? "number"
+      : (data.profiles[e.card]?.healthBar || "Medium").toLowerCase();
+    if (kind === "shield" || kind === "shield_small") kind = "medium";
   }
   const visible =
     e.hp > 0 &&
     (e.kind === "tower" ||
       ((!e.burrow || e.burrow.exposure > 0) &&
-        (e.hp < e.maxHp || e.age < 2.5)));
+        (e.hp < e.maxHp || (shielded && e.shield! < e.maxShield!) || e.age < 2.5)));
   return {
-    name: `hp_${side}_${kind}`,
+    name: shielded ? `hp_shield_${side}_${kind}` : `hp_${side}_${kind}`,
     frame,
-    fill: healthFrame(e.hp / e.maxHp),
+    fill: healthFrame(shielded ? e.shield! / e.maxShield! : e.hp / e.maxHp),
     visible,
   };
 }

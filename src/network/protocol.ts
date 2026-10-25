@@ -11,8 +11,9 @@ import type {
   Replay,
   Team,
 } from "../game/engine";
-export const PROTOCOL = 1;
-export const PEER_PROTOCOL = 4;
+export const PROTOCOL = 2;
+// A peer must understand the current card rules and snapshot fields.
+export const PEER_PROTOCOL = 5;
 export const RECONNECT_MS = 30_000;
 export type RoomPhase = "waiting" | "countdown" | "playing" | "finished";
 export interface RoomState {

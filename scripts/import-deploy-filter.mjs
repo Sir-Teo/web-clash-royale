@@ -16,6 +16,8 @@ const sc = parseSC(files[inputs[0]]);
 const characters = csvRows(files[inputs[1]].toString());
 const combat = JSON.parse(files[inputs[2]]);
 const name = "filter_deploy_unit_default";
+const legendaryName = "filter_deploy_unit_legendary";
+const minerName = "filter_deploy_unit_miner";
 const cards = Object.entries(combat)
   .filter(([id, profile]) => {
     const row = characters.find((c) => c.Name === profile.source);
@@ -26,25 +28,78 @@ const cards = Object.entries(combat)
     );
   })
   .map(([id]) => id);
-if (cards.length !== 21)
+if (cards.length !== 40 || !cards.includes("guards") || !cards.includes("giant-skeleton") || !cards.includes("ice-golem") || !cards.includes("fire-spirits") || !cards.includes("ice-spirit") || !cards.includes("elite-barbarians") || !cards.includes("bowler") || !cards.includes("dark-prince") || !cards.includes("battle-ram") || !cards.includes("executioner") || !cards.includes("bats") || !cards.includes("golem") || !cards.includes("golemite") || !cards.includes("lava-pup"))
   throw new Error(`Recheck source deploy filter bindings: ${cards.length}`);
 const clip = sc.clips[sc.names[name]];
 if (clip?.fps !== 60 || clip.frames.length !== 28)
   throw new Error("Recheck source deploy filter timeline");
 const identity = [1, 0, 0, 1, 0, 0];
 const neutral = [0, 0, 0, 255, 255, 255, 255];
-const frames = clip.frames.map((frame, i) => {
-  if (frame.length !== 1 || frame[0].id !== 592 || frame[0].blend !== 0)
-    throw new Error(`Recheck deploy filter frame ${i}`);
-  const matrix = sc.matrices[frame[0].matrix] ?? identity;
-  if (matrix[1] !== 0 || matrix[2] !== 0 || matrix[4] !== 0)
-    throw new Error(`Unsupported deploy filter affine at frame ${i}`);
-  return {
-    matrix,
-    color: sc.colors[frame[0].color] ?? neutral,
-  };
-});
-const data = { source: name, fps: clip.fps, cards, frames };
+function poses(clip, label) {
+  return clip.frames.map((frame, i) => {
+    if (frame.length !== 1 || frame[0].id !== 592 || frame[0].blend !== 0)
+      throw new Error(`Recheck ${label} deploy filter frame ${i}`);
+    const matrix = sc.matrices[frame[0].matrix] ?? identity;
+    if (matrix[1] !== 0 || matrix[2] !== 0 || matrix[4] !== 0)
+      throw new Error(`Unsupported deploy filter affine at frame ${i}`);
+    return {
+      matrix,
+      color: sc.colors[frame[0].color] ?? neutral,
+    };
+  });
+}
+const frames = poses(clip, name);
+const legendaryClip = sc.clips[sc.names[legendaryName]];
+if (legendaryClip?.fps !== 60 || legendaryClip.frames.length !== 31)
+  throw new Error("Recheck legendary deploy filter timeline");
+const legendaryCards = Object.entries(combat)
+  .filter(
+    ([, profile]) =>
+      characters.find((row) => row.Name === profile.source)
+        ?.DeployBaseAnimExportName === legendaryName,
+  )
+  .map(([id]) => id);
+if (
+  legendaryCards.length !== 8 ||
+  !legendaryCards.includes("ice-wizard") ||
+  !legendaryCards.includes("princess") ||
+  !legendaryCards.includes("inferno-dragon") ||
+  !legendaryCards.includes("electro-wizard") ||
+  !legendaryCards.includes("sparky") ||
+  !legendaryCards.includes("night-witch") ||
+  !legendaryCards.includes("bandit") ||
+  !legendaryCards.includes("lava-hound")
+)
+  throw new Error(`Recheck legendary deploy binding: ${legendaryCards}`);
+const minerClip = sc.clips[sc.names[minerName]];
+if (minerClip?.fps !== 60 || minerClip.frames.length !== 45)
+  throw new Error("Recheck Miner deploy filter timeline");
+const minerCards = Object.entries(combat)
+  .filter(([, profile]) =>
+    characters.find((row) => row.Name === profile.source)
+      ?.DeployBaseAnimExportName === minerName,
+  )
+  .map(([id]) => id);
+if (minerCards.length !== 1 || minerCards[0] !== "miner")
+  throw new Error(`Recheck Miner deploy binding: ${minerCards}`);
+const data = {
+  source: name,
+  fps: clip.fps,
+  cards,
+  frames,
+  legendary: {
+    source: legendaryName,
+    fps: legendaryClip.fps,
+    cards: legendaryCards,
+    frames: poses(legendaryClip, legendaryName),
+  },
+  miner: {
+    source: minerName,
+    fps: minerClip.fps,
+    cards: minerCards,
+    frames: poses(minerClip, minerName),
+  },
+};
 const path = "src/render/deploy-filter-data.json";
 const output = Buffer.from(JSON.stringify(data, null, 2) + "\n");
 await writeFile(path, output);
@@ -62,5 +117,5 @@ await writeFile(
   ) + "\n",
 );
 console.log(
-  `Imported ${frames.length} deploy filter frames for ${cards.length} troop cards.`,
+  `Imported ${frames.length} default and ${legendaryClip.frames.length} Legendary deploy filter frames.`,
 );

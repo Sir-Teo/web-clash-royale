@@ -2,6 +2,111 @@
   "radiusFactor": 6,
   "angleFactor": 0.0006283000111579895,
   "profiles": {
+    "giant-skeleton": {
+      "death-impact": {
+        "sources": [
+          "MegaBombExplodeSkeleton"
+        ],
+        "components": [
+          {
+            "effect": "MegaBombExplodeSkeleton",
+            "delay": 0,
+            "duration": 1
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "MegaBombExplodeSkeleton",
+            "delay": 0,
+            "duration": 1
+          }
+        ]
+      }
+    },
+    "ice-wizard": {
+      "spawn": {
+        "sources": [
+          "ice_wizard_deploy"
+        ],
+        "components": [
+          {
+            "effect": "ShakeShcreen_delay",
+            "delay": 0.35,
+            "duration": 0.3
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "ShakeShcreen_delay",
+            "delay": 0.35,
+            "duration": 0.3
+          }
+        ]
+      }
+    },
+    "miner": {
+      "spawn": {
+        "sources": [
+          "miner_deploy"
+        ],
+        "components": [
+          {
+            "effect": "miner_deploy",
+            "delay": 0,
+            "duration": 0.5
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "miner_deploy",
+            "delay": 0,
+            "duration": 0.5
+          }
+        ]
+      }
+    },
+    "sparky": {
+      "impact": {
+        "sources": [
+          "zapmachine_projectile_hit"
+        ],
+        "components": [
+          {
+            "effect": "zapmachine_projectile_hit",
+            "delay": 0,
+            "duration": 0.8
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "zapmachine_projectile_hit",
+            "delay": 0,
+            "duration": 0.8
+          }
+        ]
+      }
+    },
+    "bandit": {
+      "impact-special": {
+        "sources": [
+          "assassin_hit_special_red"
+        ],
+        "components": [
+          {
+            "effect": "assassin_hit_special_red",
+            "delay": 0,
+            "duration": 0.5
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "assassin_hit_special",
+            "delay": 0,
+            "duration": 0.5
+          }
+        ]
+      }
+    },
     "balloon": {
       "impact": {
         "sources": [
@@ -38,6 +143,48 @@
             "effect": "MegaBombExplodeBalloon",
             "delay": 0,
             "duration": 1
+          }
+        ]
+      }
+    },
+    "mortar": {
+      "impact": {
+        "sources": [
+          "mortar_hit"
+        ],
+        "components": [
+          {
+            "effect": "mortar_hit",
+            "delay": 0,
+            "duration": 0.35
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "mortar_hit",
+            "delay": 0,
+            "duration": 0.35
+          }
+        ]
+      }
+    },
+    "bomb-tower": {
+      "death": {
+        "sources": [
+          "BombTower_die"
+        ],
+        "components": [
+          {
+            "effect": "BombTower_die",
+            "delay": 0,
+            "duration": 0.4
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "BombTower_die",
+            "delay": 0,
+            "duration": 0.4
           }
         ]
       }
@@ -143,6 +290,27 @@
             "effect": "Rocket_explosion",
             "delay": 0,
             "duration": 1.5
+          }
+        ]
+      }
+    },
+    "lightning": {
+      "impact": {
+        "sources": [
+          "Spell_lightning_effect"
+        ],
+        "components": [
+          {
+            "effect": "Spell_lightning_effect",
+            "delay": 0,
+            "duration": 1
+          }
+        ],
+        "enemyComponents": [
+          {
+            "effect": "Spell_lightning_effect",
+            "delay": 0,
+            "duration": 1
           }
         ]
       }

@@ -1,4 +1,6 @@
 import { test, expect } from "@playwright/test";
+import { expectedHealth, expectedHealthRoots } from "./native-assets";
+import { CARD_MAP } from "../../src/game/cards";
 
 test("source health fills stay independent of King activation frames", async ({
   page,
@@ -6,18 +8,18 @@ test("source health fills stay independent of King activation frames", async ({
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/tests/fixtures/health.html");
-  await expect(page.locator("#status")).toContainText("12 native roots", {
+  await expect(page.locator("#status")).toContainText(`${expectedHealthRoots} native roots`, {
     timeout: 30000,
   });
   const king = page.locator('[data-name="hp_player_wizard"]');
-  await expect(king.locator("text")).toHaveText(["11", "4824"]);
+  await expect(king.locator("text")).toHaveText(["11", "5232"]);
   await page.locator("#health").fill("50");
-  await expect(king.locator("text")).toHaveText(["11", "2412"]);
+  await expect(king.locator("text")).toHaveText(["11", "2616"]);
   await expect(page.locator("#status")).toContainText("health state 50");
   await page.locator("#frame").fill("0");
   await expect(king.locator("text")).toHaveText("11");
   await page.locator("#frame").fill("31");
-  await expect(king.locator("text")).toHaveText(["11", "2412"]);
+  await expect(king.locator("text")).toHaveText(["11", "2616"]);
   await page.locator("#health").fill("0");
   await expect(king.locator("text")).toHaveText(["11", "0"]);
   expect(errors).toEqual([]);
@@ -29,7 +31,7 @@ test("native health tracks damage, freezes, survives a paused rebuild, and clear
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/tests/fixtures/health-arena.html");
-  await expect(page.locator("#status")).toContainText("22 health clips", {
+  await expect(page.locator("#status")).toContainText(`${expectedHealth} health clips`, {
     timeout: 30000,
   });
   await expect(page.locator("#status")).toContainText("10 troop HUDs");
@@ -49,7 +51,10 @@ test("native health tracks damage, freezes, survives a paused rebuild, and clear
   await page.locator("#second").click();
   await expect(page.locator("#status")).toContainText("Kings 25/25");
   const king = page.locator('[data-health-kind="king"]').first();
-  await expect(king).toHaveAttribute("aria-valuenow", "4767");
+  await expect(king).toHaveAttribute(
+    "aria-valuenow",
+    String(Math.ceil(5232 - CARD_MAP.zap.damage * 0.4)),
+  );
   const held = await page.locator(".tower-labels").innerHTML();
   await page.waitForTimeout(200);
   expect(await page.locator(".tower-labels").innerHTML()).toBe(held);
@@ -86,7 +91,7 @@ test("health labels remain readable and inside the arena across phone rotations"
       () => page.evaluate(() => (window as any).__arena?.state.loadedHealth),
       { timeout: 30000 },
     )
-    .toBe(22);
+    .toBe(expectedHealth);
   await page.locator("#battle-button").click();
   await expect(page.locator("#hand .game-card").first()).toBeEnabled({
     timeout: 15000,

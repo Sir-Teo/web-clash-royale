@@ -1,0 +1,17 @@
+{
+  "card": "AngryBarbarians",
+  "character": "AngryBarbarian",
+  "rarity": "Common",
+  "cost": 6,
+  "count": 2,
+  "summonRadius": 0.7,
+  "sourceHitpoints": 478,
+  "sourceDamage": 120,
+  "sourceSpeed": 120,
+  "sourceRange": 1,
+  "sourceHitSpeed": 1.5,
+  "sourceLoadTime": 1.1,
+  "deployDelay": 0.4,
+  "blueExport": "angry_barbarian",
+  "redExport": "angry_barbarian_red"
+}

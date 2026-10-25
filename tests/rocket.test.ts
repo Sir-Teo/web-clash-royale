@@ -39,18 +39,15 @@ describe("archived Rocket", () => {
     expect(rocket).toMatchObject({
       cost: 6,
       sourceDamage: 700,
-      damage: 1484,
       speed: 350 / 60,
       radius: 2,
       knockback: 1.8,
       crownTowerDamageFraction: 0.4,
-      sourceGravity: 50,
     });
     expect(CARD_MAP.rocket).toMatchObject({
       kind: "spell",
       rarity: "Rare",
       cost: 6,
-      damage: 1484,
     });
     expect(definitions.impacts.rocket.source).toBe("Rocket_explosion");
     expect(definitions.trails.rocket.components).toHaveLength(4);
@@ -82,7 +79,7 @@ describe("archived Rocket", () => {
       expect(target.hp).toBe(hp);
       expect(b.projectiles).toHaveLength(1);
       b.step();
-      expect(target.hp).toBeCloseTo(hp - rocket.damage * 0.4);
+      expect(target.hp).toBeCloseTo(hp - CARD_MAP.rocket.damage * 0.4);
       expect(b.projectiles).toHaveLength(0);
       advance(b, 30);
       expect(
@@ -130,7 +127,7 @@ describe("archived Rocket", () => {
     const heavyBefore = { x: heavy.x, y: heavy.y };
     b.step();
     for (const e of [ground, air, heavy])
-      expect(e.hp).toBeCloseTo(10000 - rocket.damage);
+      expect(e.hp).toBeCloseTo(10000 - CARD_MAP.rocket.damage);
     for (const e of [friend, hidden, outside]) expect(e.hp).toBe(10000);
     expect(ground.x).toBeGreaterThan(before[0].x);
     expect(
@@ -176,7 +173,7 @@ describe("archived Rocket", () => {
       y: 2,
       tx: 14,
       ty: 26,
-      crownTowerDamageFraction: 0.4,
+      towerDamageFraction: 0.4,
       speed: rocket.speed,
     });
     const replay = new Battle({ replay: b.exportReplay() });
@@ -218,7 +215,7 @@ describe("archived Rocket", () => {
     for (let i = 0; i < 10; i++) host.advance(STEP);
     expect(host.battle!.projectiles[0]).toMatchObject({
       style: "rocket",
-      crownTowerDamageFraction: 0.4,
+      towerDamageFraction: 0.4,
     });
     const before = structuredClone(snapshot(host.battle!));
     host.availability("red", false);

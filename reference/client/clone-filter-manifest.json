@@ -1,0 +1,18 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/sc/effects.bin",
+      "sha256": "1a9b0a2efe99578cd03fb9d8673ddb042aa067ba9f9fc0d3a253e15c2e9c7b7c"
+    },
+    {
+      "path": "reference/logic/area_effect_objects.csv",
+      "sha256": "f060f967d137942bd8d2e61edb1a96c4455bf833f7cab7187be3e391d352ec65"
+    }
+  ],
+  "output": {
+    "path": "src/render/clone-filter-data.json",
+    "sha256": "e34f8c33c696ea08821151d4a7af238c0d77b40c71297728586e3391db26df0e"
+  }
+}

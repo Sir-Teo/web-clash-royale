@@ -1,0 +1,12 @@
+{
+  "card": "GoblinGang",
+  "rarity": "Common",
+  "cost": 3,
+  "count": 6,
+  "radius": 0.7,
+  "characters": [
+    "Goblin",
+    "SpearGoblin"
+  ],
+  "effect": "CharacterDeploy"
+}

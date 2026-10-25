@@ -1,0 +1,30 @@
+{
+  "baby-dragon": {
+    "hp": 1288
+  },
+  "bomber": {
+    "hp": 371,
+    "damage": 345
+  },
+  "goblin-gang": {
+    "damage": 135
+  },
+  "goblins": {
+    "damage": 135
+  },
+  "mini-pekka": {
+    "hp": 1271
+  },
+  "pekka": {
+    "hp": 4187
+  },
+  "prince": {
+    "hp": 1772
+  },
+  "spear-goblins": {
+    "damage": 65
+  },
+  "witch": {
+    "damage": 84
+  }
+}

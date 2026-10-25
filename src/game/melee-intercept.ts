@@ -1,7 +1,9 @@
 import { CARD_MAP, type CardId } from "./cards";
 import { combatTraits } from "./combat";
-import { DEPLOY_TIME } from "./deployment";
+import { deploymentRadius, deploymentTime } from "./deployment";
 import type { AreaEffect, Entity, Point, Team } from "./engine";
+import iceWizard from "./ice-wizard-data.json" with { type: "json" };
+import battleRam from "./battle-ram-data.json" with { type: "json" };
 import rage from "./rage-data.json" with { type: "json" };
 
 const distance = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -61,7 +63,7 @@ export function meleeInterceptTarget(
       (threat.y >= 14.8 && threat.y <= 17.2))
   )
     return;
-  const horizon = DEPLOY_TIME + Math.min(candidate.interval, traits.windup);
+  const horizon = deploymentTime(card) + Math.min(candidate.interval, traits.windup);
   // Deployment and stun count down together, rather than adding their durations.
   const frozen = Math.max(
     0,
@@ -77,11 +79,23 @@ export function meleeInterceptTarget(
   );
   const wait = Math.max(0, threat.deploy, threat.stun, frozen);
   const moving = Math.max(0, horizon - wait);
-  const boosted = Math.min(
-    moving,
-    Math.max(0, (threat.rage?.remaining ?? 0) - wait),
-  );
-  const travel = threat.speed * (moving + boosted * (rage.speedMultiplier - 1));
+  const rageUntil = Math.max(0, (threat.rage?.remaining ?? 0) - wait);
+  const slowUntil = Math.max(0, (threat.slow?.remaining ?? 0) - wait);
+  const chargeAt = threat.card === "battle-ram"
+    ? Math.max(0, battleRam.chargeRange - threat.move) : Infinity;
+  // Integrate only changes in the current movement modifiers, bounded by the
+  // deployment horizon. No entities or simulation clocks are advanced.
+  const boundaries = [...new Set([0, moving, rageUntil, slowUntil, chargeAt]
+    .filter((time) => time >= 0 && time <= moving))].sort((a, b) => a - b);
+  let travel = 0;
+  for (let i = 1; i < boundaries.length; i++) {
+    const start = boundaries[i - 1], end = boundaries[i];
+    const middle = (start + end) / 2;
+    travel += threat.speed * (end - start) *
+      (middle < rageUntil ? rage.speedMultiplier : 1) *
+      (middle < slowUntil ? iceWizard.speedMultiplier : 1) *
+      (middle > chargeAt ? battleRam.chargeSpeedMultiplier : 1);
+  }
   const gap = distance(threat, target);
   const advance = Math.min(
     travel,
@@ -91,7 +105,7 @@ export function meleeInterceptTarget(
   const dx = (target.x - threat.x) / gap,
     dy = (target.y - threat.y) / gap;
   const point = { x: threat.x + dx * advance, y: threat.y + dy * advance };
-  const radius = candidate.hp > 3000 ? 0.55 : candidate.count > 2 ? 0.25 : 0.37;
+  const radius = deploymentRadius(card);
   const side = Math.min(
     0.75,
     (candidate.range + threat.radius + radius * 0.35) / 2,

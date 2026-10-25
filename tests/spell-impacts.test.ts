@@ -2,6 +2,8 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import definitions from "../src/render/destruction-data.json";
 import { Battle, STEP } from "../src/game/engine";
+import type { Replay } from "../src/game/engine";
+import { CARD_MAP } from "../src/game/cards";
 import { perspective, snapshot } from "../src/network/perspective";
 import { arrowOffsets } from "../src/render/arrow-volley";
 import {
@@ -11,6 +13,27 @@ import {
 } from "../src/render/destruction";
 
 describe("native Zap and Arrows impact compositions", () => {
+  it("hits troops at the archived four-tile Arrows edge without extending beyond it", () => {
+    const battle = new Battle({ seed: 8, ai: false });
+    for (const tower of battle.entities) tower.active = false;
+    const targets = [13.3, 14.2].map((x) => {
+      battle.players.red.hand[0] = "knight";
+      battle.players.red.elixir = 10;
+      expect(battle.play("red", 0, 4, 10).ok).toBe(true);
+      const target = battle.entities.filter((e) => e.team === "red" && e.card === "knight").at(-1)!;
+      Object.assign(target, { x, y: 22, deploy: 0, active: false, hp: 10000, maxHp: 10000 });
+      return target;
+    });
+    battle.players.blue.hand[0] = "arrows";
+    battle.players.blue.elixir = 10;
+    expect(battle.play("blue", 0, 9, 22).ok).toBe(true);
+    for (let i = 0; i < 45; i++) battle.step();
+    expect(targets.map((target) => target.hp)).toEqual([
+      10000 - CARD_MAP.arrows.damage,
+      10000,
+    ]);
+  });
+
   it("resolves retained spell and effect bindings through the source tables", async () => {
     const { csvRows } = await import("../scripts/lib/csv.mjs");
     const rows = (name: string) =>
@@ -23,12 +46,17 @@ describe("native Zap and Arrows impact compositions", () => {
     const projectile = rows("projectiles").find(
       (r: any) => r.Name === spell("arrows").CustomFirstProjectile,
     )!;
+    const decorative = rows("projectiles").find(
+      (r: any) => r.Name === spell("arrows").Projectile,
+    )!;
     const area = rows("area_effect_objects").find(
       (r: any) => r.Name === spell("zap").AreaEffectObject,
     )!;
     expect(definitions.impacts.arrows.source).toBe(projectile.HitEffect);
     expect(definitions.impacts.zap.source).toBe(area.OneShotEffect);
     expect(Number(spell("arrows").MultipleProjectiles)).toBe(15);
+    expect(Number(projectile.Damage)).toBeGreaterThan(0);
+    expect(decorative.Damage).toBe("");
     expect(Number(spell("arrows").Radius)).toBe(4000);
     const manifest = JSON.parse(
       readFileSync("reference/client/manifest.json", "utf8"),
@@ -36,6 +64,39 @@ describe("native Zap and Arrows impact compositions", () => {
     expect(manifest.files.map((f: any) => f.path)).toContain(
       "reference/logic/area_effect_objects.csv",
     );
+  });
+
+  it("damages once with the custom first arrow and leaves later entrants safe", () => {
+    const base = new Battle({ seed: 160, ai: false });
+    for (const version of [15, 16] as const) {
+      const battle = version === 16 ? base : new Battle({
+        replay: { ...base.exportReplay(), version } as Replay,
+      });
+      for (const tower of battle.entities) tower.active = false;
+      battle.players.red.hand[0] = "knight";
+      battle.players.red.elixir = 10;
+      expect(battle.play("red", 0, 4, 10).ok).toBe(true);
+      const late = battle.entities.find((e) => e.card === "knight")!;
+      Object.assign(late, {
+        x: 14, y: 22, hp: 10000, maxHp: 10000, deploy: 0, active: false,
+      });
+      battle.players.blue.hand[0] = "arrows";
+      battle.players.blue.elixir = 10;
+      expect(battle.play("blue", 0, 9, 22).ok).toBe(true);
+      const arrows = battle.projectiles.filter((p) => p.style === "arrows");
+      expect(arrows).toHaveLength(version === 16 ? 1 : 3);
+      expect(arrows.map((p) => p.damage)).toEqual(
+        version === 16 ? [CARD_MAP.arrows.damage] : [122, 122, 122],
+      );
+      expect(arrows[0].delay).toBe(version === 16 ? undefined : 0);
+      for (let i = 0; i < Math.round(0.7 / STEP); i++) battle.step();
+      expect(late.hp).toBe(10000);
+      late.x = 9;
+      for (let i = 0; i < Math.round(0.6 / STEP); i++) battle.step();
+      expect(late.hp, `late entrant in v${version}`).toBe(
+        version === 16 ? 10000 : 10000 - 244,
+      );
+    }
   });
 
   it("schedules 34 Zap particles and one native ground mark per arrow", () => {
@@ -86,14 +147,14 @@ describe("native Zap and Arrows impact compositions", () => {
     expect(new Set(marks.map((p) => p.clip)).size).toBe(6);
   });
 
-  it("keeps 15 unique arrows over three damage waves in both perspectives", () => {
+  it("keeps 15 unique arrows around one damaging hit in both perspectives", () => {
     const battle = new Battle({ seed: 8, ai: false });
     for (const tower of battle.entities) tower.active = false;
     battle.players.blue.hand[0] = "arrows";
     battle.players.blue.elixir = 10;
     expect(battle.play("blue", 0, 9, 22).ok).toBe(true);
     const arrows = battle.projectiles.filter((p) => p.style === "arrows");
-    expect(arrows).toHaveLength(3);
+    expect(arrows).toHaveLength(1);
     const offsets = arrows.flatMap((p) =>
       arrowOffsets(p.id, p.delay !== undefined, p.team),
     );
@@ -105,7 +166,7 @@ describe("native Zap and Arrows impact compositions", () => {
     const hits = battle.events.filter(
       (e) => e.type === "hit" && e.card === "arrows",
     );
-    expect(hits).toHaveLength(3);
+    expect(hits).toHaveLength(1);
     expect(
       hits.map((h) => h.arrowVolley?.projectileId).sort((a, b) => a! - b!),
     ).toEqual(arrows.map((p) => p.id).sort((a, b) => a - b));
@@ -122,12 +183,12 @@ describe("native Zap and Arrows impact compositions", () => {
       expect(rotated.arrowVolley).toEqual(hit.arrowVolley);
       const hostPoints = arrowOffsets(
         hit.arrowVolley!.projectileId,
-        true,
+        false,
         "blue",
       );
       const guestPoints = arrowOffsets(
         rotated.arrowVolley!.projectileId,
-        true,
+        false,
         "red",
       );
       expect(guestPoints).toEqual(

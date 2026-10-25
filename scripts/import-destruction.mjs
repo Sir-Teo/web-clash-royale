@@ -35,7 +35,7 @@ const cardsPath = "public/assets/ui/cards/cards.json",
 files.push({ path: cardsPath, sha256: sha(cardsBytes) });
 const sources = { tower: "TowerExplode", king: "King_player_die" };
 for (const [id, profile] of Object.entries(profiles)) {
-  if (id.endsWith("-tower")) continue;
+  if (id === "king-tower" || id === "princess-tower") continue;
   sources[id] = (
     tables.characters[profile.source] ?? tables.buildings[profile.source]
   ).DeathEffect;
@@ -44,11 +44,18 @@ sources["skeleton-army"] = sources.skeletons;
 const balloon = tables.characters[profiles.balloon.source];
 sources["balloon-bomb"] =
   tables.buildings[balloon.DeathSpawnCharacter].DeathEffect;
+const giantSkeleton = tables.characters[profiles["giant-skeleton"].source];
+const giantSkeletonBomb = tables.buildings[giantSkeleton.DeathSpawnCharacter];
+if (giantSkeleton.DeathSpawnCount !== "1" ||
+    giantSkeletonBomb?.DeathEffect !== "MegaBombExplodeSkeleton")
+  throw new Error("Recheck Giant Skeleton death bomb effect");
+sources["giant-skeleton-bomb"] = giantSkeletonBomb.DeathEffect;
 const effects = {},
   impacts = {},
-  launches = {},
   trails = {},
+  launches = {},
   movements = {},
+  continuities = {},
   charges = {},
   landings = {},
   deployments = {},
@@ -77,9 +84,13 @@ function importEmitter(name) {
   ];
   const clips = group
     .filter((r) =>
-      ["sc/effects.sc", "sc/building_mega_bomb.sc"].includes(
-        r.ParticleResource,
-      ),
+      [
+        "sc/effects.sc",
+        "sc/building_mega_bomb.sc",
+        "sc/chr_valkyrie.sc",
+        "sc/chr_battle_ram.sc",
+        "sc/chr_zap_machine.sc",
+      ].includes(r.ParticleResource),
     )
     .map((r) => r.ParticleExportName);
   if (!clips.length)
@@ -128,8 +139,12 @@ function composition(name, team, delay = 0, scale = 1, ancestry = []) {
         Number(row.RenderableScale || 100)) /
       100;
     if (row.Type === "Effect")
-      return composition(row.Effect, team, time, size, [...ancestry, name]);
+      return row.Effect
+        ? composition(row.Effect, team, time, size, [...ancestry, name])
+        : [];
     if (row.Type !== "ParticleEmitter") return [];
+    // Some effect heads carry a sound but no emitter; children hold the particles.
+    if (!row.ParticleEmitterName) return [];
     // Tower rubble persists from world state instead of occupying the transient pool.
     if (
       ["Tower_destroyed_ground", "KingTower_destroyed_ground"].includes(
@@ -151,6 +166,9 @@ function composition(name, team, delay = 0, scale = 1, ancestry = []) {
         scale: size,
         layer: row.Layer || "Object",
         ground:
+          ["heal_ground", "heal_ground_ring", "heal_ground_ring_enemy"].includes(
+            row.ParticleEmitterName,
+          ) ||
           row.Layer === "Shadow" ||
           (row.Layer === "Ground" && !ballistic) ||
           emitter.clips.some((c) => c.startsWith("death_ground_")),
@@ -170,14 +188,18 @@ for (const [id, expected] of Object.entries({
   zap: "Spell_zap_effect",
   arrows: "ArrowHitGround",
   rocket: "Rocket_explosion",
+  lightning: "Spell_lightning_effect",
+  log: "log_hit",
+  "goblin-barrel": "goblin_barrel_explosion",
 })) {
   const card = cards[id];
   const spell = tables[card.table][card.row];
+  const area = tables.area_effect_objects[spell.AreaEffectObject];
   const projectile =
-    tables.projectiles[spell.CustomFirstProjectile || spell.Projectile];
-  const source =
-    projectile?.HitEffect ||
-    tables.area_effect_objects[spell.AreaEffectObject]?.OneShotEffect;
+    tables.projectiles[
+      spell.CustomFirstProjectile || spell.Projectile || area?.Projectile
+    ];
+  const source = projectile?.HitEffect || area?.OneShotEffect;
   if (source !== expected)
     throw new Error(`Recheck native ${id} impact binding: ${source}`);
   impacts[id] = {
@@ -186,12 +208,290 @@ for (const [id, expected] of Object.entries({
     enemyComponents: composition(source, "red"),
   };
 }
+const rocketTrail = tables.projectiles.RocketSpell?.TrailEffect;
+if (rocketTrail !== "Rocket_Emitter")
+  throw new Error(`Recheck native Rocket trail binding: ${rocketTrail}`);
+trails.rocket = {
+  source: rocketTrail,
+  components: composition(rocketTrail, "blue"),
+  enemyComponents: composition(rocketTrail, "red"),
+};
+const rollingLog = tables.projectiles.LogProjectileRolling;
+if (
+  rollingLog?.DeathEffect !== "log_die" ||
+  rollingLog.TrailEffect !== "log_emitter"
+)
+  throw new Error("Recheck native rolling Log effects");
+impacts["log-die"] = {
+  source: rollingLog.DeathEffect,
+  components: composition(rollingLog.DeathEffect, "blue"),
+  enemyComponents: composition(rollingLog.DeathEffect, "red"),
+};
+trails.log = {
+  source: rollingLog.TrailEffect,
+  components: composition(rollingLog.TrailEffect, "blue"),
+  enemyComponents: composition(rollingLog.TrailEffect, "red"),
+};
+const dartTrail = tables.projectiles.BlowdartGoblinProjectile?.TrailEffect;
+if (dartTrail !== "BlowdartProjectileEmitter")
+  throw new Error(`Recheck native Dart Goblin trail: ${dartTrail}`);
+trails["dart-goblin"] = {
+  source: dartTrail,
+  components: composition(dartTrail, "blue"),
+  enemyComponents: composition(dartTrail, "red"),
+};
+const iceTrail = tables.projectiles.ice_wizardProjectile?.TrailEffect;
+if (iceTrail !== "ice_wiz_emitter")
+  throw new Error(`Recheck native Ice Wizard trail: ${iceTrail}`);
+trails["ice-wizard"] = {
+  source: iceTrail,
+  components: composition(iceTrail, "blue"),
+  enemyComponents: composition(iceTrail, "red"),
+};
+const iceSpiritProjectile = tables.projectiles.IceSpiritsProjectile;
+if (iceSpiritProjectile?.TrailEffect !== "ice_wiz_emitter" ||
+    iceSpiritProjectile.HitEffect !== "icespirit_projectile_hit")
+  throw new Error("Recheck native Ice Spirit projectile effects");
+trails["ice-spirit"] = {
+  source: iceSpiritProjectile.TrailEffect,
+  components: composition(iceSpiritProjectile.TrailEffect, "blue"),
+  enemyComponents: composition(iceSpiritProjectile.TrailEffect, "red"),
+};
+const fireSpiritsProjectile = tables.projectiles.FireSpiritsProjectile;
+if (fireSpiritsProjectile?.TrailEffect !== "PrincessArrowProjectileEmitter" ||
+    fireSpiritsProjectile.HitEffect !== "firespirit_projectile_hit")
+  throw new Error("Recheck native Fire Spirits projectile effects");
+trails["fire-spirits"] = {
+  source: fireSpiritsProjectile.TrailEffect,
+  components: composition(fireSpiritsProjectile.TrailEffect, "blue"),
+  enemyComponents: composition(fireSpiritsProjectile.TrailEffect, "red"),
+};
+for (const [id, projectile, expected] of [
+  ["lava-hound", "LavaHoundProjectile", "lava_hound_Emitter"],
+  ["lava-pup", "LavaPupProjectile", "lava_pups_emitter"],
+]) {
+  const source = tables.projectiles[projectile]?.TrailEffect;
+  if (source !== expected)
+    throw new Error(`Recheck native ${id} projectile trail: ${source}`);
+  trails[id] = {
+    source,
+    components: composition(source, "blue"),
+    enemyComponents: composition(source, "red"),
+  };
+  const hit = tables.projectiles[projectile].HitEffect;
+  impacts[`hit:${id}`] = {
+    source: hit,
+    components: composition(hit, "blue"),
+    enemyComponents: composition(hit, "red"),
+  };
+}
+const princessTrail = tables.projectiles.PrincessProjectile?.TrailEffect;
+if (princessTrail !== "PrincessArrowProjectileEmitter")
+  throw new Error(`Recheck native Princess arrow trail: ${princessTrail}`);
+trails.princess = {
+  source: princessTrail,
+  components: composition(princessTrail, "blue"),
+  enemyComponents: composition(princessTrail, "red"),
+};
+const infernoHit = tables.characters.InfernoDragon?.DamageEffect;
+if (infernoHit !== "inferno_hit_effect")
+  throw new Error(`Recheck native Inferno Dragon hit: ${infernoHit}`);
+impacts["hit:inferno-dragon"] = {
+  source: infernoHit,
+  components: composition(infernoHit, "blue"),
+  enemyComponents: composition(infernoHit, "red"),
+};
+const electroHit = tables.characters.ElectroWizard?.DamageEffect;
+if (electroHit !== "electro_wizard_hit")
+  throw new Error(`Recheck native Electro Wizard hit: ${electroHit}`);
+impacts["hit:electro-wizard"] = {
+  source: electroHit,
+  components: composition(electroHit, "blue"),
+  enemyComponents: composition(electroHit, "red"),
+};
+const minerTravel = tables.characters.Miner?.SpawnPathfindEffect;
+if (minerTravel !== "miner_travel_effect")
+  throw new Error(`Recheck native Miner travel effect: ${minerTravel}`);
+impacts["miner-travel"] = {
+  source: minerTravel,
+  components: composition(minerTravel, "blue"),
+  enemyComponents: composition(minerTravel, "red"),
+};
+trails.miner = {
+  source: minerTravel,
+  components: composition(minerTravel, "blue"),
+  enemyComponents: composition(minerTravel, "red"),
+};
+const boulder = tables.projectiles.BowlerProjectile;
+if (boulder?.TrailEffect !== "bowler_projectile_trail" ||
+    boulder.DeathEffect !== "bowler_projectile_die")
+  throw new Error("Recheck native Bowler effects");
+trails.bowler = {
+  source: boulder.TrailEffect,
+  components: composition(boulder.TrailEffect, "blue"),
+  enemyComponents: composition(boulder.TrailEffect, "red"),
+};
+impacts["hit:bowler"] = {
+  source: boulder.DeathEffect,
+  components: composition(boulder.DeathEffect, "blue"),
+  enemyComponents: composition(boulder.DeathEffect, "red"),
+};
+const axe = tables.projectiles.AxeManProjectile;
+if (axe?.TrailEffect !== "AxeProjectileEmitter" ||
+    axe.HitEffect !== "axe_man_projectile_hit" ||
+    axe.PingpongDeathEffect !== "axe_man_projectile_die")
+  throw new Error("Recheck native Executioner axe effects");
+trails.executioner = {
+  source: axe.TrailEffect,
+  components: composition(axe.TrailEffect, "blue"),
+  enemyComponents: composition(axe.TrailEffect, "red"),
+};
+impacts["hit:executioner"] = {
+  source: axe.HitEffect,
+  components: composition(axe.HitEffect, "blue"),
+  enemyComponents: composition(axe.HitEffect, "red"),
+};
+impacts["axe-die"] = {
+  source: axe.PingpongDeathEffect,
+  components: composition(axe.PingpongDeathEffect, "blue"),
+  enemyComponents: composition(axe.PingpongDeathEffect, "red"),
+};
+const zapMachine = tables.projectiles.ZapMachineProjectile;
+if (zapMachine?.TrailEffect !== "zapMachine_trail_emitter" ||
+    zapMachine.HitEffect !== "zapmachine_projectile_hit")
+  throw new Error("Recheck native Sparky cannon effects");
+trails.sparky = {
+  source: zapMachine.TrailEffect,
+  components: composition(zapMachine.TrailEffect, "blue"),
+  enemyComponents: composition(zapMachine.TrailEffect, "red"),
+};
+impacts["hit:sparky"] = {
+  source: zapMachine.HitEffect,
+  components: composition(zapMachine.HitEffect, "blue"),
+  enemyComponents: composition(zapMachine.HitEffect, "red"),
+};
+const rageBottle = tables.buildings.RageBarbarianBottle;
+if (rageBottle?.DeathEffect !== "rage_bottle_explode" ||
+    rageBottle.DeathAreaEffect !== "BarbarianRage")
+  throw new Error("Recheck native Lumberjack death bottle");
+impacts["bottle:lumberjack"] = {
+  source: rageBottle.DeathEffect,
+  components: composition(rageBottle.DeathEffect, "blue"),
+  enemyComponents: composition(rageBottle.DeathEffect, "red"),
+};
+const nightWitch = tables.characters.DarkWitch;
+if (nightWitch?.SpawnCharacterEffect !== "bat_dark_witch_spawn")
+  throw new Error("Recheck native Night Witch Bat summon");
+impacts["summon:night-witch"] = {
+  source: nightWitch.SpawnCharacterEffect,
+  components: composition(nightWitch.SpawnCharacterEffect, "blue"),
+  enemyComponents: composition(nightWitch.SpawnCharacterEffect, "red"),
+};
+const bandit = tables.characters.Assassin;
+if (bandit?.DashStartEffect !== "assassin_dash_start" ||
+    bandit.LandingEffect !== "assassin_dash_end" ||
+    bandit.DamageEffectSpecial !== "assassin_hit_special_red")
+  throw new Error("Recheck native Bandit dash and landing effects");
+for (const [key, source] of [
+  ["dash-start:bandit", bandit.DashStartEffect],
+  ["dash-end:bandit", bandit.LandingEffect],
+  ["hit-special:bandit", "assassin_hit_special"],
+]) impacts[key] = {
+  source,
+  components: composition(source, "blue"),
+  enemyComponents: composition(source, "red"),
+};
+const darkPrince = tables.characters.DarkPrince;
+if (darkPrince?.ShieldLostEffect !== "GuardShieldDown" ||
+    darkPrince.ChargeEffect !== "dark_prince_charge")
+  throw new Error("Recheck native Dark Prince effects");
+impacts["shield:dark-prince"] = {
+  source: darkPrince.ShieldLostEffect,
+  components: composition(darkPrince.ShieldLostEffect, "blue"),
+  enemyComponents: composition(darkPrince.ShieldLostEffect, "red"),
+};
+const guard = tables.characters.SkeletonWarrior;
+if (guard?.ShieldLostEffect !== "skeleton_warrior_lose_shield")
+  throw new Error("Recheck native Guards shield loss effect");
+impacts["shield:guards"] = {
+  source: guard.ShieldLostEffect,
+  components: composition(guard.ShieldLostEffect, "blue"),
+  enemyComponents: composition(guard.ShieldLostEffect, "red"),
+};
+const battleRam = tables.characters.BattleRam;
+if (battleRam?.TargetedHitEffect !== "battle_ram_hit" ||
+    battleRam.ChargeEffect !== "battleram_charge" ||
+    battleRam.DeathEffect !== "battle_ram_die")
+  throw new Error("Recheck native Battle Ram effects");
+impacts["hit:battle-ram"] = {
+  source: battleRam.TargetedHitEffect,
+  components: composition(battleRam.TargetedHitEffect, "blue"),
+  enemyComponents: composition(battleRam.TargetedHitEffect, "red"),
+};
+const tornadoArea = tables.area_effect_objects.Tornado;
+if (tornadoArea?.ScaledEffect !== "Spell_tornado_deploy")
+  throw new Error("Recheck native Tornado visual binding");
+impacts.tornado = {
+  source: tornadoArea.ScaledEffect,
+  components: composition(tornadoArea.ScaledEffect, "blue"),
+  enemyComponents: composition(tornadoArea.ScaledEffect, "red"),
+};
+const graveyardArea = tables.area_effect_objects.Graveyard;
+if (
+  graveyardArea?.ScaledEffect !== "Spell_graveyard_ground" ||
+  graveyardArea.SpawnEffect !== "Graveyard_appear"
+)
+  throw new Error("Recheck native Graveyard visual bindings");
+for (const [id, source] of [
+  ["graveyard", graveyardArea.ScaledEffect],
+  ["graveyard-appear", graveyardArea.SpawnEffect],
+])
+  impacts[id] = {
+    source,
+    components: composition(source, "blue"),
+    enemyComponents: composition(source, "red"),
+  };
+const cloneArea = tables.area_effect_objects.Clone;
+const healArea = tables.area_effect_objects.Heal;
+if (healArea?.ScaledEffect !== "Healing")
+  throw new Error("Recheck native Heal area visual binding");
+impacts.heal = {
+  source: healArea.ScaledEffect,
+  components: composition(healArea.ScaledEffect, "blue"),
+  enemyComponents: composition(healArea.ScaledEffect, "red"),
+};
+if (cloneArea?.ScaledEffect !== "spell_clone_ground")
+  throw new Error("Recheck native Clone area visual binding");
+impacts.clone = {
+  source: cloneArea.ScaledEffect,
+  components: composition(cloneArea.ScaledEffect, "blue"),
+  enemyComponents: composition(cloneArea.ScaledEffect, "red"),
+};
+impacts["clone-appear"] = {
+  source: "hologram_loop",
+  components: composition("hologram_loop", "blue"),
+  enemyComponents: composition("hologram_loop", "red"),
+};
+const iceGolemArea = tables.area_effect_objects.FreezeIceGolemite;
+if (iceGolemArea?.OneShotEffect !== "IceGolem_slow_loop" ||
+    iceGolemArea.ScaledEffect !== "IceGolem_slow_ground")
+  throw new Error("Recheck native Ice Golem death area effects");
+for (const [id, source] of [
+  ["ice-golem-slow", iceGolemArea.OneShotEffect],
+  ["ice-golem-ground", iceGolemArea.ScaledEffect],
+])
+  impacts[id] = {
+    source,
+    components: composition(source, "blue"),
+    enemyComponents: composition(source, "red"),
+  };
 // These DamageEffect compositions contain authored impact layers at the
 // attack target: Giant's punch dust, Balloon's crater and Tesla's beam sparks.
 for (const [id, expected] of Object.entries({
   giant: "giant_hit",
   balloon: "balloon_hit",
   tesla: "tesla_hit_effect",
+  "inferno-tower": "inferno_hit_effect",
 })) {
   const profile = profiles[id];
   const actor =
@@ -214,6 +514,57 @@ launches.cannon = {
   components: composition(cannonLaunch, "blue"),
   enemyComponents: composition(cannonLaunch, "red"),
 };
+const mortar = tables.buildings[profiles.mortar.source];
+const mortarProjectile = tables.projectiles[mortar.Projectile];
+if (mortar.ProjectileEffect !== "mortar_attack" ||
+    mortarProjectile?.HitEffect !== "mortar_hit")
+  throw new Error("Recheck native Mortar launch and impact");
+launches.mortar = {
+  source: mortar.ProjectileEffect,
+  components: composition(mortar.ProjectileEffect, "blue"),
+  enemyComponents: composition(mortar.ProjectileEffect, "red"),
+};
+impacts["hit:mortar"] = {
+  source: mortarProjectile.HitEffect,
+  components: composition(mortarProjectile.HitEffect, "blue"),
+  enemyComponents: composition(mortarProjectile.HitEffect, "red"),
+};
+const xBow = tables.buildings[profiles["x-bow"].source];
+const xBowProjectile = tables.projectiles[xBow.Projectile];
+if (xBow.ProjectileEffect !== "XbowAttack" ||
+    xBowProjectile?.HitEffect !== "ArrowHit")
+  throw new Error("Recheck native X-Bow launch and impact");
+launches["x-bow"] = {
+  source: xBow.ProjectileEffect,
+  components: composition(xBow.ProjectileEffect, "blue"),
+  enemyComponents: composition(xBow.ProjectileEffect, "red"),
+};
+impacts["hit:x-bow"] = {
+  source: xBowProjectile.HitEffect,
+  components: composition(xBowProjectile.HitEffect, "blue"),
+  enemyComponents: composition(xBowProjectile.HitEffect, "red"),
+};
+const bombTower = tables.buildings[profiles["bomb-tower"].source];
+const bombTowerProjectile = tables.projectiles[bombTower.Projectile];
+if (bombTower.ProjectileEffect !== "BombTower_attack" ||
+    bombTowerProjectile?.HitEffect !== "BombTower_projectile_hit" ||
+    bombTowerProjectile.TrailEffect !== "BomberBomb_fire_emitter")
+  throw new Error("Recheck native Bomb Tower attack effects");
+launches["bomb-tower"] = {
+  source: bombTower.ProjectileEffect,
+  components: composition(bombTower.ProjectileEffect, "blue"),
+  enemyComponents: composition(bombTower.ProjectileEffect, "red"),
+};
+impacts["hit:bomb-tower"] = {
+  source: bombTowerProjectile.HitEffect,
+  components: composition(bombTowerProjectile.HitEffect, "blue"),
+  enemyComponents: composition(bombTowerProjectile.HitEffect, "red"),
+};
+trails["bomb-tower"] = {
+  source: bombTowerProjectile.TrailEffect,
+  components: composition(bombTowerProjectile.TrailEffect, "blue"),
+  enemyComponents: composition(bombTowerProjectile.TrailEffect, "red"),
+};
 for (const [id, expected] of Object.entries({
   knight: "knight_steps",
   prince: "prince_steps",
@@ -227,6 +578,50 @@ for (const [id, expected] of Object.entries({
     enemyComponents: composition(source, "red"),
   };
 }
+const golemContinuous = tables.characters[profiles.golem.source].ContinuousEffect;
+const redFirefly = tables.particle_emitters.golem_firefly_trail?.[0].EnemyVersion;
+if (golemContinuous !== "golem_cont_effect" ||
+    redFirefly !== "golem_firefly_trail_red")
+  throw new Error("Recheck native Golem continuous fireflies");
+continuities.golem = {
+  source: golemContinuous,
+  // The source loops the four authored emissions at 0, 3, 9 and 12 seconds.
+  // Its runtime loop length is unavailable; retain a 15-second cycle.
+  cycle: 15,
+  components: composition(golemContinuous, "blue"),
+  enemyComponents: composition(golemContinuous, "red").map((component) => ({
+    ...component,
+    emitter: redFirefly,
+  })),
+};
+const iceSpiritContinuous = tables.characters.IceSpirits?.ContinuousEffect;
+if (iceSpiritContinuous !== "icespirit_continuous_fx")
+  throw new Error("Recheck native Ice Spirit continuous effect");
+continuities["ice-spirit"] = {
+  source: iceSpiritContinuous,
+  cycle: 1,
+  components: composition(iceSpiritContinuous, "blue"),
+  enemyComponents: composition(iceSpiritContinuous, "red"),
+};
+const fireSpiritsContinuous = tables.characters.FireSpirits?.ContinuousEffect;
+if (fireSpiritsContinuous !== "firespirit_continuous_fx")
+  throw new Error("Recheck native Fire Spirits continuous effect");
+continuities["fire-spirits"] = {
+  source: fireSpiritsContinuous,
+  cycle: 1,
+  components: composition(fireSpiritsContinuous, "blue"),
+  enemyComponents: composition(fireSpiritsContinuous, "red"),
+};
+const infernoTowerContinuous = tables.buildings[profiles["inferno-tower"].source].ContinuousEffect;
+if (infernoTowerContinuous !== "Inferno_continuous")
+  throw new Error("Recheck native Inferno Tower continuous effect");
+continuities["inferno-tower"] = {
+  source: infernoTowerContinuous,
+  cycle: 1,
+  components: composition(infernoTowerContinuous, "blue"),
+  enemyComponents: composition(infernoTowerContinuous, "red"),
+};
+importEmitter(redFirefly);
 const princeCharge = tables.characters[profiles.prince.source].ChargeEffect;
 if (princeCharge !== "prince_charge")
   throw new Error(`Recheck native Prince charge effect: ${princeCharge}`);
@@ -234,6 +629,26 @@ charges.prince = {
   source: princeCharge,
   components: composition(princeCharge, "blue"),
   enemyComponents: composition(princeCharge, "red"),
+};
+charges["dark-prince"] = {
+  source: darkPrince.ChargeEffect,
+  components: composition(darkPrince.ChargeEffect, "blue"),
+  enemyComponents: composition(darkPrince.ChargeEffect, "red"),
+};
+movements["dark-prince"] = {
+  source: darkPrince.MoveEffect,
+  components: composition(darkPrince.MoveEffect, "blue"),
+  enemyComponents: composition(darkPrince.MoveEffect, "red"),
+};
+charges["battle-ram"] = {
+  source: battleRam.ChargeEffect,
+  components: composition(battleRam.ChargeEffect, "blue"),
+  enemyComponents: composition(battleRam.ChargeEffect, "red"),
+};
+movements["battle-ram"] = {
+  source: battleRam.MoveEffect,
+  components: composition(battleRam.MoveEffect, "blue"),
+  enemyComponents: composition(battleRam.MoveEffect, "red"),
 };
 const hogLanding =
   tables.characters[profiles["hog-rider"].source].LandingEffect;
@@ -246,11 +661,17 @@ landings["hog-rider"] = {
 };
 for (const [id, expected] of Object.entries({
   musketeer: "cannon_hit",
-  "three-musketeers": "cannon_hit",
   bomber: "BombTower_projectile_hit",
   "baby-dragon": "dragon_hit",
   wizard: "chr_wizard_projectile_hit",
   cannon: "cannon_hit",
+  "royal-giant": "royal_giant_projectile_hit",
+  "mega-minion": "mega_minion_hit",
+  "dart-goblin": "BlowdartArrowHit",
+  "ice-wizard": "ice_wizard_hit",
+  "ice-spirit": "icespirit_projectile_hit",
+  "fire-spirits": "firespirit_projectile_hit",
+  princess: "PrincessArrowHitGround",
 })) {
   const profile = profiles[id];
   const actor =
@@ -265,7 +686,7 @@ for (const [id, expected] of Object.entries({
   };
 }
 for (const [id, profile] of Object.entries(profiles)) {
-  if (id.endsWith("-tower")) continue;
+  if (id === "king-tower" || id === "princess-tower") continue;
   const source = (
     tables.characters[profile.source] ?? tables.buildings[profile.source]
   ).SpawnEffect;
@@ -331,15 +752,6 @@ for (const [id, source] of [
     components: composition(source, "blue"),
     enemyComponents: composition(source, "red"),
   };
-const rocketSpell = tables[cards.rocket.table][cards.rocket.row];
-const rocketProjectile = tables.projectiles[rocketSpell.Projectile];
-if (rocketProjectile.TrailEffect !== "Rocket_Emitter")
-  throw new Error("Recheck native Rocket trail binding");
-trails.rocket = {
-  source: rocketProjectile.TrailEffect,
-  components: composition(rocketProjectile.TrailEffect, "blue"),
-  enemyComponents: composition(rocketProjectile.TrailEffect, "red"),
-};
 effects.tower.rubble = "Tower_destroyed_ground1";
 effects.king.rubble = "Tower_destroyed_ground2";
 const path = "src/render/destruction-data.json",
@@ -348,9 +760,10 @@ const path = "src/render/destruction-data.json",
       {
         effects,
         impacts,
-        launches,
         trails,
+        launches,
         movements,
+        continuities,
         charges,
         landings,
         deployments,

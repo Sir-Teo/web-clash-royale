@@ -1,0 +1,27 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_bowler",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "reference/sc/chr_bowler.bin",
+      "sha256": "f057c9b308890b6b08ef1d814bb51c68441d89251411479c4fbb89697603514a"
+    }
+  ],
+  "output": {
+    "path": "src/game/bowler-data.json",
+    "sha256": "45754b03309a7aff533b86de517632754bf3a3ae2d86085990563f4fa7a0278d"
+  }
+}

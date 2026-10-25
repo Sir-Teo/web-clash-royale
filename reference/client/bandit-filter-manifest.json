@@ -1,0 +1,18 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/sc/effects.bin",
+      "sha256": "1a9b0a2efe99578cd03fb9d8673ddb042aa067ba9f9fc0d3a253e15c2e9c7b7c"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    }
+  ],
+  "output": {
+    "path": "src/render/bandit-filter-data.json",
+    "sha256": "bbfe3b3e80834d6f3ca2839a65e8d1303952ef1bfab6b39b7667e27b753a76ec"
+  }
+}

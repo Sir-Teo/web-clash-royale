@@ -1,0 +1,23 @@
+{
+  "card": "Tornado",
+  "area": "Tornado",
+  "buff": "Tornado",
+  "cost": 3,
+  "rarity": "Epic",
+  "radius": 5.5,
+  "duration": 3.05,
+  "areaHitInterval": 0.05,
+  "buffDuration": 0.5,
+  "damagePerSecond": 44,
+  "damageInterval": 0.5,
+  "crownTowerDamageFraction": 0,
+  "attractPercentage": 2.2,
+  "targets": "enemy",
+  "hitsGround": true,
+  "hitsAir": true,
+  "affectsBuildings": false,
+  "visual": {
+    "area": "Spell_tornado_deploy",
+    "filter": "filter_poison"
+  }
+}

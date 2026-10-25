@@ -28,13 +28,8 @@ describe("card collection browsing", () => {
     expect(ids({ kind: "building", cost: 9 })).toEqual([]);
   });
   it("sorts equal-cost cards by name in both elixir directions", () => {
-    const names = [
-      "Baby Dragon",
-      "Hog Rider",
-      "Mini P.E.K.K.A",
-      "Musketeer",
-      "Valkyrie",
-    ];
+    const names = CARDS.filter((card) => card.kind === "troop" && card.cost === 4)
+      .map((card) => card.name).sort((a, b) => a.localeCompare(b));
     for (const order of ["cost-asc", "cost-desc"] as const)
       expect(
         collectionCards({ kind: "troop", cost: 4, order }).map((c) => c.name),
@@ -50,7 +45,7 @@ describe("card collection browsing", () => {
           (cards[i].cost - cards[i - 1].cost) * (order === "cost-asc" ? 1 : -1),
         ).toBeGreaterThanOrEqual(0);
       expect(cards[0].id).toBe(
-        order === "cost-asc" ? "skeletons" : "three-musketeers",
+        order === "cost-asc" ? "ice-spirit" : "three-musketeers",
       );
     }
   });
@@ -65,9 +60,6 @@ describe("card collection browsing", () => {
     expect(defaults).not.toBe(CARDS);
   });
   it("treats whitespace as an empty search and retains every eligible card", () => {
-    expect(ids({ search: " \t\n ", kind: "building" })).toEqual([
-      "cannon",
-      "tesla",
-    ]);
+    expect(ids({ search: " \t\n ", kind: "building" })).toEqual(CARDS.filter((card) => card.kind === "building").map((card) => card.id));
   });
 });

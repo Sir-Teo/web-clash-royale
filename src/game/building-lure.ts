@@ -1,6 +1,6 @@
 import { CARD_MAP, type CardId } from "./cards";
 import { combatTraits } from "./combat";
-import { BUILDING_RADIUS } from "./deployment";
+import { deploymentRadius } from "./deployment";
 import type { Entity, Point, Team } from "./engine";
 
 const distance = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -47,6 +47,7 @@ export function buildingLureTarget(
       .map((e) => distance(threat, e) - e.radius),
   );
   if (!Number.isFinite(crownDistance)) return;
+  const radius = deploymentRadius(card);
   const sight = Math.max(combatTraits(threat).sight, threat.range);
   if (
     visible.some(
@@ -70,8 +71,8 @@ export function buildingLureTarget(
     const gap = distance(threat, point);
     // Strictly closer: equal edge distances retain the older Crown Tower.
     if (
-      gap <= sight + BUILDING_RADIUS &&
-      gap - BUILDING_RADIUS < crownDistance &&
+      gap <= sight + radius &&
+      gap - radius < crownDistance &&
       legal(point)
     )
       return point;

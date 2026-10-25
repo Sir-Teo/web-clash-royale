@@ -5,6 +5,17 @@ const advance = (b: Battle, seconds: number) => {
   for (let i = 0; i < Math.round(seconds / STEP); i++) b.step();
 };
 describe("battle rules", () => {
+  it("deploys the archived three Goblins and four Skeletons for their card costs", () => {
+    const battle = new Battle({ seed: 11, ai: false });
+    battle.players.blue.hand[0] = "goblins";
+    battle.players.red.hand[0] = "skeletons";
+    expect(battle.play("blue", 0, 4, 22).ok).toBe(true);
+    expect(battle.play("red", 0, 4, 10).ok).toBe(true);
+    expect(battle.entities.filter((e) => e.team === "blue" && e.card === "goblins")).toHaveLength(3);
+    expect(battle.entities.filter((e) => e.team === "red" && e.card === "skeletons")).toHaveLength(4);
+    expect(battle.players.blue.elixir).toBe(3);
+    expect(battle.players.red.elixir).toBe(4);
+  });
   it("can route a returning defender back across a bridge", () => {
     const b = new Battle({ ai: false, seed: 2 });
     b.players.blue.elixir = 10;
@@ -58,7 +69,7 @@ describe("battle rules", () => {
     const hp = t.hp;
     expect(b.play("blue", 0, t.x, t.y).ok).toBe(true);
     advance(b, 3);
-    expect(t.hp).toBeCloseTo(hp - CARD_MAP.fireball.damage * 0.3);
+    expect(t.hp).toBeCloseTo(hp - CARD_MAP.fireball.damage * 0.4);
   });
   it("requires ground troops to cross the bridges", () => {
     const b = new Battle({ seed: 1, ai: false });

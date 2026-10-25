@@ -1,0 +1,18 @@
+{
+  "card": "GoblinBarrel",
+  "projectile": "GoblinBarrelSpell",
+  "cost": 3,
+  "rarity": "Epic",
+  "speed": 6.666666666666667,
+  "gravity": 40,
+  "landingRadius": 1.5,
+  "spawnCard": "goblins",
+  "spawnCount": 3,
+  "spawnDeployTime": 1.2,
+  "spawnLevelIndex": 5,
+  "visual": {
+    "projectile": "spell_goblin_barrel_projectile",
+    "shadow": "Barrel_shadow",
+    "hit": "goblin_barrel_explosion"
+  }
+}

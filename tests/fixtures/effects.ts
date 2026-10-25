@@ -14,7 +14,9 @@ await library.load();
 function setup(page: string) {
   scene.clear();
   const names =
-    page === "0"
+    page === "2"
+      ? ["projectile_rocket", "projectile_shadow_rocket"]
+      : page === "0"
       ? [
           "projectile_arrow_basic",
           "projectile_arrow_basic_enemy",

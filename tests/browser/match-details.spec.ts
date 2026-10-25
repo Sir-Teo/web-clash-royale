@@ -93,6 +93,10 @@ test("inspects recorded cards, copies and undoes a deck, persists it and replays
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   const before = await saved(page);
+  expect(before.history.every((entry: any) => entry.replay.rulesFamily === undefined)).toBe(true);
+  const migratedHistory = before.history.map((entry: any) => ({
+    ...entry, replay: { ...entry.replay, rulesFamily: "local" },
+  }));
   await open(page);
   expect(await ids(page.locator('[data-match-side="yours"]'))).toEqual(
     replay.deck,
@@ -124,7 +128,7 @@ test("inspects recorded cards, copies and undoes a deck, persists it and replays
   expect(copied.decks[1]).toEqual(replay.enemyDeck);
   expect(copied.decks[0]).toEqual(before.decks[0]);
   expect(copied.decks[2]).toEqual(before.decks[2]);
-  expect(copied.history).toEqual(before.history);
+  expect(copied.history).toEqual(migratedHistory);
   expect(copied.gold).toBe(before.gold);
   expect(copied.trophies).toBe(before.trophies);
   await page
@@ -145,7 +149,7 @@ test("inspects recorded cards, copies and undoes a deck, persists it and replays
   await expect(page.getByRole("dialog").getByRole("status")).toContainText(
     "Previous decks restored.",
   );
-  expect(await saved(page)).toEqual(before);
+  expect(await saved(page)).toEqual({ ...before, history: migratedHistory });
   await page
     .getByRole("button", { name: "Use opponent deck", exact: true })
     .click();
@@ -172,7 +176,7 @@ test("inspects recorded cards, copies and undoes a deck, persists it and replays
   await expect
     .poll(() => page.evaluate(() => (window as any).__arena.state.winner))
     .toBe("red");
-  expect((await saved(page)).history).toEqual(before.history);
+  expect((await saved(page)).history).toEqual(migratedHistory);
   await expect(page.locator("[data-use-match-deck]")).toHaveCount(0);
   await expect(page.locator("#match-deck-slot")).toHaveCount(0);
   await expect(page.locator("#practice-recorded-deck")).toHaveCount(0);

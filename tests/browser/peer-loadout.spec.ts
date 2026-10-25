@@ -10,7 +10,12 @@ import {
   CARD_MAP,
   type CardId,
 } from "../../src/game/cards";
-import { expectedCards, expectedEffects } from "./native-assets";
+import {
+  expectedCards,
+  expectedEffects,
+  expectedAnimations,
+  expectedBuildings,
+} from "./native-assets";
 const expect = baseExpect.configure({ timeout: 20000 });
 test.use({ serviceWorkers: "block", actionTimeout: 20000 });
 const key = "browser-royale.profile.v1";
@@ -64,7 +69,12 @@ async function init(page: Page, name: string) {
       },
       { timeout: 60000 },
     )
-    .toEqual([expectedEffects, 19, 3, expectedCards]);
+    .toEqual([
+      expectedEffects,
+      expectedAnimations,
+      expectedBuildings,
+      expectedCards,
+    ]);
   await page.locator("#friend-button").click();
 }
 async function close(page: Page) {

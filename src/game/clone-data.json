@@ -1,0 +1,19 @@
+{
+  "card": "Clone",
+  "area": "Clone",
+  "buff": "Clone",
+  "cost": 3,
+  "rarity": "Epic",
+  "radius": 3,
+  "duration": 1,
+  "buffDuration": 0.8,
+  "target": "own-troops",
+  "hitsGround": true,
+  "hitsAir": true,
+  "ignoresBuildings": true,
+  "visual": {
+    "ground": "spell_clone_ground",
+    "deployFilter": "filter_hologram"
+  },
+  "castSound": "SpellCasting"
+}

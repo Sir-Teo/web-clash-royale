@@ -1,0 +1,18 @@
+{
+  "card": "Elixir Collector",
+  "rarity": "Rare",
+  "cost": 6,
+  "sourceHitpoints": 580,
+  "deployTime": 1,
+  "lifetime": 70,
+  "collectAmount": 1,
+  "generateInterval": 8.5,
+  "actionFrame": 29,
+  "fps": 30,
+  "frames": 35,
+  "collectSound": "sound_elixircollector_get",
+  "spawnEffect": "elixircollector_deploy",
+  "deathEffect": "elixircollector_die",
+  "blueExport": "building_elixir_pump_blue",
+  "redExport": "building_elixir_pump_red"
+}

@@ -1,3 +1,4 @@
+import { CARD_MAP } from "../../src/game/cards";
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
 for (const [scenario, label] of [
@@ -127,7 +128,7 @@ for (const blocked of [false, true])
     expect(hit.balloonHits[0]).toMatchObject({
       x: cannon.x,
       y: cannon.y,
-      value: 640,
+      value: CARD_MAP.balloon.damage,
     });
     expect(hit.towers.every((e: any) => e.hp === e.maxHp)).toBe(true);
     expect(

@@ -1,0 +1,61 @@
+{
+  "card": "LavaHound",
+  "rarity": "Legendary",
+  "cost": 7,
+  "hound": {
+    "source": "LavaHound",
+    "sourceHitpoints": 3000,
+    "sourceDamage": 45,
+    "sourceSpeed": 45,
+    "sourceRange": 2,
+    "sourceHitSpeed": 1.3,
+    "sourceLoadTime": 0.3,
+    "sourceDeployTime": 1,
+    "targetsBuildings": true,
+    "hitsAir": true,
+    "ignoresPushback": true,
+    "flyingHeight": 5,
+    "projectileStartZ": 1.8,
+    "projectile": {
+      "source": "LavaHoundProjectile",
+      "speed": 6.666666666666667,
+      "homing": true,
+      "export": "particle_coal1",
+      "trail": "lava_hound_Emitter",
+      "hit": "lava_hound_projectile_hit"
+    },
+    "blueExport": "lava_hound",
+    "redExport": "lava_hound_red",
+    "deathSpawn": {
+      "character": "LavaPups",
+      "count": 6,
+      "radius": 2.5,
+      "pushback": true
+    }
+  },
+  "pup": {
+    "source": "LavaPups",
+    "sourceHitpoints": 179,
+    "sourceDamage": 45,
+    "sourceSpeed": 60,
+    "sourceRange": 2,
+    "sourceHitSpeed": 1,
+    "sourceLoadTime": 0.2,
+    "sourceDeployTime": 1,
+    "targetsBuildings": false,
+    "hitsAir": true,
+    "ignoresPushback": false,
+    "flyingHeight": 3.5,
+    "projectileStartZ": 0.1,
+    "projectile": {
+      "source": "LavaPupProjectile",
+      "speed": 8.333333333333334,
+      "homing": true,
+      "export": "particle_coal1",
+      "trail": "lava_pups_emitter",
+      "hit": "lava_pups_projectile_hit"
+    },
+    "blueExport": "lava_pups",
+    "redExport": "lava_pups"
+  }
+}

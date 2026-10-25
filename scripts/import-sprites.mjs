@@ -11,8 +11,31 @@ await mkdir(cache, { recursive: true });
 await mkdir(output, { recursive: true });
 const sources = {
   knight: "knight",
+  barbarians: "barbarian",
+  "elite-barbarians": "barbarian",
+  "royal-giant": "royal_giant",
+  "mega-minion": "mega_minion",
+  "dart-goblin": "goblin_blowdart",
+  "ice-wizard": "ice_wizard",
+  "ice-spirit": "ice_spirits",
+  "fire-spirits": "fire_firespirit",
+  "ice-golem": "snowman",
+  princess: "princess",
+  "inferno-dragon": "baby_dragon",
+  "electro-wizard": "electro_wizard",
+  miner: "miner",
+  bowler: "bowler",
+  "dark-prince": "black_knight",
+  "dark-prince-shield": "black_knight",
+  "battle-ram": "battle_ram",
+  executioner: "axe_man",
+  sparky: "zap_machine",
+  lumberjack: "rage_barbarian",
   archers: "archer",
   giant: "giant",
+  "giant-skeleton": "giant_skeleton",
+  guards: "skeleton_warrior",
+  "guards-shield": "skeleton_warrior",
   musketeer: "musketeer",
   "mini-pekka": "mini_pekka",
   goblins: "goblin",
@@ -23,6 +46,13 @@ const sources = {
   "hog-rider": "hog_rider",
   "baby-dragon": "baby_dragon",
   minions: "minion",
+  bats: "bats",
+  "night-witch": "dark_witch",
+  bandit: "bandit",
+  golem: "golem",
+  golemite: "golemite",
+  "lava-hound": "lava_hound",
+  "lava-pup": "lava_pups",
   witch: "witch",
   prince: "prince",
   pekka: "pekka",
@@ -79,6 +109,9 @@ for (const [id, source] of Object.entries(sources)) {
     usedShapes = new Set();
   function flatten(ref, frame, matrix = identity, color = neutral, depth = 0) {
     if (depth > 20) throw new Error(`Recursive SC display list ${name}`);
+    // The 1.8.1 Electro Wizard attack exports all reference an absent child 301.
+    // Its visible beam is a separate effect export imported below.
+    if (id === "electro-wizard" && ref === 301) return [];
     if (data.shapes[ref]) {
       usedShapes.add(ref);
       return [
@@ -100,14 +133,25 @@ for (const [id, source] of Object.entries(sources)) {
   }
   for (const [exportName, ref] of Object.entries(data.names)) {
     const match = exportName.match(
-      /(?:^|_)(run|walk|attack|idle|hover|fly|charge)(\d*)_(\d+)$/i,
+      /(?:^|_)(run|walk|attacking|attack|idle|hover|fly|charge|dash|deploy)(\d*)_(\d+)$/i,
     );
     if (!match || Number(match[2] || 1) > 1) continue;
+    if (match[1].toLowerCase() === "deploy" && id !== "lumberjack") continue;
     // This source also contains Inferno Dragon exports. Never overwrite Baby Dragon.
     if (id === "baby-dragon" && !exportName.startsWith("baby_dragon_"))
       continue;
+    if (id === "inferno-dragon" && !exportName.startsWith("inferno_dragon_"))
+      continue;
+    if (id === "barbarians" && !exportName.startsWith("barbarian1_")) continue;
+    if (id === "elite-barbarians" && !exportName.startsWith("angry_barbarian_")) continue;
     if (id === "tower-princess" && !exportName.startsWith("princess_tower_"))
       continue;
+    if (id === "princess" && !exportName.startsWith("princess_")) continue;
+    if (id === "princess" && exportName.startsWith("princess_tower_")) continue;
+    if (id === "dark-prince" && exportName.startsWith("BlackKnight_shield_")) continue;
+    if (id === "dark-prince-shield" && !exportName.startsWith("BlackKnight_shield_")) continue;
+    if (id === "guards" && exportName.includes("_shield_")) continue;
+    if (id === "guards-shield" && !exportName.includes("_shield_")) continue;
     const direction = Number(match[3]);
     if (direction < 1 || direction > 9) continue;
     const hasExplicitBlue = Object.keys(data.names).some((name) =>
@@ -124,8 +168,20 @@ for (const [id, source] of Object.entries(sources)) {
     const sourceClip = data.clips[ref];
     if (!sourceClip?.frames.length)
       throw new Error(`Missing export ${exportName}`);
-    const sequence = sourceClip.frames.map((_, index) => {
-      const parts = flatten(ref, index);
+    // The archived blue Princess run direction 9 is an authored empty export.
+    // Use adjacent direction 8 so the troop stays visible on that heading.
+    const emptyPrincessRun =
+      id === "princess" && exportName === "princess_run1_9";
+    if (
+      emptyPrincessRun &&
+      !sourceClip.frames.every((frame) => frame.length === 0)
+    )
+      throw new Error("Recheck empty archived Princess run direction 9");
+    const drawnName = emptyPrincessRun ? "princess_run1_8" : exportName;
+    const drawnRef = data.names[drawnName];
+    const drawnClip = data.clips[drawnRef];
+    const sequence = drawnClip.frames.map((_, index) => {
+      const parts = flatten(drawnRef, index);
       const key = JSON.stringify(parts);
       let frame = frameLookup.get(key);
       if (frame === undefined) {
@@ -138,9 +194,10 @@ for (const [id, source] of Object.entries(sources)) {
     if (clips[`${team}-${kind}-${direction}`])
       throw new Error(`Duplicate animation key ${id}: ${exportName}`);
     clips[`${team}-${kind}-${direction}`] = {
-      fps: sourceClip.fps,
+      fps: drawnClip.fps,
       frames: sequence,
-      source: exportName,
+      source: drawnName,
+      ...(emptyPrincessRun ? { emptySource: exportName } : {}),
     };
   }
   const textures = [],
@@ -148,15 +205,32 @@ for (const [id, source] of Object.entries(sources)) {
   for (let i = 0; i < data.textures.length; i++) {
     const original = await download(
       base,
-      id === "tower-princess"
+      id === "tower-princess" ||
+        id === "princess" ||
+        id === "royal-giant" ||
+        id === "mega-minion" ||
+        id === "dart-goblin"
+        || id === "electro-wizard"
+        || id === "bowler"
+        || id === "dark-prince"
+        || id === "dark-prince-shield"
+        || id === "guards"
+        || id === "guards-shield"
+        || id === "battle-ram"
+        || id === "executioner"
+        || id === "lumberjack"
+        || id === "night-witch"
         ? `${name}_highres_tex.png`
         : `${name}_tex${"_".repeat(i)}.png`,
     );
     const texture = await sharp(original)
       .webp({ lossless: true, effort: 6 })
       .toBuffer();
-    const file = `${id}-${i}.webp`;
-    await writeFile(`${output}/${file}`, texture);
+    // Both Barbarian characters share one archived atlas byte-for-byte.
+    const file = `${id === "elite-barbarians" ? "barbarians" :
+      id === "guards-shield" ? "guards" : id}-${i}.webp`;
+    if (id !== "elite-barbarians" && id !== "guards-shield")
+      await writeFile(`${output}/${file}`, texture);
     const info = await sharp(texture).metadata();
     textures.push({ file, width: info.width, height: info.height });
     hashes.push({
@@ -225,4 +299,16 @@ for (const [id, source] of Object.entries(sources)) {
 await writeFile(
   `${output}/manifest.json`,
   JSON.stringify(manifest, null, 2) + "\n",
+);
+const canonicalByHash = new Map();
+const aliases = {};
+for (const entry of manifest.files)
+  for (const texture of entry.textures) {
+    const canonical = canonicalByHash.get(texture.sha256);
+    if (canonical && canonical !== texture.file) aliases[texture.file] = canonical;
+    else if (!canonical) canonicalByHash.set(texture.sha256, texture.file);
+  }
+await writeFile(
+  "src/render/texture-aliases.json",
+  JSON.stringify(aliases, null, 2) + "\n",
 );

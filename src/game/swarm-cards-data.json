@@ -1,0 +1,18 @@
+{
+  "MinionHorde": {
+    "base": "Minions",
+    "character": "Minion",
+    "icon": "minion_horde",
+    "rarity": "Common",
+    "cost": 5,
+    "count": 6
+  },
+  "ThreeMusketeers": {
+    "base": "Musketeer",
+    "character": "Musketeer",
+    "icon": "three_musketeers",
+    "rarity": "Rare",
+    "cost": 9,
+    "count": 3
+  }
+}

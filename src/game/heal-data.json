@@ -1,0 +1,19 @@
+{
+  "card": "Heal",
+  "area": "Heal",
+  "buff": "Heal",
+  "cost": 3,
+  "rarity": "Rare",
+  "radius": 3,
+  "duration": 3.05,
+  "areaHitInterval": 0.05,
+  "buffDuration": 0.5,
+  "healInterval": 0.5,
+  "sourceHealPerSecond": 100,
+  "target": "own-troops",
+  "hitsGround": true,
+  "hitsAir": true,
+  "ignoresBuildings": true,
+  "visual": "Healing",
+  "castSound": "SpellCasting"
+}

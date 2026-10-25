@@ -1,3 +1,4 @@
+import { PROTOCOL } from "../src/network/protocol";
 import { afterEach, describe, expect, it } from "vitest";
 import { createServer } from "node:http";
 import { WebSocket } from "ws";
@@ -53,7 +54,7 @@ async function peer(url: string) {
   }
   return { ws, send, wait, messages };
 }
-const identity = { version: 1, name: "Blue King", deck: [...STARTER_DECK] };
+const identity = { version: PROTOCOL, name: "Blue King", deck: [...STARTER_DECK] };
 async function match() {
   const url = await server();
   const a = await peer(url),
@@ -261,7 +262,7 @@ describe("authoritative multiplayer", () => {
     const resumed = await peer(url);
     resumed.send({
       type: "resume",
-      version: 1,
+      version: PROTOCOL,
       code: welcome.code,
       token: red.token,
     });
@@ -275,7 +276,7 @@ describe("authoritative multiplayer", () => {
     const thief = await peer(url);
     thief.send({
       type: "resume",
-      version: 1,
+      version: PROTOCOL,
       code: welcome.code,
       token: "f".repeat(64),
     });

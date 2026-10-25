@@ -1,0 +1,29 @@
+{
+  "card": "RageBarbarian",
+  "rarity": "Legendary",
+  "cost": 4,
+  "sourceHitpoints": 950,
+  "sourceDamage": 200,
+  "sourceSpeed": 120,
+  "sourceRange": 0.7,
+  "sourceHitSpeed": 0.7,
+  "sourceLoadTime": 0.3,
+  "blueExport": "rage_barbarian",
+  "redExport": "rage_barbarian_red",
+  "deathBottle": {
+    "source": "RageBarbarianBottle",
+    "export": "rage_bottle_fall",
+    "impactEffect": "rage_bottle_explode",
+    "area": "BarbarianRage",
+    "duration": 7.5,
+    "radius": 5,
+    "hitInterval": 0.3,
+    "buffTime": 2,
+    "capBuffToArea": true,
+    "hitsGround": true,
+    "hitsAir": true,
+    "ownTroopsOnly": true,
+    "speedMultiplier": 1.35,
+    "hitSpeedMultiplier": 1.35
+  }
+}

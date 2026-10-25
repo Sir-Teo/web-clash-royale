@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { expectedEffects } from "./native-assets";
+import { expectedAnimations, expectedBuildings, expectedEffects, expectedHealth } from "./native-assets";
 import { readFileSync } from "node:fs";
 const replay = JSON.parse(
   readFileSync("tests/fixtures/combat-v4-replay.json", "utf8"),
@@ -232,15 +232,19 @@ test("live replay crown flights reach native counter artwork and seeking clears 
   await expect
     .poll(
       () =>
-        page.evaluate((count) => {
-          const s = (window as any).__arena.state;
-          return (
-            s.loadedEffects === count &&
-            s.loadedAnimations === 19 &&
-            s.loadedBuildings === 3 &&
-            s.loadedHealth === 22
-          );
-        }, expectedEffects),
+        page.evaluate(
+          ({ effects, animations, buildings, health }) => {
+            const s = (window as any).__arena.state;
+            return (
+              s.loadedEffects === effects &&
+              s.loadedAnimations === animations &&
+              s.loadedBuildings === buildings &&
+              s.loadedHealth === health
+            );
+          },
+          { effects: expectedEffects, animations: expectedAnimations,
+            buildings: expectedBuildings, health: expectedHealth },
+        ),
       { timeout: 30000 },
     )
     .toBe(true);
@@ -253,7 +257,22 @@ test("live replay crown flights reach native counter artwork and seeking clears 
     "data-red-frame",
     "99",
   );
-  await page.locator("#replay-speed").click();
+  await page.evaluate(() => {
+    (window as any).__nearestRedCrown = Infinity;
+    const sample = () => {
+      const a = document.querySelector("#arena-canvas")!.getBoundingClientRect();
+      const r = document.querySelector('.native-score-art [data-binding="starEnemy"]')!.getBoundingClientRect();
+      const x = r.left + r.width / 2 - a.left;
+      const y = r.top + r.height / 2 - a.top;
+      for (const f of (window as any).__arena.state.crownFlights)
+        if (f.team === "red" && f.visible)
+          (window as any).__nearestRedCrown = Math.min(
+            (window as any).__nearestRedCrown, Math.hypot(f.x - x, f.y - y),
+          );
+      requestAnimationFrame(sample);
+    };
+    requestAnimationFrame(sample);
+  });
   await page.locator("#replay-speed").click();
   await page
     .getByRole("button", { name: "Resume replay", exact: true })
@@ -262,31 +281,9 @@ test("live replay crown flights reach native counter artwork and seeking clears 
   await expect
     .poll(() => page.evaluate(() => (window as any).__arena.state.hud.redFrame))
     .toBeLessThan(99);
-  let nearest = Infinity;
   await expect
     .poll(
-      async () => {
-        const distance = await page.evaluate(() => {
-          const a = document
-              .querySelector("#arena-canvas")!
-              .getBoundingClientRect(),
-            r = document
-              .querySelector('.native-score-art [data-binding="starEnemy"]')!
-              .getBoundingClientRect(),
-            p = {
-              x: r.left + r.width / 2 - a.left,
-              y: r.top + r.height / 2 - a.top,
-            };
-          return Math.min(
-            Infinity,
-            ...(window as any).__arena.state.crownFlights
-              .filter((f: any) => f.team === "red" && f.visible)
-              .map((f: any) => Math.hypot(f.x - p.x, f.y - p.y)),
-          );
-        });
-        nearest = Math.min(nearest, distance);
-        return nearest;
-      },
+      () => page.evaluate(() => (window as any).__nearestRedCrown),
       { timeout: 5000, intervals: [25, 25, 50] },
     )
     .toBeLessThan(15);

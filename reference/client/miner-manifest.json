@@ -1,0 +1,23 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_miner",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/sc/chr_miner.bin",
+      "sha256": "05f63f618ee9e58ab5572cc9c2e93fe7f8264bc01d29f9f4f19c0f93be144284"
+    }
+  ],
+  "output": {
+    "path": "src/game/miner-data.json",
+    "sha256": "6bf937355758d1b206421623a76f2c548fed31a6fa41072a48e29cac498b1bd7"
+  }
+}

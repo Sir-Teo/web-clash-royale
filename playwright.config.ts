@@ -13,7 +13,7 @@ export default defineConfig({
   workers: 1,
   timeout: 90000,
   use: {
-    baseURL: "http://127.0.0.1:5188",
+    baseURL: process.env.ARENA_LIVE_URL ?? "http://127.0.0.1:5188",
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
     launchOptions: {
@@ -45,7 +45,7 @@ export default defineConfig({
       },
     },
   ],
-  webServer: {
+  webServer: process.env.ARENA_LIVE_URL ? undefined : {
     stdout: process.env.ARENA_NETWORK_TRACE === "1" ? "pipe" : "ignore",
     command: process.env.ARENA_PRODUCTION
       ? process.env.VITE_LEGACY_ROOMS === "1"

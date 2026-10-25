@@ -113,6 +113,12 @@ for (const red of [false, true])
     await page.locator('[data-mode="double"]').click();
     const before = await saved(page),
       record = before.history[red ? 1 : 0];
+    // Selecting a mode does not write the profile. These authentic local
+    // recordings acquire their family tag on the first subsequent save.
+    expect(before.history.every((entry: any) => entry.replay.rulesFamily === undefined)).toBe(true);
+    const migratedHistory = before.history.map((entry: any) => ({
+      ...entry, replay: { ...entry.replay, rulesFamily: "local" },
+    }));
     const opponentDeck = red ? legacy.deck : [...marshal.deck];
     await page.getByRole("button", { name: "Battle log", exact: true }).click();
     await page.locator(`[data-match-details="${red ? 1 : 0}"]`).click();
@@ -198,7 +204,8 @@ for (const red of [false, true])
         opponentType: "ai",
         playerName: before.name,
         replay: {
-          version: 5,
+          version: 16,
+          rulesFamily: "origin",
           mode: "training",
           deck: before.deck,
           enemyDeck: opponentDeck,
@@ -209,7 +216,7 @@ for (const red of [false, true])
       expect(
         after.history[0].replay.actions.some((a: any) => a.team === "red"),
       ).toBe(true);
-      expect(after.history.slice(-2)).toEqual(before.history);
+      expect(after.history.slice(-2)).toEqual(migratedHistory);
       if (round === 0) {
         if (!red && info.project.name !== "mobile")
           await page.screenshot({
@@ -257,6 +264,6 @@ for (const red of [false, true])
     expect(normalProfile.gold).toBe(before.gold + 25);
     expect(normalProfile.trophies).toBe(before.trophies - 15);
     expect(normalProfile.decks).toEqual(before.decks);
-    expect(normalProfile.history.slice(-2)).toEqual(before.history);
+    expect(normalProfile.history.slice(-2)).toEqual(migratedHistory);
     expect(errors).toEqual([]);
   });

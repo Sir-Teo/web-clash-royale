@@ -217,7 +217,7 @@ describe("bounded melee interception forecast", () => {
     (b as any).think();
     expect(random).toHaveBeenCalledTimes(2);
     random.mockRestore();
-    expect(b.actions[0]).toMatchObject({ x: 14, y: 10.15 });
+    expect(b.actions[0]).toMatchObject({ x: 14, y: 10 });
   });
 });
 

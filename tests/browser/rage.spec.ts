@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
 
-test("Rage renders on both teams, holds while paused and releases troop and tower colors", async ({
+test("Local version-5 Rage renders on both teams, holds while paused and releases troop and tower colors", async ({
   page,
 }, info) => {
   const errors: string[] = [];
@@ -20,7 +20,7 @@ test("Rage renders on both teams, holds while paused and releases troop and towe
   await expect.poll(async () => (await state("rage-areas")).length).toBe(2);
   expect(
     (await state("rage-areas")).map((a: { team: string }) => a.team),
-  ).toEqual(["red", "blue"]);
+  ).toEqual(["blue", "red"]);
   await expect.poll(async () => (await state("rage-filter")).length).toBe(2);
   await expect
     .poll(async () => (await state("rage-structures")).length)

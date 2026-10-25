@@ -159,6 +159,24 @@
       "sha256": "ac117bb5117b0214028edfe0d4bfb6a73f2654533eb56fda7a7775777d6fe1e1"
     },
     {
+      "path": "audio/battle-final-30.ogg",
+      "source": "music/30_sec_music_loop_01.ogg",
+      "bytes": 188531,
+      "sha256": "eecbaf31660dd7ae6a2abeea37e1e86d578ada78ada2ad59b8e6300a06647bc4"
+    },
+    {
+      "path": "audio/battle-last-minute.ogg",
+      "source": "music/60_sec_music_loop_01.ogg",
+      "bytes": 271192,
+      "sha256": "032494d3e6a1b18d693cb15e3decf48f03d4f0d467acfb8810aa5973c2b893b5"
+    },
+    {
+      "path": "audio/battle-sudden-death.ogg",
+      "source": "music/sudden_death_01.ogg",
+      "bytes": 339108,
+      "sha256": "d14a83aff4d55328c20f486e44c29f1fbb56ac69bf9b2400d350391c6af7649a"
+    },
+    {
       "path": "audio/battle.ogg",
       "source": "music/2min_loop_battle_01.ogg",
       "bytes": 705869,
@@ -345,16 +363,106 @@
       "sha256": "81cedea30710838650fbc2dab748ffc6709707cdae2081c4831b255f0e33d96c"
     },
     {
+      "path": "cards/bandit.png",
+      "source": "cards/bandit.png",
+      "bytes": 120732,
+      "sha256": "c1695a9ef6889e932d0961308d79d1a2a33526cdf5198c212f7e1b84a38a9eed"
+    },
+    {
+      "path": "cards/barbarian-hut.png",
+      "source": "cards/barbarian-hut.png",
+      "bytes": 144860,
+      "sha256": "cbee8ebf5514af11551937db69cc44365e1196aef16628f6f37c8d58c8e88bbb"
+    },
+    {
+      "path": "cards/barbarians.png",
+      "source": "cards/barbarians.png",
+      "bytes": 114510,
+      "sha256": "46198a754608d8086ec40aa01638da639257194c336adca0247b67f02e30d785"
+    },
+    {
+      "path": "cards/bats.png",
+      "source": "cards/bats.png",
+      "bytes": 126952,
+      "sha256": "f22cf5787dbb8cd32f3e4015766b64733f86ccedc5cb5be709b3ee06df400850"
+    },
+    {
+      "path": "cards/battle-ram.png",
+      "source": "cards/battle-ram.png",
+      "bytes": 128980,
+      "sha256": "0b949a9e7781c8c782f6ca3b7d357475fa12cc2246f6bad172f64d11cadea633"
+    },
+    {
+      "path": "cards/bomb-tower.png",
+      "source": "cards/bomb-tower.png",
+      "bytes": 130071,
+      "sha256": "ef3956d4a5aec9ecbfe37f0bc65b66b4ce6299726f4575b8e336fbf3f66cb640"
+    },
+    {
       "path": "cards/bomber.png",
       "source": "cards/bomber.png",
       "bytes": 139334,
       "sha256": "aee0f0da304a067388f1203a931b8bc42e50cac923c1fa9b3eb7dfa4e78de9b0"
     },
     {
+      "path": "cards/bowler.png",
+      "source": "cards/bowler.png",
+      "bytes": 125281,
+      "sha256": "2f6c52a8628dded53ea6f6d0902d65b5c85e8e9ee20a094e2336fabea94b5929"
+    },
+    {
       "path": "cards/cannon.png",
       "source": "cards/cannon.png",
       "bytes": 126894,
       "sha256": "6d830474c1f3d710cebcc233844af30333aec010f25debee1f875d69d74acb7e"
+    },
+    {
+      "path": "cards/clone.png",
+      "source": "cards/clone.png",
+      "bytes": 106855,
+      "sha256": "f2f67ff3f60392cfcdfb419b8f495be4f4ba08c51e3f9a4b455d5b675acdf28c"
+    },
+    {
+      "path": "cards/dark-prince.png",
+      "source": "cards/dark-prince.png",
+      "bytes": 129025,
+      "sha256": "54f58879127b4dba76557b6580ab3242d0463d5e218ccc10433266f0ed145a55"
+    },
+    {
+      "path": "cards/dart-goblin.png",
+      "source": "cards/dart-goblin.png",
+      "bytes": 134883,
+      "sha256": "9635504b4b4c9d3ef1644793cdf1a79d1c68fc5cde9b6214d13fd58ec2c06bae"
+    },
+    {
+      "path": "cards/electro-wizard.png",
+      "source": "cards/electro-wizard.png",
+      "bytes": 132946,
+      "sha256": "f05db16d2920f2771c06bf99e3fdb5b4f0f37e5a412810798379fd45bfd8a395"
+    },
+    {
+      "path": "cards/elite-barbarians.png",
+      "source": "cards/elite-barbarians.png",
+      "bytes": 131965,
+      "sha256": "8ea6b12aa61a277f5bba5c5b4ff2f1580bf181ffac74af58fa14bb2e03b955ca"
+    },
+    {
+      "path": "cards/elixir-collector.png",
+      "source": "cards/elixir-collector.png",
+      "bytes": 129117,
+      "sha256": "e2f12455481b6742b488c92a12cf2021e2ef34c1c437331942252ae2dbe9b59a"
+    },
+    {
+      "path": "cards/executioner.png",
+      "source": "cards/executioner.png",
+      "bytes": 124677,
+      "sha256": "ed03e02c470b63564f52aaafab99ac17eddf01ad55257815573ed7a05ad20082"
+    },
+    {
+      "path": "cards/fire-spirits.png",
+      "source": "cards/fire-spirits.png",
+      "bytes": 131487,
+      "sha256": "12fa2adbe28b57b8caa1d9bd7fa6d6c22e8e2f7196f1591fdbb00a8cdf0104b5"
     },
     {
       "path": "cards/fireball.png",
@@ -369,10 +477,40 @@
       "sha256": "bcbccf3289dc362eaa9e553b886d59e2255c82d62abcfe8c2f8d83560b2ec58d"
     },
     {
+      "path": "cards/furnace.png",
+      "source": "cards/furnace.png",
+      "bytes": 140558,
+      "sha256": "9211b0b56f03f06e7b88a5d2f8d327199536da29d9102ef7544f4b6fdd581bb5"
+    },
+    {
+      "path": "cards/giant-skeleton.png",
+      "source": "cards/giant-skeleton.png",
+      "bytes": 157539,
+      "sha256": "70d69153dd8485a6a508e8d3a8753c57ec17a969530f9808d09cf0931c307af1"
+    },
+    {
       "path": "cards/giant.png",
       "source": "cards/giant.png",
       "bytes": 136801,
       "sha256": "390277aa877d9b952d0b2c8843ee080b1fd5a40eb68acf8760ad18f106985367"
+    },
+    {
+      "path": "cards/goblin-barrel.png",
+      "source": "cards/goblin-barrel.png",
+      "bytes": 135753,
+      "sha256": "6d34267ad6f5d42a8e88f840e36d6a11e25f16f3d111c716bee2e31b03330c4c"
+    },
+    {
+      "path": "cards/goblin-gang.png",
+      "source": "cards/goblin-gang.png",
+      "bytes": 156303,
+      "sha256": "6cf6e06d7c94ad938f94dfd57c0308b1d1081e898001b1df5963e42a5a990031"
+    },
+    {
+      "path": "cards/goblin-hut.png",
+      "source": "cards/goblin-hut.png",
+      "bytes": 151797,
+      "sha256": "ae097ff5e26e203b67e0df0c9fc6f91e355d38feb8d45022cfc371411c0cd7dc"
     },
     {
       "path": "cards/goblins.png",
@@ -381,16 +519,106 @@
       "sha256": "c0bb707e824b63babb8890925ad889d50838e8c94dcaf567f3e8061bb2404f40"
     },
     {
+      "path": "cards/golem.png",
+      "source": "cards/golem.png",
+      "bytes": 118431,
+      "sha256": "3104284ac5620aa3fe11da23bf7b6676a138b7fba356a3a6ca4000c1542ef699"
+    },
+    {
+      "path": "cards/graveyard.png",
+      "source": "cards/graveyard.png",
+      "bytes": 117357,
+      "sha256": "5478b3a4af71d885046367f65614928f0b6f2a95b075b22ee9e83f58998647d4"
+    },
+    {
+      "path": "cards/guards.png",
+      "source": "cards/guards.png",
+      "bytes": 125912,
+      "sha256": "bfc68221b68ab264d95ac45961d5ea6d59324692b78f19e6740cb55f7a8bd9a9"
+    },
+    {
+      "path": "cards/heal.png",
+      "source": "cards/heal.png",
+      "bytes": 110531,
+      "sha256": "541e023fe90289b4a24e5448ba76a8b7703257d2c4f5016c58a2d89c37d0db40"
+    },
+    {
       "path": "cards/hog-rider.png",
       "source": "cards/hog-rider.png",
       "bytes": 131428,
       "sha256": "b34fb968d5843729c24cca9b65271345092a2e2ddde5647381d7186446a9b928"
     },
     {
+      "path": "cards/ice-golem.png",
+      "source": "cards/ice-golem.png",
+      "bytes": 121660,
+      "sha256": "e2baf07b238430895c67e5f6b433430a9ac4b5e254c81401b12503180cf0d372"
+    },
+    {
+      "path": "cards/ice-spirit.png",
+      "source": "cards/ice-spirit.png",
+      "bytes": 135591,
+      "sha256": "634e23f7cfe7508f8833216a4c657abb90bd47916364eba4701dd7e622f028d5"
+    },
+    {
+      "path": "cards/ice-wizard.png",
+      "source": "cards/ice-wizard.png",
+      "bytes": 123132,
+      "sha256": "2b4701fc766c9cf3f33e469638e7d00eb96daceec605b35739fff201c9b2bb2f"
+    },
+    {
+      "path": "cards/inferno-dragon.png",
+      "source": "cards/inferno-dragon.png",
+      "bytes": 129397,
+      "sha256": "09b3d010aaba0c5aa3d8d4df30b9c29d2dd51007c8702fb435133b57cc44e793"
+    },
+    {
+      "path": "cards/inferno-tower.png",
+      "source": "cards/inferno-tower.png",
+      "bytes": 120823,
+      "sha256": "180ef438e5f57c6292680ee107314c1a7581a1dea2cdaf3a36995e38f2e83196"
+    },
+    {
       "path": "cards/knight.png",
       "source": "cards/knight.png",
       "bytes": 153676,
       "sha256": "bc85a17a817c5e29d0e12adc854499670b648e710985a8d05dea9ccfcaa95abe"
+    },
+    {
+      "path": "cards/lava-hound.png",
+      "source": "cards/lava-hound.png",
+      "bytes": 112152,
+      "sha256": "a060c867d885328462d29974de873a3e566ff7b51719398e918000514c9a7830"
+    },
+    {
+      "path": "cards/lightning.png",
+      "source": "cards/lightning.png",
+      "bytes": 142331,
+      "sha256": "47c994fc25232801eed483458395ad9d73d2aa692d736d8fcc7a119ae61f4587"
+    },
+    {
+      "path": "cards/log.png",
+      "source": "cards/the-log.png",
+      "bytes": 130249,
+      "sha256": "2d9202b67ebd1ae3fd9d0d343b0809c63922f81b3a2afc45d7ef058ae5a1400a"
+    },
+    {
+      "path": "cards/lumberjack.png",
+      "source": "cards/lumberjack.png",
+      "bytes": 124211,
+      "sha256": "3ba375ac15a33a7fdae7ec896b7201e2c38d8c471b38ed3cd11fcd61089ae293"
+    },
+    {
+      "path": "cards/mega-minion.png",
+      "source": "cards/mega-minion.png",
+      "bytes": 158495,
+      "sha256": "d30ab6393f56450d9801639e0595b6da5ea9cb37924bc42b68344c48eb660430"
+    },
+    {
+      "path": "cards/miner.png",
+      "source": "cards/miner.png",
+      "bytes": 121119,
+      "sha256": "de39cd5d5bad2a83f0c8bbc403cf205ae10cf0f282101b760287b0bcb99a2305"
     },
     {
       "path": "cards/mini-pekka.png",
@@ -411,10 +639,28 @@
       "sha256": "aa00d7b23fd564665c76aee4f03f508d0ce727f3c39cee306a98fa657e97f1f5"
     },
     {
+      "path": "cards/mirror.png",
+      "source": "cards/mirror.png",
+      "bytes": 92364,
+      "sha256": "7b3a3b042574ede94cbcdf321e3f963657cd8497a3aaa6fe7c272d4a86e2ee6e"
+    },
+    {
+      "path": "cards/mortar.png",
+      "source": "cards/mortar.png",
+      "bytes": 150505,
+      "sha256": "ae586599383e1459a025ca6a465513d7ab6124a7d643b38c091f8d6b1e15fb70"
+    },
+    {
       "path": "cards/musketeer.png",
       "source": "cards/musketeer.png",
       "bytes": 138281,
       "sha256": "db28ed3c9eec23740bba7ae86cda7226479291c147f7453ccb3009f87e5d754b"
+    },
+    {
+      "path": "cards/night-witch.png",
+      "source": "cards/night-witch.png",
+      "bytes": 118623,
+      "sha256": "4d3b3a1cdf93fe3f8a67d959044bbdc91740a9e2c102bad0ed0633ad322b096f"
     },
     {
       "path": "cards/pekka.png",
@@ -435,6 +681,12 @@
       "sha256": "0b35ecc5f4821656f8066cc8d6ea2f65fc8985b536c056ed0d63225676cdfa0a"
     },
     {
+      "path": "cards/princess.png",
+      "source": "cards/princess.png",
+      "bytes": 140042,
+      "sha256": "89a93eecf6caecd5734310221edd712b0e2c8a986cbab06d1276174708fe768e"
+    },
+    {
       "path": "cards/rage.png",
       "source": "cards/rage.png",
       "bytes": 116774,
@@ -447,6 +699,12 @@
       "sha256": "4fc948e1cace137e9ef2828ebda5fdafe9b17c02c9ef6f8074770a2c65629c07"
     },
     {
+      "path": "cards/royal-giant.png",
+      "source": "cards/royal-giant.png",
+      "bytes": 131404,
+      "sha256": "e44b5250b97ffd4dd85c33fdc0d89a7d5bf737a667ef26a14851a65abdf08be0"
+    },
+    {
       "path": "cards/skeleton-army.png",
       "source": "cards/skeleton-army.png",
       "bytes": 132165,
@@ -457,6 +715,12 @@
       "source": "cards/skeletons.png",
       "bytes": 123669,
       "sha256": "577c897f22f0270ed7f7297f9f8e52c72557b43e673e7ea2368e00309bdece6b"
+    },
+    {
+      "path": "cards/sparky.png",
+      "source": "cards/sparky.png",
+      "bytes": 137449,
+      "sha256": "e0e3db0f5f9ce635bd6a11c4fd2eeebe2a33499d1e1efa075e8f460dabc67102"
     },
     {
       "path": "cards/spear-goblins.png",
@@ -477,6 +741,18 @@
       "sha256": "562e00986f6e4f6e63ebf6a5a07d5342317b1aaac5e42875fc199ec4e5fede82"
     },
     {
+      "path": "cards/tombstone.png",
+      "source": "cards/tombstone.png",
+      "bytes": 113858,
+      "sha256": "7acb3b6eabc76c2637fb93ddbd24ef3f451e4ead50f6b8c8aded2da809d36016"
+    },
+    {
+      "path": "cards/tornado.png",
+      "source": "cards/tornado.png",
+      "bytes": 130257,
+      "sha256": "1d7c4187b27b44fe16f4cb4664c128e02553961665d701b9c1295d5040c5f26d"
+    },
+    {
       "path": "cards/valkyrie.png",
       "source": "cards/valkyrie.png",
       "bytes": 148663,
@@ -493,6 +769,12 @@
       "source": "cards/wizard.png",
       "bytes": 128594,
       "sha256": "12254947e7486740288b315062fdb1c415ffd2482d8b00fd6ac4dd65cfc0561a"
+    },
+    {
+      "path": "cards/x-bow.png",
+      "source": "cards/x-bow.png",
+      "bytes": 127145,
+      "sha256": "c09cfc7cf5b8e12029ac9dd21ff0a3f52aef8529b5e22ce73df52970a73f1b3c"
     },
     {
       "path": "cards/zap.png",

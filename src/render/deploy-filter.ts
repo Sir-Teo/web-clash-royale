@@ -4,23 +4,28 @@ import { SpriteFilterStack } from "./sprite-filter";
 import source from "./deploy-filter-data.json";
 
 const cards = new Set<string>(source.cards);
-const life = source.frames.length / source.fps;
+const legendaryCards = new Set<string>(source.legendary.cards);
+const minerCards = new Set<string>(source.miner.cards);
 interface FilteredActor {
   sprite: AnimatedSprite;
   frame: number;
+  legendary: boolean;
+  miner: boolean;
 }
 
 export function hasNativeDeployFilter(card: string) {
-  return cards.has(card);
+  return cards.has(card) || legendaryCards.has(card) || minerCards.has(card);
 }
 
-export function deployFilterFrame(age: number) {
+export function deployFilterFrame(age: number, legendary = false, miner = false) {
+  const timeline = miner ? source.miner : legendary ? source.legendary : source;
+  const life = timeline.frames.length / timeline.fps;
   return age >= 0 && age < life
-    ? Math.min(source.frames.length - 1, Math.floor(age * source.fps))
+    ? Math.min(timeline.frames.length - 1, Math.floor(age * timeline.fps))
     : -1;
 }
 
-/** Source Base-layer deployment filter for the curated troop cards. */
+/** Archived default and Legendary Base-layer troop deployment filters. */
 export class NativeDeployFilter {
   private actors = new Map<number, FilteredActor>();
 
@@ -30,7 +35,7 @@ export class NativeDeployFilter {
     return [...this.actors.entries()].map(([id, actor]) => ({
       id,
       frame: actor.frame,
-      color: source.frames[actor.frame]?.color,
+      color: (actor.miner ? source.miner : actor.legendary ? source.legendary : source).frames[actor.frame]?.color,
       applied: this.filters.has(id, "deploy"),
     }));
   }
@@ -41,10 +46,13 @@ export class NativeDeployFilter {
   ) {
     const active = new Set<number>();
     for (const entity of entities) {
-      const frame = deployFilterFrame(entity.age);
+      const legendary = legendaryCards.has(entity.card);
+      const miner = minerCards.has(entity.card);
+      const frame = deployFilterFrame(entity.age, legendary, miner);
       if (
         entity.kind !== "troop" ||
         entity.hp <= 0 ||
+        entity.clone ||
         !hasNativeDeployFilter(entity.card) ||
         frame < 0
       )
@@ -57,10 +65,12 @@ export class NativeDeployFilter {
         actor = {
           sprite,
           frame: -1,
+          legendary,
+          miner,
         };
         this.actors.set(entity.id, actor);
       }
-      const pose = source.frames[frame];
+      const pose = miner ? source.miner.frames[frame] : legendary ? source.legendary.frames[frame] : source.frames[frame];
       this.filters.set(entity.id, "deploy", sprite, pose.color);
       actor.frame = frame;
       // SpriteLibrary.update establishes the base pose on every render.

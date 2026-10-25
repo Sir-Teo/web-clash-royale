@@ -2,26 +2,28 @@ import * as T from "three";
 import definitions from "./destruction-data.json";
 import { makeMaterial, effectMaterials, spriteGeometry } from "./sprites";
 import type { EffectLibrary } from "./effects";
-import { projectilePose } from "./projectile-path";
-import type { TrailBurst } from "./projectile-trails";
 import type { Team } from "../game/engine";
 import { particleTailPose, rotatedSpriteHeight } from "./particle-tail";
 
 type Emitter = (typeof definitions.emitters)[keyof typeof definitions.emitters];
 export type DeathEffect = keyof typeof definitions.effects;
 export type ImpactEffect = keyof typeof definitions.impacts;
+export type TrailEffect = `trail:${keyof typeof definitions.trails}`;
 export type LaunchEffect = `launch:${keyof typeof definitions.launches}`;
 export type MovementEffect = `move:${keyof typeof definitions.movements}`;
+export type ContinuousEffect =
+  `continuous:${keyof typeof definitions.continuities}`;
 export type ChargeEffect = `charge:${keyof typeof definitions.charges}`;
 export type LandingEffect = `land:${keyof typeof definitions.landings}`;
 type DeploymentCard = keyof typeof definitions.deployments;
 export type DeploymentEffect = `deploy:${DeploymentCard}`;
 type NativeEffect =
-  | "trail:rocket"
   | DeathEffect
   | ImpactEffect
+  | TrailEffect
   | LaunchEffect
   | MovementEffect
+  | ContinuousEffect
   | ChargeEffect
   | LandingEffect
   | DeploymentEffect;
@@ -34,7 +36,15 @@ export function deploymentEffect(card: string): DeploymentEffect | undefined {
     ? `deploy:${card as DeploymentCard}`
     : undefined;
 }
+// Historical local replays label swarm bodies by their card; the archived
+// roster labels them by the underlying actor. Both use the same native hit.
 export function impactEffect(card: string): ImpactEffect | undefined {
+  card =
+    card === "three-musketeers"
+      ? "musketeer"
+      : card === "minion-horde"
+        ? "minions"
+        : card;
   const key = Object.hasOwn(definitions.impacts, card) ? card : `hit:${card}`;
   return Object.hasOwn(definitions.impacts, key)
     ? (key as ImpactEffect)
@@ -48,6 +58,11 @@ export function launchEffect(card: string): LaunchEffect | undefined {
 export function movementEffect(card: string): MovementEffect | undefined {
   return Object.hasOwn(definitions.movements, card)
     ? `move:${card as keyof typeof definitions.movements}`
+    : undefined;
+}
+export function continuousEffect(card: string): ContinuousEffect | undefined {
+  return Object.hasOwn(definitions.continuities, card)
+    ? `continuous:${card as keyof typeof definitions.continuities}`
     : undefined;
 }
 export function chargeEffect(card: string): ChargeEffect | undefined {
@@ -68,6 +83,7 @@ export function deathEffect(
   return key in definitions.effects ? (key as DeathEffect) : undefined;
 }
 export interface DebrisPlan {
+  component: number;
   emitter: Emitter;
   clip: string;
   delay: number;
@@ -103,18 +119,21 @@ export function destructionPlan(
   };
   const between = (range: number[]) =>
     range[0] + random() * (range[1] - range[0]);
-  const definition =
-    effect === "trail:rocket"
-      ? definitions.trails.rocket
-      : effect.startsWith("deploy:")
-        ? definitions.deployments[effect.slice(7) as DeploymentCard]
-        : effect.startsWith("launch:")
-          ? definitions.launches[
-              effect.slice(7) as keyof typeof definitions.launches
+  const definition = effect.startsWith("trail:")
+    ? definitions.trails[effect.slice(6) as keyof typeof definitions.trails]
+    : effect.startsWith("deploy:")
+      ? definitions.deployments[effect.slice(7) as DeploymentCard]
+      : effect.startsWith("launch:")
+        ? definitions.launches[
+            effect.slice(7) as keyof typeof definitions.launches
+          ]
+        : effect.startsWith("move:")
+          ? definitions.movements[
+              effect.slice(5) as keyof typeof definitions.movements
             ]
-          : effect.startsWith("move:")
-            ? definitions.movements[
-                effect.slice(5) as keyof typeof definitions.movements
+          : effect.startsWith("continuous:")
+            ? definitions.continuities[
+                effect.slice(11) as keyof typeof definitions.continuities
               ]
             : effect.startsWith("charge:")
               ? definitions.charges[
@@ -127,12 +146,15 @@ export function destructionPlan(
                 : compositions[effect as DeathEffect | ImpactEffect];
   const components =
     definition[team === "red" ? "enemyComponents" : "components"];
-  return components.flatMap((component) => {
+  return components.flatMap((component, componentIndex) => {
     const emitter =
       definitions.emitters[
         component.emitter as keyof typeof definitions.emitters
       ];
-    const duration = between(emitter.emissionLife);
+    const sampledDuration = between(emitter.emissionLife);
+    // A blank source emitter lifetime has no end time; its authored particle
+    // intervals still spread a finite ParticleCount across the flight.
+    const duration = sampledDuration > 0 ? sampledDuration : Infinity;
     let delay = 0;
     return Array.from({ length: emitter.count }, (_, i) => {
       const angle = between(emitter.angle),
@@ -140,6 +162,7 @@ export function destructionPlan(
         speed = between(emitter.speed);
       if (i) delay += between(emitter.interval);
       return {
+        component: componentIndex,
         emitter,
         angle,
         ground: component.ground,
@@ -315,19 +338,57 @@ export class DestructionEffects {
       this.dirty = true;
     }
   }
-  trail(burst: TrailBurst) {
+  burstContinuous(
+    effect: ContinuousEffect,
+    component: number,
+    origin: T.Vector3,
+    seed: number,
+    team: Team,
+    age: number,
+  ) {
     if (!this.library.asset) return;
-    const { projectile: p, start, age, seed } = burst;
-    for (const plan of destructionPlan("trail:rocket", seed, p.team)) {
+    const definition =
+      definitions.continuities[
+        effect.slice(11) as keyof typeof definitions.continuities
+      ];
+    const sourceDelay = definition.components[component]?.delay;
+    if (sourceDelay === undefined) return;
+    for (const plan of destructionPlan(effect, seed, team)) {
+      if (plan.component !== component) continue;
       if (this.particles.length >= MAX_NATIVE_PARTICLES) break;
-      if (start + plan.delay >= p.duration || age - plan.delay >= plan.life)
+      const elapsed = age - (plan.delay - sourceDelay);
+      if (elapsed >= plan.life || !this.library.asset.data.clips[plan.clip])
         continue;
-      if (!this.library.asset.data.clips[plan.clip]) continue;
-      const pose = projectilePose(p, start + plan.delay);
       this.particles.push({
         plan,
-        origin: new T.Vector3(pose.x, pose.y, pose.z),
-        start: this.clock - age + plan.delay,
+        origin: origin.clone(),
+        start: this.clock - age + plan.delay - sourceDelay,
+      });
+      this.dirty = true;
+    }
+  }
+  // Emit one archived looping trail cycle along the fixed projectile path.
+  // Its particles keep their exact authored delays, motion and lifetimes;
+  // only the moving attachment point is reconstructed from the flight rule.
+  burstAlong(
+    effect: TrailEffect,
+    positionAt: (seconds: number) => T.Vector3,
+    flightDuration: number,
+    cycleStart: number,
+    seed: number,
+    team: Team,
+    age: number,
+  ) {
+    if (!this.library.asset) return;
+    for (const plan of destructionPlan(effect, seed, team)) {
+      const emission = cycleStart + plan.delay;
+      if (emission > flightDuration || age - emission >= plan.life) continue;
+      if (this.particles.length >= MAX_NATIVE_PARTICLES) break;
+      if (!this.library.asset.data.clips[plan.clip]) continue;
+      this.particles.push({
+        plan,
+        origin: positionAt(emission),
+        start: this.clock - age + emission,
       });
       this.dirty = true;
     }

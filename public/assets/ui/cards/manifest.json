@@ -152,11 +152,6 @@
       "sha256": "cd22e996b19bedcd3a2e69f3aaba20cc466af944f528e97f1193a909afb9b862"
     },
     {
-      "file": "portrait-three-musketeers.webp",
-      "bytes": 45010,
-      "sha256": "d4fe5116f23ef9b6383380d637216fe676ea11cc54bbc1c3cb314e6c64fc182d"
-    },
-    {
       "file": "portrait-mini-pekka.webp",
       "bytes": 33292,
       "sha256": "ae7a7e4846126922ca205d2abf5a948e23d2795a962656ed3b26cde0cfd6ee76"
@@ -217,11 +212,6 @@
       "sha256": "cbca92ca99e84275cb25809860198e2f9124f7029bfaf8d1e3f480bb7c4a0fe0"
     },
     {
-      "file": "portrait-minion-horde.webp",
-      "bytes": 40674,
-      "sha256": "dbe54297bfb26d540599ff26a4a25cb169cfcd8c7d2247de258f91a220678791"
-    },
-    {
       "file": "portrait-witch.webp",
       "bytes": 36474,
       "sha256": "0733bc437e35b26735b275e638435a3527257d84af2288de5cff146114a5c5fc"
@@ -257,6 +247,21 @@
       "sha256": "3a17d25515f90873360c0c0e72e136be0739d3b9a5a7bbaa02c46376c3877f72"
     },
     {
+      "file": "portrait-mortar.webp",
+      "bytes": 36342,
+      "sha256": "7fdb925aa25f19aa1a0ed3b65792af837b76544b2bee67fd1755ce3885f335f8"
+    },
+    {
+      "file": "portrait-bomb-tower.webp",
+      "bytes": 35948,
+      "sha256": "5491d0fe7895bdaa4c637a2350ad6c7f97c01279920fc381c0ffb14d082a1679"
+    },
+    {
+      "file": "portrait-inferno-tower.webp",
+      "bytes": 31764,
+      "sha256": "0275a2ba70eda0a2d24d7154279ce0f3c9e1162cb9d240219bb0d2642095a75c"
+    },
+    {
       "file": "portrait-zap.webp",
       "bytes": 39706,
       "sha256": "0acff86dd7ba3d91c2d161b007f0b38e2e833c2bdce25c08545c1f0874bd14a4"
@@ -272,6 +277,11 @@
       "sha256": "cc9591495b48e8ccf5fe280f9f271ca1b34de37936d516c40970cfb8654c276e"
     },
     {
+      "file": "portrait-heal.webp",
+      "bytes": 28998,
+      "sha256": "6d17f5835ff09074fe0bab41f240b6bcfdb1370ea825ae139a6cb6c3c57dd763"
+    },
+    {
       "file": "portrait-rage.webp",
       "bytes": 28072,
       "sha256": "0aa99d98429c43d3289cb0175501d96d07f51cf8efb49d04cb00790992ed9792"
@@ -282,9 +292,219 @@
       "sha256": "d349ff0e03790573a49cd14551fd9630595b09c7de0f764b4333e16b6221936b"
     },
     {
+      "file": "portrait-lightning.webp",
+      "bytes": 39224,
+      "sha256": "f9f8050b1ad5718e72b2a0e761e2370dbf82b20ab1997c115366586c6fc17fee"
+    },
+    {
+      "file": "portrait-log.webp",
+      "bytes": 38662,
+      "sha256": "123a4788c6b8164c741e3cb0421afd90c7564b868d1d14188151cefbf081c50e"
+    },
+    {
+      "file": "portrait-tornado.webp",
+      "bytes": 35456,
+      "sha256": "d31a7ffc52272d8ae64f3bd3512814ff4bd8d15a42e67b4bf8aef18d3ef582de"
+    },
+    {
+      "file": "portrait-goblin-barrel.webp",
+      "bytes": 36428,
+      "sha256": "88e2c22112f766c9a6f9e91e75b603256eeae3d8cebcf5f57657697df52fafc5"
+    },
+    {
+      "file": "portrait-graveyard.webp",
+      "bytes": 36810,
+      "sha256": "2aa646750d0a102945036b40d48c6d6d2fad55a093354e1086d00cd1bf78b2e0"
+    },
+    {
+      "file": "portrait-clone.webp",
+      "bytes": 32098,
+      "sha256": "0fc3f802b1708059a7eda17cbe9f675b3e469234e64bd3246715035339fd29d1"
+    },
+    {
+      "file": "portrait-mirror.webp",
+      "bytes": 33746,
+      "sha256": "b8d0c774e62c3383cbeaa65696623af0a98e97640402e93e62e43352fac47057"
+    },
+    {
+      "file": "portrait-minion-horde.webp",
+      "bytes": 40674,
+      "sha256": "dbe54297bfb26d540599ff26a4a25cb169cfcd8c7d2247de258f91a220678791"
+    },
+    {
+      "file": "portrait-bats.webp",
+      "bytes": 34136,
+      "sha256": "5ef71077cb99111329bd653b0c430010f764bdc0236cf90d5ffa504b2173c14f"
+    },
+    {
+      "file": "portrait-night-witch.webp",
+      "bytes": 33380,
+      "sha256": "38fece7a33c53ad1c711fb364155b6a740930380300e852c4b60a158434a97fb"
+    },
+    {
+      "file": "portrait-bandit.webp",
+      "bytes": 34812,
+      "sha256": "d0ead36bb195d306fe79d91da3f6d4a1abc981d7ad0652c424262589eabf646e"
+    },
+    {
+      "file": "portrait-golem.webp",
+      "bytes": 37404,
+      "sha256": "5b12cbd0821adc2b0157739e99485237d038f3689aca8dce0584d78a1b85e164"
+    },
+    {
+      "file": "portrait-lava-hound.webp",
+      "bytes": 33530,
+      "sha256": "94eeccf3143b311d604a20b2a27f5ff06245d371403bf1baa0f55d70365a1020"
+    },
+    {
+      "file": "portrait-three-musketeers.webp",
+      "bytes": 45010,
+      "sha256": "d4fe5116f23ef9b6383380d637216fe676ea11cc54bbc1c3cb314e6c64fc182d"
+    },
+    {
+      "file": "portrait-goblin-gang.webp",
+      "bytes": 46898,
+      "sha256": "fca2c252954e5340973f9848777c10ec53732c0c34bf091daf09c8eda4181710"
+    },
+    {
+      "file": "portrait-barbarians.webp",
+      "bytes": 34652,
+      "sha256": "2ea87c9a747fa34db38009fc4443fa7687b04c4c4056857a1eb32fc69b32a784"
+    },
+    {
+      "file": "portrait-elite-barbarians.webp",
+      "bytes": 39614,
+      "sha256": "77f824d3856cafd69ae76575269c9cc410999a86b0246c7af1402ca873524f2b"
+    },
+    {
+      "file": "portrait-ice-spirit.webp",
+      "bytes": 35874,
+      "sha256": "886da748b4eb699d590570e4e9329d5a209c9bef010d6566eb37a8344351b635"
+    },
+    {
+      "file": "portrait-fire-spirits.webp",
+      "bytes": 39326,
+      "sha256": "48f79c156b55a2e8de8eb7afbe3490074d02f71adbf555c58db521cecf60f6ea"
+    },
+    {
+      "file": "portrait-giant-skeleton.webp",
+      "bytes": 38186,
+      "sha256": "c56f70f9e09447ac0043ab476b8afe6dc4e40fd85784ff402a14951e6a3963fd"
+    },
+    {
+      "file": "portrait-guards.webp",
+      "bytes": 34676,
+      "sha256": "16c4268e4170a9d2b9b4e99fe1dec2d6d15bcefac8d912e97da8c7500e705d1b"
+    },
+    {
+      "file": "portrait-ice-golem.webp",
+      "bytes": 42180,
+      "sha256": "10232266b9bb41fb68d24e232ebe20e6bdd799efdcdc61261957b7e05add5ff6"
+    },
+    {
+      "file": "portrait-royal-giant.webp",
+      "bytes": 41662,
+      "sha256": "433cd4762b6de4533c1f44dafca45c14387c14da80e758ab2d3690dcce75cac9"
+    },
+    {
+      "file": "portrait-mega-minion.webp",
+      "bytes": 36030,
+      "sha256": "f45adf72a81f5bce4235458725ce545b75e97d07cb64d9d9fa4f9a5473862395"
+    },
+    {
+      "file": "portrait-dart-goblin.webp",
+      "bytes": 37334,
+      "sha256": "704c0c66262d00727aaaf1fa2a0b284f8f68a04d0706802213e1bbe1ba755e0e"
+    },
+    {
+      "file": "portrait-ice-wizard.webp",
+      "bytes": 41122,
+      "sha256": "bd9d4c738377370488a6f31b3f57fbf1561bc043b9f78663da1534aac0a1c628"
+    },
+    {
+      "file": "portrait-princess.webp",
+      "bytes": 45650,
+      "sha256": "32b67b45a05ba1ea5fb615a40f50df51e943f967fbcd48b5fbc79aa8cb01c7f0"
+    },
+    {
+      "file": "portrait-inferno-dragon.webp",
+      "bytes": 42476,
+      "sha256": "458fb6e7685d989cc098a06a8956bffde42ab93bc69ecd7c4a5413078d3179ea"
+    },
+    {
+      "file": "portrait-x-bow.webp",
+      "bytes": 36066,
+      "sha256": "c1201a2c451dfdba327cdd7889caee3581b4a2af5175ca26f40bc4cbe74868c0"
+    },
+    {
+      "file": "portrait-elixir-collector.webp",
+      "bytes": 33568,
+      "sha256": "86c977dec4da76c17ade516d4b133c27f3b3a1a96e50c367e88308815599c640"
+    },
+    {
+      "file": "portrait-goblin-hut.webp",
+      "bytes": 41686,
+      "sha256": "fb1e97e9967e940c230551ac9250c9a3d3200e997432686d9b55d685701d003c"
+    },
+    {
+      "file": "portrait-tombstone.webp",
+      "bytes": 30804,
+      "sha256": "d6d553d70b70727f1e30553f996fe2400738358f2965c46a9ab2c79a7a3a4600"
+    },
+    {
+      "file": "portrait-furnace.webp",
+      "bytes": 35610,
+      "sha256": "ba4449976c2d498abc0c381e6ad18cd12c264caad9c657d820fe6a1391de29af"
+    },
+    {
+      "file": "portrait-barbarian-hut.webp",
+      "bytes": 41652,
+      "sha256": "8b70254abbb1e2c5837841ecf5e5fd93eee326a01e1a90a5dac078cb387bb580"
+    },
+    {
+      "file": "portrait-electro-wizard.webp",
+      "bytes": 43830,
+      "sha256": "6924f97fcdbad44e6f51fcef5019206ef5a35a3e4b8dc8c94e8e0f89e29d1244"
+    },
+    {
+      "file": "portrait-miner.webp",
+      "bytes": 35960,
+      "sha256": "2d038984258a976bf948fa741accaea61a8626ea86e6a655e880b6f0673ca392"
+    },
+    {
+      "file": "portrait-bowler.webp",
+      "bytes": 34124,
+      "sha256": "414071739c52b82eb00a597e4bd818b99c7896809de6951d07f8a34caf9a75fd"
+    },
+    {
+      "file": "portrait-dark-prince.webp",
+      "bytes": 36720,
+      "sha256": "cbf6865484444256daf3589b28ea39ffb02055b2c7b840971972133d4db15c9f"
+    },
+    {
+      "file": "portrait-battle-ram.webp",
+      "bytes": 39230,
+      "sha256": "ab86564beb0131e9e1980528f3a4d4d4327ad05d0a8728dfd66ecc3e63fdf857"
+    },
+    {
+      "file": "portrait-executioner.webp",
+      "bytes": 35330,
+      "sha256": "a9efa37470a0268521d54c985ec5df5504c375996b41970eb2bcebee2c3fabb2"
+    },
+    {
+      "file": "portrait-sparky.webp",
+      "bytes": 43396,
+      "sha256": "c522632c5cc5665d3ceac3d84f3d3d720a8024bfd66743494e1b0b2a724e18cf"
+    },
+    {
+      "file": "portrait-lumberjack.webp",
+      "bytes": 43456,
+      "sha256": "4ac041620eb5b56965c55370a3b9179c8b677f91b5ca2e30320e9a280446ad25"
+    },
+    {
       "file": "cards.json",
-      "bytes": 92797,
-      "sha256": "ba08318ef0b67a141ea826b92ce8f5267fe0ab625f509dc272d180c0778afcd2"
+      "bytes": 108682,
+      "sha256": "f1b2cb232984f6c87e2f53182a2ee35318cb1d01598609dcc5f9c604b2b6d7f7"
     }
   ]
 }

@@ -120,6 +120,15 @@ for (const side of ["player", "enemy"])
     roots[name] = { id, barId: bar?.id };
     if (bar) slots.add(bar.id);
   }
+for (const side of ["player", "enemy"])
+  for (const kind of ["medium", "number"]) {
+    const name = `hp_shield_${side}_${kind}`,
+      id = data.names[name];
+    if (!id) throw new Error(`Missing native shield health root ${name}`);
+    const bar = data.clips[id].children.find((c) => c.name === "bar");
+    roots[name] = { id, barId: bar?.id };
+    if (bar) slots.add(bar.id);
+  }
 const clips = {},
   bars = {};
 for (const [name, { id, barId }] of Object.entries(roots)) {

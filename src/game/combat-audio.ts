@@ -26,10 +26,14 @@ export function combatAudioPlan(
     !Object.hasOwn(definitions.profiles, profile)
   )
     return [];
-  const components =
-    definitions.profiles[profile as Profile][phase]?.[
-      team === "red" ? "enemyComponents" : "components"
-    ];
+  const phases = definitions.profiles[profile as Profile] as unknown as Record<
+    string,
+    { components?: { sound: string; delay: number }[];
+      enemyComponents?: { sound: string; delay: number }[] }
+  >;
+  const components = phases[phase]?.[
+    team === "red" ? "enemyComponents" : "components"
+  ];
   if (!Array.isArray(components)) return [];
   let state = seed | 0;
   // Nearby event IDs must not select the same voice throughout a battle.
@@ -72,13 +76,15 @@ export class NativeCombatAudio {
   })[] = [];
   private lastPlayed = new Map<string, number>();
   constructor(private readonly audio: Pick<GameAudio, "enabled" | "play">) {}
-  queueCharge(seed: number, team: Team, time: number, age: number) {
-    // The 43-frame charge marker remains visible for 1.43 seconds. A slow
-    // renderer may first observe the crossing after the ordinary 0.5 s audio
-    // window, while the associated animation is still on screen.
+  queueCharge(
+    seed: number, team: Team, time: number, age: number,
+    profile: "prince" | "dark-prince" | "battle-ram" = "prince",
+  ) {
+    // Preserve a late charge cue while its source movement animation is still
+    // visible after a coalesced render or peer update.
     if (!this.audio.enabled || age >= 43 / 30) return;
     const origin = time + age;
-    for (const cue of combatAudioPlan("prince", "charge", seed, team))
+    for (const cue of combatAudioPlan(profile, "charge", seed, team))
       this.pending.push({ ...cue, time: origin + cue.delay });
     this.pending.sort((a, b) => a.time - b.time);
   }
@@ -114,12 +120,12 @@ export class NativeCombatAudio {
       ))
         this.pending.push({
           ...cue,
-          pitch: cue.pitch * (event.pitch ?? 1),
+          pitch: cue.pitch * (event.pitch ?? 1) * (event.pitchMultiplier ?? 1),
           time: origin + cue.delay / (event.rate ?? 1),
           attack: event.phase === "attack" ? event.id : undefined,
           owner: ["attack", "spawn", "summon", "appear", "hide"].includes(
             event.phase,
-          )
+          ) || event.phase.startsWith("load-")
             ? event.actor
             : undefined,
         });

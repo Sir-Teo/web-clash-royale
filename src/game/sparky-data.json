@@ -1,0 +1,37 @@
+{
+  "card": "ZapMachine",
+  "rarity": "Legendary",
+  "cost": 6,
+  "sourceHitpoints": 1200,
+  "sourceSpeed": 45,
+  "sourceRange": 4.5,
+  "sourceHitSpeed": 5,
+  "sourceLoadTime": 4.5,
+  "loadsBeforeFirstHit": true,
+  "ignoresPushback": true,
+  "pushback": 0.75,
+  "projectileStart": {
+    "radius": 1.2,
+    "height": 1.8
+  },
+  "chargeEffects": [
+    "zapmachine_load_weapon_1",
+    "zapmachine_load_weapon_2",
+    "zapmachine_load_weapon_3",
+    "zapmachine_load_weapon"
+  ],
+  "blueExport": "ZapMachine_Blue",
+  "redExport": "ZapMachine",
+  "projectile": {
+    "source": "ZapMachineProjectile",
+    "speed": 23.333333333333332,
+    "damage": 1300,
+    "radius": 1.8,
+    "homing": true,
+    "hitsGround": true,
+    "hitsAir": false,
+    "export": "zapMachine_projectile",
+    "hitEffect": "zapmachine_projectile_hit",
+    "trailEffect": "zapMachine_trail_emitter"
+  }
+}

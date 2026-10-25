@@ -1,6 +1,7 @@
-import { expectedCards, expectedEffects } from "./native-assets";
+import { expectedBuildings, expectedEffects } from "./native-assets";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import { CARDS } from "../../src/game/cards";
 
 test("saved v4 and v5 replays retain their endings when seeking on desktop and phones", async ({
   page,
@@ -128,7 +129,7 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
       () => page.evaluate(() => (window as any).__arena.state.loadedBuildings),
       { timeout: 30000 },
     )
-    .toBe(3);
+    .toBe(expectedBuildings);
   await expect
     .poll(
       () =>
@@ -139,9 +140,7 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
       { timeout: 30000 },
     )
     .toEqual([4, 4]);
-  await page
-    .getByRole("button", { name: `Cards ${expectedCards}`, exact: true })
-    .click();
+  await page.getByRole("button", { name: `Cards ${CARDS.length}`, exact: true }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.locator('[data-edit-slot="0"]').click();
   await page.locator('[data-collection="valkyrie"]').click();
@@ -224,7 +223,9 @@ test("deck changes persist, battle deploys, pause and replay work", async ({
     )
     .toBe(false);
   await expect
-    .poll(() => page.evaluate(() => (window as any).__arena.state.time))
+    .poll(() => page.evaluate(() => (window as any).__arena.state.time), {
+      timeout: 30000,
+    })
     .toBeGreaterThan(0);
   await backgroundAndReturn(page);
   await page
@@ -254,10 +255,8 @@ test("settings and card search are usable without page overflow", async ({
   await page
     .getByRole("button", { name: "Save settings", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: `Cards ${expectedCards}`, exact: true })
-    .click();
-  await page.getByLabel("Search cards", { exact: true }).fill("dragon");
+  await page.getByRole("button", { name: `Cards ${CARDS.length}`, exact: true }).click();
+  await page.getByLabel("Search cards", { exact: true }).fill("baby dragon");
   await expect(page.locator("[data-collection]")).toHaveCount(1);
   await expect(page.locator("[data-collection]")).toHaveAttribute(
     "aria-label",

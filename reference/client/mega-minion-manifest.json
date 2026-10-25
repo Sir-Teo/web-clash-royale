@@ -1,0 +1,27 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "binarySource": "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_mega_minion",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "reference/sc/chr_mega_minion.bin",
+      "sha256": "5d62b1b6ffc07f197ab3f86eb982570c7fd27ed1d34d6f23c3869d484ee46c4d"
+    }
+  ],
+  "output": {
+    "path": "src/game/mega-minion-data.json",
+    "sha256": "9a3f08d2b71f89800f25a91626261ae0f62aa09ec395a06208e665dd4c154072"
+  }
+}

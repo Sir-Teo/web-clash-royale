@@ -1,0 +1,460 @@
+{
+  "sourceCommit": "3a488e0",
+  "capture": "Independent original checkout engine, snapshot and audio SHA-256 of JSON.stringify",
+  "replay": {
+    "version": 5,
+    "seed": 42,
+    "mode": "classic",
+    "deck": [
+      "rage",
+      "rocket",
+      "witch",
+      "tesla",
+      "knight",
+      "minions",
+      "cannon",
+      "giant"
+    ],
+    "enemyDeck": [
+      "rage",
+      "rocket",
+      "witch",
+      "tesla",
+      "knight",
+      "minions",
+      "cannon",
+      "giant"
+    ],
+    "actions": [
+      {
+        "tick": 0,
+        "team": "blue",
+        "card": "minions",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 0,
+        "team": "red",
+        "card": "giant",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 90,
+        "team": "blue",
+        "card": "cannon",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 270,
+        "team": "red",
+        "card": "knight",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 540,
+        "team": "red",
+        "card": "minions",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 630,
+        "team": "blue",
+        "card": "rocket",
+        "x": 4,
+        "y": 6
+      },
+      {
+        "tick": 765,
+        "team": "blue",
+        "card": "rage",
+        "x": 4,
+        "y": 6
+      },
+      {
+        "tick": 765,
+        "team": "red",
+        "card": "cannon",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 945,
+        "team": "red",
+        "card": "rage",
+        "x": 4,
+        "y": 26
+      },
+      {
+        "tick": 1035,
+        "team": "blue",
+        "card": "knight",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 1305,
+        "team": "blue",
+        "card": "minions",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 1305,
+        "team": "red",
+        "card": "tesla",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 1530,
+        "team": "blue",
+        "card": "cannon",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 1575,
+        "team": "red",
+        "card": "knight",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 1800,
+        "team": "red",
+        "card": "minions",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 2025,
+        "team": "blue",
+        "card": "rocket",
+        "x": 4,
+        "y": 6
+      },
+      {
+        "tick": 2025,
+        "team": "red",
+        "card": "cannon",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 2205,
+        "team": "blue",
+        "card": "rage",
+        "x": 4,
+        "y": 6
+      },
+      {
+        "tick": 2205,
+        "team": "red",
+        "card": "rage",
+        "x": 4,
+        "y": 26
+      },
+      {
+        "tick": 2475,
+        "team": "blue",
+        "card": "knight",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 2700,
+        "team": "blue",
+        "card": "minions",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 2700,
+        "team": "red",
+        "card": "rocket",
+        "x": 4,
+        "y": 26
+      },
+      {
+        "tick": 2970,
+        "team": "blue",
+        "card": "cannon",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 2970,
+        "team": "red",
+        "card": "knight",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 3195,
+        "team": "red",
+        "card": "minions",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 3465,
+        "team": "blue",
+        "card": "rocket",
+        "x": 4,
+        "y": 6
+      },
+      {
+        "tick": 3465,
+        "team": "red",
+        "card": "cannon",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 3645,
+        "team": "blue",
+        "card": "rage",
+        "x": 4,
+        "y": 6
+      },
+      {
+        "tick": 3645,
+        "team": "red",
+        "card": "rage",
+        "x": 4,
+        "y": 26
+      },
+      {
+        "tick": 3735,
+        "team": "blue",
+        "card": "knight",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 3870,
+        "team": "blue",
+        "card": "minions",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 3870,
+        "team": "red",
+        "card": "rocket",
+        "x": 4,
+        "y": 26
+      },
+      {
+        "tick": 4005,
+        "team": "blue",
+        "card": "cannon",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 4140,
+        "team": "red",
+        "card": "giant",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 4230,
+        "team": "red",
+        "card": "minions",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 4275,
+        "team": "blue",
+        "card": "rocket",
+        "x": 4,
+        "y": 6
+      },
+      {
+        "tick": 4320,
+        "team": "blue",
+        "card": "rage",
+        "x": 4,
+        "y": 6
+      },
+      {
+        "tick": 4320,
+        "team": "red",
+        "card": "cannon",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 4410,
+        "team": "red",
+        "card": "rage",
+        "x": 4,
+        "y": 26
+      },
+      {
+        "tick": 4590,
+        "team": "blue",
+        "card": "witch",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 4680,
+        "team": "blue",
+        "card": "minions",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 4680,
+        "team": "red",
+        "card": "rocket",
+        "x": 4,
+        "y": 26
+      },
+      {
+        "tick": 4815,
+        "team": "blue",
+        "card": "cannon",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 4995,
+        "team": "red",
+        "card": "giant",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 5040,
+        "team": "blue",
+        "card": "rocket",
+        "x": 4,
+        "y": 6
+      },
+      {
+        "tick": 5040,
+        "team": "red",
+        "card": "minions",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 5130,
+        "team": "blue",
+        "card": "rage",
+        "x": 4,
+        "y": 6
+      },
+      {
+        "tick": 5130,
+        "team": "red",
+        "card": "cannon",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 5220,
+        "team": "red",
+        "card": "rage",
+        "x": 4,
+        "y": 26
+      },
+      {
+        "tick": 5355,
+        "team": "red",
+        "card": "knight",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 5535,
+        "team": "red",
+        "card": "tesla",
+        "x": 4,
+        "y": 10
+      },
+      {
+        "tick": 5760,
+        "team": "blue",
+        "card": "witch",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 5760,
+        "team": "red",
+        "card": "rocket",
+        "x": 4,
+        "y": 26
+      },
+      {
+        "tick": 5805,
+        "team": "blue",
+        "card": "minions",
+        "x": 4,
+        "y": 22
+      },
+      {
+        "tick": 5850,
+        "team": "blue",
+        "card": "cannon",
+        "x": 4,
+        "y": 22
+      }
+    ],
+    "duration": 5887
+  },
+  "winner": "red",
+  "checkpoints": [
+    {
+      "tick": 60,
+      "snapshot": "ccd2ad5a769f77d1fc0a934d0343e9740f49db87133f6e644fe17c8ba2085f10",
+      "audio": "acef3b515c03d7849aae366e6304715eb1d027f9763e2dd5d243002c4f061fc6"
+    },
+    {
+      "tick": 120,
+      "snapshot": "3a1b50d0c88915b6b768d866facd7e24003c443d87dca46ae8458dbd7168ae2b",
+      "audio": "0d7ca9ccf9a2f4a3162ffa61c00d39bc1287ac83eb33363471fafa7464986a77"
+    },
+    {
+      "tick": 240,
+      "snapshot": "547329715b9e0750a2ddb0eaa594e7958f976f46127c42b3427da27c57fcbf5b",
+      "audio": "7a86417d5ec2df9766bf6ddb091d1baa514e54059a77518e8c0409bf125c5ac9"
+    },
+    {
+      "tick": 600,
+      "snapshot": "24803f77692388b0da11b60a2b958d1015bd4fb8d8bf4c9a90e11b896405fb18",
+      "audio": "683a36e1b73416e37a748df44584f72104a0ece1314279f006c1b6322af9d1e9"
+    },
+    {
+      "tick": 1200,
+      "snapshot": "3d50a2baabd520fbe0a94ad835b8ce8e7238974f57d73a27fed811a1998c2db7",
+      "audio": "9b940683949ed3ac173d63f4c50853b27130dd7b48bc30ff6df75b8ad1e4a95b"
+    },
+    {
+      "tick": 2400,
+      "snapshot": "574845fa09d259828fd1154b2e08eb84b437d1b41f549378236ffcc64bc5ed3b",
+      "audio": "cbadaa1ed9ac5e1846f04d1168b286e514a6a36b33b47185c5aeaf3dbba338cc"
+    },
+    {
+      "tick": 3600,
+      "snapshot": "b1816909c19836f8dd4d1a22bb1cc4ad17c2ef0f471a19e31e17d4f2b8e627e9",
+      "audio": "fd9e89511069873710ed152ba94361c14fcf073af2f06cc039d7900604d8b08d"
+    },
+    {
+      "tick": 5887,
+      "snapshot": "151872423b5837937b72ca19ded8128c9ec7978ec82de30876ba1694716702e3",
+      "audio": "70d15e26f46fa7010ae4d2992bdc38f026909dc37e588ce59e98af0163f05b59"
+    }
+  ]
+}

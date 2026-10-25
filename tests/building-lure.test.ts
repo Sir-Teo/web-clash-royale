@@ -55,7 +55,7 @@ describe("Cannon air distraction", () => {
       b.step();
     expect(
       b.events.find((e) => e.type === "hit" && e.card === "balloon"),
-    ).toMatchObject({ x: cannon.x, y: cannon.y, value: 640 });
+    ).toMatchObject({ x: cannon.x, y: cannon.y, value: CARD_MAP.balloon.damage });
     expect(cannon.hp).toBeLessThan(cannon.maxHp);
     expect(cannon.target).toBeNull();
     expect(b.projectiles.some((p) => p.source === cannon.id)).toBe(false);

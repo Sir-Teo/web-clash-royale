@@ -1,6 +1,7 @@
+import { isPlayableCard } from "../game/playable-cards";
 import { Battle, other, STEP } from "../game/engine";
 import type { Mode, Team } from "../game/engine";
-import { CARD_MAP, STARTER_DECK } from "../game/cards";
+import { STARTER_DECK } from "../game/cards";
 import type { CardId } from "../game/cards";
 import { EMOTE_COOLDOWN, isEmote, isQuickChat } from "../game/emotes";
 import type { ClientMessage, RoomState, ServerMessage } from "./protocol";
@@ -23,7 +24,7 @@ export function validPeerPlayer(value: unknown): value is PeerPlayer {
     Array.isArray(p.deck) &&
     p.deck.length === 8 &&
     new Set(p.deck).size === 8 &&
-    p.deck.every((c) => typeof c === "string" && Object.hasOwn(CARD_MAP, c))
+    p.deck.every(isPlayableCard)
   );
 }
 
@@ -261,8 +262,7 @@ export class PeerMatch {
         b &&
         this.room.phase === "playing" &&
         !this.room.paused &&
-        typeof m.card === "string" &&
-        Object.hasOwn(CARD_MAP, m.card) &&
+        isPlayableCard(m.card) &&
         Number.isFinite(m.x) &&
         Number.isFinite(m.y)
           ? b.play(team, b.players[team].hand.indexOf(m.card), m.x, m.y)

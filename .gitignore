@@ -1,7 +1,8 @@
-node_modules/
+node_modules
 dist/
 test-results/
 playwright-report/
 .DS_Store
 *.local
 dist-server/
+.firebase/

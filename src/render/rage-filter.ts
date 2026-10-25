@@ -10,12 +10,10 @@ interface RageActor {
 }
 
 export function rageFilterFrame(age: number) {
-  return (
-    Math.floor(Math.max(0, age) * source.fps + 1e-6) % source.colors.length
-  );
+  return Math.floor(Math.max(0, age) * source.fps + 1e-6) % source.colors.length;
 }
 
-/** Archived Rage color timeline on friendly troop artwork. */
+/** Archived 50-frame purple filter for Raged native troop artwork. */
 export class NativeRageFilter {
   private actors = new Map<number, RageActor>();
 
@@ -37,7 +35,7 @@ export class NativeRageFilter {
   ) {
     const active = new Set<number>();
     for (const entity of entities) {
-      if (entity.hp <= 0 || !entity.rage?.remaining) continue;
+      if (entity.hp <= 0 || !entity.rage || entity.rage.remaining <= 0) continue;
       const sprite = spriteFor(entity.id);
       if (!sprite) continue;
       active.add(entity.id);

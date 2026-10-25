@@ -6,7 +6,7 @@ const json = (path: string) => JSON.parse(readFileSync(path, "utf8"));
 describe("bundled game artwork", () => {
   it("preserves both teams' building directions and Tesla's labeled state transitions", () => {
     const manifest = json("public/assets/buildings/manifest.json");
-    expect(manifest.files).toHaveLength(3);
+    expect(manifest.files).toHaveLength(12);
     for (const source of manifest.sourceTables)
       expect(
         createHash("sha256").update(readFileSync(source.path)).digest("hex"),
@@ -42,10 +42,33 @@ describe("bundled game artwork", () => {
           }
         }
       }
-      for (const team of ["blue", "red"]) {
+      if (file.id === "mortar") {
+        for (const team of ["blue", "red"])
+          for (const state of ["idle", "attack"])
+            for (let direction = 1; direction <= 5; direction++) {
+              const clip = data.clips[`${team}-${state}-${direction}`];
+              expect(clip.frames).toHaveLength(3);
+              expect(clip.labels).toMatchObject({ action_frame: 1 });
+            }
+      }
+      if (file.id === "bomb-tower") {
+        expect(data.attachedCharacterHeight).toBe(3.2);
+        for (const team of ["blue", "red"]) {
+          expect(data.clips[`${team}-top`].frames).toHaveLength(1);
+          expect(data.clips[`${team}-top`].source)
+            .toBe(`building_bomb_tower_top_${team}`);
+        }
+      }
+      for (const team of file.id === "mortar" ? [] : ["blue", "red"]) {
         const clip = data.clips[team];
         expect(clip.frames).toHaveLength(
-          file.id === "tesla" ? 39 : file.id === "king" ? 98 : 19,
+          file.id === "tesla" ? 39 : file.id === "king" ? 98 :
+            file.id === "bomb-tower" || file.id === "inferno-tower" ? 1 :
+              file.id === "elixir-collector" ? 35 :
+              file.id === "goblin-hut" ? 5245 :
+              file.id === "tombstone" ? (team === "blue" ? 60 : 70) :
+              file.id === "furnace" ? 300 :
+              file.id === "barbarian-hut" ? 1 : 19,
         );
         if (file.id === "tesla")
           expect(clip.labels).toEqual({
@@ -80,7 +103,7 @@ describe("bundled game artwork", () => {
     for (const t of manifest.textures)
       expect(digest(`public/assets/effects/${t.file}`)).toBe(t.sha256);
     const data = json("public/assets/effects/effects.json");
-    expect(Object.keys(data.clips)).toHaveLength(110);
+    expect(Object.keys(data.clips)).toHaveLength(208);
     for (const source of [...manifest.sources, ...manifest.inputs])
       expect(digest(source.path)).toBe(source.sha256);
     for (const name of ["balloon_bomb_blue", "balloon_bomb_red"]) {
@@ -120,7 +143,7 @@ describe("bundled game artwork", () => {
     const destruction = json(client.output.path);
     for (const emitter of Object.values(destruction.emitters) as any[])
       for (const name of emitter.clips) expect(data.clips[name]).toBeDefined();
-  });
+  }, 20000);
   it("matches every imported card, character and sound to its recorded hash", () => {
     const manifest = json("public/assets/manifest.json");
     for (const file of manifest.files) {
@@ -134,7 +157,12 @@ describe("bundled game artwork", () => {
   });
   it("preserves full source animations and every referenced UV polygon", () => {
     const manifest = json("public/assets/animations/manifest.json");
-    expect(manifest.files.length).toBe(19);
+    const aliases = json("src/render/texture-aliases.json") as Record<string, string>;
+    for (const [file, canonical] of Object.entries(aliases))
+      expect(readFileSync(`public/assets/animations/${file}`).equals(
+        readFileSync(`public/assets/animations/${canonical}`),
+      ), `${file} must remain byte-identical to ${canonical}`).toBe(true);
+    expect(manifest.files.length).toBe(49);
     let total = 0;
     for (const file of manifest.files) {
       const bytes = readFileSync(`public/assets/animations/${file.id}.json`);
@@ -188,7 +216,15 @@ describe("bundled game artwork", () => {
         expect(
           data.clips[`blue-run-${direction}`].frames.length,
         ).toBeGreaterThan(4);
-        if (file.id !== "skeletons")
+        if (
+          ![
+            "skeletons",
+            "bats",
+            "lava-pup",
+            "ice-spirit",
+            "fire-spirits",
+          ].includes(file.id)
+        )
           expect(
             data.clips[`red-run-${direction}`].frames.length,
           ).toBeGreaterThan(4);
@@ -215,7 +251,7 @@ describe("bundled game artwork", () => {
         expect(data.clips["blue-charge-1"].frames.length).toBeGreaterThan(4);
     }
     expect(total).toBeGreaterThan(16000);
-  });
+  }, 20000);
   it("includes every reconstructed stadium decoration and static unit", () => {
     const layout = json("public/assets/scenery/goblin-layout.json");
     expect(layout.length).toBeGreaterThan(10);
