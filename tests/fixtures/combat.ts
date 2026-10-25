@@ -258,6 +258,18 @@ function setup() {
       battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
       battle.players.red.elixir = 3;
     }
+  } else if (scenario.startsWith("ai-lightning-pull-")) {
+    const king = battle.entities.find((e) => e.team === "red" && e.king)!;
+    Object.assign(king, { hp: 600, active: true, cooldown: 3 });
+    const inward = scenario.endsWith("in"), race = scenario.endsWith("race");
+    if (race) battle.entities.find((e) => e.team === "blue" && e.king)!.hp = 50;
+    for (const [x, hp, card] of [[8, 900, "knight"], [10, 800, "knight"], [13.25 + (inward ? 0.3 : -0.3), 400, "giant"]] as const)
+      for (const e of unit(card, "red", x, king.y)) Object.assign(e, { hp, active: false });
+    for (const e of unit("lumberjack", "blue", king.x, king.y + 2)) Object.assign(e, { hp: 200, deploy: 2.3 });
+    battle.players.red.hand = race ? ["rocket", "freeze", "pekka", "pekka"] : ["freeze", "pekka", "pekka", "pekka"];
+    battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
+    battle.players.red.elixir = race ? 6 : 4;
+    battle.actions = [];
   } else if (scenario.startsWith("ai-lightning-windup-")) {
     const king = battle.entities.find((e) => e.team === "red" && e.king)!;
     Object.assign(king, { hp: 300, active: true, cooldown: 3 });
@@ -912,6 +924,11 @@ function advance(ticks: number) {
     else {
       if (sceneSelect.value.startsWith("ai-health-") && battle.tick === 72)
         battle.play("red", 0, 9, 4.5);
+      if (sceneSelect.value.startsWith("ai-lightning-pull-") && (battle.tick === 46 || battle.tick === 73)) {
+        const king = battle.entities.find((e) => e.team === "red" && e.king)!;
+        const lightning = battle.tick === 46;
+        cast(lightning ? "lightning" : "tornado", "blue", lightning || sceneSelect.value.endsWith("in") ? king.x : 17, king.y);
+      }
       if (sceneSelect.value.startsWith("ai-lightning-windup-") &&
           battle.tick === (sceneSelect.value.endsWith("late") ? 70 : 60))
         battle.play("red", 0, 9, 4.5);

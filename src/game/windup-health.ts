@@ -219,7 +219,7 @@ function healthProjection(
 export function createWindupHealth(
   projectiles: readonly Projectile[],
   entities: readonly Entity[],
-): WindupHealthEvaluator {
+) {
   const cache = new Map<string, Map<number, DamagePacket[]>>();
   const normalize = (areas: readonly AreaEffect[]) =>
     JSON.stringify(
@@ -232,41 +232,13 @@ export function createWindupHealth(
     events?: HealthPacket[];
   };
   const backgrounds = new Map<string, Map<Entity, HealthPath>>();
-  return (attacker, frames, areas, proposedIndex) => {
-    const baseline = healthProjection(
-      attacker,
-      frames,
-      areas,
-      projectiles,
-      entities,
-    ).statuses;
-    if (!areas.some((a) => a.card === "lightning" && a.team !== attacker.team))
-      return baseline;
-    const target = entities.find(
-      (e) => e.id === attacker.pendingAttack?.target,
-    );
-    const attempt = target
-      ? resolveWindup(attacker, target, frames, baseline)
-      : undefined;
-    const through =
-      attempt?.releaseStep ?? attempt?.cancelledStep ?? frames.length;
-    let strikes: readonly DamagePacket[] = [];
-    const nearby = areas.some(
-      (area, index) =>
-        area.card === "lightning" &&
-        area.team !== attacker.team &&
-        lightningStrikeSteps(area).some(
-          (step) =>
-            step <= through &&
-            Math.hypot(
-              frames[step - 1].areaPositions[index].x - area.x,
-              frames[step - 1].areaPositions[index].y - area.y,
-            ) <
-              area.radius + attacker.radius,
-        ),
-    );
-    if (!nearby) return baseline;
-    const key = `${through}/${normalize(areas)}`;
+  const lightning = (
+    areas: readonly AreaEffect[],
+    through = 60,
+    proposedIndex?: number,
+    additional: ReadonlyMap<number, readonly HealthPacket[]> = new Map(),
+  ) => {
+    const key = `${through}/${normalize(areas)}/${JSON.stringify([...additional])}`;
     let forecast = cache.get(key);
     if (!forecast) {
       const proposed =
@@ -340,7 +312,10 @@ export function createWindupHealth(
                 true,
               ).events
             : healthPackets(body, projectiles, data.areas, entities, 2);
-          return data.events;
+          const extra = additional.get(body.id);
+          return extra?.length
+            ? [...data.events, ...extra].sort(damagePacketOrder)
+            : data.events;
         },
         (body, step, area) => {
           const data = dataFor(body);
@@ -350,7 +325,48 @@ export function createWindupHealth(
       );
       cache.set(key, forecast);
     }
-    strikes = forecast.get(attacker.id) ?? [];
+    return forecast;
+  };
+  const evaluate: WindupHealthEvaluator = (
+    attacker,
+    frames,
+    areas,
+    proposedIndex,
+  ) => {
+    const baseline = healthProjection(
+      attacker,
+      frames,
+      areas,
+      projectiles,
+      entities,
+    ).statuses;
+    if (!areas.some((a) => a.card === "lightning" && a.team !== attacker.team))
+      return baseline;
+    const target = entities.find(
+      (e) => e.id === attacker.pendingAttack?.target,
+    );
+    const attempt = target
+      ? resolveWindup(attacker, target, frames, baseline)
+      : undefined;
+    const through =
+      attempt?.releaseStep ?? attempt?.cancelledStep ?? frames.length;
+    const nearby = areas.some(
+      (area, index) =>
+        area.card === "lightning" &&
+        area.team !== attacker.team &&
+        lightningStrikeSteps(area).some(
+          (step) =>
+            step <= through &&
+            Math.hypot(
+              frames[step - 1].areaPositions[index].x - area.x,
+              frames[step - 1].areaPositions[index].y - area.y,
+            ) <
+              area.radius + attacker.radius,
+        ),
+    );
+    if (!nearby) return baseline;
+    const strikes =
+      lightning(areas, through, proposedIndex).get(attacker.id) ?? [];
     return healthProjection(
       attacker,
       frames,
@@ -360,4 +376,5 @@ export function createWindupHealth(
       strikes,
     ).statuses;
   };
+  return Object.assign(evaluate, { lightning });
 }

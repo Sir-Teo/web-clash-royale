@@ -2,6 +2,67 @@ import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
 import { CARD_MAP } from "../../src/game/cards";
 
+for (const scene of ["out", "race", "in"])
+  test(`Lightning blocker pull: the natural AI timer handles ${scene}`, async ({
+    page,
+  }, info) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto(
+      `/tests/fixtures/combat.html?scene=ai-lightning-pull-${scene}`,
+    );
+    await expect(page.locator("#status")).toContainText(
+      `${expectedEffects} effects`,
+      { timeout: 60000 },
+    );
+    const output = page.locator("#destruction");
+    const state = async () =>
+      JSON.parse((await output.getAttribute("data-ai-areas"))!);
+    const actions = async () =>
+      JSON.parse((await output.getAttribute("data-ai-defense"))!).actions;
+    for (let i = 0; i < 3; i++) {
+      const before = (await state()).time;
+      await page.locator("#second").click();
+      await expect
+        .poll(async () => (await state()).time, { timeout: 15000 })
+        .toBeGreaterThan(before + 0.99);
+      if (i < 2) expect(await actions()).toEqual([]);
+    }
+    const inward = scene === "in";
+    expect(
+      (await actions()).map((a: any) => ({ card: a.card, tick: a.tick })),
+    ).toEqual(inward ? [] : [{ card: "freeze", tick: 74 }]);
+    const result = await state();
+    expect(result.winner).toBeNull();
+    expect(result.kings.find((e: any) => e.team === "red").hp).toBeCloseTo(
+      inward
+        ? 600 - CARD_MAP.lumberjack.damage
+        : 600 - CARD_MAP.lightning.damage * 0.4,
+    );
+    const giant = result.entities.find(
+      (e: any) => e.team === "red" && e.card === "giant",
+    );
+    if (inward) {
+      expect(giant).toBeUndefined();
+      const hand = JSON.parse((await output.getAttribute("data-ai-spells"))!);
+      expect(hand.hand).toContain("freeze");
+      expect(hand.elixir).toBeGreaterThan(4);
+    } else expect(giant.x).toBeGreaterThan(13.25);
+    if (scene === "race") {
+      const hand = JSON.parse((await output.getAttribute("data-ai-spells"))!);
+      expect(hand.hand).toContain("rocket");
+    }
+    expect(
+      result.areas.find((a: any) => a.card === "lightning").struck,
+    ).toHaveLength(3);
+    if (scene === "out")
+      await page.screenshot({
+        path: info.outputPath("ai-lightning-blocker-pull.png"),
+        fullPage: true,
+      });
+    expect(errors).toEqual([]);
+  });
+
 for (const scene of ["early", "shield", "late"])
   test(`Lightning windup: the ordinary AI timer accounts for ${scene} Lightning`, async ({
     page,
