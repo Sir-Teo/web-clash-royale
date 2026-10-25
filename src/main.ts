@@ -15,6 +15,7 @@ import {
 } from "./ui/keyboard-deployment";
 import "./ui/match-details.css";
 import "./ui/replay-files.css";
+import "./ui/replay-controls.css";
 import "./ui/deck-codes.css";
 import "./ui/announcements.css";
 import { NativeAnnouncements, battleClock } from "./ui/announcements";
@@ -73,6 +74,7 @@ import {
   Plus,
   Check,
   RotateCcw,
+  RotateCw,
   Target,
   CircleCheck,
   Heart,
@@ -118,6 +120,7 @@ const icons = {
   Plus,
   Check,
   RotateCcw,
+  RotateCw,
   Target,
   CircleCheck,
   Heart,
@@ -297,7 +300,7 @@ $("#app").innerHTML = `
     </div>
     <div id="lobby-footer" class="chest-tray"><div class="chest-heading"><span>VICTORY CHESTS</span><b id="chest-count">0 / 4</b></div><div class="chest-slots" id="chest-slots"></div></div>
     <div id="battle-tray" class="battle-tray hidden"><div class="hand-row"><div class="next-card"><span>NEXT</span><div class="next-card-picture" data-native-card="" data-card-variant="thumbnail"><img id="next-card-img" alt="Next card"/>${nativeCardArt}</div><div class="native-next-cost" data-native-card="" data-card-variant="cost"><b id="next-card-cost"></b>${nativeCardArt}</div></div><div class="hand" id="hand"></div></div><div class="elixir-row">${elixirMarkup}</div><div class="tray-caption"><span id="hand-caption">Select a card, then tap your side of the arena</span><span><kbd>1</kbd>–<kbd>4</kbd> SELECT</span></div></div>
-    <div class="replay-controls hidden"><button id="replay-play" class="icon-button" aria-label="Pause replay">${icon("pause")}</button><span id="replay-clock">0:00</span><input id="replay-seek" aria-label="Replay timeline" type="range" min="0" max="100" step="0.01" value="0"/><button id="replay-speed" class="text-button">1×</button><button id="replay-exit" class="text-button">Exit</button></div>
+    <div class="replay-controls hidden" role="group" aria-label="Replay controls"><div class="replay-position"><span id="replay-clock">0:00 / 0:00</span><input id="replay-seek" aria-label="Replay timeline" aria-describedby="replay-keyboard-help" type="range" min="0" max="100" step="0.01" value="0"/></div><div class="replay-actions"><button id="replay-back" class="icon-button replay-jump" aria-label="Back 10 seconds" title="Back 10 seconds (Left arrow)">${icon("rotate-ccw")}<span>10</span></button><button id="replay-play" class="icon-button" aria-label="Pause replay">${icon("pause")}</button><button id="replay-forward" class="icon-button replay-jump" aria-label="Forward 10 seconds" title="Forward 10 seconds (Right arrow)">${icon("rotate-cw")}<span>10</span></button><button id="replay-speed" class="text-button" aria-label="Playback speed: 1×">1×</button><button id="replay-exit" class="text-button">Exit</button></div><span id="replay-keyboard-help" class="sr-only">Outside controls: Left or Right arrow skips ten seconds, Home goes to the beginning and End to the end. Space pauses or resumes.</span></div>
    </main>
    <aside class="right-sidebar"><section class="deck-panel panel"><div class="section-heading"><div><span class="eyebrow">YOUR WINNING EIGHT</span><h3>Battle deck</h3></div><span class="deck-number">01</span></div><div class="deck-tabs" id="deck-tabs"></div><div class="deck-grid" id="deck-preview"></div><div class="deck-summary"><span><i class="tiny-drop"></i> Average elixir <b id="average-elixir">3.5</b></span><span>8 / 8</span></div><button id="edit-deck" class="secondary-button">${icon("layers-2")} Edit deck ${icon("arrow-up-right")}</button></section>
     <section class="battle-brief panel"><div class="section-heading"><h3>Battle brief</h3>${icon("scroll-text")}</div><div class="brief-item"><span>${icon("crown")}</span><div><b>Take the crown</b><p>Destroy more towers. Take the King Tower for an instant win.</p></div></div><div class="brief-item"><span class="purple">${icon("droplet")}</span><div><b>Spend wisely</b><p>Elixir refills over time. Save some to defend your side.</p></div></div><div class="brief-item"><span class="blue">${icon("timer")}</span><div><b>Three minutes. One winner.</b><p>Tied? Two-minute sudden death. Elixir speeds up as time runs out.</p></div></div><button id="how-to-play" class="text-button">How to play ${icon("arrow-right")}</button></section>
@@ -697,7 +700,12 @@ function updateBattleUI(force = false) {
   });
   nativeCards.updateHand($("#hand"), battle.time);
   if (screen === "replay" && replayData) {
-    $("#replay-clock").textContent = clock(battle.time);
+    const position = `${clock(battle.time)} / ${clock(replayData.duration * STEP)}`;
+    $("#replay-clock").textContent = position;
+    $("#replay-seek").setAttribute(
+      "aria-valuetext",
+      `${clock(battle.time)} of ${clock(replayData.duration * STEP)}${replayComplete(battle, replayData) ? ", replay complete" : ""}`,
+    );
     ($("#replay-seek") as HTMLInputElement).value = String(
       replayComplete(battle, replayData)
         ? 100
@@ -1014,6 +1022,7 @@ function playReplay(record: RecordEntry, ownerName?: string) {
   $(".replay-controls").classList.remove("hidden");
   syncReplayControl();
   $("#replay-speed").textContent = "1×";
+  $("#replay-speed").setAttribute("aria-label", "Playback speed: 1×");
   refreshDeck();
   intro.start(replayOwnerName ?? profile.name, battle.mode, opponentName);
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
@@ -2180,19 +2189,16 @@ $("#replay-speed").onclick = () => {
             : 1;
   audio.setRate(speed);
   $("#replay-speed").textContent = `${speed}×`;
+  $("#replay-speed").setAttribute("aria-label", `Playback speed: ${speed}×`);
 };
 $("#replay-exit").onclick = lobby;
-$("#replay-seek").addEventListener("input", () => {
-  if (!replayData) return;
+function seekReplay(targetTick: number) {
+  if (screen !== "replay" || !replayData) return;
   resetEnding();
   announcements.reset();
   intro.skip();
   audio.stopEffects();
-  const target = Math.floor(
-    (Number(($("#replay-seek") as HTMLInputElement).value) / 100) *
-      replayData.duration,
-  );
-  createReplayBattle(replayData, target);
+  createReplayBattle(replayData, targetTick);
   arena.setBattle(battle);
   eventCursor = battle.events.at(-1)?.id ?? 0;
   combatAudio.skip(battle.audioEvents);
@@ -2202,6 +2208,15 @@ $("#replay-seek").addEventListener("input", () => {
   accumulator = 0;
   updateBattleUI(true);
   if (battle.winner) startEnding(true);
+}
+$("#replay-back").onclick = () => seekReplay(battle.tick - 10 / STEP);
+$("#replay-forward").onclick = () => seekReplay(battle.tick + 10 / STEP);
+$("#replay-seek").addEventListener("input", () => {
+  if (!replayData) return;
+  seekReplay(
+    (Number(($("#replay-seek") as HTMLInputElement).value) / 100) *
+      replayData.duration,
+  );
 });
 $("#about-button").onclick = () =>
   modal(
@@ -2281,6 +2296,25 @@ document.addEventListener("keydown", (e) => {
       focusables[next]?.focus();
       e.preventDefault();
     }
+    return;
+  }
+  if (
+    screen === "replay" &&
+    replayData &&
+    !(e.target as HTMLElement).closest(
+      "button,a[href],input,textarea,select,[contenteditable]:not([contenteditable=false])",
+    ) &&
+    ["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)
+  ) {
+    e.preventDefault();
+    if (!e.repeat)
+      seekReplay(
+        e.key === "Home"
+          ? 0
+          : e.key === "End"
+            ? replayData.duration
+            : battle.tick + (e.key === "ArrowLeft" ? -10 : 10) / STEP,
+      );
     return;
   }
   if (["1", "2", "3", "4"].includes(e.key)) {

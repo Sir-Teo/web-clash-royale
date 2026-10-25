@@ -15,6 +15,8 @@ Classic and Double Elixir rotate between six named AI opponents: Giant push, Hog
 
 A battle’s Details view can export a replay-only JSON file. Open it from **Battle log → Open replay file** to preview both decks and watch the recording in another browser. Shared playback preserves the exporter’s name and viewing side through seeking and restart, and leaves local decks, progress and rewards unchanged. Progress backups remain a separate restore flow. Replays also retain a card played immediately before a recording ends, including a zero-duration recording, without adding an extra simulation step.
 
+Replay controls show elapsed and recorded time, with ten-second back/forward buttons. Outside controls, use Left/Right to skip ten seconds, Home/End to jump to the beginning/end and Space to pause or resume. Seeking preserves playback speed and the paused state; reaching the end pauses playback.
+
 Battle log details show both starting decks, average elixir, the result and match duration. Tap a card to inspect it or replay the match. From the lobby, copy either recorded deck into any of the three saved slots, with an immediate Undo action in the details view. Friend replays display the decks from your own side of the arena.
 
 Open **Cards → Deck codes** to copy your current eight cards or preview a code from another player. Inspect the shared cards, choose a saved battle deck and select **Use this deck** to apply it. An immediate **Undo deck change** restores your previous deck selection. Codes contain only ordered card IDs and work across browsers; they do not include progress or rewards. Select a deck card and use **Earlier** / **Later**, or **Alt + Left / Right** while it has focus, to arrange the saved order. Opening hands are shuffled.

@@ -142,7 +142,7 @@ test("real replay notices survive seeking, backgrounding and phone rotation", as
   await expect
     .poll(
       () =>
-        page.evaluate(() => (window as any).__arena.state.loadedAnnouncements),
+        page.evaluate(() => (window as any).__arena?.state.loadedAnnouncements),
       { timeout: 30000 },
     )
     .toBe(5);
@@ -182,8 +182,12 @@ test("real replay notices survive seeking, backgrounding and phone rotation", as
     delete (document as any).hidden;
     document.dispatchEvent(new Event("visibilitychange"));
   });
-  await page.getByRole("button", { name: "1×", exact: true }).click();
-  await page.getByRole("button", { name: "2×", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Playback speed: 1×", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Playback speed: 2×", exact: true })
+    .click();
   await page
     .getByRole("button", { name: "Resume replay", exact: true })
     .click();
@@ -195,7 +199,9 @@ test("real replay notices survive seeking, backgrounding and phone rotation", as
   await expect(notice).toHaveAttribute("aria-label", "+120s Extra Time");
   await seek(81);
   await expect(notice).toHaveAttribute("aria-label", "X3 Elixir");
-  await page.getByRole("button", { name: "4×", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Playback speed: 4×", exact: true })
+    .click();
   const sizes =
     info.project.name === "desktop"
       ? [{ width: 1440, height: 900 }]
