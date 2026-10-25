@@ -2,6 +2,7 @@ import { NativeConnectionWarning } from "./ui/connection";
 import { OfflineUpdates } from "./ui/offline-updates";
 import { ModalFocus } from "./ui/modal-focus";
 import { cardDetails } from "./ui/card-details";
+import { DeckEditHistory, copyDeckSelection } from "./ui/deck-edit-history";
 import { collectionCards } from "./ui/card-collection";
 import type { CollectionKind, CollectionOrder } from "./ui/card-collection";
 import "@fontsource/lilita-one/latin-400.css";
@@ -259,6 +260,8 @@ let filter: CollectionKind = "all";
 let search = "";
 let collectionCost: number | "all" = "all";
 let collectionOrder: CollectionOrder = "collection";
+const deckEdits = new DeckEditHistory();
+let deckEditNotice = "";
 let dragging = false;
 let pointerDown = false;
 let activePointerId: number | null = null;
@@ -1594,6 +1597,8 @@ function showDeckBuilder() {
   search = "";
   collectionCost = "all";
   collectionOrder = "collection";
+  deckEdits.reset(profile);
+  deckEditNotice = "";
   renderDeckBuilder();
 }
 function moveDeckCard(step: -1 | 1, focusCard = false, source = editSlot) {
@@ -1606,11 +1611,18 @@ function moveDeckCard(step: -1 | 1, focusCard = false, source = editSlot) {
   )
     return;
   const id = profile.deck[source];
+  const before = copyDeckSelection(profile);
   [profile.deck[source], profile.deck[destination]] = [
     profile.deck[destination],
     id,
   ];
   profile.decks[profile.activeDeck] = [...profile.deck];
+  deckEditNotice = `Moved ${CARD_MAP[id].name} to slot ${destination + 1}.`;
+  deckEdits.record(before, profile, {
+    label: deckEditNotice,
+    beforeFocus: source,
+    afterFocus: destination,
+  });
   editSlot = destination;
   saveProfile(profile);
   refreshDeck();
@@ -1623,11 +1635,41 @@ function moveDeckCard(step: -1 | 1, focusCard = false, source = editSlot) {
   focus.focus();
   audio.play("button_click_02");
 }
+function restoreDeckEdit(direction: "undo" | "redo", keyboard = false) {
+  if (screen !== "lobby" || modalKey !== "deck") return;
+  const edit = deckEdits[direction](profile);
+  if (!edit) {
+    renderDeckBuilder();
+    return;
+  }
+  restoreDeckSelection(profile, edit.selection);
+  editSlot = -1;
+  deckEditNotice = `${direction === "undo" ? "Undid" : "Redid"}: ${edit.label}`;
+  saveProfile(profile);
+  refreshDeck();
+  renderDeckBuilder();
+  const button = $<HTMLButtonElement>(`#deck-${direction}`);
+  const opposite = $<HTMLButtonElement>(
+    `#deck-${direction === "undo" ? "redo" : "undo"}`,
+  );
+  (keyboard
+    ? $(`[data-edit-slot="${edit.focusSlot}"]`)
+    : !button.disabled
+      ? button
+      : !opposite.disabled
+        ? opposite
+        : $(`[data-edit-slot="${edit.focusSlot}"]`)
+  ).focus();
+  audio.play("button_click_02");
+}
 function renderDeckBuilder() {
+  if (deckEdits.sync(profile))
+    deckEditNotice =
+      "Deck updated. Earlier edits are no longer available to undo.";
   const orderDescription = `deck-order-position deck-order-help${storageAvailable ? "" : " deck-order-save"}`;
   modal(
     "Build your winning eight",
-    `<div class="builder-top"><p>Inspect a collection card, or select a deck card to move or replace.</p><span><i class="tiny-drop"></i> ${averageCost(profile.deck).toFixed(1)} average</span></div><div class="builder-deck">${profile.deck.map((id, i) => cardHTML(id, `data-edit-slot="${i}" aria-pressed="${editSlot === i}" aria-keyshortcuts="Alt+ArrowLeft Alt+ArrowRight" aria-describedby="${orderDescription}"`, editSlot === i ? "selected" : "")).join("")}</div><div class="builder-order" role="group" aria-label="Deck order"><div><b id="deck-order-position">${editSlot < 0 ? "Arrange your deck" : `${CARD_MAP[profile.deck[editSlot]].name} · Slot ${editSlot + 1} of 8`}</b><p id="deck-order-help">${editSlot < 0 ? "Select a deck card to move it." : "Move this card with the buttons or Alt + Left / Right."}</p>${storageAvailable ? "" : '<p id="deck-order-save" role="status">Changes are available for this session. Browser storage is unavailable.</p>'}</div><div class="builder-order-actions"><button class="secondary-button" id="deck-move-earlier" aria-describedby="${orderDescription}" ${editSlot <= 0 ? "disabled" : ""}>Earlier</button><button class="secondary-button" id="deck-move-later" aria-describedby="${orderDescription}" ${editSlot < 0 || editSlot >= 7 ? "disabled" : ""}>Later</button></div></div><div class="builder-sharing"><button class="secondary-button" id="deck-codes">Deck codes</button><p>Copy your deck or preview a shared code.</p></div><div class="builder-controls"><div class="collection-label"><h3>Card collection</h3><span>${CARDS.length} / ${CARDS.length} unlocked</span></div><label class="search-input">${icon("search")}<input id="card-search" placeholder="Find a card…" value="${esc(search)}" aria-label="Search cards"/></label><div class="filter-row" role="group" aria-label="Card type">${["all", "troop", "spell", "building"].map((f) => `<button class="${filter === f ? "active" : ""}" data-filter="${f}" aria-pressed="${filter === f}">${f === "all" ? "All cards" : f === "troop" ? "Troops" : f === "spell" ? "Spells" : "Buildings"}</button>`).join("")}</div><div class="collection-options"><div><label for="collection-cost">Elixir cost</label><div class="match-deck-choice"><select id="collection-cost"><option value="all" ${collectionCost === "all" ? "selected" : ""}>Any elixir</option>${[
+    `<div class="builder-top"><p>Inspect a collection card, or select a deck card to move or replace.</p><span><i class="tiny-drop"></i> ${averageCost(profile.deck).toFixed(1)} average</span></div><div class="builder-deck">${profile.deck.map((id, i) => cardHTML(id, `data-edit-slot="${i}" aria-pressed="${editSlot === i}" aria-keyshortcuts="Alt+ArrowLeft Alt+ArrowRight" aria-describedby="${orderDescription}"`, editSlot === i ? "selected" : "")).join("")}</div><div class="builder-order" role="group" aria-label="Deck order"><div><b id="deck-order-position">${editSlot < 0 ? "Arrange your deck" : `${CARD_MAP[profile.deck[editSlot]].name} · Slot ${editSlot + 1} of 8`}</b><p id="deck-order-help">${editSlot < 0 ? "Select a deck card to move it." : "Move this card with the buttons or Alt + Left / Right."}</p>${storageAvailable ? "" : '<p id="deck-order-save" role="status">Changes are available for this session. Browser storage is unavailable.</p>'}</div><div class="builder-order-actions"><button class="secondary-button" id="deck-move-earlier" aria-describedby="${orderDescription}" ${editSlot <= 0 ? "disabled" : ""}>Earlier</button><button class="secondary-button" id="deck-move-later" aria-describedby="${orderDescription}" ${editSlot < 0 || editSlot >= 7 ? "disabled" : ""}>Later</button></div></div><div class="builder-history" role="group" aria-label="Deck edit history"><div><p id="deck-edit-status" role="status" aria-live="polite">${esc(deckEditNotice || "Undo and redo deck edits made during this visit.")}</p><small>Undo: Ctrl/Cmd + Z · Redo: Ctrl/Cmd + Shift + Z</small></div><div class="builder-history-actions"><button class="secondary-button" id="deck-undo" aria-describedby="deck-edit-status" aria-keyshortcuts="Control+z Meta+z" title="${esc(deckEdits.undoLabel ? `Undo: ${deckEdits.undoLabel}` : "No deck edit to undo")}" ${deckEdits.undoLabel ? "" : "disabled"}>Undo</button><button class="secondary-button" id="deck-redo" aria-describedby="deck-edit-status" aria-keyshortcuts="Control+Shift+z Meta+Shift+z Control+y" title="${esc(deckEdits.redoLabel ? `Redo: ${deckEdits.redoLabel}` : "No deck edit to redo")}" ${deckEdits.redoLabel ? "" : "disabled"}>Redo</button></div></div><div class="builder-sharing"><button class="secondary-button" id="deck-codes">Deck codes</button><p>Copy your deck or preview a shared code.</p></div><div class="builder-controls"><div class="collection-label"><h3>Card collection</h3><span>${CARDS.length} / ${CARDS.length} unlocked</span></div><label class="search-input">${icon("search")}<input id="card-search" placeholder="Find a card…" value="${esc(search)}" aria-label="Search cards"/></label><div class="filter-row" role="group" aria-label="Card type">${["all", "troop", "spell", "building"].map((f) => `<button class="${filter === f ? "active" : ""}" data-filter="${f}" aria-pressed="${filter === f}">${f === "all" ? "All cards" : f === "troop" ? "Troops" : f === "spell" ? "Spells" : "Buildings"}</button>`).join("")}</div><div class="collection-options"><div><label for="collection-cost">Elixir cost</label><div class="match-deck-choice"><select id="collection-cost"><option value="all" ${collectionCost === "all" ? "selected" : ""}>Any elixir</option>${[
       ...new Set(CARDS.map((c) => c.cost)),
     ]
       .sort((a, b) => a - b)
@@ -1679,6 +1721,8 @@ function renderDeckBuilder() {
         }
       };
     });
+  $("#deck-undo").onclick = () => restoreDeckEdit("undo");
+  $("#deck-redo").onclick = () => restoreDeckEdit("redo");
   $("#deck-move-earlier").onclick = () => moveDeckCard(-1);
   $("#deck-move-later").onclick = () => moveDeckCard(1);
   document.querySelectorAll<HTMLButtonElement>("[data-filter]").forEach(
@@ -1854,8 +1898,16 @@ function renderCollection() {
           toast("That card is already in your deck.");
           return;
         }
+        const before = copyDeckSelection(profile);
+        const previous = profile.deck[editSlot];
         profile.deck[editSlot] = id;
         profile.decks[profile.activeDeck] = [...profile.deck];
+        deckEditNotice = `Replaced ${CARD_MAP[previous].name} with ${CARD_MAP[id].name} in slot ${editSlot + 1}.`;
+        deckEdits.record(before, profile, {
+          label: deckEditNotice,
+          beforeFocus: editSlot,
+          afterFocus: editSlot,
+        });
         saveProfile(profile);
         refreshDeck();
         audio.play("button_click_02");
@@ -2462,6 +2514,26 @@ $("#about-button").onclick = () =>
     "about",
   );
 document.addEventListener("keydown", (e) => {
+  if (
+    !e.defaultPrevented &&
+    !e.altKey &&
+    (e.ctrlKey || e.metaKey) &&
+    modalKey === "deck" &&
+    screen === "lobby" &&
+    !(e.target as HTMLElement).closest(
+      "input,textarea,select,[contenteditable]:not([contenteditable=false])",
+    ) &&
+    (e.key.toLowerCase() === "z" ||
+      (e.ctrlKey && !e.metaKey && e.key.toLowerCase() === "y"))
+  ) {
+    e.preventDefault();
+    if (!e.repeat)
+      restoreDeckEdit(
+        e.shiftKey || e.key.toLowerCase() === "y" ? "redo" : "undo",
+        true,
+      );
+    return;
+  }
   if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
   // Holding Escape must not cancel a card or close a dialog and then pause.
   if (e.key === "Escape" && e.repeat) {

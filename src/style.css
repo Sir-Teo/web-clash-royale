@@ -1921,6 +1921,33 @@ kbd {
   padding-top: 20px;
   gap: 15px;
 }
+.builder-history {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.builder-history p {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #b8ccdf;
+}
+.builder-history small {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+  color: #91a8bf;
+}
+.builder-history-actions {
+  display: flex;
+  gap: 8px;
+}
+.builder-history-actions button {
+  min-width: 88px;
+  min-height: 44px;
+}
 .collection-label {
   display: flex;
   align-items: center;
