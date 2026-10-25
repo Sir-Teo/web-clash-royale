@@ -81,13 +81,11 @@ export const validDeck = (a: unknown): a is CardId[] =>
   a.length === 8 &&
   new Set(a).size === 8 &&
   a.every(isPlayableCard);
-function normalizePlayerName(value: string) {
-  return (
-    value
-      .replace(/[\u0000-\u001f\u007f]/g, "")
-      .trim()
-      .slice(0, 18) || "Sir Teo"
-  );
+export function normalizePlayerName(value: string) {
+  const name = value.replace(/[\u0000-\u001f\u007f]/g, "").trim();
+  // Keep the existing code-unit limit without cutting a surrogate pair.
+  const limit = (name.codePointAt(17) ?? 0) > 0xffff ? 17 : 18;
+  return name.slice(0, limit).trimEnd() || "Sir Teo";
 }
 export function validRecordEntry(value: unknown): value is RecordEntry {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;

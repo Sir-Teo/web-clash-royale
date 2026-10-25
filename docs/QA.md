@@ -1596,3 +1596,15 @@ A real `QuotaExceededError` reproduction showed Settings reporting “Settings s
 The change uses the existing storage result and profile/export flow. It adds no persistence format, battle, replay or network changes. TypeScript and the root production build pass; the existing combat unit suite is unchanged. No new unit tests were added for the copy/conditional rendering.
 
 All four focused cases pass across desktop Chromium and phone WebKit, retaining the existing failed-write restore/export flow and adding settings failure/recovery. The new case verifies the saved bytes remain unchanged after failure, the working name/audio preferences survive dialog reopening and export, retry writes the complete profile after recovery, and reload retains it. The 390-pixel phone screenshot was inspected; the longer note wraps inside the dialog. Production/offline checks pass for Pages-prefixed reload, the cached match worker, battle startup, scoped assets and all 278 native combat/death/music files. Root output is restored afterward. No push or deployment was performed.
+
+## Player names that survive portable backups
+
+The browser reproduced a pasted control-character name being saved and exported, then rejected by the game's own strict backup importer. Settings now calls the same `normalizePlayerName` helper as profile loading and recorded battle identity. The helper removes the existing control-character set, trims the name and retains the 18-code-unit limit and Sir Teo default. Truncation also trims a newly exposed trailing space and avoids cutting a valid surrogate pair. Applying it again leaves the accepted name unchanged. Already bounded legacy values keep their existing interpretation; no profile, replay-file, combat or wire versions change.
+
+Eleven new checks exercise the complete storage/history/progress-backup/replay-file round trip. They include pasted controls, an empty cleaned name, a space at the truncation boundary, an emoji crossing that boundary, a complete fitting emoji, ordinary emoji/CJK names, literal markup, long ASCII and an already bounded legacy surrogate value. The focused profile, backup, identity and replay-file checks pass.
+
+The isolated full suite passes 1,490 tests across 163 files. TypeScript and the root production build pass. The shared helper keeps profile names and newly captured battle names consistent without weakening strict backup validation.
+
+All four focused browser cases pass across desktop Chromium and phone WebKit. The new case saves pasted controls, a cleaned-empty name, an emoji name and literal markup; each exported file opens the strict restore preview with the accepted name, cancellation preserves the current profile, and reload retains the final name. The existing failed-write/session-export/recovery/reload case stays green.
+
+Pages-prefixed production/offline checks also pass reload, the cached match worker, battle startup, scoped assets and all 278 native combat/death/music files. Root output is restored afterward. The pack remains 921 URLs/894 unique content groups with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.

@@ -163,6 +163,7 @@ import { CARDS, CARD_MAP, PRESETS, averageCost, cardArt } from "./game/cards";
 import type { CardId } from "./game/cards";
 import {
   loadProfile,
+  normalizePlayerName,
   saveProfile as persistProfile,
   recordBattle,
   openChest,
@@ -2251,9 +2252,7 @@ function showSettings() {
   }
   $("#settings-form").onsubmit = (e) => {
     e.preventDefault();
-    profile.name =
-      ($("#player-name") as HTMLInputElement).value.trim().slice(0, 18) ||
-      "Sir Teo";
+    profile.name = normalizePlayerName($<HTMLInputElement>("#player-name").value);
     profile.sound = ($("#sound-setting") as HTMLInputElement).checked;
     profile.music = ($("#music-setting") as HTMLInputElement).checked;
     audio.setEnabled(profile.sound);
