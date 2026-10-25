@@ -217,7 +217,8 @@ function healthProjection(
 }
 
 /** Known health/control changes until this current attack releases. Positions
- * follow projected pulls; no future attacks, death effects or separation run. */
+ * follow projected pulls; no future attacks, death effects or separation run.
+ * The survival method reads the full supplied horizon for spell impacts. */
 export function createWindupHealth(
   projectiles: readonly Projectile[],
   entities: readonly Entity[],
@@ -335,6 +336,21 @@ export function createWindupHealth(
   };
   const lightning = (...args: Parameters<typeof projectLightning>) =>
     projectLightning(...args).packets;
+  // Spell impacts can arrive after a current attack has already released.
+  // Keep their survival horizon independent of the windup-only shortcut.
+  const survival = (
+    body: Entity,
+    frames: readonly WindupFrame[],
+    areas: readonly AreaEffect[],
+  ) => {
+    const strikes = areas.some(
+      (a) => a.card === "lightning" && a.team !== body.team && a.remaining > 0,
+    )
+      ? (lightning(areas, Math.min(60, frames.length)).get(body.id) ?? [])
+      : [];
+    return healthProjection(body, frames, areas, projectiles, entities, strikes)
+      .statuses;
+  };
   const evaluate: WindupHealthEvaluator = (
     attacker,
     frames,
@@ -384,7 +400,7 @@ export function createWindupHealth(
       strikes,
     ).statuses;
   };
-  return Object.assign(evaluate, { lightning, projectLightning });
+  return Object.assign(evaluate, { lightning, projectLightning, survival });
 }
 
 /** Released Lightning follows current pulls; boards without Tornado retain

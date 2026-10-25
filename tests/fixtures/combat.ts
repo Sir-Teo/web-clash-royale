@@ -294,11 +294,12 @@ function setup() {
     battle.players.red.elixir = 4;
     battle.actions = [];
   } else if (scenario.startsWith("ai-pulled-aim-")) {
+    const rest: CardId = scenario.includes("doomed") ? "three-musketeers" : "pekka";
     for (const y of [19, 20, 21])
       for (const e of unit("wizard", "blue", 5, y))
-        Object.assign(e, { hp: 500, active: false });
-    battle.players.red.hand = [scenario.endsWith("rocket") ? "rocket" : "fireball", "pekka", "pekka", "pekka"];
-    battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
+        Object.assign(e, { hp: scenario.includes("doomed") ? 200 : 500, active: false });
+    battle.players.red.hand = [scenario.endsWith("rocket") ? "rocket" : "fireball", rest, rest, rest];
+    battle.players.red.queue = [rest, rest, rest, rest];
     battle.actions = [];
   } else if (scenario.startsWith("ai-pulled-reserve-")) {
     const inward = scenario.endsWith("in");
@@ -955,8 +956,9 @@ function advance(ticks: number) {
       if (sceneSelect.value.startsWith("ai-pulled-aim-") && battle.tick === 73) {
         cast("tornado", "red", 10, 20);
         const card = sceneSelect.value.endsWith("rocket") ? "rocket" : "fireball";
-        battle.players.red.hand = [card, "pekka", "pekka", "pekka"];
-        battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
+        const rest: CardId = sceneSelect.value.includes("doomed") ? "three-musketeers" : "pekka";
+        battle.players.red.hand = [card, rest, rest, rest];
+        battle.players.red.queue = [rest, rest, rest, rest];
         battle.players.red.elixir = card === "rocket" ? 6 : 4;
       }
       if (sceneSelect.value.startsWith("ai-pulled-reserve-") && battle.tick === 73) {

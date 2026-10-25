@@ -4,6 +4,8 @@ import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import { directSpellFlight } from "./combat";
 import { impactSteps } from "./projectile-impacts";
 import { createSpellPullPaths } from "./spell-pull-paths";
+import { createWindupHealth } from "./windup-health";
+import type { WindupHealthFrame } from "./tornado-pull";
 import rocket from "./rocket-data.json" with { type: "json" };
 import { createKingSpellRace, kingRacePriority } from "./king-damage";
 import type { MatchFinisher } from "./match-finisher";
@@ -146,10 +148,20 @@ export function damageSpellTarget(
     castStep({ x: 0.5, y: team === "red" ? 31.3 : 0.7 }) + 3,
   );
   const motions = new Map<Entity, readonly Point[]>();
+  const lives = new Map<Entity, readonly WindupHealthFrame[]>();
+  const health = pullPath
+    ? createWindupHealth(projectiles, entities)
+    : undefined;
   if (pullPath)
     for (const { entity } of targets) {
       const path = pullPath(entity);
-      if (path) motions.set(entity, path);
+      if (path) {
+        motions.set(entity, path);
+        lives.set(
+          entity,
+          health!.survival(entity, pullPath.frames(entity)!, areas),
+        );
+      }
     }
   if (motions.size) {
     const led = targets.map(({ entity }) => {
@@ -216,7 +228,11 @@ export function damageSpellTarget(
     const step = motions.size ? castStep(point) : 0;
     for (const target of evaluated) {
       const position = motions.get(target.entity)?.[step - 1] ?? target.entity;
-      if (!spellContains(point, position, target.radius)) continue;
+      if (
+        !spellContains(point, position, target.radius) ||
+        lives.get(target.entity)?.[step - 1]?.afterAlive === false
+      )
+        continue;
       if (target.entity.king && race) {
         const step = race.stepAt(point);
         if (step < race.baseline) {
