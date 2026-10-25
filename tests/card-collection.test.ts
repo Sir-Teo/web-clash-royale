@@ -1,0 +1,73 @@
+import { describe, expect, it } from "vitest";
+import { CARDS } from "../src/game/cards";
+import { collectionCards } from "../src/ui/card-collection";
+
+const ids = (query: Parameters<typeof collectionCards>[0]) =>
+  collectionCards(query).map((card) => card.id);
+
+describe("card collection browsing", () => {
+  it.each([
+    ["pekka", ["mini-pekka", "pekka"]],
+    ["  Mini   Pekka  ", ["mini-pekka"]],
+    ["P.E.K.K.A", ["mini-pekka", "pekka"]],
+    ["three-musketeers", ["three-musketeers"]],
+    ["BÁBY DRÁGON", ["baby-dragon"]],
+  ])("finds cards using the plain name %s", (search, expected) => {
+    expect(ids({ search: search as string })).toEqual(expected);
+  });
+  it("combines type, cost and name instead of broadening another filter", () => {
+    expect(ids({ kind: "spell", cost: 4 })).toEqual([
+      "fireball",
+      "freeze",
+      "poison",
+    ]);
+    expect(ids({ kind: "spell", cost: 4, search: "fire" })).toEqual([
+      "fireball",
+    ]);
+    expect(ids({ kind: "troop", cost: 4, search: "fire" })).toEqual([]);
+    expect(ids({ kind: "building", cost: 9 })).toEqual([]);
+  });
+  it("sorts equal-cost cards by name in both elixir directions", () => {
+    const names = [
+      "Baby Dragon",
+      "Hog Rider",
+      "Mini P.E.K.K.A",
+      "Musketeer",
+      "Valkyrie",
+    ];
+    for (const order of ["cost-asc", "cost-desc"] as const)
+      expect(
+        collectionCards({ kind: "troop", cost: 4, order }).map((c) => c.name),
+      ).toEqual(names);
+  });
+  it("orders the whole collection by increasing and decreasing elixir", () => {
+    for (const order of ["cost-asc", "cost-desc"] as const) {
+      const cards = collectionCards({ order });
+      expect(cards).toHaveLength(CARDS.length);
+      expect(new Set(cards.map((c) => c.id)).size).toBe(CARDS.length);
+      for (let i = 1; i < cards.length; i++)
+        expect(
+          (cards[i].cost - cards[i - 1].cost) * (order === "cost-asc" ? 1 : -1),
+        ).toBeGreaterThanOrEqual(0);
+      expect(cards[0].id).toBe(
+        order === "cost-asc" ? "skeletons" : "three-musketeers",
+      );
+    }
+  });
+  it("sorts by name and leaves the source roster and default order intact", () => {
+    const original = structuredClone(CARDS);
+    expect(collectionCards({ order: "name" })[0].name).toBe("Archers");
+    expect(collectionCards({ order: "name" }).at(-1)!.name).toBe("Zap");
+    collectionCards({ order: "cost-desc" });
+    expect(CARDS).toEqual(original);
+    const defaults = collectionCards();
+    expect(defaults).toEqual(CARDS);
+    expect(defaults).not.toBe(CARDS);
+  });
+  it("treats whitespace as an empty search and retains every eligible card", () => {
+    expect(ids({ search: " \t\n ", kind: "building" })).toEqual([
+      "cannon",
+      "tesla",
+    ]);
+  });
+});

@@ -152,3 +152,154 @@ test("canceling a replacement enables touch inspection and a later replacement s
     "false",
   );
 });
+
+const collectionIds = (page: Page) =>
+  page
+    .locator("[data-collection]")
+    .evaluateAll((cards) =>
+      cards.map((card) => (card as HTMLElement).dataset.collection),
+    );
+
+test("plain-name search and combined collection filters preserve inspection state without editing progress", async ({
+  page,
+}) => {
+  const before = await saved(page);
+  await page.locator('[data-nav="cards"]').click();
+  await page.getByRole("textbox", { name: "Search cards" }).fill("pekka");
+  expect(await collectionIds(page)).toEqual(["mini-pekka", "pekka"]);
+  await expect(page.locator("#collection-results")).toHaveText(
+    "Showing 2 of 30 cards.",
+  );
+  await page.getByRole("textbox", { name: "Search cards" }).fill("Mini Pekka");
+  expect(await collectionIds(page)).toEqual(["mini-pekka"]);
+  await page.getByRole("textbox", { name: "Search cards" }).fill("");
+  await page
+    .getByLabel("Sort cards", { exact: true })
+    .selectOption("cost-desc");
+  expect((await collectionIds(page))[0]).toBe("three-musketeers");
+  await page.getByLabel("Sort cards", { exact: true }).selectOption("cost-asc");
+  expect((await collectionIds(page))[0]).toBe("skeletons");
+  await page.getByLabel("Elixir cost", { exact: true }).selectOption("4");
+  await page.locator('[data-filter="troop"]').click();
+  await expect(page.locator('[data-filter="troop"]')).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await expect(page.locator('[data-filter="all"]')).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
+  const sort = page.getByLabel("Sort cards", { exact: true });
+  await sort.focus();
+  await sort.selectOption("name");
+  await expect(sort).toBeFocused();
+  expect(await collectionIds(page)).toEqual([
+    "baby-dragon",
+    "hog-rider",
+    "mini-pekka",
+    "musketeer",
+    "valkyrie",
+  ]);
+  await expect(page.locator("#collection-results")).toHaveText(
+    "Showing 5 of 30 cards.",
+  );
+  const dragon = page.locator('[data-collection="baby-dragon"]');
+  await dragon.focus();
+  await dragon.press("Enter");
+  await expect(
+    page.getByRole("dialog", { name: "Baby Dragon", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Back to collection", exact: true })
+    .click();
+  await expect(dragon).toBeFocused();
+  await expect(page.getByLabel("Elixir cost", { exact: true })).toHaveValue(
+    "4",
+  );
+  await expect(sort).toHaveValue("name");
+  await expect(page.locator("[data-collection]")).toHaveCount(5);
+  await page.locator("#deck-codes").click();
+  await page.locator("#deck-code-back").click();
+  await expect(sort).toHaveValue("name");
+  await expect(page.getByLabel("Elixir cost", { exact: true })).toHaveValue(
+    "4",
+  );
+  expect(await saved(page)).toBe(before);
+  await page.keyboard.press("Escape");
+  await page.locator('[data-nav="cards"]').click();
+  await expect(sort).toHaveValue("collection");
+  await expect(page.getByLabel("Elixir cost", { exact: true })).toHaveValue(
+    "all",
+  );
+  await expect(page.locator("[data-collection]")).toHaveCount(30);
+});
+
+test("collection cost and sorting fit small screens and keep a filtered replacement in its saved slot", async ({
+  page,
+}, info) => {
+  if (info.project.name !== "desktop")
+    await page.setViewportSize({ width: 320, height: 568 });
+  await page.locator('[data-deck="1"]').click();
+  const before = JSON.parse((await saved(page))!);
+  await page.locator('[data-nav="cards"]').click();
+  await activate(page, page.locator('[data-edit-slot="3"]'));
+  await page.locator('[data-filter="spell"]').click();
+  const cost = page.getByLabel("Elixir cost", { exact: true });
+  const sort = page.getByLabel("Sort cards", { exact: true });
+  await cost.selectOption("4");
+  await sort.selectOption("cost-desc");
+  await page
+    .getByRole("textbox", { name: "Search cards" })
+    .fill("no such card");
+  await expect(page.locator("[data-collection]")).toHaveCount(0);
+  await expect(page.locator("#collection-results")).toHaveText(
+    "Showing 0 of 30 cards.",
+  );
+  await expect(
+    page.getByText("No cards match these filters.", { exact: true }),
+  ).toBeVisible();
+  await page.getByRole("textbox", { name: "Search cards" }).fill("");
+  expect(await collectionIds(page)).toEqual(["fireball", "freeze", "poison"]);
+  if (info.project.name !== "desktop")
+    await page
+      .locator("#collection-results")
+      .evaluate((element) => element.scrollIntoView({ block: "center" }));
+  for (const control of [cost, sort]) {
+    await control.scrollIntoViewIfNeeded();
+    const box = (await control.boundingBox())!;
+    expect(box.height).toBeGreaterThanOrEqual(44);
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+    expect(box.y).toBeGreaterThanOrEqual(0);
+    const footer = (await page.locator(".builder-footer").boundingBox())!;
+    expect(box.y + box.height).toBeLessThanOrEqual(footer.y);
+  }
+  if (info.project.name !== "mobile")
+    await page.screenshot({
+      path: info.outputPath("collection-filters.png"),
+      animations: "disabled",
+    });
+  expect(JSON.parse((await saved(page))!)).toEqual(before);
+  await activate(page, page.locator('[data-collection="poison"]'));
+  const expected = [...before.deck];
+  expected[3] = "poison";
+  expect(JSON.parse((await saved(page))!)).toEqual({
+    ...before,
+    deck: expected,
+    decks: [before.decks[0], expected, before.decks[2]],
+  });
+  await expect(cost).toHaveValue("4");
+  await expect(sort).toHaveValue("cost-desc");
+  await expect(page.locator('[data-filter="spell"]')).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await expect(page.locator("#collection-grid")).toHaveAttribute(
+    "data-collection-mode",
+    "inspect",
+  );
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth > innerWidth,
+  );
+  expect(overflow).toBe(false);
+});

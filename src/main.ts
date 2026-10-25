@@ -2,6 +2,8 @@ import { NativeConnectionWarning } from "./ui/connection";
 import { OfflineUpdates } from "./ui/offline-updates";
 import { ModalFocus } from "./ui/modal-focus";
 import { cardDetails } from "./ui/card-details";
+import { collectionCards } from "./ui/card-collection";
+import type { CollectionKind, CollectionOrder } from "./ui/card-collection";
 import "@fontsource/lilita-one/latin-400.css";
 import "@fontsource/nunito-sans/latin-400.css";
 import "@fontsource/nunito-sans/latin-600.css";
@@ -252,8 +254,10 @@ let keyboardTarget: Point | null = null;
 let keyboardAiming = false;
 let modalKey = "";
 let editSlot = -1;
-let filter = "all";
+let filter: CollectionKind = "all";
 let search = "";
+let collectionCost: number | "all" = "all";
+let collectionOrder: CollectionOrder = "collection";
 let dragging = false;
 let pointerDown = false;
 let activePointerId: number | null = null;
@@ -1525,6 +1529,8 @@ function showDeckBuilder() {
   editSlot = -1;
   filter = "all";
   search = "";
+  collectionCost = "all";
+  collectionOrder = "collection";
   renderDeckBuilder();
 }
 function moveDeckCard(step: -1 | 1, focusCard = false, source = editSlot) {
@@ -1558,7 +1564,31 @@ function renderDeckBuilder() {
   const orderDescription = `deck-order-position deck-order-help${storageAvailable ? "" : " deck-order-save"}`;
   modal(
     "Build your winning eight",
-    `<div class="builder-top"><p>Inspect a collection card, or select a deck card to move or replace.</p><span><i class="tiny-drop"></i> ${averageCost(profile.deck).toFixed(1)} average</span></div><div class="builder-deck">${profile.deck.map((id, i) => cardHTML(id, `data-edit-slot="${i}" aria-pressed="${editSlot === i}" aria-keyshortcuts="Alt+ArrowLeft Alt+ArrowRight" aria-describedby="${orderDescription}"`, editSlot === i ? "selected" : "")).join("")}</div><div class="builder-order" role="group" aria-label="Deck order"><div><b id="deck-order-position">${editSlot < 0 ? "Arrange your deck" : `${CARD_MAP[profile.deck[editSlot]].name} · Slot ${editSlot + 1} of 8`}</b><p id="deck-order-help">${editSlot < 0 ? "Select a deck card to move it." : "Move this card with the buttons or Alt + Left / Right."}</p>${storageAvailable ? "" : '<p id="deck-order-save" role="status">Changes are available for this session. Browser storage is unavailable.</p>'}</div><div class="builder-order-actions"><button class="secondary-button" id="deck-move-earlier" aria-describedby="${orderDescription}" ${editSlot <= 0 ? "disabled" : ""}>Earlier</button><button class="secondary-button" id="deck-move-later" aria-describedby="${orderDescription}" ${editSlot < 0 || editSlot >= 7 ? "disabled" : ""}>Later</button></div></div><div class="builder-sharing"><button class="secondary-button" id="deck-codes">Deck codes</button><p>Copy your deck or preview a shared code.</p></div><div class="builder-controls"><div class="collection-label"><h3>Card collection</h3><span>${CARDS.length} / ${CARDS.length} unlocked</span></div><label class="search-input">${icon("search")}<input id="card-search" placeholder="Find a card…" value="${esc(search)}" aria-label="Search cards"/></label><div class="filter-row">${["all", "troop", "spell", "building"].map((f) => `<button class="${filter === f ? "active" : ""}" data-filter="${f}">${f === "all" ? "All cards" : f === "troop" ? "Troops" : f === "spell" ? "Spells" : "Buildings"}</button>`).join("")}</div></div><div class="collection-grid" id="collection-grid"></div><div class="builder-footer"><span id="builder-hint">${editSlot < 0 ? "Choose a collection card to inspect its stats." : `${CARD_MAP[profile.deck[editSlot]].name} selected · Choose a replacement below, or select it again to cancel.`}</span><button class="primary-button" id="deck-done">${icon("check")} Done</button></div>`,
+    `<div class="builder-top"><p>Inspect a collection card, or select a deck card to move or replace.</p><span><i class="tiny-drop"></i> ${averageCost(profile.deck).toFixed(1)} average</span></div><div class="builder-deck">${profile.deck.map((id, i) => cardHTML(id, `data-edit-slot="${i}" aria-pressed="${editSlot === i}" aria-keyshortcuts="Alt+ArrowLeft Alt+ArrowRight" aria-describedby="${orderDescription}"`, editSlot === i ? "selected" : "")).join("")}</div><div class="builder-order" role="group" aria-label="Deck order"><div><b id="deck-order-position">${editSlot < 0 ? "Arrange your deck" : `${CARD_MAP[profile.deck[editSlot]].name} · Slot ${editSlot + 1} of 8`}</b><p id="deck-order-help">${editSlot < 0 ? "Select a deck card to move it." : "Move this card with the buttons or Alt + Left / Right."}</p>${storageAvailable ? "" : '<p id="deck-order-save" role="status">Changes are available for this session. Browser storage is unavailable.</p>'}</div><div class="builder-order-actions"><button class="secondary-button" id="deck-move-earlier" aria-describedby="${orderDescription}" ${editSlot <= 0 ? "disabled" : ""}>Earlier</button><button class="secondary-button" id="deck-move-later" aria-describedby="${orderDescription}" ${editSlot < 0 || editSlot >= 7 ? "disabled" : ""}>Later</button></div></div><div class="builder-sharing"><button class="secondary-button" id="deck-codes">Deck codes</button><p>Copy your deck or preview a shared code.</p></div><div class="builder-controls"><div class="collection-label"><h3>Card collection</h3><span>${CARDS.length} / ${CARDS.length} unlocked</span></div><label class="search-input">${icon("search")}<input id="card-search" placeholder="Find a card…" value="${esc(search)}" aria-label="Search cards"/></label><div class="filter-row" role="group" aria-label="Card type">${["all", "troop", "spell", "building"].map((f) => `<button class="${filter === f ? "active" : ""}" data-filter="${f}" aria-pressed="${filter === f}">${f === "all" ? "All cards" : f === "troop" ? "Troops" : f === "spell" ? "Spells" : "Buildings"}</button>`).join("")}</div><div class="collection-options"><div><label for="collection-cost">Elixir cost</label><div class="match-deck-choice"><select id="collection-cost"><option value="all" ${collectionCost === "all" ? "selected" : ""}>Any elixir</option>${[
+      ...new Set(CARDS.map((c) => c.cost)),
+    ]
+      .sort((a, b) => a - b)
+      .map(
+        (cost) =>
+          `<option value="${cost}" ${collectionCost === cost ? "selected" : ""}>${cost} elixir</option>`,
+      )
+      .join(
+        "",
+      )}</select>${icon("chevron-down")}</div></div><div><label for="collection-order">Sort cards</label><div class="match-deck-choice"><select id="collection-order">${(
+      [
+        ["collection", "Collection order"],
+        ["cost-asc", "Elixir: low to high"],
+        ["cost-desc", "Elixir: high to low"],
+        ["name", "Name: A to Z"],
+      ] as const
+    )
+      .map(
+        ([value, label]) =>
+          `<option value="${value}" ${collectionOrder === value ? "selected" : ""}>${label}</option>`,
+      )
+      .join(
+        "",
+      )}</select>${icon("chevron-down")}</div></div></div></div><p id="collection-results" role="status" aria-live="polite"></p><div class="collection-grid" id="collection-grid"></div><div class="builder-footer"><span id="builder-hint">${editSlot < 0 ? "Choose a collection card to inspect its stats." : `${CARD_MAP[profile.deck[editSlot]].name} selected · Choose a replacement below, or select it again to cancel.`}</span><button class="primary-button" id="deck-done">${icon("check")} Done</button></div>`,
     "deck",
     true,
   );
@@ -1591,7 +1621,7 @@ function renderDeckBuilder() {
   document.querySelectorAll<HTMLButtonElement>("[data-filter]").forEach(
     (e) =>
       (e.onclick = () => {
-        filter = e.dataset.filter!;
+        filter = e.dataset.filter as CollectionKind;
         renderDeckBuilder();
       }),
   );
@@ -1599,6 +1629,16 @@ function renderDeckBuilder() {
     search = ($("#card-search") as HTMLInputElement).value;
     renderCollection();
   });
+  $("#collection-cost").onchange = () => {
+    const value = $<HTMLSelectElement>("#collection-cost").value;
+    collectionCost = value === "all" ? "all" : Number(value);
+    renderCollection();
+  };
+  $("#collection-order").onchange = () => {
+    collectionOrder = $<HTMLSelectElement>("#collection-order")
+      .value as CollectionOrder;
+    renderCollection();
+  };
   $("#deck-codes").onclick = () => showDeckCodes();
   $("#deck-done").onclick = () => {
     saveProfile(profile);
@@ -1708,11 +1748,14 @@ function showDeckCodes(state: Partial<DeckCodeView> = {}) {
 function renderCollection() {
   $("#collection-grid").dataset.collectionMode =
     editSlot < 0 ? "inspect" : "replace";
-  const matches = CARDS.filter(
-    (c) =>
-      (filter === "all" || c.kind === filter) &&
-      c.name.toLowerCase().includes(search.toLowerCase()),
-  );
+  const matches = collectionCards({
+    kind: filter,
+    search,
+    cost: collectionCost,
+    order: collectionOrder,
+  });
+  $("#collection-results").textContent =
+    `Showing ${matches.length} of ${CARDS.length} cards.`;
   $("#collection-grid").innerHTML = matches.length
     ? matches
         .map(
@@ -1726,7 +1769,7 @@ function renderCollection() {
         )
         .map((s) => `<div>${s}</div>`)
         .join("")
-    : '<p class="empty-state">No cards match your search.</p>';
+    : '<p class="empty-state">No cards match these filters.</p>';
   document.querySelectorAll<HTMLButtonElement>("[data-collection]").forEach(
     (e) =>
       (e.onclick = () => {
