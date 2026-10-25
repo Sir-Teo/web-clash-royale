@@ -2670,6 +2670,7 @@ export class Battle {
                 this.entities,
                 this.projectiles,
                 this.areas,
+                a.cost ?? a.c.cost,
               )
             : areaSpellTarget(
                 a.played,

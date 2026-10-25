@@ -80,7 +80,7 @@ function setup() {
   battle = new Battle(selectedScene === "rage" ? {
     replay: { rulesFamily: "local", version: 5, seed: 12, mode: "classic",
       deck: STARTER_DECK, enemyDeck: STARTER_DECK, actions: [], duration: 0 },
-  } : { seed: 12, ai: selectedScene.startsWith("ai-") });
+  } : { seed: selectedScene === "ai-spells-mirror" ? 2 : 12, ai: selectedScene.startsWith("ai-") });
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   for (const t of battle.entities) t.active = false;
@@ -239,12 +239,16 @@ function setup() {
       battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
       battle.players.red.elixir = 3;
     }
-  } else if (scenario === "ai-spells") {
+  } else if (scenario === "ai-spells" || scenario === "ai-spells-mirror") {
     // Let the ordinary AI timer choose its cast; no private think call here.
     const tower = battle.entities.find((e) => e.team === "blue" && !e.king)!;
     tower.hp = 100;
-    battle.players.red.hand = ["rocket", "fireball", "pekka", "giant"];
-    battle.players.red.elixir = 10;
+    const mirrored = scenario === "ai-spells-mirror";
+    battle.players.red.hand = mirrored
+      ? ["mirror", "fireball", "pekka", "pekka"]
+      : ["rocket", "fireball", "pekka", "giant"];
+    battle.players.red.elixir = mirrored ? 5 : 10;
+    if (mirrored) battle.players.red.lastPlayed = "fireball";
   } else if (scenario === "rocket") {
     cast("rocket", "blue", 4, 10);
     cast("rocket", "red", 14, 22);
@@ -1191,12 +1195,14 @@ function render(now: number) {
       actions: battle.actions.filter(
         (a) =>
           a.team === "red" &&
-          ["rocket", "fireball", "arrows", "zap"].includes(a.card),
+          ["rocket", "fireball", "arrows", "zap", "mirror"].includes(a.card),
       ),
       towers: battle.entities
         .filter((e) => e.team === "blue" && e.kind === "tower")
         .map((e) => ({ id: e.id, hp: e.hp, x: e.x, y: e.y })),
       crowns: battle.players.red.crowns,
+      elixir: battle.players.red.elixir,
+      hand: battle.players.red.hand,
     });
   (document.querySelector("#destruction") as HTMLElement).dataset.aiDefense =
     JSON.stringify({

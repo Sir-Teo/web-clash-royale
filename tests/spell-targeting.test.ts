@@ -257,6 +257,65 @@ describe("AI damaging spell targets", () => {
     expect(b.actions.at(-1)?.card).toBe("zap");
     expect(b.players.red.elixir).toBe(8);
   });
+  it("holds a marginal mirrored Fireball, then spends its real cost on a useful target", () => {
+    const b = new Battle({ ai: false });
+    const target = unit(50, "musketeer", 4, 20);
+    b.entities.push(target);
+    b.players.red.hand = ["mirror", "pekka", "pekka", "pekka"];
+    b.players.red.lastPlayed = "fireball";
+    b.players.red.elixir = 5;
+    expect(damageSpellTarget("fireball", "red", b.entities)).toBeDefined();
+    think(b);
+    expect(b.actions).toHaveLength(0);
+    expect(b.players.red.elixir).toBe(5);
+    target.hp = CARD_MAP.fireball.damage;
+    think(b);
+    expect(b.actions.at(-1)).toMatchObject({
+      card: "mirror",
+      team: "red",
+      x: target.x,
+      y: target.y,
+    });
+    expect(b.players.red.elixir).toBe(0);
+    expect(b.projectiles.at(-1)?.style).toBe("fireball");
+    for (let i = 0; i < 150; i++) b.step();
+    expect(target.hp).toBeLessThanOrEqual(0);
+  });
+  it("always prefers the ordinary finisher over a more expensive Mirror of the same spell", () => {
+    for (const card of ["fireball", "arrows", "zap", "rocket"] as const)
+      for (let seed = 1; seed <= 16; seed++) {
+        const b = new Battle({ seed, ai: false });
+        b.entities.find((e) => e.team === "blue" && !e.king)!.hp = 1;
+        b.players.red.hand = ["mirror", card, "pekka", "pekka"];
+        b.players.red.lastPlayed = card;
+        b.players.red.elixir = CARD_MAP[card].cost + 1;
+        think(b);
+        expect(b.actions.at(-1)?.card, `${card}, seed ${seed}`).toBe(card);
+        expect(b.players.red.elixir).toBe(1);
+      }
+  });
+  it("keeps a mirrored King finisher ahead of a cheaper Princess finisher and wins the battle", () => {
+    const b = new Battle({ seed: 17, ai: false });
+    const king = b.entities.find((e) => e.team === "blue" && e.king)!;
+    const princess = b.entities.find((e) => e.team === "blue" && !e.king)!;
+    king.hp = 300;
+    princess.hp = 10;
+    b.players.red.hand = ["mirror", "zap", "pekka", "pekka"];
+    b.players.red.lastPlayed = "rocket";
+    b.players.red.elixir = 7;
+    think(b);
+    expect(b.actions.at(-1)).toMatchObject({
+      card: "mirror",
+      x: king.x,
+      y: king.y,
+    });
+    expect(b.players.red.elixir).toBe(0);
+    for (let i = 0; i < 200 && !b.winner; i++) b.step();
+    expect(b.winner).toBe("red");
+    expect(king.hp).toBeLessThanOrEqual(0);
+    expect(b.players.red.crowns).toBe(3);
+    expect(b.actions).toHaveLength(1);
+  });
   it("selects a useful far-side cluster rather than holding all damage spells for river crossings", () => {
     const b = new Battle({ seed: 3, ai: false });
     b.entities.push(unit(10, "wizard", 4, 23), unit(11, "witch", 4.5, 23));

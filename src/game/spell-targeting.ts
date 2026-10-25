@@ -99,6 +99,7 @@ export function damageSpellTarget(
   entities: readonly Entity[],
   projectiles: readonly Projectile[] = [],
   areas: readonly AreaEffect[] = [],
+  cost = CARD_MAP[card].cost,
 ): SpellTarget | undefined {
   if (!isDamageSpell(card)) return;
   const rules = CARD_MAP[card],
@@ -142,7 +143,7 @@ export function damageSpellTarget(
         entity: e,
         radius: radius + e.radius,
         value: hp <= damage + 1e-6 ? 0 : (Math.min(damage, hp) / e.maxHp) * 2,
-        penalty: hp > damage + 1e-6 && e.king && !e.active ? rules.cost + 8 : 0,
+        penalty: hp > damage + 1e-6 && e.king && !e.active ? cost + 8 : 0,
         lethal: e.kind === "tower" && hp <= damage + 1e-6,
       };
     const bodyCost = aiBodyValue(e);
@@ -173,9 +174,9 @@ export function damageSpellTarget(
     }
     // A guaranteed King kill wins the match, regardless of nearby troop value.
     const score = lethalTower
-      ? (lethalTower.king ? 10_000 : 40) - rules.cost + value - penalty
-      : 3 + 2 * (value - rules.cost * 0.8) - penalty;
-    if (!lethalTower && (value < rules.cost * 0.8 || score <= 0)) continue;
+      ? (lethalTower.king ? 10_000 : 40) - cost + value - penalty
+      : 3 + 2 * (value - cost * 0.8) - penalty;
+    if (!lethalTower && (value < cost * 0.8 || score <= 0)) continue;
     if (!best || score > best.score + 1e-8)
       best = {
         ...point,
