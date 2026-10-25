@@ -75,7 +75,7 @@ describe("archived Dark Prince", () => {
 
   it("charges for special damage and splashes nearby ground enemies", () => {
     const { battle, prince } = makeBattle();
-    Object.assign(prince, { move: 2.6, speed: 0 });
+    Object.assign(prince, { move: 2.6, chargeDistance: 2.5, speed: 0 });
     const victims = [];
     for (const [x, y, card] of [[4, 19.9, "knight"], [4.8, 19.9, "knight"], [4.4, 19.8, "minions"]] as [number, number, "knight" | "minions"][]) {
       battle.players.red.hand[0] = card;

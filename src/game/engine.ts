@@ -1,3 +1,4 @@
+import { chargeRange, chargedAttackDamage, resetMovement } from "./charge";
 import { advanceMovement } from "./movement";
 import { isPlayableCard } from "./playable-cards";
 import { LOCAL_REPLAY_CARDS } from "./replay-family";
@@ -126,6 +127,8 @@ export interface Entity extends Point {
   dashCooldown?: number;
   attack: number;
   move: number;
+  /** Rules 17: own movement in tiles, excluding forced displacement. */
+  chargeDistance?: number;
   king?: boolean;
   active: boolean;
   activation?: number;
@@ -210,7 +213,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -290,7 +293,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 16;
+    this.rulesVersion = r?.version ?? 17;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -783,6 +786,8 @@ export class Battle {
       attack: 0,
       ...(id === "sparky" ? { sparkyCharge: 0 } : {}),
       move: 0,
+      ...(this.rulesVersion >= 17 && Number.isFinite(chargeRange(id))
+        ? { chargeDistance: 0 } : {}),
       active: true,
       lifetime: legacyBuilding?.lifetime ?? c.lifetime,
       spawnTimer: id === "night-witch" ? nightWitch.spawn.pause :
@@ -1017,6 +1022,7 @@ export class Battle {
             cooldown: 0.4,
             attack: 0,
             move: 0,
+            ...(entity.chargeDistance !== undefined ? { chargeDistance: 0 } : {}),
             pendingAttack: undefined,
             clone: true,
           });
@@ -1315,7 +1321,7 @@ export class Battle {
         if (e.cooldown <= 0) {
           const damage =
             e.damage * (e.card === "prince" && e.move >= 2.3 ? 2 : 1);
-          e.move = 0;
+          resetMovement(e);
           e.cooldown = e.interval;
           e.attack = e.interval;
           this.beginAudio(e);
@@ -1537,7 +1543,7 @@ export class Battle {
           e.sparkyCharge = 0;
           e.cooldown = sparky.sourceLoadTime;
         }
-        e.move = 0;
+        resetMovement(e);
         continue;
       }
       if (!e.active) {
@@ -1673,7 +1679,7 @@ export class Battle {
       }
       const target = this.acquireTarget(e);
       if (!target) {
-        e.move = 0;
+        resetMovement(e);
         continue;
       }
       if (e.card === "bandit" && (e.dashCooldown ?? 0) <= 1e-8 &&
@@ -1682,7 +1688,7 @@ export class Battle {
         if (distance >= bandit.dash.minimum && distance <= bandit.dash.maximum) {
           e.dash = { target: target.id, elapsed: 0,
             remaining: bandit.dash.maximum / bandit.dash.speed + STEP };
-          e.move = 0;
+          resetMovement(e);
           this.emitAudio("dash-start", e.team, "bandit", e.id);
           this.emitAudio("dash-travel", e.team, "bandit", e.id);
           this.emit("spell", e.team, e.x, e.y, "bandit", e.id,
@@ -1692,12 +1698,8 @@ export class Battle {
       }
       if (this.inRange(e, target)) {
         if (e.cooldown <= 1e-8) {
-          const damage = e.card === "battle-ram" && e.move >= battleRam.chargeRange
-            ? Math.round((battleRam.sourceChargeDamage * 218) / 100)
-            : e.card === "dark-prince" && e.move >= darkPrince.chargeRange
-            ? Math.round(darkPrince.sourceChargeDamage * 1.1 ** 5)
-            : e.damage * (e.card === "prince" && e.move >= 2.3 ? 2 : 1);
-          e.move = 0;
+          const damage = chargedAttackDamage(e);
+          resetMovement(e);
           e.cooldown = e.interval;
           e.attack = e.interval;
           e.pendingAttack = {
@@ -1723,7 +1725,7 @@ export class Battle {
       e.dash = undefined;
       e.dashCooldown = bandit.dash.cooldown;
       e.cooldown = e.interval;
-      e.move = 0;
+      resetMovement(e);
       this.emitAudio("dash-end", e.team, "bandit", e.id);
       this.emit("spell", e.team, e.x, e.y, "bandit", e.id,
         { effect: "dash-end:bandit" });
@@ -1751,7 +1753,7 @@ export class Battle {
     if (!target || !this.inRange(e, target)) {
       this.cancelAttack(e);
       if (target) this.moveToward(e, target);
-      else e.move = 0;
+      else resetMovement(e);
       return;
     }
     if (!e.inferno || e.inferno.target !== target.id) {
@@ -1765,7 +1767,7 @@ export class Battle {
       this.beginAudio(e);
     }
     const lock = e.inferno;
-    e.move = 0;
+    resetMovement(e);
     lock.elapsed += STEP;
     lock.stage =
       lock.elapsed >= source.stageDurations[0] + source.stageDurations[1]
@@ -2272,7 +2274,7 @@ export class Battle {
           if (p.stun && !e.dash) {
             e.stun = Math.max(e.stun, p.stun);
             this.cancelAttack(e);
-            e.move = 0;
+            resetMovement(e);
           }
           if (p.slow) {
             e.slow ??= { remaining: 0 };
@@ -2343,7 +2345,7 @@ export class Battle {
     e.x = x;
     e.y = y;
     this.cancelAttack(e);
-    e.move = 0;
+    resetMovement(e);
   }
   private moveToward(e: Entity, target: Entity) {
     advanceMovement(e, target);

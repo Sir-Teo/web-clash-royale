@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
+import chargeFilter from "../../src/render/charge-filter-data.json" with { type: "json" };
 
 test("Knight and Prince leave native ground dust while moving on desktop and phone", async ({
   page,
@@ -67,7 +68,11 @@ test("Knight and Prince leave native ground dust while moving on desktop and pho
   await expect(marker.locator("svg text")).toHaveText("Charge!");
   for (let i = 0; i < 5 && (await filter())[0]?.frame < 24; i++)
     await step();
-  expect((await filter())[0].color[0]).toBeGreaterThanOrEqual(62);
+  const pulse = (await filter())[0];
+  // A 0.1-second sample can pass the peak by one six-frame step.
+  expect(pulse.frame).toBeGreaterThanOrEqual(24);
+  expect(pulse.frame).toBeLessThanOrEqual(30);
+  expect(pulse.color).toEqual(chargeFilter.colors[pulse.frame]);
   await page.screenshot({
     path: info.outputPath("native-prince-charge-filter.png"),
     fullPage: true,

@@ -143,6 +143,25 @@ describe("current card detail stats", () => {
     expect(rows("rage")).not.toHaveProperty("Damage");
   });
 
+  it.each(["prince", "dark-prince", "battle-ram"] as const)(
+    "shows %s charge distance and the damage from a real charged attack",
+    (id) => {
+      const battle = new Battle({ seed: 4, ai: false });
+      battle.entities.forEach((e) => (e.active = false));
+      (battle as any).spawn(id, "blue", 4, 23);
+      const unit = battle.entities.at(-1)!;
+      Object.assign(unit, { deploy: 0, cooldown: 0, speed: 0,
+        chargeDistance: id === "battle-ram" ? 3 : 2.5 });
+      const target = battle.entities.find((e) => e.team === "red" && !e.king)!;
+      Object.assign(target, { x: 4, y: 22, hp: 10000, maxHp: 10000 });
+      expect(rows(id)["Charge distance"]).toBe(`${unit.chargeDistance} tiles`);
+      battle.step();
+      expect(unit.pendingAttack?.damage).toBe(numeric(rows(id)["Charge damage"]));
+      expect(cardDetails(id).note).toContain("doubling movement speed");
+      expect(cardDetails(id).note).toContain("Stun resets the charge");
+    },
+  );
+
   it.each(["guards", "dark-prince"] as const)(
     "shows %s shield health separately and matches a native breaking hit",
     (id) => {

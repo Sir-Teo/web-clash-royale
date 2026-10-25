@@ -9,7 +9,8 @@ it("preserves 184,320 original movement frames across all 48 mobile playable-car
   expect(golden.frames).toBe(120);
   expect(golden.cards).toHaveLength(48);
   expect(golden.cases).toHaveLength(1536);
-  const battle = new Battle({ seed: 12, ai: false });
+  const initial = new Battle({ seed: 12, ai: false });
+  const battle = new Battle({ replay: { ...initial.exportReplay(), version: 16 } });
   const towers = [...battle.entities];
   const blueprints = new Map<string, Entity>();
   const api = battle as unknown as {

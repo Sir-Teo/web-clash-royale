@@ -20,7 +20,7 @@ test("Dark Prince charges with shielded art then loses his shield on desktop and
   for (let i = 0; i < 20 && (await data()).hits < 2; i++) await advance();
   expect((await data()).hits).toBeGreaterThanOrEqual(2);
   expect((await data()).enemyHealth.filter((enemy: any) => enemy.card === "knight")
-    .every((enemy: any) => enemy.hp < 10000)).toBe(true);
+    .every((enemy: any) => enemy.hp === 9533)).toBe(true);
   expect((await data()).enemyHealth.filter((enemy: any) => enemy.card === "minions")
     .every((enemy: any) => enemy.hp === 10000)).toBe(true);
   await page.screenshot({ path: info.outputPath("dark-prince-shield-charge.png"), fullPage: true });

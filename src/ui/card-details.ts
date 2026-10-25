@@ -15,6 +15,7 @@ import log from "../game/log-data.json" with { type: "json" };
 import lightning from "../game/lightning-data.json" with { type: "json" };
 import tornado from "../game/tornado-data.json" with { type: "json" };
 import heal from "../game/heal-data.json" with { type: "json" };
+import { chargeRange, chargedAttackDamage } from "../game/charge";
 
 type StatIcon =
   "heart" | "swords" | "timer" | "scan" | "crosshair" | "users" | "droplet";
@@ -231,12 +232,16 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
     };
   }
   const shield = cardShieldHitpoints(id);
+  const charge = chargeRange(id);
   const note = [
     c.count > 1
       ? "Each troop has its own hitpoints. Damage is per troop, per hit."
       : "",
     shield > 0
       ? "Shield hitpoints are separate. A hit that breaks the shield does not damage the body."
+      : "",
+    Number.isFinite(charge)
+      ? "Charges after moving the listed distance, doubling movement speed. Stun resets the charge."
       : "",
   ]
     .filter(Boolean)
@@ -258,6 +263,14 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
         c.damage,
         "swords",
       ),
+      ...(Number.isFinite(charge)
+        ? [
+            stat("Charge damage", chargedAttackDamage({
+              card: id, damage: c.damage, move: 0, chargeDistance: charge,
+            }), "swords"),
+            stat("Charge distance", tiles(charge), "scan"),
+          ]
+        : []),
       stat("Hit interval", seconds(c.interval), "timer"),
       stat("Range", tiles(c.range), "scan"),
       targets,

@@ -557,6 +557,7 @@ function setup() {
     const attacker = unit("dark-prince", "blue", 4, 21)[0];
     attacker.speed = 0;
     attacker.move = 2.6;
+    attacker.chargeDistance = 2.5;
     for (const [card, x, y] of [
       ["knight", 4, 19.9], ["knight", 4.85, 19.9], ["minions", 5, 19.8],
     ] as [CardId, number, number][]) {
@@ -1204,7 +1205,8 @@ function render(now: number) {
     JSON.stringify({
       chargeCues,
       rams: battle.entities.filter((e) => e.card === "battle-ram")
-        .map((e) => ({ x: e.x, y: e.y, move: e.move, hp: e.hp })),
+        .map((e) => ({ x: e.x, y: e.y, move: e.move,
+          chargeDistance: e.chargeDistance, hp: e.hp })),
       barbarians: battle.entities.filter((e) => e.team === "blue" && e.card === "barbarians")
         .map((e) => ({ x: e.x, y: e.y, deploy: e.deploy })),
       cannon: battle.entities.find((e) => e.team === "red" && e.card === "cannon")?.hp,

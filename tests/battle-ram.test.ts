@@ -52,7 +52,7 @@ describe("archived Battle Ram", () => {
 
   it("ignores troops, charges a building, then releases two Barbarians", () => {
     const { battle, ram } = makeBattle();
-    Object.assign(ram, { move: 3.1, speed: 0 });
+    Object.assign(ram, { move: 3.1, chargeDistance: 3, speed: 0 });
     battle.players.red.hand[0] = "knight";
     battle.players.red.elixir = 10;
     expect(battle.play("red", 0, 4, 10).ok).toBe(true);

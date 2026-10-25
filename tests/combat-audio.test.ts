@@ -453,6 +453,7 @@ describe("canonical combat presentation events", () => {
     const giant = unit(battle, "giant", "red", 4, 20);
     giant.active = false;
     prince.move = 2.4;
+    prince.chargeDistance = 2.5;
     advanceUntil(battle, () =>
       battle.audioEvents.some((e) => e.phase === "impact-special"),
     );

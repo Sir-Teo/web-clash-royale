@@ -127,6 +127,7 @@ describe("combat timing and targeting", () => {
       prince = unit(b, "prince", "blue", 9, 21);
     const target = dummy(b, "knight", "red", 9, 19.9);
     prince.move = 3;
+    prince.chargeDistance = 2.5;
     b.step();
     expect(prince.pendingAttack?.damage).toBe(prince.damage * 2);
     cast(b, "zap", "red", 9, 21);
@@ -433,7 +434,7 @@ describe("versioned battle replay", () => {
     }
     expect(b.winner).not.toBeNull();
     const record = b.exportReplay();
-    expect(record.version).toBe(16);
+    expect(record.version).toBe(17);
     const replay = new Battle({ replay: record });
     for (let i = 0; i < record.duration; i++) replay.step();
     expect(replay.winner).toEqual(b.winner);

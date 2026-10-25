@@ -1,8 +1,7 @@
 import type { Entity, Point, Team } from "../game/engine";
 import { chargeEffect, movementEffect } from "./destruction";
 import type { ChargeEffect, MovementEffect } from "./destruction";
-import darkPrince from "../game/dark-prince-data.json" with { type: "json" };
-import battleRam from "../game/battle-ram-data.json" with { type: "json" };
+import { chargeProgress, isCharging } from "../game/charge";
 
 export interface MovementBurst {
   actor: number;
@@ -18,6 +17,7 @@ interface Track extends Point {
   carried: number;
   step: number;
   charge: number;
+  progress: number;
 }
 
 // The archive names the footstep art, but not the animation marker cadence.
@@ -49,6 +49,7 @@ export class NativeMovementEffects {
           carried: 0,
           step: 0,
           charge: 0,
+          progress: chargeProgress(entity),
         });
         continue;
       }
@@ -73,21 +74,20 @@ export class NativeMovementEffects {
         elapsed <= 4 &&
         distance > 0 &&
         distance <= Math.max(2.5, elapsed * 4);
-      // Charge animation begins when the movement timer passes its threshold.
-      // A coalesced peer frame interpolates it along the path like footsteps.
-      const chargeAt = entity.card === "dark-prince" ? darkPrince.chargeRange :
-        entity.card === "battle-ram" ? battleRam.chargeRange : 2.3;
+      // Progress is normalized across current distance and historical timers.
+      // A coalesced peer frame interpolates the cue along the movement path.
+      const progress = chargeProgress(entity);
       if (
         chargeTravel &&
-        (entity.card === "prince" || entity.card === "dark-prince" || entity.card === "battle-ram") &&
-        previous.moved <= chargeAt &&
-        entity.move > chargeAt
+        (previous.progress < 1 ||
+          (entity.chargeDistance === undefined && previous.progress === 1)) &&
+        isCharging(entity)
       ) {
         const charge = chargeEffect(entity.card);
         if (charge) {
           const fraction = Math.min(
             1,
-            (chargeAt - previous.moved) / (entity.move - previous.moved),
+            (1 - previous.progress) / (progress - previous.progress),
           );
           previous.charge++;
           bursts.push({
@@ -135,6 +135,7 @@ export class NativeMovementEffects {
       previous.y = entity.y;
       previous.time = now;
       previous.moved = entity.move;
+      previous.progress = progress;
     }
     for (const id of this.tracks.keys())
       if (!live.has(id)) this.tracks.delete(id);

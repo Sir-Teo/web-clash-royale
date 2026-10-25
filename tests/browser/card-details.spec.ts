@@ -242,3 +242,28 @@ test("shielded troop details separate body and shield hitpoints without changing
   );
   expect(errors).toEqual([]);
 });
+
+test("charger details show charge damage and distance on a narrow phone", async ({ page }, info) => {
+  if (info.project.name !== "desktop")
+    await page.setViewportSize({ width: 320, height: 568 });
+  const before = await page.evaluate((key) => localStorage.getItem(key), key);
+  await page.locator('[data-nav="cards"]').click();
+  for (const [id, name, damage, distance] of [
+    ["prince", "Prince", "784", "2.5 tiles"],
+    ["dark-prince", "Dark Prince", "467", "2.5 tiles"],
+    ["battle-ram", "Battle Ram", "610", "3 tiles"],
+  ]) {
+    await page.locator("#card-search").fill(name);
+    await page.locator(`[data-collection="${id}"]`).click();
+    await expect(page.locator('[data-card-stat="Charge damage"] b')).toHaveText(damage);
+    await expect(page.locator('[data-card-stat="Charge distance"] b')).toHaveText(distance);
+    await expect(page.locator(".card-rule-note")).toContainText("Stun resets the charge.");
+    await page.locator('[data-card-stat="Charge distance"]').scrollIntoViewIfNeeded();
+    expect(await page.locator(".modal").evaluate((e) => e.scrollWidth > e.clientWidth)).toBe(false);
+    if (id === "dark-prince") await page.screenshot({
+      path: info.outputPath("dark-prince-charge-details.png"), animations: "disabled",
+    });
+    await page.getByRole("button", { name: "Back to collection", exact: true }).click();
+  }
+  expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(before);
+});

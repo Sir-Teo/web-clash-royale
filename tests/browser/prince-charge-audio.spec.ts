@@ -30,7 +30,8 @@ const replay = {
   duration: 360,
 };
 
-test("Prince charge and charged strike play their archived sounds once during a browser replay", async ({
+for (const version of [5, 17])
+  test(`Prince charge and charged strike play their archived sounds once during a version-${version} browser replay`, async ({
   page,
 }) => {
   test.setTimeout(120000);
@@ -52,7 +53,7 @@ test("Prince charge and charged strike play their archived sounds once during a 
           mode: replay.mode,
           winner: "blue",
           crowns: [1, 0],
-          replay,
+          replay: { ...replay, version },
         },
       ],
     },
@@ -93,7 +94,7 @@ test("Prince charge and charged strike play their archived sounds once during a 
   const hits = await playedCombatAudio(page, [chargedHit]);
   expect(hits[0].volume).toBeCloseTo(0.28);
   expect(hits[0].time).toBeGreaterThan(8);
-  expect(hits[0].time).toBeLessThan(10);
+  expect(hits[0].time).toBeLessThan(version === 17 ? 12 : 10);
   await expect
     .poll(() => page.evaluate(() => (window as any).__arena.state.time), {
       timeout: 20000,
@@ -102,7 +103,8 @@ test("Prince charge and charged strike play their archived sounds once during a 
   expect(await playedCombatAudio(page, [chargedHit])).toHaveLength(1);
 });
 
-test("Prince charge voice survives slow browser frames", async ({ page }) => {
+for (const version of [5, 17])
+  test(`Prince charge voice survives slow browser frames under version ${version}`, async ({ page }) => {
   test.setTimeout(150000);
   await observeCombatAudio(page);
   await page.addInitScript(
@@ -125,7 +127,7 @@ test("Prince charge voice survives slow browser frames", async ({ page }) => {
           mode: replay.mode,
           winner: "blue",
           crowns: [1, 0],
-          replay,
+          replay: { ...replay, version },
         },
       ],
     },

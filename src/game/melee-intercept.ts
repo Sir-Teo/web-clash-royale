@@ -81,7 +81,9 @@ export function meleeInterceptTarget(
   const moving = Math.max(0, horizon - wait);
   const rageUntil = Math.max(0, (threat.rage?.remaining ?? 0) - wait);
   const slowUntil = Math.max(0, (threat.slow?.remaining ?? 0) - wait);
-  const chargeAt = threat.card === "battle-ram"
+  const distanceCharge = threat.card === "battle-ram" &&
+    threat.chargeDistance !== undefined;
+  const chargeAt = threat.card === "battle-ram" && !distanceCharge
     ? Math.max(0, battleRam.chargeRange - threat.move) : Infinity;
   // Integrate only changes in the current movement modifiers, bounded by the
   // deployment horizon. No entities or simulation clocks are advanced.
@@ -91,10 +93,21 @@ export function meleeInterceptTarget(
   for (let i = 1; i < boundaries.length; i++) {
     const start = boundaries[i - 1], end = boundaries[i];
     const middle = (start + end) / 2;
-    travel += threat.speed * (end - start) *
-      (middle < rageUntil ? rage.speedMultiplier : 1) *
-      (middle < slowUntil ? iceWizard.speedMultiplier : 1) *
-      (middle > chargeAt ? battleRam.chargeSpeedMultiplier : 1);
+    if (distanceCharge) {
+      const speed = threat.speed *
+        (middle < rageUntil ? rage.speedMultiplier : 1) *
+        (middle < slowUntil ? iceWizard.speedMultiplier : 1);
+      const remaining = Math.max(0,
+        battleRam.chargeRange - threat.chargeDistance! - travel);
+      const walking = Math.min(end - start, remaining / speed);
+      travel += speed * walking + speed * battleRam.chargeSpeedMultiplier *
+        (end - start - walking);
+    } else {
+      travel += threat.speed * (end - start) *
+        (middle < rageUntil ? rage.speedMultiplier : 1) *
+        (middle < slowUntil ? iceWizard.speedMultiplier : 1) *
+        (middle > chargeAt ? battleRam.chargeSpeedMultiplier : 1);
+    }
   }
   const gap = distance(threat, target);
   const advance = Math.min(

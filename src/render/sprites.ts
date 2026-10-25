@@ -1,8 +1,7 @@
+import { isCharging } from "../game/charge";
 import * as T from "three";
 import type { CardId } from "../game/cards";
 import type { Entity } from "../game/engine";
-import darkPrince from "../game/dark-prince-data.json" with { type: "json" };
-import battleRam from "../game/battle-ram-data.json" with { type: "json" };
 import executioner from "../game/executioner-data.json" with { type: "json" };
 import textureAliases from "./texture-aliases.json" with { type: "json" };
 import { facing, selectClip, animationFrame } from "./animation";
@@ -48,7 +47,7 @@ export interface AnimatedSprite {
 }
 export type SpriteState = Pick<
   Entity,
-  "id" | "card" | "team" | "x" | "y" | "attack" | "interval" | "move" | "deploy" | "dash"
+  "id" | "card" | "team" | "x" | "y" | "attack" | "interval" | "move" | "chargeDistance" | "deploy" | "dash"
 > & { animationTime?: number };
 const heights: Partial<Record<SpriteId, number>> = {
   knight: 1.65,
@@ -292,9 +291,7 @@ export class SpriteLibrary {
       e.attack > 0 && !moving
         ? e.card === "executioner" && attackAge >= 1 ? "attacking" : "attack"
         : moving
-          ? (e.card === "prince" && e.move > 2.3) ||
-            (e.card === "dark-prince" && e.move > darkPrince.chargeRange)
-            || (e.card === "battle-ram" && e.move > battleRam.chargeRange)
+          ? isCharging(e)
             ? "charge"
             : "run"
           : "idle";

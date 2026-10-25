@@ -300,6 +300,7 @@ describe("AI emergency Freeze defense", () => {
       hp: 200,
       active: true,
       move: 2.3,
+      chargeDistance: 2.5,
       cooldown: 0,
       target: king.id,
     });
