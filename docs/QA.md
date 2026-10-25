@@ -1588,3 +1588,11 @@ An instrumented comparison against `8c71663` uses the same Arrows/Rage board wit
 All six focused browser cases pass across desktop Chromium and phone WebKit: the pending-Arrows response and both Tornado reservation directions. They preserve accepted commands, real impact outcomes and the defended tower's health. Unit/build checks, comparative probes and rendered checks run separately.
 
 The final Pages-prefixed production/offline check also passes reload, the cached match worker, battle startup, scoped assets and all 278 native combat/death/music files. Root production output is restored afterward. The pack remains 921 URLs/894 unique content groups with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.
+
+## Settings confirmation after a failed storage write
+
+A real `QuotaExceededError` reproduction showed Settings reporting “Settings saved.” while the previous profile remained in local storage. Its confirmation now identifies settings applied for this session when the write fails. Reopened Settings retains the name/audio choices, explains that browser storage is unavailable and points to the working lobby backup export. A later successful save restores the normal saved confirmation and automatic-save note. The in-battle note describes the session limit without pointing to backup controls that are unavailable there.
+
+The change uses the existing storage result and profile/export flow. It adds no persistence format, battle, replay or network changes. TypeScript and the root production build pass; the existing combat unit suite is unchanged. No new unit tests were added for the copy/conditional rendering.
+
+All four focused cases pass across desktop Chromium and phone WebKit, retaining the existing failed-write restore/export flow and adding settings failure/recovery. The new case verifies the saved bytes remain unchanged after failure, the working name/audio preferences survive dialog reopening and export, retry writes the complete profile after recovery, and reload retains it. The 390-pixel phone screenshot was inspected; the longer note wraps inside the dialog. Production/offline checks pass for Pages-prefixed reload, the cached match worker, battle startup, scoped assets and all 278 native combat/death/music files. Root output is restored afterward. No push or deployment was performed.

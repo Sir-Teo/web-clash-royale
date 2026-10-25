@@ -2200,9 +2200,14 @@ function showSettings() {
     screen === "lobby"
       ? `<section class="progress-backup" aria-labelledby="backup-heading"><h3 id="backup-heading">Your progress, to go</h3><p>Save your decks, rewards and battle log to a file, or restore a backup from another browser.</p><div class="backup-actions"><button type="button" class="secondary-button" id="export-progress">${icon("hard-drive-download")} Export progress</button><button type="button" class="secondary-button" id="import-progress">Restore backup ${icon("rotate-ccw")}</button></div><input type="file" id="progress-file" accept=".json,application/json" aria-label="Choose progress backup" hidden/><p class="backup-error" role="alert" hidden></p></section>`
       : "";
+  const saveNote = storageAvailable
+    ? "Progress saves automatically on this browser."
+    : screen === "lobby"
+      ? "Browser storage is unavailable. Export a backup below to keep your progress."
+      : "Browser storage is unavailable. Progress lasts for this session.";
   modal(
     "Make yourself at home",
-    `<form id="settings-form"><label class="field-label" for="player-name">PLAYER NAME</label><input class="name-input" id="player-name" maxlength="18" value="${esc(profile.name)}" required/><div class="setting-row"><div>${icon("volume-2")}<span><b>Sound effects</b><small>Deploys, spells, and a familiar king laugh</small></span></div><label class="switch"><input type="checkbox" id="sound-setting" ${profile.sound ? "checked" : ""}/><span></span></label></div><div class="setting-row"><div>${icon("music-2")}<span><b>Battle music</b><small>The soundtrack to your next victory</small></span></div><label class="switch"><input type="checkbox" id="music-setting" ${profile.music ? "checked" : ""}/><span></span></label></div><div class="setting-row"><div>${icon("maximize")}<span><b>More room for the arena</b><small>Toggle fullscreen mode</small></span></div><button type="button" class="icon-button" id="fullscreen">${icon("expand")}</button></div><div class="save-note">${icon("shield-check")} Progress saves automatically on this browser.</div><button type="submit" class="primary-button">Save settings ${icon("check")}</button></form>`,
+    `<form id="settings-form"><label class="field-label" for="player-name">PLAYER NAME</label><input class="name-input" id="player-name" maxlength="18" value="${esc(profile.name)}" required/><div class="setting-row"><div>${icon("volume-2")}<span><b>Sound effects</b><small>Deploys, spells, and a familiar king laugh</small></span></div><label class="switch"><input type="checkbox" id="sound-setting" ${profile.sound ? "checked" : ""}/><span></span></label></div><div class="setting-row"><div>${icon("music-2")}<span><b>Battle music</b><small>The soundtrack to your next victory</small></span></div><label class="switch"><input type="checkbox" id="music-setting" ${profile.music ? "checked" : ""}/><span></span></label></div><div class="setting-row"><div>${icon("maximize")}<span><b>More room for the arena</b><small>Toggle fullscreen mode</small></span></div><button type="button" class="icon-button" id="fullscreen">${icon("expand")}</button></div><div class="save-note">${icon(storageAvailable ? "shield-check" : "hard-drive-download")}<span>${saveNote}</span></div><button type="submit" class="primary-button">Save settings ${icon("check")}</button></form>`,
     "settings",
   );
   $("#settings-form").insertAdjacentHTML("afterend", backups);
@@ -2260,7 +2265,11 @@ function showSettings() {
     refreshProfile();
     refreshSound();
     closeModal();
-    toast("Settings saved.");
+    toast(
+      storageAvailable
+        ? "Settings saved."
+        : "Settings applied for this session. Browser storage is unavailable.",
+    );
   };
   $("#fullscreen").onclick = () => {
     if (document.fullscreenElement) void document.exitFullscreen();
