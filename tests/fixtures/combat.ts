@@ -258,6 +258,17 @@ function setup() {
       battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
       battle.players.red.elixir = 3;
     }
+  } else if (scenario === "ai-lightning" || scenario === "ai-lightning-king") {
+    if (scenario === "ai-lightning") {
+      for (const [card, x, y] of [["wizard", 4, 9], ["witch", 6, 9], ["musketeer", 5, 11]] as [CardId, number, number][])
+        for (const e of unit(card, "blue", x, y)) Object.assign(e, { active: false, speed: 0 });
+    } else {
+      battle.entities.find((e) => e.team === "blue" && e.king)!.hp = 400;
+      battle.entities.find((e) => e.team === "red" && e.king)!.hp = 100;
+    }
+    battle.players.red.hand = scenario === "ai-lightning" ? ["lightning", "pekka", "pekka", "pekka"] : ["mirror", "lightning", "pekka", "pekka"];
+    battle.players.red.lastPlayed = "lightning";
+    battle.players.red.elixir = scenario === "ai-lightning" ? 6 : 7;
   } else if (scenario === "ai-regulation" || scenario === "ai-regulation-tie") {
     battle.tick = 5295;
     battle.entities.find((e) => e.team === "red" && e.king)!.hp = 100;

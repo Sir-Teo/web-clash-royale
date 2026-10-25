@@ -6,8 +6,15 @@ import poison from "./poison-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
 import { createKingSpellRace, kingRacePriority } from "./king-damage";
 import type { MatchFinisher } from "./match-finisher";
+import { lightningSpellTarget } from "./lightning-targeting";
 
-const DIRECT_SPELLS = new Set<CardId>(["fireball", "arrows", "zap", "rocket"]);
+const DIRECT_SPELLS = new Set<CardId>([
+  "fireball",
+  "arrows",
+  "zap",
+  "rocket",
+  "lightning",
+]);
 export const isDamageSpell = (card: CardId) => DIRECT_SPELLS.has(card);
 export interface SpellTarget extends Point {
   score: number;
@@ -116,6 +123,16 @@ export function damageSpellTarget(
   kingDeadline = Infinity,
   finisher?: MatchFinisher,
 ): SpellTarget | undefined {
+  if (card === "lightning")
+    return lightningSpellTarget(
+      team,
+      entities,
+      projectiles,
+      areas,
+      cost,
+      kingDeadline,
+      finisher,
+    );
   if (!isDamageSpell(card)) return;
   const rules = CARD_MAP[card],
     radius = rules.radius!;

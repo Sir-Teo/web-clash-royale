@@ -9,6 +9,8 @@ import {
 } from "./projectile-impacts";
 import poison from "./poison-data.json" with { type: "json" };
 import rocket from "./rocket-data.json" with { type: "json" };
+import lightning from "./lightning-data.json" with { type: "json" };
+import { lightningStrikes } from "./lightning-strikes";
 
 function poisonPackets(
   target: Entity,
@@ -94,10 +96,10 @@ export function launchedKingDeadline(
 ): number {
   const king = entities.find((e) => e.team === team && e.king && e.hp > 0);
   return king
-    ? kingDeathStep(king, [
-        ...projectileDamagePackets(king, projectiles, entities),
-        ...poisonPackets(king, areas),
-      ])
+    ? kingDeathStep(
+        king,
+        towerDamageForecast(king, projectiles, areas, entities).baseline,
+      )
     : Infinity;
 }
 
@@ -111,7 +113,26 @@ export function towerDamageForecast(
 ) {
   const shots = projectileDamagePackets(target, projectiles, entities);
   const currentPoison = poisonPackets(target, areas);
-  const baseline = [...shots, ...currentPoison];
+  const currentLightning = entities
+    ? areas.flatMap((area, order) =>
+        area.card === "lightning" &&
+        area.team !== target.team &&
+        area.remaining > 0
+          ? lightningStrikes(area.team, area, entities, area)
+              .filter((strike) => strike.entity.id === target.id)
+              .map(({ step }): DamagePacket => ({
+                step,
+                damage:
+                  CARD_MAP.lightning.damage *
+                  lightning.crownTowerDamageFraction,
+                phase: -1,
+                born: 0,
+                order,
+              }))
+          : [],
+      )
+    : [];
+  const baseline = [...shots, ...currentPoison, ...currentLightning];
   const cache = new Map<string, DamagePacket[]>();
   return {
     baseline,
@@ -123,10 +144,18 @@ export function towerDamageForecast(
           radius + target.radius
       )
         return baseline;
+      const strike =
+        card === "lightning" && entities
+          ? lightningStrikes(team, point, entities).find(
+              (hit) => hit.entity.id === target.id,
+            )
+          : undefined;
+      if (card === "lightning" && !strike) return baseline;
       const step =
-        card === "poison"
+        strike?.step ??
+        (card === "poison"
           ? 0
-          : impactSteps(directSpellFlight(card, team, point).duration);
+          : impactSteps(directSpellFlight(card, team, point).duration));
       const key = `${card}:${step}`;
       const known = cache.get(key);
       if (known !== undefined) return known;
@@ -152,12 +181,12 @@ export function towerDamageForecast(
                 damage:
                   CARD_MAP[card].damage *
                   (card === "rocket" ? rocket.crownTowerDamageFraction : 0.4),
-                phase: 1,
+                phase: card === "lightning" ? -1 : 1,
                 born: 0,
-                order: projectiles.length,
+                order: card === "lightning" ? areas.length : projectiles.length,
               },
             ];
-      const result = [...shots, ...packets];
+      const result = [...shots, ...currentLightning, ...packets];
       cache.set(key, result);
       return result;
     },

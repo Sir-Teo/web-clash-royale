@@ -13,6 +13,7 @@ import { fatalKingWindups, finishesKingBefore } from "./king-spell-race";
 import { attackFlight } from "./attack-flight";
 import { launchedKingDeadline } from "./king-damage";
 import { createMatchFinisher, MATCH_DAMAGE_HORIZON } from "./match-finisher";
+import { selectLightningTarget } from "./lightning-strikes";
 import {
   combatTraits,
   COMBAT_STEP,
@@ -1055,16 +1056,13 @@ export class Battle {
           area.hitAt =
             (area.hitAt ?? lightning.strikeInterval) + lightning.strikeInterval;
           const struck = (area.struck ??= []);
-          const target = this.entities
-            .filter(
-              (entity) =>
-                entity.hp > 0 &&
-                entity.team !== area.team &&
-                !this.isHidden(entity) &&
-                !struck.includes(entity.id) &&
-                dist(entity, area) < area.radius + entity.radius,
-            )
-            .sort((a, b) => b.hp - a.hp || a.id - b.id)[0];
+          const target = selectLightningTarget(
+            area.team,
+            area,
+            area.radius,
+            this.entities,
+            struck,
+          );
           if (target) {
             struck.push(target.id);
             const damage =

@@ -234,3 +234,57 @@ for (const scene of ["ai-regulation", "ai-regulation-tie"])
     });
     expect(errors).toEqual([]);
   });
+
+for (const scene of ["ai-lightning", "ai-lightning-king"])
+  test(`${scene}: AI Lightning chooses its three-pulse role on the ordinary timer`, async ({
+    page,
+  }, info) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto(`/tests/fixtures/combat.html?scene=${scene}`);
+    await expect(page.locator("#status")).toContainText(
+      `${expectedEffects} effects`,
+      { timeout: 60000 },
+    );
+    const output = page.locator("#destruction");
+    const state = async () =>
+      JSON.parse((await output.getAttribute("data-ai-areas"))!);
+    const actions = async () =>
+      JSON.parse((await output.getAttribute("data-ai-defense"))!).actions;
+    const impacts = async () =>
+      JSON.parse((await output.getAttribute("data-attack-impacts"))!)
+        .lightning ?? 0;
+    for (let i = 0; i < 2; i++) {
+      const before = (await state()).time;
+      await page.locator("#second").click();
+      await expect
+        .poll(async () => (await state()).time)
+        .toBeGreaterThan(before + 0.99);
+    }
+    expect(await actions()).toEqual([]);
+    await page.locator("#second").click();
+    await expect.poll(async () => (await actions()).length).toBe(1);
+    expect((await actions())[0].card).toBe("lightning");
+    await expect.poll(impacts).toBe(1);
+    await page.screenshot({
+      path: info.outputPath(`${scene}.png`),
+      fullPage: true,
+    });
+    if (scene === "ai-lightning") {
+      await page.locator("#second").click();
+      await expect.poll(impacts).toBe(3);
+      expect((await state()).entities).toEqual([]);
+      expect((await state()).winner).toBeNull();
+    } else {
+      expect((await state()).winner).toBe("red");
+      expect((await state()).reason).toBe("King Tower destroyed");
+      expect((await state()).kings.find((e: any) => e.team === "red").hp).toBe(
+        100,
+      );
+      expect((await state()).crowns.red).toBe(3);
+      const spells = JSON.parse((await output.getAttribute("data-ai-spells"))!);
+      expect(spells.hand).toContain("mirror");
+    }
+    expect(await actions()).toHaveLength(1);
+    expect(errors).toEqual([]);
+  });

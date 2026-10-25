@@ -113,26 +113,52 @@ export function createMatchFinisher(
   const baseline = ending(towers.map((t) => t.state(t.forecast.baseline)));
   const outcomeAt = (card: CardId, point: Point) =>
     ending(towers.map((t) => t.state(t.forecast.withSpell(card, team, point))));
+  const assess = (
+    proposal: Ending | undefined,
+    cost: number,
+    value: number,
+  ) => {
+    const wins =
+      proposal?.winner === team &&
+      (baseline?.winner !== team || proposal.step < baseline.step);
+    const draws = proposal?.winner === "draw" && baseline?.winner === enemy;
+    const survives = !proposal && baseline?.winner === enemy;
+    if (!wins && !draws && !survives) return;
+    const step = proposal?.step ?? baseline!.step;
+    return {
+      score:
+        (wins ? 30_000 : draws ? 20_000 : 15_000) -
+        step * 16 -
+        cost +
+        Math.min(0.1, value * 0.001),
+      matchDecisionStep: proposal?.step ?? Infinity,
+    };
+  };
   return {
     baseline,
     outcomeAt,
+    evaluateDamage(
+      packets: ReadonlyMap<number, readonly DamagePacket[]>,
+      cost: number,
+      value: number,
+    ) {
+      return assess(
+        ending(
+          towers.map((t) => {
+            const hits = packets.get(t.entity.id);
+            return t.state(
+              hits?.length
+                ? [...t.forecast.baseline, ...hits]
+                : t.forecast.baseline,
+            );
+          }),
+        ),
+        cost,
+        value,
+      );
+    },
     evaluate(card: CardId, point: Point, cost: number, value: number) {
-      const proposal = outcomeAt(card, point);
-      const wins =
-        proposal?.winner === team &&
-        (baseline?.winner !== team || proposal.step < baseline.step);
-      const draws = proposal?.winner === "draw" && baseline?.winner === enemy;
-      const survives = !proposal && baseline?.winner === enemy;
-      if (!wins && !draws && !survives) return;
-      const step = proposal?.step ?? baseline!.step;
-      return {
-        score:
-          (wins ? 30_000 : draws ? 20_000 : 15_000) -
-          step * 16 -
-          cost +
-          Math.min(0.1, value * 0.001),
-        matchDecisionStep: proposal?.step ?? Infinity,
-      };
+      return assess(outcomeAt(card, point), cost, value);
     },
   };
 }
