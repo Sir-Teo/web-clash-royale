@@ -1707,3 +1707,16 @@ All twelve focused browser cases pass across desktop Chromium and phone WebKit. 
 The final isolated full suite passes 1,553 tests across 167 files. TypeScript and the production build pass. Historical fixture regeneration from the pinned commit also passes independently of the working-tree engine.
 
 Final Pages-prefixed production/offline checks pass reload, the cached match worker, a rules-18 battle and all 278 native combat/death/music files. Root production output is restored afterward, with cache version `e6b1252fdd63`. The pack remains 921 URLs and 894 unique content groups, with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.
+
+## Native card-group deployment filter offsets
+
+The deployment trace now retains twenty bounded native instruction blocks, including the `SummonNumber` column, loader, accessor and card-summon arguments. They link the actual card body count to the homogeneous visual-delay formula; the secondary-character pointer selects a separate angular branch. `scripts/import-deployment-visual.mjs` pins the character table, combat aliases and trace, retaining visual offsets for 20 actor profiles. Three Musketeers uses 0/100/200 ms; Minion Horde uses 0/66/133/200/266/333 ms. Goblin Gang's mixed branch is excluded.
+
+Optional per-body `deployVisualDelay` metadata drives the existing authored color/matrix filter. It is emitted only for nonzero offsets in origin rules 18, keeping single bodies and origin rules 1–17/local records unchanged. Earlier rules-18 recordings receive the updated filter presentation on replay. Body death, same-tick Mirror groups, late assets, seeking and guest projection preserve each body's own clock. The browser holds the first filter pose until its offset; full native pre-start visibility is not reconstructed. Summons and death spawns keep their existing visual timing. Combat deployment and outcomes, simulation IDs/RNG, and replay/wire/profile versions do not change.
+
+Seventeen new checks cover source/output hashes, both teams' actual card births and guest offsets, alias counts, independent Mirror groups, a missing first body, mixed/single exclusions, filter material clocks, late assets, clearing/rebuilding and Clone cleanup. The independent `--presentation --check` mode rebuilds commit `2c79362`: all fourteen retained checkpoints across a complete 3,919-tick rules-18 match match after excluding only the new visual field. The earlier 17-match fixture regenerates unchanged and its complete state checks still pass.
+
+All eight focused browser cases pass across desktop Chromium and phone WebKit, covering independent Three Musketeers/Minion Horde/Archers filter frames, native timeline/dust timing, pause/cleanup and one-second combat readiness for the five corrected troop cards. Both Three Musketeers screenshots were inspected. The isolated full suite passes 1,570 tests across 168 files; TypeScript and the production build pass. Browser and unit/build checks run separately.
+
+
+Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup and all 278 native combat/death/music files. Root production output is restored afterward with cache version `4f5770454f26`. The pack remains 921 URLs and 894 unique content groups, with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.

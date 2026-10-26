@@ -299,12 +299,153 @@
         "218539:\t5d                   \tpop    ebp",
         "21853a:\tc3                   \tret"
       ]
+    },
+    {
+      "name": "summonNumberColumn",
+      "start": "0x201592",
+      "end": "0x2015bd",
+      "interpretation": "SummonNumber string at 0x61a2b5 resolves to the cached column at GOT+0x1cac.",
+      "instructions": [
+        "201592:\t8d 83 a1 18 e6 ff    \tlea    eax,[ebx-0x19e75f]",
+        "201598:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "20159c:\t8d bc 24 f0 01 00 00 \tlea    edi,[esp+0x1f0]",
+        "2015a3:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "2015a6:\te8 f5 7d 09 00       \tcall   2993a0",
+        "2015ab:\t89 7c 24 04          \tmov    DWORD PTR [esp+0x4],edi",
+        "2015af:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "2015b2:\te8 e9 13 15 00       \tcall   3529a0",
+        "2015b7:\t89 83 ac 1c 00 00    \tmov    DWORD PTR [ebx+0x1cac],eax"
+      ]
+    },
+    {
+      "name": "summonNumberLoader",
+      "start": "0x200a4d",
+      "end": "0x200a72",
+      "interpretation": "The cached SummonNumber column is read, clamped to at least one and stored at SpellData+0x5c.",
+      "instructions": [
+        "200a4d:\t8b 83 ac 1c 00 00    \tmov    eax,DWORD PTR [ebx+0x1cac]",
+        "200a53:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "200a57:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "200a5a:\te8 7b 47 fe ff       \tcall   1e51da",
+        "200a5f:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "200a63:\tc7 04 24 01 00 00 00 \tmov    DWORD PTR [esp],0x1",
+        "200a6a:\te8 a1 b2 15 00       \tcall   35bd10",
+        "200a6f:\t89 47 5c             \tmov    DWORD PTR [edi+0x5c],eax"
+      ]
+    },
+    {
+      "name": "summonNumberAccessor",
+      "start": "0x202682",
+      "end": "0x202692",
+      "interpretation": "The accessor returns SpellData+0x5c, the card's SummonNumber.",
+      "instructions": [
+        "202682:\t55                   \tpush   ebp",
+        "202683:\t89 e5                \tmov    ebp,esp",
+        "202685:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "202688:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "20268b:\t8b 40 5c             \tmov    eax,DWORD PTR [eax+0x5c]",
+        "20268e:\t89 ec                \tmov    esp,ebp",
+        "202690:\t5d                   \tpop    ebp",
+        "202691:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "summonCountCall",
+      "start": "0x220dd0",
+      "end": "0x220ddf",
+      "interpretation": "The card summon path reads SummonNumber and retains it at stack+0x88.",
+      "instructions": [
+        "220dd0:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "220dd3:\te8 aa 18 fe ff       \tcall   202682",
+        "220dd8:\t89 84 24 88 00 00 00 \tmov    DWORD PTR [esp+0x88],eax"
+      ]
+    },
+    {
+      "name": "summonGroupCall",
+      "start": "0x220e89",
+      "end": "0x220efd",
+      "interpretation": "The retained card count is passed as the group count at argument stack+0x14 to 0x1cc99c; the secondary character pointer is passed at stack+0x30.",
+      "instructions": [
+        "220e89:\t8b 44 24 64          \tmov    eax,DWORD PTR [esp+0x64]",
+        "220e8d:\t89 44 24 30          \tmov    DWORD PTR [esp+0x30],eax",
+        "220e91:\t8d 84 24 98 00 00 00 \tlea    eax,[esp+0x98]",
+        "220e98:\t89 44 24 2c          \tmov    DWORD PTR [esp+0x2c],eax",
+        "220e9c:\t8b 44 24 70          \tmov    eax,DWORD PTR [esp+0x70]",
+        "220ea0:\t89 44 24 24          \tmov    DWORD PTR [esp+0x24],eax",
+        "220ea4:\t8b 44 24 50          \tmov    eax,DWORD PTR [esp+0x50]",
+        "220ea8:\t89 44 24 20          \tmov    DWORD PTR [esp+0x20],eax",
+        "220eac:\t8b 44 24 60          \tmov    eax,DWORD PTR [esp+0x60]",
+        "220eb0:\t89 44 24 1c          \tmov    DWORD PTR [esp+0x1c],eax",
+        "220eb4:\t8b 44 24 7c          \tmov    eax,DWORD PTR [esp+0x7c]",
+        "220eb8:\t89 44 24 18          \tmov    DWORD PTR [esp+0x18],eax",
+        "220ebc:\t8b 84 24 88 00 00 00 \tmov    eax,DWORD PTR [esp+0x88]",
+        "220ec3:\t89 44 24 14          \tmov    DWORD PTR [esp+0x14],eax",
+        "220ec7:\t8b 84 24 80 00 00 00 \tmov    eax,DWORD PTR [esp+0x80]",
+        "220ece:\t89 44 24 10          \tmov    DWORD PTR [esp+0x10],eax",
+        "220ed2:\t8b 84 24 84 00 00 00 \tmov    eax,DWORD PTR [esp+0x84]",
+        "220ed9:\t89 44 24 0c          \tmov    DWORD PTR [esp+0xc],eax",
+        "220edd:\t8b 44 24 74          \tmov    eax,DWORD PTR [esp+0x74]",
+        "220ee1:\t89 44 24 08          \tmov    DWORD PTR [esp+0x8],eax",
+        "220ee5:\t89 74 24 04          \tmov    DWORD PTR [esp+0x4],esi",
+        "220ee9:\t8b 44 24 6c          \tmov    eax,DWORD PTR [esp+0x6c]",
+        "220eed:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "220ef0:\tc7 44 24 28 01 00 00 \tmov    DWORD PTR [esp+0x28],0x1",
+        "220ef7:\t00",
+        "220ef8:\te8 9f ba fa ff       \tcall   1cc99c"
+      ]
+    },
+    {
+      "name": "secondaryCharacterLoader",
+      "start": "0x200cbe",
+      "end": "0x200cf2",
+      "interpretation": "SummonCharacterSecond string at 0x61a160 is resolved to a character pointer at SpellData+0x28.",
+      "instructions": [
+        "200cbe:\t8d 83 4c 17 e6 ff    \tlea    eax,[ebx-0x19e8b4]",
+        "200cc4:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "200cc8:\t8d b4 24 10 02 00 00 \tlea    esi,[esp+0x210]",
+        "200ccf:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "200cd2:\te8 c9 86 09 00       \tcall   2993a0",
+        "200cd7:\t89 74 24 04          \tmov    DWORD PTR [esp+0x4],esi",
+        "200cdb:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "200cde:\te8 2d 41 fe ff       \tcall   1e4e10",
+        "200ce3:\t89 7c 24 04          \tmov    DWORD PTR [esp+0x4],edi",
+        "200ce7:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "200cea:\te8 3d 87 fe ff       \tcall   1e942c",
+        "200cef:\t89 47 28             \tmov    DWORD PTR [edi+0x28],eax"
+      ]
+    },
+    {
+      "name": "secondaryCharacterAccessor",
+      "start": "0x2027e4",
+      "end": "0x2027f4",
+      "interpretation": "Returns SpellData+0x28, the secondary character pointer.",
+      "instructions": [
+        "2027e4:\t55                   \tpush   ebp",
+        "2027e5:\t89 e5                \tmov    ebp,esp",
+        "2027e7:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "2027ea:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "2027ed:\t8b 40 28             \tmov    eax,DWORD PTR [eax+0x28]",
+        "2027f0:\t89 ec                \tmov    esp,ebp",
+        "2027f2:\t5d                   \tpop    ebp",
+        "2027f3:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "secondaryCharacterCall",
+      "start": "0x220e49",
+      "end": "0x220e55",
+      "interpretation": "The secondary character pointer is read and retained at stack+0x64 before the group call. Its presence selects the angular/mixed visual-delay branch.",
+      "instructions": [
+        "220e49:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "220e4c:\te8 93 19 fe ff       \tcall   2027e4",
+        "220e51:\t89 44 24 64          \tmov    DWORD PTR [esp+0x64],eax"
+      ]
     }
   ],
   "limitations": [
     "Static disassembly only; the original executable was not run.",
     "Names describe inferred roles in a stripped binary. Addresses and bounded instructions are retained for inspection.",
     "These blocks establish the ordinary summoned-group path. Angular mixed formations, custom overrides, every spawn source and native animation scheduling are not fully reconstructed.",
-    "Browser rules 18 correct the five direct card delays, the two hut troop delays and Night Witch Bat delays. Native visual staggering remains separate future presentation work; older origin and local replays retain their clocks."
+    "Browser rules 18 correct the five direct card delays, the two hut troop delays and Night Witch Bat delays. Card-group filter offsets are supplied separately; full native pre-start visibility and non-card spawn presentation remain unreconstructed. Older origin and local replays retain their clocks."
   ]
 }

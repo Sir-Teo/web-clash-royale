@@ -48,7 +48,10 @@ export class NativeDeployFilter {
     for (const entity of entities) {
       const legendary = legendaryCards.has(entity.card);
       const miner = minerCards.has(entity.card);
-      const frame = deployFilterFrame(entity.age, legendary, miner);
+      // Hold the first authored pose until this body's visual offset elapses.
+      const visualAge = entity.age < 0 ? entity.age :
+        Math.max(0, entity.age - (entity.deployVisualDelay ?? 0));
+      const frame = deployFilterFrame(visualAge, legendary, miner);
       if (
         entity.kind !== "troop" ||
         entity.hp <= 0 ||

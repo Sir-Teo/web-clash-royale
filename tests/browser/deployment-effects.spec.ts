@@ -111,3 +111,46 @@ test("native deployment dust follows per-unit source counts, timing, pause and c
   }
   expect(errors).toEqual([]);
 });
+
+test("native card groups play independent staggered deployment filter frames", async ({ page }, info) => {
+  test.setTimeout(120000);
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/tests/fixtures/combat.html?scene=deployment");
+  await expect(page.locator("#status")).toContainText(`${expectedEffects} effects`, { timeout: 60000 });
+  const units = async () => JSON.parse(
+    (await page.locator("#destruction").getAttribute("data-deployment-timing"))!,
+  ) as { id: number; team: string; age: number; deploy: number; delay: number }[];
+  const filters = async () => JSON.parse(
+    (await page.locator("#destruction").getAttribute("data-deploy-filter"))!,
+  ) as { id: number; frame: number }[];
+  for (const [id, delays] of [
+    ["three-musketeers", [0, 0.1, 0.2]],
+    ["minion-horde", [0, 0.066, 0.133, 0.2, 0.266, 0.333]],
+    ["archers", [0, 0.2]],
+  ] as const) {
+    await page.locator("#reset").click();
+    await expect.poll(async () => (await units()).length).toBe(0);
+    await page.locator("#death-card").selectOption(id);
+    await page.locator("#spawn").click();
+    await expect.poll(async () => (await filters()).length).toBe(delays.length * 2);
+    for (const team of ["blue", "red"])
+      expect((await units()).filter((e) => e.team === team).map((e) => e.delay)).toEqual(delays);
+    expect((await filters()).every((e) => e.frame === 0)).toBe(true);
+    for (let step = 0; step < 2; step++) await page.locator("#step").click();
+    await expect.poll(async () => (await units()).every((e) => e.age > 0.19)).toBe(true);
+    const frames = new Map((await filters()).map((e) => [e.id, e.frame]));
+    for (const unit of await units()) {
+      const expected = Math.max(0, (unit.age - unit.delay) * 60);
+      expect(frames.get(unit.id)).toBeGreaterThanOrEqual(Math.floor(expected) - 1);
+      expect(frames.get(unit.id)).toBeLessThanOrEqual(Math.floor(expected) + 1);
+      expect(unit.deploy).toBeGreaterThan(0.7);
+    }
+    if (id === "three-musketeers")
+      await page.screenshot({ path: info.outputPath("three-musketeers-staggered-filter.png"), fullPage: true });
+    await page.locator("#second").click();
+    await expect.poll(async () => (await filters()).length).toBe(0);
+    expect((await units()).every((e) => e.deploy <= 0)).toBe(true);
+  }
+  expect(errors).toEqual([]);
+});

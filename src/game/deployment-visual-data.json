@@ -1,0 +1,104 @@
+{
+  "cards": {
+    "archers": {
+      "source": "Archer",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "guards": {
+      "source": "SkeletonWarrior",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "musketeer": {
+      "source": "Musketeer",
+      "delayMs": 300,
+      "deployMs": 1000
+    },
+    "three-musketeers": {
+      "source": "Musketeer",
+      "delayMs": 300,
+      "deployMs": 1000
+    },
+    "goblins": {
+      "source": "Goblin",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "barbarians": {
+      "source": "Barbarian",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "elite-barbarians": {
+      "source": "AngryBarbarian",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "dart-goblin": {
+      "source": "BlowdartGoblin",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "ice-spirit": {
+      "source": "IceSpirits",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "fire-spirits": {
+      "source": "FireSpirits",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "princess": {
+      "source": "Princess",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "executioner": {
+      "source": "AxeMan",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "lumberjack": {
+      "source": "RageBarbarian",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "spear-goblins": {
+      "source": "SpearGoblin",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "skeletons": {
+      "source": "Skeleton",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "skeleton-army": {
+      "source": "Skeleton",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "hog-rider": {
+      "source": "HogRider",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "minions": {
+      "source": "Minion",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "minion-horde": {
+      "source": "Minion",
+      "delayMs": 400,
+      "deployMs": 1000
+    },
+    "bats": {
+      "source": "Bat",
+      "delayMs": 400,
+      "deployMs": 1000
+    }
+  }
+}

@@ -86,6 +86,56 @@ const ranges = [
     "Returns max(DeployTime minus unit countdown at +0x90, 0).",
   ],
 ];
+ranges.push(
+  [
+    "summonNumberColumn",
+    0x201592,
+    0x2015bd,
+    "SummonNumber string at 0x61a2b5 resolves to the cached column at GOT+0x1cac.",
+  ],
+  [
+    "summonNumberLoader",
+    0x200a4d,
+    0x200a72,
+    "The cached SummonNumber column is read, clamped to at least one and stored at SpellData+0x5c.",
+  ],
+  [
+    "summonNumberAccessor",
+    0x202682,
+    0x202692,
+    "The accessor returns SpellData+0x5c, the card's SummonNumber.",
+  ],
+  [
+    "summonCountCall",
+    0x220dd0,
+    0x220ddf,
+    "The card summon path reads SummonNumber and retains it at stack+0x88.",
+  ],
+  [
+    "summonGroupCall",
+    0x220e89,
+    0x220efd,
+    "The retained card count is passed as the group count at argument stack+0x14 to 0x1cc99c; the secondary character pointer is passed at stack+0x30.",
+  ],
+  [
+    "secondaryCharacterLoader",
+    0x200cbe,
+    0x200cf2,
+    "SummonCharacterSecond string at 0x61a160 is resolved to a character pointer at SpellData+0x28.",
+  ],
+  [
+    "secondaryCharacterAccessor",
+    0x2027e4,
+    0x2027f4,
+    "Returns SpellData+0x28, the secondary character pointer.",
+  ],
+  [
+    "secondaryCharacterCall",
+    0x220e49,
+    0x220e55,
+    "The secondary character pointer is read and retained at stack+0x64 before the group call. Its presence selects the angular/mixed visual-delay branch.",
+  ],
+);
 const blocks = ranges.map(([name, start, end, interpretation]) => ({
   name,
   start: hex(start),
@@ -146,7 +196,7 @@ const evidence = {
     "Static disassembly only; the original executable was not run.",
     "Names describe inferred roles in a stripped binary. Addresses and bounded instructions are retained for inspection.",
     "These blocks establish the ordinary summoned-group path. Angular mixed formations, custom overrides, every spawn source and native animation scheduling are not fully reconstructed.",
-    "Browser rules 18 correct the five direct card delays, the two hut troop delays and Night Witch Bat delays. Native visual staggering remains separate future presentation work; older origin and local replays retain their clocks.",
+    "Browser rules 18 correct the five direct card delays, the two hut troop delays and Night Witch Bat delays. Card-group filter offsets are supplied separately; full native pre-start visibility and non-card spawn presentation remain unreconstructed. Older origin and local replays retain their clocks.",
   ],
 };
 writeFileSync(

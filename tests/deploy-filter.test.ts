@@ -28,6 +28,46 @@ function sprite(): AnimatedSprite {
 }
 
 describe("native troop deployment filter", () => {
+  it("holds each group's first pose until its offset, catches up after asset load and clears on clone", () => {
+    const filter = new NativeDeployFilter();
+    const first = sprite(), second = sprite();
+    const entities = [
+      { id: 1, card: "archers", kind: "troop", hp: 100, age: 0.1 },
+      { id: 2, card: "archers", kind: "troop", hp: 100, age: 0.1, deployVisualDelay: 0.2 },
+    ] as Entity[];
+    const sprites = new Map([[1, first], [2, second]]);
+    filter.update(entities, () => undefined);
+    expect(filter.state).toEqual([]);
+    const update = () => {
+      for (const s of sprites.values()) {
+        s.mesh.scale.set(1, 1, 1);
+        s.mesh.position.y = 0;
+      }
+      const before = structuredClone(entities);
+      filter.update(entities, (id) => sprites.get(id));
+      expect(entities).toEqual(before);
+    };
+    update();
+    expect(filter.state.map((e) => e.frame)).toEqual([6, 0]);
+    entities.forEach((e) => (e.age = 0.4));
+    update();
+    expect(filter.state.map((e) => e.frame)).toEqual([24, 12]);
+    filter.clear();
+    update();
+    expect(filter.state.map((e) => e.frame)).toEqual([24, 12]);
+    entities[1].clone = true;
+    update();
+    expect(filter.state.map((e) => e.id)).toEqual([1]);
+    expect(second.mesh.material).toBe(second.asset.materials);
+    entities[0].age = 0.8;
+    update();
+    expect(filter.state).toEqual([]);
+    expect(first.mesh.material).toBe(first.asset.materials);
+    for (const s of sprites.values()) {
+      s.mesh.geometry.dispose();
+      s.asset.materials.forEach((m) => m.dispose());
+    }
+  });
   it("pins the source matrix/color sequence and all 39 curated troop bindings", () => {
     const manifest = JSON.parse(
       readFileSync("reference/client/deploy-filter-manifest.json", "utf8"),

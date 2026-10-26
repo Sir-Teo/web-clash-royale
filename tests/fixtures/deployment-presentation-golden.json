@@ -1,0 +1,394 @@
+{
+  "sourceCommit": "2c79362",
+  "stateFields": [
+    "tick",
+    "entities",
+    "projectiles",
+    "areas",
+    "events",
+    "audio",
+    "players",
+    "winner",
+    "reason",
+    "actions",
+    "randomState"
+  ],
+  "cases": [
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 18,
+        "seed": 1747,
+        "mode": "classic",
+        "deck": [
+          "three-musketeers",
+          "archers",
+          "minion-horde",
+          "skeleton-army",
+          "spear-goblins",
+          "goblins",
+          "guards",
+          "bats"
+        ],
+        "enemyDeck": [
+          "fire-spirits",
+          "elite-barbarians",
+          "minions",
+          "knight",
+          "mirror",
+          "clone",
+          "rage",
+          "archers"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "spear-goblins",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "rage",
+            "x": 4,
+            "y": 20
+          },
+          {
+            "tick": 81,
+            "team": "blue",
+            "card": "guards",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 81,
+            "team": "red",
+            "card": "knight",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 324,
+            "team": "blue",
+            "card": "archers",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 324,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 486,
+            "team": "red",
+            "card": "fire-spirits",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 648,
+            "team": "blue",
+            "card": "goblins",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 729,
+            "team": "red",
+            "card": "clone",
+            "x": 14,
+            "y": 20
+          },
+          {
+            "tick": 810,
+            "team": "blue",
+            "card": "skeleton-army",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 972,
+            "team": "blue",
+            "card": "bats",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 972,
+            "team": "red",
+            "card": "archers",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1134,
+            "team": "blue",
+            "card": "spear-goblins",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1296,
+            "team": "blue",
+            "card": "guards",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1296,
+            "team": "red",
+            "card": "knight",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1377,
+            "team": "red",
+            "card": "rage",
+            "x": 14,
+            "y": 20
+          },
+          {
+            "tick": 1620,
+            "team": "blue",
+            "card": "goblins",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1620,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1782,
+            "team": "blue",
+            "card": "archers",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1944,
+            "team": "blue",
+            "card": "skeleton-army",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1944,
+            "team": "red",
+            "card": "clone",
+            "x": 4,
+            "y": 20
+          },
+          {
+            "tick": 2025,
+            "team": "red",
+            "card": "fire-spirits",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2106,
+            "team": "blue",
+            "card": "bats",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2268,
+            "team": "blue",
+            "card": "spear-goblins",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2268,
+            "team": "red",
+            "card": "archers",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2592,
+            "team": "blue",
+            "card": "goblins",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2592,
+            "team": "red",
+            "card": "rage",
+            "x": 4,
+            "y": 20
+          },
+          {
+            "tick": 2754,
+            "team": "blue",
+            "card": "guards",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2835,
+            "team": "red",
+            "card": "mirror",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2997,
+            "team": "red",
+            "card": "knight",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3078,
+            "team": "blue",
+            "card": "skeleton-army",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3240,
+            "team": "blue",
+            "card": "archers",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3240,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3402,
+            "team": "blue",
+            "card": "bats",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3483,
+            "team": "red",
+            "card": "clone",
+            "x": 14,
+            "y": 20
+          },
+          {
+            "tick": 3564,
+            "team": "blue",
+            "card": "spear-goblins",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3645,
+            "team": "red",
+            "card": "fire-spirits",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3726,
+            "team": "blue",
+            "card": "goblins",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3807,
+            "team": "red",
+            "card": "rage",
+            "x": 14,
+            "y": 20
+          },
+          {
+            "tick": 3888,
+            "team": "blue",
+            "card": "guards",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3888,
+            "team": "red",
+            "card": "archers",
+            "x": 4,
+            "y": 10
+          }
+        ],
+        "duration": 3919
+      },
+      "checkpoints": [
+        {
+          "tick": 300,
+          "digest": "175e331a915d2016dfce30a92228ed43a1470d8f17a81beaeda0149e65a227e0"
+        },
+        {
+          "tick": 600,
+          "digest": "fd4782d8611088ebb5311303c9f08c33ec13b797ae52c890e3577b0fd369aa83"
+        },
+        {
+          "tick": 900,
+          "digest": "e6767aee8eac493282772e4620c7068b5cc21d65e6a7468da67960932bb8358f"
+        },
+        {
+          "tick": 1200,
+          "digest": "0cf210b5d90a8903a2e92db69b5ada891163baf7df3ef18a8ef685978701b791"
+        },
+        {
+          "tick": 1500,
+          "digest": "3681b75e3cb8e89312a18ae30d648454d101e97e6b7f5dbc443688a1ae50afed"
+        },
+        {
+          "tick": 1800,
+          "digest": "da649b44aa3e6fcd795afae6692840561c83806af8b0441ac1f2c8278710a450"
+        },
+        {
+          "tick": 2100,
+          "digest": "46e74c2f835949df855a78728c1dd39e5dab00c9f943392efea6b8460f8d200a"
+        },
+        {
+          "tick": 2400,
+          "digest": "2c7091e8508796edf91c4e0b9cbcbe13e3a44d0c00c38983fe980eb05cccef5e"
+        },
+        {
+          "tick": 2700,
+          "digest": "4f0bc1653090c938533829a9612423ecc52cfca5c22ff931d2e780ef1782610a"
+        },
+        {
+          "tick": 3000,
+          "digest": "d34a46b1180c679a0e6968bb56eaafc56d51e18c952075154f89549c62449d7d"
+        },
+        {
+          "tick": 3300,
+          "digest": "ca611dfec7af64300b751050696895cef1803af2532e371264b46659b8452692"
+        },
+        {
+          "tick": 3600,
+          "digest": "72a43a0af41afd166bef2266738c7a8315a4d12dbbd9414c66c7bffaca25515b"
+        },
+        {
+          "tick": 3900,
+          "digest": "b497b83513590b185d4ba280b2637d90e0991e87245a2f909c7999049e4d789f"
+        },
+        {
+          "tick": 3919,
+          "digest": "43ffd58e6107c21ea4457b497026dc0fe713064032e3e26e06457f894e3fef2e"
+        }
+      ]
+    }
+  ]
+}

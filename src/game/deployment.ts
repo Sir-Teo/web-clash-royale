@@ -14,6 +14,7 @@ import golem from "./golem-data.json" with { type: "json" };
 import mortar from "./mortar-data.json" with { type: "json" };
 import xBow from "./x-bow-data.json" with { type: "json" };
 import elixirCollector from "./elixir-collector-data.json" with { type: "json" };
+import deploymentVisual from "./deployment-visual-data.json" with { type: "json" };
 
 // Historical default; cards with archived delays keep their own timing.
 export const DEPLOY_TIME = 1;
@@ -33,6 +34,15 @@ export function clonePosition(entity: Point, center: Point, team: Team): Point {
 }
 export const deploymentRadius = (id: CardId) =>
   (collisionRadii.cards as Record<string, number>)[id];
+/** Presentation offset only: does not extend combat deployment. */
+export function deploymentVisualDelay(id: CardId, index: number, count: number) {
+  const row = (deploymentVisual.cards as Record<string, {
+    delayMs: number; deployMs: number;
+  }>)[id];
+  if (!row || !Number.isInteger(index) || !Number.isInteger(count) ||
+      count < 1 || index < 0 || index >= count) return 0;
+  return (Math.trunc(row.delayMs * index / count) % row.deployMs) / 1000;
+}
 export function deploymentTime(id: CardId, rulesVersion = 18): number {
   // DeployDelay is a visual group offset in the native client. Earlier browser
   // rules added it to combat readiness; retain that behavior only for replays.

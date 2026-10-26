@@ -5,7 +5,7 @@ import { LOCAL_REPLAY_CARDS } from "./replay-family";
 import { Battle as LegacyLocalBattle, type EngineOptions as LegacyLocalOptions } from "./legacy-local-engine";
 import { CARD_MAP, LEGACY_BALLOON_STATS, LEGACY_BUILDING_STATS, LEGACY_CARD_SPLASH, LEGACY_CARD_STATS, LEGACY_CARD_VITALS, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
-import { clonePosition, deploymentPositions, deploymentTime } from "./deployment";
+import { clonePosition, deploymentPositions, deploymentTime, deploymentVisualDelay } from "./deployment";
 import { areaSpellTarget, isAreaSpell } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targeting";
 import { defensiveThreats } from "./defensive-threats";
@@ -105,6 +105,8 @@ export interface Entity extends Point {
   target: number | null;
   age: number;
   deploy: number;
+  /** Optional native group filter offset; presentation only. */
+  deployVisualDelay?: number;
   stun: number;
   clone?: boolean;
   poison?: { remaining: number; elapsed: number };
@@ -713,14 +715,15 @@ export class Battle {
           : id === "three-musketeers"
             ? "musketeer"
             : id;
-      for (const [index, point] of deploymentPositions(
+      const positions = deploymentPositions(
         id,
         { x, y },
         team,
         this.rulesVersion < 6
           ? id === "goblins" ? 4 : id === "skeletons" ? 3 : undefined
           : undefined,
-      ).entries())
+      );
+      for (const [index, point] of positions.entries())
         this.spawn(
           id === "goblin-gang"
             ? index < 3
@@ -732,11 +735,12 @@ export class Battle {
           point.y,
           true,
           deploymentTime(id, this.rulesVersion),
+          this.rulesVersion >= 18 ? deploymentVisualDelay(id, index, positions.length) : 0,
         );
     }
     return { ok: true, reason: "" };
   }
-  private spawn(id: CardId, team: Team, x: number, y: number, audio = true, deploy = 1) {
+  private spawn(id: CardId, team: Team, x: number, y: number, audio = true, deploy = 1, visualDelay = 0) {
     const c = CARD_MAP[id];
     const stats = this.rulesVersion < 7 ? LEGACY_CARD_STATS[id] ?? c : c;
     const legacyBuilding = this.rulesVersion < 8 ? LEGACY_BUILDING_STATS[id] : undefined;
@@ -770,6 +774,7 @@ export class Battle {
       target: null,
       age: 0,
       deploy,
+      ...(visualDelay > 0 ? { deployVisualDelay: visualDelay } : {}),
       stun: 0,
       attack: 0,
       ...(id === "sparky" ? { sparkyCharge: 0 } : {}),

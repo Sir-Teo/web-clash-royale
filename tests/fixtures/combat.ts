@@ -1430,6 +1430,7 @@ function render(now: number) {
     (document.querySelector("#destruction") as HTMLElement).dataset.deploymentTiming =
       JSON.stringify(battle.entities.filter((e) => e.kind === "troop").map((e) => ({
         id: e.id, card: e.card, team: e.team, age: e.age, deploy: e.deploy,
+        delay: e.deployVisualDelay ?? 0,
         native: !!(arena as any).units.get(e.id)?.sprite,
       })));
   (document.querySelector("#destruction") as HTMLElement).dataset.coldFilter =

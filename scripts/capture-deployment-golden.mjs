@@ -7,7 +7,8 @@ import { fileURLToPath } from "node:url";
 import { join, relative } from "node:path";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const sourceCommit = "ba6d20c";
+const presentation = process.argv.includes("--presentation");
+const sourceCommit = presentation ? "2c79362" : "ba6d20c";
 const result = await build({
   stdin: {
     contents: 'export { Battle } from "./src/game/engine.ts";',
@@ -57,6 +58,32 @@ const enemyDeck = [
   "ice-spirit",
   "rage",
 ];
+if (presentation) {
+  deck.splice(
+    0,
+    deck.length,
+    "three-musketeers",
+    "archers",
+    "minion-horde",
+    "skeleton-army",
+    "spear-goblins",
+    "goblins",
+    "guards",
+    "bats",
+  );
+  enemyDeck.splice(
+    0,
+    enemyDeck.length,
+    "fire-spirits",
+    "elite-barbarians",
+    "minions",
+    "knight",
+    "mirror",
+    "clone",
+    "rage",
+    "archers",
+  );
+}
 const stateFields = [
   "tick",
   "entities",
@@ -89,7 +116,11 @@ const digest = (b) =>
     )
     .digest("hex");
 const cases = [];
-for (let version = 1; version <= 17; version++) {
+for (
+  let version = presentation ? 18 : 1;
+  version <= (presentation ? 18 : 17);
+  version++
+) {
   const initial = new Battle({
     seed: 1729 + version,
     ai: false,
@@ -132,7 +163,12 @@ for (let version = 1; version <= 17; version++) {
   }
   cases.push({ replay: battle.exportReplay(), checkpoints });
 }
-const path = join(root, "tests/fixtures/deployment-legacy-golden.json");
+const path = join(
+  root,
+  presentation
+    ? "tests/fixtures/deployment-presentation-golden.json"
+    : "tests/fixtures/deployment-legacy-golden.json",
+);
 const output =
   JSON.stringify({ sourceCommit, stateFields, cases }, null, 2) + "\n";
 if (process.argv.includes("--check")) {

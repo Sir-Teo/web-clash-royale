@@ -1,0 +1,26 @@
+{
+  "inputs": [
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "src/game/combat-data.json",
+      "sha256": "e538686581e80101518c0b24373ad0024a0cfb9878f35bf80ee22dfad079cc54"
+    },
+    {
+      "path": "reference/client/deployment-native-trace.json",
+      "sha256": "b8363d043f2e357717463a0c72d7df8fb382c661f17796b265ef79e4613bf2ea"
+    }
+  ],
+  "output": {
+    "path": "src/game/deployment-visual-data.json",
+    "sha256": "bc775a43d4f625579705cd6839a273c48351b6a378394eec969ff97b44db77f5"
+  },
+  "interpretation": "Homogeneous card groups use floor(DeployDelay * index / count) modulo DeployTime as a per-body visual offset. Combat clocks remain independent.",
+  "limits": [
+    "Goblin Gang's mixed/angular branch is excluded.",
+    "Summons and death spawns retain their existing presentation; this table applies to accepted card groups.",
+    "Before the offset elapses, the browser holds the first authored filter pose. Native pre-start visibility is not fully reconstructed."
+  ]
+}
