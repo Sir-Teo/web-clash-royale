@@ -6,6 +6,7 @@ import { Battle as LegacyLocalBattle, type EngineOptions as LegacyLocalOptions }
 import { CARD_MAP, LEGACY_BALLOON_STATS, LEGACY_BUILDING_STATS, LEGACY_CARD_SPLASH, LEGACY_CARD_STATS, LEGACY_CARD_VITALS, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
 import { clonePosition, deploymentPositions, deploymentTime, deploymentVisualDelay } from "./deployment";
+import { advanceAnimationClock } from "./animation-clock";
 import { areaSpellTarget, isAreaSpell } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targeting";
 import { defensiveThreats } from "./defensive-threats";
@@ -112,6 +113,7 @@ export interface Entity extends Point {
   poison?: { remaining: number; elapsed: number };
   heal?: { remaining: number; elapsed: number };
   rage?: { remaining: number };
+  /** Optional deterministic loop clock after a movement-rate buff; presentation only. */
   animationTime?: number;
   slow?: { remaining: number };
   inferno?: {
@@ -1500,6 +1502,7 @@ export class Battle {
   private updateCombat() {
     for (const e of [...this.entities]) {
       if (e.hp <= 0) continue;
+      if (this.rulesVersion >= 19) advanceAnimationClock(e, this.time);
       const hitSpeed =
         (e.rage ? rage.hitSpeedMultiplier : 1) *
         (e.slow ? iceWizard.hitSpeedMultiplier : 1);

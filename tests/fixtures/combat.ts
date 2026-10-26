@@ -42,6 +42,7 @@ let battle: Battle,
   extraVisualTime = 0,
   last = performance.now();
 let victims: { team: Team; x: number; y: number }[] = [];
+const clockModes = new Map<number, string>();
 document.querySelector("#death-card")!.innerHTML = CARDS.filter(
   (c) => c.kind !== "spell",
 )
@@ -73,6 +74,7 @@ function setup() {
   renderedTime = 0;
   extraVisualTime = 0;
   victims = [];
+  clockModes.clear();
   document.querySelector("#play")!.textContent = "Play";
   const selectedScene = (
     document.querySelector("#scenario") as HTMLSelectElement
@@ -86,6 +88,7 @@ function setup() {
   for (const t of battle.entities) t.active = false;
   const scenario = (document.querySelector("#scenario") as HTMLSelectElement)
     .value;
+  (document.querySelector("#clock-clear") as HTMLElement).hidden = scenario !== "animation-clock";
   (document.querySelector("#attackers") as HTMLButtonElement).hidden =
     scenario !== "burrow";
   for (const id of ["death-config", "defeat", "death-stats"])
@@ -138,7 +141,8 @@ function setup() {
   ])
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king" &&
-      !(scenario === "rocket" && ["rebuild", "destruction"].includes(id));
+      !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
+      !(scenario === "animation-clock" && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -791,6 +795,19 @@ function setup() {
         }
       }
     }
+  } else if (scenario === "animation-clock") {
+    for (const team of ["blue", "red"] as const)
+      for (const [index, mode] of ["normal", "rage", "slow", "both"].entries())
+        for (const card of ["knight", "mega-minion"] as const) {
+          const y = (team === "blue" ? 20 : 12) +
+            (card === "mega-minion" ? (team === "blue" ? 2 : -2) : 0);
+          for (const entity of unit(card, team, 3 + index * 4, y)) {
+            entity.active = false;
+            if (mode === "rage" || mode === "both") entity.rage = { remaining: 30 };
+            if (mode === "slow" || mode === "both") entity.slow = { remaining: 30 };
+            clockModes.set(entity.id, mode);
+          }
+        }
   } else if (scenario === "rage-troops") {
     for (const [team, y] of [
       ["blue", 20],
@@ -920,6 +937,12 @@ document.querySelector("#freeze-towers")!.addEventListener("click", () => {
     cast("freeze", tower.team === "blue" ? "red" : "blue", tower.x, tower.y);
 });
 document.querySelector("#reset")!.addEventListener("click", setup);
+document.querySelector("#clock-clear")!.addEventListener("click", () => {
+  for (const entity of battle.entities) {
+    entity.rage = undefined;
+    entity.slow = undefined;
+  }
+});
 document.querySelector("#wake")!.addEventListener("click", () => {
   for (const king of battle.entities.filter((e) => e.king))
     cast("zap", king.team === "blue" ? "red" : "blue", king.x, king.y);
@@ -1105,6 +1128,19 @@ function render(now: number) {
   document.querySelector("#king-hits")!.textContent =
     `${battle.events.filter((e) => e.type === "hit" && e.card === undefined).length} tower hits`;
   const destruction = arena.destructionState;
+  if (sceneSelect.value === "animation-clock")
+    (document.querySelector("#destruction") as HTMLElement).dataset.animationClock = JSON.stringify({
+      time: battle.time,
+      bodies: battle.entities.filter((entity) => clockModes.has(entity.id)).map((entity) => {
+        const visual = (arena as any).units.get(entity.id);
+        return { id: entity.id, card: entity.card, team: entity.team,
+          mode: clockModes.get(entity.id), age: entity.age,
+          clock: entity.animationTime, frame: visual?.sprite?.lastFrame,
+          height: visual?.object.position.y,
+          native: !!visual?.sprite,
+        };
+      }),
+    });
   (document.querySelector("#destruction") as HTMLElement).dataset.state =
     JSON.stringify(destruction);
   (document.querySelector("#destruction") as HTMLElement).dataset.impactSprites =

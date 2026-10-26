@@ -1907,12 +1907,13 @@ export class Arena {
     }
     const moving =
       Math.abs(o.position.x - oldX) + Math.abs(o.position.z - oldZ) > 0.002;
+    const animationTime = e.animationTime ?? time;
     o.position.y =
       y +
       (e.air
-        ? Math.sin(time * 4 + e.id) * 0.12
+        ? Math.sin(animationTime * 4 + e.id) * 0.12
         : moving && e.kind === "troop"
-          ? Math.abs(Math.sin(time * 9 + e.id)) * 0.05
+          ? Math.abs(Math.sin(animationTime * 9 + e.id)) * 0.05
           : 0);
     // Keep the original ground-unit marker plane as air units rise and bob.
     if (v.shadow) v.shadow.position.y = 0.22 - o.position.y;

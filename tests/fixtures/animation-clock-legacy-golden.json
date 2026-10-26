@@ -1,0 +1,1017 @@
+{
+  "sourceCommit": "847152c",
+  "stateFields": [
+    "tick",
+    "entities",
+    "projectiles",
+    "areas",
+    "events",
+    "audioEvents",
+    "players",
+    "winner",
+    "reason",
+    "actions",
+    "randomState"
+  ],
+  "excludedEntityFields": [
+    "animationTime"
+  ],
+  "cases": [
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 19,
+        "seed": 2301,
+        "mode": "classic",
+        "deck": [
+          "rage",
+          "knight",
+          "minions",
+          "golem",
+          "ice-wizard",
+          "lumberjack",
+          "clone",
+          "freeze"
+        ],
+        "enemyDeck": [
+          "rage",
+          "giant",
+          "minions",
+          "witch",
+          "ice-wizard",
+          "dark-prince",
+          "clone",
+          "zap"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "lumberjack",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "clone",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 243,
+            "team": "blue",
+            "card": "minions",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 324,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 405,
+            "team": "blue",
+            "card": "rage",
+            "x": 14,
+            "y": 14.872999999999909
+          },
+          {
+            "tick": 729,
+            "team": "red",
+            "card": "giant",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 972,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1053,
+            "team": "blue",
+            "card": "golem",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1134,
+            "team": "red",
+            "card": "zap",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1296,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1377,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1539,
+            "team": "red",
+            "card": "rage",
+            "x": 14,
+            "y": 20.32444444444437
+          },
+          {
+            "tick": 1620,
+            "team": "blue",
+            "card": "freeze",
+            "x": 14,
+            "y": 20.78819455545263
+          },
+          {
+            "tick": 1863,
+            "team": "blue",
+            "card": "clone",
+            "x": 14,
+            "y": 21.560208333333353
+          },
+          {
+            "tick": 1863,
+            "team": "red",
+            "card": "dark-prince",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2106,
+            "team": "blue",
+            "card": "knight",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2106,
+            "team": "red",
+            "card": "clone",
+            "x": 17.209151914823817,
+            "y": 17.2
+          },
+          {
+            "tick": 2511,
+            "team": "blue",
+            "card": "lumberjack",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2592,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2754,
+            "team": "blue",
+            "card": "minions",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2916,
+            "team": "blue",
+            "card": "rage",
+            "x": 14.041536169335137,
+            "y": 10.864435347842589
+          },
+          {
+            "tick": 2997,
+            "team": "red",
+            "card": "giant",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3240,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3402,
+            "team": "red",
+            "card": "zap",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3564,
+            "team": "blue",
+            "card": "golem",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3645,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3726,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3726,
+            "team": "red",
+            "card": "rage",
+            "x": 14,
+            "y": 23.49999999999966
+          },
+          {
+            "tick": 3888,
+            "team": "blue",
+            "card": "freeze",
+            "x": 12.595595473236116,
+            "y": 25.185285432116533
+          },
+          {
+            "tick": 3888,
+            "team": "red",
+            "card": "dark-prince",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4050,
+            "team": "blue",
+            "card": "clone",
+            "x": 4,
+            "y": 12.571944445654784
+          },
+          {
+            "tick": 4050,
+            "team": "red",
+            "card": "clone",
+            "x": 11.92340185358843,
+            "y": 25.991917775693846
+          },
+          {
+            "tick": 4131,
+            "team": "blue",
+            "card": "knight",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4212,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4293,
+            "team": "blue",
+            "card": "lumberjack",
+            "x": 14,
+            "y": 22
+          }
+        ],
+        "duration": 4345
+      },
+      "coverage": {
+        "rage": 1143,
+        "slow": 2373,
+        "both": 0
+      },
+      "checkpoints": [
+        {
+          "tick": 300,
+          "digest": "899a9b6ac2cb0e9fceb4fa924049fd2a11bbfd30d3ea8c46757ba143099e63a7"
+        },
+        {
+          "tick": 600,
+          "digest": "df14eccb8609a0d7e54c21383fb21d217cccef1dd986ff86295c1883c4757bbc"
+        },
+        {
+          "tick": 900,
+          "digest": "19da1eddd9b7daa63db9ac4fa080bdf053c718da069172330c07fb656278815c"
+        },
+        {
+          "tick": 1200,
+          "digest": "0cb10a58aa25674aaa9843e82d020eda8f50afaf7fd415e77069608bdcee03a9"
+        },
+        {
+          "tick": 1500,
+          "digest": "3f2459d5d958d29cc63a0a6f9bb6390b057020e4e80c06565397224362ef9fe2"
+        },
+        {
+          "tick": 1800,
+          "digest": "9e14678f94d3a96d9a9384851460bc4bb0dd6b2c15d788194cad5ba748969426"
+        },
+        {
+          "tick": 2100,
+          "digest": "38f5fa477087e558d3f3ce6e9ac613cf60e9b474e1641425a320d04497092e88"
+        },
+        {
+          "tick": 2400,
+          "digest": "2120abd271af4c85d49cc527ba461cf9d4e84ae96d3414f7cfd87e50d6e8c887"
+        },
+        {
+          "tick": 2700,
+          "digest": "5cae79318929abbc56e1d293ebae19db6cc74da0b3d498daa6a00e894be45aa3"
+        },
+        {
+          "tick": 3000,
+          "digest": "c657ca7684a7a7d482478fc801ecec8afd79bacbf73141b9e6c41f292496c532"
+        },
+        {
+          "tick": 3300,
+          "digest": "60ddb70988d3303220e4b70b1bcfb68c28b80fd8e231c03be51bec7c8d30e0e5"
+        },
+        {
+          "tick": 3600,
+          "digest": "9ab63d2c195768835a35566e23a325fdbeeb7e85385332d62fb095ec08fe27e2"
+        },
+        {
+          "tick": 3900,
+          "digest": "3c4d50a4d3606676b3b9a5feb3e50fc90003b47f87d9f9ea4c84f6a2084713f0"
+        },
+        {
+          "tick": 4200,
+          "digest": "275a53d6399acbff3dd5856baf198343eeb1b787075f2da73f9a03fb0ca64849"
+        },
+        {
+          "tick": 4345,
+          "digest": "446ba37125b2b8bf520a1239943937105471ac08821142fecb32854f75e51e87"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 19,
+        "seed": 4077,
+        "mode": "classic",
+        "deck": [
+          "rage",
+          "knight",
+          "minions",
+          "golem",
+          "ice-wizard",
+          "lumberjack",
+          "clone",
+          "freeze"
+        ],
+        "enemyDeck": [
+          "rage",
+          "giant",
+          "minions",
+          "witch",
+          "ice-wizard",
+          "dark-prince",
+          "clone",
+          "zap"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "dark-prince",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 162,
+            "team": "red",
+            "card": "rage",
+            "x": 4,
+            "y": 16.233333333333313
+          },
+          {
+            "tick": 324,
+            "team": "blue",
+            "card": "golem",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 405,
+            "team": "red",
+            "card": "minions",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 567,
+            "team": "blue",
+            "card": "knight",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 810,
+            "team": "red",
+            "card": "giant",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 891,
+            "team": "blue",
+            "card": "freeze",
+            "x": 14.1247618826644,
+            "y": 14.899030398096999
+          },
+          {
+            "tick": 972,
+            "team": "red",
+            "card": "zap",
+            "x": 4,
+            "y": 11.275555555555695
+          },
+          {
+            "tick": 1134,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1215,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1458,
+            "team": "blue",
+            "card": "lumberjack",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1620,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1701,
+            "team": "blue",
+            "card": "minions",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1863,
+            "team": "blue",
+            "card": "rage",
+            "x": 3.6902345705359365,
+            "y": 9.464647776497493
+          },
+          {
+            "tick": 1863,
+            "team": "red",
+            "card": "clone",
+            "x": 4.045338768206917,
+            "y": 8.544263073306968
+          },
+          {
+            "tick": 2106,
+            "team": "blue",
+            "card": "clone",
+            "x": 3.3797531971850665,
+            "y": 9.800322194495193
+          },
+          {
+            "tick": 2187,
+            "team": "red",
+            "card": "dark-prince",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2430,
+            "team": "red",
+            "card": "rage",
+            "x": 14,
+            "y": 21.633333333333294
+          },
+          {
+            "tick": 2673,
+            "team": "red",
+            "card": "minions",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2835,
+            "team": "blue",
+            "card": "golem",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3078,
+            "team": "blue",
+            "card": "knight",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3078,
+            "team": "red",
+            "card": "giant",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3240,
+            "team": "red",
+            "card": "zap",
+            "x": 14,
+            "y": 14.150000000000315
+          },
+          {
+            "tick": 3402,
+            "team": "blue",
+            "card": "freeze",
+            "x": 4,
+            "y": 16.263888888888772
+          },
+          {
+            "tick": 3483,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3645,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3807,
+            "team": "blue",
+            "card": "lumberjack",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3807,
+            "team": "red",
+            "card": "witch",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3888,
+            "team": "red",
+            "card": "clone",
+            "x": 14,
+            "y": 11.8
+          },
+          {
+            "tick": 3969,
+            "team": "blue",
+            "card": "minions",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4050,
+            "team": "blue",
+            "card": "rage",
+            "x": 4.264091509501459,
+            "y": 14.125339814037122
+          },
+          {
+            "tick": 4050,
+            "team": "red",
+            "card": "dark-prince",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4131,
+            "team": "blue",
+            "card": "clone",
+            "x": 4.1433467117994,
+            "y": 12.239200716879147
+          },
+          {
+            "tick": 4131,
+            "team": "red",
+            "card": "rage",
+            "x": 13.974702449110927,
+            "y": 10.318578336626748
+          },
+          {
+            "tick": 4293,
+            "team": "red",
+            "card": "minions",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4455,
+            "team": "blue",
+            "card": "golem",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4455,
+            "team": "red",
+            "card": "giant",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4536,
+            "team": "red",
+            "card": "zap",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4617,
+            "team": "blue",
+            "card": "knight",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4698,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4779,
+            "team": "blue",
+            "card": "freeze",
+            "x": 14,
+            "y": 16.036023426748173
+          },
+          {
+            "tick": 4941,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4941,
+            "team": "red",
+            "card": "witch",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5022,
+            "team": "red",
+            "card": "clone",
+            "x": 14,
+            "y": 12.336193415637794
+          },
+          {
+            "tick": 5103,
+            "team": "blue",
+            "card": "lumberjack",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5184,
+            "team": "blue",
+            "card": "minions",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5184,
+            "team": "red",
+            "card": "dark-prince",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 5265,
+            "team": "blue",
+            "card": "rage",
+            "x": 13.234687452428346,
+            "y": 14.794048507854821
+          },
+          {
+            "tick": 5265,
+            "team": "red",
+            "card": "rage",
+            "x": 14.24704696997086,
+            "y": 14.506441836203585
+          }
+        ],
+        "duration": 5400
+      },
+      "coverage": {
+        "rage": 3346,
+        "slow": 3830,
+        "both": 120
+      },
+      "checkpoints": [
+        {
+          "tick": 300,
+          "digest": "ba72433c29ec8f7d234f21020723cd90240a742ae0243984ecb549ed539fa638"
+        },
+        {
+          "tick": 600,
+          "digest": "a333703d92f33c9b9c3ccd204169b4307ded85d4f1213def0fb7c76ed8107a15"
+        },
+        {
+          "tick": 900,
+          "digest": "2705effbd7f0416df08a24da973b18514b68288e897b5860206b065115ef3e76"
+        },
+        {
+          "tick": 1200,
+          "digest": "214ce93f18777f289f23f02b82259cb05603590897bab703348a4d679607f727"
+        },
+        {
+          "tick": 1500,
+          "digest": "91ad1b16703774f4f357ab7a4b74ea9df41e71da9fcc45ccae6c762e2952cd3e"
+        },
+        {
+          "tick": 1800,
+          "digest": "55be2947f5fa796592779d27074624f24d71140f44aeb83ed1e7e081783319d6"
+        },
+        {
+          "tick": 2100,
+          "digest": "58fd57757c6a48d1ebb41dcf49ad7b0b23b5837f22d2b8d883239c4f72a5a47e"
+        },
+        {
+          "tick": 2400,
+          "digest": "370a38dca20f12d566b4afe563555e9973432404b731942f20cba56ce6c51a4c"
+        },
+        {
+          "tick": 2700,
+          "digest": "99e0ac46a69910d593e81f6e6b2e7afe8d13c67d0b27ee65c81b9a52ca7165db"
+        },
+        {
+          "tick": 3000,
+          "digest": "9fc771340362e9b12c375f9690c8afddc90d002ff6be60cb2a2380db70306c9c"
+        },
+        {
+          "tick": 3300,
+          "digest": "6648842cf285d48d886b92f6eced1ad8579a26f71a47fed9d8465aea4840d5af"
+        },
+        {
+          "tick": 3600,
+          "digest": "6e476d9207ad064314adf9ad3a977ea8c6bae3909f3922569ec680da6d6c84c3"
+        },
+        {
+          "tick": 3900,
+          "digest": "78d545a8dd6758174b0c6c6f2b59daac0343b438b9f83a37273d3eb06188b376"
+        },
+        {
+          "tick": 4200,
+          "digest": "d451c97e9f957e4de040527804ab4c4d1ad949fe32debec8491dedfcb615cf5d"
+        },
+        {
+          "tick": 4500,
+          "digest": "f6fe72f48f0370e4660a9feda783062ca1aadd3f08086d0607b9fec1f783a3ce"
+        },
+        {
+          "tick": 4800,
+          "digest": "efddbbf7982f227b4c5be716eca0f37ffbb306cfb9d3c052fe207c83986bd7bc"
+        },
+        {
+          "tick": 5100,
+          "digest": "6e657e3b9e510c026fd30eb33d315535bd0b50c813b3851a82ed2f940442c892"
+        },
+        {
+          "tick": 5400,
+          "digest": "45e7f17d2617a3b7557683f3631b9df25382bc2ab875fab07b233e9f20f823e3"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 19,
+        "seed": 6983,
+        "mode": "classic",
+        "deck": [
+          "rage",
+          "knight",
+          "minions",
+          "golem",
+          "ice-wizard",
+          "lumberjack",
+          "clone",
+          "freeze"
+        ],
+        "enemyDeck": [
+          "rage",
+          "giant",
+          "minions",
+          "witch",
+          "ice-wizard",
+          "dark-prince",
+          "clone",
+          "zap"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 243,
+            "team": "red",
+            "card": "dark-prince",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 324,
+            "team": "blue",
+            "card": "golem",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 567,
+            "team": "blue",
+            "card": "clone",
+            "x": 4,
+            "y": 18.200000000000216
+          },
+          {
+            "tick": 648,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 810,
+            "team": "blue",
+            "card": "minions",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 810,
+            "team": "red",
+            "card": "zap",
+            "x": 3.9563344364987616,
+            "y": 14.416934339790496
+          },
+          {
+            "tick": 972,
+            "team": "red",
+            "card": "rage",
+            "x": 4.258232796912253,
+            "y": 8.307032278216898
+          },
+          {
+            "tick": 1053,
+            "team": "blue",
+            "card": "knight",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1215,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1377,
+            "team": "blue",
+            "card": "lumberjack",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1458,
+            "team": "red",
+            "card": "clone",
+            "x": 8.108010899093001,
+            "y": 6.326449839411882
+          },
+          {
+            "tick": 1539,
+            "team": "blue",
+            "card": "rage",
+            "x": 14,
+            "y": 11.974999999999731
+          },
+          {
+            "tick": 1782,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1863,
+            "team": "red",
+            "card": "giant",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2106,
+            "team": "blue",
+            "card": "freeze",
+            "x": 3.3567148983080854,
+            "y": 20.80196561690774
+          },
+          {
+            "tick": 2106,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2511,
+            "team": "red",
+            "card": "dark-prince",
+            "x": 14,
+            "y": 10
+          }
+        ],
+        "duration": 2670
+      },
+      "coverage": {
+        "rage": 852,
+        "slow": 526,
+        "both": 167
+      },
+      "checkpoints": [
+        {
+          "tick": 300,
+          "digest": "151c184402085c56771ac4f36c1f30c07c9aab98d32a696130fcb357d22c1361"
+        },
+        {
+          "tick": 600,
+          "digest": "a6cf10d8fb49363a5817a82ae239d77580cd31846f8e2aedd97de11333d76d93"
+        },
+        {
+          "tick": 900,
+          "digest": "0ac13443eac95e85fdb48c63ce13ea1ae5277afe946d4e447c80bb1274325848"
+        },
+        {
+          "tick": 1200,
+          "digest": "b01a1cb2393954f4fce1d3b51d36ddda4e2baeb76c1cb8270b9e7f616dad01bb"
+        },
+        {
+          "tick": 1500,
+          "digest": "252be416ed6068af690d3a9bacaae7d09ebc2db79fbe408fab01e9faa27534ed"
+        },
+        {
+          "tick": 1800,
+          "digest": "bc469516d184aff6b65eeef6d6c2959498b0e6c58e52b9ff9a7f6cf7741bf83f"
+        },
+        {
+          "tick": 2100,
+          "digest": "8b4de8bc7874fe3470944d168a0b3561d471260a65a9a6a0bf25ba429e352680"
+        },
+        {
+          "tick": 2400,
+          "digest": "405bb3288fe22fa2001f307c4004202d3217d6322b0585234feef699b1ab25aa"
+        },
+        {
+          "tick": 2670,
+          "digest": "18568556ac9d113ea8c3953c30aeb1606e20fd9d02be91d4358d5fe1c8d67932"
+        }
+      ]
+    }
+  ]
+}
