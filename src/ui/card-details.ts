@@ -131,6 +131,28 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
             : "Spawning stops when the building is destroyed or expires."),
     };
   }
+  if (id === "goblin-gang")
+    return {
+      stats: [
+        ...([
+          { id: "goblins", name: "Goblin", group: "Goblins" },
+          { id: "spear-goblins", name: "Spear Goblin", group: "Spear Goblins" },
+        ] as const).flatMap(({ id: troop, name, group }) => {
+          const unit = CARD_MAP[troop];
+          return [
+            stat(group, c.count / 2, "users"),
+            stat(`${name} hitpoints`, unit.hp, "heart"),
+            stat(`${name} damage`, unit.damage, "swords"),
+            stat(`${name} hit interval`, seconds(unit.interval), "timer"),
+            stat(`${name} range`, tiles(unit.range), "scan"),
+            stat(`${name} targets`, unit.hitsAir ? "Air & ground" : "Ground", "crosshair"),
+          ];
+        }),
+        stat("Count", c.count, "users"),
+        cost,
+      ],
+      note: "Hitpoints and damage are per troop of the named type. Each troop has its own hitpoints.",
+    };
   if (id === "mirror")
     return {
       stats: [

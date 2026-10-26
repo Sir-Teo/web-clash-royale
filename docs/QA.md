@@ -1768,3 +1768,13 @@ The isolated full suite passes 1,654 tests across 171 files. TypeScript and the 
 All six focused browser cases pass across desktop Chromium and phone WebKit. Both teams' normal, Raged, slowed and combined-buff troops hold their actual source loop frames and air bob for the entire four-second Freeze, preserve them when rebuilding the renderer while frozen, and resume at the active rate on recovery. Clearing buffs preserves the accumulated phase. Existing Freeze art/colors/pause/cleanup and native Zap/15-arrow volley rendering also pass. The desktop frozen-troop screenshot was inspected.
 
 Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup and all 278 native combat/death/music files. Root production output is restored afterward with cache version `0bdd8c9c40d3`. The pack remains 921 URLs and 894 unique content groups, with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.
+
+## Mixed Goblin Gang detail stats
+
+Goblin Gang now separates its melee and Spear Goblin counts, hitpoints, damage, hit intervals, ranges and target types. The panel uses the same normalized child profiles as actual deployment and explains that values are per troop of the named type. It removes the earlier single per-troop health/damage/ground-only target rows that incorrectly described all six bodies as melee Goblins. The card's total count and cost remain visible. No gameplay, replay, network or profile changes.
+
+Thirty-two focused card-detail and Goblin Gang checks pass. The new mixed-body check compares each displayed role against all actual accepted deployment bodies, including live air-target eligibility, rather than assuming all swarm bodies share one profile. The existing homogeneous-swarm check continues for every other swarm. TypeScript and the root production build pass.
+
+All four focused browser cases pass across desktop Chromium and phone WebKit. Shared-deck inspection verifies all role rows, reaches the lower Spear Goblin targets at 320 pixels, avoids horizontal overflow and preserves stored decks/progress. Lobby inspection and the real mouse/touch hand still deploy three of each type. Acceptance and births are checked in one compact snapshot, keeping later combat deaths out of the input assertion. The phone mixed-detail screenshot was inspected. Unit/build and browser checks run separately.
+
+Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup and all 278 native combat/death/music files. Root production output is restored afterward with cache version `0b88f3e25db9`. The pack remains 921 URLs and 894 unique content groups, with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.

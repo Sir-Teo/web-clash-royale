@@ -34,7 +34,7 @@ describe("current card detail stats", () => {
     }
   });
   it("identifies swarm health and damage as per troop rather than a combined pool", () => {
-    for (const c of CARDS.filter((c) => c.kind === "troop" && c.count > 1)) {
+    for (const c of CARDS.filter((c) => c.kind === "troop" && c.count > 1 && c.id !== "goblin-gang")) {
       expect(numeric(rows(c.id)["Hitpoints per troop"])).toBe(c.hp);
       expect(numeric(rows(c.id)["Damage per troop"])).toBe(c.damage);
       expect(rows(c.id).Count).toBe(String(c.count));
@@ -45,6 +45,36 @@ describe("current card detail stats", () => {
       "Hit interval": "1 s",
       Count: "6",
     });
+  });
+  it("distinguishes Goblin Gang's two troop types using their actual deployed bodies", () => {
+    const battle = cast("goblin-gang", 4, 22);
+    const stats = rows("goblin-gang");
+    const bodies = battle.entities.filter((e) => e.team === "blue" && e.kind === "troop");
+    expect(numeric(stats.Count)).toBe(bodies.length);
+    battle.players.red.hand[0] = "minions";
+    battle.players.red.elixir = 10;
+    expect(battle.play("red", 0, 4, 10).ok).toBe(true);
+    const air = battle.entities.find((e) => e.team === "red" && e.card === "minions")!;
+    for (const [card, name, group] of [
+      ["goblins", "Goblin", "Goblins"],
+      ["spear-goblins", "Spear Goblin", "Spear Goblins"],
+    ] as const) {
+      const troops = bodies.filter((e) => e.card === card);
+      expect(numeric(stats[group])).toBe(troops.length);
+      expect(troops.length).toBeGreaterThan(0);
+      for (const troop of troops) {
+        expect(numeric(stats[`${name} hitpoints`])).toBe(troop.maxHp);
+        expect(numeric(stats[`${name} damage`])).toBe(troop.damage);
+        expect(parseFloat(stats[`${name} hit interval`])).toBe(troop.interval);
+        expect(parseFloat(stats[`${name} range`])).toBe(troop.range);
+        expect(stats[`${name} targets`]).toBe((battle as any).validTarget(troop, air) ? "Air & ground" : "Ground");
+      }
+    }
+    expect(stats["Goblin hitpoints"]).not.toBe(stats["Spear Goblin hitpoints"]);
+    expect(stats["Goblin damage"]).not.toBe(stats["Spear Goblin damage"]);
+    for (const label of ["Hitpoints per troop", "Damage per troop", "Targets", "Range", "Hit interval"])
+      expect(stats).not.toHaveProperty(label);
+    expect(cardDetails("goblin-gang").note).toContain("per troop of the named type");
   });
   it("describes individual troops and defensive buildings with their actual interval and lifetime", () => {
     expect(rows("knight")).toMatchObject({

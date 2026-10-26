@@ -133,7 +133,7 @@ test("shared-deck card inspection shows per-troop stats and building lifetimes w
     "archers",
     "cannon",
     "tesla",
-    "knight",
+    "goblin-gang",
     "giant",
     "witch",
   ];
@@ -158,6 +158,19 @@ test("shared-deck card inspection shows per-troop stats and building lifetimes w
       { "Hitpoints per troop": "81", "Damage per troop": "81", Count: "15" },
     ],
     ["archers", { "Hitpoints per troop": "304", Count: "2" }],
+    ["goblin-gang", {
+      Goblins: "3", "Spear Goblins": "3", Count: "6",
+      "Goblin hitpoints": number(CARD_MAP.goblins.hp),
+      "Goblin damage": number(CARD_MAP.goblins.damage),
+      "Goblin hit interval": `${number(CARD_MAP.goblins.interval)} s`,
+      "Goblin range": `${number(CARD_MAP.goblins.range)} tiles`,
+      "Goblin targets": "Ground",
+      "Spear Goblin hitpoints": number(CARD_MAP["spear-goblins"].hp),
+      "Spear Goblin damage": number(CARD_MAP["spear-goblins"].damage),
+      "Spear Goblin hit interval": `${number(CARD_MAP["spear-goblins"].interval)} s`,
+      "Spear Goblin range": `${number(CARD_MAP["spear-goblins"].range)} tiles`,
+      "Spear Goblin targets": "Air & ground",
+    }],
     ["cannon", { Hitpoints: "824", Lifetime: "30 s", Targets: "Ground" }],
     [
       "tesla",
@@ -174,6 +187,14 @@ test("shared-deck card inspection shows per-troop stats and building lifetimes w
         .locator(".modal")
         .evaluate((e) => e.scrollWidth > e.clientWidth),
     ).toBe(false);
+    if (id === "goblin-gang") {
+      for (const label of ["Hitpoints per troop", "Damage per troop", "Targets"])
+        await expect(page.locator(`[data-card-stat="${label}"]`)).toHaveCount(0);
+      await expect(page.locator(".card-rule-note")).toContainText("per troop of the named type");
+      await page.locator('[data-card-stat="Spear Goblin targets"]').scrollIntoViewIfNeeded();
+      await expect(page.locator('[data-card-stat="Spear Goblin targets"]')).toBeInViewport();
+      await page.screenshot({ path: info.outputPath("goblin-gang-mixed-details.png"), animations: "disabled" });
+    }
     await page
       .getByRole("button", { name: "Back to deck codes", exact: true })
       .click();

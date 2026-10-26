@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { CARDS, STARTER_DECK } from "../../src/game/cards";
+import { CARDS, CARD_MAP, STARTER_DECK } from "../../src/game/cards";
 
 const deck = ["goblin-gang", ...STARTER_DECK.filter((id) => id !== "arrows")];
 
@@ -26,6 +26,19 @@ test("Goblin Gang sends a melee and ranged trio from the real desktop and phone 
     "Goblin Gang",
     "Level 11",
   ]);
+  for (const [label, value] of [
+    ["Goblins", "3"],
+    ["Spear Goblins", "3"],
+    ["Goblin hitpoints", String(CARD_MAP.goblins.hp)],
+    ["Goblin damage", String(CARD_MAP.goblins.damage)],
+    ["Spear Goblin hitpoints", String(CARD_MAP["spear-goblins"].hp)],
+    ["Spear Goblin damage", String(CARD_MAP["spear-goblins"].damage)],
+    ["Goblin targets", "Ground"],
+    ["Spear Goblin targets", "Air & ground"],
+  ])
+    await expect(page.locator(`[data-card-stat="${label}"] b`)).toHaveText(
+      value,
+    );
   await page.getByRole("button", { name: "Close dialog", exact: true }).click();
   await page.evaluate(() => {
     Math.random = () => 0;
@@ -52,18 +65,21 @@ test("Goblin Gang sends a melee and ranged trio from the real desktop and phone 
     await page.touchscreen.tap(point.x, point.y);
   else await page.mouse.click(point.x, point.y);
   await expect
-    .poll(async () => (await state()).actions)
-    .toBeGreaterThan(before.actions);
-  await expect
-    .poll(async () => {
-      const units = (await state()).units.filter(
-        (e: any) => e.team === "blue" && e.hp > 0,
-      );
-      return ["goblins", "spear-goblins"].map(
-        (id) => units.filter((e: any) => e.card === id).length,
-      );
-    })
-    .toEqual([3, 3]);
+    .poll(() =>
+      page.evaluate((actions) => {
+        const current = (window as any).__arena.state;
+        const units = current.units.filter(
+          (e: any) => e.team === "blue" && e.hp > 0,
+        );
+        return {
+          accepted: current.actions > actions,
+          counts: ["goblins", "spear-goblins"].map(
+            (id) => units.filter((e: any) => e.card === id).length,
+          ),
+        };
+      }, before.actions),
+    )
+    .toEqual({ accepted: true, counts: [3, 3] });
   await page.screenshot({
     path: info.outputPath("goblin-gang-battle.png"),
     fullPage: true,
