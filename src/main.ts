@@ -1834,11 +1834,18 @@ function renderDeckBuilder() {
   $("#deck-redo").onclick = () => restoreDeckEdit("redo");
   $("#deck-move-earlier").onclick = () => moveDeckCard(-1);
   $("#deck-move-later").onclick = () => moveDeckCard(1);
-  document.querySelectorAll<HTMLButtonElement>("[data-filter]").forEach(
+  const filterButtons = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
+  filterButtons.forEach(
     (e) =>
       (e.onclick = () => {
         filter = e.dataset.filter as CollectionKind;
-        renderDeckBuilder();
+        for (const button of filterButtons) {
+          const active = button.dataset.filter === filter;
+          if (button.classList.contains("active") !== active)
+            button.classList.toggle("active", active);
+          setAttribute(button, "aria-pressed", String(active));
+        }
+        renderCollection();
       }),
   );
   $("#card-search").addEventListener("input", () => {

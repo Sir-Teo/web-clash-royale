@@ -5,7 +5,7 @@ test.use({ serviceWorkers: "block", actionTimeout: 20000 });
 test.setTimeout(150000);
 const key = "browser-royale.profile.v1";
 
-test("collection search, cost and sort reuse native artwork within their dialog", async ({
+test("collection search, type, cost and sort reuse native artwork within their dialog", async ({
   page,
 }, info) => {
   const errors: string[] = [];
@@ -46,10 +46,14 @@ test("collection search, cost and sort reuse native artwork within their dialog"
     exact: true,
   });
   await search.focus();
+  await page.mouse.move(0, 0);
   await page.waitForTimeout(200);
   const modal = page.locator(".modal");
   const scroll = await modal.evaluate((el) => el.scrollTop);
-  const pixels = await modal.screenshot({ animations: "disabled" });
+  const pixels = await modal.screenshot({
+    path: info.outputPath("original-collection.png"),
+    animations: "disabled",
+  });
   await page.evaluate(() => {
     const grid = document.querySelector("#collection-grid")!;
     const refs = [
@@ -112,23 +116,47 @@ test("collection search, cost and sort reuse native artwork within their dialog"
   await sort.focus();
   await sort.selectOption("name");
   await expect(sort).toBeFocused();
+  for (const kind of ["troop", "spell", "building", "all", "all"] as const) {
+    const button = page.locator(`[data-filter="${kind}"]`);
+    await button.focus();
+    await button.press("Enter");
+    await expect(button).toBeFocused();
+    await expect(button).toHaveClass(/active/);
+    await expect(button).toHaveAttribute("aria-pressed", "true");
+    await expect(
+      page.locator('[data-filter][aria-pressed="true"]'),
+    ).toHaveCount(1);
+    await expect(cost).toHaveValue("4");
+    await expect(sort).toHaveValue("name");
+    await expect(search).toHaveValue("");
+    await expect(page.locator("[data-collection]")).toHaveCount(
+      CARDS.filter((c) => c.cost === 4 && (kind === "all" || c.kind === kind))
+        .length,
+    );
+  }
   await cost.selectOption("all");
   await sort.selectOption("collection");
   await expect(page.locator("[data-collection]")).toHaveCount(CARDS.length);
   const retained = await page.evaluate(() => {
     const p = (window as any).__collectionTest;
+    const grid = document.querySelector("#collection-grid");
     p.collect(p.observer.takeRecords());
     p.observer.disconnect();
     return {
       rebuilds: p.rebuilds(),
+      sameGrid: grid === p.grid,
       cards: p.refs.filter(
         (ref: any) =>
-          p.grid.querySelector(`[data-native-card="${ref.id}"]`) === ref.card &&
+          grid!.querySelector(`[data-native-card="${ref.id}"]`) === ref.card &&
           ref.card.querySelector(".native-card-art > svg") === ref.svg,
       ).length,
     };
   });
-  expect(retained).toEqual({ rebuilds: 0, cards: CARDS.length });
+  expect(retained).toEqual({
+    rebuilds: 0,
+    sameGrid: true,
+    cards: CARDS.length,
+  });
   expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(
     saved,
   );
