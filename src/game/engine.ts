@@ -211,7 +211,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -291,7 +291,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 18;
+    this.rulesVersion = r?.version ?? 19;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -722,6 +722,7 @@ export class Battle {
         this.rulesVersion < 6
           ? id === "goblins" ? 4 : id === "skeletons" ? 3 : undefined
           : undefined,
+        this.rulesVersion,
       );
       for (const [index, point] of positions.entries())
         this.spawn(

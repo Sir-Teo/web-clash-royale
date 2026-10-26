@@ -83,16 +83,16 @@ describe("native Barbarians card", () => {
       sight: expect.any(Number),
     });
     expect(deploymentPositions("barbarians", { x: 4, y: 22 })).toEqual([
-      { x: 3.45, y: 21.52 },
-      { x: 4.55, y: 21.52 },
-      { x: 3.45, y: 22.48 },
-      { x: 4.55, y: 22.48 },
+      { x: 3.501, y: 22.499 },
+      { x: 3.501, y: 21.501 },
+      { x: 4.499, y: 21.501 },
+      { x: 4.499, y: 22.499 },
     ]);
     expect(
       deploymentPositions("barbarians", { x: 4, y: 10 }, "red")[0],
     ).toEqual({
-      x: 3.45,
-      y: 10.48,
+      x: 3.501,
+      y: 9.501,
     });
     for (const team of ["blue", "red"] as const) {
       const p = battle.players[team];

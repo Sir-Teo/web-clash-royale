@@ -8,7 +8,12 @@ import { join, relative } from "node:path";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const presentation = process.argv.includes("--presentation");
-const sourceCommit = presentation ? "2c79362" : "ba6d20c";
+const formation = process.argv.includes("--formation");
+const sourceCommit = formation
+  ? "f2413c5"
+  : presentation
+    ? "2c79362"
+    : "ba6d20c";
 const result = await build({
   stdin: {
     contents: 'export { Battle } from "./src/game/engine.ts";',
@@ -84,6 +89,32 @@ if (presentation) {
     "archers",
   );
 }
+if (formation) {
+  deck.splice(
+    0,
+    deck.length,
+    "three-musketeers",
+    "archers",
+    "minion-horde",
+    "skeletons",
+    "goblins",
+    "spear-goblins",
+    "guards",
+    "bats",
+  );
+  enemyDeck.splice(
+    0,
+    enemyDeck.length,
+    "barbarians",
+    "fire-spirits",
+    "elite-barbarians",
+    "minions",
+    "knight",
+    "mirror",
+    "clone",
+    "rage",
+  );
+}
 const stateFields = [
   "tick",
   "entities",
@@ -116,13 +147,14 @@ const digest = (b) =>
     )
     .digest("hex");
 const cases = [];
-for (
-  let version = presentation ? 18 : 1;
-  version <= (presentation ? 18 : 17);
-  version++
-) {
+const versions = formation
+  ? [18, 18, 18]
+  : presentation
+    ? [18]
+    : Array.from({ length: 17 }, (_, i) => i + 1);
+for (const [caseIndex, version] of versions.entries()) {
   const initial = new Battle({
-    seed: 1729 + version,
+    seed: 1729 + version + (formation ? caseIndex * 77 : 0),
     ai: false,
     deck,
     enemyDeck,
@@ -136,10 +168,13 @@ for (
     },
   });
   const checkpoints = [];
+  const nextSlot = { blue: 0, red: 1 };
   for (let tick = 0; tick < 12000 && !battle.winner; tick++) {
     if (tick % 81 === 0)
       for (const team of ["blue", "red"]) {
-        const slot = (Math.floor(tick / 81) + (team === "red" ? 1 : 0)) % 4;
+        const slot = formation
+          ? nextSlot[team] % 4
+          : (Math.floor(tick / 81) + (team === "red" ? 1 : 0)) % 4;
         const card = battle.players[team].hand[slot];
         const spell = [
           "rage",
@@ -150,12 +185,13 @@ for (
           "fireball",
           "arrows",
         ].includes(card);
-        battle.play(
+        const result = battle.play(
           team,
           slot,
           tick % 162 === 0 ? 4 : 14,
           spell ? (team === "blue" ? 12 : 20) : team === "blue" ? 22 : 10,
         );
+        if (formation && result.ok) nextSlot[team]++;
       }
     battle.step();
     if (battle.tick % 300 === 0 || battle.winner)
@@ -165,9 +201,11 @@ for (
 }
 const path = join(
   root,
-  presentation
-    ? "tests/fixtures/deployment-presentation-golden.json"
-    : "tests/fixtures/deployment-legacy-golden.json",
+  formation
+    ? "tests/fixtures/formation-legacy-golden.json"
+    : presentation
+      ? "tests/fixtures/deployment-presentation-golden.json"
+      : "tests/fixtures/deployment-legacy-golden.json",
 );
 const output =
   JSON.stringify({ sourceCommit, stateFields, cases }, null, 2) + "\n";

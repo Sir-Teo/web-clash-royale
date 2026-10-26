@@ -32,7 +32,7 @@
   },
   "browserChoices": {
     "unitStats": "Shares the existing curated normalized Musketeer HP, damage, movement speed, range and attack interval.",
-    "formation": "Existing golden-angle three-body placement; not a recovered native formation.",
+    "formation": "Origin rules 19 use the CPU-verified native integer triangle offsets, oriented in the browser player coordinate frame. Earlier records retain the golden-angle placement. Native lane lookup, grid snapping and creation-time collision adjustment remain outside this reconstruction; see formation-native-trace.json.",
     "spriteAlias": "musketeer",
     "projectileArt": "projectile_cannonball_small",
     "opponent": "Musketeer Marshal uses a new Three Musketeers and Hog deck.",

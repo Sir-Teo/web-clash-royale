@@ -1,0 +1,36 @@
+{
+  "inputs": [
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/globals.csv",
+      "sha256": "28f97cbeb6c6de2489422b1bcc65bebd62db35fbb3ec72203eba29caa33c5641"
+    },
+    {
+      "path": "src/game/combat-data.json",
+      "sha256": "e538686581e80101518c0b24373ad0024a0cfb9878f35bf80ee22dfad079cc54"
+    },
+    {
+      "path": "public/assets/ui/cards/cards.json",
+      "sha256": "f1b2cb232984f6c87e2f53182a2ee35318cb1d01598609dcc5f9c604b2b6d7f7"
+    },
+    {
+      "path": "reference/client/formation-native-trace.json",
+      "sha256": "7e3d4263141f80ee8936c92a8145ed89949aa0c3cc966a59ab12fd7bef7130f8"
+    }
+  ],
+  "output": {
+    "path": "src/game/formation-data.json",
+    "sha256": "36db566ee0f1bfeb9db6eb5cdc1bed616999121d724d674da5662babcecfef90"
+  },
+  "limits": [
+    "Only homogeneous card groups with two through six bodies are adopted.",
+    "Native lane lookup, grid snapping and creation-time collision resolution are not reproduced; the browser retains its current edge clamps and uses its two-lane split for sequence reflection."
+  ]
+}

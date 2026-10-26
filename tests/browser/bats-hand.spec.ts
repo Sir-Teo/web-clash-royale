@@ -32,8 +32,15 @@ test("Bats select and deploy five flying units from desktop and phone hands", as
   const point = await page.evaluate(() => (window as any).__arena.project(4, 22));
   if (await page.evaluate(() => navigator.maxTouchPoints > 0)) await page.touchscreen.tap(point.x, point.y);
   else await page.mouse.click(point.x, point.y);
-  await expect.poll(async () => (await state()).actions).toBeGreaterThan(before.actions);
-  await expect.poll(async () => (await state()).units.filter((e: any) => e.team === "blue" && e.card === "bats" && e.hp > 0).length).toBe(5);
+  // Check acceptance and births together, before a later counterattack can
+  // remove the fragile Bats between two full-state protocol round trips.
+  await expect.poll(() => page.evaluate((actions) => {
+    const current = (window as any).__arena.state;
+    return {
+      accepted: current.actions > actions,
+      bats: current.units.filter((e: any) => e.team === "blue" && e.card === "bats" && e.hp > 0).length,
+    };
+  }, before.actions)).toEqual({ accepted: true, bats: 5 });
   await page.screenshot({ path: info.outputPath("bats-deployed.png"), fullPage: true });
   expect(errors).toEqual([]);
 });

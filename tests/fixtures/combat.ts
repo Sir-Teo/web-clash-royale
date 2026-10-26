@@ -111,6 +111,8 @@ function setup() {
     scenario !== "lava-hound";
   (document.querySelector("#spawn") as HTMLElement).hidden =
     scenario !== "deployment";
+  (document.querySelector("#preview-formation") as HTMLElement).hidden =
+    scenario !== "deployment";
   (document.querySelector("#freeze-cast") as HTMLElement).hidden =
     scenario !== "freeze";
   for (const id of ["rage-cast", "rage-towers"])
@@ -870,7 +872,12 @@ document.querySelector("#defeat")!.addEventListener("click", () => {
   for (const v of victims)
     cast("zap", v.team === "red" ? "blue" : "red", v.x, v.y);
 });
+document.querySelector("#preview-formation")!.addEventListener("click", () => {
+  const card = (document.querySelector("#death-card") as HTMLSelectElement).value as CardId;
+  arena.showPlacement(card, { x: 9, y: 22 });
+});
 document.querySelector("#spawn")!.addEventListener("click", () => {
+  arena.showPlacement(null, null);
   const card = (document.querySelector("#death-card") as HTMLSelectElement)
     .value as CardId;
   cast(card, "blue", 9, 22);
@@ -1430,9 +1437,23 @@ function render(now: number) {
     (document.querySelector("#destruction") as HTMLElement).dataset.deploymentTiming =
       JSON.stringify(battle.entities.filter((e) => e.kind === "troop").map((e) => ({
         id: e.id, card: e.card, team: e.team, age: e.age, deploy: e.deploy,
+        x: e.x, y: e.y,
         delay: e.deployVisualDelay ?? 0,
         native: !!(arena as any).units.get(e.id)?.sprite,
       })));
+  if (sceneSelect.value === "deployment") {
+    const preview = (arena as any).deployment;
+    (document.querySelector("#destruction") as HTMLElement).dataset.formation = JSON.stringify({
+      rulesVersion: battle.rulesVersion,
+      visible: preview.object.visible,
+      preview: preview.units.map((u: any) => ({ x: u.object.position.x + 9, y: u.object.position.z + 16 })),
+      bodies: battle.entities.filter((e) => e.kind === "troop").map((e) => ({
+        id: e.id, team: e.team, x: e.x, y: e.y,
+        visualX: (arena as any).units.get(e.id)?.object.position.x + 9,
+        visualY: (arena as any).units.get(e.id)?.object.position.z + 16,
+      })),
+    });
+  }
   (document.querySelector("#destruction") as HTMLElement).dataset.coldFilter =
     JSON.stringify(arena.coldFilterState);
   const rageNode = document.querySelector("#destruction") as HTMLElement;

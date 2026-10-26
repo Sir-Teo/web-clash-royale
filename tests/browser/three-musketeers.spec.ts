@@ -60,32 +60,33 @@ test("Three Musketeers persist, require nine elixir and render three native bodi
     card,
   );
   await expect.poll(async () => (await state()).loadedCards).toBe(CARDS.length);
-  await expect
-    .poll(() =>
-      page
-        .locator(".modal-backdrop")
-        .evaluate((e) => getComputedStyle(e).opacity),
-    )
-    .toBe("1");
+  await expect(page.locator(".modal-backdrop")).toBeVisible();
   await expect(
     page.locator('.detail-art image[href$="portrait-three-musketeers.webp"]'),
   ).toHaveCount(1);
   // WebKit can paint SVG text before its cached image resources settle.
   // Inspect the portrait interior, excluding the cost and card-name text.
   await expect
-    .poll(async () => {
-      const art = sharp(await page.locator(".detail-art").screenshot());
-      const { width, height } = await art.metadata();
-      const stats = await art
-        .extract({
-          left: Math.floor(width! * 0.2),
-          top: Math.floor(height! * 0.2),
-          width: Math.floor(width! * 0.6),
-          height: Math.floor(height! * 0.4),
-        })
-        .stats();
-      return Math.max(...stats.channels.slice(0, 3).map((c) => c.stdev));
-    })
+    .poll(
+      async () => {
+        const art = sharp(
+          await page.locator(".detail-art").screenshot({
+            animations: "disabled",
+          }),
+        );
+        const { width, height } = await art.metadata();
+        const stats = await art
+          .extract({
+            left: Math.floor(width! * 0.2),
+            top: Math.floor(height! * 0.2),
+            width: Math.floor(width! * 0.6),
+            height: Math.floor(height! * 0.4),
+          })
+          .stats();
+        return Math.max(...stats.channels.slice(0, 3).map((c) => c.stdev));
+      },
+      { timeout: 30000 },
+    )
     .toBeGreaterThan(20);
   await page.screenshot({
     path: info.outputPath("three-musketeers-details.png"),

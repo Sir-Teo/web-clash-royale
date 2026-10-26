@@ -92,7 +92,7 @@ describe("individual replay files", () => {
     p.version = 2;
     expect(() => importReplayFile(JSON.stringify(p))).toThrow(/replay/i);
     p.version = 1;
-    p.match.replay.version = 19;
+    p.match.replay.version = 20;
     expect(() => importReplayFile(JSON.stringify(p))).toThrow(/invalid/i);
   });
   it("bounds file bytes, names and recording duration", () => {

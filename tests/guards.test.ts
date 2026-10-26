@@ -67,7 +67,7 @@ describe("archived Guards", () => {
     });
     const positions = deploymentPositions("guards", { x: 4, y: 22 });
     expect(positions).toHaveLength(3);
-    expect(positions.every((p) => Math.hypot(p.x - 4, p.y - 22) <= 0.8 + 1e-8))
+    expect(positions.every((p) => Math.hypot(p.x - 4, p.y - 22) <= 0.924 + 1e-8))
       .toBe(true);
     const battle = new Battle({ seed, ai: false, deck, enemyDeck: deck });
     for (const tower of battle.entities) tower.active = false;

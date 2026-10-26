@@ -39,7 +39,7 @@ describe("archived Bats", () => {
   it("deploys five within source radius and attacks a flying target on both peers", () => {
     const positions = deploymentPositions("bats", { x: 4, y: 22 });
     expect(positions).toHaveLength(5);
-    expect(positions.every((p) => Math.hypot(p.x - 4, p.y - 22) <= 0.750001)).toBe(true);
+    expect(positions.every((p) => Math.hypot(p.x - 4, p.y - 22) <= 1.277001)).toBe(true);
     const battle = new Battle({
       seed: 54, ai: false,
       deck: ["bats", ...STARTER_DECK.filter((id) => id !== "arrows")],

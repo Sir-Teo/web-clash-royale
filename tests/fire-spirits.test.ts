@@ -62,10 +62,10 @@ describe("archived Fire Spirits", () => {
     const blue = deploymentPositions("fire-spirits", { x: 4, y: 22 }, "blue");
     const red = deploymentPositions("fire-spirits", { x: 4, y: 10 }, "red");
     expect(blue).toEqual([
-      { x: 3.45, y: 22.25 }, { x: 4, y: 21.35 }, { x: 4.55, y: 22.25 },
+      { x: 4, y: 21.25 }, { x: 4.649, y: 22.375 }, { x: 3.351, y: 22.375 },
     ]);
     expect(red).toEqual([
-      { x: 3.45, y: 9.75 }, { x: 4, y: 10.65 }, { x: 4.55, y: 9.75 },
+      { x: 4, y: 10.75 }, { x: 4.649, y: 9.625 }, { x: 3.351, y: 9.625 },
     ]);
     const battle = new Battle({ seed, ai: false, deck, enemyDeck: deck });
     while (battle.players.red.elixir < 3) battle.step();

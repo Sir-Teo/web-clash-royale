@@ -15,6 +15,7 @@ import mortar from "./mortar-data.json" with { type: "json" };
 import xBow from "./x-bow-data.json" with { type: "json" };
 import elixirCollector from "./elixir-collector-data.json" with { type: "json" };
 import deploymentVisual from "./deployment-visual-data.json" with { type: "json" };
+import { nativeCardFormation, nativeFormationOffset } from "./native-formation";
 
 // Historical default; cards with archived delays keep their own timing.
 export const DEPLOY_TIME = 1;
@@ -43,7 +44,7 @@ export function deploymentVisualDelay(id: CardId, index: number, count: number) 
       count < 1 || index < 0 || index >= count) return 0;
   return (Math.trunc(row.delayMs * index / count) % row.deployMs) / 1000;
 }
-export function deploymentTime(id: CardId, rulesVersion = 18): number {
+export function deploymentTime(id: CardId, rulesVersion = 19): number {
   // DeployDelay is a visual group offset in the native client. Earlier browser
   // rules added it to combat readiness; retain that behavior only for replays.
   if (rulesVersion < 18) {
@@ -66,7 +67,27 @@ export function deploymentPositions(
   point: Point,
   team: Team = "blue",
   countOverride?: number,
+  rulesVersion = 19,
 ): Point[] {
+  const count = countOverride ?? CARD_MAP[id].count;
+  const formation = rulesVersion >= 19 ? nativeCardFormation(id) : undefined;
+  if (formation && count >= 2 && count <= 6) {
+    // The two-lane browser arena retains its existing continuous tap position
+    // and edge clamps. Native grid/lane lookup and spawn collision adjustment
+    // remain separate from the verified integer offset math.
+    // Orient the recovered offsets in the player's view, then rotate red into
+    // the browser's canonical board so its placement preview stays aligned.
+    const ownX = team === "blue" ? point.x : 18 - point.x;
+    const rotation = team === "blue" ? 1 : -1;
+    return Array.from({ length: count }, (_, index) => {
+      const offset = nativeFormationOffset(index, count, formation.radius,
+        formation.angleShift, false, ownX > 9 ? 1 : 0);
+      return {
+        x: Math.max(0.6, Math.min(17.4, point.x + rotation * offset.x / 1000)),
+        y: Math.max(0.8, Math.min(31.2, point.y + rotation * offset.y / 1000)),
+      };
+    });
+  }
   if (id === "barbarians") {
     const forward = team === "blue" ? -1 : 1;
     return Array.from({ length: 4 }, (_, i) => ({
@@ -126,7 +147,6 @@ export function deploymentPositions(
       };
     });
   }
-  const count = countOverride ?? CARD_MAP[id].count;
   return Array.from({ length: count }, (_, i) => {
     const angle = i * 2.39996,
       spread = count === 1 ? 0 : Math.sqrt(i) * 0.43;

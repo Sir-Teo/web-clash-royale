@@ -1,0 +1,584 @@
+{
+  "sourceCommit": "f2413c5",
+  "stateFields": [
+    "tick",
+    "entities",
+    "projectiles",
+    "areas",
+    "events",
+    "audio",
+    "players",
+    "winner",
+    "reason",
+    "actions",
+    "randomState"
+  ],
+  "cases": [
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 18,
+        "seed": 1747,
+        "mode": "classic",
+        "deck": [
+          "three-musketeers",
+          "archers",
+          "minion-horde",
+          "skeletons",
+          "goblins",
+          "spear-goblins",
+          "guards",
+          "bats"
+        ],
+        "enemyDeck": [
+          "barbarians",
+          "fire-spirits",
+          "elite-barbarians",
+          "minions",
+          "knight",
+          "mirror",
+          "clone",
+          "rage"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "goblins",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "clone",
+            "x": 4,
+            "y": 20
+          },
+          {
+            "tick": 81,
+            "team": "blue",
+            "card": "guards",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 162,
+            "team": "blue",
+            "card": "skeletons",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 162,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 567,
+            "team": "blue",
+            "card": "minion-horde",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 567,
+            "team": "red",
+            "card": "barbarians",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 810,
+            "team": "blue",
+            "card": "archers",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 810,
+            "team": "red",
+            "card": "knight",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1296,
+            "team": "red",
+            "card": "elite-barbarians",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1539,
+            "team": "blue",
+            "card": "three-musketeers",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1701,
+            "team": "blue",
+            "card": "spear-goblins",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1863,
+            "team": "blue",
+            "card": "bats",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1863,
+            "team": "red",
+            "card": "mirror",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2025,
+            "team": "blue",
+            "card": "goblins",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2025,
+            "team": "red",
+            "card": "rage",
+            "x": 14,
+            "y": 20
+          },
+          {
+            "tick": 2187,
+            "team": "red",
+            "card": "fire-spirits",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2268,
+            "team": "blue",
+            "card": "guards",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2430,
+            "team": "blue",
+            "card": "skeletons",
+            "x": 4,
+            "y": 22
+          }
+        ],
+        "duration": 2436
+      },
+      "checkpoints": [
+        {
+          "tick": 300,
+          "digest": "77ca1db67df22c6f449ecb5b924caf0ccd4a2926e1db2c4b1d5cd4cb520dd0ce"
+        },
+        {
+          "tick": 600,
+          "digest": "01b7c1ff1682048b3de19eaf585dccbbd7f4f7263a96d48cbfb411516f7c8443"
+        },
+        {
+          "tick": 900,
+          "digest": "0fbf746e92bedb69123786e516e7c9413dce69ea7ce8119162d58f8cd12b72d9"
+        },
+        {
+          "tick": 1200,
+          "digest": "535b0e05cdf74fc8d416e9b159890db2d64c00b0e35532aeeefbd68632f871c7"
+        },
+        {
+          "tick": 1500,
+          "digest": "ebb1f4671bb310c90915ca1e3b7413e35b7bca71bed731728752824be9ae2858"
+        },
+        {
+          "tick": 1800,
+          "digest": "eb90554b1bacfab3ee23f24e4b5781cfc885686f175bb892b0718d38ae45e66c"
+        },
+        {
+          "tick": 2100,
+          "digest": "75d4dd0cb6086b8f8b4c84d7039fc70cc0fd3f3a3352c3881570eb68a13c289f"
+        },
+        {
+          "tick": 2400,
+          "digest": "6bfa674672d3ce19cf11310e460a5bbfc3ab223390662825419738c57fafe89b"
+        },
+        {
+          "tick": 2436,
+          "digest": "e3e714412bf00ce73136aa7203ed9f54c9780d0efe4673cccf3ff7200dd6fe0e"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 18,
+        "seed": 1824,
+        "mode": "classic",
+        "deck": [
+          "three-musketeers",
+          "archers",
+          "minion-horde",
+          "skeletons",
+          "goblins",
+          "spear-goblins",
+          "guards",
+          "bats"
+        ],
+        "enemyDeck": [
+          "barbarians",
+          "fire-spirits",
+          "elite-barbarians",
+          "minions",
+          "knight",
+          "mirror",
+          "clone",
+          "rage"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "skeletons",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "barbarians",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 162,
+            "team": "blue",
+            "card": "minion-horde",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 324,
+            "team": "red",
+            "card": "knight",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 405,
+            "team": "blue",
+            "card": "archers",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 567,
+            "team": "red",
+            "card": "minions",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 648,
+            "team": "blue",
+            "card": "guards",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 729,
+            "team": "red",
+            "card": "rage",
+            "x": 14,
+            "y": 20
+          },
+          {
+            "tick": 891,
+            "team": "red",
+            "card": "fire-spirits",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1134,
+            "team": "red",
+            "card": "clone",
+            "x": 4,
+            "y": 20
+          },
+          {
+            "tick": 1377,
+            "team": "blue",
+            "card": "three-musketeers",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1539,
+            "team": "blue",
+            "card": "goblins",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1620,
+            "team": "red",
+            "card": "elite-barbarians",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1701,
+            "team": "blue",
+            "card": "spear-goblins",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1863,
+            "team": "blue",
+            "card": "bats",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1944,
+            "team": "blue",
+            "card": "skeletons",
+            "x": 4,
+            "y": 22
+          }
+        ],
+        "duration": 2079
+      },
+      "checkpoints": [
+        {
+          "tick": 300,
+          "digest": "1ea43cec17b44d6d0a1970f8a6bc4bbd3261911226c93c955e98d3b573149fb4"
+        },
+        {
+          "tick": 600,
+          "digest": "cd2a867288d7257957f3dc80204950f5641f96bb69333223d408506f27cca1a3"
+        },
+        {
+          "tick": 900,
+          "digest": "95fa55fb627e8f4b7959a37b8e33dccd8acb6b9d153f2dcce894ec9334326c6f"
+        },
+        {
+          "tick": 1200,
+          "digest": "e94b84ac0393f6ea68e7175f49e156109270f6cb5d03e272d7ee09945b71748b"
+        },
+        {
+          "tick": 1500,
+          "digest": "ef121bf087ddcc6901f4482a00b0279310f9cba1170b695c3adca33e7b7206b1"
+        },
+        {
+          "tick": 1800,
+          "digest": "5fc1bc200ac354c7269d442e6590ac396dc5ecb8bee1ffc2ac7528c4c374ff07"
+        },
+        {
+          "tick": 2079,
+          "digest": "d719df4855d3b1e8e2cfe7b1cca19d4b9e381fe84f1e6386938a3fa72289bce0"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 18,
+        "seed": 1901,
+        "mode": "classic",
+        "deck": [
+          "three-musketeers",
+          "archers",
+          "minion-horde",
+          "skeletons",
+          "goblins",
+          "spear-goblins",
+          "guards",
+          "bats"
+        ],
+        "enemyDeck": [
+          "barbarians",
+          "fire-spirits",
+          "elite-barbarians",
+          "minions",
+          "knight",
+          "mirror",
+          "clone",
+          "rage"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "spear-goblins",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "barbarians",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 81,
+            "team": "blue",
+            "card": "skeletons",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 162,
+            "team": "blue",
+            "card": "guards",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 405,
+            "team": "blue",
+            "card": "archers",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 567,
+            "team": "red",
+            "card": "mirror",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1053,
+            "team": "red",
+            "card": "elite-barbarians",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1134,
+            "team": "blue",
+            "card": "three-musketeers",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1296,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1458,
+            "team": "red",
+            "card": "rage",
+            "x": 4,
+            "y": 20
+          },
+          {
+            "tick": 1539,
+            "team": "blue",
+            "card": "minion-horde",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1701,
+            "team": "blue",
+            "card": "goblins",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1701,
+            "team": "red",
+            "card": "clone",
+            "x": 14,
+            "y": 20
+          },
+          {
+            "tick": 1863,
+            "team": "blue",
+            "card": "bats",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1944,
+            "team": "red",
+            "card": "knight",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2025,
+            "team": "blue",
+            "card": "spear-goblins",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2106,
+            "team": "blue",
+            "card": "skeletons",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2106,
+            "team": "red",
+            "card": "fire-spirits",
+            "x": 4,
+            "y": 10
+          }
+        ],
+        "duration": 2226
+      },
+      "checkpoints": [
+        {
+          "tick": 300,
+          "digest": "9cf3dc5ee0336b023c64632cd991544e7e3328f947822a71ba7004c302e5608a"
+        },
+        {
+          "tick": 600,
+          "digest": "3e4dcd5b0ec3a4de5399bd81442f3803fae9c735a2a28d3b8b3536d47b2ec6a5"
+        },
+        {
+          "tick": 900,
+          "digest": "2b031ba0e4f9511615f6a4be2972f6f80c94e9e471910d6a41928dedbca0a39d"
+        },
+        {
+          "tick": 1200,
+          "digest": "3afe25e8eaff2a66df9a8d41ca7ee3320415a7d37d186b9da9366a5de9a94e27"
+        },
+        {
+          "tick": 1500,
+          "digest": "d5982bac194348a7fe57e53338671cf4292d61e9c7980d19736b5ee21e2d69d4"
+        },
+        {
+          "tick": 1800,
+          "digest": "f9a1c02dd6a6e9234752d9a82b777efcb71fb92fee7e53ee84a3837ca842bfe3"
+        },
+        {
+          "tick": 2100,
+          "digest": "6d493de0f575ab7fb3cca8bdf7c3bfab61228de1a9d0c48c43af7ed0d1b6adc2"
+        },
+        {
+          "tick": 2226,
+          "digest": "72b4d690071ecaf63e6a8f7d5b8490a88cf9deea13e54f9f9838365320ec9b0f"
+        }
+      ]
+    }
+  ]
+}
