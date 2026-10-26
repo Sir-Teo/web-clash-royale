@@ -27,6 +27,7 @@ import lavaHound from "../game/lava-hound-data.json" with { type: "json" };
 import battleRam from "../game/battle-ram-data.json" with { type: "json" };
 import nightWitch from "../game/night-witch-data.json" with { type: "json" };
 import mortar from "../game/mortar-data.json" with { type: "json" };
+import { infernoDamage, infernoProfile } from "../game/inferno";
 
 const buildingSpawns = {
   "goblin-hut": { name: "Spear Goblin", rules: goblinHut, stagger: 0, deploy: 1 },
@@ -328,6 +329,8 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
   }
   const shield = cardShieldHitpoints(id);
   const charge = chargeRange(id);
+  const inferno = id === "inferno-tower" || id === "inferno-dragon" ? id : undefined;
+  const beam = inferno && infernoProfile(inferno);
   const spawn = Object.hasOwn(deathSpawns, id)
     ? deathSpawns[id as keyof typeof deathSpawns] : undefined;
   const child = spawn && CARD_MAP[spawn.card];
@@ -343,6 +346,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
       : "",
     spawn ? `${spawn.note} Spawn hitpoints and damage are per troop.` : "",
     id === "mortar" ? "Cannot target enemies inside the minimum range." : "",
+    inferno ? "Damage is per hit. Stage times count from locking onto the same target. Stun, losing range or changing targets resets the beam." : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -358,11 +362,17 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
             ),
           ]
         : []),
-      stat(
+      ...(inferno ? ([0, 1, 2] as const).map((stage) =>
+        stat(`Stage ${stage + 1} damage`, infernoDamage(inferno, stage), "swords"),
+      ) : [stat(
         c.count > 1 ? "Damage per troop" : "Damage per hit",
         c.damage,
         "swords",
-      ),
+      )]),
+      ...(beam ? [
+        stat("Stage 2 after", seconds(beam.stageDurations[0]), "timer"),
+        stat("Stage 3 after", seconds(beam.stageDurations[0] + beam.stageDurations[1]), "timer"),
+      ] : []),
       ...(Number.isFinite(charge)
         ? [
             stat("Charge damage", chargedAttackDamage({

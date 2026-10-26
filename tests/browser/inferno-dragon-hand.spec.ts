@@ -19,6 +19,9 @@ test("Inferno Dragon renders and deploys from the desktop and phone hand", async
   await expect.poll(async () => (await state()).loadedAnimations, { timeout: 60000 }).toBe(expectedAnimations);
   await page.locator('#deck-preview [data-card-info="inferno-dragon"]').click();
   await expect(page.locator(".detail-art.native-card-ready text")).toHaveText(["4", "Inferno Dragon", "Level 11"]);
+  await expect(page.locator('[data-card-stat="Stage 1 damage"] b')).toHaveText("36");
+  await expect(page.locator('[data-card-stat="Stage 3 damage"] b')).toHaveText("424");
+  await expect(page.locator('[data-card-stat="Stage 3 after"] b')).toHaveText("4 s");
   await page.getByRole("button", { name: "Close dialog", exact: true }).click();
   await page.evaluate(() => { Math.random = () => 0; });
   await page.locator("#battle-button").click();

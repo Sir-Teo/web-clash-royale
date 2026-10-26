@@ -395,3 +395,31 @@ test("death-spawn troop details distinguish released bodies, targets and timing"
   expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(before);
   expect(errors).toEqual([]);
 });
+
+test("Inferno detail panels show three per-hit stages and total lock times", async ({ page }, info) => {
+  if (info.project.name !== "desktop") await page.setViewportSize({ width: 320, height: 568 });
+  const before = await page.evaluate((key) => localStorage.getItem(key), key);
+  await page.locator('[data-nav="cards"]').click();
+  for (const [id, name, damage] of [
+    ["inferno-tower", "Inferno Tower", ["51", "192", "1,024"]],
+    ["inferno-dragon", "Inferno Dragon", ["36", "121", "424"]],
+  ] as const) {
+    await page.locator("#card-search").fill(name);
+    await page.locator(`[data-collection="${id}"]`).click();
+    await expect(page.locator(".detail-art.native-card-ready")).toHaveCount(1, { timeout: 30000 });
+    for (const [stage, value] of damage.entries())
+      await expect(page.locator(`[data-card-stat="Stage ${stage + 1} damage"] b`)).toHaveText(value);
+    await expect(page.locator('[data-card-stat="Stage 2 after"] b')).toHaveText("2 s");
+    await expect(page.locator('[data-card-stat="Stage 3 after"] b')).toHaveText("4 s");
+    await expect(page.locator('[data-card-stat="Hit interval"] b')).toHaveText("0.4 s");
+    await expect(page.locator('[data-card-stat="Damage per hit"]')).toHaveCount(0);
+    await expect(page.locator(".card-rule-note")).toContainText("Damage is per hit");
+    await expect(page.locator(".card-rule-note")).toContainText("Stun, losing range or changing targets resets");
+    expect(await page.locator(".modal").evaluate((modal) => modal.scrollWidth > modal.clientWidth)).toBe(false);
+    await page.locator('[data-card-stat="Stage 3 after"]').scrollIntoViewIfNeeded();
+    await expect(page.locator('[data-card-stat="Stage 3 after"]')).toBeInViewport();
+    await page.screenshot({ path: info.outputPath(`${id}-stage-details.png`), animations: "disabled" });
+    await page.getByRole("button", { name: "Back to collection", exact: true }).click();
+  }
+  expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(before);
+});

@@ -22,6 +22,7 @@ import guards from "./guards-data.json" with { type: "json" };
 import mortar from "./mortar-data.json" with { type: "json" };
 import bombTower from "./bomb-tower-data.json" with { type: "json" };
 import infernoTower from "./inferno-tower-data.json" with { type: "json" };
+import { infernoDamage } from "./inferno";
 import xBow from "./x-bow-data.json" with { type: "json" };
 import elixirCollector from "./elixir-collector-data.json" with { type: "json" };
 import goblinHut from "./goblin-hut-data.json" with { type: "json" };
@@ -729,7 +730,7 @@ const originalCards: Card[] = [
     "Inferno Dragon",
     infernoDragon.cost,
     Math.round(infernoDragon.sourceHitpoints * 1.1 ** 2),
-    Math.round(infernoDragon.sourceDamage[0] * 1.1 ** 2),
+    infernoDamage("inferno-dragon", 0),
     infernoDragon.sourceSpeed / 60,
     infernoDragon.sourceRange / 1000,
     infernoDragon.sourceHitSpeed / 1000,
@@ -958,7 +959,7 @@ const originalCards: Card[] = [
     "Inferno Tower",
     infernoTower.cost,
     Math.round(infernoTower.sourceHitpoints * 1152 / 450),
-    Math.round(infernoTower.sourceDamage[0] * 1152 / 450),
+    infernoDamage("inferno-tower", 0),
     0,
     infernoTower.range,
     infernoTower.hitSpeed,

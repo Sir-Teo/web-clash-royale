@@ -1800,3 +1800,13 @@ Two new checks verify recency across assets, exact disposal without releasing re
 All twelve targeted browser cases pass across desktop Chromium and phone WebKit. Each cache case warms more than 16 MiB of source frame geometry, rebuilds twice within the 8 MiB budget plus the new scene's initial/current frames, and matches the original decoded canvas pixels exactly. Native asset count, battle tick, accepted actions, body positions and health stay unchanged. All six real graphics-recovery cases and four late-art/solo-pause cases also pass.
 
 Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup and all 278 native combat/death/music files. Root production output is restored afterward with cache version `48b0d013fbbc`. The pack remains 921 URLs and 894 unique content groups, with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.
+
+## Inferno damage-stage details
+
+Inferno Tower and Inferno Dragon now show their three per-hit damage values and cumulative stage-entry times, replacing the earlier unlabeled opening-damage row. Tower stages deal 51/192/1,024 damage and Dragon stages 36/121/424 at the current arena normalization; stages two and three begin after two/four seconds of uninterrupted lock. Notes explain per-hit values and beam resets from stun, lost range or target changes. The existing normalization is shared by card construction, actual hits and the panel without changing combat, replay, network or profile rules.
+
+Six new cases compare actual beam damage and lock-stage clocks against both panels at normal speed, under Rage and under slow, then verify real Zap resets and loss of range. Existing Inferno tests retain their source-value checks and target/beam behavior. All 39 focused checks pass. The full suite passes 1,665 tests across 173 files, including historical replay checkpoints. TypeScript passes. Unit/build and rendered checks run separately.
+
+All ten targeted browser cases pass across desktop Chromium and phone WebKit. Both expanded panels show all stage values/times, preserve saved data, fit at 320 pixels and reach the later-stage rows by scrolling. Both cards remain playable from real hands and render their original three-stage beam, muzzle and impact artwork. Desktop Tower and phone Dragon detail captures were inspected. Production build passes.
+
+Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup and all 278 native combat/death/music files. Root production output is restored afterward with cache version `fde3d8b32c0f`. The pack remains 921 URLs and 894 unique content groups, with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.

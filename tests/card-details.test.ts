@@ -76,6 +76,45 @@ describe("current card detail stats", () => {
       expect(stats).not.toHaveProperty(label);
     expect(cardDetails("goblin-gang").note).toContain("per troop of the named type");
   });
+  it.each([
+    ["inferno-tower", "normal"], ["inferno-tower", "rage"], ["inferno-tower", "slow"],
+    ["inferno-dragon", "normal"], ["inferno-dragon", "rage"], ["inferno-dragon", "slow"],
+  ] as const)("matches %s stage details to actual %s beam hits, lock clocks and resets", (id, buff) => {
+    const battle = cast(id, 4, 22);
+    const beam = battle.entities.find((entity) => entity.card === id)!;
+    beam.deploy = 0;
+    if (buff === "rage") beam.rage = { remaining: 30 };
+    if (buff === "slow") beam.slow = { remaining: 30 };
+    battle.players.red.hand[0] = "knight";
+    battle.players.red.elixir = 10;
+    expect(battle.play("red", 0, 4, 10).ok).toBe(true);
+    const target = battle.entities.find((entity) => entity.team === "red" && entity.card === "knight")!;
+    Object.assign(target, { x: 4, y: 18, deploy: 0, active: false, hp: 100000, maxHp: 100000 });
+    const stats = rows(id), stages = new Map<number, number>();
+    for (let step = 0; step < 160; step++) {
+      battle.step();
+      const stage = beam.inferno?.stage;
+      if (stage !== undefined && !stages.has(stage)) stages.set(stage, battle.time);
+    }
+    const damage = battle.events.filter((event) => event.type === "hit" && event.card === id).map((event) => event.value);
+    for (const stage of [1, 2, 3]) expect(damage).toContain(numeric(stats[`Stage ${stage} damage`]));
+    expect(numeric(stats["Stage 1 damage"])).toBe(CARD_MAP[id].damage);
+    for (const stage of [2, 3])
+      expect(Math.abs(stages.get(stage - 1)! - parseFloat(stats[`Stage ${stage} after`]))).toBeLessThanOrEqual(STEP + 1e-8);
+    expect(stats).not.toHaveProperty("Damage per hit");
+    battle.players.red.hand[0] = "zap";
+    battle.players.red.elixir = 10;
+    expect(battle.play("red", 0, beam.x, beam.y).ok).toBe(true);
+    for (let step = 0; step < 10 && beam.stun === 0; step++) battle.step();
+    expect(beam.stun).toBeGreaterThan(0);
+    expect(beam.inferno).toBeUndefined();
+    for (let step = 0; step < 30 && !beam.inferno; step++) battle.step();
+    expect(beam.inferno?.stage).toBe(0);
+    target.y = beam.y - 20;
+    battle.step();
+    expect(beam.inferno).toBeUndefined();
+    expect(cardDetails(id).note).toContain("losing range or changing targets resets");
+  });
   it("describes individual troops and defensive buildings with their actual interval and lifetime", () => {
     expect(rows("knight")).toMatchObject({
       Hitpoints: "1,666",

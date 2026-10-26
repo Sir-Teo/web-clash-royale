@@ -49,7 +49,7 @@ import clone from "./clone-data.json" with { type: "json" };
 import mirror from "./mirror-data.json" with { type: "json" };
 import iceWizard from "./ice-wizard-data.json" with { type: "json" };
 import princess from "./princess-data.json" with { type: "json" };
-import infernoDragon from "./inferno-dragon-data.json" with { type: "json" };
+import { infernoDamage, infernoProfile } from "./inferno";
 import electroWizard from "./electro-wizard-data.json" with { type: "json" };
 import miner from "./miner-data.json" with { type: "json" };
 import bowler from "./bowler-data.json" with { type: "json" };
@@ -63,7 +63,6 @@ import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import giantSkeleton from "./giant-skeleton-data.json" with { type: "json" };
 import mortar from "./mortar-data.json" with { type: "json" };
 import bombTower from "./bomb-tower-data.json" with { type: "json" };
-import infernoTower from "./inferno-tower-data.json" with { type: "json" };
 import xBow from "./x-bow-data.json" with { type: "json" };
 import elixirCollector from "./elixir-collector-data.json" with { type: "json" };
 import goblinHut from "./goblin-hut-data.json" with { type: "json" };
@@ -1746,7 +1745,8 @@ export class Battle {
     if (this.inRange(e, target)) this.advanceBanditDash(e);
   }
   private updateInferno(e: Entity, hitSpeed: number) {
-    const source = e.card === "inferno-tower" ? infernoTower : infernoDragon;
+    const card = e.card === "inferno-tower" ? "inferno-tower" : "inferno-dragon";
+    const source = infernoProfile(card);
     const target = this.acquireTarget(e);
     if (!target || !this.inRange(e, target)) {
       this.cancelAttack(e);
@@ -1777,8 +1777,7 @@ export class Battle {
     if (lock.hitTimer > 1e-8) return;
     lock.hitTimer += e.interval;
     e.attack = e.interval;
-    const damage = Math.round(source.sourceDamage[lock.stage] *
-      (e.card === "inferno-tower" ? 1152 / 450 : 1.1 ** 2));
+    const damage = infernoDamage(card, lock.stage);
     this.hurt(target, damage);
     this.emit("hit", e.team, target.x, target.y, e.card, damage, {
       height: projectileHitHeight(target),

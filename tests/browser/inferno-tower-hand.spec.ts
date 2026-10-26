@@ -22,6 +22,9 @@ test("Inferno Tower is playable from the hand on desktop and phone", async ({ pa
   await page.locator('#deck-preview [data-card-info="inferno-tower"]').click();
   await expect(page.locator(".detail-art.native-card-ready text"))
     .toHaveText(["5", "Inferno Tower", "Level 11"]);
+  await expect(page.locator('[data-card-stat="Stage 1 damage"] b')).toHaveText("51");
+  await expect(page.locator('[data-card-stat="Stage 3 damage"] b')).toHaveText("1,024");
+  await expect(page.locator('[data-card-stat="Stage 3 after"] b')).toHaveText("4 s");
   await page.getByRole("button", { name: "Close dialog", exact: true }).click();
   await page.evaluate(() => { Math.random = () => 0; });
   await page.locator("#battle-button").click();

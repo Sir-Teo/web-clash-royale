@@ -392,6 +392,8 @@ The Crown Tower spell multiplier follows the current rules version in the engine
 
 Golem, Lava Hound, Battle Ram and Night Witch additionally show the count released on destruction and the released troop's per-body health, damage, hit interval, targets and deployment time. These values use the same normalized `CARD_MAP` child profiles and source spawn settings as the engine. Golem distinguishes its own death blast from each Golemite's; Night Witch distinguishes periodic Bat pairs, the first delay after deployment and her four-Bat death spawn. Battle Ram retains charge details while explaining that its first building hit breaks the ram. No simulation, replay, wire or profile fields change.
 
+Inferno Tower and Inferno Dragon show all three per-hit damage stages and cumulative stage-entry times at two/four seconds of uninterrupted lock. `infernoDamage` supplies the unchanged normalized values to card construction, live beam hits and the panel, avoiding separate rounding paths. Ramp time continues in real time while Rage/slow change hit cadence. The panel explains per-hit values and resets from stun, lost range or changed targets. No combat or replay rules change.
+
 Phone detail panels use two stat columns with centered wrapping labels and values; desktop uses three. Card inspection through lobby, shared decks and match details uses the same read-only provider.
 
 
