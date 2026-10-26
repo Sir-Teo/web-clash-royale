@@ -1,0 +1,1830 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "sha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "emulator": "unicorn==2.1.4",
+  "stepMs": 50,
+  "steps": 720,
+  "inputs": [
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    }
+  ],
+  "limits": [
+    "Summon-clock updates and the separate deployment guard run. The deployment state-transition callback is intercepted. Complete state transitions, stun/control eligibility, child placement, allocation and lifetimes are not emulated.",
+    "The real empty-buff rate helper runs. Buff collection/ranking is not tested.",
+    "Clock profiles are explicit inputs matching archived rows; CSV inheritance and row loading are outside this fragment."
+  ],
+  "blocks": [
+    {
+      "name": "startColumn",
+      "start": "0x1dc701",
+      "end": "0x1dc72c",
+      "interpretation": "SpawnStartTime string at 0x61418c is cached at GOT+0x1850.",
+      "instructions": [
+        "1dc701:\t8d 83 78 b7 e5 ff    \tlea    eax,[ebx-0x1a4888]",
+        "1dc707:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1dc70b:\t8d bc 24 d0 03 00 00 \tlea    edi,[esp+0x3d0]",
+        "1dc712:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1dc715:\te8 86 cc 0b 00       \tcall   2993a0",
+        "1dc71a:\t89 7c 24 04          \tmov    DWORD PTR [esp+0x4],edi",
+        "1dc71e:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1dc721:\te8 7a 62 17 00       \tcall   3529a0",
+        "1dc726:\t89 83 50 18 00 00    \tmov    DWORD PTR [ebx+0x1850],eax"
+      ]
+    },
+    {
+      "name": "spawnColumns",
+      "start": "0x1dc754",
+      "end": "0x1dc825",
+      "interpretation": "SpawnInterval, SpawnNumber and SpawnPauseTime cache at GOT+0x1854/1858/185c.",
+      "instructions": [
+        "1dc754:\t8d 83 1e a5 e5 ff    \tlea    eax,[ebx-0x1a5ae2]",
+        "1dc75a:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1dc75e:\t8d bc 24 b8 03 00 00 \tlea    edi,[esp+0x3b8]",
+        "1dc765:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1dc768:\te8 33 cc 0b 00       \tcall   2993a0",
+        "1dc76d:\t89 7c 24 04          \tmov    DWORD PTR [esp+0x4],edi",
+        "1dc771:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1dc774:\te8 27 62 17 00       \tcall   3529a0",
+        "1dc779:\t89 83 54 18 00 00    \tmov    DWORD PTR [ebx+0x1854],eax",
+        "1dc77f:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1dc782:\te8 59 c8 0b 00       \tcall   298fe0",
+        "1dc787:\t81 bb 54 18 00 00 ff \tcmp    DWORD PTR [ebx+0x1854],0xffffffff",
+        "1dc78e:\tff ff ff",
+        "1dc791:\t0f 95 c0             \tsetne  al",
+        "1dc794:\t8b 4c 24 24          \tmov    ecx,DWORD PTR [esp+0x24]",
+        "1dc798:\t89 4c 24 04          \tmov    DWORD PTR [esp+0x4],ecx",
+        "1dc79c:\t0f b6 c0             \tmovzx  eax,al",
+        "1dc79f:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1dc7a2:\te8 09 a7 17 00       \tcall   356eb0",
+        "1dc7a7:\t8d 83 87 b7 e5 ff    \tlea    eax,[ebx-0x1a4879]",
+        "1dc7ad:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1dc7b1:\t8d bc 24 a0 03 00 00 \tlea    edi,[esp+0x3a0]",
+        "1dc7b8:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1dc7bb:\te8 e0 cb 0b 00       \tcall   2993a0",
+        "1dc7c0:\t89 7c 24 04          \tmov    DWORD PTR [esp+0x4],edi",
+        "1dc7c4:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1dc7c7:\te8 d4 61 17 00       \tcall   3529a0",
+        "1dc7cc:\t89 83 58 18 00 00    \tmov    DWORD PTR [ebx+0x1858],eax",
+        "1dc7d2:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1dc7d5:\te8 06 c8 0b 00       \tcall   298fe0",
+        "1dc7da:\t81 bb 58 18 00 00 ff \tcmp    DWORD PTR [ebx+0x1858],0xffffffff",
+        "1dc7e1:\tff ff ff",
+        "1dc7e4:\t0f 95 c0             \tsetne  al",
+        "1dc7e7:\t8b 4c 24 24          \tmov    ecx,DWORD PTR [esp+0x24]",
+        "1dc7eb:\t89 4c 24 04          \tmov    DWORD PTR [esp+0x4],ecx",
+        "1dc7ef:\t0f b6 c0             \tmovzx  eax,al",
+        "1dc7f2:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1dc7f5:\te8 b6 a6 17 00       \tcall   356eb0",
+        "1dc7fa:\t8d 83 93 b7 e5 ff    \tlea    eax,[ebx-0x1a486d]",
+        "1dc800:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1dc804:\t8d bc 24 88 03 00 00 \tlea    edi,[esp+0x388]",
+        "1dc80b:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1dc80e:\te8 8d cb 0b 00       \tcall   2993a0",
+        "1dc813:\t89 7c 24 04          \tmov    DWORD PTR [esp+0x4],edi",
+        "1dc817:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1dc81a:\te8 81 61 17 00       \tcall   3529a0",
+        "1dc81f:\t89 83 5c 18 00 00    \tmov    DWORD PTR [ebx+0x185c],eax"
+      ]
+    },
+    {
+      "name": "clockData",
+      "start": "0x1d9b4d",
+      "end": "0x1d9bad",
+      "interpretation": "The cached fields load into CharacterData+0x1e4/1e8/1ec/1f0.",
+      "instructions": [
+        "1d9b4d:\t8b 83 50 18 00 00    \tmov    eax,DWORD PTR [ebx+0x1850]",
+        "1d9b53:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1d9b57:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1d9b5a:\te8 7b b6 00 00       \tcall   1e51da",
+        "1d9b5f:\t89 87 e4 01 00 00    \tmov    DWORD PTR [edi+0x1e4],eax",
+        "1d9b65:\t8b 83 54 18 00 00    \tmov    eax,DWORD PTR [ebx+0x1854]",
+        "1d9b6b:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1d9b6f:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1d9b72:\te8 63 b6 00 00       \tcall   1e51da",
+        "1d9b77:\t89 87 e8 01 00 00    \tmov    DWORD PTR [edi+0x1e8],eax",
+        "1d9b7d:\t8b 83 58 18 00 00    \tmov    eax,DWORD PTR [ebx+0x1858]",
+        "1d9b83:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1d9b87:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1d9b8a:\te8 4b b6 00 00       \tcall   1e51da",
+        "1d9b8f:\t89 87 ec 01 00 00    \tmov    DWORD PTR [edi+0x1ec],eax",
+        "1d9b95:\t8b 83 5c 18 00 00    \tmov    eax,DWORD PTR [ebx+0x185c]",
+        "1d9b9b:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1d9b9f:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1d9ba2:\te8 33 b6 00 00       \tcall   1e51da",
+        "1d9ba7:\t89 87 f0 01 00 00    \tmov    DWORD PTR [edi+0x1f0],eax"
+      ]
+    },
+    {
+      "name": "clockGetters",
+      "start": "0x1de0ba",
+      "end": "0x1de11e",
+      "interpretation": "Read start, interval, count, pause and limit from CharacterData.",
+      "instructions": [
+        "1de0ba:\t55                   \tpush   ebp",
+        "1de0bb:\t89 e5                \tmov    ebp,esp",
+        "1de0bd:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "1de0c0:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "1de0c3:\t8b 80 e4 01 00 00    \tmov    eax,DWORD PTR [eax+0x1e4]",
+        "1de0c9:\t89 ec                \tmov    esp,ebp",
+        "1de0cb:\t5d                   \tpop    ebp",
+        "1de0cc:\tc3                   \tret",
+        "1de0cd:\t90                   \tnop",
+        "1de0ce:\t55                   \tpush   ebp",
+        "1de0cf:\t89 e5                \tmov    ebp,esp",
+        "1de0d1:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "1de0d4:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "1de0d7:\t8b 80 e8 01 00 00    \tmov    eax,DWORD PTR [eax+0x1e8]",
+        "1de0dd:\t89 ec                \tmov    esp,ebp",
+        "1de0df:\t5d                   \tpop    ebp",
+        "1de0e0:\tc3                   \tret",
+        "1de0e1:\t90                   \tnop",
+        "1de0e2:\t55                   \tpush   ebp",
+        "1de0e3:\t89 e5                \tmov    ebp,esp",
+        "1de0e5:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "1de0e8:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "1de0eb:\t8b 80 ec 01 00 00    \tmov    eax,DWORD PTR [eax+0x1ec]",
+        "1de0f1:\t89 ec                \tmov    esp,ebp",
+        "1de0f3:\t5d                   \tpop    ebp",
+        "1de0f4:\tc3                   \tret",
+        "1de0f5:\t90                   \tnop",
+        "1de0f6:\t55                   \tpush   ebp",
+        "1de0f7:\t89 e5                \tmov    ebp,esp",
+        "1de0f9:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "1de0fc:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "1de0ff:\t8b 80 f0 01 00 00    \tmov    eax,DWORD PTR [eax+0x1f0]",
+        "1de105:\t89 ec                \tmov    esp,ebp",
+        "1de107:\t5d                   \tpop    ebp",
+        "1de108:\tc3                   \tret",
+        "1de109:\t90                   \tnop",
+        "1de10a:\t55                   \tpush   ebp",
+        "1de10b:\t89 e5                \tmov    ebp,esp",
+        "1de10d:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "1de110:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "1de113:\t8b 80 f4 01 00 00    \tmov    eax,DWORD PTR [eax+0x1f4]",
+        "1de119:\t89 ec                \tmov    esp,ebp",
+        "1de11b:\t5d                   \tpop    ebp",
+        "1de11c:\tc3                   \tret",
+        "1de11d:\t90                   \tnop"
+      ]
+    },
+    {
+      "name": "initialZero",
+      "start": "0x214602",
+      "end": "0x214617",
+      "interpretation": "Character clock +0x78 initializes to zero.",
+      "instructions": [
+        "214602:\tc7 46 70 64 00 00 00 \tmov    DWORD PTR [esi+0x70],0x64",
+        "214609:\tc7 46 78 00 00 00 00 \tmov    DWORD PTR [esi+0x78],0x0",
+        "214610:\tc7 46 74 00 00 00 00 \tmov    DWORD PTR [esi+0x74],0x0"
+      ]
+    },
+    {
+      "name": "positiveStartOverride",
+      "start": "0x214ecf",
+      "end": "0x214ede",
+      "interpretation": "A strictly positive SpawnStartTime replaces that zero clock.",
+      "instructions": [
+        "214ecf:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "214ed2:\te8 e3 91 fc ff       \tcall   1de0ba",
+        "214ed7:\t85 c0                \ttest   eax,eax",
+        "214ed9:\t7e 03                \tjle    214ede",
+        "214edb:\t89 46 78             \tmov    DWORD PTR [esi+0x78],eax"
+      ]
+    },
+    {
+      "name": "deploymentGuard",
+      "start": "0x21640b",
+      "end": "0x21644e",
+      "interpretation": "A positive deployment countdown advances by 50 ms and returns while positive. State 8 also returns. Expiry notifies the intercepted state callback and can continue on the same update.",
+      "instructions": [
+        "21640b:\t8b 87 90 00 00 00    \tmov    eax,DWORD PTR [edi+0x90]",
+        "216411:\t85 c0                \ttest   eax,eax",
+        "216413:\t7f 06                \tjg     21641b",
+        "216415:\t83 7f 60 08          \tcmp    DWORD PTR [edi+0x60],0x8",
+        "216419:\t75 33                \tjne    21644e",
+        "21641b:\t83 c0 ce             \tadd    eax,0xffffffce",
+        "21641e:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "216421:\tc7 44 24 04 00 00 00 \tmov    DWORD PTR [esp+0x4],0x0",
+        "216428:\t00",
+        "216429:\te8 e2 58 14 00       \tcall   35bd10",
+        "21642e:\t89 87 90 00 00 00    \tmov    DWORD PTR [edi+0x90],eax",
+        "216434:\t85 c0                \ttest   eax,eax",
+        "216436:\t0f 8f 49 05 00 00    \tjg     216985",
+        "21643c:\t83 7f 60 08          \tcmp    DWORD PTR [edi+0x60],0x8",
+        "216440:\t0f 84 3f 05 00 00    \tje     216985",
+        "216446:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "216449:\te8 40 05 00 00       \tcall   21698e"
+      ]
+    },
+    {
+      "name": "summonerClock",
+      "start": "0x216777",
+      "end": "0x216972",
+      "interpretation": "Current eligible summon update: rate/2 decrement; one child per positive interval, otherwise a simultaneous group; count reset; add interval or pause, carrying remainder and clamping to one millisecond.",
+      "instructions": [
+        "216777:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "21677a:\te8 8f 2e 00 00       \tcall   21960e",
+        "21677f:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "216782:\te8 fb 80 fc ff       \tcall   1de882",
+        "216787:\t89 c6                \tmov    esi,eax",
+        "216789:\t89 74 24 24          \tmov    DWORD PTR [esp+0x24],esi",
+        "21678d:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "216790:\te8 79 2e 00 00       \tcall   21960e",
+        "216795:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "216798:\te8 6d 79 fc ff       \tcall   1de10a",
+        "21679d:\t89 44 24 28          \tmov    DWORD PTR [esp+0x28],eax",
+        "2167a1:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "2167a4:\te8 65 2e 00 00       \tcall   21960e",
+        "2167a9:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "2167ac:\te8 45 79 fc ff       \tcall   1de0f6",
+        "2167b1:\t89 44 24 2c          \tmov    DWORD PTR [esp+0x2c],eax",
+        "2167b5:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "2167b8:\te8 51 2e 00 00       \tcall   21960e",
+        "2167bd:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "2167c0:\te8 09 79 fc ff       \tcall   1de0ce",
+        "2167c5:\t85 f6                \ttest   esi,esi",
+        "2167c7:\t0f 84 a5 01 00 00    \tje     216972",
+        "2167cd:\t03 44 24 2c          \tadd    eax,DWORD PTR [esp+0x2c]",
+        "2167d1:\t83 bf 80 00 00 00 00 \tcmp    DWORD PTR [edi+0x80],0x0",
+        "2167d8:\t7e 09                \tjle    2167e3",
+        "2167da:\t85 c0                \ttest   eax,eax",
+        "2167dc:\t7f 1d                \tjg     2167fb",
+        "2167de:\te9 8f 01 00 00       \tjmp    216972",
+        "2167e3:\t83 7c 24 28 00       \tcmp    DWORD PTR [esp+0x28],0x0",
+        "2167e8:\t0f 9e c1             \tsetle  cl",
+        "2167eb:\t85 c0                \ttest   eax,eax",
+        "2167ed:\t0f 8e 7f 01 00 00    \tjle    216972",
+        "2167f3:\t84 c9                \ttest   cl,cl",
+        "2167f5:\t0f 84 77 01 00 00    \tje     216972",
+        "2167fb:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "2167fe:\te8 ad 31 00 00       \tcall   2199b0",
+        "216803:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "216806:\te8 15 56 04 00       \tcall   25be20",
+        "21680b:\t89 c1                \tmov    ecx,eax",
+        "21680d:\tc1 e9 1f             \tshr    ecx,0x1f",
+        "216810:\t01 c1                \tadd    ecx,eax",
+        "216812:\td1 f9                \tsar    ecx,1",
+        "216814:\t8b 47 78             \tmov    eax,DWORD PTR [edi+0x78]",
+        "216817:\t29 c8                \tsub    eax,ecx",
+        "216819:\t89 47 78             \tmov    DWORD PTR [edi+0x78],eax",
+        "21681c:\t85 c0                \ttest   eax,eax",
+        "21681e:\t0f 8f 4e 01 00 00    \tjg     216972",
+        "216824:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "216827:\te8 e2 2d 00 00       \tcall   21960e",
+        "21682c:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "21682f:\te8 ae 78 fc ff       \tcall   1de0e2",
+        "216834:\t89 44 24 2c          \tmov    DWORD PTR [esp+0x2c],eax",
+        "216838:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "21683b:\te8 ce 2d 00 00       \tcall   21960e",
+        "216840:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "216843:\te8 86 78 fc ff       \tcall   1de0ce",
+        "216848:\t85 c0                \ttest   eax,eax",
+        "21684a:\t74 5f                \tje     2168ab",
+        "21684c:\t8d 83 ed 6a e4 ff    \tlea    eax,[ebx-0x1b9513]",
+        "216852:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "216856:\t8d 74 24 30          \tlea    esi,[esp+0x30]",
+        "21685a:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "21685d:\te8 3e 2b 08 00       \tcall   2993a0",
+        "216862:\t89 74 24 18          \tmov    DWORD PTR [esp+0x18],esi",
+        "216866:\t8b 44 24 24          \tmov    eax,DWORD PTR [esp+0x24]",
+        "21686a:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "21686e:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "216871:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "216878:\t00",
+        "216879:\tc7 44 24 10 00 00 00 \tmov    DWORD PTR [esp+0x10],0x0",
+        "216880:\t00",
+        "216881:\tc7 44 24 0c 00 00 00 \tmov    DWORD PTR [esp+0xc],0x0",
+        "216888:\t00",
+        "216889:\tc7 44 24 08 01 00 00 \tmov    DWORD PTR [esp+0x8],0x1",
+        "216890:\t00",
+        "216891:\te8 26 f1 ff ff       \tcall   2159bc",
+        "216896:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "216899:\te8 42 27 08 00       \tcall   298fe0",
+        "21689e:\t8b 47 7c             \tmov    eax,DWORD PTR [edi+0x7c]",
+        "2168a1:\t40                   \tinc    eax",
+        "2168a2:\t89 47 7c             \tmov    DWORD PTR [edi+0x7c],eax",
+        "2168a5:\t8b 4c 24 2c          \tmov    ecx,DWORD PTR [esp+0x2c]",
+        "2168a9:\teb 74                \tjmp    21691f",
+        "2168ab:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "2168ae:\te8 5b 2d 00 00       \tcall   21960e",
+        "2168b3:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "2168b6:\te8 ff 7f fc ff       \tcall   1de8ba",
+        "2168bb:\t89 44 24 20          \tmov    DWORD PTR [esp+0x20],eax",
+        "2168bf:\t8d 83 ed 6a e4 ff    \tlea    eax,[ebx-0x1b9513]",
+        "2168c5:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "2168c9:\t8d 44 24 48          \tlea    eax,[esp+0x48]",
+        "2168cd:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "2168d0:\t89 c6                \tmov    esi,eax",
+        "2168d2:\te8 c9 2a 08 00       \tcall   2993a0",
+        "2168d7:\t89 74 24 18          \tmov    DWORD PTR [esp+0x18],esi",
+        "2168db:\t8b 44 24 20          \tmov    eax,DWORD PTR [esp+0x20]",
+        "2168df:\t89 44 24 10          \tmov    DWORD PTR [esp+0x10],eax",
+        "2168e3:\t8b 44 24 2c          \tmov    eax,DWORD PTR [esp+0x2c]",
+        "2168e7:\t89 44 24 08          \tmov    DWORD PTR [esp+0x8],eax",
+        "2168eb:\t8b 44 24 24          \tmov    eax,DWORD PTR [esp+0x24]",
+        "2168ef:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "2168f3:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "2168f6:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "2168fd:\t00",
+        "2168fe:\tc7 44 24 0c 00 00 00 \tmov    DWORD PTR [esp+0xc],0x0",
+        "216905:\t00",
+        "216906:\te8 b1 f0 ff ff       \tcall   2159bc",
+        "21690b:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "21690e:\te8 cd 26 08 00       \tcall   298fe0",
+        "216913:\t8b 47 7c             \tmov    eax,DWORD PTR [edi+0x7c]",
+        "216916:\t8b 4c 24 2c          \tmov    ecx,DWORD PTR [esp+0x2c]",
+        "21691a:\t01 c8                \tadd    eax,ecx",
+        "21691c:\t89 47 7c             \tmov    DWORD PTR [edi+0x7c],eax",
+        "21691f:\t83 7c 24 28 00       \tcmp    DWORD PTR [esp+0x28],0x0",
+        "216924:\t7e 06                \tjle    21692c",
+        "216926:\tff 8f 80 00 00 00    \tdec    DWORD PTR [edi+0x80]",
+        "21692c:\t39 c8                \tcmp    eax,ecx",
+        "21692e:\t7d 12                \tjge    216942",
+        "216930:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "216933:\te8 d6 2c 00 00       \tcall   21960e",
+        "216938:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "21693b:\te8 8e 77 fc ff       \tcall   1de0ce",
+        "216940:\teb 17                \tjmp    216959",
+        "216942:\tc7 47 7c 00 00 00 00 \tmov    DWORD PTR [edi+0x7c],0x0",
+        "216949:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "21694c:\te8 bd 2c 00 00       \tcall   21960e",
+        "216951:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "216954:\te8 9d 77 fc ff       \tcall   1de0f6",
+        "216959:\t03 47 78             \tadd    eax,DWORD PTR [edi+0x78]",
+        "21695c:\t89 47 78             \tmov    DWORD PTR [edi+0x78],eax",
+        "21695f:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "216962:\tc7 44 24 04 01 00 00 \tmov    DWORD PTR [esp+0x4],0x1",
+        "216969:\t00",
+        "21696a:\te8 a1 53 14 00       \tcall   35bd10",
+        "21696f:\t89 47 78             \tmov    DWORD PTR [edi+0x78],eax"
+      ]
+    },
+    {
+      "name": "emptyBuffRate",
+      "start": "0x25be20",
+      "end": "0x25bede",
+      "interpretation": "An empty buff component produces rate 100; the clock update divides it by two, advancing 50 ms.",
+      "instructions": [
+        "25be20:\t55                   \tpush   ebp",
+        "25be21:\t89 e5                \tmov    ebp,esp",
+        "25be23:\t53                   \tpush   ebx",
+        "25be24:\t57                   \tpush   edi",
+        "25be25:\t56                   \tpush   esi",
+        "25be26:\t83 e4 f0             \tand    esp,0xfffffff0",
+        "25be29:\t83 ec 20             \tsub    esp,0x20",
+        "25be2c:\te8 00 00 00 00       \tcall   25be31",
+        "25be31:\t5b                   \tpop    ebx",
+        "25be32:\t81 c3 e3 cb 55 00    \tadd    ebx,0x55cbe3",
+        "25be38:\t8b 75 08             \tmov    esi,DWORD PTR [ebp+0x8]",
+        "25be3b:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "25be42:\t00",
+        "25be43:\t83 7e 10 00          \tcmp    DWORD PTR [esi+0x10],0x0",
+        "25be47:\tc7 44 24 18 64 00 00 \tmov    DWORD PTR [esp+0x18],0x64",
+        "25be4e:\t00",
+        "25be4f:\t7e 4d                \tjle    25be9e",
+        "25be51:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "25be58:\t00",
+        "25be59:\tc7 44 24 18 64 00 00 \tmov    DWORD PTR [esp+0x18],0x64",
+        "25be60:\t00",
+        "25be61:\t31 ff                \txor    edi,edi",
+        "25be63:\t8b 46 08             \tmov    eax,DWORD PTR [esi+0x8]",
+        "25be66:\t8b 04 b8             \tmov    eax,DWORD PTR [eax+edi*4]",
+        "25be69:\t8b 40 0c             \tmov    eax,DWORD PTR [eax+0xc]",
+        "25be6c:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25be6f:\te8 18 c1 f7 ff       \tcall   1d7f8c",
+        "25be74:\t85 c0                \ttest   eax,eax",
+        "25be76:\t7e 0f                \tjle    25be87",
+        "25be78:\t8b 4c 24 18          \tmov    ecx,DWORD PTR [esp+0x18]",
+        "25be7c:\t39 c8                \tcmp    eax,ecx",
+        "25be7e:\t0f 4d c8             \tcmovge ecx,eax",
+        "25be81:\t89 4c 24 18          \tmov    DWORD PTR [esp+0x18],ecx",
+        "25be85:\teb 11                \tjmp    25be98",
+        "25be87:\t79 0f                \tjns    25be98",
+        "25be89:\tf7 d8                \tneg    eax",
+        "25be8b:\t8b 4c 24 14          \tmov    ecx,DWORD PTR [esp+0x14]",
+        "25be8f:\t39 c1                \tcmp    ecx,eax",
+        "25be91:\t0f 4c c8             \tcmovl  ecx,eax",
+        "25be94:\t89 4c 24 14          \tmov    DWORD PTR [esp+0x14],ecx",
+        "25be98:\t47                   \tinc    edi",
+        "25be99:\t3b 7e 10             \tcmp    edi,DWORD PTR [esi+0x10]",
+        "25be9c:\t7c c5                \tjl     25be63",
+        "25be9e:\tb8 64 00 00 00       \tmov    eax,0x64",
+        "25bea3:\t2b 44 24 14          \tsub    eax,DWORD PTR [esp+0x14]",
+        "25bea7:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25beaa:\tc7 44 24 08 64 00 00 \tmov    DWORD PTR [esp+0x8],0x64",
+        "25beb1:\t00",
+        "25beb2:\tc7 44 24 04 00 00 00 \tmov    DWORD PTR [esp+0x4],0x0",
+        "25beb9:\t00",
+        "25beba:\te8 f1 fe 0f 00       \tcall   35bdb0",
+        "25bebf:\t0f af 44 24 18       \timul   eax,DWORD PTR [esp+0x18]",
+        "25bec4:\tb9 1f 85 eb 51       \tmov    ecx,0x51eb851f",
+        "25bec9:\tf7 e9                \timul   ecx",
+        "25becb:\t89 d0                \tmov    eax,edx",
+        "25becd:\tc1 e8 1f             \tshr    eax,0x1f",
+        "25bed0:\tc1 fa 05             \tsar    edx,0x5",
+        "25bed3:\t8d 04 02             \tlea    eax,[edx+eax*1]",
+        "25bed6:\t8d 65 f4             \tlea    esp,[ebp-0xc]",
+        "25bed9:\t5e                   \tpop    esi",
+        "25beda:\t5f                   \tpop    edi",
+        "25bedb:\t5b                   \tpop    ebx",
+        "25bedc:\t5d                   \tpop    ebp",
+        "25bedd:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "displayedCycle",
+      "start": "0x1bbf78",
+      "end": "0x1bbf9e",
+      "interpretation": "The native card-stat path computes SpawnPauseTime + (SpawnNumber - 1) * SpawnInterval.",
+      "instructions": [
+        "1bbf78:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1bbf7b:\te8 4e 21 02 00       \tcall   1de0ce",
+        "1bbf80:\t89 44 24 58          \tmov    DWORD PTR [esp+0x58],eax",
+        "1bbf84:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1bbf87:\te8 56 21 02 00       \tcall   1de0e2",
+        "1bbf8c:\t89 c7                \tmov    edi,eax",
+        "1bbf8e:\t4f                   \tdec    edi",
+        "1bbf8f:\t0f af 7c 24 58       \timul   edi,DWORD PTR [esp+0x58]",
+        "1bbf94:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1bbf97:\te8 5a 21 02 00       \tcall   1de0f6",
+        "1bbf9c:\t01 f8                \tadd    eax,edi"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "name": "witch",
+      "startMs": 0,
+      "intervalMs": 300,
+      "count": 3,
+      "pauseMs": 6900,
+      "initialRemaining": 0,
+      "events": [
+        {
+          "tick": 1,
+          "counts": [
+            1
+          ],
+          "remaining": 250,
+          "index": 1
+        },
+        {
+          "tick": 6,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 12,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 150,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 156,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 162,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 300,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 306,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 312,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 450,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 456,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 462,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 600,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 606,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 612,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        }
+      ],
+      "checkpoints": [
+        {
+          "tick": 1,
+          "remaining": 250,
+          "index": 1
+        },
+        {
+          "tick": 2,
+          "remaining": 200,
+          "index": 1
+        },
+        {
+          "tick": 5,
+          "remaining": 50,
+          "index": 1
+        },
+        {
+          "tick": 6,
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 12,
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 20,
+          "remaining": 6500,
+          "index": 0
+        },
+        {
+          "tick": 60,
+          "remaining": 4500,
+          "index": 0
+        },
+        {
+          "tick": 100,
+          "remaining": 2500,
+          "index": 0
+        },
+        {
+          "tick": 200,
+          "remaining": 5000,
+          "index": 0
+        },
+        {
+          "tick": 600,
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 720,
+          "remaining": 1500,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "name": "night-witch",
+      "startMs": 0,
+      "intervalMs": 0,
+      "count": 2,
+      "pauseMs": 5000,
+      "initialRemaining": 0,
+      "events": [
+        {
+          "tick": 1,
+          "counts": [
+            2
+          ],
+          "remaining": 4950,
+          "index": 0
+        },
+        {
+          "tick": 100,
+          "counts": [
+            2
+          ],
+          "remaining": 5000,
+          "index": 0
+        },
+        {
+          "tick": 200,
+          "counts": [
+            2
+          ],
+          "remaining": 5000,
+          "index": 0
+        },
+        {
+          "tick": 300,
+          "counts": [
+            2
+          ],
+          "remaining": 5000,
+          "index": 0
+        },
+        {
+          "tick": 400,
+          "counts": [
+            2
+          ],
+          "remaining": 5000,
+          "index": 0
+        },
+        {
+          "tick": 500,
+          "counts": [
+            2
+          ],
+          "remaining": 5000,
+          "index": 0
+        },
+        {
+          "tick": 600,
+          "counts": [
+            2
+          ],
+          "remaining": 5000,
+          "index": 0
+        },
+        {
+          "tick": 700,
+          "counts": [
+            2
+          ],
+          "remaining": 5000,
+          "index": 0
+        }
+      ],
+      "checkpoints": [
+        {
+          "tick": 1,
+          "remaining": 4950,
+          "index": 0
+        },
+        {
+          "tick": 2,
+          "remaining": 4900,
+          "index": 0
+        },
+        {
+          "tick": 5,
+          "remaining": 4750,
+          "index": 0
+        },
+        {
+          "tick": 6,
+          "remaining": 4700,
+          "index": 0
+        },
+        {
+          "tick": 12,
+          "remaining": 4400,
+          "index": 0
+        },
+        {
+          "tick": 20,
+          "remaining": 4000,
+          "index": 0
+        },
+        {
+          "tick": 60,
+          "remaining": 2000,
+          "index": 0
+        },
+        {
+          "tick": 100,
+          "remaining": 5000,
+          "index": 0
+        },
+        {
+          "tick": 200,
+          "remaining": 5000,
+          "index": 0
+        },
+        {
+          "tick": 600,
+          "remaining": 5000,
+          "index": 0
+        },
+        {
+          "tick": 720,
+          "remaining": 4000,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "name": "goblin-hut",
+      "startMs": 0,
+      "intervalMs": 0,
+      "count": 1,
+      "pauseMs": 4950,
+      "initialRemaining": 0,
+      "events": [
+        {
+          "tick": 1,
+          "counts": [
+            1
+          ],
+          "remaining": 4900,
+          "index": 0
+        },
+        {
+          "tick": 99,
+          "counts": [
+            1
+          ],
+          "remaining": 4950,
+          "index": 0
+        },
+        {
+          "tick": 198,
+          "counts": [
+            1
+          ],
+          "remaining": 4950,
+          "index": 0
+        },
+        {
+          "tick": 297,
+          "counts": [
+            1
+          ],
+          "remaining": 4950,
+          "index": 0
+        },
+        {
+          "tick": 396,
+          "counts": [
+            1
+          ],
+          "remaining": 4950,
+          "index": 0
+        },
+        {
+          "tick": 495,
+          "counts": [
+            1
+          ],
+          "remaining": 4950,
+          "index": 0
+        },
+        {
+          "tick": 594,
+          "counts": [
+            1
+          ],
+          "remaining": 4950,
+          "index": 0
+        },
+        {
+          "tick": 693,
+          "counts": [
+            1
+          ],
+          "remaining": 4950,
+          "index": 0
+        }
+      ],
+      "checkpoints": [
+        {
+          "tick": 1,
+          "remaining": 4900,
+          "index": 0
+        },
+        {
+          "tick": 2,
+          "remaining": 4850,
+          "index": 0
+        },
+        {
+          "tick": 5,
+          "remaining": 4700,
+          "index": 0
+        },
+        {
+          "tick": 6,
+          "remaining": 4650,
+          "index": 0
+        },
+        {
+          "tick": 12,
+          "remaining": 4350,
+          "index": 0
+        },
+        {
+          "tick": 20,
+          "remaining": 3950,
+          "index": 0
+        },
+        {
+          "tick": 60,
+          "remaining": 1950,
+          "index": 0
+        },
+        {
+          "tick": 100,
+          "remaining": 4900,
+          "index": 0
+        },
+        {
+          "tick": 200,
+          "remaining": 4850,
+          "index": 0
+        },
+        {
+          "tick": 600,
+          "remaining": 4650,
+          "index": 0
+        },
+        {
+          "tick": 720,
+          "remaining": 3600,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "name": "tombstone",
+      "startMs": 0,
+      "intervalMs": 0,
+      "count": 1,
+      "pauseMs": 2950,
+      "initialRemaining": 0,
+      "events": [
+        {
+          "tick": 1,
+          "counts": [
+            1
+          ],
+          "remaining": 2900,
+          "index": 0
+        },
+        {
+          "tick": 59,
+          "counts": [
+            1
+          ],
+          "remaining": 2950,
+          "index": 0
+        },
+        {
+          "tick": 118,
+          "counts": [
+            1
+          ],
+          "remaining": 2950,
+          "index": 0
+        },
+        {
+          "tick": 177,
+          "counts": [
+            1
+          ],
+          "remaining": 2950,
+          "index": 0
+        },
+        {
+          "tick": 236,
+          "counts": [
+            1
+          ],
+          "remaining": 2950,
+          "index": 0
+        },
+        {
+          "tick": 295,
+          "counts": [
+            1
+          ],
+          "remaining": 2950,
+          "index": 0
+        },
+        {
+          "tick": 354,
+          "counts": [
+            1
+          ],
+          "remaining": 2950,
+          "index": 0
+        },
+        {
+          "tick": 413,
+          "counts": [
+            1
+          ],
+          "remaining": 2950,
+          "index": 0
+        },
+        {
+          "tick": 472,
+          "counts": [
+            1
+          ],
+          "remaining": 2950,
+          "index": 0
+        },
+        {
+          "tick": 531,
+          "counts": [
+            1
+          ],
+          "remaining": 2950,
+          "index": 0
+        },
+        {
+          "tick": 590,
+          "counts": [
+            1
+          ],
+          "remaining": 2950,
+          "index": 0
+        },
+        {
+          "tick": 649,
+          "counts": [
+            1
+          ],
+          "remaining": 2950,
+          "index": 0
+        },
+        {
+          "tick": 708,
+          "counts": [
+            1
+          ],
+          "remaining": 2950,
+          "index": 0
+        }
+      ],
+      "checkpoints": [
+        {
+          "tick": 1,
+          "remaining": 2900,
+          "index": 0
+        },
+        {
+          "tick": 2,
+          "remaining": 2850,
+          "index": 0
+        },
+        {
+          "tick": 5,
+          "remaining": 2700,
+          "index": 0
+        },
+        {
+          "tick": 6,
+          "remaining": 2650,
+          "index": 0
+        },
+        {
+          "tick": 12,
+          "remaining": 2350,
+          "index": 0
+        },
+        {
+          "tick": 20,
+          "remaining": 1950,
+          "index": 0
+        },
+        {
+          "tick": 60,
+          "remaining": 2900,
+          "index": 0
+        },
+        {
+          "tick": 100,
+          "remaining": 900,
+          "index": 0
+        },
+        {
+          "tick": 200,
+          "remaining": 1800,
+          "index": 0
+        },
+        {
+          "tick": 600,
+          "remaining": 2450,
+          "index": 0
+        },
+        {
+          "tick": 720,
+          "remaining": 2350,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "name": "furnace",
+      "startMs": 0,
+      "intervalMs": 500,
+      "count": 2,
+      "pauseMs": 9400,
+      "initialRemaining": 0,
+      "events": [
+        {
+          "tick": 1,
+          "counts": [
+            1
+          ],
+          "remaining": 450,
+          "index": 1
+        },
+        {
+          "tick": 10,
+          "counts": [
+            1
+          ],
+          "remaining": 9400,
+          "index": 0
+        },
+        {
+          "tick": 198,
+          "counts": [
+            1
+          ],
+          "remaining": 500,
+          "index": 1
+        },
+        {
+          "tick": 208,
+          "counts": [
+            1
+          ],
+          "remaining": 9400,
+          "index": 0
+        },
+        {
+          "tick": 396,
+          "counts": [
+            1
+          ],
+          "remaining": 500,
+          "index": 1
+        },
+        {
+          "tick": 406,
+          "counts": [
+            1
+          ],
+          "remaining": 9400,
+          "index": 0
+        },
+        {
+          "tick": 594,
+          "counts": [
+            1
+          ],
+          "remaining": 500,
+          "index": 1
+        },
+        {
+          "tick": 604,
+          "counts": [
+            1
+          ],
+          "remaining": 9400,
+          "index": 0
+        }
+      ],
+      "checkpoints": [
+        {
+          "tick": 1,
+          "remaining": 450,
+          "index": 1
+        },
+        {
+          "tick": 2,
+          "remaining": 400,
+          "index": 1
+        },
+        {
+          "tick": 5,
+          "remaining": 250,
+          "index": 1
+        },
+        {
+          "tick": 6,
+          "remaining": 200,
+          "index": 1
+        },
+        {
+          "tick": 12,
+          "remaining": 9300,
+          "index": 0
+        },
+        {
+          "tick": 20,
+          "remaining": 8900,
+          "index": 0
+        },
+        {
+          "tick": 60,
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 100,
+          "remaining": 4900,
+          "index": 0
+        },
+        {
+          "tick": 200,
+          "remaining": 400,
+          "index": 1
+        },
+        {
+          "tick": 600,
+          "remaining": 200,
+          "index": 1
+        },
+        {
+          "tick": 720,
+          "remaining": 3600,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "name": "barbarian-hut",
+      "startMs": 0,
+      "intervalMs": 500,
+      "count": 2,
+      "pauseMs": 13500,
+      "initialRemaining": 0,
+      "events": [
+        {
+          "tick": 1,
+          "counts": [
+            1
+          ],
+          "remaining": 450,
+          "index": 1
+        },
+        {
+          "tick": 10,
+          "counts": [
+            1
+          ],
+          "remaining": 13500,
+          "index": 0
+        },
+        {
+          "tick": 280,
+          "counts": [
+            1
+          ],
+          "remaining": 500,
+          "index": 1
+        },
+        {
+          "tick": 290,
+          "counts": [
+            1
+          ],
+          "remaining": 13500,
+          "index": 0
+        },
+        {
+          "tick": 560,
+          "counts": [
+            1
+          ],
+          "remaining": 500,
+          "index": 1
+        },
+        {
+          "tick": 570,
+          "counts": [
+            1
+          ],
+          "remaining": 13500,
+          "index": 0
+        }
+      ],
+      "checkpoints": [
+        {
+          "tick": 1,
+          "remaining": 450,
+          "index": 1
+        },
+        {
+          "tick": 2,
+          "remaining": 400,
+          "index": 1
+        },
+        {
+          "tick": 5,
+          "remaining": 250,
+          "index": 1
+        },
+        {
+          "tick": 6,
+          "remaining": 200,
+          "index": 1
+        },
+        {
+          "tick": 12,
+          "remaining": 13400,
+          "index": 0
+        },
+        {
+          "tick": 20,
+          "remaining": 13000,
+          "index": 0
+        },
+        {
+          "tick": 60,
+          "remaining": 11000,
+          "index": 0
+        },
+        {
+          "tick": 100,
+          "remaining": 9000,
+          "index": 0
+        },
+        {
+          "tick": 200,
+          "remaining": 4000,
+          "index": 0
+        },
+        {
+          "tick": 600,
+          "remaining": 12000,
+          "index": 0
+        },
+        {
+          "tick": 720,
+          "remaining": 6000,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "name": "witch-delayed",
+      "startMs": 1000,
+      "intervalMs": 300,
+      "count": 3,
+      "pauseMs": 6900,
+      "initialRemaining": 1000,
+      "events": [
+        {
+          "tick": 20,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 26,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 32,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 170,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 176,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 182,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 320,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 326,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 332,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 470,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 476,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 482,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 620,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 626,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 632,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        }
+      ],
+      "checkpoints": [
+        {
+          "tick": 1,
+          "remaining": 950,
+          "index": 0
+        },
+        {
+          "tick": 2,
+          "remaining": 900,
+          "index": 0
+        },
+        {
+          "tick": 5,
+          "remaining": 750,
+          "index": 0
+        },
+        {
+          "tick": 6,
+          "remaining": 700,
+          "index": 0
+        },
+        {
+          "tick": 12,
+          "remaining": 400,
+          "index": 0
+        },
+        {
+          "tick": 20,
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 60,
+          "remaining": 5500,
+          "index": 0
+        },
+        {
+          "tick": 100,
+          "remaining": 3500,
+          "index": 0
+        },
+        {
+          "tick": 200,
+          "remaining": 6000,
+          "index": 0
+        },
+        {
+          "tick": 600,
+          "remaining": 1000,
+          "index": 0
+        },
+        {
+          "tick": 720,
+          "remaining": 2500,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "name": "witch-negative-start",
+      "startMs": -100,
+      "intervalMs": 300,
+      "count": 3,
+      "pauseMs": 6900,
+      "initialRemaining": 0,
+      "events": [
+        {
+          "tick": 1,
+          "counts": [
+            1
+          ],
+          "remaining": 250,
+          "index": 1
+        },
+        {
+          "tick": 6,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 12,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 150,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 156,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 162,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 300,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 306,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 312,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 450,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 456,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 462,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 600,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 606,
+          "counts": [
+            1
+          ],
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 612,
+          "counts": [
+            1
+          ],
+          "remaining": 6900,
+          "index": 0
+        }
+      ],
+      "checkpoints": [
+        {
+          "tick": 1,
+          "remaining": 250,
+          "index": 1
+        },
+        {
+          "tick": 2,
+          "remaining": 200,
+          "index": 1
+        },
+        {
+          "tick": 5,
+          "remaining": 50,
+          "index": 1
+        },
+        {
+          "tick": 6,
+          "remaining": 300,
+          "index": 2
+        },
+        {
+          "tick": 12,
+          "remaining": 6900,
+          "index": 0
+        },
+        {
+          "tick": 20,
+          "remaining": 6500,
+          "index": 0
+        },
+        {
+          "tick": 60,
+          "remaining": 4500,
+          "index": 0
+        },
+        {
+          "tick": 100,
+          "remaining": 2500,
+          "index": 0
+        },
+        {
+          "tick": 200,
+          "remaining": 5000,
+          "index": 0
+        },
+        {
+          "tick": 600,
+          "remaining": 300,
+          "index": 1
+        },
+        {
+          "tick": 720,
+          "remaining": 1500,
+          "index": 0
+        }
+      ]
+    }
+  ],
+  "deploymentCases": [
+    {
+      "remaining": 1000,
+      "state": 1,
+      "after": 950,
+      "continues": false,
+      "transitionCalls": 0
+    },
+    {
+      "remaining": 1000,
+      "state": 5,
+      "after": 950,
+      "continues": false,
+      "transitionCalls": 0
+    },
+    {
+      "remaining": 1000,
+      "state": 8,
+      "after": 950,
+      "continues": false,
+      "transitionCalls": 0
+    },
+    {
+      "remaining": 100,
+      "state": 1,
+      "after": 50,
+      "continues": false,
+      "transitionCalls": 0
+    },
+    {
+      "remaining": 100,
+      "state": 5,
+      "after": 50,
+      "continues": false,
+      "transitionCalls": 0
+    },
+    {
+      "remaining": 100,
+      "state": 8,
+      "after": 50,
+      "continues": false,
+      "transitionCalls": 0
+    },
+    {
+      "remaining": 50,
+      "state": 1,
+      "after": 0,
+      "continues": true,
+      "transitionCalls": 1
+    },
+    {
+      "remaining": 50,
+      "state": 5,
+      "after": 0,
+      "continues": true,
+      "transitionCalls": 1
+    },
+    {
+      "remaining": 50,
+      "state": 8,
+      "after": 0,
+      "continues": false,
+      "transitionCalls": 0
+    },
+    {
+      "remaining": 1,
+      "state": 1,
+      "after": 0,
+      "continues": true,
+      "transitionCalls": 1
+    },
+    {
+      "remaining": 1,
+      "state": 5,
+      "after": 0,
+      "continues": true,
+      "transitionCalls": 1
+    },
+    {
+      "remaining": 1,
+      "state": 8,
+      "after": 0,
+      "continues": false,
+      "transitionCalls": 0
+    },
+    {
+      "remaining": 0,
+      "state": 1,
+      "after": 0,
+      "continues": true,
+      "transitionCalls": 0
+    },
+    {
+      "remaining": 0,
+      "state": 5,
+      "after": 0,
+      "continues": true,
+      "transitionCalls": 0
+    },
+    {
+      "remaining": 0,
+      "state": 8,
+      "after": 0,
+      "continues": false,
+      "transitionCalls": 0
+    },
+    {
+      "remaining": -50,
+      "state": 1,
+      "after": -50,
+      "continues": true,
+      "transitionCalls": 0
+    },
+    {
+      "remaining": -50,
+      "state": 5,
+      "after": -50,
+      "continues": true,
+      "transitionCalls": 0
+    },
+    {
+      "remaining": -50,
+      "state": 8,
+      "after": 0,
+      "continues": false,
+      "transitionCalls": 0
+    }
+  ]
+}
