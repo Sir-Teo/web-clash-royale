@@ -44,7 +44,7 @@ describe("AI emergency Freeze defense", () => {
     "defends before a fatal %s projectile instead of launching a late Rocket",
     (card) => {
       const { battle, king, attacker, spawn } = setup();
-      if (card === "balloon") king.hp = 300;
+      if (card === "balloon") king.hp = 400;
       attacker.hp = 0;
       const ranged = spawn(
         card,
@@ -69,7 +69,7 @@ describe("AI emergency Freeze defense", () => {
       think(battle);
       expect(battle.actions.at(-1)?.card).toBe("freeze");
       for (let i = 0; i < 120 && !battle.winner; i++) battle.step();
-      expect(king.hp).toBe(card === "balloon" ? 60 : 100);
+      expect(king.hp).toBe(card === "balloon" ? 70 : 100);
       expect(ranged.hp).toBeLessThanOrEqual(0);
     },
   );

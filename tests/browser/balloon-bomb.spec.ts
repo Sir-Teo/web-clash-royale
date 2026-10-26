@@ -63,6 +63,7 @@ for (const perspective of ["blue", "red"] as const)
       if (impact && source.time > impact.time + 15) break;
     }
     const replay = { ...source.exportReplay(), perspective };
+    expect(replay.version).toBe(20);
     const battle = new Battle({ replay });
     while (
       !battle.audioEvents.some((e) => e.phase === "death-impact") &&
@@ -77,6 +78,11 @@ for (const perspective of ["blue", "red"] as const)
       (e) => e.type === "death" && e.card === "balloon",
     )!;
     expect(events.map((e) => e.phase)).toEqual(["death-spawn", "death-impact"]);
+    // Combat-born shots advance this frame; projectile-born shots wait for
+    // the next snapshot. Preserve that existing one-tick phase distinction.
+    const bombDelay = events[1].time - events[0].time;
+    expect(bombDelay).toBeGreaterThanOrEqual(1 - 1 / 30 - 1e-8);
+    expect(bombDelay).toBeLessThanOrEqual(1 + 1e-8);
     const expected = events.map((e) => ({
       ...combatAudioPlan(e.profile, e.phase, replay.seed ^ e.id, e.team)[0],
       time: e.time,

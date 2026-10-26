@@ -1,0 +1,1720 @@
+{
+  "sourceCommit": "42e13dc",
+  "stateFields": [
+    "tick",
+    "rulesVersion",
+    "entities",
+    "projectiles",
+    "areas",
+    "events",
+    "audioEvents",
+    "players",
+    "winner",
+    "reason",
+    "actions",
+    "randomState"
+  ],
+  "cases": [
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 19,
+        "seed": 1911,
+        "mode": "classic",
+        "deck": [
+          "balloon",
+          "knight",
+          "archers",
+          "musketeer",
+          "fireball",
+          "arrows",
+          "zap",
+          "cannon"
+        ],
+        "enemyDeck": [
+          "balloon",
+          "minions",
+          "cannon",
+          "witch",
+          "fireball",
+          "archers",
+          "zap",
+          "mini-pekka"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "zap",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "archers",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 105,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 210,
+            "team": "red",
+            "card": "mini-pekka",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 420,
+            "team": "blue",
+            "card": "arrows",
+            "x": 13.570000538309797,
+            "y": 19.87247088854985
+          },
+          {
+            "tick": 420,
+            "team": "red",
+            "card": "minions",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 840,
+            "team": "blue",
+            "card": "balloon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 840,
+            "team": "red",
+            "card": "balloon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1050,
+            "team": "blue",
+            "card": "archers",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1050,
+            "team": "red",
+            "card": "zap",
+            "x": 14,
+            "y": 16.033333333333037
+          },
+          {
+            "tick": 1260,
+            "team": "blue",
+            "card": "knight",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1260,
+            "team": "red",
+            "card": "cannon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1680,
+            "team": "blue",
+            "card": "fireball",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1680,
+            "team": "red",
+            "card": "fireball",
+            "x": 13.992999727270108,
+            "y": 14.688533874654349
+          },
+          {
+            "tick": 1890,
+            "team": "blue",
+            "card": "cannon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2100,
+            "team": "blue",
+            "card": "zap",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2100,
+            "team": "red",
+            "card": "witch",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2310,
+            "team": "red",
+            "card": "archers",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2415,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2625,
+            "team": "blue",
+            "card": "arrows",
+            "x": 13.951314461510389,
+            "y": 18.367645227191367
+          },
+          {
+            "tick": 2625,
+            "team": "red",
+            "card": "mini-pekka",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2940,
+            "team": "red",
+            "card": "minions",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3045,
+            "team": "blue",
+            "card": "balloon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3360,
+            "team": "blue",
+            "card": "archers",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3360,
+            "team": "red",
+            "card": "balloon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3465,
+            "team": "red",
+            "card": "zap",
+            "x": 4,
+            "y": 9.033333333333061
+          },
+          {
+            "tick": 3570,
+            "team": "blue",
+            "card": "knight",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3675,
+            "team": "red",
+            "card": "cannon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3780,
+            "team": "blue",
+            "card": "fireball",
+            "x": 3.5921083513434438,
+            "y": 21.671508160945102
+          },
+          {
+            "tick": 3885,
+            "team": "blue",
+            "card": "cannon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3885,
+            "team": "red",
+            "card": "fireball",
+            "x": 10.093718512474823,
+            "y": 19.443212756683426
+          },
+          {
+            "tick": 3990,
+            "team": "blue",
+            "card": "zap",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4200,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4200,
+            "team": "red",
+            "card": "witch",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4305,
+            "team": "blue",
+            "card": "arrows",
+            "x": 13.62326530721243,
+            "y": 9.605421837860652
+          },
+          {
+            "tick": 4410,
+            "team": "red",
+            "card": "archers",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4620,
+            "team": "blue",
+            "card": "balloon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4620,
+            "team": "red",
+            "card": "mini-pekka",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4725,
+            "team": "blue",
+            "card": "archers",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4725,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4830,
+            "team": "blue",
+            "card": "knight",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4830,
+            "team": "red",
+            "card": "balloon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4935,
+            "team": "blue",
+            "card": "fireball",
+            "x": 4.43,
+            "y": 17.010022999868983
+          },
+          {
+            "tick": 4935,
+            "team": "red",
+            "card": "zap",
+            "x": 8.982676701303312,
+            "y": 13.972282722085097
+          },
+          {
+            "tick": 5040,
+            "team": "blue",
+            "card": "cannon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5040,
+            "team": "red",
+            "card": "cannon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5145,
+            "team": "blue",
+            "card": "zap",
+            "x": 12.288894392247885,
+            "y": 18.244681054351563
+          },
+          {
+            "tick": 5145,
+            "team": "red",
+            "card": "fireball",
+            "x": 5.537683591282574,
+            "y": 8.460293746051978
+          },
+          {
+            "tick": 5355,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5355,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 5460,
+            "team": "blue",
+            "card": "arrows",
+            "x": 10.627812103459132,
+            "y": 26.596360539846284
+          },
+          {
+            "tick": 5565,
+            "team": "red",
+            "card": "archers",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 5670,
+            "team": "blue",
+            "card": "balloon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5775,
+            "team": "blue",
+            "card": "archers",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5775,
+            "team": "red",
+            "card": "mini-pekka",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 5880,
+            "team": "blue",
+            "card": "knight",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5880,
+            "team": "red",
+            "card": "minions",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5985,
+            "team": "red",
+            "card": "balloon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 6090,
+            "team": "blue",
+            "card": "fireball",
+            "x": 9.426280351636281,
+            "y": 12.927152800674579
+          },
+          {
+            "tick": 6090,
+            "team": "red",
+            "card": "zap",
+            "x": 7.525406686797035,
+            "y": 11.064834273365202
+          },
+          {
+            "tick": 6195,
+            "team": "blue",
+            "card": "cannon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 6195,
+            "team": "red",
+            "card": "cannon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 6300,
+            "team": "blue",
+            "card": "zap",
+            "x": 4,
+            "y": 19.466666666666818
+          },
+          {
+            "tick": 6300,
+            "team": "red",
+            "card": "fireball",
+            "x": 9.789643845536805,
+            "y": 11.709211579437115
+          },
+          {
+            "tick": 6405,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 6510,
+            "team": "blue",
+            "card": "arrows",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 6510,
+            "team": "red",
+            "card": "witch",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 6720,
+            "team": "blue",
+            "card": "balloon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 6720,
+            "team": "red",
+            "card": "archers",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 6825,
+            "team": "red",
+            "card": "mini-pekka",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 6930,
+            "team": "blue",
+            "card": "archers",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 6930,
+            "team": "red",
+            "card": "minions",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 7035,
+            "team": "blue",
+            "card": "knight",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 7140,
+            "team": "blue",
+            "card": "fireball",
+            "x": 12.8808330700544,
+            "y": 21.13237137432869
+          },
+          {
+            "tick": 7140,
+            "team": "red",
+            "card": "balloon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 7245,
+            "team": "blue",
+            "card": "cannon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 7245,
+            "team": "red",
+            "card": "zap",
+            "x": 4,
+            "y": 19.73333333333322
+          },
+          {
+            "tick": 7350,
+            "team": "blue",
+            "card": "zap",
+            "x": 5.232508847893874,
+            "y": 20.05812618770519
+          },
+          {
+            "tick": 7350,
+            "team": "red",
+            "card": "cannon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 7455,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 7455,
+            "team": "red",
+            "card": "fireball",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 7560,
+            "team": "blue",
+            "card": "arrows",
+            "x": 6.958884462854802,
+            "y": 20.83523926694022
+          },
+          {
+            "tick": 7665,
+            "team": "blue",
+            "card": "balloon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 7665,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 7770,
+            "team": "blue",
+            "card": "archers",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 7875,
+            "team": "blue",
+            "card": "knight",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 7875,
+            "team": "red",
+            "card": "archers",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 7980,
+            "team": "blue",
+            "card": "fireball",
+            "x": 4,
+            "y": 13.155866666666656
+          },
+          {
+            "tick": 8085,
+            "team": "blue",
+            "card": "cannon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 8085,
+            "team": "red",
+            "card": "mini-pekka",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 8190,
+            "team": "blue",
+            "card": "zap",
+            "x": 3.9999343850651514,
+            "y": 13.54999999797314
+          },
+          {
+            "tick": 8190,
+            "team": "red",
+            "card": "minions",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 8295,
+            "team": "red",
+            "card": "balloon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 8400,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 8400,
+            "team": "red",
+            "card": "zap",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 8505,
+            "team": "blue",
+            "card": "arrows",
+            "x": 7.070176262756268,
+            "y": 17.88366996445547
+          },
+          {
+            "tick": 8505,
+            "team": "red",
+            "card": "cannon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 8610,
+            "team": "blue",
+            "card": "balloon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 8610,
+            "team": "red",
+            "card": "fireball",
+            "x": 14,
+            "y": 16.699999999999736
+          },
+          {
+            "tick": 8715,
+            "team": "blue",
+            "card": "archers",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 8820,
+            "team": "blue",
+            "card": "knight",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 8820,
+            "team": "red",
+            "card": "witch",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 8925,
+            "team": "blue",
+            "card": "fireball",
+            "x": 14,
+            "y": 12.466666666666658
+          }
+        ],
+        "duration": 9000
+      },
+      "deaths": 2,
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "f09d7932bb6b16afa9d2e4609b38b0a692c8446b2af05bc95a0c7be0373e6d1b"
+        },
+        {
+          "tick": 1200,
+          "digest": "dd4ff8594ea2eee3e80e9caea53a425a9eeca69926ce042a4906ded6b8e8df96"
+        },
+        {
+          "tick": 1800,
+          "digest": "f727911c4ffd76a00b839011437b1f9cc9c669d3a667fb9c699ba24446eaa95d"
+        },
+        {
+          "tick": 2400,
+          "digest": "f206a64e540486648665e7a88bd1fa596590a766363948b0522f060fb94e1ce1"
+        },
+        {
+          "tick": 3000,
+          "digest": "206df9c3efbe2f983f28ba5aaee5a1f2ee2ead918cd4ab9ab259813de961811a"
+        },
+        {
+          "tick": 3600,
+          "digest": "52bc8c6c6a6cb9792e5c19bdb55635244fb5048b59006db79ecce3cec677bce3"
+        },
+        {
+          "tick": 4200,
+          "digest": "eba735b2e1611c35d9bac956ea7a4db48893cefbf65ab2bade628ae151055adf"
+        },
+        {
+          "tick": 4800,
+          "digest": "d88d454c77dbe743d234eb87fc5a462354d396cdb585c5d7040c1814e29a99d3"
+        },
+        {
+          "tick": 5400,
+          "digest": "937ef4e236d642fd4ccf4603fc3cc534b348d7b0c1270396a6ea64da3acf09c8"
+        },
+        {
+          "tick": 6000,
+          "digest": "0c11a9dd3110597019951a0b21e61a8dd67a04049bee050edc90bc5f292fa395"
+        },
+        {
+          "tick": 6600,
+          "digest": "11c8ac82ca302f3cc4719b19300ecb174c082ca72495ea7647b1e0ad100d5161"
+        },
+        {
+          "tick": 7200,
+          "digest": "26bbd76999f1de6557f1ee1dc162afb32feaa923cabdcf39e09f0b0ab3582301"
+        },
+        {
+          "tick": 7800,
+          "digest": "4513ba80f86eaf55b191fe457f7b24b2a1b63092feccbee1c288c85cf6718dec"
+        },
+        {
+          "tick": 8400,
+          "digest": "fe5916378fe4bfb9558b8e9e9216c9829f72436a38b0a56b72d8ca898f66d8b9"
+        },
+        {
+          "tick": 9000,
+          "digest": "cdec15d5f9f3804b6b707bfe3f96f79a6affa8b6d75045153a744a74183e5349"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 19,
+        "seed": 2937,
+        "mode": "classic",
+        "deck": [
+          "balloon",
+          "knight",
+          "archers",
+          "musketeer",
+          "fireball",
+          "arrows",
+          "zap",
+          "cannon"
+        ],
+        "enemyDeck": [
+          "balloon",
+          "minions",
+          "cannon",
+          "witch",
+          "fireball",
+          "archers",
+          "zap",
+          "mini-pekka"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "cannon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "mini-pekka",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 105,
+            "team": "red",
+            "card": "zap",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 315,
+            "team": "blue",
+            "card": "balloon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 525,
+            "team": "blue",
+            "card": "arrows",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 525,
+            "team": "red",
+            "card": "balloon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 840,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 840,
+            "team": "red",
+            "card": "cannon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1155,
+            "team": "blue",
+            "card": "knight",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1155,
+            "team": "red",
+            "card": "archers",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1260,
+            "team": "blue",
+            "card": "zap",
+            "x": 4,
+            "y": 20.795925925926003
+          },
+          {
+            "tick": 1260,
+            "team": "red",
+            "card": "minions",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1680,
+            "team": "blue",
+            "card": "fireball",
+            "x": 14.426250059356956,
+            "y": 22.898988755172844
+          },
+          {
+            "tick": 1680,
+            "team": "red",
+            "card": "fireball",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1890,
+            "team": "blue",
+            "card": "archers",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2100,
+            "team": "blue",
+            "card": "cannon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2100,
+            "team": "red",
+            "card": "witch",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2415,
+            "team": "red",
+            "card": "mini-pekka",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2520,
+            "team": "red",
+            "card": "zap",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2625,
+            "team": "blue",
+            "card": "balloon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2835,
+            "team": "blue",
+            "card": "arrows",
+            "x": 4,
+            "y": 23.800000000000196
+          },
+          {
+            "tick": 2940,
+            "team": "red",
+            "card": "balloon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3150,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3255,
+            "team": "red",
+            "card": "cannon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3360,
+            "team": "blue",
+            "card": "knight",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3570,
+            "team": "blue",
+            "card": "zap",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3570,
+            "team": "red",
+            "card": "archers",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3780,
+            "team": "blue",
+            "card": "fireball",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3780,
+            "team": "red",
+            "card": "minions",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3885,
+            "team": "blue",
+            "card": "archers",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3885,
+            "team": "red",
+            "card": "fireball",
+            "x": 14,
+            "y": 8.150370370370103
+          },
+          {
+            "tick": 3990,
+            "team": "blue",
+            "card": "cannon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4095,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4200,
+            "team": "red",
+            "card": "mini-pekka",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4305,
+            "team": "blue",
+            "card": "balloon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4305,
+            "team": "red",
+            "card": "zap",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4410,
+            "team": "blue",
+            "card": "arrows",
+            "x": 4.211453122973131,
+            "y": 17.53829922420978
+          },
+          {
+            "tick": 4515,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4515,
+            "team": "red",
+            "card": "balloon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4620,
+            "team": "blue",
+            "card": "knight",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4620,
+            "team": "red",
+            "card": "cannon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4725,
+            "team": "blue",
+            "card": "zap",
+            "x": 7.162327008685589,
+            "y": 15.059723213897069
+          },
+          {
+            "tick": 4830,
+            "team": "red",
+            "card": "archers",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4935,
+            "team": "blue",
+            "card": "fireball",
+            "x": 14.5,
+            "y": 10
+          },
+          {
+            "tick": 4935,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 5040,
+            "team": "blue",
+            "card": "archers",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5040,
+            "team": "red",
+            "card": "fireball",
+            "x": 4,
+            "y": 16.46666666666639
+          },
+          {
+            "tick": 5145,
+            "team": "blue",
+            "card": "cannon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5250,
+            "team": "red",
+            "card": "witch",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5460,
+            "team": "blue",
+            "card": "balloon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5460,
+            "team": "red",
+            "card": "mini-pekka",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5565,
+            "team": "blue",
+            "card": "arrows",
+            "x": 14.215866371619393,
+            "y": 17.51777862645097
+          },
+          {
+            "tick": 5565,
+            "team": "red",
+            "card": "zap",
+            "x": 14,
+            "y": 19.53333333333321
+          },
+          {
+            "tick": 5670,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5775,
+            "team": "blue",
+            "card": "knight",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5775,
+            "team": "red",
+            "card": "balloon",
+            "x": 4,
+            "y": 10
+          }
+        ],
+        "duration": 5852
+      },
+      "deaths": 1,
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "2f556744a0c42dfa1ba2ccfdaacf46173d3caa07fbc0b9a7b23faf5801d4ee6b"
+        },
+        {
+          "tick": 1200,
+          "digest": "3298d70cbaae1633ec051579c2a5fbfdcb93c473cac69a719292a593c8d550fb"
+        },
+        {
+          "tick": 1800,
+          "digest": "7931a425296d5de3a5b11332b304e18a62f656d2b335006eaa4f6f8b0e96d418"
+        },
+        {
+          "tick": 2400,
+          "digest": "98a785d33fdd68aff12d00ebcd36c07159371b6ea61d38ff19411d9a59ab7f00"
+        },
+        {
+          "tick": 3000,
+          "digest": "c730d319c7e5fbbbdc0f5f1d1999436d7bbf8e1745e1699d9369b36ded73fd2a"
+        },
+        {
+          "tick": 3600,
+          "digest": "45ecd958334519ab9687a18576920a5741673b8d0f7afd5f542b1f38cab4e35c"
+        },
+        {
+          "tick": 4200,
+          "digest": "31340fbf1aef488038324a77f1523f4738524c4ca0c83d9f61f9f47b7f471d36"
+        },
+        {
+          "tick": 4800,
+          "digest": "2f3db1565030260b23e449dce9aef94f2ed0874cd0ee31ac9e8b4dde2810e478"
+        },
+        {
+          "tick": 5400,
+          "digest": "735c7b0eda8c0ae3d941085841b932461a6afc3f247604c77ccc3d50319bbd61"
+        },
+        {
+          "tick": 5852,
+          "digest": "6e6e1b45198beb2aa990c8ddd50b16f6fb1a5ea1bffe4dcb924befbf52a4de9d"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 19,
+        "seed": 5471,
+        "mode": "classic",
+        "deck": [
+          "balloon",
+          "knight",
+          "archers",
+          "musketeer",
+          "fireball",
+          "arrows",
+          "zap",
+          "cannon"
+        ],
+        "enemyDeck": [
+          "balloon",
+          "minions",
+          "cannon",
+          "witch",
+          "fireball",
+          "archers",
+          "zap",
+          "mini-pekka"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "fireball",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "cannon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 105,
+            "team": "blue",
+            "card": "zap",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 105,
+            "team": "red",
+            "card": "zap",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 315,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 420,
+            "team": "blue",
+            "card": "knight",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 630,
+            "team": "blue",
+            "card": "cannon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 735,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1155,
+            "team": "blue",
+            "card": "balloon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1155,
+            "team": "red",
+            "card": "balloon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1260,
+            "team": "blue",
+            "card": "arrows",
+            "x": 4.040441602622828,
+            "y": 24.3387949595162
+          },
+          {
+            "tick": 1365,
+            "team": "red",
+            "card": "archers",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1680,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1680,
+            "team": "red",
+            "card": "fireball",
+            "x": 4,
+            "y": 16.370740740740526
+          },
+          {
+            "tick": 1890,
+            "team": "blue",
+            "card": "archers",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2100,
+            "team": "red",
+            "card": "mini-pekka",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2205,
+            "team": "blue",
+            "card": "fireball",
+            "x": 5.7361352778463965,
+            "y": 23.81256016643114
+          },
+          {
+            "tick": 2310,
+            "team": "red",
+            "card": "cannon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2415,
+            "team": "blue",
+            "card": "zap",
+            "x": 14.00005688488724,
+            "y": 20.84465699090571
+          },
+          {
+            "tick": 2520,
+            "team": "red",
+            "card": "zap",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2625,
+            "team": "blue",
+            "card": "knight",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2835,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2940,
+            "team": "blue",
+            "card": "cannon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3255,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3360,
+            "team": "blue",
+            "card": "balloon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3570,
+            "team": "blue",
+            "card": "arrows",
+            "x": 5.382302001104564,
+            "y": 20.98145141482813
+          },
+          {
+            "tick": 3570,
+            "team": "red",
+            "card": "balloon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3780,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3780,
+            "team": "red",
+            "card": "archers",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3885,
+            "team": "blue",
+            "card": "archers",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3885,
+            "team": "red",
+            "card": "fireball",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4095,
+            "team": "blue",
+            "card": "fireball",
+            "x": 14.386426236874069,
+            "y": 17.101412606210033
+          },
+          {
+            "tick": 4095,
+            "team": "red",
+            "card": "mini-pekka",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4200,
+            "team": "blue",
+            "card": "zap",
+            "x": 3.7208016841962235,
+            "y": 13.689448883009925
+          },
+          {
+            "tick": 4200,
+            "team": "red",
+            "card": "cannon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4305,
+            "team": "blue",
+            "card": "knight",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4305,
+            "team": "red",
+            "card": "zap",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4410,
+            "team": "blue",
+            "card": "cannon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4515,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4725,
+            "team": "blue",
+            "card": "balloon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4725,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4830,
+            "team": "blue",
+            "card": "arrows",
+            "x": 6.236764469207209,
+            "y": 18.150163420320215
+          },
+          {
+            "tick": 4935,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4935,
+            "team": "red",
+            "card": "balloon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 5145,
+            "team": "blue",
+            "card": "archers",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5145,
+            "team": "red",
+            "card": "archers",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 5250,
+            "team": "blue",
+            "card": "fireball",
+            "x": 4,
+            "y": 14.778399999999984
+          },
+          {
+            "tick": 5250,
+            "team": "red",
+            "card": "fireball",
+            "x": 4.1853117724425655,
+            "y": 19.99249273203454
+          },
+          {
+            "tick": 5355,
+            "team": "blue",
+            "card": "zap",
+            "x": 11.093196166770168,
+            "y": 20.790916422254945
+          },
+          {
+            "tick": 5355,
+            "team": "red",
+            "card": "mini-pekka",
+            "x": 4,
+            "y": 10
+          }
+        ],
+        "duration": 5400
+      },
+      "deaths": 1,
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "53dca6e8015990308ae42595c1508f99bca49b933235e95e0937ba5c6481d7a0"
+        },
+        {
+          "tick": 1200,
+          "digest": "acda9011187d9180d77c21619ca45d436274caee5c543254b48ef24f8ec0bd00"
+        },
+        {
+          "tick": 1800,
+          "digest": "2cca76a4842ad66e2092f1941ad8cc8b8fb69816066a3caeda4aeb92a36db20c"
+        },
+        {
+          "tick": 2400,
+          "digest": "7b7ca25812eabad1876ab53c1bbf2a3e0710bd6b38b32f821696cc2e418b9bb9"
+        },
+        {
+          "tick": 3000,
+          "digest": "895563ec1c7e390059bd9919dfe9294ceacaf1dbb1d2e6b5319606751d768ebb"
+        },
+        {
+          "tick": 3600,
+          "digest": "0c4713c88e806c544f15b3dac6425923041a6d4c40dca776c03e6323dbcf2185"
+        },
+        {
+          "tick": 4200,
+          "digest": "bf29f0c100b12b82d64e487e9da883e7e9cfb0095e173b7d56b61930b2135677"
+        },
+        {
+          "tick": 4800,
+          "digest": "0564db8233ae10a104d8c90d12d857af17d1c7e91991c681eb76100e7675cb86"
+        },
+        {
+          "tick": 5400,
+          "digest": "d9e8d011da8b42d5cbf3211f589f3dbd1cbc97f0ba0f0ded219360ce25b1a205"
+        }
+      ]
+    }
+  ]
+}

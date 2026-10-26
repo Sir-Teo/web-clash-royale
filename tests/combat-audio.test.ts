@@ -188,7 +188,7 @@ describe("combat audio timing and lifecycle", () => {
     expect(dropped.actor).toBe(balloon.id);
     expect(dropped.time).toBe(death.time);
     expect(explosion.actor).toBe(balloon.id);
-    expect(explosion.time - death.time).toBeCloseTo(0.8, 1);
+    expect(explosion.time - death.time).toBeCloseTo(1, 8);
     expect(battle.entities.some((e) => e.id === balloon.id)).toBe(false);
     const plan = combatAudioPlan(
       "balloon",

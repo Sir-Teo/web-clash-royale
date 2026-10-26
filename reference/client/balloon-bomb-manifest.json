@@ -1,0 +1,26 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/client/effects.csv",
+      "sha256": "22591ef669cb9af6535a10caae5b7f7f8b5b79c81630aeb3381a04bfef298985"
+    },
+    {
+      "path": "reference/sc/building_mega_bomb.bin",
+      "sha256": "0f588b85ea10ddd26f3997f8a44ef8d6ae206f7dbfe09a45a8bd5eb445d0ce1c"
+    }
+  ],
+  "output": {
+    "path": "src/game/balloon-bomb-data.json",
+    "sha256": "91354c97a2ac77dfca14e2fc35bedeafec3a00176261a7028ee96b7622e23186"
+  }
+}

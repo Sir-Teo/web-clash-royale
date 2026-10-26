@@ -65,6 +65,7 @@
     "assets:elite-barbarians": "node scripts/import-elite-barbarians.mjs",
     "assets:ice-spirit": "node scripts/import-ice-spirit.mjs",
     "assets:ice-golem": "node scripts/import-ice-golem.mjs",
+    "assets:balloon-bomb": "node scripts/import-balloon-bomb.mjs",
     "assets:giant-skeleton": "node scripts/import-giant-skeleton.mjs",
     "assets:inferno-tower": "node scripts/import-inferno-tower.mjs",
     "assets:x-bow": "node scripts/import-x-bow.mjs",

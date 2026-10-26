@@ -1,0 +1,15 @@
+{
+  "character": "Balloon",
+  "bomb": {
+    "source": "BalloonBomb",
+    "delay": 1,
+    "sourceDamage": 205,
+    "radius": 3,
+    "hitsGround": true,
+    "hitsAir": true,
+    "blueExport": "balloon_bomb_blue",
+    "redExport": "balloon_bomb_red",
+    "spawnEffect": "Balloon_Bomb_deploy",
+    "deathEffect": "MegaBombExplodeBalloon"
+  }
+}

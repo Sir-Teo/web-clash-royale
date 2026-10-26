@@ -1,3 +1,4 @@
+import { balloonBombProfile } from "../game/balloon-bomb";
 import { CARD_MAP, type CardId } from "../game/cards";
 import {
   cardShieldHitpoints,
@@ -335,6 +336,11 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
   const spawn = Object.hasOwn(deathSpawns, id)
     ? deathSpawns[id as keyof typeof deathSpawns] : undefined;
   const child = spawn && CARD_MAP[spawn.card];
+  const deathBomb = id === "giant-skeleton" ? {
+    damage: Math.round(giantSkeleton.bomb.sourceDamage * 1.1 ** 5),
+    delay: giantSkeleton.bomb.deployTime, radius: giantSkeleton.bomb.radius,
+    air: giantSkeleton.bomb.hitsAir, knockback: giantSkeleton.bomb.pushback,
+  } : id === "balloon" ? { ...balloonBombProfile(), knockback: 0 } : undefined;
   const note = [
     c.count > 1
       ? "Each troop has its own hitpoints. Damage is per troop, per hit."
@@ -348,6 +354,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
     spawn ? `${spawn.note} Spawn hitpoints and damage are per troop.` : "",
     id === "mortar" ? "Cannot target enemies inside the minimum range." : "",
     inferno ? "Damage is per hit. Stage times count from locking onto the same target. Stun, losing range or changing targets resets the beam." : "",
+    id === "balloon" ? "Drops a timed bomb where it is destroyed. The bomb damages nearby enemy air and ground troops and buildings. Its normal attack targets buildings." : "",
     id === "giant-skeleton" ? "Drops a timed bomb where it is destroyed. The bomb damages nearby enemy air and ground units and buildings, knocking back eligible troops. Its normal attack targets ground enemies." : "",
   ]
     .filter(Boolean)
@@ -393,12 +400,12 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
       c.kind === "building"
         ? stat("Lifetime", seconds(c.lifetime ?? 0), "timer")
         : stat("Count", c.count, "users"),
-      ...(id === "giant-skeleton" ? [
-        stat("Death bomb damage", Math.round(giantSkeleton.bomb.sourceDamage * 1.1 ** 5), "swords"),
-        stat("Bomb delay", seconds(giantSkeleton.bomb.deployTime), "timer"),
-        stat("Bomb radius", tiles(giantSkeleton.bomb.radius), "scan"),
-        stat("Bomb targets", giantSkeleton.bomb.hitsAir ? "Air & ground" : "Ground", "crosshair"),
-        stat("Bomb knockback", tiles(giantSkeleton.bomb.pushback), "scan"),
+      ...(deathBomb ? [
+        stat("Death bomb damage", deathBomb.damage, "swords"),
+        stat("Bomb delay", seconds(deathBomb.delay), "timer"),
+        stat("Bomb radius", tiles(deathBomb.radius), "scan"),
+        stat("Bomb targets", deathBomb.air ? "Air & ground" : "Ground", "crosshair"),
+        ...(deathBomb.knockback ? [stat("Bomb knockback", tiles(deathBomb.knockback), "scan")] : []),
       ] : []),
       ...(spawn && child ? [
         stat("Deploy time", seconds(deploymentTime(id)), "timer"),
