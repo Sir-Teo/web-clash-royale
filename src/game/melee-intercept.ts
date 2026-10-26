@@ -1,3 +1,4 @@
+import { attackRadius, attackReach } from "./attack-range";
 import { CARD_MAP, type CardId } from "./cards";
 import { combatTraits } from "./combat";
 import { deploymentRadius, deploymentTime } from "./deployment";
@@ -47,7 +48,7 @@ export function meleeInterceptTarget(
   const current = targets.find((e) => e.id === threat.target);
   const inRange = (target: Entity) =>
     distance(threat, target) <=
-    threat.range + target.radius + threat.radius * 0.35;
+    attackReach(threat, target);
   if (current && inRange(current)) return;
   const target =
     targets
@@ -112,7 +113,7 @@ export function meleeInterceptTarget(
   const gap = distance(threat, target);
   const advance = Math.min(
     travel,
-    Math.max(0, gap - threat.range - target.radius - threat.radius * 0.35),
+    Math.max(0, gap - threat.range - target.radius - attackRadius(threat)),
   );
   if (advance <= 0) return;
   const dx = (target.x - threat.x) / gap,
@@ -121,7 +122,7 @@ export function meleeInterceptTarget(
   const radius = deploymentRadius(card);
   const side = Math.min(
     0.75,
-    (candidate.range + threat.radius + radius * 0.35) / 2,
+    (candidate.range + threat.radius + attackRadius({ radius, rangeRadiusFactor: threat.rangeRadiusFactor })) / 2,
   );
   for (const offset of [0, -side, side]) {
     const placement = { x: point.x - dy * offset, y: point.y + dx * offset };

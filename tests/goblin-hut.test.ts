@@ -77,13 +77,13 @@ describe("archived Goblin Hut", () => {
     for (let i = 0; i < Math.ceil(62 / STEP); i++) expired.battle.step();
     expect(expired.battle.entities.some((e) => e.id === expired.hut.id)).toBe(false);
     expect(spearCount(expired.battle)).toBeGreaterThan(0);
-    const count = expired.battle.audioEvents.filter((event) =>
+    const lastBirth = Math.max(...expired.battle.audioEvents.filter((event) =>
       event.phase === "spawn" && event.profile === "spear-goblins"
-    ).length;
+    ).map((event) => event.id));
     for (let i = 0; i < Math.ceil(10 / STEP); i++) expired.battle.step();
     expect(expired.battle.audioEvents.filter((event) =>
-      event.phase === "spawn" && event.profile === "spear-goblins"
-    )).toHaveLength(count);
+      event.phase === "spawn" && event.profile === "spear-goblins" && event.id > lastBirth
+    )).toHaveLength(0);
   });
 
   it("replays its spawn cycle and mirrors the hut and Spear Goblins to a guest", () => {

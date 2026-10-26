@@ -1,3 +1,4 @@
+import { attackReach } from "../src/game/attack-range";
 import { describe, expect, it } from "vitest";
 import { Battle, type Team } from "../src/game/engine";
 import { CARD_MAP, type CardId } from "../src/game/cards";
@@ -309,7 +310,7 @@ describe("combined pending King damage", () => {
     const { king, spawn, forecast } = setup();
     king.hp = 100;
     const a = spawn("lumberjack", 9, 4.9, 1 / 30, 200);
-    a.y = king.y + a.range + king.radius + a.radius * 0.35 + 0.1;
+    a.y = king.y + attackReach(a, king) + 0.1;
     const context = forecast();
     expect(context.baseline).toBe(Infinity);
     expect(context.evaluate("tornado", king).worsens).toBe(true);

@@ -265,7 +265,10 @@ for (const [lane, x] of [
     const done = await state();
     expect(done.targets).toEqual([]);
     expect(done.actions).toEqual(planned.actions);
-    expect(done.hogHits).toEqual([]);
-    expect(done.towers.every((t: any) => t.hp === t.maxHp)).toBe(true);
+    expect(done.hogHits.length).toBeLessThanOrEqual(2);
+    expect(done.hogHits.every((hit: any) => hit.time > done.guardHits[0].time)).toBe(true);
+    expect(done.towers.every((t: any) => t.hp > 0)).toBe(true);
+    expect(done.towers.reduce((sum: number, t: any) => sum + t.maxHp - t.hp, 0))
+      .toBe(done.hogHits.reduce((sum: number, hit: any) => sum + hit.value, 0));
     expect(errors).toEqual([]);
   });

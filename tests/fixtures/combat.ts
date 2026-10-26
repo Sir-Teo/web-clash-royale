@@ -1,4 +1,5 @@
 import { defensiveThreats } from "../../src/game/defensive-threats";
+import { attackReach } from "../../src/game/attack-range";
 import { Arena } from "../../src/render/arena";
 import { spriteGeometry } from "../../src/render/sprites";
 import { Battle, STEP } from "../../src/game/engine";
@@ -86,6 +87,10 @@ function setup() {
   } : { seed: selectedScene === "ai-lightning-combo" ? 8 : selectedScene === "ai-lightning-followup" ? 1 : selectedScene === "ai-spells-mirror" ? 2 : 12, ai: selectedScene.startsWith("ai-") });
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
+  if (selectedScene === "attack-range" && new URL(location.href).searchParams.get("rules") === "23") {
+    battle = new Battle({ replay: { ...battle.exportReplay(), version: 23 } });
+    Object.assign(battle, { replayActions: null, replayDuration: undefined });
+  }
   for (const t of battle.entities) t.active = false;
   const scenario = (document.querySelector("#scenario") as HTMLSelectElement)
     .value;
@@ -100,7 +105,8 @@ function setup() {
   (document.querySelector("#death-config") as HTMLElement).hidden =
     scenario !== "death" && scenario !== "deployment";
   (document.querySelector("#attack-config") as HTMLElement).hidden =
-    scenario !== "attack-impacts" && scenario !== "inferno-clock";
+    scenario !== "attack-impacts" && scenario !== "inferno-clock" && scenario !== "attack-range";
+  (document.querySelector("#range-out") as HTMLElement).hidden = scenario !== "attack-range";
   (document.querySelector("#break-shield") as HTMLElement).hidden =
     scenario !== "dark-prince" && scenario !== "guards";
   (document.querySelector("#kill-night-witch") as HTMLElement).hidden =
@@ -147,7 +153,7 @@ function setup() {
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king" &&
       !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
-      !(["animation-clock", "sprite-cache", "inferno-clock"].includes(scenario) && ["rebuild", "destruction"].includes(id));
+      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-range"].includes(scenario) && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -732,6 +738,20 @@ function setup() {
       target.speed = target.damage = 0;
       target.hp = target.maxHp = 10000;
     }
+  } else if (scenario === "attack-range") {
+    const card = (document.querySelector("#attack-card") as HTMLSelectElement).value as CardId;
+    for (const team of ["blue", "red"] as const) {
+      const x = team === "blue" ? 4 : 14, y = team === "blue" ? 23 : 9;
+      const attacker = unit(card, team, x, y)[0];
+      const target = unit("cannon", team === "blue" ? "red" : "blue", x, y)[0];
+      Object.assign(target, { active: false, hp: 1e6, maxHp: 1e6, lifetime: undefined });
+      target.x = attacker.x;
+      target.y = attacker.y + (team === "blue" ? -1 : 1) *
+        (attacker.range + target.radius + attacker.radius * 0.675);
+      attacker.speed = 0;
+      attacker.target = target.id;
+      clockModes.set(attacker.id, "range");
+    }
   } else if (scenario === "inferno-clock") {
     const selected = (document.querySelector("#attack-card") as HTMLSelectElement).value;
     const card = selected === "inferno-tower" ? "inferno-tower" : "inferno-dragon";
@@ -999,6 +1019,13 @@ document.querySelector("#clock-freeze")!.addEventListener("click", () => {
     for (const x of [3, 7, 11, 15])
       cast("freeze", team === "blue" ? "red" : "blue", x, team === "blue" ? 21 : 11);
 });
+document.querySelector("#range-out")!.addEventListener("click", () => {
+  for (const attacker of battle.entities.filter((entity) => clockModes.has(entity.id))) {
+    const target = battle.entities.find((entity) => entity.id === attacker.target);
+    if (target) target.y = attacker.y + (attacker.team === "blue" ? -1 : 1) *
+      (attackReach(attacker, target) + 0.01);
+  }
+});
 document.querySelector("#wake")!.addEventListener("click", () => {
   for (const king of battle.entities.filter((e) => e.king))
     cast("zap", king.team === "blue" ? "red" : "blue", king.x, king.y);
@@ -1228,6 +1255,21 @@ function render(now: number) {
       bodies: battle.entities.filter((entity) => clockModes.has(entity.id) && entity.card.startsWith("inferno-"))
         .map((entity) => ({ id: entity.id, card: entity.card, team: entity.team,
           mode: clockModes.get(entity.id), lock: entity.inferno })) });
+  if (sceneSelect.value === "attack-range")
+    (document.querySelector("#destruction") as HTMLElement).dataset.attackRange =
+      JSON.stringify({ version: battle.rulesVersion, time: battle.time,
+        bodies: battle.entities.filter((entity) => clockModes.has(entity.id)).map((entity) => {
+          const target = battle.entities.find((entry) => entry.id === entity.target);
+          const visual = (arena as any).units.get(entity.id);
+          return { id: entity.id, card: entity.card, team: entity.team,
+            reach: target ? attackReach(entity, target) : null,
+            gap: target ? Math.hypot(entity.x - target.x, entity.y - target.y) : null,
+            targetHp: target?.hp,
+            lock: entity.inferno, pending: entity.pendingAttack,
+            native: !!(visual?.sprite || visual?.building),
+            hits: battle.events.filter((event) => event.type === "hit" && event.team === entity.team && event.card === entity.card).length,
+          };
+        }) });
   const collector = battle.entities.find((entity) => entity.card === "elixir-collector");
   (document.querySelector("#destruction") as HTMLElement).dataset.collector =
     JSON.stringify({

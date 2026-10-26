@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { Battle, STEP } from "../src/game/engine";
+import type { Replay } from "../src/game/engine";
 import { CARD_MAP, STARTER_DECK } from "../src/game/cards";
 import rules from "../src/game/graveyard-data.json";
 import audio from "../src/game/combat-audio-data.json";
@@ -32,6 +33,39 @@ const births = (match: Battle) =>
   );
 
 describe("native Graveyard spell", () => {
+  it.each([23, 24] as const)("isolates spawn randomness from AI draws only under rules 24 (rules %s)", (version) => {
+    const make = () => {
+      const base = battle();
+      const match = new Battle({ replay: { ...base.exportReplay(), version } as Replay });
+      for (const tower of match.entities) tower.active = false;
+      match.players.blue.hand[0] = "graveyard";
+      match.players.blue.elixir = 10;
+      expect(match.play("blue", 0, 9, 16).ok).toBe(true);
+      return match;
+    };
+    const clean = make(), noisy = make();
+    const before = clean.randomState;
+    for (let i = 0; i < 120; i++) {
+      // AI decisions consume this stream in live games, while command replay
+      // does not rerun that policy. Spawn geometry must survive those draws.
+      noisy.random(); noisy.random();
+      clean.step(); noisy.step();
+    }
+    const positions = (match: Battle) => births(match).map(({ x, y }) => ({ x, y }));
+    expect(positions(clean).length).toBeGreaterThan(0);
+    if (version === 24) {
+      expect(positions(noisy)).toEqual(positions(clean));
+      expect(clean.randomState).toBe(before);
+      const area = clean.areas.find((entry) => entry.card === "graveyard")!;
+      expect(Number.isInteger(area.spawnRandomState)).toBe(true);
+      expect(perspective(snapshot(clean), "red").areas?.find((entry) => entry.id === area.id)?.spawnRandomState)
+        .toBe(area.spawnRandomState);
+    } else {
+      expect(positions(noisy)).not.toEqual(positions(clean));
+      expect(clean.randomState).not.toBe(before);
+      expect(clean.areas[0]).not.toHaveProperty("spawnRandomState");
+    }
+  });
   it("pins source cadence, portrait, ground art, particles and sound", () => {
     const manifest = JSON.parse(
       readFileSync("reference/client/graveyard-manifest.json", "utf8"),

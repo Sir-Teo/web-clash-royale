@@ -1,0 +1,26 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/logic/globals.csv",
+      "sha256": "28f97cbeb6c6de2489422b1bcc65bebd62db35fbb3ec72203eba29caa33c5641"
+    },
+    {
+      "path": "reference/client/attack-range-native-trace.json",
+      "sha256": "adccc2c7db6eceb03c5067a600a07b6d3fb79aeccaaf70b1ad1e836dfe52f7fa"
+    }
+  ],
+  "output": {
+    "path": "src/game/attack-range-data.json",
+    "sha256": "152afe225057dc09e8a955b0fe2da1aa14aef38c64ff62dda47c08e60d450919"
+  }
+}

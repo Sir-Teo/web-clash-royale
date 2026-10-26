@@ -1,3 +1,5 @@
+import { attackReach, NATIVE_RANGE_RADIUS_FACTOR } from "./attack-range";
+import { areaRandom, areaRandomSeed } from "./area-random";
 import { advanceSummonClock, summonProfile, type SummonProfile } from "./summon-clock";
 import { balloonBombProfile } from "./balloon-bomb";
 import { chargeRange, chargedAttackDamage, resetMovement } from "./charge";
@@ -98,6 +100,8 @@ export interface Entity extends Point {
   shield?: number;
   maxShield?: number;
   radius: number;
+  /** Rules 24: native own-radius contribution to maximum attack reach. */
+  rangeRadiusFactor?: number;
   air: boolean;
   damage: number;
   range: number;
@@ -195,6 +199,8 @@ export interface AreaEffect extends Point {
   hitAt?: number;
   damageAt?: number;
   struck?: number[];
+  /** Rules 24: Graveyard spawns retain their own deterministic random stream. */
+  spawnRandomState?: number;
 }
 export interface BattleEvent extends Point {
   id: number;
@@ -216,7 +222,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -296,7 +302,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 23;
+    this.rulesVersion = r?.version ?? 24;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -403,6 +409,7 @@ export class Battle {
       hp: king ? kingHp : 3052,
       maxHp: king ? kingHp : 3052,
       radius,
+      ...(this.rulesVersion >= 24 ? { rangeRadiusFactor: NATIVE_RANGE_RADIUS_FACTOR } : {}),
       air: false,
       damage: king ? 109 : 109,
       range: king ? 7 : 7.5,
@@ -633,7 +640,12 @@ export class Battle {
             : id === "tornado"
               ? { hitAt: 0, damageAt: tornado.damageInterval }
               : id === "graveyard"
-                ? { hitAt: graveyard.spawnInitialDelay }
+                ? {
+                    hitAt: graveyard.spawnInitialDelay,
+                    ...(this.rulesVersion >= 24
+                      ? { spawnRandomState: areaRandomSeed(this.seed, this.nextId - 1) }
+                      : {}),
+                  }
                 : {}),
         });
         if (id === "poison" || id === "heal" || id === "rage")
@@ -769,6 +781,7 @@ export class Battle {
       radius: this.rulesVersion >= 15
         ? (collisionRadii.cards as Record<string, number>)[id]
         : legacyRadius,
+      ...(this.rulesVersion >= 24 ? { rangeRadiusFactor: NATIVE_RANGE_RADIUS_FACTOR } : {}),
       air: !!c.air,
       damage: legacyBalloon?.damage ?? legacyVitals?.damage ?? c.damage,
       range: legacyBalloon?.range ?? stats.range,
@@ -1041,8 +1054,12 @@ export class Battle {
           // The source specifies a radius and cadence but leaves individual
           // spawn coordinates to its native runtime. Use a seeded uniform
           // area distribution so peers and replays agree on every Skeleton.
-          const angle = this.random() * Math.PI * 2;
-          const radius = Math.sqrt(this.random()) * area.radius;
+          const random = () =>
+            this.rulesVersion >= 24
+              ? areaRandom(area, areaRandomSeed(this.seed, area.id))
+              : this.random();
+          const angle = random() * Math.PI * 2;
+          const radius = Math.sqrt(random()) * area.radius;
           const x = clamp(area.x + Math.cos(angle) * radius, 0.5, 17.5);
           const y = clamp(area.y + Math.sin(angle) * radius, 0.7, 31.3);
           this.spawn("skeletons", area.team, x, y, false);
@@ -1420,7 +1437,7 @@ export class Battle {
     );
   }
   private inRange(e: Entity, target: Entity) {
-    return dist(e, target) <= e.range + target.radius + e.radius * 0.35;
+    return dist(e, target) <= attackReach(e, target);
   }
   private acquireTarget(e: Entity) {
     const current = this.entities.find(

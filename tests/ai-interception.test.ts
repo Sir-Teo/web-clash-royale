@@ -1,3 +1,4 @@
+import { attackReach } from "../src/game/attack-range";
 import { describe, expect, it, vi } from "vitest";
 import { meleeInterceptTarget } from "../src/game/melee-intercept";
 import { perspective, snapshot } from "../src/network/perspective";
@@ -32,11 +33,19 @@ describe("AI moving building-seeker interception", () => {
       }
       expect(firstGuard).toBeLessThan(1.8);
       expect(firstGuard).toBeLessThan(firstHog);
-      expect(
-        b.entities
-          .filter((e) => e.team === "red" && e.kind === "tower")
-          .every((e) => e.hp === e.maxHp),
-      ).toBe(true);
+      const unguarded = scene(start).b;
+      let unguardedFirstHit = Infinity;
+      for (let i = 0; i < 210; i++) {
+        unguarded.step();
+        if (unguarded.events.some((e) => e.type === "hit" && e.card === "hog-rider"))
+          unguardedFirstHit = Math.min(unguardedFirstHit, unguarded.time);
+      }
+      const towerDamage = (battle: Battle) => battle.entities
+        .filter((e) => e.team === "red" && e.kind === "tower")
+        .reduce((sum, e) => sum + e.maxHp - e.hp, 0);
+      expect(firstHog).toBeGreaterThan(unguardedFirstHit);
+      expect(towerDamage(b)).toBeLessThan(towerDamage(unguarded));
+      expect(b.entities.some((e) => e.card === "hog-rider")).toBe(false);
     },
   );
 });
@@ -87,7 +96,7 @@ describe("bounded melee interception forecast", () => {
     expect(
       Math.hypot(point.x - target.x, point.y - target.y),
     ).toBeGreaterThanOrEqual(
-      hog.range + target.radius + hog.radius * 0.35 - 1e-9,
+      attackReach(hog, target) - 1e-9,
     );
   });
   it("never forecasts past the attack ring or onto a destroyed/hidden building", () => {
@@ -101,7 +110,7 @@ describe("bounded melee interception forecast", () => {
       (e) => e.team === "red" && e.lane === "right",
     )!;
     expect(point.y).toBeGreaterThanOrEqual(
-      tower.y + hog.range + tower.radius + hog.radius * 0.35 - 1e-9,
+      tower.y + attackReach(hog, tower) - 1e-9,
     );
     tower.hp = 0;
     const next = intercept(b, "mini-pekka", hog)!;

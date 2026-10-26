@@ -91,7 +91,7 @@ test("native card formations align placement previews and both rendered teams", 
       })
       .toBe(true);
     const placed = await state();
-    expect(placed.rulesVersion).toBe(23);
+    expect(placed.rulesVersion).toBe(24);
     expect(placed.visible).toBe(false);
     for (const team of ["blue", "red"]) {
       const bodies = placed.bodies.filter((e) => e.team === team);

@@ -1,3 +1,4 @@
+import { attackReach } from "./attack-range";
 import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point } from "./engine";
 import { advanceInfernoClock, infernoDamage, infernoProfile } from "./inferno";
@@ -48,7 +49,7 @@ export function infernoKingPackets(
       (status && (!status.beforeAlive || status.beforeInterrupt)) ||
       frame.stun > 0 ||
       Math.hypot(frame.position.x - king.x, frame.position.y - king.y) >
-        attacker.range + king.radius + attacker.radius * 0.35
+        attackReach(attacker, king)
     )
       break;
     if (version >= 23) {

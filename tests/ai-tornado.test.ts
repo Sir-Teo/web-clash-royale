@@ -1,3 +1,4 @@
+import { attackReach } from "../src/game/attack-range";
 import { describe, expect, it } from "vitest";
 import { Battle, type Team } from "../src/game/engine";
 import { CARD_MAP, type CardId } from "../src/game/cards";
@@ -284,7 +285,7 @@ describe("AI Tornado control", () => {
       const ranged = spawn("musketeer", king.x, king.y + 3);
       if (position === "edge")
         ranged.y =
-          king.y + ranged.range + king.radius + ranged.radius * 0.35 - 0.15;
+          king.y + attackReach(ranged, king) - 0.15;
       Object.assign(ranged, {
         active: true,
         target: king.id,

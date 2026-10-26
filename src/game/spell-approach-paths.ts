@@ -1,3 +1,4 @@
+import { attackRadius, attackReach } from "./attack-range";
 import type { AreaEffect, Entity, Point, Projectile } from "./engine";
 import { COMBAT_STEP } from "./combat";
 import { advanceMovement } from "./movement";
@@ -13,7 +14,7 @@ const controls = new Set<AreaEffect["card"]>([
 ]);
 const distance = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
 const inRange = (body: Entity, target: Entity) =>
-  distance(body, target) <= body.range + target.radius + body.radius * 0.35;
+  distance(body, target) <= attackReach(body, target);
 
 /** Stable Hog/Balloon approaches with ordinary homing shots or plain Arrows.
  * Targets stay fixed; separation, future attacks and target changes are omitted. */
@@ -134,7 +135,7 @@ export function createSpellApproachPaths(
     // destination, along with its lifetime decay.
     const gap = Math.max(
       0,
-      distance(body, target) - body.range - target.radius - body.radius * 0.35,
+      distance(body, target) - body.range - target.radius - attackRadius(body),
     );
     const first = gap / (body.speed * rage.speedMultiplier);
     const hits =

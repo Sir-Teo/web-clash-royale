@@ -1,3 +1,4 @@
+import { attackReach } from "./attack-range";
 import { CARD_MAP, type CardId } from "./cards";
 import { combatTraits } from "./combat";
 import { deploymentRadius } from "./deployment";
@@ -38,7 +39,7 @@ export function buildingLureTarget(
     current &&
     (current.kind === "building" ||
       distance(threat, current) <=
-        threat.range + current.radius + threat.radius * 0.35)
+        attackReach(threat, current))
   )
     return;
   const crownDistance = Math.min(

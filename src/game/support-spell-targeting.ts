@@ -1,3 +1,4 @@
+import { attackReach } from "./attack-range";
 import { aiBodyValue } from "./ai-body-value";
 import { CARD_MAP } from "./cards";
 import { combatTraits, HEAL_PER_TICK } from "./combat";
@@ -24,7 +25,7 @@ const hits = (attacker: Entity, target: Entity) =>
     attacker.kind === "tower" ||
     !!CARD_MAP[attacker.card as keyof typeof CARD_MAP].hitsAir);
 const close = (a: Entity, b: Entity, extra = 0) =>
-  spellContains(a, b, a.range + b.radius + a.radius * 0.35 + extra);
+  spellContains(a, b, attackReach(a, b) + extra);
 
 // A hit can remove a shield or damage the body, never both. Current fixed
 // destinations are used; homing shots retain their original entity target.

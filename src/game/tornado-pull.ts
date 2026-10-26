@@ -1,3 +1,4 @@
+import { attackReach } from "./attack-range";
 import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point } from "./engine";
 import tornado from "./tornado-data.json" with { type: "json" };
@@ -223,7 +224,7 @@ export function resolveWindup(
       (status && (!status.beforeAlive || status.beforeInterrupt)) ||
       frame.stun > 0 ||
       distance(position, target) >
-        attacker.range + target.radius + attacker.radius * 0.35
+        attackReach(attacker, target)
     )
       return { position, cancelledStep: step };
     remaining -=
