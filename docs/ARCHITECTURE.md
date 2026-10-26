@@ -386,6 +386,8 @@ Deck cards expose selection state and the keyboard shortcut. The ordering row sh
 
 The Crown Tower spell multiplier follows the current rules version in the engine, AI damage planner and card panel. Version 12 and later use 40% for Fireball, Arrows and Zap; earlier rules retain the historical `SPELL_CROWN_TOWER_DAMAGE_FRACTION` fallback. Rocket and Poison retain their explicit multipliers. Values keep fractional damage rather than rounding to whole hitpoints. Poison's displayed damage rate comes from the effective card damage and live tick interval, matching the engine rather than the retained archived 57-damage source field. Timing and coverage notes distinguish capped Rage lingering and new Poison applications against buried Tesla. The surrounding combat rules and historical versions retain their existing numeric behavior.
 
+Golem, Lava Hound, Battle Ram and Night Witch additionally show the count released on destruction and the released troop's per-body health, damage, hit interval, targets and deployment time. These values use the same normalized `CARD_MAP` child profiles and source spawn settings as the engine. Golem distinguishes its own death blast from each Golemite's; Night Witch distinguishes periodic Bat pairs, the first delay after deployment and her four-Bat death spawn. Battle Ram retains charge details while explaining that its first building hit breaks the ram. No simulation, replay, wire or profile fields change.
+
 Phone detail panels use two stat columns with centered wrapping labels and values; desktop uses three. Card inspection through lobby, shared decks and match details uses the same read-only provider.
 
 

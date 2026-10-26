@@ -22,6 +22,10 @@ import goblinHut from "../game/goblin-hut-data.json" with { type: "json" };
 import tombstone from "../game/tombstone-data.json" with { type: "json" };
 import furnace from "../game/furnace-data.json" with { type: "json" };
 import barbarianHut from "../game/barbarian-hut-data.json" with { type: "json" };
+import golem from "../game/golem-data.json" with { type: "json" };
+import lavaHound from "../game/lava-hound-data.json" with { type: "json" };
+import battleRam from "../game/battle-ram-data.json" with { type: "json" };
+import nightWitch from "../game/night-witch-data.json" with { type: "json" };
 
 const buildingSpawns = {
   "goblin-hut": { name: "Spear Goblin", rules: goblinHut, stagger: 0, deploy: 1 },
@@ -33,6 +37,20 @@ const buildingSpawns = {
     deploy: barbarianHut.unitDeployTime },
 };
 const quantity = (count: number, name: string) => `${count} ${name}${count === 1 ? "" : "s"}`;
+const deathSpawns = {
+  golem: { card: "golemite", name: "Golemite", count: golem.golem.deathSpawn.count,
+    deploy: golem.golemite.sourceDeployTime,
+    note: "The Golem and each Golemite explode on death, damaging nearby air and ground enemies and knocking back eligible troops." },
+  "lava-hound": { card: "lava-pup", name: "Lava Pup", count: lavaHound.hound.deathSpawn.count,
+    deploy: lavaHound.pup.sourceDeployTime,
+    note: "The Hound targets buildings. Its Pups can attack air and ground enemies. The split deals no death damage." },
+  "battle-ram": { card: "barbarians", name: "Barbarian", count: battleRam.deathSpawnCount,
+    deploy: battleRam.deathSpawnDeployTime,
+    note: "The ram breaks on its first building hit or when destroyed, releasing its Barbarians." },
+  "night-witch": { card: "bats", name: "Bat", count: nightWitch.deathSpawn.count,
+    deploy: deploymentTime("bats"),
+    note: "The first spawn delay starts after the Night Witch deploys. Rage and slow affect the spawn interval. Death releases the listed Bats immediately, with their own deployment time." },
+} as const;
 
 type StatIcon =
   "heart" | "swords" | "timer" | "scan" | "crosshair" | "users" | "droplet";
@@ -287,6 +305,9 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
   }
   const shield = cardShieldHitpoints(id);
   const charge = chargeRange(id);
+  const spawn = Object.hasOwn(deathSpawns, id)
+    ? deathSpawns[id as keyof typeof deathSpawns] : undefined;
+  const child = spawn && CARD_MAP[spawn.card];
   const note = [
     c.count > 1
       ? "Each troop has its own hitpoints. Damage is per troop, per hit."
@@ -297,6 +318,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
     Number.isFinite(charge)
       ? "Charges after moving the listed distance, doubling movement speed. Stun resets the charge."
       : "",
+    spawn ? `${spawn.note} Spawn hitpoints and damage are per troop.` : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -331,6 +353,27 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
       c.kind === "building"
         ? stat("Lifetime", seconds(c.lifetime ?? 0), "timer")
         : stat("Count", c.count, "users"),
+      ...(spawn && child ? [
+        stat("Deploy time", seconds(deploymentTime(id)), "timer"),
+        ...(id === "night-witch" ? [
+          stat("Spawns", quantity(nightWitch.spawn.count, spawn.name), "users"),
+          stat("First spawn delay", seconds(nightWitch.spawn.pause), "timer"),
+          stat("Spawn interval", seconds(nightWitch.spawn.pause), "timer"),
+        ] : []),
+        stat("On destruction", quantity(spawn.count, spawn.name), "users"),
+        stat("Spawn hitpoints", child.hp, "heart"),
+        stat("Spawn damage per hit", child.damage, "swords"),
+        stat("Spawn hit interval", seconds(child.interval), "timer"),
+        stat("Spawn targets", child.buildingsOnly ? "Buildings" :
+          child.hitsAir ? "Air & ground" : "Ground", "crosshair"),
+        stat("Spawn deploy time", seconds(spawn.deploy), "timer"),
+        ...(id === "golem" ? [
+          stat("Death damage", Math.round(golem.golem.death.damage * 1.1 ** 5), "swords"),
+          stat("Death radius", tiles(golem.golem.death.radius), "scan"),
+          stat("Golemite death damage", Math.round(golem.golemite.death.damage * 1.1 ** 5), "swords"),
+          stat("Golemite death radius", tiles(golem.golemite.death.radius), "scan"),
+        ] : []),
+      ] : []),
       cost,
     ],
     ...(note ? { note } : {}),

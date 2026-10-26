@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { cardDetails } from "../src/ui/card-details";
 import { CARDS, CARD_MAP, type CardId } from "../src/game/cards";
-import { Battle, STEP } from "../src/game/engine";
+import { Battle, STEP, type Entity } from "../src/game/engine";
 import rage from "../src/game/rage-data.json";
 
 const rows = (id: CardId) =>
@@ -65,6 +65,87 @@ describe("current card detail stats", () => {
     });
     expect(rows("cannon")).not.toHaveProperty("Count");
   });
+  it.each([
+    ["golem", "golemite", "Golemite"],
+    ["lava-hound", "lava-pup", "Lava Pup"],
+    ["battle-ram", "barbarians", "Barbarian"],
+    ["night-witch", "bats", "Bat"],
+  ] as const)("matches %s death-spawn details to actual released troops", (id, childId, name) => {
+    const battle = cast(id, 4, 22);
+    const parent = battle.entities.find((e) => e.card === id)!;
+    const stats = rows(id);
+    expect(parseFloat(stats["Deploy time"])).toBe(parent.deploy);
+    (battle as any).hurt(parent, parent.hp);
+    const children = battle.entities.filter((e) => e.card === childId);
+    expect(children.length).toBeGreaterThan(0);
+    expect(stats["On destruction"]).toBe(`${children.length} ${name}s`);
+    for (const child of children) {
+      expect(numeric(stats["Spawn hitpoints"])).toBe(child.maxHp);
+      expect(numeric(stats["Spawn damage per hit"])).toBe(child.damage);
+      expect(parseFloat(stats["Spawn hit interval"])).toBe(child.interval);
+      expect(parseFloat(stats["Spawn deploy time"])).toBe(child.deploy);
+    }
+    for (const card of ["knight", "minions"] as const) {
+      battle.players.red.hand[0] = card;
+      battle.players.red.elixir = 10;
+      expect(battle.play("red", 0, 4, 10).ok).toBe(true);
+    }
+    const valid = (card: CardId | "tower") => (battle as any).validTarget(
+      children[0], battle.entities.find((e) => e.team === "red" && e.card === card),
+    );
+    expect(valid("tower")).toBe(true);
+    expect(stats["Spawn targets"]).toBe(!valid("knight") ? "Buildings" :
+      valid("minions") ? "Air & ground" : "Ground");
+    expect(cardDetails(id).note).toContain("per troop");
+  });
+
+  it("shows both Golem death blasts separately from the living troops' attacks", () => {
+    const battle = cast("golem", 4, 22);
+    const stats = rows("golem");
+    for (const [card, damageLabel, radiusLabel] of [
+      ["golem", "Death damage", "Death radius"],
+      ["golemite", "Golemite death damage", "Golemite death radius"],
+    ] as const) {
+      const source = battle.entities.find((e) => e.card === card && e.hp > 0)!;
+      const victims: Entity[] = [];
+      for (const outside of [false, true]) {
+        battle.players.red.hand[0] = "knight";
+        battle.players.red.elixir = 10;
+        expect(battle.play("red", 0, 4, 10).ok).toBe(true);
+        const victim = battle.entities.filter((e) => e.card === "knight").at(-1)!;
+        Object.assign(victim, {
+          x: source.x + parseFloat(stats[radiusLabel]) + victim.radius + (outside ? 0.1 : -0.1),
+          y: source.y, hp: 10000, maxHp: 10000,
+        });
+        victims.push(victim);
+      }
+      (battle as any).hurt(source, source.hp);
+      expect(10000 - victims[0].hp).toBe(numeric(stats[damageLabel]));
+      expect(victims[1].hp).toBe(10000);
+    }
+  });
+
+  it("matches Night Witch's first and repeating Bat waves to the displayed clocks", () => {
+    const battle = cast("night-witch", 4, 22);
+    const stats = rows("night-witch");
+    const waves: number[] = [];
+    const counts: number[] = [];
+    for (let tick = 0; tick < 400 && waves.length < 2; tick++) {
+      const before = battle.entities.filter((e) => e.card === "bats").length;
+      battle.step();
+      const born = battle.entities.filter((e) => e.card === "bats").length - before;
+      if (born > 0) {
+        waves.push(battle.time);
+        counts.push(born);
+      }
+    }
+    expect(waves).toHaveLength(2);
+    expect(Math.abs(waves[0] - parseFloat(stats["Deploy time"]) -
+      parseFloat(stats["First spawn delay"]))).toBeLessThanOrEqual(2 * STEP);
+    expect(waves[1] - waves[0]).toBeCloseTo(parseFloat(stats["Spawn interval"]), 8);
+    expect(counts.map((count) => `${count} Bats`)).toEqual([stats.Spawns, stats.Spawns]);
+  });
+
   it("describes Collector production using its actual first collection and repeat interval", () => {
     const battle = cast("elixir-collector", 4, 22);
     const collector = battle.entities.find((e) => e.card === "elixir-collector")!;

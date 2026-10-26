@@ -315,3 +315,62 @@ test("utility building details explain production, staggered waves and death spa
   }
   expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(before);
 });
+
+test("death-spawn troop details distinguish released bodies, targets and timing", async ({ page }, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  if (info.project.name !== "desktop")
+    await page.setViewportSize({ width: 320, height: 568 });
+  const before = await page.evaluate((key) => localStorage.getItem(key), key);
+  await page.locator('[data-nav="cards"]').click();
+  for (const [id, name, child, expected] of [
+    ["golem", "Golem", "golemite", {
+      "On destruction": "2 Golemites", "Deploy time": "3 s",
+      "Spawn targets": "Buildings", "Spawn deploy time": "1 s",
+      "Death damage": "314", "Death radius": "2 tiles",
+      "Golemite death damage": "64", "Golemite death radius": "2 tiles",
+    }],
+    ["lava-hound", "Lava Hound", "lava-pup", {
+      "On destruction": "6 Lava Pups", "Deploy time": "1 s",
+      "Spawn targets": "Air & ground", "Spawn deploy time": "1 s",
+    }],
+    ["battle-ram", "Battle Ram", "barbarians", {
+      "On destruction": "2 Barbarians", "Deploy time": "1 s",
+      "Spawn targets": "Ground", "Spawn deploy time": "0.8 s",
+      "Charge damage": "610", "Charge distance": "3 tiles",
+    }],
+    ["night-witch", "Night Witch", "bats", {
+      "On destruction": "4 Bats", "Deploy time": "1 s",
+      "Spawn targets": "Air & ground", "Spawn deploy time": "1 s",
+      Spawns: "2 Bats", "First spawn delay": "5 s", "Spawn interval": "5 s",
+    }],
+  ] as const) {
+    await page.locator("#card-search").fill(name);
+    await page.locator(`[data-collection="${id}"]`).click();
+    for (const [label, value] of Object.entries({
+      ...expected,
+      "Spawn hitpoints": number(CARD_MAP[child].hp),
+      "Spawn damage per hit": number(CARD_MAP[child].damage),
+      "Spawn hit interval": `${number(CARD_MAP[child].interval)} s`,
+    }))
+      await expect(page.locator(`[data-card-stat="${label}"] b`)).toHaveText(value);
+    await expect(page.locator(".card-rule-note")).toContainText("per troop");
+    await page.locator('[data-card-stat="On destruction"]').scrollIntoViewIfNeeded();
+    await expect(page.locator('[data-card-stat="On destruction"]')).toBeInViewport();
+    expect(await page.locator(".modal").evaluate((e) => e.scrollWidth > e.clientWidth)).toBe(false);
+    const bounds = await page.locator("[data-card-stat]").evaluateAll((rows) => rows.map((row) => ({
+      left: row.getBoundingClientRect().left, right: row.getBoundingClientRect().right,
+    })));
+    for (const box of bounds) {
+      expect(box.left).toBeGreaterThanOrEqual(0);
+      expect(box.right).toBeLessThanOrEqual(page.viewportSize()!.width);
+    }
+    if (id === "golem" || id === "night-witch")
+      await page.screenshot({ path: info.outputPath(`${id}-death-spawn-details.png`), animations: "disabled" });
+    await page.locator('[data-card-stat="Elixir"]').scrollIntoViewIfNeeded();
+    await expect(page.locator('[data-card-stat="Elixir"]')).toBeInViewport();
+    await page.getByRole("button", { name: "Back to collection", exact: true }).click();
+  }
+  expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(before);
+  expect(errors).toEqual([]);
+});
