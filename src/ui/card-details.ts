@@ -357,7 +357,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
       : "",
     spawn ? `${spawn.note} Spawn hitpoints and damage are per troop.` : "",
     id === "mortar" ? "Cannot target enemies inside the minimum range." : "",
-    inferno ? "Damage is per hit. Stage times count from locking onto the same target. Stun, losing range or changing targets resets the beam." : "",
+    inferno ? "Damage is per hit. Stage times use the attack clock: Rage accelerates the ramp and slow delays it. Stun, losing range or changing targets resets the beam." : "",
     id === "witch" ? "The first Skeleton wave starts as deployment finishes. Skeletons appear separately at the listed spacing. Rage and slow affect the spawn clock. Spawn hitpoints and damage are per Skeleton." : "",
     id === "balloon" ? "Drops a timed bomb where it is destroyed. The bomb damages nearby enemy air and ground troops and buildings. Its normal attack targets buildings." : "",
     id === "giant-skeleton" ? "Drops a timed bomb where it is destroyed. The bomb damages nearby enemy air and ground units and buildings, knocking back eligible troops. Its normal attack targets ground enemies." : "",

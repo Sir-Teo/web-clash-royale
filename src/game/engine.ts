@@ -51,7 +51,7 @@ import clone from "./clone-data.json" with { type: "json" };
 import mirror from "./mirror-data.json" with { type: "json" };
 import iceWizard from "./ice-wizard-data.json" with { type: "json" };
 import princess from "./princess-data.json" with { type: "json" };
-import { infernoDamage, infernoProfile } from "./inferno";
+import { advanceInfernoClock, infernoAttackRate, infernoDamage, infernoProfile } from "./inferno";
 import electroWizard from "./electro-wizard-data.json" with { type: "json" };
 import miner from "./miner-data.json" with { type: "json" };
 import bowler from "./bowler-data.json" with { type: "json" };
@@ -216,7 +216,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -296,7 +296,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 22;
+    this.rulesVersion = r?.version ?? 23;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -1507,8 +1507,10 @@ export class Battle {
       if (e.hp <= 0) continue;
       if (this.rulesVersion >= 19) advanceAnimationClock(e, this.time);
       const hitSpeed =
-        (e.rage ? rage.hitSpeedMultiplier : 1) *
-        (e.slow ? iceWizard.hitSpeedMultiplier : 1);
+        this.rulesVersion >= 23 && (e.card === "inferno-tower" || e.card === "inferno-dragon")
+          ? infernoAttackRate(!!e.rage, !!e.slow)
+          : (e.rage ? rage.hitSpeedMultiplier : 1) *
+            (e.slow ? iceWizard.hitSpeedMultiplier : 1);
       e.age += STEP;
       e.attack = Math.max(0, e.attack - STEP * hitSpeed);
       e.cooldown = Math.max(0, e.cooldown - STEP * hitSpeed);
@@ -1794,7 +1796,6 @@ export class Battle {
   }
   private updateInferno(e: Entity, hitSpeed: number) {
     const card = e.card === "inferno-tower" ? "inferno-tower" : "inferno-dragon";
-    const source = infernoProfile(card);
     const target = this.acquireTarget(e);
     if (!target || !this.inRange(e, target)) {
       this.cancelAttack(e);
@@ -1814,14 +1815,15 @@ export class Battle {
     }
     const lock = e.inferno;
     resetMovement(e);
-    lock.elapsed += STEP;
-    lock.stage =
-      lock.elapsed >= source.stageDurations[0] + source.stageDurations[1]
-        ? 2
-        : lock.elapsed >= source.stageDurations[0]
-          ? 1
-          : 0;
-    lock.hitTimer -= STEP * hitSpeed;
+    if (this.rulesVersion >= 23) {
+      advanceInfernoClock(card, lock, STEP, !!e.rage, !!e.slow);
+    } else {
+      const source = infernoProfile(card);
+      lock.elapsed += STEP;
+      lock.stage = lock.elapsed >= source.stageDurations[0] + source.stageDurations[1]
+        ? 2 : lock.elapsed >= source.stageDurations[0] ? 1 : 0;
+      lock.hitTimer -= STEP * hitSpeed;
+    }
     if (lock.hitTimer > 1e-8) return;
     lock.hitTimer += e.interval;
     e.attack = e.interval;
@@ -2671,6 +2673,7 @@ export class Battle {
       ? createKingDefense(
           "red", this.entities, this.projectiles, this.areas,
           finisher?.baseline?.step,
+          this.rulesVersion,
         )
       : undefined;
     const spellTargets = new Map<CardId, SpellTarget | undefined>(

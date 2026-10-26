@@ -91,7 +91,7 @@ describe("current card detail stats", () => {
     const target = battle.entities.find((entity) => entity.team === "red" && entity.card === "knight")!;
     Object.assign(target, { x: 4, y: 18, deploy: 0, active: false, hp: 100000, maxHp: 100000 });
     const stats = rows(id), stages = new Map<number, number>();
-    for (let step = 0; step < 160; step++) {
+    for (let step = 0; step < 200; step++) {
       battle.step();
       const stage = beam.inferno?.stage;
       if (stage !== undefined && !stages.has(stage)) stages.set(stage, battle.time);
@@ -99,8 +99,10 @@ describe("current card detail stats", () => {
     const damage = battle.events.filter((event) => event.type === "hit" && event.card === id).map((event) => event.value);
     for (const stage of [1, 2, 3]) expect(damage).toContain(numeric(stats[`Stage ${stage} damage`]));
     expect(numeric(stats["Stage 1 damage"])).toBe(CARD_MAP[id].damage);
+    const rate = buff === "rage" ? 1.34 : buff === "slow" ? 0.64 : 1;
     for (const stage of [2, 3])
-      expect(Math.abs(stages.get(stage - 1)! - parseFloat(stats[`Stage ${stage} after`]))).toBeLessThanOrEqual(STEP + 1e-8);
+      expect(Math.abs(stages.get(stage - 1)! - parseFloat(stats[`Stage ${stage} after`]) / rate)).toBeLessThanOrEqual(STEP + 1e-8);
+    expect(cardDetails(id).note).toContain("Rage accelerates the ramp and slow delays it");
     expect(stats).not.toHaveProperty("Damage per hit");
     battle.players.red.hand[0] = "zap";
     battle.players.red.elixir = 10;

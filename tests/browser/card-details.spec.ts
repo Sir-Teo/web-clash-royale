@@ -435,6 +435,7 @@ test("Inferno detail panels show three per-hit stages and total lock times", asy
     await expect(page.locator('[data-card-stat="Hit interval"] b')).toHaveText("0.4 s");
     await expect(page.locator('[data-card-stat="Damage per hit"]')).toHaveCount(0);
     await expect(page.locator(".card-rule-note")).toContainText("Damage is per hit");
+    await expect(page.locator(".card-rule-note")).toContainText("Rage accelerates the ramp and slow delays it");
     await expect(page.locator(".card-rule-note")).toContainText("Stun, losing range or changing targets resets");
     expect(await page.locator(".modal").evaluate((modal) => modal.scrollWidth > modal.clientWidth)).toBe(false);
     await page.locator('[data-card-stat="Stage 3 after"]').scrollIntoViewIfNeeded();

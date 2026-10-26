@@ -1,0 +1,9 @@
+{
+  "stepMs": 50,
+  "deltasMs": {
+    "normal": 50,
+    "rage": 67,
+    "slow": 32,
+    "both": 43
+  }
+}

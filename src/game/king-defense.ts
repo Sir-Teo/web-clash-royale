@@ -93,6 +93,7 @@ export function createKingDefense(
   projectiles: readonly Projectile[] = [],
   areas: readonly AreaEffect[] = [],
   knownEndingStep = Infinity,
+  version = 23,
 ) {
   const king = entities.find((e) => e.hp > 0 && e.team === team && e.king);
   const health = createWindupHealth(projectiles, entities);
@@ -143,7 +144,7 @@ export function createKingDefense(
             order,
             channel,
             packets: channel
-              ? infernoKingPackets(attacker, king, areas, order, health)
+              ? infernoKingPackets(attacker, king, areas, order, health, undefined, version)
               : pendingKingPackets(attacker, king, projection, order),
           },
         ];
@@ -223,6 +224,7 @@ export function createKingDefense(
             a.order,
             health,
             card === "tornado" ? point : undefined,
+            version,
           )
         : pendingKingPackets(
             a.attacker,

@@ -100,7 +100,7 @@ function setup() {
   (document.querySelector("#death-config") as HTMLElement).hidden =
     scenario !== "death" && scenario !== "deployment";
   (document.querySelector("#attack-config") as HTMLElement).hidden =
-    scenario !== "attack-impacts";
+    scenario !== "attack-impacts" && scenario !== "inferno-clock";
   (document.querySelector("#break-shield") as HTMLElement).hidden =
     scenario !== "dark-prince" && scenario !== "guards";
   (document.querySelector("#kill-night-witch") as HTMLElement).hidden =
@@ -147,7 +147,7 @@ function setup() {
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king" &&
       !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
-      !(["animation-clock", "sprite-cache"].includes(scenario) && ["rebuild", "destruction"].includes(id));
+      !(["animation-clock", "sprite-cache", "inferno-clock"].includes(scenario) && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -732,6 +732,20 @@ function setup() {
       target.speed = target.damage = 0;
       target.hp = target.maxHp = 10000;
     }
+  } else if (scenario === "inferno-clock") {
+    const selected = (document.querySelector("#attack-card") as HTMLSelectElement).value;
+    const card = selected === "inferno-tower" ? "inferno-tower" : "inferno-dragon";
+    for (const team of ["blue", "red"] as const)
+      for (const [index, mode] of ["normal", "rage", "slow", "both"].entries()) {
+        const x = 2 + index * 4.6, y = team === "blue" ? 23 : 9;
+        const attacker = unit(card, team, x, y)[0];
+        const target = unit("giant", team === "blue" ? "red" : "blue", x, y + (team === "blue" ? -2 : 2))[0];
+        target.active = false;
+        target.hp = target.maxHp = 1e6;
+        if (mode === "rage" || mode === "both") attacker.rage = { remaining: 100 };
+        if (mode === "slow" || mode === "both") attacker.slow = { remaining: 100 };
+        clockModes.set(attacker.id, mode);
+      }
   } else if (scenario === "attack-impacts") {
     const attacker = (
       document.querySelector("#attack-card") as HTMLSelectElement
@@ -1209,6 +1223,11 @@ function render(now: number) {
     JSON.stringify(arena.impactSpriteState);
   (document.querySelector("#destruction") as HTMLElement).dataset.infernoBeams =
     JSON.stringify(arena.infernoBeamState);
+  (document.querySelector("#destruction") as HTMLElement).dataset.infernoClock =
+    JSON.stringify({ version: battle.rulesVersion, time: battle.time,
+      bodies: battle.entities.filter((entity) => clockModes.has(entity.id) && entity.card.startsWith("inferno-"))
+        .map((entity) => ({ id: entity.id, card: entity.card, team: entity.team,
+          mode: clockModes.get(entity.id), lock: entity.inferno })) });
   const collector = battle.entities.find((entity) => entity.card === "elixir-collector");
   (document.querySelector("#destruction") as HTMLElement).dataset.collector =
     JSON.stringify({

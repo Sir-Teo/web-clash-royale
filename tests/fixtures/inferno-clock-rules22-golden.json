@@ -1,0 +1,1574 @@
+{
+  "sourceCommit": "9b6cb11",
+  "stateFields": [
+    "tick",
+    "rulesVersion",
+    "entities",
+    "projectiles",
+    "areas",
+    "events",
+    "audioEvents",
+    "players",
+    "winner",
+    "reason",
+    "actions",
+    "randomState"
+  ],
+  "cases": [
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 22,
+        "seed": 3111,
+        "mode": "classic",
+        "deck": [
+          "inferno-dragon",
+          "inferno-tower",
+          "giant",
+          "ice-wizard",
+          "rage",
+          "zap",
+          "freeze",
+          "mirror"
+        ],
+        "enemyDeck": [
+          "inferno-tower",
+          "inferno-dragon",
+          "giant",
+          "ice-wizard",
+          "rage",
+          "freeze",
+          "tornado",
+          "lightning"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "inferno-tower",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "giant",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 210,
+            "team": "red",
+            "card": "rage",
+            "x": 14,
+            "y": 14.475000000000064
+          },
+          {
+            "tick": 525,
+            "team": "blue",
+            "card": "inferno-dragon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 735,
+            "team": "red",
+            "card": "lightning",
+            "x": 4,
+            "y": 16.033333333333037
+          },
+          {
+            "tick": 945,
+            "team": "blue",
+            "card": "giant",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 945,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1155,
+            "team": "blue",
+            "card": "freeze",
+            "x": 4,
+            "y": 13.299999999999988
+          },
+          {
+            "tick": 1260,
+            "team": "blue",
+            "card": "rage",
+            "x": 4,
+            "y": 15.7925000000003
+          },
+          {
+            "tick": 1260,
+            "team": "red",
+            "card": "freeze",
+            "x": 4,
+            "y": 15.7925000000003
+          },
+          {
+            "tick": 1470,
+            "team": "blue",
+            "card": "zap",
+            "x": 4,
+            "y": 13.124162767091082
+          },
+          {
+            "tick": 1680,
+            "team": "blue",
+            "card": "mirror",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1680,
+            "team": "red",
+            "card": "inferno-dragon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1995,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2100,
+            "team": "red",
+            "card": "inferno-tower",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2310,
+            "team": "red",
+            "card": "tornado",
+            "x": 4,
+            "y": 17.73333333333312
+          },
+          {
+            "tick": 2415,
+            "team": "blue",
+            "card": "inferno-tower",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2730,
+            "team": "blue",
+            "card": "inferno-dragon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2835,
+            "team": "red",
+            "card": "giant",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2940,
+            "team": "red",
+            "card": "rage",
+            "x": 4,
+            "y": 11.850000000000026
+          },
+          {
+            "tick": 3150,
+            "team": "blue",
+            "card": "giant",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3360,
+            "team": "red",
+            "card": "lightning",
+            "x": 14,
+            "y": 17.525000000000254
+          },
+          {
+            "tick": 3465,
+            "team": "blue",
+            "card": "freeze",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3675,
+            "team": "blue",
+            "card": "rage",
+            "x": 14,
+            "y": 10.025000000000256
+          },
+          {
+            "tick": 3675,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3780,
+            "team": "blue",
+            "card": "zap",
+            "x": 4,
+            "y": 12.466666666666658
+          },
+          {
+            "tick": 3780,
+            "team": "red",
+            "card": "freeze",
+            "x": 14,
+            "y": 8.506250000000279
+          },
+          {
+            "tick": 3885,
+            "team": "blue",
+            "card": "mirror",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3990,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3990,
+            "team": "red",
+            "card": "inferno-dragon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4200,
+            "team": "blue",
+            "card": "inferno-tower",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4200,
+            "team": "red",
+            "card": "inferno-tower",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4305,
+            "team": "red",
+            "card": "tornado",
+            "x": 14,
+            "y": 17.766666666666456
+          },
+          {
+            "tick": 4515,
+            "team": "blue",
+            "card": "inferno-dragon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4515,
+            "team": "red",
+            "card": "giant",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4620,
+            "team": "red",
+            "card": "rage",
+            "x": 4,
+            "y": 11.850000000000026
+          },
+          {
+            "tick": 4725,
+            "team": "blue",
+            "card": "giant",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4830,
+            "team": "blue",
+            "card": "freeze",
+            "x": 4,
+            "y": 18.666249999999994
+          },
+          {
+            "tick": 4830,
+            "team": "red",
+            "card": "lightning",
+            "x": 4,
+            "y": 18.13333333333314
+          },
+          {
+            "tick": 4935,
+            "team": "blue",
+            "card": "rage",
+            "x": 4,
+            "y": 18.905902777777897
+          },
+          {
+            "tick": 5040,
+            "team": "blue",
+            "card": "zap",
+            "x": 4,
+            "y": 17.043472222222206
+          },
+          {
+            "tick": 5145,
+            "team": "blue",
+            "card": "mirror",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5145,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 5250,
+            "team": "red",
+            "card": "freeze",
+            "x": 4,
+            "y": 12.87777777777767
+          },
+          {
+            "tick": 5355,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5355,
+            "team": "red",
+            "card": "inferno-dragon",
+            "x": 4,
+            "y": 10
+          }
+        ],
+        "duration": 5400
+      },
+      "ai": false,
+      "infernos": {
+        "blue": 6,
+        "red": 5
+      },
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "93ec597c192e0242ad6fa15cf72de482e0c00570938fea8f1efc8b70549eec36"
+        },
+        {
+          "tick": 1200,
+          "digest": "2db3444c0bd35364f5515ceac267fb0517dbee8ae676cf1dfac196f49026d924"
+        },
+        {
+          "tick": 1800,
+          "digest": "df06fb9c73f791789e865cf2e10eed73f845a4f9edac9490781b913cccc7ccff"
+        },
+        {
+          "tick": 2400,
+          "digest": "e4917e2b9c5fb01766762fc4e298b6858efb99fb1b0d099116990b35e6149c52"
+        },
+        {
+          "tick": 3000,
+          "digest": "f63345039dc58c6b477c1c818175eb5f187b3b317743a5f65fee0406a3094554"
+        },
+        {
+          "tick": 3600,
+          "digest": "2d2c61350223d7360572eba03d67968c00cf6a641f4948ef69656af0edc971df"
+        },
+        {
+          "tick": 4200,
+          "digest": "38b4229553c64247285875636b022f5daecbba821facfd9252b6407fde3dd97e"
+        },
+        {
+          "tick": 4800,
+          "digest": "d51dbe907eacd0235c243c99a5c5c2a82254c4a7b576c3224894d59c1db0765e"
+        },
+        {
+          "tick": 5400,
+          "digest": "e085f71faed55da588dad9e52613e3cf42f7cbf3c76b7aa81192c222319976e3"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 22,
+        "seed": 4693,
+        "mode": "classic",
+        "deck": [
+          "inferno-dragon",
+          "inferno-tower",
+          "giant",
+          "ice-wizard",
+          "rage",
+          "zap",
+          "freeze",
+          "mirror"
+        ],
+        "enemyDeck": [
+          "inferno-tower",
+          "inferno-dragon",
+          "giant",
+          "ice-wizard",
+          "rage",
+          "freeze",
+          "tornado",
+          "lightning"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "giant",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 129,
+            "team": "red",
+            "card": "giant",
+            "x": 4.414502411149442,
+            "y": 3.5
+          },
+          {
+            "tick": 315,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 327,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 14.175209542643278,
+            "y": 13.8
+          },
+          {
+            "tick": 420,
+            "team": "blue",
+            "card": "rage",
+            "x": 13.616082533247676,
+            "y": 12.696489310774973
+          },
+          {
+            "tick": 532,
+            "team": "red",
+            "card": "rage",
+            "x": 9.794518174128967,
+            "y": 11.913984847991106
+          },
+          {
+            "tick": 630,
+            "team": "blue",
+            "card": "zap",
+            "x": 4.489206783635002,
+            "y": 12.42483174488334
+          },
+          {
+            "tick": 700,
+            "team": "red",
+            "card": "tornado",
+            "x": 4,
+            "y": 19.033333333333037
+          },
+          {
+            "tick": 1050,
+            "team": "blue",
+            "card": "inferno-tower",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1113,
+            "team": "red",
+            "card": "freeze",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1561,
+            "team": "red",
+            "card": "giant",
+            "x": 13.319556739134715,
+            "y": 3.5
+          },
+          {
+            "tick": 1575,
+            "team": "blue",
+            "card": "mirror",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1785,
+            "team": "red",
+            "card": "inferno-dragon",
+            "x": 4.085963849741839,
+            "y": 13.8
+          },
+          {
+            "tick": 1890,
+            "team": "blue",
+            "card": "freeze",
+            "x": 12.862221454565372,
+            "y": 9.20969237164253
+          },
+          {
+            "tick": 2083,
+            "team": "red",
+            "card": "rage",
+            "x": 13.223096367924478,
+            "y": 10.998656959583917
+          },
+          {
+            "tick": 2310,
+            "team": "blue",
+            "card": "inferno-dragon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2481,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 4.050046310480684,
+            "y": 9
+          },
+          {
+            "tick": 2730,
+            "team": "blue",
+            "card": "giant",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2745,
+            "team": "red",
+            "card": "tornado",
+            "x": 14,
+            "y": 18.46666666666652
+          },
+          {
+            "tick": 2844,
+            "team": "red",
+            "card": "freeze",
+            "x": 4,
+            "y": 26
+          },
+          {
+            "tick": 2940,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3045,
+            "team": "blue",
+            "card": "rage",
+            "x": 14,
+            "y": 11.466666666666415
+          },
+          {
+            "tick": 3111,
+            "team": "red",
+            "card": "inferno-dragon",
+            "x": 14,
+            "y": 9.976666666666652
+          },
+          {
+            "tick": 3255,
+            "team": "blue",
+            "card": "zap",
+            "x": 14,
+            "y": 9.976666666666652
+          },
+          {
+            "tick": 3655,
+            "team": "red",
+            "card": "giant",
+            "x": 3.3930595143698157,
+            "y": 3.5
+          },
+          {
+            "tick": 3675,
+            "team": "blue",
+            "card": "inferno-tower",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3760,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 12.885304354536423,
+            "y": 13.8
+          },
+          {
+            "tick": 3945,
+            "team": "red",
+            "card": "inferno-tower",
+            "x": 9,
+            "y": 10
+          },
+          {
+            "tick": 3990,
+            "team": "blue",
+            "card": "mirror",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4049,
+            "team": "red",
+            "card": "rage",
+            "x": 8.228122180759492,
+            "y": 12.432993354719727
+          },
+          {
+            "tick": 4095,
+            "team": "blue",
+            "card": "freeze",
+            "x": 3.446799013910819,
+            "y": 12.107623963859712
+          },
+          {
+            "tick": 4236,
+            "team": "red",
+            "card": "lightning",
+            "x": 4,
+            "y": 26
+          },
+          {
+            "tick": 4305,
+            "team": "blue",
+            "card": "inferno-dragon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4468,
+            "team": "red",
+            "card": "freeze",
+            "x": 4.111091322027992,
+            "y": 20.925832193254458
+          },
+          {
+            "tick": 4515,
+            "team": "blue",
+            "card": "giant",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4710,
+            "team": "red",
+            "card": "giant",
+            "x": 4.132978476630524,
+            "y": 3.5
+          },
+          {
+            "tick": 4725,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4830,
+            "team": "blue",
+            "card": "rage",
+            "x": 5.118572223160975,
+            "y": 18.674293457568083
+          },
+          {
+            "tick": 4912,
+            "team": "red",
+            "card": "tornado",
+            "x": 3.999550038239891,
+            "y": 18.522487591990963
+          },
+          {
+            "tick": 4935,
+            "team": "blue",
+            "card": "zap",
+            "x": 4.843353417595603,
+            "y": 4.4666197428459515
+          },
+          {
+            "tick": 5044,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 3.3395912300329655,
+            "y": 9
+          },
+          {
+            "tick": 5081,
+            "team": "red",
+            "card": "inferno-tower",
+            "x": 6.5,
+            "y": 10
+          },
+          {
+            "tick": 5145,
+            "team": "blue",
+            "card": "inferno-tower",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5226,
+            "team": "red",
+            "card": "rage",
+            "x": 4.9432690825874985,
+            "y": 10.173924723916913
+          },
+          {
+            "tick": 5250,
+            "team": "blue",
+            "card": "mirror",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5355,
+            "team": "blue",
+            "card": "freeze",
+            "x": 3.9753075827985156,
+            "y": 13.835915856383082
+          }
+        ],
+        "duration": 5400
+      },
+      "ai": true,
+      "infernos": {
+        "blue": 5,
+        "red": 4
+      },
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "a757558922cf9a85380b9222fbf58fdcc1cbd30d40774292635c682f2130df98"
+        },
+        {
+          "tick": 1200,
+          "digest": "40dd2cc180a90f4344ce35230ba81c7f67b6df2c9cc45e5243795ec191333801"
+        },
+        {
+          "tick": 1800,
+          "digest": "a0223e97875458b7ee3cdb6e5c06775d437c162f344e6fa78021b857c339b8af"
+        },
+        {
+          "tick": 2400,
+          "digest": "676436593df0b76bac436988a92809c4fe0f89ccb5a1e301a37f8ac732f2d06a"
+        },
+        {
+          "tick": 3000,
+          "digest": "bc8ea6804c679f81a2ae0da40893ca3654cdaaf21b4c68e24f9da684af55b21f"
+        },
+        {
+          "tick": 3600,
+          "digest": "25793432bac8a62a9a033b7688bdbe04443ec173dd46e406b35a083860afb4a2"
+        },
+        {
+          "tick": 4200,
+          "digest": "a405f2a86a0071025a45f5812b36bf20cc705420c93bf0d5c47335969787ef83"
+        },
+        {
+          "tick": 4800,
+          "digest": "00797c4a429ae55b47c911bfe4ca95793cf9a7dab8f01557d25263d568866925"
+        },
+        {
+          "tick": 5400,
+          "digest": "33042356844e0eba45b82dfc1fc1ee16f6ccd33713df7c20061fdc93b2ad2257"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 22,
+        "seed": 7047,
+        "mode": "classic",
+        "deck": [
+          "inferno-dragon",
+          "inferno-tower",
+          "giant",
+          "ice-wizard",
+          "rage",
+          "zap",
+          "freeze",
+          "mirror"
+        ],
+        "enemyDeck": [
+          "inferno-tower",
+          "inferno-dragon",
+          "giant",
+          "ice-wizard",
+          "rage",
+          "freeze",
+          "tornado",
+          "lightning"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "inferno-dragon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "inferno-tower",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 210,
+            "team": "red",
+            "card": "rage",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 420,
+            "team": "blue",
+            "card": "inferno-tower",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 525,
+            "team": "blue",
+            "card": "rage",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 525,
+            "team": "red",
+            "card": "freeze",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 840,
+            "team": "blue",
+            "card": "freeze",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 945,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1155,
+            "team": "red",
+            "card": "inferno-dragon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1365,
+            "team": "blue",
+            "card": "giant",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1470,
+            "team": "blue",
+            "card": "zap",
+            "x": 4,
+            "y": 19.226163428683666
+          },
+          {
+            "tick": 1680,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1680,
+            "team": "red",
+            "card": "lightning",
+            "x": 4,
+            "y": 15.056982270390442
+          },
+          {
+            "tick": 2100,
+            "team": "blue",
+            "card": "mirror",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2100,
+            "team": "red",
+            "card": "giant",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2310,
+            "team": "red",
+            "card": "tornado",
+            "x": 14,
+            "y": 18.366666666666486
+          },
+          {
+            "tick": 2415,
+            "team": "blue",
+            "card": "inferno-dragon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2730,
+            "team": "red",
+            "card": "inferno-tower",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2835,
+            "team": "blue",
+            "card": "inferno-tower",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2940,
+            "team": "blue",
+            "card": "rage",
+            "x": 14,
+            "y": 21.467420020168408
+          },
+          {
+            "tick": 2940,
+            "team": "red",
+            "card": "rage",
+            "x": 14,
+            "y": 20.42130890905729
+          },
+          {
+            "tick": 3255,
+            "team": "red",
+            "card": "freeze",
+            "x": 14,
+            "y": 20.381867936002998
+          },
+          {
+            "tick": 3360,
+            "team": "blue",
+            "card": "freeze",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3465,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3780,
+            "team": "blue",
+            "card": "giant",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3885,
+            "team": "blue",
+            "card": "zap",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3885,
+            "team": "red",
+            "card": "inferno-dragon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3990,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3990,
+            "team": "red",
+            "card": "lightning",
+            "x": 14,
+            "y": 17.525000000000254
+          },
+          {
+            "tick": 4095,
+            "team": "blue",
+            "card": "mirror",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4200,
+            "team": "blue",
+            "card": "inferno-dragon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4200,
+            "team": "red",
+            "card": "giant",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4305,
+            "team": "red",
+            "card": "tornado",
+            "x": 14,
+            "y": 11.222083333333535
+          },
+          {
+            "tick": 4410,
+            "team": "blue",
+            "card": "inferno-tower",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4515,
+            "team": "blue",
+            "card": "rage",
+            "x": 14,
+            "y": 10.28204109278478
+          },
+          {
+            "tick": 4515,
+            "team": "red",
+            "card": "inferno-tower",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4620,
+            "team": "red",
+            "card": "rage",
+            "x": 14,
+            "y": 8.154402203895886
+          },
+          {
+            "tick": 4725,
+            "team": "blue",
+            "card": "freeze",
+            "x": 14,
+            "y": 8.057125
+          },
+          {
+            "tick": 4830,
+            "team": "red",
+            "card": "freeze",
+            "x": 14,
+            "y": 11.803687994006982
+          },
+          {
+            "tick": 4935,
+            "team": "blue",
+            "card": "giant",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5040,
+            "team": "blue",
+            "card": "zap",
+            "x": 14,
+            "y": 11.981101112475596
+          },
+          {
+            "tick": 5040,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5145,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5250,
+            "team": "red",
+            "card": "inferno-dragon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5355,
+            "team": "blue",
+            "card": "mirror",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5355,
+            "team": "red",
+            "card": "lightning",
+            "x": 4,
+            "y": 16.26666666666638
+          },
+          {
+            "tick": 5565,
+            "team": "blue",
+            "card": "inferno-dragon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5670,
+            "team": "blue",
+            "card": "inferno-tower",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5670,
+            "team": "red",
+            "card": "giant",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5775,
+            "team": "blue",
+            "card": "rage",
+            "x": 5.2050529876037785,
+            "y": 11.8355696504946
+          },
+          {
+            "tick": 5775,
+            "team": "red",
+            "card": "tornado",
+            "x": 5.2050529876037785,
+            "y": 11.8355696504946
+          },
+          {
+            "tick": 5880,
+            "team": "blue",
+            "card": "freeze",
+            "x": 14,
+            "y": 14.475000000000064
+          },
+          {
+            "tick": 5880,
+            "team": "red",
+            "card": "inferno-tower",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5985,
+            "team": "red",
+            "card": "rage",
+            "x": 14,
+            "y": 14.475000000000064
+          },
+          {
+            "tick": 6090,
+            "team": "red",
+            "card": "freeze",
+            "x": 6.9015416467146835,
+            "y": 7.6622075490817965
+          },
+          {
+            "tick": 6195,
+            "team": "blue",
+            "card": "giant",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 6300,
+            "team": "blue",
+            "card": "zap",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 6405,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 6405,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 6615,
+            "team": "blue",
+            "card": "mirror",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 6615,
+            "team": "red",
+            "card": "inferno-dragon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 6720,
+            "team": "red",
+            "card": "lightning",
+            "x": 6.760408080477227,
+            "y": 13.463239784501857
+          },
+          {
+            "tick": 6825,
+            "team": "blue",
+            "card": "inferno-dragon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 6930,
+            "team": "blue",
+            "card": "inferno-tower",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 7035,
+            "team": "blue",
+            "card": "rage",
+            "x": 4,
+            "y": 16.299999999999716
+          },
+          {
+            "tick": 7035,
+            "team": "red",
+            "card": "giant",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 7140,
+            "team": "blue",
+            "card": "freeze",
+            "x": 4,
+            "y": 11.538022840628196
+          },
+          {
+            "tick": 7140,
+            "team": "red",
+            "card": "tornado",
+            "x": 7.617597183149966,
+            "y": 15.61346809670982
+          },
+          {
+            "tick": 7245,
+            "team": "red",
+            "card": "inferno-tower",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 7350,
+            "team": "red",
+            "card": "rage",
+            "x": 4,
+            "y": 12.8578517416529
+          },
+          {
+            "tick": 7455,
+            "team": "blue",
+            "card": "giant",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 7455,
+            "team": "red",
+            "card": "freeze",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 7560,
+            "team": "blue",
+            "card": "zap",
+            "x": 6.221004776205803,
+            "y": 18.275107281869396
+          },
+          {
+            "tick": 7560,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 7665,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 7770,
+            "team": "red",
+            "card": "inferno-dragon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 7875,
+            "team": "blue",
+            "card": "mirror",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 7875,
+            "team": "red",
+            "card": "lightning",
+            "x": 4,
+            "y": 14.50000000000032
+          },
+          {
+            "tick": 7980,
+            "team": "red",
+            "card": "giant",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 8085,
+            "team": "blue",
+            "card": "inferno-dragon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 8085,
+            "team": "red",
+            "card": "tornado",
+            "x": 4,
+            "y": 16.26666666666638
+          },
+          {
+            "tick": 8190,
+            "team": "blue",
+            "card": "inferno-tower",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 8190,
+            "team": "red",
+            "card": "inferno-tower",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 8295,
+            "team": "blue",
+            "card": "rage",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 8295,
+            "team": "red",
+            "card": "rage",
+            "x": 14,
+            "y": 17.100000000000023
+          },
+          {
+            "tick": 8400,
+            "team": "blue",
+            "card": "freeze",
+            "x": 14,
+            "y": 19.90125000000013
+          },
+          {
+            "tick": 8400,
+            "team": "red",
+            "card": "freeze",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 8505,
+            "team": "blue",
+            "card": "giant",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 8505,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 8610,
+            "team": "blue",
+            "card": "zap",
+            "x": 14,
+            "y": 19.90125000000013
+          },
+          {
+            "tick": 8715,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 8715,
+            "team": "red",
+            "card": "inferno-dragon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 8820,
+            "team": "red",
+            "card": "lightning",
+            "x": 4,
+            "y": 16.25625000000027
+          },
+          {
+            "tick": 8925,
+            "team": "blue",
+            "card": "mirror",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 8925,
+            "team": "red",
+            "card": "giant",
+            "x": 4,
+            "y": 10
+          }
+        ],
+        "duration": 9000
+      },
+      "ai": false,
+      "infernos": {
+        "blue": 12,
+        "red": 12
+      },
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "86d23f2558b6b32e82051d3b369e4617d78d0181ce4cd1de6dbf0b0104c78a33"
+        },
+        {
+          "tick": 1200,
+          "digest": "85f3e55efad688e43d985103c4a605511fa8773892f60adeb4a56f23913abbe7"
+        },
+        {
+          "tick": 1800,
+          "digest": "a8b68228c1d0a1ad533882773f4e60ea4659b69d32b405e989c7e81b732d097b"
+        },
+        {
+          "tick": 2400,
+          "digest": "7bf20eb0c3ab195eab90a5060c2c4fd8e2529dd54e69d114244af72849451617"
+        },
+        {
+          "tick": 3000,
+          "digest": "1a2a05405dd6dfe717e73d9563cf92c48b2d82cc606436861eb41bef91718d8b"
+        },
+        {
+          "tick": 3600,
+          "digest": "88b58a9b0c6e26a57bd05fb065fe9d83090977cbc5cb0529c1ea9c29b16f5fc8"
+        },
+        {
+          "tick": 4200,
+          "digest": "7df6c63303561782b9b9d6b8fb1385fb248acc1436e63f7523837b70f3597c90"
+        },
+        {
+          "tick": 4800,
+          "digest": "f509fc2843b29dd97e685d2b7f70f2ba7a71974d125fbb9dc1ec41088956ecac"
+        },
+        {
+          "tick": 5400,
+          "digest": "89921c8131bf20ef6cac44a6b263ec35d847b7bc892118463a65228fd53b0a24"
+        },
+        {
+          "tick": 6000,
+          "digest": "8e0c341641ee96380505c49546b1c112e7a316978cab29583bdcac880d579f59"
+        },
+        {
+          "tick": 6600,
+          "digest": "864f3f8a6af3cb03251b50bfb9d9c1628385d79910c110fb9fb1127add62bffc"
+        },
+        {
+          "tick": 7200,
+          "digest": "6adfb32c338af43edc01032f66136e49a93f1ecadf806ec391fa0c9ce1e5f666"
+        },
+        {
+          "tick": 7800,
+          "digest": "e7a016767df170097350be77b8e86b10bed8ba555c6df5ed64be84efb3641f0e"
+        },
+        {
+          "tick": 8400,
+          "digest": "ecd84a0a83eafba33a4ca390564679bb515c0743ddc09fb8bf538a55457672fc"
+        },
+        {
+          "tick": 9000,
+          "digest": "7ad60f2d6f4468f998b3f70c44cac24034d04c1be5c7e021965a34b1ad2d149b"
+        }
+      ]
+    }
+  ]
+}

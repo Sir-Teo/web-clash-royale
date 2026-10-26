@@ -1,6 +1,6 @@
 import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point } from "./engine";
-import { infernoDamage, infernoProfile } from "./inferno";
+import { advanceInfernoClock, infernoDamage, infernoProfile } from "./inferno";
 import type { DamagePacket } from "./projectile-impacts";
 import {
   currentAttackAreas,
@@ -19,6 +19,7 @@ export function infernoKingPackets(
   order: number,
   health: WindupHealthEvaluator,
   proposed?: Point,
+  version = 23,
 ): DamagePacket[] {
   const card = attacker.card;
   const lock = attacker.inferno;
@@ -37,10 +38,8 @@ export function infernoKingPackets(
     clouds,
     proposed ? clouds.length - 1 : undefined,
   );
-  const source = infernoProfile(card);
-  let elapsed = lock.elapsed,
-    timer = lock.hitTimer,
-    shotSlow = 0;
+  const clock = { ...lock };
+  let shotSlow = 0;
   const packets: DamagePacket[] = [];
   for (const [index, frame] of frames.entries()) {
     const status = statuses[index];
@@ -52,25 +51,35 @@ export function infernoKingPackets(
         attacker.range + king.radius + attacker.radius * 0.35
     )
       break;
-    // Accumulate exactly as Combat does, including stage-boundary rounding.
-    elapsed += COMBAT_STEP;
-    const stage =
-      elapsed >= source.stageDurations[0] + source.stageDurations[1]
-        ? 2
-        : elapsed >= source.stageDurations[0]
-          ? 1
-          : 0;
-    timer -=
-      COMBAT_STEP *
-      (frame.boost >= 1e-8 ? rage.hitSpeedMultiplier : 1) *
-      (Math.max(frame.slow, shotSlow) >= 1e-8
-        ? iceWizard.hitSpeedMultiplier
-        : 1);
-    if (timer <= 1e-8) {
-      timer += attacker.interval;
+    if (version >= 23) {
+      advanceInfernoClock(
+        card,
+        clock,
+        COMBAT_STEP,
+        frame.boost >= 1e-8,
+        Math.max(frame.slow, shotSlow) >= 1e-8,
+      );
+    } else {
+      const source = infernoProfile(card);
+      clock.elapsed += COMBAT_STEP;
+      clock.stage =
+        clock.elapsed >= source.stageDurations[0] + source.stageDurations[1]
+          ? 2
+          : clock.elapsed >= source.stageDurations[0]
+            ? 1
+            : 0;
+      clock.hitTimer -=
+        COMBAT_STEP *
+        (frame.boost >= 1e-8 ? rage.hitSpeedMultiplier : 1) *
+        (Math.max(frame.slow, shotSlow) >= 1e-8
+          ? iceWizard.hitSpeedMultiplier
+          : 1);
+    }
+    if (clock.hitTimer <= 1e-8) {
+      clock.hitTimer += attacker.interval;
       packets.push({
         step: index + 1,
-        damage: infernoDamage(card, stage),
+        damage: infernoDamage(card, clock.stage),
         phase: 0.75,
         born: 0,
         order,

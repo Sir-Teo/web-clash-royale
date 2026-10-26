@@ -1,0 +1,26 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/logic/character_buffs.csv",
+      "sha256": "fbcc636e6c8025ca0f36aab524b868806b2a6a8606186b622410a5f46fba9bbe"
+    },
+    {
+      "path": "reference/client/inferno-clock-native-trace.json",
+      "sha256": "b2e7ca1aca98b5d45bbeff60d78d3df274cc3107ef7a890e0dcd4a1e5efb1a46"
+    }
+  ],
+  "output": {
+    "path": "src/game/inferno-clock-data.json",
+    "sha256": "dfabd5ea72e8beb5c8f2b6eb88101d7c752b0234a26c47363effb82d1859d299"
+  }
+}

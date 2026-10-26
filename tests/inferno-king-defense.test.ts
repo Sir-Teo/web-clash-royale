@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Battle, type Team } from "../src/game/engine";
+import { Battle, type Replay, type Team } from "../src/game/engine";
 import { createKingDefense } from "../src/game/king-defense";
 import type { Projectile } from "../src/game/engine";
 import type { InfernoCard } from "../src/game/inferno";
@@ -9,8 +9,10 @@ function setup(
   team: Team = "red",
   hp = 300,
   card: InfernoCard = "inferno-dragon",
+  version: Replay["version"] = 23,
 ) {
-  const battle = new Battle({ seed: 12, ai: false });
+  const initial = new Battle({ seed: 12, ai: false });
+  const battle = new Battle({ replay: { ...initial.exportReplay(), version } });
   for (const entity of battle.entities) entity.active = false;
   const king = battle.entities.find(
     (entity) => entity.team === team && entity.king,
@@ -30,7 +32,7 @@ function setup(
   battle.players[team].queue = ["pekka", "pekka", "pekka", "pekka"];
   battle.players[team].elixir = 6;
   const forecast = () =>
-    createKingDefense(team, battle.entities, battle.projectiles, battle.areas);
+    createKingDefense(team, battle.entities, battle.projectiles, battle.areas, Infinity, version);
   const step = (count: number) => {
     for (let i = 0; i < count && !battle.winner; i++) battle.step();
   };
@@ -122,9 +124,10 @@ describe("Inferno lock forecast ordering", () => {
   it.each(["inferno-dragon", "inferno-tower"] as const)(
     "matches %s stages and expiring cadence modifiers",
     (card) => {
+      for (const version of [22, 23] as const)
       for (const elapsed of [1.8, 3.8, 4.2]) {
         for (const buff of ["none", "rage", "slow", "both"]) {
-          const s = setup("red", card === "inferno-tower" ? 1100 : 600, card);
+          const s = setup("red", card === "inferno-tower" ? 1100 : 600, card, version);
           s.attacker.inferno!.elapsed = elapsed;
           if (buff === "rage" || buff === "both")
             s.attacker.rage = { remaining: 0.3 };

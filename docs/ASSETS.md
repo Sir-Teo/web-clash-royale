@@ -448,3 +448,8 @@ Inspected scenes: [desktop pump cycle](screenshots/elixir-collector-pump-desktop
 The animation importer derives `src/render/texture-aliases.json` from byte-identical atlas hashes. The 49 animation families share 44 unique animation texture requests and objects, retaining separate geometry and animation state. See [rendering performance](PERFORMANCE.md) for the measured limits and regression fixtures.
 
 The offline pack deduplicates byte-identical files by content hash and file type and reuses unchanged responses from earlier releases. Each complete release still owns its HTML shell and asset mapping. Waiting updates activate only through the idle-lobby update flow after a same-scope single-tab check, or the browser's ordinary lifecycle after all clients close. Cache-first HTML keeps active matches and replays on their current complete release. Content reuse does not authorize an update to take over an active game.
+
+
+## Imported Inferno clock rates
+
+`npm run assets:inferno-clock` verifies the three source CSV hashes retained by `inferno-clock-native-trace.json`, then imports the agreement between both cards' four eligible active-clock rates into `src/game/inferno-clock-data.json`. `inferno-clock-manifest.json` pins the source tables, native capture and output. Rules 23 use those native integer ratios for both ramp and pulses, resampled to the browser's 30-Hz simulation. The earlier 2/4-second descriptions refer to attack-clock time; Rage accelerates it and slow delays it. First-load timing, retarget delays and complete native interruption callers remain outside this recovery.
