@@ -1,5 +1,11 @@
 # Verification
 
+## Native Inferno active-clock evidence
+
+The bounded `probe-inferno-clock.py` capture and a separate `--check` run reproduce byte-for-byte: 20 fixed-buff cases, two changing-buff sequences, 2,760 native updates, 18 stage boundaries, four reset-helper cases and six controlled-field cases across Inferno Tower and Inferno Dragon. The pinned native code executes buff ranking, integer rate arithmetic, active-clock updates, threshold selection and the reset helper in isolated emulated memory. Eight disassembly blocks retain the buff column/field mapping, elapsed-clock damage consumer and executed helper evidence. Unexpected instructions, interrupts, lookup contexts, notifications and instruction-budget exhaustion fail the capture.
+
+This is evidence only; application files, current rules 22, first-load timing, spell interruption behavior and replay results are unchanged. Native zero-rate helper behavior is deliberately not assigned to complete Freeze/Zap effects. No application rebuild is needed for these script/reference/documentation files. No push or deployment was performed.
+
 Integration results are recorded in [INTEGRATION.md](INTEGRATION.md). The checkpoint descriptions below preserve results from both development lines and subsequent work, including their original roster sizes, test counts, cache versions and deployment evidence.
 
 ```sh

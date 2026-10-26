@@ -1,0 +1,249 @@
+"""Capture bounded native 1.8.1 Inferno stage and active attack-clock behavior.
+
+Requires unicorn==2.1.4 for regeneration. Executes the archived x86 library in
+isolated memory; owner/world resolution, table reads and reset notification are
+intercepted. This does not emulate target eligibility or complete attacks.
+"""
+import argparse
+import csv
+import hashlib
+import importlib.metadata
+import io
+import json
+from pathlib import Path
+import re
+import struct
+import subprocess
+from unicorn import Uc, UC_ARCH_X86, UC_MODE_32, UC_HOOK_CODE, UC_HOOK_INTR, UC_PROT_READ, UC_PROT_EXEC
+from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX, UC_X86_REG_EDX, UC_X86_REG_ESI, UC_X86_REG_EDI, UC_X86_REG_EBP, UC_X86_REG_ESP, UC_X86_REG_EIP, UC_X86_REG_EFLAGS
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("library", type=Path)
+parser.add_argument("--check", action="store_true")
+args = parser.parse_args()
+if importlib.metadata.version("unicorn") != "2.1.4":
+    raise RuntimeError("Regeneration requires unicorn==2.1.4")
+binary = args.library.read_bytes()
+sha = hashlib.sha256(binary).hexdigest()
+if sha != "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746":
+    raise RuntimeError("Expected pinned 1.8.1 x86 libg.so")
+ph_offset = struct.unpack_from("<I", binary, 28)[0]
+ph_size, ph_count = struct.unpack_from("<HH", binary, 42)
+segments = [struct.unpack_from("<8I", binary, ph_offset + i * ph_size) for i in range(ph_count)]
+size = (max(v + ms for kind, _, v, _, _, ms, _, _ in segments if kind == 1) + 4095) & ~4095
+cpu = Uc(UC_ARCH_X86, UC_MODE_32)
+cpu.mem_map(0, size)
+for kind, offset, virtual, _, file_size, _, _, _ in segments:
+    if kind == 1:
+        cpu.mem_write(virtual, binary[offset:offset + file_size])
+cpu.mem_protect(0, size, UC_PROT_READ | UC_PROT_EXEC)
+heap, stack, stop = 0x1000000, 0x2000000, 0x3000000
+cpu.mem_map(heap, 0x10000)
+cpu.mem_map(stack, 0x100000)
+cpu.mem_map(stop, 0x1000, UC_PROT_READ | UC_PROT_EXEC)
+body, data, component, world, buffs, array = [heap + i * 0x1000 for i in range(6)]
+registers = [UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX, UC_X86_REG_EDX, UC_X86_REG_ESI, UC_X86_REG_EDI, UC_X86_REG_EBP]
+allowed = [(0x25f754, 0x25f8d3), (0x25c080, 0x25c152), (0x1d7f10, 0x1d7f20),
+           (0x2147c8, 0x2147ef), (0x21960e, 0x21961e), (0x2199b0, 0x2199c8),
+           (0x1ddf7a, 0x1ddf8e), (0x1deb6e, 0x1deb82), (0x1cc746, 0x1cc75b),
+           (0x1ded02, 0x1ded7d), (0x35bdb0, 0x35be20)]
+profile = None
+reset_calls = 0
+
+
+def read(address):
+    return struct.unpack("<i", cpu.mem_read(address, 4))[0]
+
+
+def write(address, value):
+    cpu.mem_write(address, struct.pack("<i", value))
+
+
+def return_hook(value=0):
+    sp = cpu.reg_read(UC_X86_REG_ESP)
+    destination = read(sp)
+    cpu.reg_write(UC_X86_REG_EAX, value)
+    cpu.reg_write(UC_X86_REG_ESP, sp + 4)
+    cpu.reg_write(UC_X86_REG_EIP, destination)
+
+
+def instruction(_cpu, address, _size, _data):
+    global reset_calls
+    sp = cpu.reg_read(UC_X86_REG_ESP)
+    if address == stop:
+        cpu.emu_stop()
+    elif address in [0x25fa64, 0x25fa3a]:
+        if read(sp + 4) != component:
+            raise RuntimeError("Unexpected owner/world resolution")
+        return_hook(body if address == 0x25fa64 else world)
+    elif address == 0x356eb0:
+        if read(sp + 4) != 1:
+            raise RuntimeError("Native variable-damage assertion failed")
+        return_hook()
+    elif address == 0x351d10:
+        field = {0x1ded4b: "VariableDamageTime1", 0x1ded69: "VariableDamageTime2"}.get(read(sp))
+        if field is None or read(sp + 4) != data + 0x800:
+            raise RuntimeError("Unexpected native table lookup")
+        return_hook(int(profile[field]))
+    elif address == 0x21698e:
+        if read(sp + 4) != body:
+            raise RuntimeError("Unexpected reset notification owner")
+        reset_calls += 1
+        return_hook()
+    elif not any(start <= address < end for start, end in allowed):
+        raise RuntimeError(f"Native instruction escaped clock ranges: {address:#x}")
+
+
+def interrupt(_cpu, number, _data):
+    raise RuntimeError(f"Unexpected emulated interrupt: {number}")
+
+
+cpu.hook_add(UC_HOOK_CODE, instruction)
+cpu.hook_add(UC_HOOK_INTR, interrupt)
+
+
+def run(start, *arguments):
+    for register in registers:
+        cpu.reg_write(register, 0)
+    cpu.reg_write(UC_X86_REG_EFLAGS, 2)
+    sp = stack + 0xf0000
+    write(sp, stop)
+    for index, value in enumerate(arguments):
+        write(sp + 4 * (index + 1), value)
+    cpu.reg_write(UC_X86_REG_ESP, sp)
+    cpu.reg_write(UC_X86_REG_EBX, 0x7b8a14)
+    cpu.emu_start(start, stop + 1, count=4000)
+    if cpu.reg_read(UC_X86_REG_EIP) != stop:
+        raise RuntimeError("Native clock exceeded instruction budget")
+    return cpu.reg_read(UC_X86_REG_EAX)
+
+
+inputs, rows = [], {}
+for path in ["reference/logic/characters.csv", "reference/logic/buildings.csv", "reference/logic/character_buffs.csv"]:
+    content = Path(path).read_bytes()
+    inputs.append({"path": path, "sha256": hashlib.sha256(content).hexdigest()})
+    rows[path] = {row["Name"]: row for row in csv.DictReader(io.StringIO(content.decode()))}
+buff_rows = rows["reference/logic/character_buffs.csv"]
+
+
+def set_buffs(names):
+    write(buffs + 8, array)
+    write(buffs + 0x10, len(names))
+    for index, name in enumerate(names):
+        obj = heap + 0x6000 + index * 0x100
+        model = obj + 0x40
+        write(array + 4 * index, obj)
+        write(obj + 0xc, model)
+        write(model + 0x44, int(buff_rows[name]["HitSpeedMultiplier"] or 0))
+
+
+def initialize(source):
+    global profile
+    profile = source
+    cpu.mem_write(heap, b"\0" * 0x10000)
+    write(body + 0x10, data)
+    write(body + 0x38, 8)
+    write(body + 0x48, buffs)
+    write(data + 8, data + 0x800)
+    cpu.mem_write(data + 0x17d, b"\1")
+    write(data + 0x198, int(source["HitSpeed"]))
+    write(data + 0x1fc, int(source["LoadTime"]))
+    write(component + 4, body)
+    write(component + 0xc, 1000)
+    set_buffs([])
+
+
+profiles = [("inferno-tower", rows["reference/logic/buildings.csv"]["InfernoTower"]),
+            ("inferno-dragon", rows["reference/logic/characters.csv"]["InfernoDragon"])]
+buff_cases = [[], ["Rage"], ["IceWizardSlowDown"], ["Rage", "IceWizardSlowDown"],
+              ["IceWizardSlowDown", "Rage"], ["Freeze"], ["ZapFreeze"],
+              ["Rage", "Rage"], ["IceWizardSlowDown", "IceWizardSlowDown"], ["Rage", "Freeze"]]
+cases, boundaries, resets, controls, changing = [], [], [], [], []
+for name, source in profiles:
+    initialize(source)
+    for elapsed in [0, 1, 1999, 2000, 2001, 3999, 4000, 4001, 10000]:
+        boundaries.append({"card": name, "elapsedMs": elapsed, "stage": run(0x1ded02, data, elapsed)})
+    for names in buff_cases:
+        initialize(source)
+        set_buffs(names)
+        delta = run(0x25c080, buffs, 50)
+        checkpoints, transitions = [], []
+        previous_stage = run(0x1ded02, data, 1000)
+        for tick in range(1, 121):
+            run(0x25f754, component)
+            elapsed = read(component + 0xc)
+            stage = run(0x1ded02, data, elapsed)
+            if stage != previous_stage:
+                transitions.append({"tick": tick, "elapsedMs": elapsed, "stage": stage})
+                previous_stage = stage
+            if tick in [1, 15, 20, 30, 40, 45, 60, 90, 120]:
+                checkpoints.append({"tick": tick, "elapsedMs": elapsed, "stage": stage})
+        cases.append({"card": name, "buffs": names, "initialElapsedMs": 1000,
+                      "deltaMs": delta, "checkpoints": checkpoints, "transitions": transitions})
+    for gate in [0, 1]:
+        initialize(source)
+        write(component + 0x4c, gate)
+        for offset in [0x14, 0x28, 0x40]:
+            write(component + offset, 123)
+        cpu.mem_write(component + 0x1d, b"\1")
+        reset_calls = 0
+        run(0x25f87e, component)
+        resets.append({"card": name, "gate": gate, "elapsedMs": read(component + 0xc),
+                       "fields": {hex(offset): read(component + offset) for offset in [0x14, 0x28, 0x40]},
+                       "flag1d": cpu.mem_read(component + 0x1d, 1)[0], "notificationCalls": reset_calls})
+    for control in ["world-gate", "flag1e", "deferred40"]:
+        initialize(source)
+        if control == "world-gate":
+            cpu.mem_write(world + 0xfc, b"\1")
+        elif control == "flag1e":
+            cpu.mem_write(component + 0x1e, b"\1")
+        else:
+            write(component + 0x40, 123)
+        run(0x25f754, component)
+        controls.append({"card": name, "control": control, "elapsedMs": read(component + 0xc),
+                         "deferred40": read(component + 0x40), "flag1e": cpu.mem_read(component + 0x1e, 1)[0]})
+    initialize(source)
+    phases = []
+    for names in [[], ["Rage"], ["IceWizardSlowDown"], ["Freeze"], ["Rage", "IceWizardSlowDown"], []]:
+        set_buffs(names)
+        before = read(component + 0xc)
+        for _ in range(30):
+            run(0x25f754, component)
+        elapsed = read(component + 0xc)
+        phases.append({"buffs": names, "steps": 30, "beforeMs": before, "afterMs": elapsed,
+                       "stage": run(0x1ded02, data, elapsed)})
+    changing.append({"card": name, "phases": phases})
+
+static = [
+    ("buffColumn", 0x1d7634, 0x1d7692, "HitSpeedMultiplier at 0x6135ac caches at GOT+0x1718."),
+    ("buffField", 0x1d6ef6, 0x1d6f0b, "The cached HitSpeedMultiplier loads into BuffData+0x44."),
+    ("buffGetter", 0x1d7f10, 0x1d7f20, "Read BuffData+0x44."),
+    ("attackDelta", 0x25c080, 0x25c152, "Strongest positive and strongest negative buffs apply in two integer divisions; duplicate buffs do not stack."),
+    ("stageSelector", 0x1ded02, 0x1ded7d, "Threshold equality advances the stage; Time2 is added to Time1."),
+    ("damageClockConsumer", 0x25e75f, 0x25e78c, "The attack damage path passes AttackComponent+0x0c to the stage selector."),
+    ("activeClock", 0x25f754, 0x25f87e, "An already-active clock normally adds buff-adjusted 50 ms. Zero delta holds it; world gate clears it; controlled flags can redirect advancement."),
+    ("resetHelper", 0x25f87e, 0x25f8d3, "With gate +0x4c zero, clear elapsed and related state, then notify owner. Caller eligibility is outside this capture."),
+]
+blocks = []
+for name, start, end, meaning in static:
+    assembly = subprocess.check_output(["objdump", "-d", "-Mintel", f"--start-address={start:#x}", f"--stop-address={end:#x}", str(args.library)], text=True)
+    instructions = [re.sub(r"\s+<[^>]+>", "", line.strip()) for line in assembly.splitlines() if re.match(r"\s+[0-9a-f]+:", line)]
+    blocks.append({"name": name, "start": hex(start), "end": hex(end), "interpretation": meaning, "instructions": instructions})
+output = json.dumps({"source": "apk/1.8.1/x86/libg.so", "sha256": sha,
+                     "emulator": "unicorn==2.1.4", "stepMs": 50, "steps": 120, "inputs": inputs,
+                     "limits": ["Bounded active attack-clock and stage-selector execution, with explicit memory profiles matching archived CSV values. CSV loading/inheritance is not emulated.",
+                                "Owner/world resolution, two threshold table reads, assertion reporting and reset notification are intercepted. All other execution must stay in listed native ranges.",
+                                "Initial elapsed is 1000 ms, bypassing first-load behavior. Actual pulses, damage allocation, targeting, control eligibility, Freeze/Zap reset callers and complete state transitions are not emulated.",
+                                "Freeze and ZapFreeze cases show only zero-delta clock-helper behavior, not complete spell effects. Controlled fields have no inferred gameplay trigger.",
+                                "Native integer 50 ms updates do not establish equivalence with the browser's floating-point 30 Hz simulation."],
+                     "blocks": blocks, "boundaries": boundaries, "cases": cases,
+                     "resetCases": resets, "controlledCases": controls, "changingBuffCases": changing}, indent=2) + "\n"
+path = Path("reference/client/inferno-clock-native-trace.json")
+if args.check:
+    if path.read_text() != output:
+        raise RuntimeError("Native Inferno clock capture differs")
+else:
+    path.write_text(output)
+print(json.dumps({"cases": len(cases), "updates": len(cases) * 120 + len(changing) * 180, "boundaries": len(boundaries),
+                  "resets": len(resets), "controls": len(controls),
+                  "deltasMs": [{"buffs": case["buffs"], "deltaMs": case["deltaMs"]} for case in cases[:len(buff_cases)]]}))

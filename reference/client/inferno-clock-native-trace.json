@@ -1,0 +1,1961 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "sha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "emulator": "unicorn==2.1.4",
+  "stepMs": 50,
+  "steps": 120,
+  "inputs": [
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/logic/character_buffs.csv",
+      "sha256": "fbcc636e6c8025ca0f36aab524b868806b2a6a8606186b622410a5f46fba9bbe"
+    }
+  ],
+  "limits": [
+    "Bounded active attack-clock and stage-selector execution, with explicit memory profiles matching archived CSV values. CSV loading/inheritance is not emulated.",
+    "Owner/world resolution, two threshold table reads, assertion reporting and reset notification are intercepted. All other execution must stay in listed native ranges.",
+    "Initial elapsed is 1000 ms, bypassing first-load behavior. Actual pulses, damage allocation, targeting, control eligibility, Freeze/Zap reset callers and complete state transitions are not emulated.",
+    "Freeze and ZapFreeze cases show only zero-delta clock-helper behavior, not complete spell effects. Controlled fields have no inferred gameplay trigger.",
+    "Native integer 50 ms updates do not establish equivalence with the browser's floating-point 30 Hz simulation."
+  ],
+  "blocks": [
+    {
+      "name": "buffColumn",
+      "start": "0x1d7634",
+      "end": "0x1d7692",
+      "interpretation": "HitSpeedMultiplier at 0x6135ac caches at GOT+0x1718.",
+      "instructions": [
+        "1d7634:\t8d 83 98 ab e5 ff    \tlea    eax,[ebx-0x1a5468]",
+        "1d763a:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1d763e:\t8d bc 24 78 01 00 00 \tlea    edi,[esp+0x178]",
+        "1d7645:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1d7648:\te8 53 1d 0c 00       \tcall   2993a0",
+        "1d764d:\t89 7c 24 04          \tmov    DWORD PTR [esp+0x4],edi",
+        "1d7651:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1d7654:\te8 47 b3 17 00       \tcall   3529a0",
+        "1d7659:\t89 83 18 17 00 00    \tmov    DWORD PTR [ebx+0x1718],eax",
+        "1d765f:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1d7662:\te8 79 19 0c 00       \tcall   298fe0",
+        "1d7667:\t8b 83 18 17 00 00    \tmov    eax,DWORD PTR [ebx+0x1718]",
+        "1d766d:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1d7671:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1d7674:\te8 07 b8 17 00       \tcall   352e80",
+        "1d7679:\t83 f8 01             \tcmp    eax,0x1",
+        "1d767c:\t0f 94 c0             \tsete   al",
+        "1d767f:\t8b 4c 24 0c          \tmov    ecx,DWORD PTR [esp+0xc]",
+        "1d7683:\t89 4c 24 04          \tmov    DWORD PTR [esp+0x4],ecx",
+        "1d7687:\t0f b6 c0             \tmovzx  eax,al",
+        "1d768a:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1d768d:\te8 1e f8 17 00       \tcall   356eb0"
+      ]
+    },
+    {
+      "name": "buffField",
+      "start": "0x1d6ef6",
+      "end": "0x1d6f0b",
+      "interpretation": "The cached HitSpeedMultiplier loads into BuffData+0x44.",
+      "instructions": [
+        "1d6ef6:\t8b 83 18 17 00 00    \tmov    eax,DWORD PTR [ebx+0x1718]",
+        "1d6efc:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1d6f00:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1d6f03:\te8 d2 e2 00 00       \tcall   1e51da",
+        "1d6f08:\t89 47 44             \tmov    DWORD PTR [edi+0x44],eax"
+      ]
+    },
+    {
+      "name": "buffGetter",
+      "start": "0x1d7f10",
+      "end": "0x1d7f20",
+      "interpretation": "Read BuffData+0x44.",
+      "instructions": [
+        "1d7f10:\t55                   \tpush   ebp",
+        "1d7f11:\t89 e5                \tmov    ebp,esp",
+        "1d7f13:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "1d7f16:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "1d7f19:\t8b 40 44             \tmov    eax,DWORD PTR [eax+0x44]",
+        "1d7f1c:\t89 ec                \tmov    esp,ebp",
+        "1d7f1e:\t5d                   \tpop    ebp",
+        "1d7f1f:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "attackDelta",
+      "start": "0x25c080",
+      "end": "0x25c152",
+      "interpretation": "Strongest positive and strongest negative buffs apply in two integer divisions; duplicate buffs do not stack.",
+      "instructions": [
+        "25c080:\t55                   \tpush   ebp",
+        "25c081:\t89 e5                \tmov    ebp,esp",
+        "25c083:\t53                   \tpush   ebx",
+        "25c084:\t57                   \tpush   edi",
+        "25c085:\t56                   \tpush   esi",
+        "25c086:\t83 e4 f0             \tand    esp,0xfffffff0",
+        "25c089:\t83 ec 20             \tsub    esp,0x20",
+        "25c08c:\te8 00 00 00 00       \tcall   25c091",
+        "25c091:\t5b                   \tpop    ebx",
+        "25c092:\t81 c3 83 c9 55 00    \tadd    ebx,0x55c983",
+        "25c098:\t8b 75 08             \tmov    esi,DWORD PTR [ebp+0x8]",
+        "25c09b:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "25c0a2:\t00",
+        "25c0a3:\t83 7e 10 00          \tcmp    DWORD PTR [esi+0x10],0x0",
+        "25c0a7:\tc7 44 24 18 64 00 00 \tmov    DWORD PTR [esp+0x18],0x64",
+        "25c0ae:\t00",
+        "25c0af:\t7e 4d                \tjle    25c0fe",
+        "25c0b1:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "25c0b8:\t00",
+        "25c0b9:\tc7 44 24 18 64 00 00 \tmov    DWORD PTR [esp+0x18],0x64",
+        "25c0c0:\t00",
+        "25c0c1:\t31 ff                \txor    edi,edi",
+        "25c0c3:\t8b 46 08             \tmov    eax,DWORD PTR [esi+0x8]",
+        "25c0c6:\t8b 04 b8             \tmov    eax,DWORD PTR [eax+edi*4]",
+        "25c0c9:\t8b 40 0c             \tmov    eax,DWORD PTR [eax+0xc]",
+        "25c0cc:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25c0cf:\te8 3c be f7 ff       \tcall   1d7f10",
+        "25c0d4:\t85 c0                \ttest   eax,eax",
+        "25c0d6:\t7e 0f                \tjle    25c0e7",
+        "25c0d8:\t8b 4c 24 18          \tmov    ecx,DWORD PTR [esp+0x18]",
+        "25c0dc:\t39 c8                \tcmp    eax,ecx",
+        "25c0de:\t0f 4d c8             \tcmovge ecx,eax",
+        "25c0e1:\t89 4c 24 18          \tmov    DWORD PTR [esp+0x18],ecx",
+        "25c0e5:\teb 11                \tjmp    25c0f8",
+        "25c0e7:\t79 0f                \tjns    25c0f8",
+        "25c0e9:\tf7 d8                \tneg    eax",
+        "25c0eb:\t8b 4c 24 14          \tmov    ecx,DWORD PTR [esp+0x14]",
+        "25c0ef:\t39 c1                \tcmp    ecx,eax",
+        "25c0f1:\t0f 4c c8             \tcmovl  ecx,eax",
+        "25c0f4:\t89 4c 24 14          \tmov    DWORD PTR [esp+0x14],ecx",
+        "25c0f8:\t47                   \tinc    edi",
+        "25c0f9:\t3b 7e 10             \tcmp    edi,DWORD PTR [esi+0x10]",
+        "25c0fc:\t7c c5                \tjl     25c0c3",
+        "25c0fe:\t8b 44 24 18          \tmov    eax,DWORD PTR [esp+0x18]",
+        "25c102:\t0f af 45 0c          \timul   eax,DWORD PTR [ebp+0xc]",
+        "25c106:\tbf 1f 85 eb 51       \tmov    edi,0x51eb851f",
+        "25c10b:\tf7 ef                \timul   edi",
+        "25c10d:\t89 d6                \tmov    esi,edx",
+        "25c10f:\t89 f0                \tmov    eax,esi",
+        "25c111:\tc1 e8 1f             \tshr    eax,0x1f",
+        "25c114:\tc1 fe 05             \tsar    esi,0x5",
+        "25c117:\t01 c6                \tadd    esi,eax",
+        "25c119:\tb8 64 00 00 00       \tmov    eax,0x64",
+        "25c11e:\t2b 44 24 14          \tsub    eax,DWORD PTR [esp+0x14]",
+        "25c122:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25c125:\tc7 44 24 08 64 00 00 \tmov    DWORD PTR [esp+0x8],0x64",
+        "25c12c:\t00",
+        "25c12d:\tc7 44 24 04 00 00 00 \tmov    DWORD PTR [esp+0x4],0x0",
+        "25c134:\t00",
+        "25c135:\te8 76 fc 0f 00       \tcall   35bdb0",
+        "25c13a:\t0f af c6             \timul   eax,esi",
+        "25c13d:\tf7 ef                \timul   edi",
+        "25c13f:\t89 d0                \tmov    eax,edx",
+        "25c141:\tc1 e8 1f             \tshr    eax,0x1f",
+        "25c144:\tc1 fa 05             \tsar    edx,0x5",
+        "25c147:\t8d 04 02             \tlea    eax,[edx+eax*1]",
+        "25c14a:\t8d 65 f4             \tlea    esp,[ebp-0xc]",
+        "25c14d:\t5e                   \tpop    esi",
+        "25c14e:\t5f                   \tpop    edi",
+        "25c14f:\t5b                   \tpop    ebx",
+        "25c150:\t5d                   \tpop    ebp",
+        "25c151:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "stageSelector",
+      "start": "0x1ded02",
+      "end": "0x1ded7d",
+      "interpretation": "Threshold equality advances the stage; Time2 is added to Time1.",
+      "instructions": [
+        "1ded02:\t55                   \tpush   ebp",
+        "1ded03:\t89 e5                \tmov    ebp,esp",
+        "1ded05:\t53                   \tpush   ebx",
+        "1ded06:\t57                   \tpush   edi",
+        "1ded07:\t56                   \tpush   esi",
+        "1ded08:\t83 e4 f0             \tand    esp,0xfffffff0",
+        "1ded0b:\t83 ec 10             \tsub    esp,0x10",
+        "1ded0e:\te8 00 00 00 00       \tcall   1ded13",
+        "1ded13:\t5b                   \tpop    ebx",
+        "1ded14:\t81 c3 01 9d 5d 00    \tadd    ebx,0x5d9d01",
+        "1ded1a:\t8b 7d 08             \tmov    edi,DWORD PTR [ebp+0x8]",
+        "1ded1d:\t0f b6 87 7d 01 00 00 \tmovzx  eax,BYTE PTR [edi+0x17d]",
+        "1ded24:\t8d 8b ed 6a e4 ff    \tlea    ecx,[ebx-0x1b9513]",
+        "1ded2a:\t89 4c 24 04          \tmov    DWORD PTR [esp+0x4],ecx",
+        "1ded2e:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1ded31:\te8 7a 81 17 00       \tcall   356eb0",
+        "1ded36:\t8b 47 08             \tmov    eax,DWORD PTR [edi+0x8]",
+        "1ded39:\t8b 8b 68 17 00 00    \tmov    ecx,DWORD PTR [ebx+0x1768]",
+        "1ded3f:\t89 4c 24 04          \tmov    DWORD PTR [esp+0x4],ecx",
+        "1ded43:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1ded46:\te8 c5 2f 17 00       \tcall   351d10",
+        "1ded4b:\t89 c6                \tmov    esi,eax",
+        "1ded4d:\t31 c0                \txor    eax,eax",
+        "1ded4f:\t3b 75 0c             \tcmp    esi,DWORD PTR [ebp+0xc]",
+        "1ded52:\t7f 21                \tjg     1ded75",
+        "1ded54:\t8b 47 08             \tmov    eax,DWORD PTR [edi+0x8]",
+        "1ded57:\t8b 8b 64 17 00 00    \tmov    ecx,DWORD PTR [ebx+0x1764]",
+        "1ded5d:\t89 4c 24 04          \tmov    DWORD PTR [esp+0x4],ecx",
+        "1ded61:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1ded64:\te8 a7 2f 17 00       \tcall   351d10",
+        "1ded69:\t01 f0                \tadd    eax,esi",
+        "1ded6b:\t3b 45 0c             \tcmp    eax,DWORD PTR [ebp+0xc]",
+        "1ded6e:\t0f 9e c0             \tsetle  al",
+        "1ded71:\t0f b6 c0             \tmovzx  eax,al",
+        "1ded74:\t40                   \tinc    eax",
+        "1ded75:\t8d 65 f4             \tlea    esp,[ebp-0xc]",
+        "1ded78:\t5e                   \tpop    esi",
+        "1ded79:\t5f                   \tpop    edi",
+        "1ded7a:\t5b                   \tpop    ebx",
+        "1ded7b:\t5d                   \tpop    ebp",
+        "1ded7c:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "damageClockConsumer",
+      "start": "0x25e75f",
+      "end": "0x25e78c",
+      "interpretation": "The attack damage path passes AttackComponent+0x0c to the stage selector.",
+      "instructions": [
+        "25e75f:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "25e762:\t8b 40 0c             \tmov    eax,DWORD PTR [eax+0xc]",
+        "25e765:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "25e769:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "25e76c:\te8 91 05 f8 ff       \tcall   1ded02",
+        "25e771:\t8b 8c 24 88 00 00 00 \tmov    ecx,DWORD PTR [esp+0x88]",
+        "25e778:\t89 4c 24 08          \tmov    DWORD PTR [esp+0x8],ecx",
+        "25e77c:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "25e780:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "25e783:\te8 be 04 f8 ff       \tcall   1dec46",
+        "25e788:\t89 44 24 60          \tmov    DWORD PTR [esp+0x60],eax"
+      ]
+    },
+    {
+      "name": "activeClock",
+      "start": "0x25f754",
+      "end": "0x25f87e",
+      "interpretation": "An already-active clock normally adds buff-adjusted 50 ms. Zero delta holds it; world gate clears it; controlled flags can redirect advancement.",
+      "instructions": [
+        "25f754:\t55                   \tpush   ebp",
+        "25f755:\t89 e5                \tmov    ebp,esp",
+        "25f757:\t53                   \tpush   ebx",
+        "25f758:\t57                   \tpush   edi",
+        "25f759:\t56                   \tpush   esi",
+        "25f75a:\t83 e4 f0             \tand    esp,0xfffffff0",
+        "25f75d:\t83 ec 20             \tsub    esp,0x20",
+        "25f760:\te8 00 00 00 00       \tcall   25f765",
+        "25f765:\t5b                   \tpop    ebx",
+        "25f766:\t81 c3 af 92 55 00    \tadd    ebx,0x5592af",
+        "25f76c:\t8b 75 08             \tmov    esi,DWORD PTR [ebp+0x8]",
+        "25f76f:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "25f772:\te8 c3 02 00 00       \tcall   25fa3a",
+        "25f777:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25f77a:\te8 c7 cf f6 ff       \tcall   1cc746",
+        "25f77f:\t84 c0                \ttest   al,al",
+        "25f781:\t75 77                \tjne    25f7fa",
+        "25f783:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "25f786:\te8 d9 02 00 00       \tcall   25fa64",
+        "25f78b:\t89 44 24 18          \tmov    DWORD PTR [esp+0x18],eax",
+        "25f78f:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25f792:\te8 19 a2 fb ff       \tcall   2199b0",
+        "25f797:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25f79a:\tc7 44 24 04 32 00 00 \tmov    DWORD PTR [esp+0x4],0x32",
+        "25f7a1:\t00",
+        "25f7a2:\te8 d9 c8 ff ff       \tcall   25c080",
+        "25f7a7:\t89 c7                \tmov    edi,eax",
+        "25f7a9:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "25f7ac:\te8 b3 02 00 00       \tcall   25fa64",
+        "25f7b1:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25f7b4:\te8 0f 50 fb ff       \tcall   2147c8",
+        "25f7b9:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25f7bc:\te8 b9 e7 f7 ff       \tcall   1ddf7a",
+        "25f7c1:\t89 f9                \tmov    ecx,edi",
+        "25f7c3:\t89 c7                \tmov    edi,eax",
+        "25f7c5:\t85 c9                \ttest   ecx,ecx",
+        "25f7c7:\t7e 38                \tjle    25f801",
+        "25f7c9:\t83 7e 0c 00          \tcmp    DWORD PTR [esi+0xc],0x0",
+        "25f7cd:\t75 7b                \tjne    25f84a",
+        "25f7cf:\t80 7e 1e 00          \tcmp    BYTE PTR [esi+0x1e],0x0",
+        "25f7d3:\t75 75                \tjne    25f84a",
+        "25f7d5:\t89 4c 24 14          \tmov    DWORD PTR [esp+0x14],ecx",
+        "25f7d9:\t8b 44 24 18          \tmov    eax,DWORD PTR [esp+0x18]",
+        "25f7dd:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25f7e0:\te8 e3 4f fb ff       \tcall   2147c8",
+        "25f7e5:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25f7e8:\te8 81 f3 f7 ff       \tcall   1deb6e",
+        "25f7ed:\t89 c1                \tmov    ecx,eax",
+        "25f7ef:\t8b 56 10             \tmov    edx,DWORD PTR [esi+0x10]",
+        "25f7f2:\t39 f9                \tcmp    ecx,edi",
+        "25f7f4:\t7e 11                \tjle    25f807",
+        "25f7f6:\t39 fa                \tcmp    edx,edi",
+        "25f7f8:\t7e 2b                \tjle    25f825",
+        "25f7fa:\tc7 46 0c 00 00 00 00 \tmov    DWORD PTR [esi+0xc],0x0",
+        "25f801:\tc6 46 1d 00          \tmov    BYTE PTR [esi+0x1d],0x0",
+        "25f805:\teb 6f                \tjmp    25f876",
+        "25f807:\t89 c8                \tmov    eax,ecx",
+        "25f809:\t29 d0                \tsub    eax,edx",
+        "25f80b:\t03 46 0c             \tadd    eax,DWORD PTR [esi+0xc]",
+        "25f80e:\t89 46 0c             \tmov    DWORD PTR [esi+0xc],eax",
+        "25f811:\t89 4e 10             \tmov    DWORD PTR [esi+0x10],ecx",
+        "25f814:\t99                   \tcdq",
+        "25f815:\tf7 ff                \tidiv   edi",
+        "25f817:\t39 ca                \tcmp    edx,ecx",
+        "25f819:\t7d 21                \tjge    25f83c",
+        "25f81b:\tc6 46 1d 00          \tmov    BYTE PTR [esi+0x1d],0x0",
+        "25f81f:\t8b 4c 24 14          \tmov    ecx,DWORD PTR [esp+0x14]",
+        "25f823:\teb 25                \tjmp    25f84a",
+        "25f825:\t83 7e 08 00          \tcmp    DWORD PTR [esi+0x8],0x0",
+        "25f829:\t74 04                \tje     25f82f",
+        "25f82b:\tc6 46 1d 01          \tmov    BYTE PTR [esi+0x1d],0x1",
+        "25f82f:\tc7 46 10 00 00 00 00 \tmov    DWORD PTR [esi+0x10],0x0",
+        "25f836:\t8b 4c 24 14          \tmov    ecx,DWORD PTR [esp+0x14]",
+        "25f83a:\teb 0e                \tjmp    25f84a",
+        "25f83c:\t83 7e 08 00          \tcmp    DWORD PTR [esi+0x8],0x0",
+        "25f840:\t8b 4c 24 14          \tmov    ecx,DWORD PTR [esp+0x14]",
+        "25f844:\t74 04                \tje     25f84a",
+        "25f846:\tc6 46 1d 01          \tmov    BYTE PTR [esi+0x1d],0x1",
+        "25f84a:\t80 7e 1e 00          \tcmp    BYTE PTR [esi+0x1e],0x0",
+        "25f84e:\t74 15                \tje     25f865",
+        "25f850:\t8b 4e 0c             \tmov    ecx,DWORD PTR [esi+0xc]",
+        "25f853:\t89 c8                \tmov    eax,ecx",
+        "25f855:\t99                   \tcdq",
+        "25f856:\tf7 ff                \tidiv   edi",
+        "25f858:\t01 cf                \tadd    edi,ecx",
+        "25f85a:\t29 d7                \tsub    edi,edx",
+        "25f85c:\t89 7e 0c             \tmov    DWORD PTR [esi+0xc],edi",
+        "25f85f:\tc6 46 1e 00          \tmov    BYTE PTR [esi+0x1e],0x0",
+        "25f863:\teb 11                \tjmp    25f876",
+        "25f865:\t8b 46 40             \tmov    eax,DWORD PTR [esi+0x40]",
+        "25f868:\t85 c0                \ttest   eax,eax",
+        "25f86a:\t7e 07                \tjle    25f873",
+        "25f86c:\t01 c8                \tadd    eax,ecx",
+        "25f86e:\t89 46 40             \tmov    DWORD PTR [esi+0x40],eax",
+        "25f871:\teb 03                \tjmp    25f876",
+        "25f873:\t01 4e 0c             \tadd    DWORD PTR [esi+0xc],ecx",
+        "25f876:\t8d 65 f4             \tlea    esp,[ebp-0xc]",
+        "25f879:\t5e                   \tpop    esi",
+        "25f87a:\t5f                   \tpop    edi",
+        "25f87b:\t5b                   \tpop    ebx",
+        "25f87c:\t5d                   \tpop    ebp",
+        "25f87d:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "resetHelper",
+      "start": "0x25f87e",
+      "end": "0x25f8d3",
+      "interpretation": "With gate +0x4c zero, clear elapsed and related state, then notify owner. Caller eligibility is outside this capture.",
+      "instructions": [
+        "25f87e:\t55                   \tpush   ebp",
+        "25f87f:\t89 e5                \tmov    ebp,esp",
+        "25f881:\t53                   \tpush   ebx",
+        "25f882:\t83 e4 f0             \tand    esp,0xfffffff0",
+        "25f885:\t83 ec 10             \tsub    esp,0x10",
+        "25f888:\te8 00 00 00 00       \tcall   25f88d",
+        "25f88d:\t5b                   \tpop    ebx",
+        "25f88e:\t81 c3 87 91 55 00    \tadd    ebx,0x559187",
+        "25f894:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "25f897:\t83 78 4c 00          \tcmp    DWORD PTR [eax+0x4c],0x0",
+        "25f89b:\t75 30                \tjne    25f8cd",
+        "25f89d:\tc7 40 0c 00 00 00 00 \tmov    DWORD PTR [eax+0xc],0x0",
+        "25f8a4:\tc6 40 1d 00          \tmov    BYTE PTR [eax+0x1d],0x0",
+        "25f8a8:\tc7 40 40 00 00 00 00 \tmov    DWORD PTR [eax+0x40],0x0",
+        "25f8af:\tc7 40 14 00 00 00 00 \tmov    DWORD PTR [eax+0x14],0x0",
+        "25f8b6:\tc7 40 28 00 00 00 00 \tmov    DWORD PTR [eax+0x28],0x0",
+        "25f8bd:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25f8c0:\te8 9f 01 00 00       \tcall   25fa64",
+        "25f8c5:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25f8c8:\te8 c1 70 fb ff       \tcall   21698e",
+        "25f8cd:\t8d 65 fc             \tlea    esp,[ebp-0x4]",
+        "25f8d0:\t5b                   \tpop    ebx",
+        "25f8d1:\t5d                   \tpop    ebp",
+        "25f8d2:\tc3                   \tret"
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "card": "inferno-tower",
+      "elapsedMs": 0,
+      "stage": 0
+    },
+    {
+      "card": "inferno-tower",
+      "elapsedMs": 1,
+      "stage": 0
+    },
+    {
+      "card": "inferno-tower",
+      "elapsedMs": 1999,
+      "stage": 0
+    },
+    {
+      "card": "inferno-tower",
+      "elapsedMs": 2000,
+      "stage": 1
+    },
+    {
+      "card": "inferno-tower",
+      "elapsedMs": 2001,
+      "stage": 1
+    },
+    {
+      "card": "inferno-tower",
+      "elapsedMs": 3999,
+      "stage": 1
+    },
+    {
+      "card": "inferno-tower",
+      "elapsedMs": 4000,
+      "stage": 2
+    },
+    {
+      "card": "inferno-tower",
+      "elapsedMs": 4001,
+      "stage": 2
+    },
+    {
+      "card": "inferno-tower",
+      "elapsedMs": 10000,
+      "stage": 2
+    },
+    {
+      "card": "inferno-dragon",
+      "elapsedMs": 0,
+      "stage": 0
+    },
+    {
+      "card": "inferno-dragon",
+      "elapsedMs": 1,
+      "stage": 0
+    },
+    {
+      "card": "inferno-dragon",
+      "elapsedMs": 1999,
+      "stage": 0
+    },
+    {
+      "card": "inferno-dragon",
+      "elapsedMs": 2000,
+      "stage": 1
+    },
+    {
+      "card": "inferno-dragon",
+      "elapsedMs": 2001,
+      "stage": 1
+    },
+    {
+      "card": "inferno-dragon",
+      "elapsedMs": 3999,
+      "stage": 1
+    },
+    {
+      "card": "inferno-dragon",
+      "elapsedMs": 4000,
+      "stage": 2
+    },
+    {
+      "card": "inferno-dragon",
+      "elapsedMs": 4001,
+      "stage": 2
+    },
+    {
+      "card": "inferno-dragon",
+      "elapsedMs": 10000,
+      "stage": 2
+    }
+  ],
+  "cases": [
+    {
+      "card": "inferno-tower",
+      "buffs": [],
+      "initialElapsedMs": 1000,
+      "deltaMs": 50,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1050,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1750,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 2000,
+          "stage": 1
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 2500,
+          "stage": 1
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 3000,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 3250,
+          "stage": 1
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 4000,
+          "stage": 2
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 5500,
+          "stage": 2
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 7000,
+          "stage": 2
+        }
+      ],
+      "transitions": [
+        {
+          "tick": 20,
+          "elapsedMs": 2000,
+          "stage": 1
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 4000,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-tower",
+      "buffs": [
+        "Rage"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 67,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1067,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 2005,
+          "stage": 1
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 2340,
+          "stage": 1
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 3010,
+          "stage": 1
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 3680,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 4015,
+          "stage": 2
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 5020,
+          "stage": 2
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 7030,
+          "stage": 2
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 9040,
+          "stage": 2
+        }
+      ],
+      "transitions": [
+        {
+          "tick": 15,
+          "elapsedMs": 2005,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 4015,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-tower",
+      "buffs": [
+        "IceWizardSlowDown"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 32,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1032,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1480,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 1640,
+          "stage": 0
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 1960,
+          "stage": 0
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 2280,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 2440,
+          "stage": 1
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 2920,
+          "stage": 1
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 3880,
+          "stage": 1
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 4840,
+          "stage": 2
+        }
+      ],
+      "transitions": [
+        {
+          "tick": 32,
+          "elapsedMs": 2024,
+          "stage": 1
+        },
+        {
+          "tick": 94,
+          "elapsedMs": 4008,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-tower",
+      "buffs": [
+        "Rage",
+        "IceWizardSlowDown"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 43,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1043,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1645,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 1860,
+          "stage": 0
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 2290,
+          "stage": 1
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 2720,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 2935,
+          "stage": 1
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 3580,
+          "stage": 1
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 4870,
+          "stage": 2
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 6160,
+          "stage": 2
+        }
+      ],
+      "transitions": [
+        {
+          "tick": 24,
+          "elapsedMs": 2032,
+          "stage": 1
+        },
+        {
+          "tick": 70,
+          "elapsedMs": 4010,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-tower",
+      "buffs": [
+        "IceWizardSlowDown",
+        "Rage"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 43,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1043,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1645,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 1860,
+          "stage": 0
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 2290,
+          "stage": 1
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 2720,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 2935,
+          "stage": 1
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 3580,
+          "stage": 1
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 4870,
+          "stage": 2
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 6160,
+          "stage": 2
+        }
+      ],
+      "transitions": [
+        {
+          "tick": 24,
+          "elapsedMs": 2032,
+          "stage": 1
+        },
+        {
+          "tick": 70,
+          "elapsedMs": 4010,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-tower",
+      "buffs": [
+        "Freeze"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 0,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 1000,
+          "stage": 0
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "card": "inferno-tower",
+      "buffs": [
+        "ZapFreeze"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 0,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 1000,
+          "stage": 0
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "card": "inferno-tower",
+      "buffs": [
+        "Rage",
+        "Rage"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 67,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1067,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 2005,
+          "stage": 1
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 2340,
+          "stage": 1
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 3010,
+          "stage": 1
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 3680,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 4015,
+          "stage": 2
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 5020,
+          "stage": 2
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 7030,
+          "stage": 2
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 9040,
+          "stage": 2
+        }
+      ],
+      "transitions": [
+        {
+          "tick": 15,
+          "elapsedMs": 2005,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 4015,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-tower",
+      "buffs": [
+        "IceWizardSlowDown",
+        "IceWizardSlowDown"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 32,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1032,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1480,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 1640,
+          "stage": 0
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 1960,
+          "stage": 0
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 2280,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 2440,
+          "stage": 1
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 2920,
+          "stage": 1
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 3880,
+          "stage": 1
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 4840,
+          "stage": 2
+        }
+      ],
+      "transitions": [
+        {
+          "tick": 32,
+          "elapsedMs": 2024,
+          "stage": 1
+        },
+        {
+          "tick": 94,
+          "elapsedMs": 4008,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-tower",
+      "buffs": [
+        "Rage",
+        "Freeze"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 0,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 1000,
+          "stage": 0
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "card": "inferno-dragon",
+      "buffs": [],
+      "initialElapsedMs": 1000,
+      "deltaMs": 50,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1050,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1750,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 2000,
+          "stage": 1
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 2500,
+          "stage": 1
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 3000,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 3250,
+          "stage": 1
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 4000,
+          "stage": 2
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 5500,
+          "stage": 2
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 7000,
+          "stage": 2
+        }
+      ],
+      "transitions": [
+        {
+          "tick": 20,
+          "elapsedMs": 2000,
+          "stage": 1
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 4000,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-dragon",
+      "buffs": [
+        "Rage"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 67,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1067,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 2005,
+          "stage": 1
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 2340,
+          "stage": 1
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 3010,
+          "stage": 1
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 3680,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 4015,
+          "stage": 2
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 5020,
+          "stage": 2
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 7030,
+          "stage": 2
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 9040,
+          "stage": 2
+        }
+      ],
+      "transitions": [
+        {
+          "tick": 15,
+          "elapsedMs": 2005,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 4015,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-dragon",
+      "buffs": [
+        "IceWizardSlowDown"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 32,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1032,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1480,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 1640,
+          "stage": 0
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 1960,
+          "stage": 0
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 2280,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 2440,
+          "stage": 1
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 2920,
+          "stage": 1
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 3880,
+          "stage": 1
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 4840,
+          "stage": 2
+        }
+      ],
+      "transitions": [
+        {
+          "tick": 32,
+          "elapsedMs": 2024,
+          "stage": 1
+        },
+        {
+          "tick": 94,
+          "elapsedMs": 4008,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-dragon",
+      "buffs": [
+        "Rage",
+        "IceWizardSlowDown"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 43,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1043,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1645,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 1860,
+          "stage": 0
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 2290,
+          "stage": 1
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 2720,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 2935,
+          "stage": 1
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 3580,
+          "stage": 1
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 4870,
+          "stage": 2
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 6160,
+          "stage": 2
+        }
+      ],
+      "transitions": [
+        {
+          "tick": 24,
+          "elapsedMs": 2032,
+          "stage": 1
+        },
+        {
+          "tick": 70,
+          "elapsedMs": 4010,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-dragon",
+      "buffs": [
+        "IceWizardSlowDown",
+        "Rage"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 43,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1043,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1645,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 1860,
+          "stage": 0
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 2290,
+          "stage": 1
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 2720,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 2935,
+          "stage": 1
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 3580,
+          "stage": 1
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 4870,
+          "stage": 2
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 6160,
+          "stage": 2
+        }
+      ],
+      "transitions": [
+        {
+          "tick": 24,
+          "elapsedMs": 2032,
+          "stage": 1
+        },
+        {
+          "tick": 70,
+          "elapsedMs": 4010,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-dragon",
+      "buffs": [
+        "Freeze"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 0,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 1000,
+          "stage": 0
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "card": "inferno-dragon",
+      "buffs": [
+        "ZapFreeze"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 0,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 1000,
+          "stage": 0
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "card": "inferno-dragon",
+      "buffs": [
+        "Rage",
+        "Rage"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 67,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1067,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 2005,
+          "stage": 1
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 2340,
+          "stage": 1
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 3010,
+          "stage": 1
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 3680,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 4015,
+          "stage": 2
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 5020,
+          "stage": 2
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 7030,
+          "stage": 2
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 9040,
+          "stage": 2
+        }
+      ],
+      "transitions": [
+        {
+          "tick": 15,
+          "elapsedMs": 2005,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 4015,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-dragon",
+      "buffs": [
+        "IceWizardSlowDown",
+        "IceWizardSlowDown"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 32,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1032,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1480,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 1640,
+          "stage": 0
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 1960,
+          "stage": 0
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 2280,
+          "stage": 1
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 2440,
+          "stage": 1
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 2920,
+          "stage": 1
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 3880,
+          "stage": 1
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 4840,
+          "stage": 2
+        }
+      ],
+      "transitions": [
+        {
+          "tick": 32,
+          "elapsedMs": 2024,
+          "stage": 1
+        },
+        {
+          "tick": 94,
+          "elapsedMs": 4008,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-dragon",
+      "buffs": [
+        "Rage",
+        "Freeze"
+      ],
+      "initialElapsedMs": 1000,
+      "deltaMs": 0,
+      "checkpoints": [
+        {
+          "tick": 1,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 15,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 20,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 30,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 40,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 45,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 60,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 90,
+          "elapsedMs": 1000,
+          "stage": 0
+        },
+        {
+          "tick": 120,
+          "elapsedMs": 1000,
+          "stage": 0
+        }
+      ],
+      "transitions": []
+    }
+  ],
+  "resetCases": [
+    {
+      "card": "inferno-tower",
+      "gate": 0,
+      "elapsedMs": 0,
+      "fields": {
+        "0x14": 0,
+        "0x28": 0,
+        "0x40": 0
+      },
+      "flag1d": 0,
+      "notificationCalls": 1
+    },
+    {
+      "card": "inferno-tower",
+      "gate": 1,
+      "elapsedMs": 1000,
+      "fields": {
+        "0x14": 123,
+        "0x28": 123,
+        "0x40": 123
+      },
+      "flag1d": 1,
+      "notificationCalls": 0
+    },
+    {
+      "card": "inferno-dragon",
+      "gate": 0,
+      "elapsedMs": 0,
+      "fields": {
+        "0x14": 0,
+        "0x28": 0,
+        "0x40": 0
+      },
+      "flag1d": 0,
+      "notificationCalls": 1
+    },
+    {
+      "card": "inferno-dragon",
+      "gate": 1,
+      "elapsedMs": 1000,
+      "fields": {
+        "0x14": 123,
+        "0x28": 123,
+        "0x40": 123
+      },
+      "flag1d": 1,
+      "notificationCalls": 0
+    }
+  ],
+  "controlledCases": [
+    {
+      "card": "inferno-tower",
+      "control": "world-gate",
+      "elapsedMs": 0,
+      "deferred40": 0,
+      "flag1e": 0
+    },
+    {
+      "card": "inferno-tower",
+      "control": "flag1e",
+      "elapsedMs": 1200,
+      "deferred40": 0,
+      "flag1e": 0
+    },
+    {
+      "card": "inferno-tower",
+      "control": "deferred40",
+      "elapsedMs": 1000,
+      "deferred40": 173,
+      "flag1e": 0
+    },
+    {
+      "card": "inferno-dragon",
+      "control": "world-gate",
+      "elapsedMs": 0,
+      "deferred40": 0,
+      "flag1e": 0
+    },
+    {
+      "card": "inferno-dragon",
+      "control": "flag1e",
+      "elapsedMs": 1200,
+      "deferred40": 0,
+      "flag1e": 0
+    },
+    {
+      "card": "inferno-dragon",
+      "control": "deferred40",
+      "elapsedMs": 1000,
+      "deferred40": 173,
+      "flag1e": 0
+    }
+  ],
+  "changingBuffCases": [
+    {
+      "card": "inferno-tower",
+      "phases": [
+        {
+          "buffs": [],
+          "steps": 30,
+          "beforeMs": 1000,
+          "afterMs": 2500,
+          "stage": 1
+        },
+        {
+          "buffs": [
+            "Rage"
+          ],
+          "steps": 30,
+          "beforeMs": 2500,
+          "afterMs": 4510,
+          "stage": 2
+        },
+        {
+          "buffs": [
+            "IceWizardSlowDown"
+          ],
+          "steps": 30,
+          "beforeMs": 4510,
+          "afterMs": 5470,
+          "stage": 2
+        },
+        {
+          "buffs": [
+            "Freeze"
+          ],
+          "steps": 30,
+          "beforeMs": 5470,
+          "afterMs": 5470,
+          "stage": 2
+        },
+        {
+          "buffs": [
+            "Rage",
+            "IceWizardSlowDown"
+          ],
+          "steps": 30,
+          "beforeMs": 5470,
+          "afterMs": 6760,
+          "stage": 2
+        },
+        {
+          "buffs": [],
+          "steps": 30,
+          "beforeMs": 6760,
+          "afterMs": 8260,
+          "stage": 2
+        }
+      ]
+    },
+    {
+      "card": "inferno-dragon",
+      "phases": [
+        {
+          "buffs": [],
+          "steps": 30,
+          "beforeMs": 1000,
+          "afterMs": 2500,
+          "stage": 1
+        },
+        {
+          "buffs": [
+            "Rage"
+          ],
+          "steps": 30,
+          "beforeMs": 2500,
+          "afterMs": 4510,
+          "stage": 2
+        },
+        {
+          "buffs": [
+            "IceWizardSlowDown"
+          ],
+          "steps": 30,
+          "beforeMs": 4510,
+          "afterMs": 5470,
+          "stage": 2
+        },
+        {
+          "buffs": [
+            "Freeze"
+          ],
+          "steps": 30,
+          "beforeMs": 5470,
+          "afterMs": 5470,
+          "stage": 2
+        },
+        {
+          "buffs": [
+            "Rage",
+            "IceWizardSlowDown"
+          ],
+          "steps": 30,
+          "beforeMs": 5470,
+          "afterMs": 6760,
+          "stage": 2
+        },
+        {
+          "buffs": [],
+          "steps": 30,
+          "beforeMs": 6760,
+          "afterMs": 8260,
+          "stage": 2
+        }
+      ]
+    }
+  ]
+}
