@@ -268,6 +268,8 @@ let filter: CollectionKind = "all";
 let search = "";
 let collectionCost: number | "all" = "all";
 let collectionOrder: CollectionOrder = "collection";
+// A replaced dialog releases its grid and cached rows together.
+const collectionRows = new WeakMap<HTMLElement, Map<CardId, HTMLDivElement>>();
 const deckEdits = new DeckEditHistory();
 let deckEditNotice = "";
 let dragging = false;
@@ -1960,32 +1962,39 @@ function showDeckCodes(state: Partial<DeckCodeView> = {}) {
   }
 }
 function renderCollection() {
-  $("#collection-grid").dataset.collectionMode =
-    editSlot < 0 ? "inspect" : "replace";
+  const grid = $("#collection-grid");
+  setAttribute(grid, "data-collection-mode", editSlot < 0 ? "inspect" : "replace");
+  let rows = collectionRows.get(grid);
+  if (!rows) collectionRows.set(grid, rows = new Map());
   const matches = collectionCards({
     kind: filter,
     search,
     cost: collectionCost,
     order: collectionOrder,
   });
-  $("#collection-results").textContent =
-    `Showing ${matches.length} of ${CARDS.length} cards.`;
-  $("#collection-grid").innerHTML = matches.length
-    ? matches
-        .map(
-          (c) =>
-            cardHTML(
-              c.id,
-              `data-collection="${c.id}" aria-describedby="builder-hint"`,
-              profile.deck.includes(c.id) ? "in-deck" : "",
-            ) +
-            `<span class="collection-card-label">${c.name}${profile.deck.includes(c.id) ? " <b>IN DECK</b>" : ""}</span>`,
-        )
-        .map((s) => `<div>${s}</div>`)
-        .join("")
-    : '<p class="empty-state">No cards match these filters.</p>';
-  nativeCards.hydrate($("#collection-grid"));
-  document.querySelectorAll<HTMLButtonElement>("[data-collection]").forEach(
+  setText($("#collection-results"), `Showing ${matches.length} of ${CARDS.length} cards.`);
+  const children = matches.map(c => {
+    let row = rows.get(c.id);
+    if (!row) {
+      row = document.createElement("div");
+      row.innerHTML = cardHTML(c.id, `data-collection="${c.id}" aria-describedby="builder-hint"`,
+        profile.deck.includes(c.id) ? "in-deck" : "") +
+        `<span class="collection-card-label">${c.name}${profile.deck.includes(c.id) ? " <b>IN DECK</b>" : ""}</span>`;
+      rows.set(c.id, row);
+    }
+    return row;
+  });
+  if (children.length) {
+    if (grid.children.length !== children.length || children.some((row, i) => grid.children[i] !== row))
+      grid.replaceChildren(...children);
+  } else if (!grid.querySelector(".empty-state")) {
+    const empty = document.createElement("p");
+    empty.className = "empty-state";
+    empty.textContent = "No cards match these filters.";
+    grid.replaceChildren(empty);
+  }
+  nativeCards.hydrate(grid);
+  grid.querySelectorAll<HTMLButtonElement>("[data-collection]").forEach(
     (e) =>
       (e.onclick = () => {
         const id = e.dataset.collection as CardId;

@@ -1,0 +1,219 @@
+import { test, expect } from "@playwright/test";
+import { CARDS } from "../../src/game/cards";
+
+test.use({ serviceWorkers: "block", actionTimeout: 20000 });
+test.setTimeout(150000);
+const key = "browser-royale.profile.v1";
+
+test("collection search, cost and sort reuse native artwork within their dialog", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  if (info.project.name !== "desktop")
+    await page.setViewportSize({ width: 320, height: 568 });
+  await page.addInitScript(
+    (key) =>
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          version: 1,
+          seenTutorial: true,
+          sound: false,
+          music: false,
+        }),
+      ),
+    key,
+  );
+  await page.goto("/");
+  await page.waitForFunction(
+    () => {
+      const s = (window as any).__arena?.state;
+      return s && !s.renderPending;
+    },
+    null,
+    { timeout: 90000 },
+  );
+  await page.locator('[data-nav="cards"]').click();
+  await expect(page.locator("#collection-grid .native-card-ready")).toHaveCount(
+    CARDS.length,
+    { timeout: 60000 },
+  );
+  await page.evaluate(() => document.fonts.ready);
+  const saved = await page.evaluate((key) => localStorage.getItem(key), key);
+  const search = page.getByRole("textbox", {
+    name: "Search cards",
+    exact: true,
+  });
+  await search.focus();
+  await page.waitForTimeout(200);
+  const modal = page.locator(".modal");
+  const scroll = await modal.evaluate((el) => el.scrollTop);
+  const pixels = await modal.screenshot({ animations: "disabled" });
+  await page.evaluate(() => {
+    const grid = document.querySelector("#collection-grid")!;
+    const refs = [
+      ...grid.querySelectorAll<HTMLElement>("[data-native-card]"),
+    ].map((card) => ({
+      id: card.dataset.nativeCard,
+      card,
+      svg: card.querySelector(".native-card-art > svg"),
+    }));
+    let rebuilds = 0;
+    const collect = (records: MutationRecord[]) => {
+      for (const record of records)
+        if (
+          record.type === "childList" &&
+          (record.target as Element).matches?.(".native-card-art")
+        )
+          rebuilds++;
+    };
+    const observer = new MutationObserver(collect);
+    observer.observe(grid, { subtree: true, childList: true });
+    (window as any).__collectionTest = {
+      grid,
+      refs,
+      observer,
+      collect,
+      rebuilds: () => rebuilds,
+    };
+  });
+  for (const [query, count] of [
+    ["g", 22],
+    ["go", 10],
+    ["gob", 6],
+    ["goblin", 6],
+    ["no such card", 0],
+    ["", CARDS.length],
+  ] as const) {
+    await search.fill(query);
+    await expect(search).toBeFocused();
+    await expect(page.locator("[data-collection]")).toHaveCount(count);
+    await expect(page.locator("#collection-results")).toHaveText(
+      `Showing ${count} of ${CARDS.length} cards.`,
+    );
+    if (!count)
+      await expect(page.locator("#collection-grid .empty-state")).toHaveText(
+        "No cards match these filters.",
+      );
+  }
+  await modal.evaluate((el, scroll) => (el.scrollTop = scroll), scroll);
+  expect(
+    (
+      await modal.screenshot({
+        path: info.outputPath("reused-collection.png"),
+        animations: "disabled",
+      })
+    ).equals(pixels),
+  ).toBe(true);
+  const cost = page.getByLabel("Elixir cost", { exact: true });
+  const sort = page.getByLabel("Sort cards", { exact: true });
+  await cost.selectOption("4");
+  await sort.focus();
+  await sort.selectOption("name");
+  await expect(sort).toBeFocused();
+  await cost.selectOption("all");
+  await sort.selectOption("collection");
+  await expect(page.locator("[data-collection]")).toHaveCount(CARDS.length);
+  const retained = await page.evaluate(() => {
+    const p = (window as any).__collectionTest;
+    p.collect(p.observer.takeRecords());
+    p.observer.disconnect();
+    return {
+      rebuilds: p.rebuilds(),
+      cards: p.refs.filter(
+        (ref: any) =>
+          p.grid.querySelector(`[data-native-card="${ref.id}"]`) === ref.card &&
+          ref.card.querySelector(".native-card-art > svg") === ref.svg,
+      ).length,
+    };
+  });
+  expect(retained).toEqual({ rebuilds: 0, cards: CARDS.length });
+  expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(
+    saved,
+  );
+  await page.getByRole("button", { name: "Close dialog", exact: true }).click();
+  await page.locator('[data-nav="cards"]').click();
+  await expect(page.locator("#collection-grid .native-card-ready")).toHaveCount(
+    CARDS.length,
+  );
+  expect(
+    await page.evaluate(
+      () =>
+        document.querySelector("#collection-grid") !==
+        (window as any).__collectionTest.grid,
+    ),
+  ).toBe(true);
+  expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(
+    saved,
+  );
+  expect(errors).toEqual([]);
+});
+
+test("cached rows hidden before native artwork loads upgrade when restored", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => (release = resolve));
+  await page.route("**/assets/ui/cards/cards.json", async (route) => {
+    await held;
+    await route.continue();
+  });
+  await page.addInitScript(
+    (key) =>
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          version: 1,
+          seenTutorial: true,
+          sound: false,
+          music: false,
+        }),
+      ),
+    key,
+  );
+  try {
+    await page.goto("/");
+    await page.locator('[data-nav="cards"]').click();
+    await expect(page.locator("[data-collection]")).toHaveCount(CARDS.length);
+    await expect(
+      page.locator("#collection-grid .native-card-ready"),
+    ).toHaveCount(0);
+    const saved = await page.evaluate((key) => localStorage.getItem(key), key);
+    await page.evaluate(() => {
+      (window as any).__lateCollectionCard = document.querySelector(
+        '[data-collection="musketeer"]',
+      );
+    });
+    await page.locator("#card-search").fill("goblin");
+    await expect(page.locator("[data-collection]")).toHaveCount(6);
+    release();
+    await expect(
+      page.locator("#collection-grid .native-card-ready"),
+    ).toHaveCount(6, { timeout: 60000 });
+    await page.locator("#card-search").fill("");
+    await expect(
+      page.locator("#collection-grid .native-card-ready"),
+    ).toHaveCount(CARDS.length, { timeout: 30000 });
+    expect(
+      await page.evaluate(
+        () =>
+          document.querySelector('[data-collection="musketeer"]') ===
+          (window as any).__lateCollectionCard,
+      ),
+    ).toBe(true);
+    await page.locator('[data-collection="musketeer"]').click();
+    await expect(
+      page.getByRole("dialog", { name: "Musketeer", exact: true }),
+    ).toBeVisible();
+    await expect(page.locator(".detail-art.native-card-ready")).toBeVisible();
+    expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(
+      saved,
+    );
+    expect(errors).toEqual([]);
+  } finally {
+    release();
+  }
+});
