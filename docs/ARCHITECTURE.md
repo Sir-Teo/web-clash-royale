@@ -149,6 +149,8 @@ The native display-list parser preserves each child's instance index as well as 
 
 A four-slot presentation clock tracks newly drawn cards independently of hand DOM replacement. Only changed slots play the 60-FPS source reveal; unchanged cards remain still. Animation uses simulation time, pauses with the battle, respects reduced motion and resets on replay seeking/restarting. Loading all native images and the local font precedes the switch from fallback art. Failed loading leaves the previous playable UI intact. `loadedCards` exposes the number of ready portraits through read-only diagnostics.
 
+Hand refreshes reconcile each of the four slots against its current card ID. Only changed slots receive new button markup and input listeners; unchanged buttons and native SVG hosts stay mounted. Forced updates still refresh cost, Mirror reflection, selection, disabled state and labels through the shared attribute/draw pass. Newly drawn cards retain the existing reveal clock, and retained fallback cards hydrate when artwork arrives. The cache is the four mounted slots, with no separate retained-card collection.
+
 ## Native health displays
 
 `src/ui/health-data.ts` separates health fill selection from animation time. Its flattening helper substitutes the chosen 100-state bar frame into the source root while composing its matrices and colors. `healthSelection` derives team, source bar size, visibility and the King’s opening frame from entity state. Paused rendering and replay seeking therefore reconstruct the current display without replaying historical transitions.

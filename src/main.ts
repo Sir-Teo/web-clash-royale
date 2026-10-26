@@ -732,16 +732,19 @@ function updateBattleUI(force = false) {
     key = p.hand.join(",");
   if (force || key !== lastHand) {
     lastHand = key;
-    $("#hand").innerHTML = p.hand
-      .map((id, i) =>
-        cardHTML(
-          id,
-          `data-slot="${i}"`,
-          `hand-card ${selected === i ? "selected" : ""}`,
-        ),
-      )
-      .join("");
-    document.querySelectorAll<HTMLButtonElement>("[data-slot]").forEach((e) => {
+    const hand = $("#hand");
+    // Forced cost/selection refreshes still retain unchanged slots and artwork.
+    const template = document.createElement("template");
+    p.hand.forEach((id, i) => {
+      const previous = hand.children.item(i) as HTMLButtonElement | null;
+      if (previous?.dataset.nativeCard === id) return;
+      template.innerHTML = cardHTML(
+        id, `data-slot="${i}"`,
+        `hand-card ${selected === i ? "selected" : ""}`,
+      );
+      const e = template.content.firstElementChild as HTMLButtonElement;
+      if (previous) previous.replaceWith(e);
+      else hand.append(e);
       e.addEventListener("click", (event) => {
         if (event.detail === 0 && screen === "battle" && !paused)
           selectCard(Number(e.dataset.slot), true);

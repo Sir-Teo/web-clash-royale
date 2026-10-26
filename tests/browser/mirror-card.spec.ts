@@ -42,6 +42,7 @@ test("Mirror shows its changing cost and repeats a troop on desktop and phone", 
   expect(mirrorSlot).toBeGreaterThanOrEqual(0);
   expect(skeletonSlot).toBeGreaterThanOrEqual(0);
   const mirror = page.locator(`#hand [data-slot="${mirrorSlot}"]`);
+  const originalMirror = await mirror.elementHandle();
   await expect(mirror).toBeDisabled();
   await expect(mirror.locator(".cost")).toHaveText("?");
   const tap = async (x: number, y: number) => {
@@ -59,6 +60,7 @@ test("Mirror shows its changing cost and repeats a troop on desktop and phone", 
     .poll(async () => (await state()).actions)
     .toBeGreaterThan(before.actions);
   await expect(mirror).toBeEnabled();
+  expect(await mirror.evaluate((element, original) => element === original, originalMirror)).toBe(true);
   await expect(mirror.locator(".cost")).toHaveText("2");
   await expect(mirror.locator(".native-card-art text")).toContainText("2");
   await expect(mirror).toHaveAttribute("data-mirror-card", "skeletons");
