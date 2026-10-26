@@ -2928,7 +2928,9 @@ function frame(now: number) {
     deathAudio.update(battle.time, presentationPaused);
   }
   const idle = screen === "lobby" || presentationPaused || !!battle.winner;
-  const frozen = paused && !multiplayer && screen !== "lobby" && !battle.winner;
+  const frozen =
+    (paused && !multiplayer && screen !== "lobby" && !battle.winner) ||
+    (screen === "lobby" && !!modalKey);
   const frozenChanged = !renderedFrozen || arena.needsFrame || renderedBattle !== battle ||
     renderedTick !== battle.tick;
   if (frozen && !frozenChanged) {
@@ -2941,19 +2943,24 @@ function frame(now: number) {
     const renderElapsed = Math.max(0, (now - lastRenderTime) / 1000);
     const renderDelta = Math.min(renderElapsed, 0.1);
     lastRenderTime = now;
-    animationTime = screen === "lobby" ? now / 1000 : battle.time;
+    if (screen !== "lobby") animationTime = battle.time;
+    else if (!frozen) animationTime = now / 1000;
     arena.render(
-      screen === "lobby" || battle.winner
-        ? renderDelta
-        : presentationPaused
-          ? 0
-          : renderDelta * speed,
+      frozen
+        ? 0
+        : screen === "lobby" || battle.winner
+          ? renderDelta
+          : presentationPaused
+            ? 0
+            : renderDelta * speed,
       animationTime,
-      screen === "lobby" || battle.winner
-        ? renderElapsed
-        : presentationPaused
-          ? 0
-          : renderElapsed * speed,
+      frozen
+        ? 0
+        : screen === "lobby" || battle.winner
+          ? renderElapsed
+          : presentationPaused
+            ? 0
+            : renderElapsed * speed,
     );
     renderedBattle = battle;
     renderedTick = battle.tick;
