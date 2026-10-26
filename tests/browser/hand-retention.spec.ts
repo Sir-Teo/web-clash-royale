@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { CARDS } from "../../src/game/cards";
+import sharp from "sharp";
 
 const deck = [
   "skeletons",
@@ -144,12 +145,10 @@ test("a draw retains the other three hand cards and their native SVGs", async ({
     )
     .toEqual(["hand", "hand", "hand", "hand"]);
   await page.getByRole("button", { name: "Pause battle", exact: true }).click();
-  await page
-    .locator("#battle-tray")
-    .screenshot({
-      path: info.outputPath("retained-native-hand.png"),
-      style: "#modal-root, #toast { visibility: hidden !important; }",
-    });
+  await page.locator("#battle-tray").screenshot({
+    path: info.outputPath("retained-native-hand.png"),
+    style: "#modal-root, #toast { visibility: hidden !important; }",
+  });
   await page.getByRole("button", { name: "Leave battle", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Watch replay", exact: true }),
@@ -219,4 +218,90 @@ test("retained fallback hand cards hydrate after artwork arrives", async ({
   } finally {
     release();
   }
+});
+
+test("repeated selection reuses normal and selected native artwork", async ({
+  page,
+}, info) => {
+  test.setTimeout(120000);
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await openBattle(page);
+  await expect(page.locator("#hand .native-card-ready")).toHaveCount(4, {
+    timeout: 60000,
+  });
+  await page.mouse.move(0, 0);
+  const before = await state(page),
+    slot = before.hand.indexOf("skeletons");
+  expect(slot).toBeGreaterThanOrEqual(0);
+  const card = page.locator(`#hand [data-slot="${slot}"]`);
+  const initialSvg = await card
+    .locator(".native-card-art > svg")
+    .elementHandle();
+  // First-use selection transitions also change SVG rasterization in the
+  // uncached build. Compare stable normal poses after one complete transition.
+  await page.keyboard.press(String(slot + 1));
+  await page.keyboard.press(String(slot + 1));
+  await expect(card).toHaveAttribute("data-card-clip", "hand");
+  expect(
+    await card
+      .locator(".native-card-art > svg")
+      .evaluate((svg, original) => svg === original, initialSvg),
+  ).toBe(true);
+  const pixels = await card.screenshot({
+    path: info.outputPath("original-native-card.png"),
+    animations: "disabled",
+  });
+  await page.evaluate((slot) => {
+    const button = document.querySelector(`#hand [data-slot="${slot}"]`)!;
+    const host = button.querySelector(".native-card-art")!;
+    (window as any).__selectionViews = {
+      normal: host.firstElementChild,
+      selected: null,
+      button,
+    };
+  }, slot);
+  for (let cycle = 0; cycle < 10; cycle++) {
+    await page.keyboard.press(String(slot + 1));
+    await expect(card).toHaveAttribute("aria-pressed", "true");
+    await expect(card).toHaveAttribute("data-card-clip", "hand-selected");
+    expect(
+      await card.evaluate((button) => {
+        const saved = (window as any).__selectionViews;
+        const svg = button.querySelector(".native-card-art > svg");
+        if (!saved.selected) saved.selected = svg;
+        return button === saved.button && svg === saved.selected;
+      }),
+    ).toBe(true);
+    await page.keyboard.press(String(slot + 1));
+    await expect(card).toHaveAttribute("aria-pressed", "false");
+    await expect(card).toHaveAttribute("data-card-clip", "hand");
+    expect(
+      await card.evaluate(
+        (button) =>
+          button.querySelector(".native-card-art > svg") ===
+          (window as any).__selectionViews.normal,
+      ),
+    ).toBe(true);
+  }
+  const restored = await card.screenshot({
+    path: info.outputPath("cached-native-card.png"),
+    animations: "disabled",
+  });
+  const a = await sharp(pixels)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const b = await sharp(restored)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  expect(a.info).toEqual(b.info);
+  let delta = 0;
+  for (let i = 0; i < a.data.length; i++)
+    delta = Math.max(delta, Math.abs(a.data[i] - b.data[i]));
+  expect(delta).toBeLessThanOrEqual(1);
+  expect((await state(page)).hand).toEqual(before.hand);
+  expect((await state(page)).selected).toBe(-1);
+  expect(errors).toEqual([]);
 });

@@ -151,6 +151,8 @@ A four-slot presentation clock tracks newly drawn cards independently of hand DO
 
 Hand refreshes reconcile each of the four slots against its current card ID. Only changed slots receive new button markup and input listeners; unchanged buttons and native SVG hosts stay mounted. Forced updates still refresh cost, Mirror reflection, selection, disabled state and labels through the shared attribute/draw pass. Newly drawn cards retain the existing reveal clock, and retained fallback cards hydrate when artwork arrives. The cache is the four mounted slots, with no separate retained-card collection.
 
+Each native artwork host also retains its static normal/selected SVG views in a weak map. Card ID, variant, cost and Mirror reflection identify the current view profile; changes prevent reuse of older views. Repeated selection swaps the existing SVG nodes and updates the same clip/frame metadata. Animated reveal frames bypass this cache. At most two static views belong to a current host/profile, plus its current animated frame when revealing; releasing the host permits its saved views to be collected. Unique native clip/filter IDs remain attached to each SVG node.
+
 ## Native health displays
 
 `src/ui/health-data.ts` separates health fill selection from animation time. Its flattening helper substitutes the chosen 100-state bar frame into the source root while composing its matrices and colors. `healthSelection` derives team, source bar size, visibility and the King’s opening frame from entity state. Paused rendering and replay seeking therefore reconstruct the current display without replaying historical transitions.

@@ -36,6 +36,13 @@ export class NativeCards {
   private data: CardData | null = null;
   private portraits = new Map<CardId, CardData>();
   private signatures = new WeakMap<HTMLElement, string>();
+  private staticViews = new WeakMap<
+    HTMLElement,
+    {
+      key: string;
+      views: Map<string, Element>;
+    }
+  >();
   private serial = 0;
   private reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   constructor() {
@@ -121,6 +128,17 @@ export class NativeCards {
     const mirrorCard = element.dataset.mirrorCard as CardId | undefined;
     const signature = `${id}:${clip}:${frame}:${cost}:${mirrorCard ?? ""}`;
     if (this.signatures.get(host) === signature) return;
+    const staticKey = `${id}:${variant}:${cost}:${mirrorCard ?? ""}`;
+    let saved = this.staticViews.get(host);
+    const cached =
+      clip !== "reveal" && saved?.key === staticKey
+        ? saved.views.get(clip)
+        : undefined;
+    if (cached) {
+      host.replaceChildren(cached);
+      this.finishDraw(element, host, signature, clip, frame);
+      return;
+    }
     let data = this.portraits.get(id);
     if (!data) {
       data = {
@@ -198,6 +216,22 @@ export class NativeCards {
         svg.append(image);
       }
     }
+    if (clip !== "reveal") {
+      if (saved?.key !== staticKey) {
+        saved = { key: staticKey, views: new Map() };
+        this.staticViews.set(host, saved);
+      }
+      saved.views.set(clip, host.firstElementChild!);
+    }
+    this.finishDraw(element, host, signature, clip, frame);
+  }
+  private finishDraw(
+    element: HTMLElement,
+    host: HTMLElement,
+    signature: string,
+    clip: string,
+    frame: number,
+  ) {
     this.signatures.set(host, signature);
     element.classList.add("native-card-ready");
     element.dataset.cardClip = clip;

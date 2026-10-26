@@ -1,5 +1,9 @@
 // Start Vite/preview on 5188; also works against the pre-optimization build.
 import { chromium } from "playwright";
+import { mkdir } from "node:fs/promises";
+import sharp from "sharp";
+const selection = process.argv.includes("--selection");
+const artifacts = process.env.ARENA_PROFILE_ARTIFACTS;
 
 const browser = await chromium.launch({
   args: [
@@ -70,12 +74,23 @@ try {
       id: button.dataset.nativeCard,
       svg: button.querySelector(".native-card-art > svg"),
     }));
-    const metrics = { unchangedArtRebuilds: 0, rootMutations: 0 };
+    const seen = new WeakSet(refs.map((ref) => ref.svg).filter(Boolean));
+    const metrics = {
+      unchangedArtRebuilds: 0,
+      rootMutations: 0,
+      constructedSvg: 0,
+    };
     const collect = (records) => {
       for (const record of records) {
         if (record.type === "childList" && record.target === root)
           metrics.rootMutations++;
         const button = record.target.closest?.("[data-slot]");
+        if (record.target.matches?.(".native-card-art"))
+          for (const node of record.addedNodes)
+            if (node.nodeName.toLowerCase() === "svg" && !seen.has(node)) {
+              seen.add(node);
+              metrics.constructedSvg++;
+            }
         if (
           record.type === "childList" &&
           record.target.matches?.(".native-card-art") &&
@@ -93,20 +108,34 @@ try {
       slot,
     };
   }, selected);
-  await page.locator(`#hand [data-slot="${selected}"]`).click();
-  const point = await page.evaluate(() => window.__arena.project(4, 23));
-  await page.mouse.click(point.x, point.y);
-  await page.waitForFunction(
-    (before) =>
-      window.__arena.state.actions > before.actions &&
-      window.__arena.state.hand[before.slot] !== before.hand[before.slot],
-    before,
-  );
-  const time = await page.evaluate(() => window.__arena.state.time);
-  await page.waitForFunction(
-    (time) => window.__arena.state.time > time + 0.7,
-    time,
-  );
+  const card = page.locator(`#hand [data-slot="${selected}"]`);
+  if (artifacts) await mkdir(artifacts, { recursive: true });
+  const pixels =
+    selection && artifacts
+      ? await card.screenshot({
+          path: `${artifacts}/before.png`,
+          animations: "disabled",
+        })
+      : null;
+  if (selection) {
+    for (let i = 0; i < 20; i++)
+      await page.keyboard.press(String(selected + 1));
+  } else {
+    await page.locator(`#hand [data-slot="${selected}"]`).click();
+    const point = await page.evaluate(() => window.__arena.project(4, 23));
+    await page.mouse.click(point.x, point.y);
+    await page.waitForFunction(
+      (before) =>
+        window.__arena.state.actions > before.actions &&
+        window.__arena.state.hand[before.slot] !== before.hand[before.slot],
+      before,
+    );
+    const time = await page.evaluate(() => window.__arena.state.time);
+    await page.waitForFunction(
+      (time) => window.__arena.state.time > time + 0.7,
+      time,
+    );
+  }
   const after = await page.evaluate((slot) => {
     const probe = window.__handProbe;
     probe.collect(probe.observer.takeRecords());
@@ -126,12 +155,48 @@ try {
           ) === ref.svg,
       ).length,
       unchangedCards: unchanged.length,
+      selectedSvgRestored:
+        document.querySelector(
+          `#hand [data-slot="${slot}"] .native-card-art > svg`,
+        ) === probe.refs[slot].svg,
       actions: window.__arena.state.actions,
       hand: window.__arena.state.hand,
       nodes: document.querySelectorAll("#hand *").length,
     };
   }, selected);
-  console.log(JSON.stringify({ before, after, errors }, null, 2));
+  if (pixels) {
+    const restored = await card.screenshot({
+      path: `${artifacts}/after.png`,
+      animations: "disabled",
+    });
+    const a = await sharp(pixels)
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    const b = await sharp(restored)
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    if (JSON.stringify(a.info) !== JSON.stringify(b.info))
+      throw new Error("Card image dimensions changed");
+    let changed = 0,
+      maxChannelDelta = 0;
+    for (let i = 0; i < a.data.length; i += 4) {
+      const delta = Math.max(
+        ...[0, 1, 2, 3].map((c) => Math.abs(a.data[i + c] - b.data[i + c])),
+      );
+      if (delta) changed++;
+      maxChannelDelta = Math.max(maxChannelDelta, delta);
+    }
+    after.pixels = { changed, maxChannelDelta };
+  }
+  console.log(
+    JSON.stringify(
+      { mode: selection ? "selection" : "draw", before, after, errors },
+      null,
+      2,
+    ),
+  );
   if (errors.length) throw new Error("Page errors during hand probe");
 } finally {
   await browser.close();

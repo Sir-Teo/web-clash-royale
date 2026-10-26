@@ -60,7 +60,12 @@ test("Mirror shows its changing cost and repeats a troop on desktop and phone", 
     .poll(async () => (await state()).actions)
     .toBeGreaterThan(before.actions);
   await expect(mirror).toBeEnabled();
-  expect(await mirror.evaluate((element, original) => element === original, originalMirror)).toBe(true);
+  expect(
+    await mirror.evaluate(
+      (element, original) => element === original,
+      originalMirror,
+    ),
+  ).toBe(true);
   await expect(mirror.locator(".cost")).toHaveText("2");
   await expect(mirror.locator(".native-card-art text")).toContainText("2");
   await expect(mirror).toHaveAttribute("data-mirror-card", "skeletons");
@@ -69,6 +74,9 @@ test("Mirror shows its changing cost and repeats a troop on desktop and phone", 
     /portrait-skeletons\.webp$/,
   );
   const afterSkeletons = await state();
+  const currentMirrorArt = await mirror
+    .locator(".native-card-art > svg")
+    .elementHandle();
   await mirror.click();
   await expect(page.locator("#hand-caption")).toContainText(
     "Mirror → Skeletons · 2 elixir",
@@ -77,6 +85,19 @@ test("Mirror shows its changing cost and repeats a troop on desktop and phone", 
     path: info.outputPath("mirror-selected.png"),
     fullPage: true,
   });
+  await page.keyboard.press("Escape");
+  await expect(mirror).toHaveAttribute("aria-pressed", "false");
+  await expect(mirror.locator(".native-card-art text")).toContainText("2");
+  await expect(mirror.locator(".mirror-reflection")).toHaveAttribute(
+    "href",
+    /portrait-skeletons\.webp$/,
+  );
+  expect(
+    await mirror
+      .locator(".native-card-art > svg")
+      .evaluate((svg, original) => svg === original, currentMirrorArt),
+  ).toBe(true);
+  await mirror.click();
   await tap(5, 22);
   await expect
     .poll(async () => (await state()).actions)
