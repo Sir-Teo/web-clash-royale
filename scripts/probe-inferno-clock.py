@@ -20,6 +20,7 @@ from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX, UC
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("library", type=Path)
 parser.add_argument("--check", action="store_true")
+parser.add_argument("--attack-loop", action="store_true", help="Capture controlled target-loss/reacquisition through the larger attack loop")
 args = parser.parse_args()
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
@@ -152,6 +153,11 @@ def initialize(source):
     write(component + 0xc, 1000)
     set_buffs([])
 
+
+if args.attack_loop:
+    from lib.inferno_attack_probe import capture
+    capture(globals())
+    raise SystemExit(0)
 
 profiles = [("inferno-tower", rows["reference/logic/buildings.csv"]["InfernoTower"]),
             ("inferno-dragon", rows["reference/logic/characters.csv"]["InfernoDragon"])]

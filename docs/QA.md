@@ -1951,3 +1951,10 @@ Validation covers 1,862 checks across 180 files. The full run passed 1,855; seve
 All ten desktop Chromium/phone WebKit cases pass: both unbuffed three-stage beam sequences, both cards' eight simultaneous locks across both teams/all buff modes, pause stability, native artwork restoration after renderer rebuild and 320-pixel card explanations. Desktop/phone captures were inspected. The first new-scene attempt waited on a rebuild control omitted from the fixture's visibility list; that run was stopped, the scene's control visibility and Dragon clip expectations corrected, then the complete ten-case run passed without forced clicks.
 
 Pages-prefixed offline reload, the cached browser match worker, rules-23 startup and all 278 native combat/death/music files pass. The offline pack remains 921 URLs and 894 unique content groups, omitting 8.1 MB of duplicate bytes. Root production output is restored after the hosting check with cache version `df5bcd2dd4ca`. No push or deployment was performed.
+
+
+## Controlled Inferno attack-loop capture
+
+The larger `--attack-loop` capture regenerates byte-for-byte: 32 controlled cases, 5,120 native updates, 562 damage-dispatch entries and eleven disassembly blocks. It pins the same 1.8.1 binary and three logic tables plus `globals.csv`. Both cards run under normal, Rage, slow and combined buffs with uninterrupted targeting, direct eligible assignment, explicit null removal/reacquisition and removal notification/reacquisition. The original active-clock capture's `--check` still matches exactly, so its imported application rates and manifest hashes are unchanged. Python syntax validation and diff whitespace checks pass.
+
+The native larger loop and reset/finish/reload branches run; geometry eligibility, candidate scanning, card owner state transitions and full damage allocation are explicit boundaries. No complete spell or ordinary target-selection behavior is inferred from those controlled callbacks. App rules 23, replay fixtures and production output remain unchanged. No application rebuild, push or deployment is needed for these script/reference/documentation files.
