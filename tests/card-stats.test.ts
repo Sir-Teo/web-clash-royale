@@ -43,7 +43,7 @@ describe("archived basic troop movement and attack stats", () => {
     const previous = new Battle({ replay: {
       ...original.exportReplay(), version: 6,
     } as Replay });
-    expect(original.rulesVersion).toBe(17);
+    expect(original.rulesVersion).toBe(18);
     expect(previous.rulesVersion).toBe(6);
     for (const battle of [original, previous]) {
       for (const id of cards) {

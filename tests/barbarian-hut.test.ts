@@ -67,7 +67,7 @@ describe("archived Barbarian Hut", () => {
     expect(barbarians(battle, team)).toHaveLength(0);
     while (spawned(battle) < 1) battle.step();
     expect(battle.time).toBeCloseTo(14.5, 1);
-    expect(barbarians(battle, team)[0].deploy).toBeCloseTo(1.4, 1);
+    expect(barbarians(battle, team)[0].deploy).toBeCloseTo(1, 1);
     expect(hut.spawnBurst).toBeCloseTo(0.5);
     expect(hut.spawnTimer).toBeCloseTo(14, 1);
     const first = battle.time;

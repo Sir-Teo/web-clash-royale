@@ -67,7 +67,7 @@ describe("archived Furnace", () => {
     expect(spirits(battle, team)).toHaveLength(0);
     while (spawned(battle) < 1) battle.step();
     expect(battle.time).toBeCloseTo(10.4, 1);
-    expect(spirits(battle, team)[0].deploy).toBeCloseTo(1.4, 1);
+    expect(spirits(battle, team)[0].deploy).toBeCloseTo(1, 1);
     expect(furnace.spawnBurst).toBeCloseTo(0.5);
     expect(furnace.spawnTimer).toBeCloseTo(9.9, 1);
     const first = battle.time;

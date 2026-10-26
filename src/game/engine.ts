@@ -5,7 +5,7 @@ import { LOCAL_REPLAY_CARDS } from "./replay-family";
 import { Battle as LegacyLocalBattle, type EngineOptions as LegacyLocalOptions } from "./legacy-local-engine";
 import { CARD_MAP, LEGACY_BALLOON_STATS, LEGACY_BUILDING_STATS, LEGACY_CARD_SPLASH, LEGACY_CARD_STATS, LEGACY_CARD_VITALS, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
-import { clonePosition, deploymentPositions } from "./deployment";
+import { clonePosition, deploymentPositions, deploymentTime } from "./deployment";
 import { areaSpellTarget, isAreaSpell } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targeting";
 import { defensiveThreats } from "./defensive-threats";
@@ -57,10 +57,7 @@ import battleRam from "./battle-ram-data.json" with { type: "json" };
 import executioner from "./executioner-data.json" with { type: "json" };
 import sparky from "./sparky-data.json" with { type: "json" };
 import lumberjack from "./lumberjack-data.json" with { type: "json" };
-import bats from "./bats-data.json" with { type: "json" };
-import eliteBarbarians from "./elite-barbarians-data.json" with { type: "json" };
 import iceSpirit from "./ice-spirit-data.json" with { type: "json" };
-import fireSpirits from "./fire-spirits-data.json" with { type: "json" };
 import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import giantSkeleton from "./giant-skeleton-data.json" with { type: "json" };
 import mortar from "./mortar-data.json" with { type: "json" };
@@ -72,7 +69,6 @@ import goblinHut from "./goblin-hut-data.json" with { type: "json" };
 import tombstone from "./tombstone-data.json" with { type: "json" };
 import furnace from "./furnace-data.json" with { type: "json" };
 import barbarianHut from "./barbarian-hut-data.json" with { type: "json" };
-import guards from "./guards-data.json" with { type: "json" };
 import nightWitch from "./night-witch-data.json" with { type: "json" };
 import bandit from "./bandit-data.json" with { type: "json" };
 import golem from "./golem-data.json" with { type: "json" };
@@ -213,7 +209,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -293,7 +289,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 17;
+    this.rulesVersion = r?.version ?? 18;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -735,15 +731,7 @@ export class Battle {
           point.x,
           point.y,
           true,
-          id === "bats" ? 1 + bats.deployDelay :
-            id === "elite-barbarians" ? 1 + eliteBarbarians.deployDelay :
-          id === "guards" ? guards.sourceDeployTime + guards.deployDelay :
-            id === "ice-spirit" ? 1 + iceSpirit.deployDelay :
-            id === "fire-spirits" ? 1 + fireSpirits.deployDelay :
-            id === "golem" ? golem.golem.sourceDeployTime :
-            id === "mortar" ? mortar.deployTime :
-            id === "x-bow" ? xBow.deployTime :
-            id === "elixir-collector" ? elixirCollector.deployTime : 1,
+          deploymentTime(id, this.rulesVersion),
         );
     }
     return { ok: true, reason: "" };
@@ -1283,7 +1271,7 @@ export class Battle {
               "bats", e.team,
               clamp(e.x + side * nightWitch.spawn.radius * 1.2, 0.6, 17.4),
               clamp(e.y + (e.team === "blue" ? -0.5 : 0.5), 0.8, 31.2),
-              true, 1 + bats.deployDelay,
+              true, deploymentTime("bats", this.rulesVersion),
             );
           }
         }
@@ -1587,9 +1575,10 @@ export class Battle {
         const fire = e.card === "furnace";
         const rules = fire ? furnace : barbarianHut;
         const unit: CardId = fire ? "fire-spirits" : "barbarians";
-        const deploy = fire
-          ? furnace.spiritDeployTime + furnace.spiritDeployDelay
-          : barbarianHut.unitDeployTime + barbarianHut.unitDeployDelay;
+        const deploy = (fire ? furnace.spiritDeployTime : barbarianHut.unitDeployTime) +
+          (this.rulesVersion < 18
+            ? fire ? furnace.spiritDeployDelay : barbarianHut.unitDeployDelay
+            : 0);
         if (e.spawnBurst !== undefined) {
           e.spawnBurst -= STEP * hitSpeed;
           if (e.spawnBurst <= 1e-8) {
@@ -1659,7 +1648,7 @@ export class Battle {
               "bats", e.team,
               clamp(e.x + side * nightWitch.spawn.radius * 1.2, 0.6, 17.4),
               clamp(e.y + (e.team === "blue" ? -0.5 : 0.5), 0.8, 31.2),
-              true, 1 + bats.deployDelay,
+              true, deploymentTime("bats", this.rulesVersion),
             );
           }
         }
@@ -2522,7 +2511,7 @@ export class Battle {
           "bats", e.team,
           clamp(e.x + Math.cos(angle) * nightWitch.deathSpawn.radius, 0.6, 17.4),
           clamp(e.y + Math.sin(angle) * nightWitch.deathSpawn.radius, 0.8, 31.2),
-          false, 1 + bats.deployDelay,
+          false, deploymentTime("bats", this.rulesVersion),
         );
       }
     }

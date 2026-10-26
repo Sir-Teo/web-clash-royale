@@ -36,10 +36,10 @@
     "spriteAlias": "musketeer",
     "projectileArt": "projectile_cannonball_small",
     "opponent": "Musketeer Marshal uses a new Three Musketeers and Hog deck.",
-    "deploymentTiming": "Uses the existing common one-second deployment for all three bodies; the historical DeployDelay column scheduling is not reconstructed."
+    "deploymentTiming": "All three bodies share the native one-second combat deployment. The DeployDelay field supplies visual group staggering, which remains unreconstructed; see deployment-native-trace.json."
   },
   "limits": [
     "Retained configuration and artwork establish these bindings, not native runtime scheduling or current live balance.",
-    "No new native code execution or decompilation was performed for this card."
+    "The later deployment-native-trace.json records read-only static disassembly of the pinned 1.8.1 library. The original executable was not run."
   ]
 }

@@ -66,7 +66,7 @@ describe("archived Ice Spirit", () => {
     expect(battle.players.blue.elixir).toBeCloseTo(elixir - 1);
     const spirit = battle.entities.find((e) => e.card === "ice-spirit")!;
     const knight = battle.entities.find((e) => e.card === "knight" && e.team === "red")!;
-    expect(spirit.deploy).toBe(1.4);
+    expect(spirit.deploy).toBe(1);
     expect(perspective(snapshot(battle), "red").entities.some((e) => e.card === "ice-spirit"))
       .toBe(true);
     for (let i = 0; i < 240 && knight.stun <= 0; i++) battle.step();

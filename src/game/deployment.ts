@@ -33,12 +33,17 @@ export function clonePosition(entity: Point, center: Point, team: Team): Point {
 }
 export const deploymentRadius = (id: CardId) =>
   (collisionRadii.cards as Record<string, number>)[id];
-export function deploymentTime(id: CardId): number {
-  if (id === "bats") return DEPLOY_TIME + bats.deployDelay;
-  if (id === "elite-barbarians") return DEPLOY_TIME + eliteBarbarians.deployDelay;
-  if (id === "guards") return guards.sourceDeployTime + guards.deployDelay;
-  if (id === "ice-spirit") return DEPLOY_TIME + iceSpirit.deployDelay;
-  if (id === "fire-spirits") return DEPLOY_TIME + fireSpirits.deployDelay;
+export function deploymentTime(id: CardId, rulesVersion = 18): number {
+  // DeployDelay is a visual group offset in the native client. Earlier browser
+  // rules added it to combat readiness; retain that behavior only for replays.
+  if (rulesVersion < 18) {
+    if (id === "bats") return DEPLOY_TIME + bats.deployDelay;
+    if (id === "elite-barbarians") return DEPLOY_TIME + eliteBarbarians.deployDelay;
+    if (id === "guards") return guards.sourceDeployTime + guards.deployDelay;
+    if (id === "ice-spirit") return DEPLOY_TIME + iceSpirit.deployDelay;
+    if (id === "fire-spirits") return DEPLOY_TIME + fireSpirits.deployDelay;
+  }
+  if (id === "guards") return guards.sourceDeployTime;
   if (id === "golem") return golem.golem.sourceDeployTime;
   if (id === "mortar") return mortar.deployTime;
   if (id === "x-bow") return xBow.deployTime;

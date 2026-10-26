@@ -57,7 +57,7 @@ describe("archived Elite Barbarians", () => {
     expect(battle.players.blue.elixir).toBeCloseTo(beforeElixir - 6);
     const units = battle.entities.filter((e) => e.card === "elite-barbarians");
     expect(units.map(({ x, y, deploy }) => ({ x, y, deploy }))).toEqual(
-      positions.map(({ x, y }) => ({ x, y, deploy: 1.4 })),
+      positions.map(({ x, y }) => ({ x, y, deploy: 1 })),
     );
     expect(perspective(snapshot(battle), "red").entities.filter((e) =>
       e.card === "elite-barbarians")).toHaveLength(2);

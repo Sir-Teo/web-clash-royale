@@ -75,7 +75,7 @@ describe("archived Fire Spirits", () => {
     expect(battle.players.blue.elixir).toBeCloseTo(beforeElixir - 2);
     const spirits = battle.entities.filter((e) => e.card === "fire-spirits");
     expect(spirits).toHaveLength(3);
-    expect(spirits.every((e) => e.deploy === 1.4)).toBe(true);
+    expect(spirits.every((e) => e.deploy === 1)).toBe(true);
     expect(perspective(snapshot(battle), "red").entities.filter((e) =>
       e.card === "fire-spirits")).toHaveLength(3);
     for (let i = 0; i < 240 && (spirits.some((e) => e.hp > 0) ||

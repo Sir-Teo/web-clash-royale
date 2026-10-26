@@ -1426,6 +1426,12 @@ function render(now: number) {
     JSON.stringify(arena.chargeFilterState);
   (document.querySelector("#destruction") as HTMLElement).dataset.deployFilter =
     JSON.stringify(arena.deployFilterState);
+  if (sceneSelect.value === "deployment")
+    (document.querySelector("#destruction") as HTMLElement).dataset.deploymentTiming =
+      JSON.stringify(battle.entities.filter((e) => e.kind === "troop").map((e) => ({
+        id: e.id, card: e.card, team: e.team, age: e.age, deploy: e.deploy,
+        native: !!(arena as any).units.get(e.id)?.sprite,
+      })));
   (document.querySelector("#destruction") as HTMLElement).dataset.coldFilter =
     JSON.stringify(arena.coldFilterState);
   const rageNode = document.querySelector("#destruction") as HTMLElement;

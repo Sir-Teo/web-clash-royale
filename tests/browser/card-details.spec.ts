@@ -287,11 +287,11 @@ test("utility building details explain production, staggered waves and death spa
     }],
     ["furnace", "Furnace", {
       Spawns: "2 Fire Spirits", "First spawn delay": "9.4 s", "Wave interval": "9.9 s",
-      "Troop spacing": "0.5 s", "Troop deploy time": "1.4 s", Lifetime: "50 s",
+      "Troop spacing": "0.5 s", "Troop deploy time": "1 s", Lifetime: "50 s",
     }],
     ["barbarian-hut", "Barbarian Hut", {
       Spawns: "2 Barbarians", "First spawn delay": "13.5 s", "Wave interval": "14 s",
-      "Troop spacing": "0.5 s", "Troop deploy time": "1.4 s", Lifetime: "60 s",
+      "Troop spacing": "0.5 s", "Troop deploy time": "1 s", Lifetime: "60 s",
     }],
   ] as const) {
     await page.locator("#card-search").fill(name);

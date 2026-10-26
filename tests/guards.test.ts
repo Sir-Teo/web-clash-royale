@@ -77,7 +77,7 @@ describe("archived Guards", () => {
     expect(battle.players.blue.elixir).toBeCloseTo(beforeElixir - 3);
     const units = battle.entities.filter((e) => e.card === "guards");
     expect(units.map(({ x, y, deploy, shield }) => ({ x, y, deploy, shield })))
-      .toEqual(positions.map(({ x, y }) => ({ x, y, deploy: 1.4, shield: 242 })));
+      .toEqual(positions.map(({ x, y }) => ({ x, y, deploy: 1, shield: 242 })));
     expect(perspective(snapshot(battle), "red").entities.filter((e) =>
       e.card === "guards" && e.shield === 242)).toHaveLength(3);
     const replay = new Battle({ replay: battle.exportReplay() });

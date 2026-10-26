@@ -27,10 +27,10 @@ const buildingSpawns = {
   "goblin-hut": { name: "Spear Goblin", rules: goblinHut, stagger: 0, deploy: 1 },
   tombstone: { name: "Skeleton", rules: tombstone, stagger: 0, deploy: 1 },
   furnace: { name: "Fire Spirit", rules: furnace, stagger: furnace.spawnInterval,
-    deploy: furnace.spiritDeployTime + furnace.spiritDeployDelay },
+    deploy: furnace.spiritDeployTime },
   "barbarian-hut": { name: "Barbarian", rules: barbarianHut,
     stagger: barbarianHut.spawnInterval,
-    deploy: barbarianHut.unitDeployTime + barbarianHut.unitDeployDelay },
+    deploy: barbarianHut.unitDeployTime },
 };
 const quantity = (count: number, name: string) => `${count} ${name}${count === 1 ? "" : "s"}`;
 

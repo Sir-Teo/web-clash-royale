@@ -50,7 +50,7 @@ describe("archived Bats", () => {
     expect(battle.play("blue", 0, 4, 22).ok).toBe(true);
     const bats = battle.entities.filter((e) => e.card === "bats");
     expect(bats).toHaveLength(5);
-    expect(bats.every((e) => e.deploy === 1.4 && e.air)).toBe(true);
+    expect(bats.every((e) => e.deploy === 1 && e.air)).toBe(true);
     const guest = perspective(snapshot(battle), "red");
     expect(guest.entities.filter((e) => e.card === "bats")).toHaveLength(5);
     for (const bat of bats) Object.assign(bat, { x: 4, y: 21, deploy: 0, speed: 0, cooldown: 0 });
