@@ -1824,3 +1824,13 @@ All fourteen targeted browser cases pass across desktop Chromium and phone WebKi
 The final isolated suite passes all 1,691 tests across 174 files, including historical replay checkpoints.
 
 Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup and all 278 native combat/death/music files. Root production output is restored afterward with cache version `0ecccd8500f8`. The pack remains 921 URLs and 894 unique content groups, with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.
+
+## Giant Skeleton death-bomb details
+
+Giant Skeleton's card panel now separates its normal ground attack from its timed death bomb. The source-backed bomb rows show 1,160 damage, a three-second delay, a three-tile radius, air/ground targeting and 1.8-tile knockback. The note explains that the bomb stays where the troop is destroyed and only eligible troops can be pushed. Values come from the existing Giant Skeleton source data and current arena normalization; combat, replay and network rules do not change.
+
+Two new cases compare the panel against actual detonations for both teams. Each checks ground and air damage, full Crown Tower damage, the radius boundary, friendly immunity, knockback and pushback-immune troops, with no damage before the displayed delay. All 38 focused card-detail/Giant Skeleton checks and TypeScript/production compilation pass.
+
+All four targeted desktop Chromium/phone WebKit browser cases pass. The expanded panel retains its native portrait, fits a 320-pixel viewport, scrolls to the bomb rows and cost, and preserves the saved deck. Both actual-hand deployment cases remain playable by mouse or touch after closing the details. The narrow phone capture was inspected; there are no page errors.
+
+Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup and all 278 native combat/death/music files. Root production output is restored afterward with cache version `c8e7a7b231e1`. The pack remains 921 URLs and 894 unique content groups, with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.

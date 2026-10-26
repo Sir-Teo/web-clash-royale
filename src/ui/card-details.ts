@@ -28,6 +28,7 @@ import battleRam from "../game/battle-ram-data.json" with { type: "json" };
 import nightWitch from "../game/night-witch-data.json" with { type: "json" };
 import mortar from "../game/mortar-data.json" with { type: "json" };
 import { infernoDamage, infernoProfile } from "../game/inferno";
+import giantSkeleton from "../game/giant-skeleton-data.json" with { type: "json" };
 
 const buildingSpawns = {
   "goblin-hut": { name: "Spear Goblin", rules: goblinHut, stagger: 0, deploy: 1 },
@@ -347,6 +348,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
     spawn ? `${spawn.note} Spawn hitpoints and damage are per troop.` : "",
     id === "mortar" ? "Cannot target enemies inside the minimum range." : "",
     inferno ? "Damage is per hit. Stage times count from locking onto the same target. Stun, losing range or changing targets resets the beam." : "",
+    id === "giant-skeleton" ? "Drops a timed bomb where it is destroyed. The bomb damages nearby enemy air and ground units and buildings, knocking back eligible troops. Its normal attack targets ground enemies." : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -391,6 +393,13 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
       c.kind === "building"
         ? stat("Lifetime", seconds(c.lifetime ?? 0), "timer")
         : stat("Count", c.count, "users"),
+      ...(id === "giant-skeleton" ? [
+        stat("Death bomb damage", Math.round(giantSkeleton.bomb.sourceDamage * 1.1 ** 5), "swords"),
+        stat("Bomb delay", seconds(giantSkeleton.bomb.deployTime), "timer"),
+        stat("Bomb radius", tiles(giantSkeleton.bomb.radius), "scan"),
+        stat("Bomb targets", giantSkeleton.bomb.hitsAir ? "Air & ground" : "Ground", "crosshair"),
+        stat("Bomb knockback", tiles(giantSkeleton.bomb.pushback), "scan"),
+      ] : []),
       ...(spawn && child ? [
         stat("Deploy time", seconds(deploymentTime(id)), "timer"),
         ...(id === "night-witch" ? [

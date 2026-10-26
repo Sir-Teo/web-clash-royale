@@ -423,3 +423,35 @@ test("Inferno detail panels show three per-hit stages and total lock times", asy
   }
   expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(before);
 });
+
+test("Giant Skeleton details distinguish its delayed air-and-ground death bomb", async ({ page }, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", error => errors.push(error.message));
+  if (info.project.name !== "desktop") await page.setViewportSize({ width: 320, height: 568 });
+  const before = await page.evaluate(key => localStorage.getItem(key), key);
+  await page.locator('[data-nav="cards"]').click();
+  await page.locator("#card-search").fill("Giant Skeleton");
+  await page.locator('[data-collection="giant-skeleton"]').click();
+  await expect(page.locator(".detail-art.native-card-ready")).toHaveCount(1, { timeout: 30000 });
+  for (const [label, value] of Object.entries({
+    "Damage per hit": number(CARD_MAP["giant-skeleton"].damage),
+    Targets: "Ground", "Death bomb damage": "1,160", "Bomb delay": "3 s",
+    "Bomb radius": "3 tiles", "Bomb targets": "Air & ground", "Bomb knockback": "1.8 tiles",
+  })) await expect(page.locator(`[data-card-stat="${label}"] b`)).toHaveText(value);
+  await expect(page.locator(".card-rule-note")).toContainText("where it is destroyed");
+  await expect(page.locator(".card-rule-note")).toContainText("eligible troops");
+  await page.locator('[data-card-stat="Bomb targets"]').scrollIntoViewIfNeeded();
+  await expect(page.locator('[data-card-stat="Bomb targets"]')).toBeInViewport();
+  expect(await page.locator(".modal").evaluate(modal => modal.scrollWidth > modal.clientWidth)).toBe(false);
+  const bounds = await page.locator("[data-card-stat]").evaluateAll(rows => rows.map(row => ({ left: row.getBoundingClientRect().left, right: row.getBoundingClientRect().right })));
+  for (const box of bounds) {
+    expect(box.left).toBeGreaterThanOrEqual(0);
+    expect(box.right).toBeLessThanOrEqual(page.viewportSize()!.width);
+  }
+  await page.screenshot({ path: info.outputPath("giant-skeleton-bomb-details.png"), animations: "disabled" });
+  await page.locator('[data-card-stat="Elixir"]').scrollIntoViewIfNeeded();
+  await expect(page.locator('[data-card-stat="Elixir"]')).toBeInViewport();
+  await page.getByRole("button", { name: "Back to collection", exact: true }).click();
+  expect(await page.evaluate(key => localStorage.getItem(key), key)).toBe(before);
+  expect(errors).toEqual([]);
+});

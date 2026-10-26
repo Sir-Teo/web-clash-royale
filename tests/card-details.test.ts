@@ -436,3 +436,51 @@ describe("current card detail stats", () => {
     }
   });
 });
+
+describe("Giant Skeleton death bomb details", () => {
+  it.each(["blue", "red"] as const)("matches real delayed damage, targeting, bounds and pushback (%s)", (team) => {
+    const stats = rows("giant-skeleton");
+    expect(stats.Targets).toBe("Ground");
+    expect(stats["Bomb targets"]).toBe("Air & ground");
+    expect(numeric(stats["Death bomb damage"])).toBeGreaterThan(numeric(stats["Damage per hit"]));
+    for (const kind of ["ground", "air", "tower", "ally", "immune", "outside"] as const) {
+      const battle = new Battle({ seed: 4, ai: false });
+      for (const body of battle.entities) body.active = false;
+      battle.players[team].hand[0] = "giant-skeleton";
+      battle.players[team].elixir = 10;
+      expect(battle.play(team, 0, 4, team === "blue" ? 22 : 10).ok).toBe(true);
+      const parent = battle.entities.find(e => e.card === "giant-skeleton")!;
+      const enemy = team === "blue" ? "red" : "blue";
+      const side = kind === "ally" ? team : enemy;
+      let target: Entity;
+      if (kind === "tower") {
+        target = battle.entities.find(e => e.kind === "tower" && e.team === enemy && !e.king)!;
+      } else {
+        const card = kind === "air" ? "mega-minion" : kind === "immune" ? "giant" : "knight";
+        battle.players[side].hand[0] = card;
+        battle.players[side].elixir = 10;
+        expect(battle.play(side, 0, 4, side === "blue" ? 22 : 10).ok).toBe(true);
+        target = battle.entities.filter(e => e.card === card && e.team === side).at(-1)!;
+      }
+      const offset = kind === "ground" || kind === "outside"
+        ? parseFloat(stats["Bomb radius"]) + target.radius + (kind === "outside" ? 0.05 : -0.05)
+        : 2;
+      Object.assign(target, { x: parent.x + offset, y: parent.y, hp: 10000, maxHp: 10000, deploy: 0, active: false, speed: 0 });
+      const start = { x: target.x, y: target.y };
+      (battle as any).hurt(parent, parent.hp);
+      const bomb = battle.projectiles.find(p => p.style === "giant-skeleton-bomb")!;
+      expect(bomb.duration).toBe(parseFloat(stats["Bomb delay"]));
+      const ticks = Math.round(parseFloat(stats["Bomb delay"]) / STEP);
+      for (let tick = 1; tick < ticks; tick++) battle.step();
+      expect(target.hp).toBe(10000);
+      battle.step();
+      const hit = kind !== "ally" && kind !== "outside";
+      expect(10000 - target.hp).toBe(hit ? numeric(stats["Death bomb damage"]) : 0);
+      const moved = Math.hypot(target.x - start.x, target.y - start.y);
+      expect(moved).toBeCloseTo(hit && kind !== "tower" && kind !== "immune"
+        ? parseFloat(stats["Bomb knockback"]) : 0, 8);
+    }
+    expect(cardDetails("giant-skeleton").note).toContain("where it is destroyed");
+    expect(cardDetails("giant-skeleton").note).toContain("eligible troops");
+  });
+});
