@@ -3015,7 +3015,7 @@ function frame(now: number) {
   announcements.update(battle, screen !== "lobby");
   intro.update(screen !== "lobby" && !battle.winner);
   if (screen !== "lobby") {
-    nativeCards.updateHand($("#hand"), battle.time);
+    nativeCards.animateHand($("#hand"), battle.time);
     // Crown feedback and its flights share one continuous clock through victory.
     // Switching from match time here would reset the final award after a seek.
     matchHud.update(battle, crownCounts(), arena.effectTime);

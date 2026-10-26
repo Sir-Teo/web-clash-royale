@@ -3,6 +3,8 @@ import { chromium } from "playwright";
 import { mkdir } from "node:fs/promises";
 import sharp from "sharp";
 const selection = process.argv.includes("--selection");
+const idle = process.argv.includes("--idle");
+if (selection && idle) throw new Error("Choose --selection or --idle");
 const artifacts = process.env.ARENA_PROFILE_ARTIFACTS;
 
 const browser = await chromium.launch({
@@ -79,6 +81,13 @@ try {
       unchangedArtRebuilds: 0,
       rootMutations: 0,
       constructedSvg: 0,
+      handScans: 0,
+    };
+    const query = Element.prototype.querySelectorAll;
+    Element.prototype.querySelectorAll = function (selector) {
+      if (this === root && selector === "[data-native-card][data-slot]")
+        metrics.handScans++;
+      return query.call(this, selector);
     };
     const collect = (records) => {
       for (const record of records) {
@@ -101,11 +110,20 @@ try {
     };
     const observer = new MutationObserver(collect);
     observer.observe(root, { subtree: true, childList: true });
-    window.__handProbe = { refs, metrics, observer, collect };
+    window.__handProbe = {
+      refs,
+      metrics,
+      observer,
+      collect,
+      restoreQueries: () => {
+        Element.prototype.querySelectorAll = query;
+      },
+    };
     return {
       hand: window.__arena.state.hand,
       actions: window.__arena.state.actions,
       slot,
+      renderedFrames: window.__arena.state.renderedFrames,
     };
   }, selected);
   const card = page.locator(`#hand [data-slot="${selected}"]`);
@@ -117,7 +135,11 @@ try {
           animations: "disabled",
         })
       : null;
-  if (selection) {
+  if (idle) {
+    await page.waitForTimeout(
+      Number(process.env.ARENA_PROFILE_SECONDS ?? 3) * 1000,
+    );
+  } else if (selection) {
     for (let i = 0; i < 20; i++)
       await page.keyboard.press(String(selected + 1));
   } else {
@@ -140,6 +162,7 @@ try {
     const probe = window.__handProbe;
     probe.collect(probe.observer.takeRecords());
     probe.observer.disconnect();
+    probe.restoreQueries();
     const unchanged = probe.refs.filter((ref) => ref.slot !== slot);
     return {
       ...probe.metrics,
@@ -160,6 +183,7 @@ try {
           `#hand [data-slot="${slot}"] .native-card-art > svg`,
         ) === probe.refs[slot].svg,
       actions: window.__arena.state.actions,
+      renderedFrames: window.__arena.state.renderedFrames,
       hand: window.__arena.state.hand,
       nodes: document.querySelectorAll("#hand *").length,
     };
@@ -192,7 +216,12 @@ try {
   }
   console.log(
     JSON.stringify(
-      { mode: selection ? "selection" : "draw", before, after, errors },
+      {
+        mode: idle ? "idle" : selection ? "selection" : "draw",
+        before,
+        after,
+        errors,
+      },
       null,
       2,
     ),

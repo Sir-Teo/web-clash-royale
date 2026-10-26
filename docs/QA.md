@@ -1982,3 +1982,18 @@ All twelve targeted desktop Chromium/phone WebKit cases pass: repeated normal/se
 Simulation, rules 23, replay and saved formats are unchanged. No push or deployment was performed.
 
 Pages-prefixed offline reload, the cached match worker, rules-23 battle startup and all 278 native combat/death/music files pass. Root output is restored with cache version `8f8ec1dcc93c`. The pack remains 921 URLs and 894 unique content groups, omitting 8.1 MB of duplicate bytes.
+
+
+## Idle hand scans and preserved reveal poses
+
+The animation loop now checks whether a visible reveal needs a new simulation-time sample before scanning all four hand elements. Ordinary HUD/input updates still refresh card metadata immediately. A live reduced-motion change forces one fresh pass even between simulation ticks; late artwork requests a pass too. Paused clocks skip redundant animation-loop work. Hydration now preserves the currently displayed reveal frame, fixing the brief normal-pose reset when a pause dialog opens. The existing animation-loop cadence and authored timeline are retained.
+
+The production probe's `--idle` mode temporarily counts the exact native-hand DOM query, then restores its original method. Comparable three-second Chromium runs change from 34 scans during 18 rendered frames to 15 during 19 frames. Both construct zero SVGs, keep the same hand and 384 mounted descendants, and report zero page errors. The frame-count difference in software rendering is not treated as a speedup measurement.
+
+All ten desktop Chromium/phone WebKit cases pass. Four clock-controlled cases check the archived 60-FPS reveal timeline against actual 30-Hz simulation steps, live reduced-motion changes in both directions, selecting/deselecting a card mid-reveal, a 500-ms pause with identical SVG/frame/time, resume and the final normal pose. Each case retains a `reveal-frames.json` trace. The six existing cases retain unchanged card/SVG identity, normal mouse/touch/keyboard deployment, late artwork and Mirror's dynamic cost/reflection. Three native card asset/reveal-clock unit checks pass.
+
+The test first corrected its initial timing assumption: two 16-ms RAF callbacks can remain short of one 33-ms simulation step, so it waits 50 ms before requiring progress. It then exposed the actual hydration reset: frame two changed to normal pose immediately on pause, before a later frame restored it. That application behavior is fixed and exact SVG identity now holds through the pause. A live media-preference check also verifies that the guard responds between simulation ticks.
+
+Rules 23, simulation, replay and saved formats are unchanged. No push or deployment was performed.
+
+TypeScript and production compilation pass, as do Pages-prefixed offline reload, the cached match worker, rules-23 startup and all 278 native combat/death/music files. Root output is restored with cache version `41f05a78676b`. The pack remains 921 URLs and 894 unique content groups, omitting 8.1 MB of duplicate bytes.

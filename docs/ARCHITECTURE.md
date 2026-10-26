@@ -153,6 +153,8 @@ Hand refreshes reconcile each of the four slots against its current card ID. Onl
 
 Each native artwork host also retains its static normal/selected SVG views in a weak map. Card ID, variant, cost and Mirror reflection identify the current view profile; changes prevent reuse of older views. Repeated selection swaps the existing SVG nodes and updates the same clip/frame metadata. Animated reveal frames bypass this cache. At most two static views belong to a current host/profile, plus its current animated frame when revealing; releasing the host permits its saved views to be collected. Unique native clip/filter IDs remain attached to each SVG node.
 
+The ordinary HUD refresh still updates every hand slot's current metadata. The animation-loop path scans the hand only when a visible reveal is pending and simulation time changed, avoiding duplicate work after a HUD update or while paused. A reduced-motion change invalidates that guard immediately on the next animation frame; late artwork also requests a fresh pass. Reset/seek clears its time and pending state. Hydration preserves an already displayed reveal frame rather than drawing its static normal pose, so opening a pause dialog does not briefly reset the card before the next frame restores it.
+
 ## Native health displays
 
 `src/ui/health-data.ts` separates health fill selection from animation time. Its flattening helper substitutes the chosen 100-state bar frame into the source root while composing its matrices and colors. `healthSelection` derives team, source bar size, visibility and the King’s opening frame from entity state. Paused rendering and replay seeking therefore reconstruct the current display without replaying historical transitions.

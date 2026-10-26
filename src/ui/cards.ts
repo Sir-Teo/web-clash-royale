@@ -44,7 +44,10 @@ export class NativeCards {
     }
   >();
   private serial = 0;
+  private handFrameNeeded = false;
+  private handFrameTime: number | null = null;
   private reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  private handReduced = this.reducedMotion.matches;
   constructor() {
     void this.load();
   }
@@ -77,6 +80,8 @@ export class NativeCards {
       ]);
       this.data = data;
       this.hydrate();
+      // Recheck a hand that changed before native artwork became available.
+      this.handFrameNeeded = true;
     } catch (error) {
       console.warn(
         "Native cards unavailable; retaining fallback artwork",
@@ -87,13 +92,34 @@ export class NativeCards {
   hydrate(root: ParentNode = document) {
     root
       .querySelectorAll<HTMLElement>("[data-native-card]")
-      .forEach((e) => this.draw(e));
+      .forEach((e) =>
+        this.draw(
+          e,
+          !this.reducedMotion.matches && e.dataset.cardClip === "reveal"
+            ? Number(e.dataset.cardFrame)
+            : null,
+        ),
+      );
   }
   reset(time: number, hand: readonly CardId[]) {
     this.reveal.reset(time, hand);
+    this.handFrameNeeded = false;
+    this.handFrameTime = null;
+  }
+  animateHand(root: ParentNode, time: number) {
+    if (this.handReduced !== this.reducedMotion.matches) {
+      this.handFrameNeeded = true;
+      this.handFrameTime = null;
+    }
+    if (this.handFrameNeeded && time !== this.handFrameTime)
+      this.updateHand(root, time);
   }
   updateHand(root: ParentNode, time: number) {
     if (!this.data) return;
+    this.handFrameNeeded = false;
+    this.handFrameTime = time;
+    const reduced = this.reducedMotion.matches;
+    this.handReduced = reduced;
     const clip = this.data.clips.reveal;
     root
       .querySelectorAll<HTMLElement>("[data-native-card][data-slot]")
@@ -105,7 +131,9 @@ export class NativeCards {
           clip.fps,
           clip.labels!.show_end,
         );
-        this.draw(e, this.reducedMotion.matches ? null : frame);
+        if (!reduced && frame !== null && !e.classList.contains("selected"))
+          this.handFrameNeeded = true;
+        this.draw(e, reduced ? null : frame);
       });
   }
   draw(element: HTMLElement, revealFrame: number | null = null) {
