@@ -1,0 +1,575 @@
+{
+  "source": "https://raw.githubusercontent.com/smlbiobot/cr/7fc7687e6de74690e902543ee4b59f562121e225/apk/1.8.1/com.supercell.clashroyale-1.8.1/lib/x86/libg.so",
+  "sha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "emulator": "unicorn 2.1.4",
+  "cases": [
+    {
+      "ownerIndex": 0,
+      "lane": 0,
+      "flipY": true,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": -1400,
+          "character": "SpearGoblin",
+          "angle": 270,
+          "visualDelayMs": 100
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": -700,
+          "character": "SpearGoblin",
+          "angle": 210,
+          "visualDelayMs": 166
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": 700,
+          "character": "Goblin",
+          "angle": 150,
+          "visualDelayMs": 233
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": 1400,
+          "character": "Goblin",
+          "angle": 90,
+          "visualDelayMs": 300
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": 700,
+          "character": "Goblin",
+          "angle": 30,
+          "visualDelayMs": 366
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": -700,
+          "character": "SpearGoblin",
+          "angle": 330,
+          "visualDelayMs": 33
+        }
+      ]
+    },
+    {
+      "ownerIndex": 0,
+      "lane": 1,
+      "flipY": true,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": -1400,
+          "character": "SpearGoblin",
+          "angle": 270,
+          "visualDelayMs": 100
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": -700,
+          "character": "SpearGoblin",
+          "angle": 210,
+          "visualDelayMs": 166
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": 700,
+          "character": "Goblin",
+          "angle": 150,
+          "visualDelayMs": 233
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": 1400,
+          "character": "Goblin",
+          "angle": 90,
+          "visualDelayMs": 300
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": 700,
+          "character": "Goblin",
+          "angle": 30,
+          "visualDelayMs": 366
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": -700,
+          "character": "SpearGoblin",
+          "angle": 330,
+          "visualDelayMs": 33
+        }
+      ]
+    },
+    {
+      "ownerIndex": 1,
+      "lane": 0,
+      "flipY": false,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1400,
+          "character": "SpearGoblin",
+          "angle": 90,
+          "visualDelayMs": 100
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": 700,
+          "character": "SpearGoblin",
+          "angle": 150,
+          "visualDelayMs": 166
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": -700,
+          "character": "Goblin",
+          "angle": 210,
+          "visualDelayMs": 233
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": -1400,
+          "character": "Goblin",
+          "angle": 270,
+          "visualDelayMs": 300
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": -700,
+          "character": "Goblin",
+          "angle": 330,
+          "visualDelayMs": 366
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": 700,
+          "character": "SpearGoblin",
+          "angle": 30,
+          "visualDelayMs": 33
+        }
+      ]
+    },
+    {
+      "ownerIndex": 1,
+      "lane": 1,
+      "flipY": false,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1400,
+          "character": "SpearGoblin",
+          "angle": 90,
+          "visualDelayMs": 100
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": 700,
+          "character": "SpearGoblin",
+          "angle": 150,
+          "visualDelayMs": 166
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": -700,
+          "character": "Goblin",
+          "angle": 210,
+          "visualDelayMs": 233
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": -1400,
+          "character": "Goblin",
+          "angle": 270,
+          "visualDelayMs": 300
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": -700,
+          "character": "Goblin",
+          "angle": 330,
+          "visualDelayMs": 366
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": 700,
+          "character": "SpearGoblin",
+          "angle": 30,
+          "visualDelayMs": 33
+        }
+      ]
+    },
+    {
+      "ownerIndex": 2,
+      "lane": 0,
+      "flipY": true,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": -1400,
+          "character": "SpearGoblin",
+          "angle": 270,
+          "visualDelayMs": 100
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": -700,
+          "character": "SpearGoblin",
+          "angle": 210,
+          "visualDelayMs": 166
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": 700,
+          "character": "Goblin",
+          "angle": 150,
+          "visualDelayMs": 233
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": 1400,
+          "character": "Goblin",
+          "angle": 90,
+          "visualDelayMs": 300
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": 700,
+          "character": "Goblin",
+          "angle": 30,
+          "visualDelayMs": 366
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": -700,
+          "character": "SpearGoblin",
+          "angle": 330,
+          "visualDelayMs": 33
+        }
+      ]
+    },
+    {
+      "ownerIndex": 2,
+      "lane": 1,
+      "flipY": true,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": -1400,
+          "character": "SpearGoblin",
+          "angle": 270,
+          "visualDelayMs": 100
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": -700,
+          "character": "SpearGoblin",
+          "angle": 210,
+          "visualDelayMs": 166
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": 700,
+          "character": "Goblin",
+          "angle": 150,
+          "visualDelayMs": 233
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": 1400,
+          "character": "Goblin",
+          "angle": 90,
+          "visualDelayMs": 300
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": 700,
+          "character": "Goblin",
+          "angle": 30,
+          "visualDelayMs": 366
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": -700,
+          "character": "SpearGoblin",
+          "angle": 330,
+          "visualDelayMs": 33
+        }
+      ]
+    },
+    {
+      "ownerIndex": 3,
+      "lane": 0,
+      "flipY": false,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1400,
+          "character": "SpearGoblin",
+          "angle": 90,
+          "visualDelayMs": 100
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": 700,
+          "character": "SpearGoblin",
+          "angle": 150,
+          "visualDelayMs": 166
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": -700,
+          "character": "Goblin",
+          "angle": 210,
+          "visualDelayMs": 233
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": -1400,
+          "character": "Goblin",
+          "angle": 270,
+          "visualDelayMs": 300
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": -700,
+          "character": "Goblin",
+          "angle": 330,
+          "visualDelayMs": 366
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": 700,
+          "character": "SpearGoblin",
+          "angle": 30,
+          "visualDelayMs": 33
+        }
+      ]
+    },
+    {
+      "ownerIndex": 3,
+      "lane": 1,
+      "flipY": false,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1400,
+          "character": "SpearGoblin",
+          "angle": 90,
+          "visualDelayMs": 100
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": 700,
+          "character": "SpearGoblin",
+          "angle": 150,
+          "visualDelayMs": 166
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": -700,
+          "character": "Goblin",
+          "angle": 210,
+          "visualDelayMs": 233
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": -1400,
+          "character": "Goblin",
+          "angle": 270,
+          "visualDelayMs": 300
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": -700,
+          "character": "Goblin",
+          "angle": 330,
+          "visualDelayMs": 366
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": 700,
+          "character": "SpearGoblin",
+          "angle": 30,
+          "visualDelayMs": 33
+        }
+      ]
+    }
+  ],
+  "axisCases": [
+    {
+      "ownerIndex": 0,
+      "x": 0,
+      "y": 0,
+      "angle": 0,
+      "visualDelayMs": 400
+    },
+    {
+      "ownerIndex": 0,
+      "x": 1,
+      "y": 0,
+      "angle": 0,
+      "visualDelayMs": 400
+    },
+    {
+      "ownerIndex": 0,
+      "x": -1,
+      "y": 0,
+      "angle": 180,
+      "visualDelayMs": 200
+    },
+    {
+      "ownerIndex": 0,
+      "x": 0,
+      "y": 1,
+      "angle": 90,
+      "visualDelayMs": 300
+    },
+    {
+      "ownerIndex": 0,
+      "x": 0,
+      "y": -1,
+      "angle": 270,
+      "visualDelayMs": 100
+    },
+    {
+      "ownerIndex": 0,
+      "x": 1,
+      "y": 1,
+      "angle": 45,
+      "visualDelayMs": 350
+    },
+    {
+      "ownerIndex": 0,
+      "x": -1,
+      "y": 1,
+      "angle": 135,
+      "visualDelayMs": 250
+    },
+    {
+      "ownerIndex": 0,
+      "x": -1,
+      "y": -1,
+      "angle": 225,
+      "visualDelayMs": 150
+    },
+    {
+      "ownerIndex": 0,
+      "x": 1,
+      "y": -1,
+      "angle": 315,
+      "visualDelayMs": 50
+    },
+    {
+      "ownerIndex": 1,
+      "x": 0,
+      "y": 0,
+      "angle": 0,
+      "visualDelayMs": 0
+    },
+    {
+      "ownerIndex": 1,
+      "x": 1,
+      "y": 0,
+      "angle": 0,
+      "visualDelayMs": 0
+    },
+    {
+      "ownerIndex": 1,
+      "x": -1,
+      "y": 0,
+      "angle": 180,
+      "visualDelayMs": 200
+    },
+    {
+      "ownerIndex": 1,
+      "x": 0,
+      "y": 1,
+      "angle": 90,
+      "visualDelayMs": 100
+    },
+    {
+      "ownerIndex": 1,
+      "x": 0,
+      "y": -1,
+      "angle": 270,
+      "visualDelayMs": 300
+    },
+    {
+      "ownerIndex": 1,
+      "x": 1,
+      "y": 1,
+      "angle": 45,
+      "visualDelayMs": 50
+    },
+    {
+      "ownerIndex": 1,
+      "x": -1,
+      "y": 1,
+      "angle": 135,
+      "visualDelayMs": 150
+    },
+    {
+      "ownerIndex": 1,
+      "x": -1,
+      "y": -1,
+      "angle": 225,
+      "visualDelayMs": 250
+    },
+    {
+      "ownerIndex": 1,
+      "x": 1,
+      "y": -1,
+      "angle": 315,
+      "visualDelayMs": 350
+    }
+  ]
+}

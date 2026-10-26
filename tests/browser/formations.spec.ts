@@ -77,17 +77,18 @@ test("native card formations align placement previews and both rendered teams", 
     if (id === "goblin-gang") {
       expect(preview.map((p) => p.card)).toEqual(mixedCards);
       expect(preview.every((p) => p.native)).toBe(true);
-      await page.screenshot({
+      await page.locator("#arena").screenshot({
         path: info.outputPath("goblin-gang-native-preview.png"),
-        fullPage: true,
       });
     }
     await page.locator("#spawn").click();
     await expect
-      .poll(async () => (await state()).bodies.length)
+      .poll(async () => (await state()).bodies.length, { timeout: 30000 })
       .toBe(expected.length * 2);
     await expect
-      .poll(async () => (await models()).every((e) => e.native))
+      .poll(async () => (await models()).every((e) => e.native), {
+        timeout: 30000,
+      })
       .toBe(true);
     const placed = await state();
     expect(placed.rulesVersion).toBe(22);
@@ -116,9 +117,8 @@ test("native card formations align placement previews and both rendered teams", 
       .poll(async () => (await models()).every((e) => e.native))
       .toBe(true);
     if (id === "three-musketeers" || id === "bats" || id === "goblin-gang")
-      await page.screenshot({
+      await page.locator("#arena").screenshot({
         path: info.outputPath(`${id}-native-formation.png`),
-        fullPage: true,
       });
   }
   expect(

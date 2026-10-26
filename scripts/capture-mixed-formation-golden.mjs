@@ -7,7 +7,8 @@ import { fileURLToPath } from "node:url";
 import { relative } from "node:path";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const sourceCommit = "1601c0d";
+const presentation = process.argv.includes("--presentation");
+const sourceCommit = presentation ? "e6a571a" : "1601c0d";
 const { outputFiles } = await build({
   stdin: {
     contents: 'export { Battle } from "./src/game/engine.ts";',
@@ -55,7 +56,16 @@ const digest = (battle) =>
   createHash("sha256")
     .update(
       JSON.stringify(
-        Object.fromEntries(stateFields.map((key) => [key, battle[key]])),
+        Object.fromEntries(
+          stateFields.map((key) => [
+            key,
+            presentation && key === "entities"
+              ? battle.entities.map(
+                  ({ deployVisualDelay: _visual, ...entity }) => entity,
+                )
+              : battle[key],
+          ]),
+        ),
       ),
     )
     .digest("hex");
@@ -140,11 +150,24 @@ for (const seed of [3111, 4693, 7047]) {
   cases.push({ replay: battle.exportReplay(), groups, checkpoints });
 }
 const path = new URL(
-  "../tests/fixtures/mixed-formation-rules21-golden.json",
+  presentation
+    ? "../tests/fixtures/mixed-deployment-presentation-golden.json"
+    : "../tests/fixtures/mixed-formation-rules21-golden.json",
   import.meta.url,
 );
 const output =
-  JSON.stringify({ sourceCommit, stateFields, cases }, null, 2) + "\n";
+  JSON.stringify(
+    {
+      sourceCommit,
+      stateFields,
+      ...(presentation
+        ? { excludedPresentationFields: ["entities[].deployVisualDelay"] }
+        : {}),
+      cases,
+    },
+    null,
+    2,
+  ) + "\n";
 if (process.argv.includes("--check")) {
   if (readFileSync(path, "utf8") !== output)
     throw new Error("Mixed formation fixture differs from historical engine");

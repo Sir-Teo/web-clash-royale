@@ -739,7 +739,7 @@ export class Battle {
           point.y,
           true,
           deploymentTime(id, this.rulesVersion),
-          this.rulesVersion >= 18 ? deploymentVisualDelay(id, index, positions.length) : 0,
+          this.rulesVersion >= 18 ? deploymentVisualDelay(id, index, positions.length, this.rulesVersion) : 0,
         );
     }
     return { ok: true, reason: "" };

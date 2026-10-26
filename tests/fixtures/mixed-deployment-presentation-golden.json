@@ -1,0 +1,900 @@
+{
+  "sourceCommit": "e6a571a",
+  "stateFields": [
+    "tick",
+    "rulesVersion",
+    "entities",
+    "projectiles",
+    "areas",
+    "events",
+    "audioEvents",
+    "players",
+    "winner",
+    "reason",
+    "actions",
+    "randomState"
+  ],
+  "excludedPresentationFields": [
+    "entities[].deployVisualDelay"
+  ],
+  "cases": [
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 22,
+        "seed": 3111,
+        "mode": "classic",
+        "deck": [
+          "goblin-gang",
+          "giant",
+          "archers",
+          "musketeer",
+          "zap",
+          "fireball",
+          "clone",
+          "mirror"
+        ],
+        "enemyDeck": [
+          "goblin-gang",
+          "knight",
+          "archers",
+          "giant",
+          "arrows",
+          "freeze",
+          "tornado",
+          "mirror"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "giant",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "archers",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 105,
+            "team": "red",
+            "card": "arrows",
+            "x": 14,
+            "y": 20.150000000000105
+          },
+          {
+            "tick": 315,
+            "team": "blue",
+            "card": "goblin-gang",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 420,
+            "team": "red",
+            "card": "mirror",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 525,
+            "team": "blue",
+            "card": "archers",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 840,
+            "team": "blue",
+            "card": "clone",
+            "x": 4.0023436713190135,
+            "y": 12.171798647528325
+          },
+          {
+            "tick": 840,
+            "team": "red",
+            "card": "giant",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 945,
+            "team": "blue",
+            "card": "zap",
+            "x": 14,
+            "y": 11.850000000000026
+          },
+          {
+            "tick": 1260,
+            "team": "blue",
+            "card": "fireball",
+            "x": 14,
+            "y": 19.349999999999895
+          },
+          {
+            "tick": 1260,
+            "team": "red",
+            "card": "freeze",
+            "x": 5.364880989889289,
+            "y": 7.948219902714977
+          },
+          {
+            "tick": 1470,
+            "team": "red",
+            "card": "knight",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1680,
+            "team": "blue",
+            "card": "mirror",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1680,
+            "team": "red",
+            "card": "goblin-gang",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1995,
+            "team": "red",
+            "card": "tornado",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2100,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2205,
+            "team": "red",
+            "card": "archers",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2520,
+            "team": "blue",
+            "card": "giant",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2520,
+            "team": "red",
+            "card": "arrows",
+            "x": 14,
+            "y": 13.16666666666638
+          },
+          {
+            "tick": 2730,
+            "team": "blue",
+            "card": "goblin-gang",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2835,
+            "team": "red",
+            "card": "mirror",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2940,
+            "team": "blue",
+            "card": "archers",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3255,
+            "team": "blue",
+            "card": "clone",
+            "x": 10.538869790980376,
+            "y": 4.96251282232222
+          },
+          {
+            "tick": 3255,
+            "team": "red",
+            "card": "giant",
+            "x": 4,
+            "y": 10
+          }
+        ],
+        "duration": 3340
+      },
+      "groups": {
+        "blue": 2,
+        "red": 1
+      },
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "719fadbcff88d178872f8018fd746d8b2aae3a46d5f8102a3e68d3caa86d4611"
+        },
+        {
+          "tick": 1200,
+          "digest": "ef34d41c4c3e1337c060e05ca577563ca9e995658584db5ec9ded88536c05c1a"
+        },
+        {
+          "tick": 1800,
+          "digest": "ab6a7ae09f85e34e88dfc3c6f7c104a29400c76f76e01e4b14effe6c69efaf75"
+        },
+        {
+          "tick": 2400,
+          "digest": "7016670e6a42ba98d56f68eb3eaa00991d9b1b4b2632e5c7e9f9c711215cd1fa"
+        },
+        {
+          "tick": 3000,
+          "digest": "8fca6c28a52fbc4fe875537d480ba207e7b5dc29988d6b60402d7d946fecdd0d"
+        },
+        {
+          "tick": 3340,
+          "digest": "92431108e679ad648a872b3b7c9011e66c5b2eedbb93e15044b012e59d19ba76"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 22,
+        "seed": 4693,
+        "mode": "classic",
+        "deck": [
+          "goblin-gang",
+          "giant",
+          "archers",
+          "musketeer",
+          "zap",
+          "fireball",
+          "clone",
+          "mirror"
+        ],
+        "enemyDeck": [
+          "goblin-gang",
+          "knight",
+          "archers",
+          "giant",
+          "arrows",
+          "freeze",
+          "tornado",
+          "mirror"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "archers",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "freeze",
+            "x": 14.5,
+            "y": 22
+          },
+          {
+            "tick": 210,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 210,
+            "team": "red",
+            "card": "arrows",
+            "x": 14.417678886036153,
+            "y": 19.029020107089718
+          },
+          {
+            "tick": 420,
+            "team": "blue",
+            "card": "zap",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 420,
+            "team": "red",
+            "card": "archers",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 735,
+            "team": "blue",
+            "card": "fireball",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 840,
+            "team": "red",
+            "card": "giant",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1155,
+            "team": "blue",
+            "card": "giant",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1155,
+            "team": "red",
+            "card": "goblin-gang",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1470,
+            "team": "red",
+            "card": "mirror",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1680,
+            "team": "blue",
+            "card": "mirror",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1680,
+            "team": "red",
+            "card": "tornado",
+            "x": 4.007805041918469,
+            "y": 13.48655290338451
+          },
+          {
+            "tick": 1890,
+            "team": "blue",
+            "card": "clone",
+            "x": 14.033290578717615,
+            "y": 19.580373537918643
+          },
+          {
+            "tick": 1995,
+            "team": "red",
+            "card": "knight",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2100,
+            "team": "blue",
+            "card": "goblin-gang",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2310,
+            "team": "red",
+            "card": "freeze",
+            "x": 13.946837645351563,
+            "y": 22.27093332718225
+          },
+          {
+            "tick": 2415,
+            "team": "blue",
+            "card": "archers",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2520,
+            "team": "red",
+            "card": "arrows",
+            "x": 4.5,
+            "y": 22
+          },
+          {
+            "tick": 2730,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2835,
+            "team": "red",
+            "card": "archers",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2940,
+            "team": "blue",
+            "card": "zap",
+            "x": 3.579859951249829,
+            "y": 12.447570992077925
+          },
+          {
+            "tick": 3255,
+            "team": "blue",
+            "card": "fireball",
+            "x": 4.4299994616906195,
+            "y": 19.872465995953544
+          },
+          {
+            "tick": 3255,
+            "team": "red",
+            "card": "giant",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3465,
+            "team": "red",
+            "card": "goblin-gang",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3675,
+            "team": "blue",
+            "card": "giant",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3780,
+            "team": "red",
+            "card": "mirror",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3885,
+            "team": "blue",
+            "card": "mirror",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3885,
+            "team": "red",
+            "card": "tornado",
+            "x": 4.206076758219952,
+            "y": 20.73915010939637
+          },
+          {
+            "tick": 3990,
+            "team": "blue",
+            "card": "clone",
+            "x": 4.191416186948594,
+            "y": 20.371808377484328
+          },
+          {
+            "tick": 3990,
+            "team": "red",
+            "card": "knight",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4200,
+            "team": "blue",
+            "card": "goblin-gang",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4200,
+            "team": "red",
+            "card": "freeze",
+            "x": 4.011057670248195,
+            "y": 16.493048696853666
+          }
+        ],
+        "duration": 4262
+      },
+      "groups": {
+        "blue": 2,
+        "red": 2
+      },
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "d64981aad6477f202f5b8fb23eb8a733d92a59c020e2396c49f700067f826242"
+        },
+        {
+          "tick": 1200,
+          "digest": "d41ae383824afc119b141ad90521b0923a3aea7efaf6f32a1ad5869430b351b2"
+        },
+        {
+          "tick": 1800,
+          "digest": "93bee8716cf4a920fa5a84d3ae7b3a49a1d74864ce01e560449c20a477c65fca"
+        },
+        {
+          "tick": 2400,
+          "digest": "a19f88744220070ac23e0eda3a6435c2acbc08fc4221fb9c697fc572b7de2a1b"
+        },
+        {
+          "tick": 3000,
+          "digest": "f9afc0d61f52706dc6ae0d3c822dd2d9812dee6c3f8bb901909a0a737778a881"
+        },
+        {
+          "tick": 3600,
+          "digest": "637ce03f7b0195272933c9e0ff38cf364d42d07580051e6bfc08943b54a3ce1d"
+        },
+        {
+          "tick": 4200,
+          "digest": "9f13415dbb470f19b331588fc4119d1c062c46f949bfef13f58525c6edc82394"
+        },
+        {
+          "tick": 4262,
+          "digest": "ea24579ed85c904fb12665d69902469e6c8b836c9d5364e878f597b5b7ba9e1d"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 22,
+        "seed": 7047,
+        "mode": "classic",
+        "deck": [
+          "goblin-gang",
+          "giant",
+          "archers",
+          "musketeer",
+          "zap",
+          "fireball",
+          "clone",
+          "mirror"
+        ],
+        "enemyDeck": [
+          "goblin-gang",
+          "knight",
+          "archers",
+          "giant",
+          "arrows",
+          "freeze",
+          "tornado",
+          "mirror"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "goblin-gang",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "goblin-gang",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 105,
+            "team": "red",
+            "card": "arrows",
+            "x": 14.000597255969927,
+            "y": 20.292462627008117
+          },
+          {
+            "tick": 315,
+            "team": "blue",
+            "card": "giant",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 420,
+            "team": "blue",
+            "card": "zap",
+            "x": 13.998557031965811,
+            "y": 19.84615109257654
+          },
+          {
+            "tick": 420,
+            "team": "red",
+            "card": "freeze",
+            "x": 4,
+            "y": 20.150000000000105
+          },
+          {
+            "tick": 735,
+            "team": "blue",
+            "card": "clone",
+            "x": 4,
+            "y": 15.27500000000033
+          },
+          {
+            "tick": 840,
+            "team": "red",
+            "card": "giant",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 945,
+            "team": "blue",
+            "card": "archers",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1155,
+            "team": "red",
+            "card": "knight",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1260,
+            "team": "blue",
+            "card": "fireball",
+            "x": 14,
+            "y": 19.724999999999874
+          },
+          {
+            "tick": 1470,
+            "team": "red",
+            "card": "mirror",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1680,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1680,
+            "team": "red",
+            "card": "archers",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1995,
+            "team": "red",
+            "card": "tornado",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2100,
+            "team": "blue",
+            "card": "mirror",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2205,
+            "team": "red",
+            "card": "goblin-gang",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2310,
+            "team": "blue",
+            "card": "goblin-gang",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2520,
+            "team": "red",
+            "card": "arrows",
+            "x": 14.01096076177304,
+            "y": 12.434453222042924
+          },
+          {
+            "tick": 2730,
+            "team": "blue",
+            "card": "giant",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2835,
+            "team": "red",
+            "card": "freeze",
+            "x": 14,
+            "y": 20.150000000000105
+          },
+          {
+            "tick": 2940,
+            "team": "blue",
+            "card": "zap",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3150,
+            "team": "blue",
+            "card": "clone",
+            "x": 14,
+            "y": 15.27500000000033
+          },
+          {
+            "tick": 3255,
+            "team": "red",
+            "card": "giant",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3360,
+            "team": "blue",
+            "card": "archers",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3465,
+            "team": "red",
+            "card": "knight",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3675,
+            "team": "blue",
+            "card": "fireball",
+            "x": 4,
+            "y": 19.724999999999874
+          },
+          {
+            "tick": 3780,
+            "team": "red",
+            "card": "mirror",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3885,
+            "team": "blue",
+            "card": "musketeer",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3885,
+            "team": "red",
+            "card": "archers",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3990,
+            "team": "red",
+            "card": "tornado",
+            "x": 11.146800430482921,
+            "y": 5.171068144173882
+          },
+          {
+            "tick": 4095,
+            "team": "blue",
+            "card": "mirror",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4095,
+            "team": "red",
+            "card": "goblin-gang",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4200,
+            "team": "blue",
+            "card": "goblin-gang",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4200,
+            "team": "red",
+            "card": "arrows",
+            "x": 12.835495795402492,
+            "y": 8.999326045425486
+          },
+          {
+            "tick": 4410,
+            "team": "blue",
+            "card": "giant",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4410,
+            "team": "red",
+            "card": "freeze",
+            "x": 12.98128630210191,
+            "y": 12.3385096807892
+          },
+          {
+            "tick": 4515,
+            "team": "blue",
+            "card": "zap",
+            "x": 5.546567391609164,
+            "y": 23.911229581217942
+          },
+          {
+            "tick": 4620,
+            "team": "blue",
+            "card": "clone",
+            "x": 11.459570176833957,
+            "y": 8.592904504072319
+          },
+          {
+            "tick": 4620,
+            "team": "red",
+            "card": "giant",
+            "x": 14,
+            "y": 10
+          }
+        ],
+        "duration": 4640
+      },
+      "groups": {
+        "blue": 3,
+        "red": 3
+      },
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "6ff8147b37acc7cbcca6ba0fe6814da7f86d1146542d227215a35dc7970a940d"
+        },
+        {
+          "tick": 1200,
+          "digest": "5735cc71a3595eacf7757ae5dc80ba382d86f8a94c801149c05928ad99d2fcbe"
+        },
+        {
+          "tick": 1800,
+          "digest": "f90544d791647d59722568c19775916f74c4a3eeb88c81b134c3e544b1df4ffb"
+        },
+        {
+          "tick": 2400,
+          "digest": "8c5d4d0d15f355cee6b14f63a636eada72f90d360ef07ff502ef25276c9e4baf"
+        },
+        {
+          "tick": 3000,
+          "digest": "d4e1a2d86e812bd9da29ac7baa0b60b985dae04493e2f8d5cc13237963961fcb"
+        },
+        {
+          "tick": 3600,
+          "digest": "9ad0891cabdfde1fef0b621e7a911add67310c47674d00b43dfba78ebbf286b7"
+        },
+        {
+          "tick": 4200,
+          "digest": "877504aacde4d32fcb2d31a9ec6fe5e0c3aef34da9d1b861e00f47dbb189d419"
+        },
+        {
+          "tick": 4640,
+          "digest": "f6c094c0d4348ca4b61b2009beb75524f340c7d16fefb357aaf37acf83f07493"
+        }
+      ]
+    }
+  ]
+}

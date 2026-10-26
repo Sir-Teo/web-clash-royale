@@ -11,15 +11,23 @@
     {
       "path": "reference/client/deployment-native-trace.json",
       "sha256": "b8363d043f2e357717463a0c72d7df8fb382c661f17796b265ef79e4613bf2ea"
+    },
+    {
+      "path": "reference/client/mixed-deployment-native-trace.json",
+      "sha256": "457970a636f750d88eb76faa8ebee3bacd1159c6a6ffe362d88e7ba3d0aecd7f"
+    },
+    {
+      "path": "tests/fixtures/native-mixed-deployment-golden.json",
+      "sha256": "7ed60ea658749e76af1427ee5384471785702c596c620b7a4add30d37c4cb334"
     }
   ],
   "output": {
     "path": "src/game/deployment-visual-data.json",
-    "sha256": "bc775a43d4f625579705cd6839a273c48351b6a378394eec969ff97b44db77f5"
+    "sha256": "69747377852e8d28cc8a910c74c4a8580945fc38621f81e330f692538d7a4fa2"
   },
-  "interpretation": "Homogeneous card groups use floor(DeployDelay * index / count) modulo DeployTime as a per-body visual offset. Combat clocks remain independent.",
+  "interpretation": "Homogeneous card groups use floor(DeployDelay * index / count) modulo DeployTime. Goblin Gang uses the captured native angular offset per child. These are presentation offsets; combat clocks remain independent.",
   "limits": [
-    "Goblin Gang's mixed/angular branch is excluded.",
+    "Goblin Gang offsets apply to the recovered rules-22 mixed creation order. Earlier rules retain their original presentation metadata.",
     "Summons and death spawns retain their existing presentation; this table applies to accepted card groups.",
     "Before the offset elapses, the browser holds the first authored filter pose. Native pre-start visibility is not fully reconstructed."
   ]

@@ -100,5 +100,18 @@
       "delayMs": 400,
       "deployMs": 1000
     }
+  },
+  "mixed": {
+    "goblin-gang": {
+      "source": "GoblinGang",
+      "delaysMs": [
+        100,
+        166,
+        233,
+        300,
+        366,
+        33
+      ]
+    }
   }
 }

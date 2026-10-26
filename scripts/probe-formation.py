@@ -5,6 +5,7 @@ The Android app/library is never loaded into the host process. Only bounded
 geometry/trig and optional mixed-group fragments run; globals/assertions are hooks.
 Usage: python scripts/probe-formation.py /path/to/1.8.1/x86/libg.so [--check]
 Add --mixed to capture Goblin Gang geometry and its native character selector.
+Add --mixed-visual to also capture its angular deployment presentation offsets.
 """
 import argparse
 import hashlib
@@ -24,7 +25,9 @@ from unicorn.x86_const import (
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("library", type=Path)
 parser.add_argument("--check", action="store_true")
-parser.add_argument("--mixed", action="store_true")
+mode = parser.add_mutually_exclusive_group()
+mode.add_argument("--mixed", action="store_true")
+mode.add_argument("--mixed-visual", action="store_true")
 args = parser.parse_args()
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires pinned unicorn==2.1.4")
@@ -75,10 +78,14 @@ def instruction_hook(_cpu, address, _size, _data):
             raise RuntimeError("Native formation assertion failed")
         return_from_hook()
     elif not (0x1cce2e <= address < 0x1cd028 or 0x35bec0 <= address < 0x35c117 or
-              (args.mixed and (0x1cca1b <= address < 0x1cca20 or
+              ((args.mixed or args.mixed_visual) and (0x1cca1b <= address < 0x1cca20 or
                                0x1cca6a <= address < 0x1cca74 or
                                0x1ccb4d <= address < 0x1ccb79 or
-                               0x35be60 <= address < 0x35beb3))):
+                               0x35be60 <= address < 0x35beb3)) or
+              (args.mixed_visual and (0x1ccd12 <= address < 0x1ccd52 or
+                                     0x35d510 <= address < 0x35d54a or
+                                     0x35c4e0 <= address < 0x35c783 or
+                                     0x35be20 <= address < 0x35be60))):
         raise RuntimeError(f"Native instruction escaped geometry/trig ranges: {address:#x}")
 
 def interrupt_hook(_cpu, interrupt, _data):
@@ -104,7 +111,7 @@ def native_point(index, count, radius, angle, flip_y, lane):
         raise RuntimeError("Native fragment exceeded the instruction budget")
     return list(struct.unpack("<2i", cpu.mem_read(output, 8)))
 
-if args.mixed:
+if args.mixed or args.mixed_visual:
     import csv
     import io
     import sys
@@ -160,6 +167,20 @@ if args.mixed:
             raise RuntimeError("Unexpected native mixed character pointer")
         return primary["Name"] if selected == primary_pointer else secondary["Name"]
 
+    def native_visual_delay(x, y, owner, delay):
+        sp, bp = setup_mixed()
+        model = globals_address + 0x400
+        cpu.reg_write(UC_X86_REG_ESI, model)
+        cpu.mem_write(bp + 0x38, struct.pack("<I", globals_address + 0x800))
+        cpu.mem_write(model + 0x2a8, struct.pack("<i", delay))
+        cpu.mem_write(sp + 0x48, struct.pack("<i", owner & 1))
+        cpu.mem_write(sp + 0x80, struct.pack("<2i", x, y))
+        fragment(0x1ccd12, 0x1ccd27)
+        angle = cpu.reg_read(UC_X86_REG_EAX)
+        fragment(0x1ccd27, 0x1ccd52)
+        return {"angle": angle, "visualDelayMs": cpu.reg_read(UC_X86_REG_EDX)}
+
+    delay_by_character = {row["Name"]: int(row["DeployDelay"]) for row in [primary, secondary]}
     mixed_cases = []
     for owner in range(4):
         for lane in [0, 1]:
@@ -167,8 +188,11 @@ if args.mixed:
             points = []
             for index in range(count):
                 x, y = native_point(index, count, radius, angle, flip_y, lane)
-                points.append({"index": index, "x": x, "y": y,
-                               "character": native_character(y, owner)})
+                character = native_character(y, owner)
+                point = {"index": index, "x": x, "y": y, "character": character}
+                if args.mixed_visual:
+                    point.update(native_visual_delay(x, y, owner, delay_by_character[character]))
+                points.append(point)
             mixed_cases.append({"ownerIndex": owner, "lane": lane, "flipY": flip_y,
                                 "points": points})
     sign_cases = [{"ownerIndex": owner, "y": y, "hasSecondary": has_secondary,
@@ -194,6 +218,17 @@ if args.mixed:
         ("sign", 0x35be60, 0x35beb3,
          "Returns -1, 0 or 1. A zero offset keeps the primary character."),
     ]
+    if args.mixed_visual:
+        mixed_ranges += [
+            ("mixedVisualDelay", 0x1ccd12, 0x1ccd61,
+             "Uses the original formation vector angle, owner parity and selected child DeployDelay to compute an integer millisecond offset, passed to the +0x68 presentation callback."),
+            ("vectorAngle", 0x35d510, 0x35d54a,
+             "Passes the two integer formation-vector components to the native angle helper."),
+            ("integerAngle", 0x35c4e0, 0x35c783,
+             "Integer atan lookup at 0x641004, quadrant handling and zero-vector behavior. The native table and instructions execute from the pinned ELF."),
+            ("angleAbsolute", 0x35be20, 0x35be60,
+             "Integer absolute-value helper used by the angle routine."),
+        ]
     mixed_blocks = []
     for name, start, end, interpretation in mixed_ranges:
         assembly = subprocess.check_output(["objdump", "-d", "-Mintel",
@@ -215,8 +250,23 @@ if args.mixed:
                         "Child allocation, collision adjustment, edge snapping, deployment visibility and visual-delay timing are not executed."]}
     fixture = {"source": source, "sha256": sha256, "emulator": "unicorn 2.1.4",
                "cases": mixed_cases, "signCases": sign_cases}
-    for path, value in [(Path("reference/client/mixed-formation-native-trace.json"), trace),
-                        (Path("tests/fixtures/native-mixed-formation-golden.json"), fixture)]:
+    if args.mixed_visual:
+        trace["profile"]["deployDelayMs"] = delay_by_character
+        trace["emulation"]["visualBudget"] = 1000
+        trace["emulation"]["memory"] = trace["emulation"]["memory"].replace("parity/selector", "parity/selector/angular-delay")
+        trace["limits"][-1] = "Child allocation, collision adjustment, edge snapping, pre-start visibility and effect scheduling are not executed. The integer visual offset is captured before the presentation callback."
+        fixture.pop("signCases")
+        fixture["axisCases"] = [{"ownerIndex": owner, "x": x, "y": y,
+                                 **native_visual_delay(x, y, owner, 400)}
+                                for owner in [0, 1]
+                                for x, y in [(0, 0), (1, 0), (-1, 0), (0, 1), (0, -1),
+                                             (1, 1), (-1, 1), (-1, -1), (1, -1)]]
+        trace_path = Path("reference/client/mixed-deployment-native-trace.json")
+        fixture_path = Path("tests/fixtures/native-mixed-deployment-golden.json")
+    else:
+        trace_path = Path("reference/client/mixed-formation-native-trace.json")
+        fixture_path = Path("tests/fixtures/native-mixed-formation-golden.json")
+    for path, value in [(trace_path, trace), (fixture_path, fixture)]:
         output = json.dumps(value, indent=2) + "\n"
         if args.check:
             if path.read_text() != output:
@@ -224,7 +274,9 @@ if args.mixed:
         else:
             path.write_text(output)
     print(json.dumps({"cases": len(mixed_cases), "points": sum(len(c["points"]) for c in mixed_cases),
-                      "signCases": len(sign_cases), "blocks": len(mixed_blocks), "sha256": sha256}))
+                      "signCases": len(fixture.get("signCases", [])),
+                      "axisCases": len(fixture.get("axisCases", [])),
+                      "blocks": len(mixed_blocks), "sha256": sha256}))
     sys.exit(0)
 
 configurations = [(1, 500, 0), (2, 500, 0), (2, 700, 0), (3, 500, 0),

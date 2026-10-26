@@ -43,12 +43,17 @@ export function goblinGangCharacter(index: number, rulesVersion = 22): "goblins"
   return secondary ? "spear-goblins" : "goblins";
 }
 /** Presentation offset only: does not extend combat deployment. */
-export function deploymentVisualDelay(id: CardId, index: number, count: number) {
+export function deploymentVisualDelay(id: CardId, index: number, count: number, rulesVersion = 22) {
+  if (!Number.isInteger(index) || !Number.isInteger(count) ||
+      count < 1 || index < 0 || index >= count) return 0;
+  const mixed = rulesVersion >= 22
+    ? (deploymentVisual.mixed as Record<string, { delaysMs: number[] }>)[id]
+    : undefined;
+  if (mixed) return count === mixed.delaysMs.length ? mixed.delaysMs[index] / 1000 : 0;
   const row = (deploymentVisual.cards as Record<string, {
     delayMs: number; deployMs: number;
   }>)[id];
-  if (!row || !Number.isInteger(index) || !Number.isInteger(count) ||
-      count < 1 || index < 0 || index >= count) return 0;
+  if (!row) return 0;
   return (Math.trunc(row.delayMs * index / count) % row.deployMs) / 1000;
 }
 export function deploymentTime(id: CardId, rulesVersion = 19): number {
