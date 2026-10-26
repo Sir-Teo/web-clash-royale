@@ -82,6 +82,7 @@ def capture(env):
 
     cpu.hook_add(UC_HOOK_CODE, hook)
     profiles = []
+    minimum_mode = env["args"].candidate_minimum
     names = {
         "characters": ["Knight", "Archer", "Musketeer", "Giant", "HogRider", "Balloon", "Prince", "InfernoDragon"],
         "buildings": ["Cannon", "Mortar", "InfernoTower", "KingTower", "PrincessTower"],
@@ -115,21 +116,29 @@ def capture(env):
                     raise RuntimeError("Native sight getter differs from source fields")
                 getters.append({"addOwnRadius": add_radius, "sightRange": sight})
                 expected_query = sight + max(extra_building, extra_crown)
-                for label, type_flags in [("plain", {}), ("slot60", {0x60: 1}), ("slot64", {0x64: 1}), ("slot68", {0x68: 1})]:
+                type_cases = [("plain", {})] if minimum_mode else [("plain", {}), ("slot60", {0x60: 1}), ("slot64", {0x64: 1}), ("slot68", {0x68: 1})]
+                for label, type_flags in type_cases:
                     extra = extra_crown if type_flags.get(0x60) or type_flags.get(0x64) else extra_building if type_flags.get(0x68) else 0
-                    for target_radius in [0, 250, 1000]:
+                    for target_radius in ([0, 250, 500, 750, 1000, 1400, 6000] if minimum_mode else [0, 250, 1000]):
                         reach = sight + target_radius + extra
+                        inner = values["MinimumRange"]
+                        if inner > 0 and add_radius:
+                            # This scanner squares the signed result without
+                            # the attack predicate's nonpositive clamp.
+                            inner = abs(inner + values["CollisionRadius"] - target_radius)
                         for axis, direction in [("right", 1), ("left", -1)]:
                             for offset in [-1, 0, 1]:
-                                x = (reach + offset) * direction
+                                x = ((inner if minimum_mode else reach) + offset) * direction
                                 write(target + 0x20, x)
                                 passed, query_radius = False, None
                                 run(0x25d95e, component, 0)
-                                if query_radius != expected_query or passed != (offset <= 0):
+                                expected = abs(x) >= inner if minimum_mode else offset <= 0
+                                if query_radius != expected_query or passed != expected:
                                     raise RuntimeError("Native candidate sight gate differs from recovered boundary")
                                 samples.append({"addOwnRadius": add_radius, "classFlags": label,
                                                 "targetRadius": target_radius, "axis": axis, "offset": offset,
-                                                "x": x, "broadphaseRadius": query_radius, "passesSightGate": passed})
+                                                "x": x, "broadphaseRadius": query_radius,
+                                                ("passesCandidateGates" if minimum_mode else "passesSightGate"): passed})
             profiles.append({"table": table, "name": name, **values, "getters": getters, "samples": samples})
     static = [
         ("ownRadiusGlobal", 0x1f19fe, 0x1f1a31, "ADD_CHARACTER_RANGE_TO_RADIUS loads Globals+0x295; archived true."),
@@ -145,6 +154,9 @@ def capture(env):
         ("distanceWrapper", 0x35d620, 0x35d66f, "Native point-to-point wrapper."),
         ("squaredDistance", 0x35d330, 0x35d423, "Native saturating integer squared distance; supplied coordinates do not saturate."),
     ]
+    if minimum_mode:
+        static.append(("candidateInnerBound", 0x25dad2, 0x25db2a,
+                       "For a positive source minimum, the scanner uses the raw minimum when the own-radius flag is false. When true it adds own radius, subtracts target radius, then squares the signed result without a nonpositive clamp. Equality passes."))
     blocks = []
     for name, start, end, meaning in static:
         assembly = subprocess.check_output(["objdump", "-d", "-Mintel", f"--start-address={start:#x}", f"--stop-address={end:#x}", str(env["args"].library)], text=True)
@@ -157,9 +169,10 @@ def capture(env):
                          "limits": ["Captures the native resolved-sight getter and candidate sight gate only. A successful gate halts at 0x25db97 before subsequent ranking and attack-range validation; passing is not acquiring a target.",
                                     "Owner/Globals/world-grid resolution, candidate collection, eligibility, priority and virtual class/radius callbacks are supplied. One eligible dummy is returned by the intercepted world query; native broadphase spatial indexing is not emulated.",
                                     "Virtual type slots are controlled independently and labeled by slot, not asserted to be actual runtime class identities. Other Globals fields remain zero; no full inherited/global/card profile or movement state machine is recovered.",
-                                    "Source MinimumRange fields are loaded, but these outer-boundary samples do not establish candidate minimum behavior. Native integer coordinates do not establish browser quantization equivalence."],
+                                    ("Inner-boundary samples use plain virtual type flags, zero-minimum controls and real roster-size radii through 1400. The oversized 6000 radius is a synthetic numeric control showing the scanner's signed-square behavior; it is not a roster body. Passing both range gates still does not establish complete acquisition."
+                                     if minimum_mode else "Source MinimumRange fields are loaded, but these outer-boundary samples do not establish candidate minimum behavior. Native integer coordinates do not establish browser quantization equivalence.")],
                          "blocks": blocks, "profiles": profiles}, indent=2) + "\n"
-    path = Path("reference/client/sight-range-native-trace.json")
+    path = Path("reference/client/candidate-minimum-native-trace.json" if minimum_mode else "reference/client/sight-range-native-trace.json")
     if env["args"].check:
         if path.read_text() != output:
             raise RuntimeError("Native sight-range capture differs")

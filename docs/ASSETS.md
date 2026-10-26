@@ -501,3 +501,12 @@ The world query supplies one eligible dummy candidate; native spatial indexing, 
 ## Imported source-sight footprint
 
 Rules 25 use the captured resolved-sight getter: existing source SightRange plus own collision radius. The shared radius importer also verifies/pins `sight-range-native-trace.json` and its source inputs before retaining the factor of one; the maximum-range data bytes are unchanged. The optional resolved `sightRange` travels with each entity and its snapshot. This applies the verified getter's body term to the browser's existing new-target search and the corresponding building-lure/interception visibility checks. Native class extensions, candidate ranking, broadphase and movement remain outside the application change, as does minimum-range recovery.
+
+
+## Native candidate minimum-range gate
+
+`probe-inferno-clock.py /path/to/1.8.1/x86/libg.so --sight-range --candidate-minimum --check` retains `candidate-minimum-native-trace.json`: 1,092 candidate boundary samples, 26 sight getter controls, thirteen source profiles and thirteen disassembly blocks. The single supplied eligible candidate uses plain virtual-type flags; successful execution still halts before target ranking and final attack-range validation. Inputs cover both own-radius flag values, seven supplied radii, two directions and three boundary offsets.
+
+With the archived flag enabled, the scanner adds own radius and subtracts target radius before squaring its inner bound. This agrees with the generic attack predicate for all tested roster-sized radii through 1,400; the imported roster maximum is 1,400. Mortar accepts equality at 4,600 units for radius 500, 4,100 for radius 1,000, or 3,700 for radius 1,400. Twelve zero-minimum profiles retain no inner exclusion.
+
+The controls preserve two differences rather than generalizing beyond those bounds: with the own-radius flag disabled, this scanner uses the raw minimum without subtracting target radius; an oversized synthetic 6,000-unit target produces a signed result whose square creates an exclusion, while the generic attack predicate clamps a nonpositive inner bound away. The oversized control is not a roster body. Candidate collection, eligibility, priority, class callbacks and complete acquisition remain outside the capture. Application rules 25 are unchanged.

@@ -2062,3 +2062,10 @@ The initial new-scene check confirmed discovery and windup but tested target dam
 
 
 Production compilation and Pages-prefixed offline reload pass, including the cached browser match worker, rules-25 startup and all 278 native combat/death/music files. The root build is restored with cache version `1a88a75dd712`. The pack remains 921 URLs and 894 unique content groups, omitting 8.1 MB of duplicate bytes. No push or deployment was performed.
+
+
+## Native candidate minimum-range evidence
+
+The `--sight-range --candidate-minimum` capture and independent `--check` reproduce byte-for-byte: 1,092 candidate boundary samples, 26 getter controls, thirteen profiles and thirteen disassembly blocks. They cover both own-radius flag values, zero/positive source minimums, seven radii and both signs of the inner boundary. Under the actual enabled flag, the scanner and attack predicate agree for the tested real roster radii through 1.4 tiles. Controls record the scanner's distinct flag-disabled and oversized-radius behavior. Passing the bounded range gates is not claimed as full acquisition.
+
+The original sight capture still regenerates byte-for-byte, so the current imported source-sight evidence and manifest hashes are unchanged. Syntax and whitespace checks pass. App rules 25 and root cache `1a88a75dd712` remain unchanged; no application rebuild, push or deployment was performed.
