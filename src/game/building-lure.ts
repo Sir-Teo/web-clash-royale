@@ -1,6 +1,6 @@
 import { attackReach } from "./attack-range";
+import { acquisitionSight } from "./sight-range";
 import { CARD_MAP, type CardId } from "./cards";
-import { combatTraits } from "./combat";
 import { deploymentRadius } from "./deployment";
 import type { Entity, Point, Team } from "./engine";
 
@@ -49,7 +49,7 @@ export function buildingLureTarget(
   );
   if (!Number.isFinite(crownDistance)) return;
   const radius = deploymentRadius(card);
-  const sight = Math.max(combatTraits(threat).sight, threat.range);
+  const sight = acquisitionSight(threat);
   if (
     visible.some(
       (e) =>

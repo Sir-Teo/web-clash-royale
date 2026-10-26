@@ -2043,3 +2043,22 @@ The `--sight-range` capture and independent `--check` reproduce byte-for-byte: t
 The world query supplies one eligible dummy. Priority and virtual class/radius callbacks remain explicit boundaries; virtual slots are not claimed to identify full runtime classes. Positive execution stops at `0x25db97`, before later ranking and attack-range validation, so passing the sight gate is not claimed as acquisition. Outer-boundary inputs do not recover the scanner's separate minimum behavior. The previous maximum and minimum captures both regenerate byte-for-byte, preserving imported application hashes. Python syntax and whitespace checks pass.
 
 No application changes accompany this evidence. Rules 24 and restored root cache `d500c9545b87` remain unchanged; no rebuild, push or deployment was performed.
+
+
+## Native resolved sight for new targets
+
+New origin games record rules 25. Each new troop, building, child and Crown Tower resolves source sight with its own collision radius into optional `sightRange`. Combat, melee interception and building lures share `acquisitionSight`; snapshots and copied bodies preserve the resolved value. Earlier entities omit it and retain the original maximum-of-source-sight-and-range expression. This fixes stationary attackers failing to notice a fresh troop inside the full native attack ring while they could already retain a target there. The source-sight/body term is the recovered scope; native class extensions, full target ranking, broadphase, movement and the scanner's minimum-range behavior remain outside the application correction.
+
+The shared radius importer now pins the sight capture and verifies both native helpers agree on the archived own-radius flag. Maximum-range data bytes remain unchanged. Thirty new checks bind all 26 native sight getter results and applicable plain-candidate boundary samples to the application helper; verify every current body's resolved source sight; discover/reject new troops at exact native sight and one source unit farther for five attacker types and both teams; reconsider a distant tower destination when a defender enters the extended sight band; preserve red/blue snapshot geometry and all earlier 1–24 bounds; and compare complete old/current games.
+
+Three independently rebuilt complete rules-24 games from `42fe948` retain 32 world/action/RNG checkpoints across 18,994 ticks, including historical AI and Graveyard's independent area stream. Regeneration with `--check` matches. The complete current recording/replay comparison also matches world and RNG. Profile/portable replay checks accept 25 and reject future 26; older formats and the frozen local engine retain their paths.
+
+All 1,931 unit/asset checks across 182 files are verified. The full run passes 1,930 and times out in one existing building-art check at its five-second limit; that file then passes all five checks sequentially without code changes. TypeScript passes.
+
+
+All eight relevant desktop Chromium/phone WebKit browser cases are verified. The new sight scene starts with no assigned target and compares rules 24/25 for Cannon, Musketeer and Inferno Tower on both teams: only rules 25 notice the fresh troop in the outer band, start an attack and deal actual damage. Moving the victim beyond sight clears the noticed target and pending attack/beam. Renderer rebuild restores both active Tower beams with unchanged state. Both projects retain complete comparison traces; desktop/phone before/after captures were inspected. The earlier maximum-range comparison remains on its explicit rules 23/24, and all four buffed Inferno beam cases retain their stage, pause and rebuild checks under the current default.
+
+The initial new-scene check confirmed discovery and windup but tested target damage at 1.1 seconds, before Cannon's 0.8-second source windup plus the outer-ring projectile flight could finish. Its damage observation now advances through three whole seconds; application timing was not changed. The affected desktop sight case passed on its targeted rerun, and all four phone cases then passed. The three previously passing desktop regressions were retained from the initial run.
+
+
+Production compilation and Pages-prefixed offline reload pass, including the cached browser match worker, rules-25 startup and all 278 native combat/death/music files. The root build is restored with cache version `1a88a75dd712`. The pack remains 921 URLs and 894 unique content groups, omitting 8.1 MB of duplicate bytes. No push or deployment was performed.

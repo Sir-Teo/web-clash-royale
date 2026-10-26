@@ -17,6 +17,10 @@
     {
       "path": "reference/client/attack-range-native-trace.json",
       "sha256": "adccc2c7db6eceb03c5067a600a07b6d3fb79aeccaaf70b1ad1e836dfe52f7fa"
+    },
+    {
+      "path": "reference/client/sight-range-native-trace.json",
+      "sha256": "f06ad9d12232699a27af7f0215eb9177c0aa1fcdcdda88626196fd2bfe08141b"
     }
   ],
   "output": {

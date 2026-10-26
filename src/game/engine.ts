@@ -1,5 +1,6 @@
 import { attackReach, NATIVE_RANGE_RADIUS_FACTOR } from "./attack-range";
 import { areaRandom, areaRandomSeed } from "./area-random";
+import { acquisitionSight, nativeSightRange } from "./sight-range";
 import { advanceSummonClock, summonProfile, type SummonProfile } from "./summon-clock";
 import { balloonBombProfile } from "./balloon-bomb";
 import { chargeRange, chargedAttackDamage, resetMovement } from "./charge";
@@ -102,6 +103,8 @@ export interface Entity extends Point {
   radius: number;
   /** Rules 24: native own-radius contribution to maximum attack reach. */
   rangeRadiusFactor?: number;
+  /** Rules 25: resolved source sight, including own collision radius. */
+  sightRange?: number;
   air: boolean;
   damage: number;
   range: number;
@@ -222,7 +225,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -302,7 +305,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 24;
+    this.rulesVersion = r?.version ?? 25;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -410,6 +413,7 @@ export class Battle {
       maxHp: king ? kingHp : 3052,
       radius,
       ...(this.rulesVersion >= 24 ? { rangeRadiusFactor: NATIVE_RANGE_RADIUS_FACTOR } : {}),
+      ...(this.rulesVersion >= 25 ? { sightRange: nativeSightRange({ card: "tower", king, radius }) } : {}),
       air: false,
       damage: king ? 109 : 109,
       range: king ? 7 : 7.5,
@@ -768,6 +772,9 @@ export class Battle {
     const shield = cardShieldHitpoints(id);
     const legacyRadius = c.kind === "building" ? 0.8 :
       hp > 3000 ? 0.55 : c.count > 2 ? 0.25 : 0.37;
+    const radius = this.rulesVersion >= 15
+      ? (collisionRadii.cards as Record<string, number>)[id]
+      : legacyRadius;
     this.entities.push({
       id: this.nextId++,
       team,
@@ -778,10 +785,9 @@ export class Battle {
       hp,
       maxHp: hp,
       ...(shield ? { shield, maxShield: shield } : {}),
-      radius: this.rulesVersion >= 15
-        ? (collisionRadii.cards as Record<string, number>)[id]
-        : legacyRadius,
+      radius,
       ...(this.rulesVersion >= 24 ? { rangeRadiusFactor: NATIVE_RANGE_RADIUS_FACTOR } : {}),
+      ...(this.rulesVersion >= 25 ? { sightRange: nativeSightRange({ card: id, radius }) } : {}),
       air: !!c.air,
       damage: legacyBalloon?.damage ?? legacyVitals?.damage ?? c.damage,
       range: legacyBalloon?.range ?? stats.range,
@@ -1445,7 +1451,7 @@ export class Battle {
     );
     // Keep an engaged target. A distant tower is only a movement destination;
     // nearby defenders or a newly deployed building can intercept that path.
-    const sight = Math.max(combatTraits(e).sight, e.range);
+    const sight = acquisitionSight(e);
     if (
       current &&
       (this.inRange(e, current) ||

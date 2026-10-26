@@ -1,4 +1,5 @@
 import { attackRadius, attackReach } from "./attack-range";
+import { acquisitionSight } from "./sight-range";
 import { CARD_MAP, type CardId } from "./cards";
 import { combatTraits } from "./combat";
 import { deploymentRadius, deploymentTime } from "./deployment";
@@ -41,7 +42,7 @@ export function meleeInterceptTarget(
       e.kind !== "troop" &&
       !(e.deploy <= 0 && e.burrow?.phase === "hidden"),
   );
-  const sight = Math.max(combatTraits(threat).sight, threat.range);
+  const sight = acquisitionSight(threat);
   const closest = (a: Entity, b: Entity) =>
     distance(threat, a) - a.radius - (distance(threat, b) - b.radius) ||
     a.id - b.id;
