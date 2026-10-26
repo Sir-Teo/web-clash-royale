@@ -38,6 +38,8 @@ export interface SpriteAsset {
   geometry: Map<number, T.BufferGeometry>;
   scale: number;
 }
+export const SPRITE_GEOMETRY_BUDGET = 8 * 1024 * 1024;
+let geometryUse = 0;
 export interface AnimatedSprite {
   mesh: T.Mesh<T.BufferGeometry, T.MeshBasicMaterial[]>;
   asset: SpriteAsset;
@@ -157,7 +159,10 @@ export function effectMaterials(
 }
 export function spriteGeometry(asset: SpriteAsset, index: number) {
   const cached = asset.geometry.get(index);
-  if (cached) return cached;
+  if (cached) {
+    cached.userData.spriteLastUse = ++geometryUse;
+    return cached;
+  }
   const positions: number[] = [],
     uvs: number[] = [],
     multiply: number[] = [],
@@ -205,6 +210,10 @@ export function spriteGeometry(asset: SpriteAsset, index: number) {
   geometry.setAttribute("scAdd", new T.Float32BufferAttribute(add, 3));
   geometry.computeBoundingSphere();
   geometry.userData.shared = true;
+  geometry.userData.spriteFrameBytes =
+    (positions.length + uvs.length + multiply.length + add.length) *
+    Float32Array.BYTES_PER_ELEMENT;
+  geometry.userData.spriteLastUse = ++geometryUse;
   asset.geometry.set(index, geometry);
   return geometry;
 }
@@ -315,6 +324,46 @@ export class SpriteLibrary {
         : 1;
     sprite.mesh.scale.set(flip ? -scale : scale, scale, scale);
   }
+  private geometryEntries() {
+    return [...new Set(this.assets.values())].flatMap((asset) =>
+      [...asset.geometry].map(([frame, geometry]) => ({
+        asset, frame, geometry,
+        bytes: Number(geometry.userData.spriteFrameBytes ?? 0),
+        used: Number(geometry.userData.spriteLastUse ?? 0),
+      })),
+    );
+  }
+
+  get geometryCacheState() {
+    let frames = 0, bytes = 0;
+    for (const asset of new Set(this.assets.values()))
+      for (const geometry of asset.geometry.values()) {
+        frames++;
+        bytes += Number(geometry.userData.spriteFrameBytes ?? 0);
+      }
+    return { frames, bytes };
+  }
+
+  /** Call only after scene consumers and sprite instance batches are released. */
+  trimGeometryCache(budgetBytes = SPRITE_GEOMETRY_BUDGET) {
+    if (!Number.isFinite(budgetBytes) || budgetBytes < 0)
+      throw new RangeError("Invalid sprite geometry budget");
+    const entries = this.geometryEntries();
+    let bytes = entries.reduce((sum, entry) => sum + entry.bytes, 0);
+    let releasedFrames = 0, releasedBytes = 0;
+    if (bytes <= budgetBytes) return { releasedFrames, releasedBytes };
+    entries.sort((a, b) => a.used - b.used);
+    for (const entry of entries) {
+      if (bytes <= budgetBytes) break;
+      entry.asset.geometry.delete(entry.frame);
+      entry.geometry.dispose();
+      bytes -= entry.bytes;
+      releasedBytes += entry.bytes;
+      releasedFrames++;
+    }
+    return { releasedFrames, releasedBytes };
+  }
+
   destroy() {
     for (const asset of this.assets.values()) {
       asset.materials.forEach((material) => material.dispose());

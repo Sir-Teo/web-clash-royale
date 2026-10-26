@@ -3138,6 +3138,7 @@ Object.defineProperty(window, "__arena", {
         shake: arena.shakeState,
         placement: arena.placementState,
         loadedAnimations: arena.loadedAnimations,
+        spriteGeometry: arena.spriteGeometryCache,
         nativeTowerPrincesses: arena.nativeTowerPrincesses,
         nativePrincessTowers: arena.nativePrincessTowers,
         nativeBombTowerBombers: arena.nativeBombTowerBombers,

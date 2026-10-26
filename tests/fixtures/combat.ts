@@ -1,5 +1,6 @@
 import { defensiveThreats } from "../../src/game/defensive-threats";
 import { Arena } from "../../src/render/arena";
+import { spriteGeometry } from "../../src/render/sprites";
 import { Battle, STEP } from "../../src/game/engine";
 import type { Entity, Team } from "../../src/game/engine";
 import type { CardId } from "../../src/game/cards";
@@ -88,6 +89,7 @@ function setup() {
   for (const t of battle.entities) t.active = false;
   const scenario = (document.querySelector("#scenario") as HTMLSelectElement)
     .value;
+  (document.querySelector("#warm-sprite-cache") as HTMLElement).hidden = scenario !== "sprite-cache";
   for (const id of ["clock-clear", "clock-freeze"])
     (document.querySelector(`#${id}`) as HTMLElement).hidden = scenario !== "animation-clock";
   (document.querySelector("#attackers") as HTMLButtonElement).hidden =
@@ -145,7 +147,7 @@ function setup() {
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king" &&
       !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
-      !(scenario === "animation-clock" && ["rebuild", "destruction"].includes(id));
+      !(["animation-clock", "sprite-cache"].includes(scenario) && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -798,6 +800,13 @@ function setup() {
         }
       }
     }
+  } else if (scenario === "sprite-cache") {
+    const cards = ["knight", "goblins", "minions", "pekka", "musketeer", "mini-pekka", "giant", "valkyrie"] as const;
+    for (const team of ["blue", "red"] as const)
+      cards.forEach((card, index) => {
+        const y = (team === "blue" ? 20 : 12) + (index >= 4 ? (team === "blue" ? 4 : -4) : 0);
+        for (const entity of unit(card, team, 3 + (index % 4) * 4, y)) entity.active = false;
+      });
   } else if (scenario === "animation-clock") {
     for (const team of ["blue", "red"] as const)
       for (const [index, mode] of ["normal", "rage", "slow", "both"].entries())
@@ -945,6 +954,13 @@ document.querySelector("#freeze-towers")!.addEventListener("click", () => {
     cast("freeze", tower.team === "blue" ? "red" : "blue", tower.x, tower.y);
 });
 document.querySelector("#reset")!.addEventListener("click", setup);
+document.querySelector("#warm-sprite-cache")!.addEventListener("click", () => {
+  const library = (arena as any).sprites;
+  for (const id of ["inferno-dragon", "electro-wizard", "sparky", "ice-wizard", "golem", "executioner"]) {
+    const asset = library.assets.get(id);
+    if (asset) for (let frame = 0; frame < asset.data.frames.length; frame++) spriteGeometry(asset, frame);
+  }
+});
 document.querySelector("#clock-clear")!.addEventListener("click", () => {
   for (const entity of battle.entities) {
     entity.rage = undefined;
@@ -1141,6 +1157,26 @@ function render(now: number) {
   document.querySelector("#king-hits")!.textContent =
     `${battle.events.filter((e) => e.type === "hit" && e.card === undefined).length} tower hits`;
   const destruction = arena.destructionState;
+  if (sceneSelect.value === "sprite-cache") {
+    const visuals = [...(arena as any).units.values()] as any[];
+    const geometry = new Set<any>();
+    for (const visual of visuals)
+      for (const sprite of [visual.sprite, visual.archer]) {
+        if (!sprite) continue;
+        geometry.add(sprite.mesh.geometry);
+        const initial = Object.values(sprite.asset.data.clips)[0] as { frames: number[] };
+        const first = sprite.asset.geometry.get(initial.frames[0]);
+        if (first) geometry.add(first);
+      }
+    (document.querySelector("#destruction") as HTMLElement).dataset.spriteCache = JSON.stringify({
+      ...arena.spriteGeometryCache,
+      loaded: arena.loadedAnimations,
+      ready: !(arena as any).loadingAssets,
+      sceneBytes: [...geometry].reduce((sum, entry) => sum + (entry.userData.spriteFrameBytes ?? 0), 0),
+      tick: battle.tick, actions: battle.actions.length,
+      bodies: battle.entities.map((entity) => ({ id: entity.id, card: entity.card, x: entity.x, y: entity.y, hp: entity.hp })),
+    });
+  }
   if (sceneSelect.value === "animation-clock")
     (document.querySelector("#destruction") as HTMLElement).dataset.animationClock = JSON.stringify({
       time: battle.time,

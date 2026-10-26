@@ -643,6 +643,7 @@ export class Arena {
     for (const impact of this.impacts) this.scene.remove(impact.sprite.mesh);
     this.impacts = [];
     this.particles.clear();
+    this.sprites.trimGeometryCache();
     this.battle = battle;
     this.lastEvent = battle.events.at(-1)?.id ?? 0;
   }
@@ -656,6 +657,9 @@ export class Arena {
   }
   get loadedAnimations() {
     return this.sprites.assets.size;
+  }
+  get spriteGeometryCache() {
+    return this.sprites.geometryCacheState;
   }
   get shakeState() {
     return {
