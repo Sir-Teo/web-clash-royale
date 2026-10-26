@@ -98,7 +98,8 @@ export class NativeIntro {
   }
   update(visible: boolean) {
     if (!visible || !this.clock.active || !this.data) {
-      this.host.classList.add("hidden");
+      if (!this.host.classList.contains("hidden"))
+        this.host.classList.add("hidden");
       this.signature = "";
       return;
     }
@@ -115,6 +116,7 @@ export class NativeIntro {
     });
     this.host.dataset.frame = String(frame);
     this.host.dataset.clip = this.name;
-    this.host.classList.remove("hidden");
+    if (this.host.classList.contains("hidden"))
+      this.host.classList.remove("hidden");
   }
 }

@@ -1,5 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-import { expectedAnimations } from "./native-assets";
+import { expectedAnimations, expectedCards } from "./native-assets";
 
 test.use({ serviceWorkers: "block" });
 test.setTimeout(120000);
@@ -33,13 +33,22 @@ const game = (value: any) => ({
   units: value.units,
   actions: value.actions,
 });
-async function boot(page: Page, viewer = "blue", knight = false) {
+async function boot(
+  page: Page,
+  viewer = "blue",
+  knight = false,
+  emptyMirror = false,
+) {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.addInitScript(
-    ({ key, replay, viewer, knight }) => {
+    ({ key, replay, viewer, knight, emptyMirror }) => {
       if (knight) {
         replay.deck = ["knight", "prince", ...replay.deck.slice(2)];
         replay.actions[0].card = "knight";
+      }
+      if (emptyMirror) {
+        replay.deck = ["mirror", ...replay.deck.slice(1)];
+        replay.actions = [];
       }
       localStorage.setItem(
         key,
@@ -61,7 +70,7 @@ async function boot(page: Page, viewer = "blue", knight = false) {
         }),
       );
     },
-    { key, replay, viewer, knight },
+    { key, replay, viewer, knight, emptyMirror },
   );
   await page.goto("/");
   await page.waitForFunction(() => !!(window as any).__arena);
@@ -91,6 +100,50 @@ async function quiet(page: Page) {
   return after;
 }
 
+async function nativeUIReady(page: Page) {
+  await page.waitForFunction((cards) => {
+    const s = (window as any).__arena.state;
+    return (
+      s.loadedCards === cards &&
+      s.loadedHud === 6 &&
+      s.loadedElixir === 8 &&
+      s.loadedIntros === 2 &&
+      s.loadedAnnouncements === 5
+    );
+  }, expectedCards);
+}
+
+async function assertQuietDom(page: Page) {
+  await page.evaluate(() => {
+    const result = { total: 0, targets: [] as string[] };
+    const collect = (records: MutationRecord[]) => {
+      result.total += records.length;
+      for (const r of records)
+        if (result.targets.length < 8) {
+          const e = r.target as Element;
+          result.targets.push(
+            `${e.id || e.nodeName}:${r.attributeName || r.type}`,
+          );
+        }
+    };
+    const observer = new MutationObserver(collect);
+    observer.observe(document.body, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+    });
+    (window as any).__pausedDom = { observer, result, collect };
+  });
+  await page.waitForTimeout(700);
+  const mutations = await page.evaluate(() => {
+    const p = (window as any).__pausedDom;
+    p.collect(p.observer.takeRecords());
+    p.observer.disconnect();
+    return p.result;
+  });
+  expect(mutations).toEqual({ total: 0, targets: [] });
+}
+
 for (const viewer of ["blue", "red"])
   test(`${viewer} paused replay sleeps, retains pixels and redraws for real presentation changes`, async ({
     page,
@@ -103,6 +156,7 @@ for (const viewer of ["blue", "red"])
         timeout: 60000,
       })
       .toBe(expectedAnimations);
+    await nativeUIReady(page);
     await openReplay(page);
     const held = await quiet(page);
     expect(held.time).toBe(3);
@@ -110,7 +164,7 @@ for (const viewer of ["blue", "red"])
     const saved = await page.evaluate((key) => localStorage.getItem(key), key);
     const canvas = page.locator("#arena-canvas canvas");
     const before = await canvas.screenshot();
-    await page.waitForTimeout(700);
+    await assertQuietDom(page);
     expect((await canvas.screenshot()).equals(before)).toBe(true);
     expect((await state(page)).renderedFrames).toBe(held.renderedFrames);
 
@@ -153,6 +207,10 @@ for (const viewer of ["blue", "red"])
       .toBeGreaterThan(resized.renderedFrames);
     const sought = await quiet(page);
     expect(sought.time).toBe(10.5);
+    await expect(page.locator("#replay-clock")).toHaveText("0:10 / 0:30");
+    await expect(
+      page.getByRole("slider", { name: "Replay timeline" }),
+    ).toHaveAttribute("aria-valuetext", "0:10 of 0:30");
     expect(sought.units).not.toEqual(held.units);
     expect((await canvas.screenshot()).equals(resizedPixels)).toBe(false);
     await page.screenshot({
@@ -181,6 +239,20 @@ for (const viewer of ["blue", "red"])
     );
     expect(errors).toEqual([]);
   });
+
+test("an unavailable Mirror remains disabled without repeated DOM writes", async ({
+  page,
+}) => {
+  await boot(page, "blue", false, true);
+  await nativeUIReady(page);
+  await openReplay(page);
+  const held = await quiet(page);
+  const mirror = page.locator('#hand [data-native-card="mirror"]');
+  await expect(mirror).toBeDisabled();
+  await expect(mirror).toHaveAttribute("data-card-cost", "?");
+  await assertQuietDom(page);
+  expect(game(await state(page))).toEqual(game(held));
+});
 
 test("late native artwork replaces a fallback while the replay is paused, then rendering sleeps", async ({
   page,

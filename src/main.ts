@@ -184,6 +184,7 @@ import { GameAudio } from "./game/audio";
 import { NativeDeathAudio } from "./game/death-audio";
 import { NativeCombatAudio } from "./game/combat-audio";
 import { DeploymentFeedback } from "./ui/deployment-feedback";
+import { setAttribute, setText } from "./ui/dom";
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) =>
   document.querySelector<T>(s)!;
@@ -427,14 +428,17 @@ function syncGraphicsStatus() {
       : multiplayer && !peerNetwork
         ? "Graphics interrupted. Online battle continues. Recover graphics or surrender."
         : "Graphics interrupted. Battle paused while the arena recovers. Reload if it does not recover.";
-  warning.hidden = graphicsAvailable;
+  if (warning.hidden !== graphicsAvailable) warning.hidden = graphicsAvailable;
   if (warning.textContent !== message) warning.textContent = message;
-  $<HTMLButtonElement>("#battle-button").disabled = !graphicsAvailable;
+  const battleButton = $<HTMLButtonElement>("#battle-button");
+  if (battleButton.disabled !== !graphicsAvailable)
+    battleButton.disabled = !graphicsAvailable;
   const ready = document.querySelector<HTMLButtonElement>("#room-ready");
-  if (ready && !graphicsAvailable) ready.disabled = true;
+  if (ready && !graphicsAvailable && !ready.disabled) ready.disabled = true;
   const resume = document.querySelector<HTMLButtonElement>("#resume-button");
   if (resume) {
-    resume.disabled = !graphicsAvailable;
+    if (resume.disabled !== !graphicsAvailable)
+      resume.disabled = !graphicsAvailable;
     let note = document.querySelector<HTMLElement>("#graphics-pause-note");
     if (!graphicsAvailable && !note) {
       note = document.createElement("p");
@@ -715,8 +719,7 @@ function updateBattleUI(force = false) {
   syncKeyboardArena();
   const timer = battleClock(battle);
   const text = (selector: string, value: string) => {
-    const node = $(selector);
-    if (node.textContent !== value) node.textContent = value;
+    setText($(selector), value);
   };
   text("#match-clock", clock(Math.ceil(timer.remaining)));
   text("#phase-label", timer.overtime ? "SUDDEN DEATH" : "TIME LEFT");
@@ -761,44 +764,49 @@ function updateBattleUI(force = false) {
     });
   }
   const next = CARD_MAP[p.queue[0]];
-  $("#next-card-img").setAttribute("src", cardArt(next.id));
-  $("#next-card-img").setAttribute("alt", `Next card: ${next.name}`);
-  $("#next-card-cost").textContent = String(
-    battle.cardCost("blue", next.id) ?? "?",
-  );
+  setAttribute($("#next-card-img"), "src", cardArt(next.id));
+  setAttribute($("#next-card-img"), "alt", `Next card: ${next.name}`);
+  text("#next-card-cost", String(battle.cardCost("blue", next.id) ?? "?"));
   document
     .querySelectorAll<HTMLElement>(".next-card [data-native-card]")
     .forEach((e) => {
-      e.dataset.nativeCard = next.id;
-      e.dataset.cardCost = String(battle.cardCost("blue", next.id) ?? "?");
-      e.dataset.mirrorCard = next.id === "mirror" ? (p.lastPlayed ?? "") : "";
+      setAttribute(e, "data-native-card", next.id);
+      setAttribute(e, "data-card-cost",
+        String(battle.cardCost("blue", next.id) ?? "?"));
+      setAttribute(e, "data-mirror-card",
+        next.id === "mirror" ? (p.lastPlayed ?? "") : "");
       nativeCards.draw(e);
     });
   document.querySelectorAll<HTMLElement>("[data-slot]").forEach((e, i) => {
     const id = p.hand[i];
     const cost = battle.cardCost("blue", id);
-    e.dataset.cardCost = String(cost ?? "?");
-    e.dataset.mirrorCard = id === "mirror" ? (p.lastPlayed ?? "") : "";
-    e.querySelector<HTMLElement>(".cost")!.textContent = String(cost ?? "?");
-    e.setAttribute(
+    setAttribute(e, "data-card-cost", String(cost ?? "?"));
+    setAttribute(e, "data-mirror-card",
+      id === "mirror" ? (p.lastPlayed ?? "") : "");
+    setText(e.querySelector<HTMLElement>(".cost")!, String(cost ?? "?"));
+    setAttribute(
+      e,
       "aria-label",
       `${CARD_MAP[id].name}, ${cost ?? "unknown"} elixir${id === "mirror" && p.lastPlayed ? `, repeats ${CARD_MAP[p.lastPlayed].name}` : ""}`,
     );
-    (e as HTMLButtonElement).disabled =
+    const disabled =
       !graphicsAvailable ||
       intro.clock.blocking ||
       cost === null ||
       (multiplayer &&
         (!network.connected || network.pending || !!network.room?.paused));
+    if ((e as HTMLButtonElement).disabled !== disabled)
+      (e as HTMLButtonElement).disabled = disabled;
     e.classList.toggle("unaffordable", cost === null || cost > p.elixir);
     e.classList.toggle("selected", selected === i);
-    e.setAttribute("aria-pressed", String(selected === i));
+    setAttribute(e, "aria-pressed", String(selected === i));
   });
   nativeCards.updateHand($("#hand"), battle.time);
   if (screen === "replay" && replayData) {
     const position = `${clock(battle.time)} / ${clock(replayData.duration * STEP)}`;
-    $("#replay-clock").textContent = position;
-    $("#replay-seek").setAttribute(
+    text("#replay-clock", position);
+    setAttribute(
+      $("#replay-seek"),
       "aria-valuetext",
       `${clock(battle.time)} of ${clock(replayData.duration * STEP)}${replayComplete(battle, replayData) ? ", replay complete" : ""}`,
     );

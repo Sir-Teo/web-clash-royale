@@ -9,6 +9,10 @@ if (!Number.isFinite(seconds) || seconds <= 0)
 const animations = JSON.parse(
   await readFile("public/assets/animations/manifest.json", "utf8"),
 ).files.length;
+const cards = Object.keys(
+  JSON.parse(await readFile("public/assets/ui/cards/cards.json", "utf8"))
+    .portraits,
+).length;
 const browser = await chromium.launch({
   args: [
     "--enable-webgl",
@@ -70,8 +74,21 @@ try {
   const url = process.env.ARENA_PROFILE_URL ?? "http://127.0.0.1:5188/";
   await page.goto(url);
   await page.waitForFunction(
-    (count) => window.__arena?.state.loadedAnimations === count,
-    animations,
+    ({ animations, cards }) => {
+      const s = window.__arena?.state;
+      return (
+        s?.loadedAnimations === animations &&
+        s.loadedCards === cards &&
+        s.loadedHud === 6 &&
+        s.loadedElixir === 8 &&
+        s.loadedIntros === 2 &&
+        s.loadedAnnouncements === 5 &&
+        s.loadedEndings === 5 &&
+        s.loadedConnectionWarnings === 1 &&
+        s.loadedEmotes === 17
+      );
+    },
+    { animations, cards },
     { timeout: 90000 },
   );
   await page.getByRole("button", { name: "Battle log", exact: true }).click();
@@ -95,6 +112,18 @@ try {
   });
   const canvas = page.locator("#arena-canvas canvas");
   const image = await canvas.screenshot();
+  await page.evaluate(() => {
+    const sample = { count: 0 };
+    const observer = new MutationObserver((records) => {
+      sample.count += records.length;
+    });
+    observer.observe(document.body, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+    });
+    window.__pausedDomSample = { sample, observer };
+  });
   const session = await page.context().newCDPSession(page);
   await session.send("Performance.enable");
   const metrics = async () =>
@@ -111,6 +140,12 @@ try {
   const after = await metrics(),
     held = await state();
   const elapsedMs = performance.now() - start;
+  const domMutations = await page.evaluate(() => {
+    const { sample, observer } = window.__pausedDomSample;
+    sample.count += observer.takeRecords().length;
+    observer.disconnect();
+    return sample.count;
+  });
   const retained = await canvas.screenshot();
   await page.evaluate(() => {
     window.dispatchEvent(new Event("pagehide"));
@@ -137,6 +172,7 @@ try {
         viewport: { width: 900, height: 700 },
         elapsedMs,
         renders: held.renderedFrames - initial.renderedFrames,
+        domMutations,
         drawCallsPerFrame: held.drawCalls,
         gameUnchanged:
           JSON.stringify(game(initial)) === JSON.stringify(game(held)),

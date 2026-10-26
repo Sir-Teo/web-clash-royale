@@ -133,7 +133,8 @@ export class NativeAnnouncements {
     if (cue) this.cue(cue);
     this.current = visible ? announcementAt(b) : null;
     if (!this.current || !this.data) {
-      this.host.classList.add("hidden");
+      if (!this.host.classList.contains("hidden"))
+        this.host.classList.add("hidden");
       this.signature = "";
       return;
     }
@@ -155,6 +156,7 @@ export class NativeAnnouncements {
     );
     this.host.dataset.clip = selected.name;
     this.host.dataset.frame = String(selected.frame);
-    this.host.classList.remove("hidden");
+    if (this.host.classList.contains("hidden"))
+      this.host.classList.remove("hidden");
   }
 }

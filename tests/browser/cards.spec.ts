@@ -115,14 +115,10 @@ test("card selection and deployment preserve readable costs and touch targets ac
   await expect
     .poll(() => page.evaluate(() => (window as any).__arena.state.paused))
     .toBe(true);
-  const firstPausedFrame = await page.evaluate(
-    () => (window as any).__arena.state.renderedFrames,
-  );
-  await expect
-    .poll(() =>
-      page.evaluate(() => (window as any).__arena.state.renderedFrames),
-    )
-    .toBeGreaterThan(firstPausedFrame);
+  // Hand feedback updates on the UI loop even when the settled canvas sleeps.
+  await page.evaluate(() => new Promise<void>((resolve) => {
+    requestAnimationFrame(() => resolve());
+  }));
   const held = await page.locator("#hand").innerHTML();
   await page.waitForTimeout(200);
   expect(await page.locator("#hand").innerHTML()).toBe(held);
