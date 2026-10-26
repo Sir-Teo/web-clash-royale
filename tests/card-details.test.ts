@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { cardDetails } from "../src/ui/card-details";
 import { CARDS, CARD_MAP, type CardId } from "../src/game/cards";
-import { Battle } from "../src/game/engine";
+import { Battle, STEP } from "../src/game/engine";
 import rage from "../src/game/rage-data.json";
 
 const rows = (id: CardId) =>
@@ -64,6 +64,73 @@ describe("current card detail stats", () => {
       Targets: "Air & ground",
     });
     expect(rows("cannon")).not.toHaveProperty("Count");
+  });
+  it("describes Collector production using its actual first collection and repeat interval", () => {
+    const battle = cast("elixir-collector", 4, 22);
+    const collector = battle.entities.find((e) => e.card === "elixir-collector")!;
+    const stats = rows("elixir-collector");
+    expect(numeric(stats.Hitpoints)).toBe(collector.hp);
+    expect(parseFloat(stats["Deploy time"])).toBe(collector.deploy);
+    expect(parseFloat(stats.Lifetime)).toBe(CARD_MAP[collector.card].lifetime);
+    const collections: number[] = [];
+    for (let tick = 0; tick < 600 && collections.length < 2; tick++) {
+      const count = battle.audioEvents.filter((e) => e.phase === "collect").length;
+      const before = battle.players.blue.elixir = 0;
+      battle.step();
+      if (battle.audioEvents.filter((e) => e.phase === "collect").length > count) {
+        collections.push(battle.time);
+        expect(battle.players.blue.elixir - before - STEP / 2.8)
+          .toBeCloseTo(numeric(stats["Elixir per cycle"]), 8);
+      }
+    }
+    expect(collections).toHaveLength(2);
+    expect(Math.abs(collections[0] - parseFloat(stats["Deploy time"]) -
+      parseFloat(stats["Production interval"]))).toBeLessThanOrEqual(2 * STEP);
+    expect(collections[1] - collections[0]).toBeCloseTo(parseFloat(stats["Production interval"]), 8);
+    expect(cardDetails("elixir-collector").note).toContain("capped at 10");
+    expect(stats).not.toHaveProperty("Damage per hit");
+  });
+
+  it.each([
+    ["goblin-hut", "spear-goblins", "1 Spear Goblin", 1],
+    ["tombstone", "skeletons", "1 Skeleton", 1],
+    ["furnace", "fire-spirits", "2 Fire Spirits", 2],
+    ["barbarian-hut", "barbarians", "2 Barbarians", 2],
+  ] as const)("matches %s details to troop births and wave timing", (id, troop, description, count) => {
+    const battle = cast(id, 4, 22);
+    const building = battle.entities.find((e) => e.card === id)!;
+    const stats = rows(id);
+    expect(numeric(stats.Hitpoints)).toBe(building.hp);
+    expect(parseFloat(stats["Deploy time"])).toBe(building.deploy);
+    expect(parseFloat(stats.Lifetime)).toBe(CARD_MAP[id].lifetime);
+    expect(stats.Spawns).toBe(description);
+    const births: number[] = [];
+    for (let tick = 0; tick < 1000 && births.length < count + 1; tick++) {
+      const previousId = battle.entities.at(-1)!.id;
+      battle.step();
+      for (const unit of battle.entities.filter((e) => e.id > previousId && e.card === troop)) {
+        births.push(battle.time);
+        expect(unit.deploy).toBeCloseTo(parseFloat(stats["Troop deploy time"]), 8);
+      }
+    }
+    expect(births).toHaveLength(count + 1);
+    expect(Math.abs(births[0] - parseFloat(stats["Deploy time"]) -
+      parseFloat(stats["First spawn delay"]))).toBeLessThanOrEqual(2 * STEP);
+    expect(Math.abs(births[count] - births[0] -
+      parseFloat(stats[count === 2 ? "Wave interval" : "Spawn interval"])))
+      .toBeLessThanOrEqual(STEP);
+    if (count === 2)
+      expect(births[1] - births[0]).toBeCloseTo(parseFloat(stats["Troop spacing"]), 8);
+    for (const label of ["Damage per hit", "Hit interval", "Range", "Targets"])
+      expect(stats).not.toHaveProperty(label);
+    if (id === "tombstone") {
+      const previous = battle.entities.filter((e) => e.card === troop).length;
+      (battle as any).hurt(building, building.hp);
+      expect(battle.entities.filter((e) => e.card === troop).length - previous)
+        .toBe(parseFloat(stats["On destruction"]));
+      expect(stats["On destruction"]).toBe("4 Skeletons");
+      expect(cardDetails(id).note).toContain("when its lifetime expires");
+    }
   });
   it.each(["fireball", "arrows", "zap", "rocket"] as const)(
     "matches a real %s Crown Tower impact without rounding damage to a whole hitpoint",

@@ -16,6 +16,23 @@ import lightning from "../game/lightning-data.json" with { type: "json" };
 import tornado from "../game/tornado-data.json" with { type: "json" };
 import heal from "../game/heal-data.json" with { type: "json" };
 import { chargeRange, chargedAttackDamage } from "../game/charge";
+import { deploymentTime } from "../game/deployment";
+import elixirCollector from "../game/elixir-collector-data.json" with { type: "json" };
+import goblinHut from "../game/goblin-hut-data.json" with { type: "json" };
+import tombstone from "../game/tombstone-data.json" with { type: "json" };
+import furnace from "../game/furnace-data.json" with { type: "json" };
+import barbarianHut from "../game/barbarian-hut-data.json" with { type: "json" };
+
+const buildingSpawns = {
+  "goblin-hut": { name: "Spear Goblin", rules: goblinHut, stagger: 0, deploy: 1 },
+  tombstone: { name: "Skeleton", rules: tombstone, stagger: 0, deploy: 1 },
+  furnace: { name: "Fire Spirit", rules: furnace, stagger: furnace.spawnInterval,
+    deploy: furnace.spiritDeployTime + furnace.spiritDeployDelay },
+  "barbarian-hut": { name: "Barbarian", rules: barbarianHut,
+    stagger: barbarianHut.spawnInterval,
+    deploy: barbarianHut.unitDeployTime + barbarianHut.unitDeployDelay },
+};
+const quantity = (count: number, name: string) => `${count} ${name}${count === 1 ? "" : "s"}`;
 
 type StatIcon =
   "heart" | "swords" | "timer" | "scan" | "crosshair" | "users" | "droplet";
@@ -59,6 +76,43 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
     "crosshair",
   );
   const radius = stat("Radius", tiles(c.radius ?? 0), "scan");
+  if (id === "elixir-collector")
+    return {
+      stats: [
+        stat("Hitpoints", c.hp, "heart"),
+        stat("Elixir per cycle", elixirCollector.collectAmount, "droplet"),
+        stat("Production interval", seconds(elixirCollector.generateInterval), "timer"),
+        stat("Deploy time", seconds(deploymentTime(id)), "timer"),
+        stat("Lifetime", seconds(c.lifetime!), "timer"),
+        cost,
+      ],
+      note: "The first collection occurs one production interval after deployment. Stored elixir is capped at 10. Production stops when the building is destroyed or expires.",
+    };
+  if (Object.hasOwn(buildingSpawns, id)) {
+    const spawn = buildingSpawns[id as keyof typeof buildingSpawns];
+    return {
+      stats: [
+        stat("Hitpoints", c.hp, "heart"),
+        stat("Spawns", quantity(spawn.rules.spawnNumber, spawn.name), "users"),
+        stat("First spawn delay", seconds(spawn.rules.spawnPause), "timer"),
+        stat(spawn.stagger ? "Wave interval" : "Spawn interval",
+          seconds(spawn.rules.spawnPause + spawn.stagger), "timer"),
+        ...(spawn.stagger ? [stat("Troop spacing", seconds(spawn.stagger), "timer")] : []),
+        stat("Deploy time", seconds(deploymentTime(id)), "timer"),
+        stat("Troop deploy time", seconds(spawn.deploy), "timer"),
+        ...(id === "tombstone" ? [stat("On destruction",
+          quantity(tombstone.deathSpawnCount, spawn.name), "users")] : []),
+        stat("Lifetime", seconds(c.lifetime!), "timer"),
+        cost,
+      ],
+      note: "The first spawn delay starts after the building deploys. " +
+        (id === "tombstone"
+          ? "The listed death spawn also occurs when its lifetime expires."
+          : spawn.stagger
+            ? "The second troop does not appear if the building is destroyed before it spawns."
+            : "Spawning stops when the building is destroyed or expires."),
+    };
+  }
   if (id === "mirror")
     return {
       stats: [

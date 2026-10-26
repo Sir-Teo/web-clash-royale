@@ -1684,3 +1684,12 @@ The isolated full suite passes 1,522 tests across 166 files. TypeScript and the 
 The standalone probe waits for native cards, timer/crowns, elixir, intro/announcements, endings, connection artwork and emotes before sampling. The same readiness principle is used by the zero-mutation browser assertions. Three additional captured checks matched at the decoded-pixel level, and the final readiness-gated production probe passes retained/fresh-paint equality with zero mutations. One earlier ungated sample reported a repaint mismatch. The standalone probe now uses explicit UI readiness before its pixel comparisons.
 
 Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup, scoped assets and all 278 native combat/death/music files. Root production output is restored afterward (cache version `c532d80fcefd`). The pack remains 921 URLs/894 unique content groups with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.
+## Utility building production details
+
+Elixir Collector, Goblin Hut, Tombstone, Furnace and Barbarian Hut now show production or troop-spawn rows instead of generic zero-damage attack rows. Spawn details distinguish building deployment, the first post-deployment delay, repeating waves, spacing within a pair and each troop's deployment delay. Tombstone lists its four-Skeleton death spawn on destruction or natural expiry. No simulation, replay, network or profile format changes.
+
+Five new detail checks compare the displayed values with actual collections and troop births in running battles, including Collector's elixir increment, initial and repeat timing, paired-wave spacing, troop deployment and Tombstone's death spawn. All 47 focused detail/building checks pass. All ten card-detail browser cases pass across desktop Chromium and phone WebKit, covering the five new panels plus spell, shield, charge and shared-deck inspection. The panels preserve stored profiles and have no horizontal overflow at 320 pixels. Desktop and phone Furnace screenshots were inspected.
+
+The isolated full suite passes 1,527 tests across 166 files. TypeScript and the root production build pass. Unit/build and browser checks run separately.
+
+Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup and all 278 native combat/death/music files. Root production output is restored afterward. The pack remains 921 URLs and 894 unique content groups, with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.

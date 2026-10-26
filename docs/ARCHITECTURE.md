@@ -508,3 +508,7 @@ UI/audio/connection updates continue through the frame loop. Idle skips update p
 ## Updating stable UI values
 
 `src/ui/dom.ts` guards text and attribute assignments by reading the target's current DOM value. The battle UI uses these helpers for hand costs, card datasets, accessibility labels, next-card artwork and replay text. Graphics availability and hand disabled states compare their current boolean values before assignment. Native intro/announcement updates check their existing hidden class before changing it. These checks preserve the first assignment and subsequent real value changes while retaining unchanged text nodes; the UI update loop, native animation signatures and input handling continue normally.
+
+## Utility building details
+
+`cardDetails` uses the Collector and four troop-spawner data tables for production rows instead of generic zero-damage attack rows. Collector shows elixir per cycle and the production interval. Spawners distinguish the first delay after building deployment, subsequent spawn/wave intervals, spacing within paired waves and the produced troop's own deployment delay. Furnace and Barbarian Hut repeat a wave after `spawnPause + spawnInterval`; their first wave waits only `spawnPause`. Tombstone lists its four-Skeleton death spawn, including natural expiry. Health and lifetime retain the normalized arena values. These panels describe the existing simulation and do not change combat or saved formats.
