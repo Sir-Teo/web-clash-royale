@@ -38,6 +38,8 @@ test("native Mortar deploys, aims and fires on desktop and phone", async ({
     "Mortar",
     "Level 11",
   ]);
+  await expect(page.locator('[data-card-stat="Minimum range"] b')).toHaveText("4.5 tiles");
+  await expect(page.locator('[data-card-stat="Deploy time"] b')).toHaveText("4 s");
   await page.getByRole("button", { name: "Close dialog", exact: true }).click();
   await page.evaluate(() => {
     Math.random = () => 0;
@@ -53,6 +55,18 @@ test("native Mortar deploys, aims and fires on desktop and phone", async ({
   const slot = before.hand.indexOf("mortar");
   expect(slot).toBeGreaterThanOrEqual(0);
   await page.locator(`#hand [data-slot="${slot}"]`).click();
+  await page.locator("canvas").focus();
+  await page.keyboard.press("ArrowUp");
+  await expect.poll(async () => (await state()).placement?.minimumRange).toBe(4.5);
+  const feedback = page.locator(".placement-feedback");
+  await expect(feedback).toContainText("Blind spot: 4.5 tiles");
+  const label = await feedback.boundingBox();
+  const arena = await page.locator("#arena-canvas").boundingBox();
+  expect(label!.x).toBeGreaterThanOrEqual(arena!.x);
+  expect(label!.x + label!.width).toBeLessThanOrEqual(arena!.x + arena!.width);
+  expect(label!.y).toBeGreaterThanOrEqual(arena!.y);
+  expect(label!.y + label!.height).toBeLessThanOrEqual(arena!.y + arena!.height);
+  await page.screenshot({ path: info.outputPath("mortar-range-aim.png"), animations: "disabled" });
   const point = await page.evaluate(() =>
     (window as any).__arena.project(4, 18.5),
   );

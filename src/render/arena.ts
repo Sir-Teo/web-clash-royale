@@ -33,6 +33,8 @@ import {
 } from "./projectiles";
 import type { ProjectileVisual } from "./projectiles";
 import { DeploymentPreview } from "./deployment";
+import { BlindSpotIndicator } from "./blind-spot";
+import mortar from "../game/mortar-data.json" with { type: "json" };
 import { BuildingLibrary } from "./buildings";
 import type { BuildingSprite } from "./buildings";
 import { destroyedTowerSites, TOWER_SITES } from "../game/arena-layout";
@@ -147,6 +149,7 @@ export class Arena {
   private floor = new T.Plane(new T.Vector3(0, 1, 0), 0);
   private cursor = new T.Group();
   private rangeRing: T.Mesh;
+  private blindSpot = new BlindSpotIndicator();
   private block = new T.Group();
   private blockedLanes: T.Mesh[] = [];
   private deployment: DeploymentPreview;
@@ -263,6 +266,7 @@ export class Arena {
     this.rangeRing.rotation.x = -Math.PI / 2;
     this.rangeRing.position.y = 0.09;
     this.cursor.add(this.rangeRing);
+    this.cursor.add(this.blindSpot.object);
     const center = new T.Mesh(
       new T.CircleGeometry(0.1, 16),
       new T.MeshBasicMaterial({
@@ -841,6 +845,7 @@ export class Arena {
             ? this.deployment.nativeCount
             : 0,
           blockedUntil: this.blockedLanes.map((o) => o.scale.y),
+          minimumRange: this.blindSpot.radius,
         }
       : null;
   }
@@ -948,6 +953,7 @@ export class Arena {
     this.placement = id ? { card: id, point, valid, reason } : null;
     this.block.visible = !!id && CARD_MAP[id].kind !== "spell";
     this.cursor.visible = !!id && !!point;
+    this.blindSpot.show(id === "mortar" && point ? mortar.minimumRange : 0, valid);
     this.placementFeedback.classList.toggle("hidden", !id || !point);
     this.blockedLanes.forEach((overlay, i) => {
       const lane = i === 0 ? "left" : "right";
@@ -978,7 +984,7 @@ export class Arena {
     else this.deployment.object.visible = false;
     this.placementFeedback.classList.toggle("invalid", !valid);
     const feedback = valid
-      ? `${card.name}${card.count > 1 ? ` ×${card.count}` : ""} · Level 11`
+      ? `${card.name}${card.count > 1 ? ` ×${card.count}` : ""} · Level 11${id === "mortar" ? ` · Blind spot: ${mortar.minimumRange} tiles` : ""}`
       : reason || "Cannot deploy here";
     if (this.placementFeedback.textContent !== feedback)
       this.placementFeedback.textContent = feedback;
@@ -2075,6 +2081,7 @@ export class Arena {
       if (o instanceof T.Mesh && !o.geometry.userData.shared)
         o.geometry.dispose();
     });
+    this.blindSpot.dispose();
     this.deployment.clear();
     this.destruction.clear();
     this.crowns.clear();

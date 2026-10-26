@@ -117,6 +117,8 @@ function setup() {
     scenario !== "deployment";
   (document.querySelector("#preview-formation") as HTMLElement).hidden =
     scenario !== "deployment";
+  for (const id of ["preview-invalid", "preview-hide"])
+    (document.querySelector(`#${id}`) as HTMLElement).hidden = scenario !== "deployment";
   (document.querySelector("#freeze-cast") as HTMLElement).hidden =
     scenario !== "freeze";
   for (const id of ["rage-cast", "rage-towers"])
@@ -894,6 +896,11 @@ document.querySelector("#preview-formation")!.addEventListener("click", () => {
   const card = (document.querySelector("#death-card") as HTMLSelectElement).value as CardId;
   arena.showPlacement(card, { x: 9, y: 22 });
 });
+document.querySelector("#preview-invalid")!.addEventListener("click", () => {
+  const card = (document.querySelector("#death-card") as HTMLSelectElement).value as CardId;
+  arena.showPlacement(card, { x: 9, y: 22 }, false, "Not enough elixir");
+});
+document.querySelector("#preview-hide")!.addEventListener("click", () => arena.showPlacement(null, null));
 document.querySelector("#spawn")!.addEventListener("click", () => {
   arena.showPlacement(null, null);
   const card = (document.querySelector("#death-card") as HTMLSelectElement)
@@ -1485,6 +1492,16 @@ function render(now: number) {
       })));
   if (sceneSelect.value === "deployment") {
     const preview = (arena as any).deployment;
+    const indicator = (arena as any).blindSpot;
+    const boundary = indicator.object.children[1];
+    (document.querySelector("#destruction") as HTMLElement).dataset.placementRange = JSON.stringify({
+      placement: arena.placementState,
+      cursorVisible: (arena as any).cursor.visible,
+      visible: indicator.object.visible && (arena as any).cursor.visible,
+      inner: boundary.geometry.parameters.innerRadius * indicator.object.scale.x,
+      outer: boundary.geometry.parameters.outerRadius * indicator.object.scale.x,
+      color: boundary.material.color.getHex(),
+    });
     (document.querySelector("#destruction") as HTMLElement).dataset.formation = JSON.stringify({
       rulesVersion: battle.rulesVersion,
       visible: preview.object.visible,

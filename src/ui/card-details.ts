@@ -26,6 +26,7 @@ import golem from "../game/golem-data.json" with { type: "json" };
 import lavaHound from "../game/lava-hound-data.json" with { type: "json" };
 import battleRam from "../game/battle-ram-data.json" with { type: "json" };
 import nightWitch from "../game/night-witch-data.json" with { type: "json" };
+import mortar from "../game/mortar-data.json" with { type: "json" };
 
 const buildingSpawns = {
   "goblin-hut": { name: "Spear Goblin", rules: goblinHut, stagger: 0, deploy: 1 },
@@ -341,6 +342,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
       ? "Charges after moving the listed distance, doubling movement speed. Stun resets the charge."
       : "",
     spawn ? `${spawn.note} Spawn hitpoints and damage are per troop.` : "",
+    id === "mortar" ? "Cannot target enemies inside the minimum range." : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -371,6 +373,10 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
         : []),
       stat("Hit interval", seconds(c.interval), "timer"),
       stat("Range", tiles(c.range), "scan"),
+      ...(id === "mortar" ? [
+        stat("Minimum range", tiles(mortar.minimumRange), "scan"),
+        stat("Deploy time", seconds(deploymentTime(id)), "timer"),
+      ] : []),
       targets,
       c.kind === "building"
         ? stat("Lifetime", seconds(c.lifetime ?? 0), "timer")
