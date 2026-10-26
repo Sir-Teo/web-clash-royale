@@ -1810,3 +1810,17 @@ Six new cases compare actual beam damage and lock-stage clocks against both pane
 All ten targeted browser cases pass across desktop Chromium and phone WebKit. Both expanded panels show all stage values/times, preserve saved data, fit at 320 pixels and reach the later-stage rows by scrolling. Both cards remain playable from real hands and render their original three-stage beam, muzzle and impact artwork. Desktop Tower and phone Dragon detail captures were inspected. Production build passes.
 
 Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup and all 278 native combat/death/music files. Root production output is restored afterward with cache version `fde3d8b32c0f`. The pack remains 921 URLs and 894 unique content groups, with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.
+
+## Active Inferno locks in King defense
+
+The AI's shared King-defense forecast now includes pulses from a current Inferno Tower or Inferno Dragon lock, alongside ordinary pending attacks and released damage. The previous forecast reported no danger for a charged Dragon that actually killed either team's 300-HP King six ticks later, and could choose a later winning Rocket over Freeze. The new forecast predicts that sixth tick and chooses the immediate rescue.
+
+The channel projection follows the current uninterrupted lock for at most 60 ticks (two seconds), accumulating elapsed time exactly as Combat does. Stage changes use real time; known Rage/slow clocks change pulse cadence. Existing ordered area movement/control and health projections handle Tornado, Freeze, Poison, Heal, Lightning, passive building decay and released projectiles. A projectile hit after Combat can stop later pulses while preserving the pulse already dealt on that tick. Lost range or an interruption ends the projected lock; reacquisition, new attacks, ordinary walking, separation and future commands remain outside this bounded forecast. Combat values, RNG, replay and network formats do not change.
+
+The new tests compare predicted loss ticks against actual simulation for both teams and both cards, all stage boundaries with expiring Rage/slow combinations, repeated pulses, combined ordinary damage, projectile death before/on/after a pulse, Zap reset, projectile slow, actual Freeze/Tornado casts, out-of-range pulls, Poison, building decay, existing Freeze, invalid/stale locks, earlier known wins and read-only alternative forecasts.
+
+All fourteen targeted browser cases pass across desktop Chromium and phone WebKit: the new charged-beam rescue, all three combined-damage rescues and the three earlier melee/ranged Freeze defenses. The new scene starts from an existing lock and lets the ordinary AI timer cast at tick 74; the King retains 671 HP through four seconds and Rocket stays unplayed. Both captures were inspected, with no page errors or paused-state drift. Production TypeScript/build checks pass.
+
+The final isolated suite passes all 1,691 tests across 174 files, including historical replay checkpoints.
+
+Final Pages-prefixed production/offline checks pass reload, the cached match worker, battle startup and all 278 native combat/death/music files. Root production output is restored afterward with cache version `0ecccd8500f8`. The pack remains 921 URLs and 894 unique content groups, with 8.1 MB of duplicate bytes omitted. No push or deployment was performed.

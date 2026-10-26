@@ -154,6 +154,17 @@ function setup() {
     unit("archers", "red", 14, 10);
     cast("arrows", "blue", 4, 12);
     cast("fireball", "blue", 14, 12);
+  } else if (scenario === "ai-inferno-king") {
+    const king = battle.entities.find((e) => e.team === "red" && e.king)!;
+    Object.assign(king, { hp: 1700, active: true, activation: 10 });
+    battle.entities.find((e) => e.team === "blue" && e.king)!.hp = 50;
+    const dragon = unit("inferno-dragon", "blue", king.x, king.y + 3)[0];
+    Object.assign(dragon, { target: king.id, inferno: {
+      target: king.id, elapsed: 1.7, stage: 0, hitTimer: 0.4,
+    } });
+    battle.players.red.hand = ["rocket", "freeze", "pekka", "pekka"];
+    battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
+    battle.players.red.elixir = 6;
   } else if (["ai-freeze-king", "ai-freeze-race", "ai-freeze-ranged", "ai-freeze-ranged-fast"].includes(scenario)) {
     const ranged = scenario.startsWith("ai-freeze-ranged");
     const fast = scenario.endsWith("-fast");

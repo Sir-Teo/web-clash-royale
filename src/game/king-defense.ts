@@ -9,6 +9,7 @@ import {
 import { projectTornadoWindup, type WindupProjection } from "./tornado-pull";
 import miner from "./miner-data.json" with { type: "json" };
 import freeze from "./freeze-data.json" with { type: "json" };
+import { infernoKingPackets } from "./inferno-forecast";
 import { createWindupHealth } from "./windup-health";
 import tornado from "./tornado-data.json" with { type: "json" };
 
@@ -84,7 +85,8 @@ export function kingDefenseScore(
 }
 
 /** One read-only context per decision: released damage plus every eligible
- * current King windup. No new attacks or separation is run. */
+ * current King windup or uninterrupted Inferno lock. No new attacks or separation
+ * is run; channels use the shared two-second defensive horizon. */
 export function createKingDefense(
   team: Team,
   entities: readonly Entity[],
@@ -111,11 +113,20 @@ export function createKingDefense(
           attacker.deploy > 0 ||
           attacker.stun > 0 ||
           attacker.dash ||
-          (attacker.deploy <= 0 && attacker.burrow?.phase === "hidden") ||
-          !pending ||
-          pending.target !== king.id ||
-          pending.damage <= 0 ||
-          pending.remaining > 1
+          (attacker.deploy <= 0 && attacker.burrow?.phase === "hidden")
+        )
+          return [];
+        const channel =
+          (attacker.card === "inferno-tower" ||
+            attacker.card === "inferno-dragon") &&
+          attacker.inferno?.target === king.id &&
+          attacker.target === king.id;
+        if (
+          !channel &&
+          (!pending ||
+            pending.target !== king.id ||
+            pending.damage <= 0 ||
+            pending.remaining > 1)
         )
           return [];
         const projection = projectTornadoWindup(
@@ -130,7 +141,10 @@ export function createKingDefense(
           {
             attacker,
             order,
-            packets: pendingKingPackets(attacker, king, projection, order),
+            channel,
+            packets: channel
+              ? infernoKingPackets(attacker, king, areas, order, health)
+              : pendingKingPackets(attacker, king, projection, order),
           },
         ];
       })
@@ -201,18 +215,27 @@ export function createKingDefense(
           ]
         : areas;
     const pending = attempts.map((a) =>
-      pendingKingPackets(
-        a.attacker,
-        king,
-        projectTornadoWindup(
-          a.attacker,
-          king,
-          clouds,
-          card === "tornado" ? point : undefined,
-          health,
-        ),
-        a.order,
-      ),
+      a.channel
+        ? infernoKingPackets(
+            a.attacker,
+            king,
+            clouds,
+            a.order,
+            health,
+            card === "tornado" ? point : undefined,
+          )
+        : pendingKingPackets(
+            a.attacker,
+            king,
+            projectTornadoWindup(
+              a.attacker,
+              king,
+              clouds,
+              card === "tornado" ? point : undefined,
+              health,
+            ),
+            a.order,
+          ),
     );
     const key = pending
       .map((packets) => packets.map((p) => p.step).join(","))

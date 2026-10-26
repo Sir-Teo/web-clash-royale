@@ -131,17 +131,12 @@ export function projectAreaFrames(
   return frames;
 }
 
-/** The same control clocks also retain the release position of an attack
- * that survives a pull, so its projectile flight can be recomputed. */
-export function projectTornadoWindup(
-  attacker: Entity,
+/** Areas that can change an existing attack, in their original update order. */
+export function currentAttackAreas(
   target: Entity,
   areas: readonly AreaEffect[],
   proposed?: Point,
-  health?: WindupHealthEvaluator,
-): WindupProjection {
-  let position = { x: attacker.x, y: attacker.y };
-  if (!attacker.pendingAttack) return { position };
+): AreaEffect[] {
   const clouds = areas.filter(
     (a) =>
       a.remaining > 0 &&
@@ -167,6 +162,21 @@ export function projectTornadoWindup(
       remaining: tornado.duration,
       hitAt: 0,
     });
+  return clouds;
+}
+
+/** The same control clocks also retain the release position of an attack
+ * that survives a pull, so its projectile flight can be recomputed. */
+export function projectTornadoWindup(
+  attacker: Entity,
+  target: Entity,
+  areas: readonly AreaEffect[],
+  proposed?: Point,
+  health?: WindupHealthEvaluator,
+): WindupProjection {
+  let position = { x: attacker.x, y: attacker.y };
+  if (!attacker.pendingAttack) return { position };
+  const clouds = currentAttackAreas(target, areas, proposed);
   let remaining = attacker.pendingAttack.remaining;
   const limit = health
     ? Math.min(

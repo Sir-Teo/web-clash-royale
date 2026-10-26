@@ -489,3 +489,52 @@ test("AI takes an earlier winning Zap before the ranged attack can arrive", asyn
   });
   expect(errors).toEqual([]);
 });
+
+test("AI freezes an active charged Inferno lock before a late winning Rocket", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/tests/fixtures/combat.html?scene=ai-inferno-king");
+  await expect(page.locator("#status")).toContainText(
+    `${expectedEffects} effects`,
+    { timeout: 60000 },
+  );
+  const output = page.locator("#destruction");
+  const state = async () =>
+    JSON.parse((await output.getAttribute("data-ai-areas"))!);
+  const actions = async () =>
+    JSON.parse((await output.getAttribute("data-ai-defense"))!).actions;
+  const step = async () => {
+    const before = (await state()).time;
+    await page.locator("#second").click();
+    await expect
+      .poll(async () => (await state()).time)
+      .toBeGreaterThan(before + 0.99);
+  };
+  await step();
+  await step();
+  expect(await actions()).toEqual([]);
+  await step();
+  expect(await actions()).toMatchObject([
+    { card: "freeze", team: "red", tick: 74 },
+  ]);
+  expect(await actions()).toHaveLength(1);
+  const defended = await state();
+  expect(defended.kings.find((e: any) => e.team === "red").hp).toBe(671);
+  expect(
+    defended.entities.find((e: any) => e.card === "inferno-dragon").stun,
+  ).toBeGreaterThan(0);
+  await step();
+  const survived = await state();
+  expect(survived.winner).toBeNull();
+  expect(survived.kings.find((e: any) => e.team === "red").hp).toBe(671);
+  expect(await actions()).toHaveLength(1);
+  await page.screenshot({
+    path: info.outputPath("ai-inferno-king-defense.png"),
+    fullPage: true,
+  });
+  await page.waitForTimeout(160);
+  expect(await state()).toEqual(survived);
+  expect(errors).toEqual([]);
+});
