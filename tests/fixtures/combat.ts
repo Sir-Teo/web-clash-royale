@@ -88,7 +88,8 @@ function setup() {
   for (const t of battle.entities) t.active = false;
   const scenario = (document.querySelector("#scenario") as HTMLSelectElement)
     .value;
-  (document.querySelector("#clock-clear") as HTMLElement).hidden = scenario !== "animation-clock";
+  for (const id of ["clock-clear", "clock-freeze"])
+    (document.querySelector(`#${id}`) as HTMLElement).hidden = scenario !== "animation-clock";
   (document.querySelector("#attackers") as HTMLButtonElement).hidden =
     scenario !== "burrow";
   for (const id of ["death-config", "defeat", "death-stats"])
@@ -943,6 +944,11 @@ document.querySelector("#clock-clear")!.addEventListener("click", () => {
     entity.slow = undefined;
   }
 });
+document.querySelector("#clock-freeze")!.addEventListener("click", () => {
+  for (const team of ["blue", "red"] as const)
+    for (const x of [3, 7, 11, 15])
+      cast("freeze", team === "blue" ? "red" : "blue", x, team === "blue" ? 21 : 11);
+});
 document.querySelector("#wake")!.addEventListener("click", () => {
   for (const king of battle.entities.filter((e) => e.king))
     cast("zap", king.team === "blue" ? "red" : "blue", king.x, king.y);
@@ -1134,7 +1140,7 @@ function render(now: number) {
       bodies: battle.entities.filter((entity) => clockModes.has(entity.id)).map((entity) => {
         const visual = (arena as any).units.get(entity.id);
         return { id: entity.id, card: entity.card, team: entity.team,
-          mode: clockModes.get(entity.id), age: entity.age,
+          mode: clockModes.get(entity.id), age: entity.age, stun: entity.stun,
           clock: entity.animationTime, frame: visual?.sprite?.lastFrame,
           height: visual?.object.position.y,
           native: !!visual?.sprite,

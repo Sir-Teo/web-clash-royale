@@ -113,7 +113,7 @@ export interface Entity extends Point {
   poison?: { remaining: number; elapsed: number };
   heal?: { remaining: number; elapsed: number };
   rage?: { remaining: number };
-  /** Optional deterministic loop clock after a movement-rate buff; presentation only. */
+  /** Optional deterministic loop clock after a movement buff or stun; presentation only. */
   animationTime?: number;
   slow?: { remaining: number };
   inferno?: {

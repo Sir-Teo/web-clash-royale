@@ -12,11 +12,13 @@ type Body = {
   frame: number;
   height: number;
   native: boolean;
+  stun: number;
 };
 const rates = { normal: 1, rage: 1.35, slow: 0.65, both: 1.35 * 0.65 };
-test("Rage and slow drive native troop loop frames and air bob through pause and rebuild", async ({
+test("movement buffs and Freeze drive native troop loops through pause, rebuild and recovery", async ({
   page,
 }, info) => {
+  test.setTimeout(120000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/tests/fixtures/combat.html?scene=animation-clock");
@@ -38,11 +40,14 @@ test("Rage and slow drive native troop loop frames and air bob through pause and
   const check = (
     current: Awaited<ReturnType<typeof state>>,
     buffedTime: number,
+    stoppedTime = 0,
   ) => {
     expect(current.bodies).toHaveLength(16);
     for (const body of current.bodies) {
-      const clock = current.time + buffedTime * (rates[body.mode] - 1);
-      if (body.mode === "normal") expect(body.clock).toBeUndefined();
+      const clock =
+        current.time - stoppedTime + buffedTime * (rates[body.mode] - 1);
+      if (body.mode === "normal" && stoppedTime === 0)
+        expect(body.clock).toBeUndefined();
       else expect(body.clock).toBeCloseTo(clock, 8);
       const source = body.card === "knight" ? knight : minion;
       const clips = source.clips as Record<
@@ -81,9 +86,35 @@ test("Rage and slow drive native troop loop frames and air bob through pause and
     path: info.outputPath("buffed-native-loops.png"),
     fullPage: true,
   });
+  await page.locator("#clock-freeze").click();
+  for (let frozen = 1; frozen <= 4; frozen++) {
+    await page.locator("#second").click();
+    await expect.poll(async () => (await state()).time).toBe(2 + frozen);
+    check(await state(), 2, frozen);
+    expect((await state()).bodies.every((body) => body.stun > 0)).toBe(true);
+    if (frozen === 2) {
+      const held = await state();
+      await page.locator("#rebuild").click();
+      await expect
+        .poll(
+          async () =>
+            (await state()).bodies.filter((body) => body.native).length,
+        )
+        .toBe(16);
+      expect(await state()).toEqual(held);
+    }
+  }
+  await page.screenshot({
+    path: info.outputPath("stopped-native-loops.png"),
+    fullPage: true,
+  });
+  await page.locator("#step").click();
+  await expect.poll(async () => (await state()).time).toBeCloseTo(6.1, 8);
+  check(await state(), 2.1, 4);
+  expect((await state()).bodies.every((body) => body.stun === 0)).toBe(true);
   await page.locator("#clock-clear").click();
   await page.locator("#second").click();
-  await expect.poll(async () => (await state()).time).toBe(3);
-  check(await state(), 2);
+  await expect.poll(async () => (await state()).time).toBeCloseTo(7.1, 8);
+  check(await state(), 2.1, 4);
   expect(errors).toEqual([]);
 });

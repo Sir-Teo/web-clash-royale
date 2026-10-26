@@ -57,6 +57,54 @@ describe("buffed native loop clocks", () => {
     },
   );
 
+  it.each(["normal", "rage", "slow", "both"] as const)(
+    "holds %s troop loops for an actual Freeze and resumes on the first movable step",
+    (status) => {
+      const { battle, entity } = setup(19, "mega-minion");
+      if (status === "rage" || status === "both")
+        entity.rage = { remaining: 30 };
+      if (status === "slow" || status === "both")
+        entity.slow = { remaining: 30 };
+      const rate = (entity.rage ? 1.35 : 1) * (entity.slow ? 0.65 : 1);
+      battle.players.red.hand[0] = "freeze";
+      battle.players.red.elixir = 10;
+      const held = battle.time;
+      expect(battle.play("red", 0, entity.x, entity.y).ok).toBe(true);
+      for (let step = 0; step < 120; step++) {
+        battle.step();
+        expect(entity.stun).toBeGreaterThan(0);
+        expect(entity.animationTime).toBeCloseTo(held, 10);
+      }
+      battle.step();
+      expect(entity.stun).toBe(0);
+      expect(entity.animationTime).toBeCloseTo(held + STEP * rate, 10);
+    },
+  );
+
+  it("holds during Zap stun without catching up after recovery or guest projection", () => {
+    const { battle, entity } = setup(19, "mega-minion");
+    battle.players.red.hand[0] = "zap";
+    battle.players.red.elixir = 10;
+    expect(battle.play("red", 0, entity.x, entity.y).ok).toBe(true);
+    for (let step = 0; step < 10 && entity.stun === 0; step++) battle.step();
+    expect(entity.stun).toBeGreaterThan(0);
+    const held = entity.animationTime ?? battle.time;
+    while (entity.stun > STEP) {
+      battle.step();
+      expect(entity.animationTime).toBeCloseTo(held, 10);
+    }
+    const guest = new Battle({ ai: false });
+    applySnapshot(guest, structuredClone(snapshot(battle)), "red");
+    expect(guest.entities.find((e) => e.id === entity.id)).toMatchObject({
+      team: "red",
+      animationTime: entity.animationTime,
+      stun: entity.stun,
+    });
+    battle.step();
+    expect(entity.stun).toBe(0);
+    expect(entity.animationTime).toBeCloseTo(held + STEP, 10);
+  });
+
   it("keeps deployment in real time and leaves unbuffed troops and structures without metadata", () => {
     const { battle, entity } = setup();
     battle.step();
@@ -64,6 +112,7 @@ describe("buffed native loop clocks", () => {
     entity.deploy = 0.5;
     entity.rage = { remaining: 1 };
     entity.slow = { remaining: 1 };
+    entity.stun = 1;
     const before = battle.time;
     battle.step();
     expect(entity.animationTime).toBeCloseTo(before + STEP, 10);
@@ -84,6 +133,7 @@ describe("buffed native loop clocks", () => {
     const old = setup(18);
     old.entity.rage = { remaining: 1 };
     old.entity.slow = { remaining: 1 };
+    old.entity.stun = 1;
     old.battle.step();
     expect(old.entity.animationTime).toBeUndefined();
     const { battle, entity } = setup();
