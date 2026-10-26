@@ -24,6 +24,7 @@ parser.add_argument("--attack-loop", action="store_true", help="Capture controll
 parser.add_argument("--range-loss", action="store_true", help="Use native range geometry and acquire through the main loop's scan gate")
 parser.add_argument("--attack-range", action="store_true", help="Capture maximum attack geometry across troop, building and Crown Tower profiles")
 parser.add_argument("--minimum-range", action="store_true", help="Capture minimum-range boundaries instead of maximum-range boundaries")
+parser.add_argument("--sight-range", action="store_true", help="Capture native sight getters and the bounded candidate sight gate")
 args = parser.parse_args()
 if args.range_loss and not args.attack_loop:
     parser.error("--range-loss requires --attack-loop")
@@ -31,6 +32,8 @@ if args.attack_range and args.attack_loop:
     parser.error("--attack-range and --attack-loop are separate captures")
 if args.minimum_range and not args.attack_range:
     parser.error("--minimum-range requires --attack-range")
+if args.sight_range and (args.attack_range or args.attack_loop):
+    parser.error("--sight-range is a separate capture")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()
@@ -163,6 +166,10 @@ def initialize(source):
     set_buffs([])
 
 
+if args.sight_range:
+    from lib.sight_range_probe import capture
+    capture(globals())
+    raise SystemExit(0)
 if args.attack_range:
     from lib.attack_range_probe import capture
     capture(globals())

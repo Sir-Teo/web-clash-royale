@@ -2034,3 +2034,12 @@ Production compilation, Pages-prefixed offline reload, the cached browser match 
 The separate `--attack-range --minimum-range` capture and `--check` reproduce byte-for-byte: 1,248 native samples, thirteen profiles and fifteen disassembly blocks. They cover positive and zero source minimums, own-radius global on/off, four directions, three inner-boundary offsets and four supplied target radii. Mortar accepts equality at source minimum plus own radius minus target radius; nonpositive bounds impose no minimum in this predicate. The oversized-radius branch is explicitly a synthetic numeric control. Owner/Globals/target radius callbacks remain supplied boundaries, and native candidate scanning is not inferred from this predicate.
 
 The earlier maximum-range capture still regenerates byte-for-byte, preserving its imported application factor and manifest hashes. Python syntax and whitespace checks pass. These script/reference/documentation changes do not alter app rules 24 or the restored root cache `d500c9545b87`; no application rebuild, push or deployment was performed.
+
+
+## Native sight-gate evidence
+
+The `--sight-range` capture and independent `--check` reproduce byte-for-byte: thirteen profiles, 26 resolved-sight getter results, 1,872 candidate sight-boundary samples and twelve disassembly blocks. The native getter adds own collision radius under the archived global. Native candidate filtering includes supplied target radius, accepts maximum equality and reads the source building/crown extensions of 0/2,000 through independently supplied virtual-type slots. The intercepted broadphase query's exact radius is verified in every sample.
+
+The world query supplies one eligible dummy. Priority and virtual class/radius callbacks remain explicit boundaries; virtual slots are not claimed to identify full runtime classes. Positive execution stops at `0x25db97`, before later ranking and attack-range validation, so passing the sight gate is not claimed as acquisition. Outer-boundary inputs do not recover the scanner's separate minimum behavior. The previous maximum and minimum captures both regenerate byte-for-byte, preserving imported application hashes. Python syntax and whitespace checks pass.
+
+No application changes accompany this evidence. Rules 24 and restored root cache `d500c9545b87` remain unchanged; no rebuild, push or deployment was performed.
