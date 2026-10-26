@@ -7,7 +7,7 @@ import { LOCAL_REPLAY_CARDS } from "./replay-family";
 import { Battle as LegacyLocalBattle, type EngineOptions as LegacyLocalOptions } from "./legacy-local-engine";
 import { CARD_MAP, LEGACY_BALLOON_STATS, LEGACY_BUILDING_STATS, LEGACY_CARD_SPLASH, LEGACY_CARD_STATS, LEGACY_CARD_VITALS, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
-import { clonePosition, deploymentPositions, deploymentTime, deploymentVisualDelay } from "./deployment";
+import { clonePosition, deploymentPositions, deploymentTime, deploymentVisualDelay, goblinGangCharacter } from "./deployment";
 import { advanceAnimationClock } from "./animation-clock";
 import { areaSpellTarget, isAreaSpell } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targeting";
@@ -216,7 +216,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -296,7 +296,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 21;
+    this.rulesVersion = r?.version ?? 22;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -732,9 +732,7 @@ export class Battle {
       for (const [index, point] of positions.entries())
         this.spawn(
           id === "goblin-gang"
-            ? index < 3
-              ? "goblins"
-              : "spear-goblins"
+            ? goblinGangCharacter(index, this.rulesVersion)
             : unitId,
           team,
           point.x,

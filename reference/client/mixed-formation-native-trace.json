@@ -1,0 +1,219 @@
+{
+  "source": "https://raw.githubusercontent.com/smlbiobot/cr/7fc7687e6de74690e902543ee4b59f562121e225/apk/1.8.1/com.supercell.clashroyale-1.8.1/lib/x86/libg.so",
+  "sha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/client/formation-native-trace.json",
+      "sha256": "7e3d4263141f80ee8936c92a8145ed89949aa0c3cc966a59ab12fd7bef7130f8"
+    }
+  ],
+  "profile": {
+    "card": "GoblinGang",
+    "primary": "Goblin",
+    "secondary": "SpearGoblin",
+    "count": 6,
+    "radius": 700,
+    "angleShift": 0
+  },
+  "blocks": [
+    {
+      "name": "secondaryCharacterLoader",
+      "start": "0x200cbe",
+      "end": "0x200cf2",
+      "interpretation": "SummonCharacterSecond at 0x61a160 resolves to SpellData+0x28.",
+      "instructions": [
+        "200cbe:\t8d 83 4c 17 e6 ff    \tlea    eax,[ebx-0x19e8b4]",
+        "200cc4:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "200cc8:\t8d b4 24 10 02 00 00 \tlea    esi,[esp+0x210]",
+        "200ccf:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "200cd2:\te8 c9 86 09 00       \tcall   2993a0",
+        "200cd7:\t89 74 24 04          \tmov    DWORD PTR [esp+0x4],esi",
+        "200cdb:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "200cde:\te8 2d 41 fe ff       \tcall   1e4e10",
+        "200ce3:\t89 7c 24 04          \tmov    DWORD PTR [esp+0x4],edi",
+        "200ce7:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "200cea:\te8 3d 87 fe ff       \tcall   1e942c",
+        "200cef:\t89 47 28             \tmov    DWORD PTR [edi+0x28],eax"
+      ]
+    },
+    {
+      "name": "secondaryCharacterAccessor",
+      "start": "0x2027e4",
+      "end": "0x2027f4",
+      "interpretation": "Returns the secondary character pointer at SpellData+0x28.",
+      "instructions": [
+        "2027e4:\t55                   \tpush   ebp",
+        "2027e5:\t89 e5                \tmov    ebp,esp",
+        "2027e7:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "2027ea:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "2027ed:\t8b 40 28             \tmov    eax,DWORD PTR [eax+0x28]",
+        "2027f0:\t89 ec                \tmov    esp,ebp",
+        "2027f2:\t5d                   \tpop    ebp",
+        "2027f3:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "secondaryCharacterCall",
+      "start": "0x220e49",
+      "end": "0x220e55",
+      "interpretation": "The card summon path retains the secondary pointer at stack+0x64.",
+      "instructions": [
+        "220e49:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "220e4c:\te8 93 19 fe ff       \tcall   2027e4",
+        "220e51:\t89 44 24 64          \tmov    DWORD PTR [esp+0x64],eax"
+      ]
+    },
+    {
+      "name": "summonGroupCall",
+      "start": "0x220e89",
+      "end": "0x220efd",
+      "interpretation": "Passes the secondary pointer at argument stack+0x30, read by the group at EBP+0x38.",
+      "instructions": [
+        "220e89:\t8b 44 24 64          \tmov    eax,DWORD PTR [esp+0x64]",
+        "220e8d:\t89 44 24 30          \tmov    DWORD PTR [esp+0x30],eax",
+        "220e91:\t8d 84 24 98 00 00 00 \tlea    eax,[esp+0x98]",
+        "220e98:\t89 44 24 2c          \tmov    DWORD PTR [esp+0x2c],eax",
+        "220e9c:\t8b 44 24 70          \tmov    eax,DWORD PTR [esp+0x70]",
+        "220ea0:\t89 44 24 24          \tmov    DWORD PTR [esp+0x24],eax",
+        "220ea4:\t8b 44 24 50          \tmov    eax,DWORD PTR [esp+0x50]",
+        "220ea8:\t89 44 24 20          \tmov    DWORD PTR [esp+0x20],eax",
+        "220eac:\t8b 44 24 60          \tmov    eax,DWORD PTR [esp+0x60]",
+        "220eb0:\t89 44 24 1c          \tmov    DWORD PTR [esp+0x1c],eax",
+        "220eb4:\t8b 44 24 7c          \tmov    eax,DWORD PTR [esp+0x7c]",
+        "220eb8:\t89 44 24 18          \tmov    DWORD PTR [esp+0x18],eax",
+        "220ebc:\t8b 84 24 88 00 00 00 \tmov    eax,DWORD PTR [esp+0x88]",
+        "220ec3:\t89 44 24 14          \tmov    DWORD PTR [esp+0x14],eax",
+        "220ec7:\t8b 84 24 80 00 00 00 \tmov    eax,DWORD PTR [esp+0x80]",
+        "220ece:\t89 44 24 10          \tmov    DWORD PTR [esp+0x10],eax",
+        "220ed2:\t8b 84 24 84 00 00 00 \tmov    eax,DWORD PTR [esp+0x84]",
+        "220ed9:\t89 44 24 0c          \tmov    DWORD PTR [esp+0xc],eax",
+        "220edd:\t8b 44 24 74          \tmov    eax,DWORD PTR [esp+0x74]",
+        "220ee1:\t89 44 24 08          \tmov    DWORD PTR [esp+0x8],eax",
+        "220ee5:\t89 74 24 04          \tmov    DWORD PTR [esp+0x4],esi",
+        "220ee9:\t8b 44 24 6c          \tmov    eax,DWORD PTR [esp+0x6c]",
+        "220eed:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "220ef0:\tc7 44 24 28 01 00 00 \tmov    DWORD PTR [esp+0x28],0x1",
+        "220ef7:\t00",
+        "220ef8:\te8 9f ba fa ff       \tcall   1cc99c"
+      ]
+    },
+    {
+      "name": "ownerParity",
+      "start": "0x1cca1b",
+      "end": "0x1cca20",
+      "interpretation": "Masks the previously found owner index to its low bit.",
+      "instructions": [
+        "1cca1b:\t83 64 24 48 01       \tand    DWORD PTR [esp+0x48],0x1"
+      ]
+    },
+    {
+      "name": "formationFlip",
+      "start": "0x1cca6a",
+      "end": "0x1cca74",
+      "interpretation": "Even owner indices select the geometry Y reflection.",
+      "instructions": [
+        "1cca6a:\t83 7c 24 48 00       \tcmp    DWORD PTR [esp+0x48],0x0",
+        "1cca6f:\t0f 94 44 24 50       \tsete   BYTE PTR [esp+0x50]"
+      ]
+    },
+    {
+      "name": "formationCall",
+      "start": "0x1cca9b",
+      "end": "0x1ccadb",
+      "interpretation": "The primary character angle, group count, selected radius, reflection and lane enter the existing geometry helper.",
+      "instructions": [
+        "1cca9b:\t8b 4d 0c             \tmov    ecx,DWORD PTR [ebp+0xc]",
+        "1cca9e:\t8b 91 60 01 00 00    \tmov    edx,DWORD PTR [ecx+0x160]",
+        "1ccaa4:\t8d 8c 24 80 00 00 00 \tlea    ecx,[esp+0x80]",
+        "1ccaab:\t89 4c 24 18          \tmov    DWORD PTR [esp+0x18],ecx",
+        "1ccaaf:\t89 54 24 14          \tmov    DWORD PTR [esp+0x14],edx",
+        "1ccab3:\t89 44 24 10          \tmov    DWORD PTR [esp+0x10],eax",
+        "1ccab7:\t0f b6 44 24 50       \tmovzx  eax,BYTE PTR [esp+0x50]",
+        "1ccabc:\t89 44 24 0c          \tmov    DWORD PTR [esp+0xc],eax",
+        "1ccac0:\t8b 44 24 54          \tmov    eax,DWORD PTR [esp+0x54]",
+        "1ccac4:\t89 44 24 08          \tmov    DWORD PTR [esp+0x8],eax",
+        "1ccac8:\t8b 45 1c             \tmov    eax,DWORD PTR [ebp+0x1c]",
+        "1ccacb:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1ccacf:\t8b 44 24 5c          \tmov    eax,DWORD PTR [esp+0x5c]",
+        "1ccad3:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1ccad6:\te8 53 03 00 00       \tcall   1cce2e"
+      ]
+    },
+    {
+      "name": "mixedCharacter",
+      "start": "0x1ccb4d",
+      "end": "0x1ccb79",
+      "interpretation": "A secondary pointer selects by the sign of the original formation Y offset and owner parity, before child allocation.",
+      "instructions": [
+        "1ccb4d:\t83 7d 38 00          \tcmp    DWORD PTR [ebp+0x38],0x0",
+        "1ccb51:\t74 23                \tje     1ccb76",
+        "1ccb53:\t8b 84 24 84 00 00 00 \tmov    eax,DWORD PTR [esp+0x84]",
+        "1ccb5a:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1ccb5d:\te8 fe f2 18 00       \tcall   35be60",
+        "1ccb62:\t89 f1                \tmov    ecx,esi",
+        "1ccb64:\tf6 c1 01             \ttest   cl,0x1",
+        "1ccb67:\t74 05                \tje     1ccb6e",
+        "1ccb69:\t83 f8 01             \tcmp    eax,0x1",
+        "1ccb6c:\teb 03                \tjmp    1ccb71",
+        "1ccb6e:\t83 f8 ff             \tcmp    eax,0xffffffff",
+        "1ccb71:\t8b 75 38             \tmov    esi,DWORD PTR [ebp+0x38]",
+        "1ccb74:\t74 03                \tje     1ccb79",
+        "1ccb76:\t8b 75 0c             \tmov    esi,DWORD PTR [ebp+0xc]"
+      ]
+    },
+    {
+      "name": "sign",
+      "start": "0x35be60",
+      "end": "0x35beb3",
+      "interpretation": "Returns -1, 0 or 1. A zero offset keeps the primary character.",
+      "instructions": [
+        "35be60:\t55                   \tpush   ebp",
+        "35be61:\t89 e5                \tmov    ebp,esp",
+        "35be63:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "35be66:\t83 ec 08             \tsub    esp,0x8",
+        "35be69:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "35be6c:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "35be6f:\t81 3c 24 00 00 00 00 \tcmp    DWORD PTR [esp],0x0",
+        "35be76:\t0f 8e 0d 00 00 00    \tjle    35be89",
+        "35be7c:\tc7 44 24 04 01 00 00 \tmov    DWORD PTR [esp+0x4],0x1",
+        "35be83:\t00",
+        "35be84:\te9 22 00 00 00       \tjmp    35beab",
+        "35be89:\t81 3c 24 00 00 00 00 \tcmp    DWORD PTR [esp],0x0",
+        "35be90:\t0f 8d 0d 00 00 00    \tjge    35bea3",
+        "35be96:\tc7 44 24 04 ff ff ff \tmov    DWORD PTR [esp+0x4],0xffffffff",
+        "35be9d:\tff",
+        "35be9e:\te9 08 00 00 00       \tjmp    35beab",
+        "35bea3:\tc7 44 24 04 00 00 00 \tmov    DWORD PTR [esp+0x4],0x0",
+        "35beaa:\t00",
+        "35beab:\t8b 44 24 04          \tmov    eax,DWORD PTR [esp+0x4]",
+        "35beaf:\t89 ec                \tmov    esp,ebp",
+        "35beb1:\t5d                   \tpop    ebp",
+        "35beb2:\tc3                   \tret"
+      ]
+    }
+  ],
+  "emulation": {
+    "engine": "unicorn",
+    "version": "2.1.4",
+    "geometryBudget": 20000,
+    "selectorBudget": 1000,
+    "hooks": [
+      "controlled globals",
+      "require a successful geometry assertion"
+    ],
+    "memory": "ELF segments are read/execute only. Fake globals and stack are isolated writable pages. Only geometry/trig and the explicit parity/selector ranges execute; all interrupts fail."
+  },
+  "limits": [
+    "The Android app is not launched and its library is not loaded into the host process.",
+    "Owner-list lookup and lane lookup are controlled inputs. Native parity, integer offsets and character-pointer selection execute from the source binary.",
+    "Child allocation, collision adjustment, edge snapping, deployment visibility and visual-delay timing are not executed."
+  ]
+}

@@ -1,9 +1,10 @@
 """Verify pinned native formation math in a bounded x86 emulator.
 
 Requires unicorn==2.1.4 only for regeneration; ordinary tests use the fixture.
-The Android app/library is never loaded into the host process. Only the geometry
-and integer trig instruction ranges run; globals/assertions are controlled hooks.
+The Android app/library is never loaded into the host process. Only bounded
+geometry/trig and optional mixed-group fragments run; globals/assertions are hooks.
 Usage: python scripts/probe-formation.py /path/to/1.8.1/x86/libg.so [--check]
+Add --mixed to capture Goblin Gang geometry and its native character selector.
 """
 import argparse
 import hashlib
@@ -23,6 +24,7 @@ from unicorn.x86_const import (
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("library", type=Path)
 parser.add_argument("--check", action="store_true")
+parser.add_argument("--mixed", action="store_true")
 args = parser.parse_args()
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires pinned unicorn==2.1.4")
@@ -72,7 +74,11 @@ def instruction_hook(_cpu, address, _size, _data):
         if not condition:
             raise RuntimeError("Native formation assertion failed")
         return_from_hook()
-    elif not (0x1cce2e <= address < 0x1cd028 or 0x35bec0 <= address < 0x35c117):
+    elif not (0x1cce2e <= address < 0x1cd028 or 0x35bec0 <= address < 0x35c117 or
+              (args.mixed and (0x1cca1b <= address < 0x1cca20 or
+                               0x1cca6a <= address < 0x1cca74 or
+                               0x1ccb4d <= address < 0x1ccb79 or
+                               0x35be60 <= address < 0x35beb3))):
         raise RuntimeError(f"Native instruction escaped geometry/trig ranges: {address:#x}")
 
 def interrupt_hook(_cpu, interrupt, _data):
@@ -97,6 +103,129 @@ def native_point(index, count, radius, angle, flip_y, lane):
     if cpu.reg_read(UC_X86_REG_EIP) != stop_address:
         raise RuntimeError("Native fragment exceeded the instruction budget")
     return list(struct.unpack("<2i", cpu.mem_read(output, 8)))
+
+if args.mixed:
+    import csv
+    import io
+    import sys
+
+    input_paths = ["reference/logic/spells_characters.csv", "reference/logic/characters.csv",
+                   "reference/client/formation-native-trace.json"]
+    inputs = [{"path": path, "sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest()}
+              for path in input_paths]
+    spells, characters = [[*csv.DictReader(io.StringIO(Path(path).read_text()))]
+                          for path in input_paths[:2]]
+    card = next(row for row in spells if row["Name"] == "GoblinGang")
+    primary = next(row for row in characters if row["Name"] == card["SummonCharacter"])
+    secondary = next(row for row in characters if row["Name"] == card["SummonCharacterSecond"])
+    count = int(card["SummonNumber"])
+    radius = int(card["SummonRadius"] or primary["SpawnRadius"] or primary["CollisionRadius"])
+    angle = int(primary["SpawnAngleShift"] or 0)
+    if (primary["Name"], secondary["Name"], count, radius, angle) != ("Goblin", "SpearGoblin", 6, 700, 0):
+        raise RuntimeError("Recheck the source Goblin Gang profile")
+
+    def setup_mixed():
+        sp, bp = stack_address + 0xf0000, stack_address + 0xf8000
+        for register in registers:
+            cpu.reg_write(register, 0)
+        cpu.reg_write(UC_X86_REG_EFLAGS, 2)
+        cpu.reg_write(UC_X86_REG_ESP, sp)
+        cpu.reg_write(UC_X86_REG_EBP, bp)
+        cpu.mem_write(sp - 0x1000, b"\0" * 0x2000)
+        cpu.mem_write(bp, b"\0" * 0x100)
+        return sp, bp
+
+    def fragment(start, end):
+        cpu.emu_start(start, end, count=1000)
+        if cpu.reg_read(UC_X86_REG_EIP) != end:
+            raise RuntimeError("Native mixed fragment exceeded the instruction budget")
+
+    def native_flip(owner):
+        sp, _ = setup_mixed()
+        cpu.mem_write(sp + 0x48, struct.pack("<i", owner))
+        fragment(0x1cca1b, 0x1cca20)
+        fragment(0x1cca6a, 0x1cca74)
+        return bool(cpu.mem_read(sp + 0x50, 1)[0])
+
+    def native_character(y, owner, has_secondary=True):
+        sp, bp = setup_mixed()
+        primary_pointer, secondary_pointer = globals_address + 0x100, globals_address + 0x200
+        cpu.reg_write(UC_X86_REG_ESI, owner)
+        cpu.mem_write(bp + 0xc, struct.pack("<I", primary_pointer))
+        cpu.mem_write(bp + 0x38, struct.pack("<I", secondary_pointer if has_secondary else 0))
+        cpu.mem_write(sp + 0x84, struct.pack("<i", y))
+        fragment(0x1ccb4d, 0x1ccb79)
+        selected = cpu.reg_read(UC_X86_REG_ESI)
+        if selected not in [primary_pointer, secondary_pointer]:
+            raise RuntimeError("Unexpected native mixed character pointer")
+        return primary["Name"] if selected == primary_pointer else secondary["Name"]
+
+    mixed_cases = []
+    for owner in range(4):
+        for lane in [0, 1]:
+            flip_y = native_flip(owner)
+            points = []
+            for index in range(count):
+                x, y = native_point(index, count, radius, angle, flip_y, lane)
+                points.append({"index": index, "x": x, "y": y,
+                               "character": native_character(y, owner)})
+            mixed_cases.append({"ownerIndex": owner, "lane": lane, "flipY": flip_y,
+                                "points": points})
+    sign_cases = [{"ownerIndex": owner, "y": y, "hasSecondary": has_secondary,
+                   "character": native_character(y, owner, has_secondary)}
+                  for owner in range(4) for y in [-1, 0, 1] for has_secondary in [False, True]]
+    mixed_ranges = [
+        ("secondaryCharacterLoader", 0x200cbe, 0x200cf2,
+         "SummonCharacterSecond at 0x61a160 resolves to SpellData+0x28."),
+        ("secondaryCharacterAccessor", 0x2027e4, 0x2027f4,
+         "Returns the secondary character pointer at SpellData+0x28."),
+        ("secondaryCharacterCall", 0x220e49, 0x220e55,
+         "The card summon path retains the secondary pointer at stack+0x64."),
+        ("summonGroupCall", 0x220e89, 0x220efd,
+         "Passes the secondary pointer at argument stack+0x30, read by the group at EBP+0x38."),
+        ("ownerParity", 0x1cca1b, 0x1cca20,
+         "Masks the previously found owner index to its low bit."),
+        ("formationFlip", 0x1cca6a, 0x1cca74,
+         "Even owner indices select the geometry Y reflection."),
+        ("formationCall", 0x1cca9b, 0x1ccadb,
+         "The primary character angle, group count, selected radius, reflection and lane enter the existing geometry helper."),
+        ("mixedCharacter", 0x1ccb4d, 0x1ccb79,
+         "A secondary pointer selects by the sign of the original formation Y offset and owner parity, before child allocation."),
+        ("sign", 0x35be60, 0x35beb3,
+         "Returns -1, 0 or 1. A zero offset keeps the primary character."),
+    ]
+    mixed_blocks = []
+    for name, start, end, interpretation in mixed_ranges:
+        assembly = subprocess.check_output(["objdump", "-d", "-Mintel",
+                      f"--start-address={start:#x}", f"--stop-address={end:#x}", str(args.library)], text=True)
+        instructions = [re.sub(r"\s+<[^>]+>", "", line.strip())
+                        for line in assembly.splitlines() if re.match(r"\s+[0-9a-f]+:", line)]
+        mixed_blocks.append({"name": name, "start": hex(start), "end": hex(end),
+                             "interpretation": interpretation, "instructions": instructions})
+    source = "https://raw.githubusercontent.com/smlbiobot/cr/7fc7687e6de74690e902543ee4b59f562121e225/apk/1.8.1/com.supercell.clashroyale-1.8.1/lib/x86/libg.so"
+    trace = {"source": source, "sha256": sha256, "inputs": inputs,
+             "profile": {"card": card["Name"], "primary": primary["Name"], "secondary": secondary["Name"],
+                         "count": count, "radius": radius, "angleShift": angle},
+             "blocks": mixed_blocks,
+             "emulation": {"engine": "unicorn", "version": "2.1.4", "geometryBudget": 20000,
+                           "selectorBudget": 1000, "hooks": ["controlled globals", "require a successful geometry assertion"],
+                           "memory": "ELF segments are read/execute only. Fake globals and stack are isolated writable pages. Only geometry/trig and the explicit parity/selector ranges execute; all interrupts fail."},
+             "limits": ["The Android app is not launched and its library is not loaded into the host process.",
+                        "Owner-list lookup and lane lookup are controlled inputs. Native parity, integer offsets and character-pointer selection execute from the source binary.",
+                        "Child allocation, collision adjustment, edge snapping, deployment visibility and visual-delay timing are not executed."]}
+    fixture = {"source": source, "sha256": sha256, "emulator": "unicorn 2.1.4",
+               "cases": mixed_cases, "signCases": sign_cases}
+    for path, value in [(Path("reference/client/mixed-formation-native-trace.json"), trace),
+                        (Path("tests/fixtures/native-mixed-formation-golden.json"), fixture)]:
+        output = json.dumps(value, indent=2) + "\n"
+        if args.check:
+            if path.read_text() != output:
+                raise RuntimeError(f"Native mixed artifact differs: {path}")
+        else:
+            path.write_text(output)
+    print(json.dumps({"cases": len(mixed_cases), "points": sum(len(c["points"]) for c in mixed_cases),
+                      "signCases": len(sign_cases), "blocks": len(mixed_blocks), "sha256": sha256}))
+    sys.exit(0)
 
 configurations = [(1, 500, 0), (2, 500, 0), (2, 700, 0), (3, 500, 0),
                   (3, 650, 0), (3, 800, 0), (4, 500, 0), (5, 750, 45),

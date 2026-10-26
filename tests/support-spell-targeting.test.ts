@@ -521,7 +521,7 @@ describe("friendly Heal and Clone AI", () => {
       expect(snapshot(replay)).toEqual(snapshot(battle));
       expect(replay.audioEvents).toEqual(battle.audioEvents);
       expect(replay.exportReplay()).toMatchObject({
-        version: 21,
+        version: 22,
         rulesFamily: "origin",
       });
     });

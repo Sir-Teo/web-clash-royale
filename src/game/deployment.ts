@@ -35,6 +35,13 @@ export function clonePosition(entity: Point, center: Point, team: Team): Point {
 }
 export const deploymentRadius = (id: CardId) =>
   (collisionRadii.cards as Record<string, number>)[id];
+/** Native mixed groups select the child before collision/edge adjustment. */
+export function goblinGangCharacter(index: number, rulesVersion = 22): "goblins" | "spear-goblins" {
+  const secondary = rulesVersion >= 22
+    ? goblinGang.formation.secondaryIndices.includes(index)
+    : index >= 3;
+  return secondary ? "spear-goblins" : "goblins";
+}
 /** Presentation offset only: does not extend combat deployment. */
 export function deploymentVisualDelay(id: CardId, index: number, count: number) {
   const row = (deploymentVisual.cards as Record<string, {
@@ -67,10 +74,12 @@ export function deploymentPositions(
   point: Point,
   team: Team = "blue",
   countOverride?: number,
-  rulesVersion = 19,
+  rulesVersion = 22,
 ): Point[] {
   const count = countOverride ?? CARD_MAP[id].count;
-  const formation = rulesVersion >= 19 ? nativeCardFormation(id) : undefined;
+  const formation = rulesVersion >= 22 && id === "goblin-gang"
+    ? goblinGang.formation
+    : rulesVersion >= 19 ? nativeCardFormation(id) : undefined;
   if (formation && count >= 2 && count <= 6) {
     // The two-lane browser arena retains its existing continuous tap position
     // and edge clamps. Native grid/lane lookup and spawn collision adjustment

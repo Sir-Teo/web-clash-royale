@@ -8,5 +8,14 @@
     "Goblin",
     "SpearGoblin"
   ],
+  "formation": {
+    "radius": 700,
+    "angleShift": 0,
+    "secondaryIndices": [
+      0,
+      1,
+      5
+    ]
+  },
   "effect": "CharacterDeploy"
 }

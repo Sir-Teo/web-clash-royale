@@ -40,7 +40,7 @@ describe("native formation geometry", () => {
       }),
     ).toEqual(row.points);
   });
-  it("keeps mixed and large groups outside the adopted card formations", () => {
+  it("keeps mixed and large groups outside the homogeneous formation map", () => {
     expect(nativeCardFormation("goblin-gang")).toBeUndefined();
     expect(nativeCardFormation("skeleton-army")).toBeUndefined();
     expect(nativeCardFormation("archers")).toMatchObject({

@@ -5,10 +5,18 @@
     {
       "path": "reference/logic/spells_characters.csv",
       "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/client/mixed-formation-native-trace.json",
+      "sha256": "9f6d79d90f17cd4663542b04130e829c841224c7de5b58d87bac75f8d6353a4e"
+    },
+    {
+      "path": "tests/fixtures/native-mixed-formation-golden.json",
+      "sha256": "2b2e12c3e9c73b63fb43a48049f7ea65293e690f381c727da4c66b1f0c83541c"
     }
   ],
   "output": {
     "path": "src/game/goblin-gang-data.json",
-    "sha256": "196c0348ab6cb604a3b19ee298d832e417702583f5c7ecce43e1528c51a67fec"
+    "sha256": "a880a7c7dd97cd9cf63f503834e677de85c6b0a0fd490386dd18f51c87c34ad3"
   }
 }

@@ -1564,9 +1564,10 @@ function render(now: number) {
     (document.querySelector("#destruction") as HTMLElement).dataset.formation = JSON.stringify({
       rulesVersion: battle.rulesVersion,
       visible: preview.object.visible,
-      preview: preview.units.map((u: any) => ({ x: u.object.position.x + 9, y: u.object.position.z + 16 })),
+      preview: preview.units.map((u: any) => ({ x: u.object.position.x + 9, y: u.object.position.z + 16,
+        card: u.state.card, native: !!u.sprite })),
       bodies: battle.entities.filter((e) => e.kind === "troop").map((e) => ({
-        id: e.id, team: e.team, x: e.x, y: e.y,
+        id: e.id, card: e.card, team: e.team, x: e.x, y: e.y,
         visualX: (arena as any).units.get(e.id)?.object.position.x + 9,
         visualY: (arena as any).units.get(e.id)?.object.position.z + 16,
       })),

@@ -1,0 +1,497 @@
+{
+  "source": "https://raw.githubusercontent.com/smlbiobot/cr/7fc7687e6de74690e902543ee4b59f562121e225/apk/1.8.1/com.supercell.clashroyale-1.8.1/lib/x86/libg.so",
+  "sha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "emulator": "unicorn 2.1.4",
+  "cases": [
+    {
+      "ownerIndex": 0,
+      "lane": 0,
+      "flipY": true,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": -1400,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": -700,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": 700,
+          "character": "Goblin"
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": 1400,
+          "character": "Goblin"
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": 700,
+          "character": "Goblin"
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": -700,
+          "character": "SpearGoblin"
+        }
+      ]
+    },
+    {
+      "ownerIndex": 0,
+      "lane": 1,
+      "flipY": true,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": -1400,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": -700,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": 700,
+          "character": "Goblin"
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": 1400,
+          "character": "Goblin"
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": 700,
+          "character": "Goblin"
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": -700,
+          "character": "SpearGoblin"
+        }
+      ]
+    },
+    {
+      "ownerIndex": 1,
+      "lane": 0,
+      "flipY": false,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1400,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": 700,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": -700,
+          "character": "Goblin"
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": -1400,
+          "character": "Goblin"
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": -700,
+          "character": "Goblin"
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": 700,
+          "character": "SpearGoblin"
+        }
+      ]
+    },
+    {
+      "ownerIndex": 1,
+      "lane": 1,
+      "flipY": false,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1400,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": 700,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": -700,
+          "character": "Goblin"
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": -1400,
+          "character": "Goblin"
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": -700,
+          "character": "Goblin"
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": 700,
+          "character": "SpearGoblin"
+        }
+      ]
+    },
+    {
+      "ownerIndex": 2,
+      "lane": 0,
+      "flipY": true,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": -1400,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": -700,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": 700,
+          "character": "Goblin"
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": 1400,
+          "character": "Goblin"
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": 700,
+          "character": "Goblin"
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": -700,
+          "character": "SpearGoblin"
+        }
+      ]
+    },
+    {
+      "ownerIndex": 2,
+      "lane": 1,
+      "flipY": true,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": -1400,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": -700,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": 700,
+          "character": "Goblin"
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": 1400,
+          "character": "Goblin"
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": 700,
+          "character": "Goblin"
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": -700,
+          "character": "SpearGoblin"
+        }
+      ]
+    },
+    {
+      "ownerIndex": 3,
+      "lane": 0,
+      "flipY": false,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1400,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": 700,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": -700,
+          "character": "Goblin"
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": -1400,
+          "character": "Goblin"
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": -700,
+          "character": "Goblin"
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": 700,
+          "character": "SpearGoblin"
+        }
+      ]
+    },
+    {
+      "ownerIndex": 3,
+      "lane": 1,
+      "flipY": false,
+      "points": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1400,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 1,
+          "x": -1212,
+          "y": 700,
+          "character": "SpearGoblin"
+        },
+        {
+          "index": 2,
+          "x": -1212,
+          "y": -700,
+          "character": "Goblin"
+        },
+        {
+          "index": 3,
+          "x": 0,
+          "y": -1400,
+          "character": "Goblin"
+        },
+        {
+          "index": 4,
+          "x": 1212,
+          "y": -700,
+          "character": "Goblin"
+        },
+        {
+          "index": 5,
+          "x": 1212,
+          "y": 700,
+          "character": "SpearGoblin"
+        }
+      ]
+    }
+  ],
+  "signCases": [
+    {
+      "ownerIndex": 0,
+      "y": -1,
+      "hasSecondary": false,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 0,
+      "y": -1,
+      "hasSecondary": true,
+      "character": "SpearGoblin"
+    },
+    {
+      "ownerIndex": 0,
+      "y": 0,
+      "hasSecondary": false,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 0,
+      "y": 0,
+      "hasSecondary": true,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 0,
+      "y": 1,
+      "hasSecondary": false,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 0,
+      "y": 1,
+      "hasSecondary": true,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 1,
+      "y": -1,
+      "hasSecondary": false,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 1,
+      "y": -1,
+      "hasSecondary": true,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 1,
+      "y": 0,
+      "hasSecondary": false,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 1,
+      "y": 0,
+      "hasSecondary": true,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 1,
+      "y": 1,
+      "hasSecondary": false,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 1,
+      "y": 1,
+      "hasSecondary": true,
+      "character": "SpearGoblin"
+    },
+    {
+      "ownerIndex": 2,
+      "y": -1,
+      "hasSecondary": false,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 2,
+      "y": -1,
+      "hasSecondary": true,
+      "character": "SpearGoblin"
+    },
+    {
+      "ownerIndex": 2,
+      "y": 0,
+      "hasSecondary": false,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 2,
+      "y": 0,
+      "hasSecondary": true,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 2,
+      "y": 1,
+      "hasSecondary": false,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 2,
+      "y": 1,
+      "hasSecondary": true,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 3,
+      "y": -1,
+      "hasSecondary": false,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 3,
+      "y": -1,
+      "hasSecondary": true,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 3,
+      "y": 0,
+      "hasSecondary": false,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 3,
+      "y": 0,
+      "hasSecondary": true,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 3,
+      "y": 1,
+      "hasSecondary": false,
+      "character": "Goblin"
+    },
+    {
+      "ownerIndex": 3,
+      "y": 1,
+      "hasSecondary": true,
+      "character": "SpearGoblin"
+    }
+  ]
+}

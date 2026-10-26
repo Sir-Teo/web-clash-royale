@@ -63,7 +63,7 @@ describe("native Goblin Gang card", () => {
       const positions = deploymentPositions("goblin-gang", { x: 9, y }, team);
       expect(positions).toHaveLength(6);
       expect(
-        positions.every((pos) => Math.hypot(pos.x - 9, pos.y - y) <= 0.701),
+        positions.every((pos) => Math.hypot(pos.x - 9, pos.y - y) <= 1.401),
       ).toBe(true);
       expect(battle.play(team, 0, 9, y).ok).toBe(true);
       expect(p.elixir).toBe(7);

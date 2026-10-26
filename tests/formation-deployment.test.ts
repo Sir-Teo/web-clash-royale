@@ -84,8 +84,8 @@ describe("source-backed small card formations", () => {
         }
     },
   );
-  it("retains mixed/large/single layouts and keeps the existing browser edge clamps", () => {
-    for (const card of ["goblin-gang", "skeleton-army", "knight"] as const)
+  it("retains large/single layouts and keeps the existing browser edge clamps", () => {
+    for (const card of ["skeleton-army", "knight"] as const)
       expect(deploymentPositions(card, { x: 4, y: 22 })).toEqual(
         deploymentPositions(card, { x: 4, y: 22 }, "blue", undefined, 18),
       );

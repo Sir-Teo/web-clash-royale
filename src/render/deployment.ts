@@ -3,7 +3,7 @@ import { CARD_MAP } from "../game/cards";
 import type { CardId } from "../game/cards";
 import { entityVisualHeight } from "../game/engine";
 import type { Point } from "../game/engine";
-import { deploymentPositions } from "../game/deployment";
+import { deploymentPositions, goblinGangCharacter } from "../game/deployment";
 import { troopModel } from "./models";
 import { SpriteLibrary } from "./sprites";
 import type { AnimatedSprite, SpriteState } from "./sprites";
@@ -36,14 +36,15 @@ export class DeploymentPreview {
       const card = CARD_MAP[id],
         materialCopies = new Map<T.Material, T.Material>();
       for (let i = 0; i < card.count; i++) {
+        const body = id === "goblin-gang" ? goblinGangCharacter(i) : id;
         let object: T.Group, sprite: AnimatedSprite | undefined;
         if (card.kind === "building") object = this.building(id);
         else {
           sprite = this.library.make(
-            id === "dark-prince" ? "dark-prince-shield" :
-            id === "guards" ? "guards-shield" : id,
+            body === "dark-prince" ? "dark-prince-shield" :
+            body === "guards" ? "guards-shield" : body,
           ) ?? undefined;
-          object = sprite ? new T.Group() : troopModel(id, "blue").group;
+          object = sprite ? new T.Group() : troopModel(body, "blue").group;
           if (sprite) object.add(sprite.mesh);
           else object.rotation.y = Math.PI;
         }
@@ -77,12 +78,12 @@ export class DeploymentPreview {
           sprite,
           state: {
             id: i,
-            card: id,
+            card: body,
             team: "blue",
             x: 0,
             y: 0,
             attack: 0,
-            interval: card.interval,
+            interval: CARD_MAP[body].interval,
             move: 0,
             deploy: 0,
           },
