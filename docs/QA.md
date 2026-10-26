@@ -1997,3 +1997,12 @@ The test first corrected its initial timing assumption: two 16-ms RAF callbacks 
 Rules 23, simulation, replay and saved formats are unchanged. No push or deployment was performed.
 
 TypeScript and production compilation pass, as do Pages-prefixed offline reload, the cached match worker, rules-23 startup and all 278 native combat/death/music files. Root output is restored with cache version `41f05a78676b`. The pack remains 921 URLs and 894 unique content groups, omitting 8.1 MB of duplicate bytes.
+
+
+## Native Inferno range loss and scan gating
+
+The new `--attack-loop --range-loss` capture and separate `--check` reproduce byte-for-byte: 32 controlled cases, 5,120 native updates, 524 damage-dispatch entries, eight exact range-boundary samples and nineteen disassembly blocks. The native maximum/minimum range getters, own collision-radius getter, target geometry and saturating integer distance helper now execute. The pinned archived `ADD_CHARACTER_RANGE_TO_RADIUS` flag is true; its native string/field loader is retained alongside the CollisionRadius column/field mapping. Maximum reach against zero-radius targets is inclusive at 6,600/4,500 source units for Tower/Dragon, and fails at one further unit.
+
+Both range loss and explicit removal notification pass through the native finish gate. A controlled replacement is available from the following update, but all 32 cases acquire only on the first permitted scan five updates after loss. The provider tail-calls the real setter from that scan; no external assignment bypasses the gate. Two loss phases expose interaction between real-time reload and buffed ramp/pulse clocks, including the late slow-Dragon case. Candidate ranking, full card state transitions, complete death propagation and damage allocation remain explicit boundaries.
+
+Both earlier capture modes also regenerate byte-for-byte, including the original imported clock evidence and its hashes. Python syntax validation and diff whitespace checks pass. These are script/reference/documentation changes; app rules 23 and root production cache `41f05a78676b` are unchanged. No rebuild, push or deployment was performed.

@@ -21,7 +21,10 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("library", type=Path)
 parser.add_argument("--check", action="store_true")
 parser.add_argument("--attack-loop", action="store_true", help="Capture controlled target-loss/reacquisition through the larger attack loop")
+parser.add_argument("--range-loss", action="store_true", help="Use native range geometry and acquire through the main loop's scan gate")
 args = parser.parse_args()
+if args.range_loss and not args.attack_loop:
+    parser.error("--range-loss requires --attack-loop")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()

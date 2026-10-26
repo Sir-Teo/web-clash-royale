@@ -88,6 +88,19 @@ def capture(env):
             return_hook()
 
     cpu.hook_add(UC_HOOK_CODE, hook)
+    if args.range_loss:
+        from lib.inferno_range_probe import capture as capture_range
+
+        def set_tick(value):
+            nonlocal tick
+            tick = value
+
+        capture_range(env, {"config": config, "target_a": target_a, "target_b": target_b,
+                            "finish_ms": finish_ms, "state": state, "pulses": pulses,
+                            "calls": calls, "constants": constants, "set_tick": set_tick,
+                            "globals_path": globals_path, "globals_bytes": globals_bytes,
+                            "globals_rows": globals_rows})
+        return
     cases = []
     for card, source in [("inferno-tower", rows["reference/logic/buildings.csv"]["InfernoTower"]),
                          ("inferno-dragon", rows["reference/logic/characters.csv"]["InfernoDragon"])]:
