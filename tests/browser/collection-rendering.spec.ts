@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import sharp from "sharp";
 import { CARDS } from "../../src/game/cards";
 
 test.use({ serviceWorkers: "block", actionTimeout: 20000 });
@@ -102,14 +103,27 @@ test("collection search, type, cost and sort reuse native artwork within their d
       );
   }
   await modal.evaluate((el, scroll) => (el.scrollTop = scroll), scroll);
-  expect(
-    (
-      await modal.screenshot({
-        path: info.outputPath("reused-collection.png"),
-        animations: "disabled",
-      })
-    ).equals(pixels),
-  ).toBe(true);
+  const restoredPixels = await modal.screenshot({
+    path: info.outputPath("reused-collection.png"),
+    animations: "disabled",
+  });
+  const original = await sharp(pixels)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const restored = await sharp(restoredPixels)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  expect(restored.info).toEqual(original.info);
+  // The rounded modal border may differ by one rasterized 8-bit value.
+  let maxChannelDelta = 0;
+  for (let i = 0; i < original.data.length; i++)
+    maxChannelDelta = Math.max(
+      maxChannelDelta,
+      Math.abs(original.data[i] - restored.data[i]),
+    );
+  expect(maxChannelDelta).toBeLessThanOrEqual(1);
   const cost = page.getByLabel("Elixir cost", { exact: true });
   const sort = page.getByLabel("Sort cards", { exact: true });
   await cost.selectOption("4");
@@ -137,6 +151,26 @@ test("collection search, type, cost and sort reuse native artwork within their d
   await cost.selectOption("all");
   await sort.selectOption("collection");
   await expect(page.locator("[data-collection]")).toHaveCount(CARDS.length);
+  for (const [id, name] of [
+    ["musketeer", "Musketeer"],
+    ["giant", "Giant"],
+  ]) {
+    const card = page.locator(`[data-collection="${id}"]`);
+    await card.scrollIntoViewIfNeeded();
+    await card.focus();
+    const heldScroll = await modal.evaluate((el) => el.scrollTop);
+    await card.press("Enter");
+    await expect(page.getByRole("dialog", { name, exact: true })).toBeVisible();
+    await page
+      .getByRole("button", { name: "Back to collection", exact: true })
+      .click();
+    await expect(card).toBeFocused();
+    await expect(card).toBeInViewport();
+    expect(await modal.evaluate((el) => el.scrollTop)).toBeCloseTo(
+      heldScroll,
+      0,
+    );
+  }
   const retained = await page.evaluate(() => {
     const p = (window as any).__collectionTest;
     const grid = document.querySelector("#collection-grid");
@@ -211,16 +245,33 @@ test("cached rows hidden before native artwork loads upgrade when restored", asy
     ).toHaveCount(0);
     const saved = await page.evaluate((key) => localStorage.getItem(key), key);
     await page.evaluate(() => {
+      (window as any).__lateCollectionGrid =
+        document.querySelector("#collection-grid");
       (window as any).__lateCollectionCard = document.querySelector(
         '[data-collection="musketeer"]',
       );
     });
     await page.locator("#card-search").fill("goblin");
     await expect(page.locator("[data-collection]")).toHaveCount(6);
+    await page.locator('[data-collection="goblins"]').click();
+    await expect(page.locator(".detail-art.native-card-ready")).toHaveCount(0);
     release();
+    await expect(page.locator(".detail-art.native-card-ready")).toHaveCount(1, {
+      timeout: 60000,
+    });
+    await page
+      .getByRole("button", { name: "Back to collection", exact: true })
+      .click();
     await expect(
       page.locator("#collection-grid .native-card-ready"),
     ).toHaveCount(6, { timeout: 60000 });
+    expect(
+      await page.evaluate(
+        () =>
+          document.querySelector("#collection-grid") ===
+          (window as any).__lateCollectionGrid,
+      ),
+    ).toBe(true);
     await page.locator("#card-search").fill("");
     await expect(
       page.locator("#collection-grid .native-card-ready"),

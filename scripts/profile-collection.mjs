@@ -1,6 +1,9 @@
 // Start Vite/preview on 5188; this probe also runs against an earlier build.
 import { chromium } from "playwright";
 const types = process.argv.includes("--types");
+const inspect = process.argv.includes("--inspect");
+if (types && inspect) throw new Error("Choose --types or --inspect");
+const wholeDialog = types || inspect;
 
 const browser = await chromium.launch({
   args: [
@@ -46,13 +49,13 @@ try {
   );
   await page.evaluate(() => document.fonts.ready);
   await page.locator("#card-search").focus();
-  if (types) await page.mouse.move(0, 0);
+  if (wholeDialog) await page.mouse.move(0, 0);
   await page.waitForTimeout(350);
   const scroll = await page.locator(".modal").evaluate((el) => el.scrollTop);
   const pixels = () =>
     page.locator(".modal").screenshot({ animations: "disabled" });
-  const beforePixels = await pixels();
-  const initial = await page.evaluate((types) => {
+  const beforePixels = inspect ? null : await pixels();
+  const initial = await page.evaluate((wholeDialog) => {
     const grid = document.querySelector("#collection-grid");
     const refs = [...grid.querySelectorAll("[data-native-card]")].map(
       (card) => ({
@@ -72,7 +75,7 @@ try {
         if (
           r.type === "childList" &&
           r.target.matches?.(".native-card-art") &&
-          (!types || r.target.closest("#collection-grid"))
+          (!wholeDialog || r.target.closest("#collection-grid"))
         )
           metrics.artRebuilds++;
         else if (r.type === "childList" && r.target.id === "collection-grid")
@@ -83,34 +86,49 @@ try {
       }
     };
     const observer = new MutationObserver(collect);
-    observer.observe(types ? document.querySelector("#modal-root") : grid, {
-      subtree: true,
-      childList: true,
-      attributes: true,
-    });
+    observer.observe(
+      wholeDialog ? document.querySelector("#modal-root") : grid,
+      {
+        subtree: true,
+        childList: true,
+        attributes: true,
+      },
+    );
     window.__collectionProbe = { grid, refs, metrics, observer, collect };
     return {
       cards: refs.length,
       nodes: grid.querySelectorAll("*").length,
       frames: window.__arena.state.renderedFrames,
     };
-  }, types);
+  }, wholeDialog);
   const inputs = [];
   const started = performance.now();
-  for (const value of types
-    ? ["troop", "spell", "building", "all"]
-    : ["g", "go", "gob", "goblin", ""]) {
+  if (inspect) {
     const start = performance.now();
-    if (types) await page.locator(`[data-filter="${value}"]`).click();
-    else await page.locator("#card-search").fill(value);
+    await page.locator('[data-collection="musketeer"]').click();
+    await page
+      .getByRole("button", { name: "Back to collection", exact: true })
+      .click();
     inputs.push({
-      [types ? "type" : "search"]: value,
+      card: "musketeer",
       elapsedMs: performance.now() - start,
       count: await page.locator("#collection-grid [data-collection]").count(),
     });
-  }
+  } else
+    for (const value of types
+      ? ["troop", "spell", "building", "all"]
+      : ["g", "go", "gob", "goblin", ""]) {
+      const start = performance.now();
+      if (types) await page.locator(`[data-filter="${value}"]`).click();
+      else await page.locator("#card-search").fill(value);
+      inputs.push({
+        [types ? "type" : "search"]: value,
+        elapsedMs: performance.now() - start,
+        count: await page.locator("#collection-grid [data-collection]").count(),
+      });
+    }
   const elapsedMs = performance.now() - started;
-  const final = await page.evaluate(() => {
+  const final = await page.evaluate((inspect) => {
     const p = window.__collectionProbe;
     const grid = document.querySelector("#collection-grid");
     p.collect(p.observer.takeRecords());
@@ -128,8 +146,15 @@ try {
       cards: grid.querySelectorAll("[data-collection]").length,
       nodes: grid.querySelectorAll("*").length,
       frames: window.__arena.state.renderedFrames,
+      ...(inspect
+        ? {
+            focusedCard:
+              document.activeElement?.getAttribute("data-collection"),
+            scrollTop: document.querySelector(".modal").scrollTop,
+          }
+        : {}),
     };
-  });
+  }, inspect);
   if (types) {
     await page.locator("#card-search").focus();
     await page.mouse.move(0, 0);
@@ -138,18 +163,20 @@ try {
       .evaluate((el, scroll) => (el.scrollTop = scroll), scroll);
     await page.waitForTimeout(180);
   }
-  const afterPixels = await pixels();
+  const afterPixels = inspect ? null : await pixels();
   if (errors.length) throw new Error(errors.join("\n"));
   console.log(
     JSON.stringify(
       {
         url,
-        mode: types ? "type-filters" : "search",
+        mode: inspect ? "inspection" : types ? "type-filters" : "search",
         elapsedMs,
         inputs,
         initial,
         final,
-        sameModalPixels: beforePixels.equals(afterPixels),
+        ...(inspect
+          ? {}
+          : { sameModalPixels: beforePixels.equals(afterPixels) }),
       },
       null,
       2,

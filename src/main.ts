@@ -268,7 +268,7 @@ let filter: CollectionKind = "all";
 let search = "";
 let collectionCost: number | "all" = "all";
 let collectionOrder: CollectionOrder = "collection";
-// A replaced dialog releases its grid and cached rows together.
+// Rows belong to their builder grid, including during a read-only inspection.
 const collectionRows = new WeakMap<HTMLElement, Map<CardId, HTMLDivElement>>();
 const deckEdits = new DeckEditHistory();
 let deckEditNotice = "";
@@ -2006,11 +2006,18 @@ function renderCollection() {
       (e.onclick = () => {
         const id = e.dataset.collection as CardId;
         if (editSlot < 0) {
+          const view = $("#modal-root").firstElementChild!;
+          const panel = view.querySelector<HTMLElement>(".modal")!;
+          const scroll = panel.scrollTop;
           showCard(
             id,
             () => {
-              renderDeckBuilder();
-              document
+              modalKey = "deck";
+              modalFocus.render("deck", () => $("#modal-root").replaceChildren(view));
+              nativeCards.hydrate(view);
+              syncGraphicsStatus();
+              panel.scrollTop = scroll;
+              view
                 .querySelector<HTMLElement>(`[data-collection="${id}"]`)
                 ?.focus();
             },
