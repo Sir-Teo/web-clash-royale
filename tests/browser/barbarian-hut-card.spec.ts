@@ -13,12 +13,11 @@ test("Barbarian Hut renders and releases a staggered Barbarian pair", async ({ p
   const hut = async () => JSON.parse(
     (await page.locator("#destruction").getAttribute("data-barbarian-hut"))!,
   );
-  for (let i = 0; i < 13; i++) await page.locator("#second").click();
   expect((await hut()).barbarians).toBe(0);
   await page.screenshot({ path: info.outputPath("barbarian-hut-idle.png"), fullPage: true });
-  for (let i = 0; i < 6; i++) await page.locator("#step").click();
+  await page.locator("#step").click();
   await expect.poll(async () => (await hut()).barbarians).toBe(1);
-  expect((await hut()).burst).toBeGreaterThan(0);
+  expect((await hut()).index).toBe(1);
   for (let i = 0; i < 5; i++) await page.locator("#step").click();
   await expect.poll(async () => (await hut()).barbarians).toBe(2);
   await page.locator("#second").click();

@@ -1,0 +1,50 @@
+{
+  "witch": {
+    "source": "Witch",
+    "child": "skeletons",
+    "start": 0,
+    "interval": 0.3,
+    "count": 3,
+    "pause": 6.9
+  },
+  "night-witch": {
+    "source": "DarkWitch",
+    "child": "bats",
+    "start": 0,
+    "interval": 0,
+    "count": 2,
+    "pause": 5
+  },
+  "goblin-hut": {
+    "source": "GoblinHut",
+    "child": "spear-goblins",
+    "start": 0,
+    "interval": 0,
+    "count": 1,
+    "pause": 4.95
+  },
+  "tombstone": {
+    "source": "Tombstone",
+    "child": "skeletons",
+    "start": 0,
+    "interval": 0,
+    "count": 1,
+    "pause": 2.95
+  },
+  "furnace": {
+    "source": "FirespiritHut",
+    "child": "fire-spirits",
+    "start": 0,
+    "interval": 0.5,
+    "count": 2,
+    "pause": 9.4
+  },
+  "barbarian-hut": {
+    "source": "BarbarianHut",
+    "child": "barbarians",
+    "start": 0,
+    "interval": 0.5,
+    "count": 2,
+    "pause": 13.5
+  }
+}

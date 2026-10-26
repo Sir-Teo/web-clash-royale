@@ -63,13 +63,13 @@ describe("archived Furnace", () => {
 
   it.each(["blue", "red"] as const)("releases a staggered %s pair and pauses before the next wave", (team) => {
     const { battle, furnace } = deployed(team);
-    for (let i = 0; i < Math.floor(10.3 / STEP); i++) battle.step();
+    for (let i = 0; i < Math.round(1 / STEP) - 1; i++) battle.step();
     expect(spirits(battle, team)).toHaveLength(0);
     while (spawned(battle) < 1) battle.step();
-    expect(battle.time).toBeCloseTo(10.4, 1);
+    expect(battle.time).toBeCloseTo(1, 8);
     expect(spirits(battle, team)[0].deploy).toBeCloseTo(1, 1);
-    expect(furnace.spawnBurst).toBeCloseTo(0.5);
-    expect(furnace.spawnTimer).toBeCloseTo(9.9, 1);
+    expect(furnace.spawnIndex).toBe(1);
+    expect(furnace.spawnTimer).toBeCloseTo(0.5, 1);
     const first = battle.time;
     while (spawned(battle) < 2) battle.step();
     expect(battle.time - first).toBeCloseTo(0.5, 1);
@@ -124,8 +124,8 @@ describe("archived Furnace", () => {
     while (!peer.battle!.entities.some((e) => e.card === "fire-spirits"))
       peer.advance(STEP);
     const view = perspective(snapshot(peer.battle!), "red");
-    expect(view.entities.find((e) => e.card === "furnace")?.spawnBurst)
-      .toBeCloseTo(0.5);
+    expect(view.entities.find((e) => e.card === "furnace")?.spawnIndex)
+      .toBe(1);
     expect(view.entities.filter((e) => e.card === "fire-spirits")).toHaveLength(1);
   });
 });

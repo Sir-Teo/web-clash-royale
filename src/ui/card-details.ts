@@ -1,3 +1,4 @@
+import { summonProfile, summonCycle } from "../game/summon-clock";
 import { balloonBombProfile } from "../game/balloon-bomb";
 import { CARD_MAP, type CardId } from "../game/cards";
 import {
@@ -53,7 +54,7 @@ const deathSpawns = {
     note: "The ram breaks on its first building hit or when destroyed, releasing its Barbarians." },
   "night-witch": { card: "bats", name: "Bat", count: nightWitch.deathSpawn.count,
     deploy: deploymentTime("bats"),
-    note: "The first spawn delay starts after the Night Witch deploys. Rage and slow affect the spawn interval. Death releases the listed Bats immediately, with their own deployment time." },
+    note: "The first Bat wave starts as deployment finishes. Rage and slow affect the spawn clock. Death releases the listed Bats immediately, with their own deployment time." },
 } as const;
 
 type StatIcon =
@@ -112,13 +113,14 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
     };
   if (Object.hasOwn(buildingSpawns, id)) {
     const spawn = buildingSpawns[id as keyof typeof buildingSpawns];
+    const wave = summonProfile(id)!;
     return {
       stats: [
         stat("Hitpoints", c.hp, "heart"),
         stat("Spawns", quantity(spawn.rules.spawnNumber, spawn.name), "users"),
-        stat("First spawn delay", seconds(spawn.rules.spawnPause), "timer"),
+        stat("First spawn delay", seconds(wave.start), "timer"),
         stat(spawn.stagger ? "Wave interval" : "Spawn interval",
-          seconds(spawn.rules.spawnPause + spawn.stagger), "timer"),
+          seconds(summonCycle(wave)), "timer"),
         ...(spawn.stagger ? [stat("Troop spacing", seconds(spawn.stagger), "timer")] : []),
         stat("Deploy time", seconds(deploymentTime(id)), "timer"),
         stat("Troop deploy time", seconds(spawn.deploy), "timer"),
@@ -127,7 +129,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
         stat("Lifetime", seconds(c.lifetime!), "timer"),
         cost,
       ],
-      note: "The first spawn delay starts after the building deploys. " +
+      note: "The first wave starts as deployment finishes. " +
         (id === "tombstone"
           ? "The listed death spawn also occurs when its lifetime expires."
           : spawn.stagger
@@ -336,6 +338,8 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
   const spawn = Object.hasOwn(deathSpawns, id)
     ? deathSpawns[id as keyof typeof deathSpawns] : undefined;
   const child = spawn && CARD_MAP[spawn.card];
+  const wave = summonProfile(id);
+  const summoned = wave && CARD_MAP[wave.child as CardId];
   const deathBomb = id === "giant-skeleton" ? {
     damage: Math.round(giantSkeleton.bomb.sourceDamage * 1.1 ** 5),
     delay: giantSkeleton.bomb.deployTime, radius: giantSkeleton.bomb.radius,
@@ -354,6 +358,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
     spawn ? `${spawn.note} Spawn hitpoints and damage are per troop.` : "",
     id === "mortar" ? "Cannot target enemies inside the minimum range." : "",
     inferno ? "Damage is per hit. Stage times count from locking onto the same target. Stun, losing range or changing targets resets the beam." : "",
+    id === "witch" ? "The first Skeleton wave starts as deployment finishes. Skeletons appear separately at the listed spacing. Rage and slow affect the spawn clock. Spawn hitpoints and damage are per Skeleton." : "",
     id === "balloon" ? "Drops a timed bomb where it is destroyed. The bomb damages nearby enemy air and ground troops and buildings. Its normal attack targets buildings." : "",
     id === "giant-skeleton" ? "Drops a timed bomb where it is destroyed. The bomb damages nearby enemy air and ground units and buildings, knocking back eligible troops. Its normal attack targets ground enemies." : "",
   ]
@@ -407,12 +412,24 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
         stat("Bomb targets", deathBomb.air ? "Air & ground" : "Ground", "crosshair"),
         ...(deathBomb.knockback ? [stat("Bomb knockback", tiles(deathBomb.knockback), "scan")] : []),
       ] : []),
+      ...(id === "witch" && wave && summoned ? [
+        stat("Deploy time", seconds(deploymentTime(id)), "timer"),
+        stat("Spawns", quantity(wave.count, "Skeleton"), "users"),
+        stat("First spawn delay", seconds(wave.start), "timer"),
+        stat("Wave interval", seconds(summonCycle(wave)), "timer"),
+        stat("Troop spacing", seconds(wave.interval), "timer"),
+        stat("Spawn hitpoints", summoned.hp, "heart"),
+        stat("Spawn damage per hit", summoned.damage, "swords"),
+        stat("Spawn hit interval", seconds(summoned.interval), "timer"),
+        stat("Spawn targets", "Ground", "crosshair"),
+        stat("Spawn deploy time", seconds(deploymentTime("skeletons")), "timer"),
+      ] : []),
       ...(spawn && child ? [
         stat("Deploy time", seconds(deploymentTime(id)), "timer"),
         ...(id === "night-witch" ? [
           stat("Spawns", quantity(nightWitch.spawn.count, spawn.name), "users"),
-          stat("First spawn delay", seconds(nightWitch.spawn.pause), "timer"),
-          stat("Spawn interval", seconds(nightWitch.spawn.pause), "timer"),
+          stat("First spawn delay", seconds(wave!.start), "timer"),
+          stat("Spawn interval", seconds(summonCycle(wave!)), "timer"),
         ] : []),
         stat("On destruction", quantity(spawn.count, spawn.name), "users"),
         stat("Spawn hitpoints", child.hp, "heart"),

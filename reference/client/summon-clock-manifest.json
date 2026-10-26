@@ -1,0 +1,22 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "inputs": [
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/client/spawn-clock-native-trace.json",
+      "sha256": "6b7abdf8978d05781382a5c0a0c3a542caec09be4bb1c2a163fac20a0664bbde"
+    }
+  ],
+  "output": {
+    "path": "src/game/summon-clock-data.json",
+    "sha256": "f3833085422fac3ced9536b8759f9c37df2470ce8e0591fd1130b3ce43f6e999"
+  }
+}

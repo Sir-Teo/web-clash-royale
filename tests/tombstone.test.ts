@@ -62,10 +62,10 @@ describe("archived Tombstone", () => {
 
   it.each(["blue", "red"] as const)("spawns one %s Skeleton on each 2.95-second cycle", (team) => {
     const { battle, stone } = deployed(team);
-    for (let i = 0; i < Math.floor(3.9 / STEP); i++) battle.step();
+    for (let i = 0; i < Math.round(1 / STEP) - 1; i++) battle.step();
     expect(skeletons(battle, team)).toHaveLength(0);
     while (!skeletons(battle, team).length) battle.step();
-    expect(battle.time).toBeCloseTo(3.95, 1);
+    expect(battle.time).toBeCloseTo(1, 8);
     expect(skeletons(battle, team)[0].x).toBe(9);
     expect(skeletons(battle, team)[0].y).toBeCloseTo(
       (team === "blue" ? 22 : 10) + (team === "blue" ? -0.4 : 0.4),

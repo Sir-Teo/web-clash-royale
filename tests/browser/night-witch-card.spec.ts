@@ -17,7 +17,7 @@ test("Night Witch summons native Bats and releases four after defeat", async ({ 
   };
   await expect.poll(async () => (await data()).alive).toBe(true);
   expect((await data()).bats).toHaveLength(0);
-  for (let i = 0; i < 5; i++) await advance(true);
+  await advance();
   expect((await data()).bats).toHaveLength(2);
   expect((await data()).summons).toBe(1);
   expect((await data()).summonCues).toBe(1);

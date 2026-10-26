@@ -63,13 +63,13 @@ describe("archived Barbarian Hut", () => {
 
   it.each(["blue", "red"] as const)("releases a staggered %s pair and waits 13.5 seconds for the next wave", (team) => {
     const { battle, hut } = deployed(team);
-    for (let i = 0; i < Math.floor(14.4 / STEP); i++) battle.step();
+    for (let i = 0; i < Math.round(1 / STEP) - 1; i++) battle.step();
     expect(barbarians(battle, team)).toHaveLength(0);
     while (spawned(battle) < 1) battle.step();
-    expect(battle.time).toBeCloseTo(14.5, 1);
+    expect(battle.time).toBeCloseTo(1, 8);
     expect(barbarians(battle, team)[0].deploy).toBeCloseTo(1, 1);
-    expect(hut.spawnBurst).toBeCloseTo(0.5);
-    expect(hut.spawnTimer).toBeCloseTo(14, 1);
+    expect(hut.spawnIndex).toBe(1);
+    expect(hut.spawnTimer).toBeCloseTo(0.5, 1);
     const first = battle.time;
     while (spawned(battle) < 2) battle.step();
     expect(battle.time - first).toBeCloseTo(0.5, 1);
@@ -125,8 +125,8 @@ describe("archived Barbarian Hut", () => {
       !peer.battle!.entities.some((e) => e.card === "barbarians"); i++)
       peer.advance(STEP);
     const view = perspective(snapshot(peer.battle!), "red");
-    expect(view.entities.find((e) => e.card === "barbarian-hut")?.spawnBurst)
-      .toBeCloseTo(0.5);
+    expect(view.entities.find((e) => e.card === "barbarian-hut")?.spawnIndex)
+      .toBe(1);
     expect(view.entities.filter((e) => e.card === "barbarians")).toHaveLength(1);
   });
 });

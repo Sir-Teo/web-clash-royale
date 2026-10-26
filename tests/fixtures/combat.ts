@@ -668,6 +668,8 @@ function setup() {
       target.speed = target.damage = 0;
       target.hp = target.maxHp = 10000;
     }
+  } else if (scenario === "summon-witch") {
+    unit("witch", "blue", 4, 21)[0].speed = 0;
   } else if (scenario === "night-witch") {
     const witch = unit("night-witch", "blue", 4, 21)[0];
     witch.speed = 0;
@@ -1242,6 +1244,7 @@ function render(now: number) {
       frame: furnace ? (arena as any).units.get(furnace.id)?.building?.frame : null,
       timer: furnace?.spawnTimer ?? null,
       burst: furnace?.spawnBurst ?? null,
+      index: furnace?.spawnIndex ?? null,
       spirits: battle.entities.filter((entity) =>
         entity.card === "fire-spirits" && entity.team === "blue" && entity.hp > 0
       ).length,
@@ -1254,6 +1257,7 @@ function render(now: number) {
       frame: barbarianHut ? (arena as any).units.get(barbarianHut.id)?.building?.frame : null,
       timer: barbarianHut?.spawnTimer ?? null,
       burst: barbarianHut?.spawnBurst ?? null,
+      index: barbarianHut?.spawnIndex ?? null,
       barbarians: battle.entities.filter((entity) =>
         entity.card === "barbarians" && entity.team === "blue" && entity.hp > 0
       ).length,
@@ -1363,6 +1367,14 @@ function render(now: number) {
         .map((e) => ({ x: e.x, hp: e.hp })),
       hits: battle.events.filter((e) => e.type === "hit" && e.card === "bats" && e.value).length,
     });
+  const summoningWitch = battle.entities.find(e => e.card === "witch" && e.team === "blue" && e.hp > 0);
+  (document.querySelector("#destruction") as HTMLElement).dataset.witchWave = JSON.stringify({
+    time: battle.time, timer: summoningWitch?.spawnTimer, index: summoningWitch?.spawnIndex,
+    children: battle.entities.filter(e => e.card === "skeletons" && e.team === "blue" && e.hp > 0)
+      .map(e => ({ id: e.id, x: e.x, y: e.y, deploy: e.deploy, native: !!(arena as any).units.get(e.id)?.sprite })),
+    births: battle.audioEvents.filter(e => e.profile === "skeletons" && e.phase === "spawn").map(e => e.time),
+    cues: battle.audioEvents.filter(e => e.profile === "witch" && e.phase === "summon").length,
+  });
   (document.querySelector("#destruction") as HTMLElement).dataset.nightWitch =
     JSON.stringify({
       alive: battle.entities.some((e) => e.team === "blue" && e.card === "night-witch" && e.hp > 0),

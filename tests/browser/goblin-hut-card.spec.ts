@@ -14,10 +14,8 @@ test("Goblin Hut renders and produces one Spear Goblin per cycle on desktop and 
     (await page.locator("#destruction").getAttribute("data-goblin-hut"))!,
   );
   expect((await hut()).spears).toBe(0);
-  for (let i = 0; i < 4; i++) await page.locator("#second").click();
-  expect((await hut()).spears).toBe(0);
   await page.screenshot({ path: info.outputPath("goblin-hut-idle.png"), fullPage: true });
-  await page.locator("#second").click();
+  await page.locator("#step").click();
   await expect.poll(async () => (await hut()).spears).toBe(1);
   for (let i = 0; i < 5; i++) await page.locator("#second").click();
   await expect.poll(async () => (await hut()).spears).toBeGreaterThanOrEqual(2);

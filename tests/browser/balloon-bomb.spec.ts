@@ -63,7 +63,7 @@ for (const perspective of ["blue", "red"] as const)
       if (impact && source.time > impact.time + 15) break;
     }
     const replay = { ...source.exportReplay(), perspective };
-    expect(replay.version).toBe(20);
+    expect(replay.version).toBe(21);
     const battle = new Battle({ replay });
     while (
       !battle.audioEvents.some((e) => e.phase === "death-impact") &&

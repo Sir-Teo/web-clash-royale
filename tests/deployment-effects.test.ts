@@ -170,17 +170,11 @@ describe("native deployment effects", () => {
       cursor = new NativeDeploymentEffects();
     play(battle, "witch");
     cursor.reset(battle.audioEvents);
-    while (
-      !battle.audioEvents.some((e) => e.phase === "summon") &&
-      battle.time < 10
-    )
+    const births: ReturnType<NativeDeploymentEffects["consume"]> = [];
+    while (births.length < 3 && battle.time < 10) {
       battle.step();
-    const births = cursor.consume(
-      battle.audioEvents,
-      battle.entities,
-      battle.seed,
-      battle.time,
-    );
+      births.push(...cursor.consume(battle.audioEvents, battle.entities, battle.seed, battle.time));
+    }
     expect(births).toHaveLength(3);
     expect(births.every((b) => b.effect === "deploy:skeletons")).toBe(true);
     for (const birth of births)

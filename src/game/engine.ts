@@ -1,3 +1,4 @@
+import { advanceSummonClock, summonProfile, type SummonProfile } from "./summon-clock";
 import { balloonBombProfile } from "./balloon-bomb";
 import { chargeRange, chargedAttackDamage, resetMovement } from "./charge";
 import { advanceMovement } from "./movement";
@@ -135,6 +136,8 @@ export interface Entity extends Point {
   lane?: "left" | "right";
   lifetime?: number;
   spawnTimer: number;
+  /** Rules 21: next child within a serial summon wave. */
+  spawnIndex?: number;
   spawnBurst?: number;
   pendingAttack?: { target: number; remaining: number; damage: number };
   burrow?: {
@@ -213,7 +216,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -293,7 +296,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 20;
+    this.rulesVersion = r?.version ?? 21;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -751,6 +754,7 @@ export class Battle {
     const legacyBalloon = this.rulesVersion < 10 && id === "balloon"
       ? LEGACY_BALLOON_STATS : undefined;
     const hp = legacyVitals?.hp ?? c.hp;
+    const initialSummon = this.rulesVersion >= 21 ? summonProfile(id) : undefined;
     const shield = cardShieldHitpoints(id);
     const legacyRadius = c.kind === "building" ? 0.8 :
       hp > 3000 ? 0.55 : c.count > 2 ? 0.25 : 0.37;
@@ -786,12 +790,13 @@ export class Battle {
         ? { chargeDistance: 0 } : {}),
       active: true,
       lifetime: legacyBuilding?.lifetime ?? c.lifetime,
-      spawnTimer: id === "night-witch" ? nightWitch.spawn.pause :
+      ...(initialSummon ? { spawnIndex: 0 } : {}),
+      spawnTimer: initialSummon?.start ?? (id === "night-witch" ? nightWitch.spawn.pause :
         id === "elixir-collector" ? elixirCollector.generateInterval :
         id === "goblin-hut" ? goblinHut.spawnPause :
         id === "tombstone" ? tombstone.spawnPause :
         id === "furnace" ? furnace.spawnPause :
-        id === "barbarian-hut" ? barbarianHut.spawnPause : 4,
+        id === "barbarian-hut" ? barbarianHut.spawnPause : 4),
       ...(id === "tesla" && this.rulesVersion >= 3
         ? { burrow: { exposure: 0, idle: 0, phase: "hidden" as const } }
         : {}),
@@ -1512,13 +1517,16 @@ export class Battle {
       if (e.card === "bandit")
         e.dashCooldown = Math.max(0, (e.dashCooldown ?? 0) - STEP);
       e.stun = Math.max(0, e.stun - STEP);
+      const summoner = this.rulesVersion >= 21 ? summonProfile(e.card) : undefined;
       if (e.deploy > 0) {
         e.deploy -= STEP;
         if (e.card === "electro-wizard" && e.deploy <= 1e-8) {
           e.deploy = 0;
           this.electroDeployZap(e);
         }
-        continue;
+        // The native summoner guard can continue on deployment's expiry frame.
+        if (summoner && e.deploy <= 1e-8) e.deploy = 0;
+        else continue;
       }
       if (e.lifetime) {
         this.hurt(e, (e.maxHp / e.lifetime) * STEP, true);
@@ -1546,6 +1554,13 @@ export class Battle {
       if (!e.active) {
         this.cancelAttack(e);
         continue;
+      }
+      if (summoner) {
+        const spawn = advanceSummonClock(e, summoner, STEP *
+          (e.rage ? rage.spawnSpeedMultiplier : 1) *
+          (e.slow ? iceWizard.spawnSpeedMultiplier : 1));
+        if (spawn) this.emitSummon(e, summoner, spawn);
+        if (e.kind === "building") continue;
       }
       if (e.card === "elixir-collector") {
         e.spawnTimer -= STEP;
@@ -1623,7 +1638,7 @@ export class Battle {
         this.updateInferno(e, hitSpeed);
         continue;
       }
-      if (e.card === "witch") {
+      if (!summoner && e.card === "witch") {
         e.spawnTimer -=
           STEP *
           (e.rage ? rage.spawnSpeedMultiplier : 1) *
@@ -1640,7 +1655,7 @@ export class Battle {
             );
         }
       }
-      if (e.card === "night-witch") {
+      if (!summoner && e.card === "night-witch") {
         e.spawnTimer -=
           STEP *
           (e.rage ? rage.spawnSpeedMultiplier : 1) *
@@ -1744,6 +1759,40 @@ export class Battle {
     dash.elapsed += STEP;
     dash.remaining -= STEP;
     if (this.inRange(e, target)) this.advanceBanditDash(e);
+  }
+  /** Preserve existing child placement/art; only the source clock changes. */
+  private emitSummon(e: Entity, profile: SummonProfile,
+    wave: { index: number; count: number; startsWave: boolean }) {
+    if (wave.startsWave && e.card === "witch")
+      this.emitAudio("summon", e.team, audioProfile(e), e.id);
+    if (wave.startsWave && e.card === "night-witch") {
+      this.emitAudio("summon", e.team, "night-witch", e.id,
+        undefined, { x: e.x, y: e.y });
+      this.emit("spell", e.team, e.x, e.y, "night-witch", 0,
+        { effect: "summon:night-witch" });
+    }
+    for (let i = 0; i < wave.count; i++) {
+      const index = wave.index + i;
+      let x = e.x, y = e.y;
+      let deploy = 1;
+      const direction = e.team === "blue" ? -1 : 1;
+      if (e.card === "witch") {
+        x = clamp(e.x + (index - 1) * 0.6, 0.6, 17.4);
+        y = clamp(e.y + direction * 0.8, 0.8, 31.2);
+      } else if (e.card === "night-witch") {
+        x = clamp(e.x + (index - (profile.count - 1) / 2) * nightWitch.spawn.radius * 1.2, 0.6, 17.4);
+        y = clamp(e.y + direction * 0.5, 0.8, 31.2);
+        deploy = deploymentTime("bats", this.rulesVersion);
+      } else {
+        const rules = e.card === "goblin-hut" ? goblinHut : e.card === "tombstone" ? tombstone : e.card === "furnace" ? furnace : barbarianHut;
+        y = e.y + direction * rules.spawnRadius;
+        if (e.card === "furnace" || e.card === "barbarian-hut")
+          x += index === 0 ? -0.22 : 0.22;
+        if (e.card === "furnace") deploy = furnace.spiritDeployTime;
+        if (e.card === "barbarian-hut") deploy = barbarianHut.unitDeployTime;
+      }
+      this.spawn(profile.child as CardId, e.team, x, y, true, deploy);
+    }
   }
   private updateInferno(e: Entity, hitSpeed: number) {
     const card = e.card === "inferno-tower" ? "inferno-tower" : "inferno-dragon";

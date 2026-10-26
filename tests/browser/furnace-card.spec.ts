@@ -13,12 +13,11 @@ test("Furnace animates and releases a half-second-spaced Fire Spirit pair", asyn
   const furnace = async () => JSON.parse(
     (await page.locator("#destruction").getAttribute("data-furnace"))!,
   );
-  for (let i = 0; i < 9; i++) await page.locator("#second").click();
   expect((await furnace()).spirits).toBe(0);
   await page.screenshot({ path: info.outputPath("furnace-idle.png"), fullPage: true });
-  for (let i = 0; i < 5; i++) await page.locator("#step").click();
+  await page.locator("#step").click();
   await expect.poll(async () => (await furnace()).spirits).toBe(1);
-  expect((await furnace()).burst).toBeGreaterThan(0);
+  expect((await furnace()).index).toBe(1);
   await page.screenshot({ path: info.outputPath("furnace-first-spirit.png"), fullPage: true });
   for (let i = 0; i < 5; i++) await page.locator("#step").click();
   await expect.poll(async () => (await furnace()).spirits).toBe(2);

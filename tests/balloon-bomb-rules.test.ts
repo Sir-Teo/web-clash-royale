@@ -218,7 +218,7 @@ describe("source-backed Balloon death bomb", () => {
       }
     }
   });
-  it("records and replays a complete current match through Balloon deaths", () => {
+  it("records and replays a complete rules-20 match through Balloon deaths", () => {
     const old = golden.cases[0].replay as Replay;
     const battle = new Battle({
       replay: { ...old, version: 20, actions: [], duration: 9000 },

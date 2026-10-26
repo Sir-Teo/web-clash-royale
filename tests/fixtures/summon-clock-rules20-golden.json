@@ -1,0 +1,826 @@
+{
+  "sourceCommit": "52d1d8d",
+  "stateFields": [
+    "tick",
+    "rulesVersion",
+    "entities",
+    "projectiles",
+    "areas",
+    "events",
+    "audioEvents",
+    "players",
+    "winner",
+    "reason",
+    "actions",
+    "randomState"
+  ],
+  "cases": [
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 20,
+        "seed": 3111,
+        "mode": "classic",
+        "deck": [
+          "witch",
+          "night-witch",
+          "goblin-hut",
+          "tombstone",
+          "furnace",
+          "barbarian-hut",
+          "clone",
+          "freeze"
+        ],
+        "enemyDeck": [
+          "witch",
+          "night-witch",
+          "goblin-hut",
+          "tombstone",
+          "furnace",
+          "barbarian-hut",
+          "rage",
+          "freeze"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "night-witch",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "goblin-hut",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 420,
+            "team": "blue",
+            "card": "witch",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 525,
+            "team": "red",
+            "card": "furnace",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 735,
+            "team": "red",
+            "card": "freeze",
+            "x": 14.02082839095892,
+            "y": 11.368512117278458
+          },
+          {
+            "tick": 840,
+            "team": "blue",
+            "card": "goblin-hut",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1050,
+            "team": "blue",
+            "card": "clone",
+            "x": 11.582743911603066,
+            "y": 6.071267553736887
+          },
+          {
+            "tick": 1050,
+            "team": "red",
+            "card": "tombstone",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1365,
+            "team": "blue",
+            "card": "furnace",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1680,
+            "team": "red",
+            "card": "barbarian-hut",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1995,
+            "team": "red",
+            "card": "night-witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2310,
+            "team": "red",
+            "card": "witch",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2415,
+            "team": "blue",
+            "card": "barbarian-hut",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2520,
+            "team": "blue",
+            "card": "freeze",
+            "x": 14.014803414532086,
+            "y": 19.792827133177628
+          },
+          {
+            "tick": 2520,
+            "team": "red",
+            "card": "rage",
+            "x": 14.014803414532086,
+            "y": 19.792827133177628
+          },
+          {
+            "tick": 2940,
+            "team": "blue",
+            "card": "tombstone",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2940,
+            "team": "red",
+            "card": "goblin-hut",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3150,
+            "team": "blue",
+            "card": "night-witch",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3255,
+            "team": "red",
+            "card": "furnace",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3570,
+            "team": "blue",
+            "card": "witch",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3570,
+            "team": "red",
+            "card": "freeze",
+            "x": 13.808434742955768,
+            "y": 12.94253042288645
+          },
+          {
+            "tick": 3780,
+            "team": "blue",
+            "card": "goblin-hut",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3780,
+            "team": "red",
+            "card": "tombstone",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3990,
+            "team": "blue",
+            "card": "clone",
+            "x": 10.417024285882714,
+            "y": 5.611972720924195
+          },
+          {
+            "tick": 3990,
+            "team": "red",
+            "card": "barbarian-hut",
+            "x": 14,
+            "y": 10
+          }
+        ],
+        "duration": 4060
+      },
+      "parents": {
+        "witch": 3,
+        "night-witch": 3,
+        "goblin-hut": 4,
+        "tombstone": 3,
+        "furnace": 3,
+        "barbarian-hut": 3
+      },
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "a79faf2fb8c989597a8c32c2155e3c4cdfcac3fa91a5d2968c1f6c9af6ba333c"
+        },
+        {
+          "tick": 1200,
+          "digest": "c558867286429418076c6ce542da434490ac80af2a740f91d0f730558eb439fc"
+        },
+        {
+          "tick": 1800,
+          "digest": "eee850ac336e673b8a79921f99599d95d96b87764273f8866357c0f278834471"
+        },
+        {
+          "tick": 2400,
+          "digest": "f207e2095b071f8be684a1813902e99414c2658ca125f91e238590bffdf881fe"
+        },
+        {
+          "tick": 3000,
+          "digest": "491c038bdcab7e8a45c652d7e2bfff5dbe8df4d09e91e816d1921c44e2cff1dc"
+        },
+        {
+          "tick": 3600,
+          "digest": "3e501c37915c4519f89473f7e4763c416a7868d451f3f7b14a05c35bc8378f3b"
+        },
+        {
+          "tick": 4060,
+          "digest": "9c7283a66fb3e650aa876112250557e6ca75d072e99fe0536327455921cfb561"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 20,
+        "seed": 4693,
+        "mode": "classic",
+        "deck": [
+          "witch",
+          "night-witch",
+          "goblin-hut",
+          "tombstone",
+          "furnace",
+          "barbarian-hut",
+          "clone",
+          "freeze"
+        ],
+        "enemyDeck": [
+          "witch",
+          "night-witch",
+          "goblin-hut",
+          "tombstone",
+          "furnace",
+          "barbarian-hut",
+          "rage",
+          "freeze"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "goblin-hut",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 210,
+            "team": "red",
+            "card": "barbarian-hut",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 315,
+            "team": "blue",
+            "card": "tombstone",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 525,
+            "team": "red",
+            "card": "furnace",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1050,
+            "team": "red",
+            "card": "goblin-hut",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1575,
+            "team": "blue",
+            "card": "furnace",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1680,
+            "team": "blue",
+            "card": "barbarian-hut",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2205,
+            "team": "red",
+            "card": "tombstone",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2520,
+            "team": "blue",
+            "card": "night-witch",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2625,
+            "team": "blue",
+            "card": "freeze",
+            "x": 4,
+            "y": 16.100000000000065
+          },
+          {
+            "tick": 2625,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2730,
+            "team": "blue",
+            "card": "clone",
+            "x": 14,
+            "y": 16.033333333333037
+          },
+          {
+            "tick": 2730,
+            "team": "red",
+            "card": "freeze",
+            "x": 14,
+            "y": 16.033333333333037
+          },
+          {
+            "tick": 2835,
+            "team": "red",
+            "card": "rage",
+            "x": 4.3497313283757375,
+            "y": 16.472160755765632
+          },
+          {
+            "tick": 3045,
+            "team": "blue",
+            "card": "witch",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3045,
+            "team": "red",
+            "card": "night-witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3465,
+            "team": "blue",
+            "card": "goblin-hut",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3675,
+            "team": "red",
+            "card": "barbarian-hut",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3780,
+            "team": "blue",
+            "card": "tombstone",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3990,
+            "team": "red",
+            "card": "furnace",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4095,
+            "team": "red",
+            "card": "goblin-hut",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4515,
+            "team": "red",
+            "card": "tombstone",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4725,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4830,
+            "team": "red",
+            "card": "freeze",
+            "x": 12.550170624289272,
+            "y": 11.233419735751518
+          },
+          {
+            "tick": 4935,
+            "team": "red",
+            "card": "rage",
+            "x": 4.019156073935638,
+            "y": 12.120867338158366
+          },
+          {
+            "tick": 5040,
+            "team": "blue",
+            "card": "furnace",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5040,
+            "team": "red",
+            "card": "night-witch",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5250,
+            "team": "red",
+            "card": "barbarian-hut",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5355,
+            "team": "blue",
+            "card": "barbarian-hut",
+            "x": 4,
+            "y": 22
+          }
+        ],
+        "duration": 5400
+      },
+      "parents": {
+        "witch": 3,
+        "night-witch": 3,
+        "goblin-hut": 4,
+        "tombstone": 4,
+        "furnace": 4,
+        "barbarian-hut": 5
+      },
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "e192532fde314ba57b9f9a4affef4d1c18fd387cdc29aab4174f5c5a53ba8c38"
+        },
+        {
+          "tick": 1200,
+          "digest": "6dd2e061f16d7de20dffe77ac94de92746e9e007c079ff310c99b8d458062c5d"
+        },
+        {
+          "tick": 1800,
+          "digest": "858ed631e15eb86058d97835a353ea0abfad8fbe7805971d446bae1b949546a7"
+        },
+        {
+          "tick": 2400,
+          "digest": "c94acc6d08e5520eccc2460534ab057d203c433ff7788be836e5151f553f342a"
+        },
+        {
+          "tick": 3000,
+          "digest": "24b4a528ae25568fa81a708274f8588e07b6bb78228b1849868b450f7674d170"
+        },
+        {
+          "tick": 3600,
+          "digest": "2b27369219310ea7062cf9bcaff488a84da05f60719b1b4656b4b5e242096a61"
+        },
+        {
+          "tick": 4200,
+          "digest": "1d5731a786b6c3019c94b56d87a88677bb96d28cf1840f7ff2c23644c576ed83"
+        },
+        {
+          "tick": 4800,
+          "digest": "d02867d944f674ac6faf3eb739ed9ed85965ab680fca42e15af182dc446f5b8b"
+        },
+        {
+          "tick": 5400,
+          "digest": "2f4a40fa759f881767e633ee4a2ad03e7ee4f6e0ec3e52842bfc5db60ae78b70"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 20,
+        "seed": 7047,
+        "mode": "classic",
+        "deck": [
+          "witch",
+          "night-witch",
+          "goblin-hut",
+          "tombstone",
+          "furnace",
+          "barbarian-hut",
+          "clone",
+          "freeze"
+        ],
+        "enemyDeck": [
+          "witch",
+          "night-witch",
+          "goblin-hut",
+          "tombstone",
+          "furnace",
+          "barbarian-hut",
+          "rage",
+          "freeze"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "witch",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "witch",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 420,
+            "team": "blue",
+            "card": "night-witch",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 420,
+            "team": "red",
+            "card": "furnace",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 735,
+            "team": "blue",
+            "card": "furnace",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 945,
+            "team": "blue",
+            "card": "clone",
+            "x": 13.284389205418394,
+            "y": 9.286508834374576
+          },
+          {
+            "tick": 945,
+            "team": "red",
+            "card": "barbarian-hut",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1260,
+            "team": "red",
+            "card": "tombstone",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1470,
+            "team": "blue",
+            "card": "goblin-hut",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2100,
+            "team": "red",
+            "card": "night-witch",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2205,
+            "team": "blue",
+            "card": "barbarian-hut",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2205,
+            "team": "red",
+            "card": "freeze",
+            "x": 14,
+            "y": 14.731237570456823
+          },
+          {
+            "tick": 2520,
+            "team": "red",
+            "card": "goblin-hut",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2625,
+            "team": "red",
+            "card": "rage",
+            "x": 14.00000008912932,
+            "y": 20.031013250161482
+          },
+          {
+            "tick": 2730,
+            "team": "blue",
+            "card": "tombstone",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2835,
+            "team": "blue",
+            "card": "freeze",
+            "x": 14.365633635165956,
+            "y": 23.969317673397942
+          },
+          {
+            "tick": 3045,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3150,
+            "team": "blue",
+            "card": "witch",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3360,
+            "team": "blue",
+            "card": "night-witch",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3465,
+            "team": "red",
+            "card": "furnace",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3675,
+            "team": "blue",
+            "card": "furnace",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3780,
+            "team": "blue",
+            "card": "clone",
+            "x": 9.619028441786714,
+            "y": 12.213265171269903
+          },
+          {
+            "tick": 3780,
+            "team": "red",
+            "card": "barbarian-hut",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3885,
+            "team": "red",
+            "card": "tombstone",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3990,
+            "team": "blue",
+            "card": "goblin-hut",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4095,
+            "team": "red",
+            "card": "night-witch",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4200,
+            "team": "red",
+            "card": "freeze",
+            "x": 7.044329886610723,
+            "y": 9.384253832701734
+          },
+          {
+            "tick": 4410,
+            "team": "red",
+            "card": "goblin-hut",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4515,
+            "team": "red",
+            "card": "rage",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4725,
+            "team": "red",
+            "card": "witch",
+            "x": 4,
+            "y": 10
+          }
+        ],
+        "duration": 4772
+      },
+      "parents": {
+        "witch": 5,
+        "night-witch": 4,
+        "goblin-hut": 4,
+        "tombstone": 3,
+        "furnace": 4,
+        "barbarian-hut": 3
+      },
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "feee08813838b78350a577d05e11c48dfda6f3c927309b1a0e9cebb452dd1724"
+        },
+        {
+          "tick": 1200,
+          "digest": "89bd66af04f33291e863adb04e25813b306ece5a3653b9bd3deda3a8e4c16093"
+        },
+        {
+          "tick": 1800,
+          "digest": "daa52748173311c9ed1afd83c8967d64885cb0a852ef1f08e6c1e373c0ef7e34"
+        },
+        {
+          "tick": 2400,
+          "digest": "68cb1f6a8d8ec6a3cd142f3fe420889f9f884408926fb97f6c08c22d2ef7cac3"
+        },
+        {
+          "tick": 3000,
+          "digest": "c52ac0118a9d0bbe0a2e3119d3081b889b2353f1f417c457991f7049001fd16d"
+        },
+        {
+          "tick": 3600,
+          "digest": "e4e44860010f7f64dac1377de32683e4cb8e68cd4fe2a830deacfbc63596e36d"
+        },
+        {
+          "tick": 4200,
+          "digest": "30954fbfd6f9673c0f2d5f94ef307caa1d2614a9033269823bb39e4377313f23"
+        },
+        {
+          "tick": 4772,
+          "digest": "90505a1210b22a47fa890dd2fc77cee7508781ce02541e56df945a0605c6ef26"
+        }
+      ]
+    }
+  ]
+}

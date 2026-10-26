@@ -211,7 +211,7 @@ describe("current card detail stats", () => {
     expect(waves).toHaveLength(2);
     expect(Math.abs(waves[0] - parseFloat(stats["Deploy time"]) -
       parseFloat(stats["First spawn delay"]))).toBeLessThanOrEqual(2 * STEP);
-    expect(waves[1] - waves[0]).toBeCloseTo(parseFloat(stats["Spawn interval"]), 8);
+    expect(Math.abs(waves[1] - waves[0] - parseFloat(stats["Spawn interval"]))).toBeLessThanOrEqual(STEP + 1e-8);
     expect(counts.map((count) => `${count} Bats`)).toEqual([stats.Spawns, stats.Spawns]);
   });
 
@@ -268,9 +268,9 @@ describe("current card detail stats", () => {
       parseFloat(stats["First spawn delay"]))).toBeLessThanOrEqual(2 * STEP);
     expect(Math.abs(births[count] - births[0] -
       parseFloat(stats[count === 2 ? "Wave interval" : "Spawn interval"])))
-      .toBeLessThanOrEqual(STEP);
+      .toBeLessThanOrEqual(STEP + 1e-8);
     if (count === 2)
-      expect(births[1] - births[0]).toBeCloseTo(parseFloat(stats["Troop spacing"]), 8);
+      expect(Math.abs(births[1] - births[0] - parseFloat(stats["Troop spacing"]))).toBeLessThanOrEqual(STEP + 1e-8);
     for (const label of ["Damage per hit", "Hit interval", "Range", "Targets"])
       expect(stats).not.toHaveProperty(label);
     if (id === "tombstone") {

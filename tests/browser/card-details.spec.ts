@@ -289,7 +289,8 @@ test("charger details show charge damage and distance on a narrow phone", async 
   expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(before);
 });
 
-test("utility building details explain production, staggered waves and death spawns", async ({ page }, info) => {
+test("production and summoner details show initial waves, spacing and death spawns", async ({ page }, info) => {
+  test.setTimeout(180000);
   if (info.project.name !== "desktop")
     await page.setViewportSize({ width: 320, height: 568 });
   const before = await page.evaluate((key) => localStorage.getItem(key), key);
@@ -298,40 +299,60 @@ test("utility building details explain production, staggered waves and death spa
     ["elixir-collector", "Elixir Collector", {
       "Elixir per cycle": "1", "Production interval": "8.5 s", Lifetime: "70 s",
     }],
+    ["witch", "Witch", {
+      Spawns: "3 Skeletons", "First spawn delay": "0 s", "Wave interval": "7.5 s",
+      "Troop spacing": "0.3 s", "Spawn deploy time": "1 s", Targets: "Air & ground",
+      "Spawn targets": "Ground", "Spawn hitpoints": number(CARD_MAP.skeletons.hp),
+      "Spawn damage per hit": number(CARD_MAP.skeletons.damage),
+    }],
+    ["night-witch", "Night Witch", {
+      Spawns: "2 Bats", "First spawn delay": "0 s", "Spawn interval": "5 s",
+      "On destruction": "4 Bats", "Spawn targets": "Air & ground", Targets: "Ground",
+    }],
     ["goblin-hut", "Goblin Hut", {
-      Spawns: "1 Spear Goblin", "First spawn delay": "4.95 s", "Spawn interval": "4.95 s",
+      Spawns: "1 Spear Goblin", "First spawn delay": "0 s", "Spawn interval": "4.95 s",
       "Troop deploy time": "1 s", Lifetime: "60 s",
     }],
     ["tombstone", "Tombstone", {
-      Spawns: "1 Skeleton", "First spawn delay": "2.95 s", "Spawn interval": "2.95 s",
+      Spawns: "1 Skeleton", "First spawn delay": "0 s", "Spawn interval": "2.95 s",
       "On destruction": "4 Skeletons", "Troop deploy time": "1 s", Lifetime: "40 s",
     }],
     ["furnace", "Furnace", {
-      Spawns: "2 Fire Spirits", "First spawn delay": "9.4 s", "Wave interval": "9.9 s",
+      Spawns: "2 Fire Spirits", "First spawn delay": "0 s", "Wave interval": "9.9 s",
       "Troop spacing": "0.5 s", "Troop deploy time": "1 s", Lifetime: "50 s",
     }],
     ["barbarian-hut", "Barbarian Hut", {
-      Spawns: "2 Barbarians", "First spawn delay": "13.5 s", "Wave interval": "14 s",
+      Spawns: "2 Barbarians", "First spawn delay": "0 s", "Wave interval": "14 s",
       "Troop spacing": "0.5 s", "Troop deploy time": "1 s", Lifetime: "60 s",
     }],
   ] as const) {
     await page.locator("#card-search").fill(name);
     await page.locator(`[data-collection="${id}"]`).click();
+    await expect(page.locator(".detail-art.native-card-ready")).toHaveCount(1, { timeout: 30000 });
     for (const [label, value] of Object.entries(expected))
       await expect(page.locator(`[data-card-stat="${label}"] b`)).toHaveText(value);
     await expect(page.locator('[data-card-stat="Deploy time"] b')).toHaveText("1 s");
-    for (const label of ["Damage per hit", "Hit interval", "Range", "Targets"])
-      await expect(page.locator(`[data-card-stat="${label}"]`)).toHaveCount(0);
+    if (!["witch", "night-witch"].includes(id))
+      for (const label of ["Damage per hit", "Hit interval", "Range", "Targets"])
+        await expect(page.locator(`[data-card-stat="${label}"]`)).toHaveCount(0);
     await expect(page.locator(".card-rule-note")).toContainText(
       id === "elixir-collector" ? "Stored elixir is capped at 10." :
-        "The first spawn delay starts after the building deploys.",
+        id === "witch" ? "The first Skeleton wave starts as deployment finishes." :
+        id === "night-witch" ? "The first Bat wave starts as deployment finishes." :
+        "The first wave starts as deployment finishes.",
     );
     if (id === "tombstone")
       await expect(page.locator(".card-rule-note")).toContainText("when its lifetime expires");
     expect(await page.locator(".modal").evaluate((e) => e.scrollWidth > e.clientWidth)).toBe(false);
     await page.locator(".stat-grid").scrollIntoViewIfNeeded();
-    if (["elixir-collector", "tombstone", "furnace"].includes(id))
+    if (id !== "elixir-collector") {
+      await page.locator('[data-card-stat="First spawn delay"]').scrollIntoViewIfNeeded();
+      await expect(page.locator('[data-card-stat="First spawn delay"]')).toBeInViewport();
+    }
+    if (["witch", "night-witch", "elixir-collector", "tombstone", "furnace"].includes(id))
       await page.screenshot({ path: info.outputPath(`${id}-production-details.png`), animations: "disabled" });
+    await page.locator('[data-card-stat="Elixir"]').scrollIntoViewIfNeeded();
+    await expect(page.locator('[data-card-stat="Elixir"]')).toBeInViewport();
     await page.getByRole("button", { name: "Back to collection", exact: true }).click();
   }
   expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(before);
@@ -363,7 +384,7 @@ test("death-spawn troop details distinguish released bodies, targets and timing"
     ["night-witch", "Night Witch", "bats", {
       "On destruction": "4 Bats", "Deploy time": "1 s",
       "Spawn targets": "Air & ground", "Spawn deploy time": "1 s",
-      Spawns: "2 Bats", "First spawn delay": "5 s", "Spawn interval": "5 s",
+      Spawns: "2 Bats", "First spawn delay": "0 s", "Spawn interval": "5 s",
     }],
   ] as const) {
     await page.locator("#card-search").fill(name);

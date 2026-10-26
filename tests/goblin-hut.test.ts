@@ -54,10 +54,10 @@ describe("archived Goblin Hut", () => {
 
   it("releases one Spear Goblin on each 4.95-second cycle after deploying", () => {
     const { battle, hut } = deployed();
-    for (let i = 0; i < Math.floor(5.9 / STEP); i++) battle.step();
+    for (let i = 0; i < Math.round(1 / STEP) - 1; i++) battle.step();
     expect(spearCount(battle)).toBe(0);
     while (spearCount(battle) === 0) battle.step();
-    expect(battle.time).toBeCloseTo(5.95, 1);
+    expect(battle.time).toBeCloseTo(1, 8);
     const spear = battle.entities.find((e) => e.card === "spear-goblins")!;
     expect(spear.team).toBe("blue");
     expect(spear.x).toBe(9);

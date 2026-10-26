@@ -50,8 +50,7 @@ describe("archived Night Witch", () => {
 
   it("summons two Bats every five active seconds and sends the event to the guest", () => {
     const { game, witch } = battle();
-    expect(witch.spawnTimer).toBe(5);
-    for (let i = 0; i < 149; i++) game.step();
+    expect(witch.spawnTimer).toBe(0);
     expect(game.entities.filter((e) => e.card === "bats")).toHaveLength(0);
     game.step();
     expect(game.entities.filter((e) => e.card === "bats" && e.team === "blue")).toHaveLength(2);
@@ -60,7 +59,7 @@ describe("archived Night Witch", () => {
     const guest = perspective(snapshot(game), "red");
     expect(guest.entities.filter((e) => e.card === "bats" && e.team === "red")).toHaveLength(2);
     expect(guest.events?.some((e) => e.effect === "summon:night-witch")).toBe(true);
-    for (let i = 0; i < 150; i++) game.step();
+    for (let i = 0; i < 149; i++) game.step();
     expect(game.entities.filter((e) => e.card === "bats" && e.team === "blue")).toHaveLength(4);
   });
 

@@ -15,7 +15,7 @@ test("Tombstone animates, spawns Skeletons, then releases four on death", async 
   );
   expect((await stone()).skeletons).toBe(0);
   await page.screenshot({ path: info.outputPath("tombstone-idle.png"), fullPage: true });
-  for (let i = 0; i < 3; i++) await page.locator("#second").click();
+  await page.locator("#step").click();
   await expect.poll(async () => (await stone()).skeletons).toBe(1);
   expect((await stone()).frame).toBeGreaterThan(0);
   await page.screenshot({ path: info.outputPath("tombstone-spawn.png"), fullPage: true });
