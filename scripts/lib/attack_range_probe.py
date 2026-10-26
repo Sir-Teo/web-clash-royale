@@ -45,6 +45,7 @@ def capture(env):
 
     cpu.hook_add(UC_HOOK_CODE, hook)
     profiles = []
+    minimum_mode = env["args"].minimum_range
     names = {
         "characters": ["Knight", "Archer", "Musketeer", "Giant", "HogRider", "Balloon", "Prince", "InfernoDragon"],
         "buildings": ["Cannon", "Mortar", "InfernoTower", "KingTower", "PrincessTower"],
@@ -66,12 +67,13 @@ def capture(env):
             for add_radius in [False, True]:
                 cpu.mem_write(config + 0x295, bytes([int(add_radius)]))
                 own = values["CollisionRadius"] if add_radius else 0
-                for target_radius in [0, 250, 1000]:
+                for target_radius in ([0, 250, 1000, 6000] if minimum_mode else [0, 250, 1000]):
                     reach = values["Range"] + own + target_radius
                     minimum = max(0, values["MinimumRange"] + (own if values["MinimumRange"] > 0 else 0) - target_radius)
                     for axis, dx, dy in [("right", 1, 0), ("left", -1, 0), ("down", 0, 1), ("up", 0, -1)]:
                         for offset in [-1, 0, 1]:
-                            x, y = (reach + offset) * dx, (reach + offset) * dy
+                            boundary = minimum if minimum_mode else reach
+                            x, y = (boundary + offset) * dx, (boundary + offset) * dy
                             write(target + 0x20, x)
                             write(target + 0x24, y)
                             actual = bool(run(0x25d6f2, component, target, 0))
@@ -93,19 +95,28 @@ def capture(env):
         ("distanceWrapper", 0x35d620, 0x35d66f, "Native integer point-to-point squared distance."),
         ("squaredDistance", 0x35d330, 0x35d423, "Saturating integer distance; supplied source coordinates do not saturate."),
     ]
+    if minimum_mode:
+        static.extend([
+            ("minimumColumn", 0x1db694, 0x1db6c2, "MinimumRange column caches GOT+0x1794."),
+            ("minimumField", 0x1d990f, 0x1d9927, "The cached MinimumRange column loads CharacterData+0x1a4."),
+            ("minimumModifier", 0x25de60, 0x25deb6, "Own radius is added only when source minimum is positive and ADD_CHARACTER_RANGE_TO_RADIUS is true."),
+            ("minimumGeometry", 0x21a32b, 0x21a36b, "Subtract target radius from the resolved minimum. A positive inner bound accepts equality; a nonpositive bound imposes no minimum."),
+        ])
     blocks = []
     for name, start, end, meaning in static:
         assembly = subprocess.check_output(["objdump", "-d", "-Mintel", f"--start-address={start:#x}", f"--stop-address={end:#x}", str(env["args"].library)], text=True)
         instructions = [re.sub(r"\s+<[^>]+>", "", line.strip()) for line in assembly.splitlines() if re.match(r"\s+[0-9a-f]+:", line)]
         blocks.append({"name": name, "start": hex(start), "end": hex(end), "interpretation": meaning, "instructions": instructions})
+    boundary_limit = ("Minimum-boundary samples use direct source fields, including zero minimum controls and a supplied target radius larger than Mortar's inner bound. Negative coordinate offsets around a zero boundary still have positive absolute distance."
+                      if minimum_mode else "Maximum-boundary samples use archived direct Range/MinimumRange/CollisionRadius rows for representative melee, ranged, flying, building and Crown Tower profiles. Native integer coordinates do not establish browser floating-point quantization equivalence.")
     output = json.dumps({"source": "apk/1.8.1/x86/libg.so", "sha256": env["sha"], "emulator": "unicorn==2.1.4",
                          "addCharacterRangeToRadius": flag == "TRUE",
                          "inputs": [*env["inputs"][:2], {"path": globals_path, "sha256": hashlib.sha256(globals_bytes).hexdigest()}],
                          "limits": ["Executes generic native range getters and integer geometry, not attack acquisition, card state machines or damage.",
                                     "Owner and Globals resolution are intercepted; dummy target radius is explicitly supplied through its virtual callback. Other Globals modifiers remain zero; full inherited/global profiles are not recovered.",
-                                    "Maximum-boundary samples use archived direct Range/MinimumRange/CollisionRadius rows for representative melee, ranged, flying, building and Crown Tower profiles. Native integer coordinates do not establish browser floating-point quantization equivalence."],
+                                    boundary_limit],
                          "blocks": blocks, "profiles": profiles}, indent=2) + "\n"
-    path = Path("reference/client/attack-range-native-trace.json")
+    path = Path("reference/client/attack-minimum-native-trace.json" if minimum_mode else "reference/client/attack-range-native-trace.json")
     if env["args"].check:
         if path.read_text() != output:
             raise RuntimeError("Native attack-range capture differs")
