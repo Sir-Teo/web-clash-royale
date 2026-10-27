@@ -1,0 +1,8583 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "sha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "emulator": "unicorn==2.1.4",
+  "inputs": [
+    {
+      "path": "reference/client/projectile-launch-native-trace.json",
+      "sha256": "63e7d1b8ef80b9fc3302deacad68de2dca8bc5ecc744d655d7fa26c4b8f04e47"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    }
+  ],
+  "sourceColumn": {
+    "name": "ConstantHeight",
+    "string": "0x619453",
+    "dataOffset": "0x94"
+  },
+  "limits": [
+    "Actual bounded late-initializer ConstantHeight branch, Data/X/Y getters and XYZ/history setter execute. Earlier allocation, registration, Data/position initialization and caller frame are supplied.",
+    "Every archived projectile data row is checked with supplied initialized XY, target height, launch height and two incoming Z values at three translated origins. Data rows are not claims of naturally constructed projectiles. Only source AxeManProjectile supplies a nonzero ConstantHeight of 3000.",
+    "Zero leaves current/target/launch heights untouched; any nonzero signed override replaces all three with the configured absolute height. Synthetic negative/positive/zero controls verify the raw gate. Ordinary initialized XY and prior XYZ history remain unchanged.",
+    "Complete supplied heap mutation, getter counts and exact Data reads are independently checked. Column lookup/store instructions are retained bindings, not executed CSV loading. Earlier/later initializer work, natural actor Z, projectile registration, trajectory/collision/hits and visual coordinate conversion remain excluded. Application rules remain unchanged."
+  ],
+  "profiles": [
+    {
+      "sourceName": "FireballSpell",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "KingProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "ArcherArrow",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "TowerPrincessProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "ArrowsSpell",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "ArrowsSpellDeco",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "TowerCannonball",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "MinionSpit",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "MortarProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "WitchProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "BombSkeletonProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "BombTowerProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "RocketSpell",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "GoblinBarrelSpell",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "MusketeerProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "BabyDragonProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "chr_wizardProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "xbow_projectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "LighningSpell",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "SpearGoblinProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "ice_wizardProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "RoyalGiantProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "PrincessProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "PrincessProjectileDeco",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "LavaHoundProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "LavaPupProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "FireSpiritsProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "ZapMachineProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "NotInUse",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "IceSpiritsProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "LogProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "LogProjectileRolling",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "MegaMinionSpit",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "BlowdartGoblinProjectile",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 3000
+    },
+    {
+      "sourceName": "NotInUseP1",
+      "constantHeight": 0
+    },
+    {
+      "sourceName": "BatProjectile",
+      "constantHeight": 0
+    }
+  ],
+  "blocks": [
+    {
+      "name": "constantHeightBranch",
+      "start": "0x21d577",
+      "end": "0x21d5cb",
+      "interpretation": "Actual initializer tests Data+0x94; nonzero replaces target/launch height and calls actual XYZ setter.",
+      "instructions": [
+        "21d577:\t8b 7d 34             \tmov    edi,DWORD PTR [ebp+0x34]",
+        "21d57a:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "21d57d:\te8 8c c0 ff ff       \tcall   21960e <dl_iterate_phdr@plt+0x1be05e>",
+        "21d582:\t83 b8 94 00 00 00 00 \tcmp    DWORD PTR [eax+0x94],0x0",
+        "21d589:\t74 40                \tje     21d5cb <dl_iterate_phdr@plt+0x1c201b>",
+        "21d58b:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "21d58e:\te8 7b c0 ff ff       \tcall   21960e <dl_iterate_phdr@plt+0x1be05e>",
+        "21d593:\t8b 80 94 00 00 00    \tmov    eax,DWORD PTR [eax+0x94]",
+        "21d599:\t89 46 64             \tmov    DWORD PTR [esi+0x64],eax",
+        "21d59c:\t89 46 70             \tmov    DWORD PTR [esi+0x70],eax",
+        "21d59f:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "21d5a2:\te8 4f c5 ff ff       \tcall   219af6 <dl_iterate_phdr@plt+0x1be546>",
+        "21d5a7:\t89 c7                \tmov    edi,eax",
+        "21d5a9:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "21d5ac:\te8 55 c5 ff ff       \tcall   219b06 <dl_iterate_phdr@plt+0x1be556>",
+        "21d5b1:\t8b 4e 70             \tmov    ecx,DWORD PTR [esi+0x70]",
+        "21d5b4:\t89 4c 24 0c          \tmov    DWORD PTR [esp+0xc],ecx",
+        "21d5b8:\t89 44 24 08          \tmov    DWORD PTR [esp+0x8],eax",
+        "21d5bc:\t89 7c 24 04          \tmov    DWORD PTR [esp+0x4],edi",
+        "21d5c0:\t8b 7d 34             \tmov    edi,DWORD PTR [ebp+0x34]",
+        "21d5c3:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "21d5c6:\te8 e3 c4 ff ff       \tcall   219aae <dl_iterate_phdr@plt+0x1be4fe>"
+      ]
+    },
+    {
+      "name": "positionSetter",
+      "start": "0x219aae",
+      "end": "0x219ae2",
+      "interpretation": "Actual XYZ/history setter preserves ordinary prior history and stores current XYZ.",
+      "instructions": [
+        "219aae:\t55                   \tpush   ebp",
+        "219aaf:\t89 e5                \tmov    ebp,esp",
+        "219ab1:\t56                   \tpush   esi",
+        "219ab2:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "219ab5:\t8b 45 14             \tmov    eax,DWORD PTR [ebp+0x14]",
+        "219ab8:\t8b 4d 10             \tmov    ecx,DWORD PTR [ebp+0x10]",
+        "219abb:\t8b 75 0c             \tmov    esi,DWORD PTR [ebp+0xc]",
+        "219abe:\t8b 55 08             \tmov    edx,DWORD PTR [ebp+0x8]",
+        "219ac1:\t81 7a 20 ff ff ff 7f \tcmp    DWORD PTR [edx+0x20],0x7fffffff",
+        "219ac8:\t75 09                \tjne    219ad3 <dl_iterate_phdr@plt+0x1be523>",
+        "219aca:\t89 72 28             \tmov    DWORD PTR [edx+0x28],esi",
+        "219acd:\t89 4a 2c             \tmov    DWORD PTR [edx+0x2c],ecx",
+        "219ad0:\t89 42 34             \tmov    DWORD PTR [edx+0x34],eax",
+        "219ad3:\t89 72 20             \tmov    DWORD PTR [edx+0x20],esi",
+        "219ad6:\t89 4a 24             \tmov    DWORD PTR [edx+0x24],ecx",
+        "219ad9:\t89 42 30             \tmov    DWORD PTR [edx+0x30],eax",
+        "219adc:\t8d 65 fc             \tlea    esp,[ebp-0x4]",
+        "219adf:\t5e                   \tpop    esi",
+        "219ae0:\t5d                   \tpop    ebp",
+        "219ae1:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "pointGetters",
+      "start": "0x219af6",
+      "end": "0x219b16",
+      "interpretation": "Actual projectile X/Y getters.",
+      "instructions": [
+        "219af6:\t55                   \tpush   ebp",
+        "219af7:\t89 e5                \tmov    ebp,esp",
+        "219af9:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "219afc:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "219aff:\t8b 40 20             \tmov    eax,DWORD PTR [eax+0x20]",
+        "219b02:\t89 ec                \tmov    esp,ebp",
+        "219b04:\t5d                   \tpop    ebp",
+        "219b05:\tc3                   \tret",
+        "219b06:\t55                   \tpush   ebp",
+        "219b07:\t89 e5                \tmov    ebp,esp",
+        "219b09:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "219b0c:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "219b0f:\t8b 40 24             \tmov    eax,DWORD PTR [eax+0x24]",
+        "219b12:\t89 ec                \tmov    esp,ebp",
+        "219b14:\t5d                   \tpop    ebp",
+        "219b15:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "constantHeightColumnStore",
+      "start": "0x1fa8cc",
+      "end": "0x1fa8f7",
+      "interpretation": "Named ConstantHeight column lookup and Data+0x94 store are retained source binding.",
+      "instructions": [
+        "1fa8cc:\t8d 83 3f 0a e6 ff    \tlea    eax,[ebx-0x19f5c1]",
+        "1fa8d2:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1fa8d6:\t8d b4 24 e8 00 00 00 \tlea    esi,[esp+0xe8]",
+        "1fa8dd:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1fa8e0:\te8 bb ea 09 00       \tcall   2993a0 <dl_iterate_phdr@plt+0x23ddf0>",
+        "1fa8e5:\t89 74 24 04          \tmov    DWORD PTR [esp+0x4],esi",
+        "1fa8e9:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1fa8ec:\te8 49 a4 fe ff       \tcall   1e4d3a <dl_iterate_phdr@plt+0x18978a>",
+        "1fa8f1:\t89 87 94 00 00 00    \tmov    DWORD PTR [edi+0x94],eax"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "kind": "source",
+      "sourceName": "FireballSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "FireballSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "FireballSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "FireballSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "FireballSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "FireballSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "KingProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "KingProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "KingProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "KingProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "KingProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "KingProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "TowerPrincessProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "TowerPrincessProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "TowerPrincessProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "TowerPrincessProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "TowerPrincessProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "TowerPrincessProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArrowsSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArrowsSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArrowsSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArrowsSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArrowsSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArrowsSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArrowsSpellDeco",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArrowsSpellDeco",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArrowsSpellDeco",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArrowsSpellDeco",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArrowsSpellDeco",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ArrowsSpellDeco",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "TowerCannonball",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "TowerCannonball",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "TowerCannonball",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "TowerCannonball",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "TowerCannonball",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "TowerCannonball",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MinionSpit",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MinionSpit",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MinionSpit",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MinionSpit",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MinionSpit",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MinionSpit",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MortarProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MortarProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MortarProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MortarProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MortarProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MortarProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "WitchProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "WitchProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "WitchProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "WitchProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "WitchProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "WitchProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BombSkeletonProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BombSkeletonProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BombSkeletonProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BombSkeletonProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BombSkeletonProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BombSkeletonProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BombTowerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BombTowerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BombTowerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BombTowerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BombTowerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BombTowerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "RocketSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "RocketSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "RocketSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "RocketSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "RocketSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "RocketSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "GoblinBarrelSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "GoblinBarrelSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "GoblinBarrelSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "GoblinBarrelSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "GoblinBarrelSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "GoblinBarrelSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MusketeerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MusketeerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MusketeerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MusketeerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MusketeerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MusketeerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BabyDragonProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BabyDragonProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BabyDragonProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BabyDragonProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BabyDragonProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BabyDragonProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "chr_wizardProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "chr_wizardProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "chr_wizardProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "chr_wizardProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "chr_wizardProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "chr_wizardProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "xbow_projectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "xbow_projectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "xbow_projectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "xbow_projectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "xbow_projectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "xbow_projectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LighningSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LighningSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LighningSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LighningSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LighningSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LighningSpell",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "SpearGoblinProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "SpearGoblinProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "SpearGoblinProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "SpearGoblinProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "SpearGoblinProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "SpearGoblinProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ice_wizardProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ice_wizardProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ice_wizardProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ice_wizardProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ice_wizardProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ice_wizardProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "RoyalGiantProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "RoyalGiantProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "RoyalGiantProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "RoyalGiantProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "RoyalGiantProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "RoyalGiantProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "PrincessProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "PrincessProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "PrincessProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "PrincessProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "PrincessProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "PrincessProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "PrincessProjectileDeco",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "PrincessProjectileDeco",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "PrincessProjectileDeco",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "PrincessProjectileDeco",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "PrincessProjectileDeco",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "PrincessProjectileDeco",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LavaHoundProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LavaHoundProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LavaHoundProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LavaHoundProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LavaHoundProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LavaHoundProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LavaPupProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LavaPupProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LavaPupProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LavaPupProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LavaPupProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LavaPupProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "FireSpiritsProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "FireSpiritsProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "FireSpiritsProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "FireSpiritsProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "FireSpiritsProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "FireSpiritsProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ZapMachineProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ZapMachineProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ZapMachineProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ZapMachineProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ZapMachineProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "ZapMachineProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "NotInUse",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "NotInUse",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "NotInUse",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "NotInUse",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "NotInUse",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "NotInUse",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "IceSpiritsProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "IceSpiritsProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "IceSpiritsProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "IceSpiritsProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "IceSpiritsProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "IceSpiritsProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LogProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LogProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LogProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LogProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LogProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LogProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LogProjectileRolling",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LogProjectileRolling",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LogProjectileRolling",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LogProjectileRolling",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LogProjectileRolling",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "LogProjectileRolling",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MegaMinionSpit",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MegaMinionSpit",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MegaMinionSpit",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MegaMinionSpit",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MegaMinionSpit",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "MegaMinionSpit",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BlowdartGoblinProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BlowdartGoblinProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BlowdartGoblinProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BlowdartGoblinProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BlowdartGoblinProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BlowdartGoblinProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 3000,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 3000,
+        "targetHeight": 3000,
+        "launchHeight": 3000
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 3000,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 3000,
+        "targetHeight": 3000,
+        "launchHeight": 3000
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 3000,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 3000,
+        "targetHeight": 3000,
+        "launchHeight": 3000
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 3000,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 3000,
+        "targetHeight": 3000,
+        "launchHeight": 3000
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 3000,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 3000,
+        "targetHeight": 3000,
+        "launchHeight": 3000
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 3000,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 3000,
+        "targetHeight": 3000,
+        "launchHeight": 3000
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "NotInUseP1",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "NotInUseP1",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "NotInUseP1",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "NotInUseP1",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "NotInUseP1",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "NotInUseP1",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BatProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BatProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BatProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BatProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 10333,
+        "y": 17333,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BatProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 0
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 0,
+        "targetHeight": 1800,
+        "launchHeight": 0
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "source",
+      "sourceName": "BatProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1723,
+        "targetHeight": 1800,
+        "launchHeight": 1723
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    }
+  ],
+  "controls": [
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": -500,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": -500,
+        "targetHeight": -500,
+        "launchHeight": -500
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": -500,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": -500,
+        "targetHeight": -500,
+        "launchHeight": -500
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": -500,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": -500,
+        "targetHeight": -500,
+        "launchHeight": -500
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": -500,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": -500,
+        "targetHeight": -500,
+        "launchHeight": -500
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17,
+        "targetHeight": 1800,
+        "launchHeight": 17
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000,
+        "targetHeight": 1800,
+        "launchHeight": 9000
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 17,
+        "targetHeight": 1800,
+        "launchHeight": 17
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000,
+        "targetHeight": 1800,
+        "launchHeight": 9000
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 1,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1,
+        "targetHeight": 1,
+        "launchHeight": 1
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 1,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1,
+        "targetHeight": 1,
+        "launchHeight": 1
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 1,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1,
+        "targetHeight": 1,
+        "launchHeight": 1
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 1,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1,
+        "targetHeight": 1,
+        "launchHeight": 1
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 4200,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 4200,
+        "targetHeight": 4200,
+        "launchHeight": 4200
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 4200,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 4200,
+        "targetHeight": 4200,
+        "launchHeight": 4200
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 4200,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 4200,
+        "targetHeight": 4200,
+        "launchHeight": 4200
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "ArcherArrow",
+      "constantHeight": 4200,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 4200,
+        "targetHeight": 4200,
+        "launchHeight": 4200
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": -500,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": -500,
+        "targetHeight": -500,
+        "launchHeight": -500
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": -500,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": -500,
+        "targetHeight": -500,
+        "launchHeight": -500
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": -500,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": -500,
+        "targetHeight": -500,
+        "launchHeight": -500
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": -500,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": -500,
+        "targetHeight": -500,
+        "launchHeight": -500
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17,
+        "targetHeight": 1800,
+        "launchHeight": 17
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000,
+        "targetHeight": 1800,
+        "launchHeight": 9000
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 17,
+        "targetHeight": 1800,
+        "launchHeight": 17
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000,
+        "targetHeight": 1800,
+        "launchHeight": 9000
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 1,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1,
+        "targetHeight": 1,
+        "launchHeight": 1
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 1,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1,
+        "targetHeight": 1,
+        "launchHeight": 1
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 1,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1,
+        "targetHeight": 1,
+        "launchHeight": 1
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 1,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1,
+        "targetHeight": 1,
+        "launchHeight": 1
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 4200,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 4200,
+        "targetHeight": 4200,
+        "launchHeight": 4200
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 4200,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 4200,
+        "targetHeight": 4200,
+        "launchHeight": 4200
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 4200,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 4200,
+        "targetHeight": 4200,
+        "launchHeight": 4200
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "BowlerProjectile",
+      "constantHeight": 4200,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 4200,
+        "targetHeight": 4200,
+        "launchHeight": 4200
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": -500,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": -500,
+        "targetHeight": -500,
+        "launchHeight": -500
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": -500,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": -500,
+        "targetHeight": -500,
+        "launchHeight": -500
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": -500,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": -500,
+        "targetHeight": -500,
+        "launchHeight": -500
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": -500,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": -500,
+        "targetHeight": -500,
+        "launchHeight": -500
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17,
+        "targetHeight": 1800,
+        "launchHeight": 17
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000,
+        "targetHeight": 1800,
+        "launchHeight": 9000
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 17,
+        "targetHeight": 1800,
+        "launchHeight": 17
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 0,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000,
+        "targetHeight": 1800,
+        "launchHeight": 9000
+      },
+      "getterCalls": {
+        "projectileData": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 1,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1,
+        "targetHeight": 1,
+        "launchHeight": 1
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 1,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 1,
+        "targetHeight": 1,
+        "launchHeight": 1
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 1,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1,
+        "targetHeight": 1,
+        "launchHeight": 1
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 1,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 1,
+        "targetHeight": 1,
+        "launchHeight": 1
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 4200,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 4200,
+        "targetHeight": 4200,
+        "launchHeight": 4200
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 4200,
+      "point": {
+        "x": 9000,
+        "y": 16000,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": 9000,
+        "y": 16000,
+        "z": 4200,
+        "targetHeight": 4200,
+        "launchHeight": 4200
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 4200,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 17
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 4200,
+        "targetHeight": 4200,
+        "launchHeight": 4200
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    },
+    {
+      "kind": "heightOverride",
+      "sourceName": "AxeManProjectile",
+      "constantHeight": 4200,
+      "point": {
+        "x": -125,
+        "y": 6875,
+        "z": 9000
+      },
+      "initialTargetHeight": 1800,
+      "stored": {
+        "x": -125,
+        "y": 6875,
+        "z": 4200,
+        "targetHeight": 4200,
+        "launchHeight": 4200
+      },
+      "getterCalls": {
+        "projectileData": 2,
+        "projectileX": 1,
+        "projectileY": 1,
+        "positionSetter": 1
+      },
+      "dataReads": [
+        [
+          148,
+          4
+        ],
+        [
+          148,
+          4
+        ]
+      ],
+      "historyUnchanged": true,
+      "unrelatedHeapUnchanged": true
+    }
+  ]
+}

@@ -2427,3 +2427,10 @@ Pages-prefixed production offline startup passes with rules 39, the match worker
 The projectile-launch capture verifies 27 source profiles, 1,620 cases, 204 synthetic controls and all 1,824 twelve-argument initializer requests. Native square-root/normalization arithmetic agrees with an independent integer oracle. Both raw owners, three translated origins, source radius/Z/Y fields, live/null target forwarding, exact getter counts, exact three-field Data reads and unchanged supplied heap are checked. The actual body Z getter reads +0x30; an unrelated +0x28 sentinel stays distinct.
 
 Regeneration through the new CLI is byte-identical to the independent scratch capture and a second CLI `--check` run. The preceding 96-case/52-control target-loss request capture remains byte-identical. Three Python modules parse, the new module passes Black formatting and eight invalid continuation combinations reject before capture execution. The game and validated rules-39 production build are unchanged.
+
+
+## Native constant-height verification
+
+All 38 archived projectile rows, 228 translated/input-height cases and 48 signed field controls agree with the independent ConstantHeight store model. Zero preserves current/target/launch Z; nonzero values overwrite all three absolutely. Actual XY/history setter behavior, exact Data reads, getter counts and unrelated heap preservation are checked. AxeManProjectile is the only nonzero source profile at 3,000 units.
+
+The formal CLI capture matches the scratch execution byte-for-byte, a second regeneration is unchanged, and the preceding 1,824-request muzzle capture remains byte-identical. Three Python modules parse, the new module is Black-formatted and nine invalid mode combinations reject. This is an initializer-branch proof; full projectile construction/registration and world/hit execution remain outside scope.

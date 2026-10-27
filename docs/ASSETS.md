@@ -774,3 +774,12 @@ The native radius normalizes target-minus-actor XY using the integer square root
 Both raw owners, three translated origins, cardinal/diagonal/zero/tiny/long vectors and supplied live/null target arguments preserve the request contract. Every argument, getter count, exact Data-read set and unchanged supplied heap is independently checked with integer arithmetic. Source actor Z is supplied from FlyingHeight or zero, without claiming natural height/deployment progression. Tiny/long vectors and overridden fields are arithmetic controls, not asserted naturally reachable attacks.
 
 Execution stops before the full projectile initializer at 0x21cff6. Factory allocation, initializer/target registration, later special linkage, trajectories, collision, hits, effects and full owner/world execution remain outside this capture. Application rules remain at 39.
+
+
+## Native constant projectile height
+
+`probe-inferno-clock.py /path/to/1.8.1/x86/libg.so --attack-loop --first-attacks --projectile-height --check` captures the bounded later initializer branch. Thirty-eight archived projectile data rows produce 228 source cases and 48 synthetic controls. Actual Data/XY getters, the ConstantHeight field gate and the native XYZ/history setter execute. Four instruction blocks retain the branch, getter/setter and named column-to-Data+0x94 binding.
+
+Zero ConstantHeight preserves current, target and launch Z. Any nonzero signed value replaces all three with that absolute height while retaining initialized XY and prior position history. Only source AxeManProjectile supplies a nonzero value (3,000 source units). This later override supersedes the preceding wrapper's source muzzle Z for that projectile. Negative/zero/positive controls and different incoming Z values distinguish absolute replacement from a relative offset.
+
+Earlier allocation, registration, initializer work, caller frame and initialized positions/target height are supplied. Exact Data reads, getter counts and complete heap mutation agree with an independent store model. Natural owner/Z progression, later initializer work, trajectories, collision, hits and visual coordinate conversion remain excluded. The committed application remains at rules 39 while the rules-40 muzzle integration is under validation.
