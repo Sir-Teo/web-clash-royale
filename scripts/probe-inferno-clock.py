@@ -26,6 +26,7 @@ parser.add_argument("--attack-range", action="store_true", help="Capture maximum
 parser.add_argument("--minimum-range", action="store_true", help="Capture minimum-range boundaries instead of maximum-range boundaries")
 parser.add_argument("--sight-range", action="store_true", help="Capture native sight getters and the bounded candidate sight gate")
 parser.add_argument("--candidate-minimum", action="store_true", help="Capture candidate minimum-range boundaries through the sight scanner")
+parser.add_argument("--native-target-types", action="store_true", help="Run sight gates with native target vtables, source class flags and radius getters")
 args = parser.parse_args()
 if args.range_loss and not args.attack_loop:
     parser.error("--range-loss requires --attack-loop")
@@ -37,6 +38,8 @@ if args.sight_range and (args.attack_range or args.attack_loop):
     parser.error("--sight-range is a separate capture")
 if args.candidate_minimum and not args.sight_range:
     parser.error("--candidate-minimum requires --sight-range")
+if args.native_target_types and (not args.sight_range or args.candidate_minimum):
+    parser.error("--native-target-types requires --sight-range without --candidate-minimum")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()
@@ -170,7 +173,10 @@ def initialize(source):
 
 
 if args.sight_range:
-    from lib.sight_range_probe import capture
+    if args.native_target_types:
+        from lib.sight_type_probe import capture
+    else:
+        from lib.sight_range_probe import capture
     capture(globals())
     raise SystemExit(0)
 if args.attack_range:

@@ -502,6 +502,14 @@ The world query supplies one eligible dummy candidate; native spatial indexing, 
 
 Rules 25 use the captured resolved-sight getter: existing source SightRange plus own collision radius. The shared radius importer also verifies/pins `sight-range-native-trace.json` and its source inputs before retaining the factor of one; the maximum-range data bytes are unchanged. The optional resolved `sightRange` travels with each entity and its snapshot. This applies the verified getter's body term to the browser's existing new-target search and the corresponding building-lure/interception visibility checks. Native class extensions, candidate ranking, broadphase and movement remain outside the application change, as does minimum-range recovery.
 
+## Native sight target methods
+
+`probe-inferno-clock.py /path/to/1.8.1/x86/libg.so --sight-range --native-target-types --check` regenerates `sight-target-types-native-trace.json`. It reads the actual base/King vtables at `0x7b34a0`/`0x7b36d8` and executes their target class and radius methods. The capture retains 2,028 outer sight-boundary samples over thirteen owners and thirteen source targets, both own-radius settings and both horizontal directions, plus 26 owner sight getters, 39 class results, 52 state/radius controls and 23 disassembly blocks.
+
+Native virtual `+0x60` returns false for the base character and true for the King subclass. The pinned `KingTower` table-row lookup, row-ID comparison, object factory and constructor vtable stores bind that distinction. Virtual `+0x64` reads `IsSummonerTower` through Data byte `+0x28a`, with its source column/field loader retained; the selected Princess Tower row sets it. Virtual `+0x68` checks whether Data speed `+0x190` is zero, with the `Speed` source column and loader retained. It identifies the selected stationary buildings and both Crown Towers. The candidate gate gives the Crown extension precedence over the stationary-building extension, so both King and Princess receive the archived extra 2,000 source units. Ordinary selected buildings receive the archived zero building extension.
+
+The actual virtual radius method reads source CollisionRadius except in controlled body states 4/6, where it returns zero. States 0/2 retain the radius. These controls establish the numeric getter behavior, without assigning full state-machine or eligibility semantics. Boundary scans use state 2. Source-selected base/King vtables and minimal body/Data fields are supplied; full constructors, inherited/profile modifiers and table loading are not emulated. World/grid resolution, one-candidate broadphase, eligibility and priority remain explicit callbacks. Successful sight gates still halt at `0x25db97` before ranking and subsequent attack validation. Native class/radius execution therefore improves the evidence without claiming full acquisition or changing application rules 26.
+
 
 ## Native candidate minimum-range gate
 
