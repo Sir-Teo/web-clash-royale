@@ -81,7 +81,7 @@ describe("native Lightning spell", () => {
   it("strikes the three strongest distinct enemies, including air, on separate pulses", () => {
     const match = battle();
     const tower = match.entities.find(
-      (e) => e.kind === "tower" && e.team === "red" && e.x === 4,
+      (e) => e.kind === "tower" && e.team === "red" && e.lane === "left",
     )!;
     match.players.red.hand[0] = "tesla";
     match.players.red.elixir = 10;

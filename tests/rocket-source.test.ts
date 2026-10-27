@@ -78,7 +78,7 @@ describe("native Rocket spell", () => {
   it("flies at source speed, hits ground and air, knocks troops back, and uses 40% tower damage", () => {
     const match = battle();
     const tower = match.entities.find(
-      (e) => e.kind === "tower" && e.team === "red" && e.x === 4,
+      (e) => e.kind === "tower" && e.team === "red" && e.lane === "left",
     )!;
     match.players.red.hand[0] = "tesla";
     match.players.red.elixir = 10;

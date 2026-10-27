@@ -239,8 +239,8 @@ it("leads a Battle Ram through a distance charge and modifier expiry without mut
       mover.slow = undefined;
   }
   // Continuous planning may cross the charge boundary within a simulation step.
-  expect(point.x).toBe(4);
-  expect(Math.abs(point.y - mover.y)).toBeLessThan(
+  expect(point.x).toBeLessThan(actor.x);
+  expect(Math.hypot(point.x - mover.x, point.y - mover.y)).toBeLessThan(
     actor.speed * 2 * 1.35 * STEP,
   );
   expect(actor).toEqual(before);
@@ -285,7 +285,7 @@ it("records and reconstructs a complete current match with all three chargers", 
   expect(live.winner).toBeTruthy();
   expect([...seen]).toEqual(expect.arrayContaining([...chargers]));
   const record = live.exportReplay();
-  expect(record.version).toBe(30);
+  expect(record.version).toBe(31);
   const replay = new Battle({ replay: record });
   for (const checkpoint of checkpoints) {
     while (replay.tick < checkpoint.tick && !replay.winner) replay.step();

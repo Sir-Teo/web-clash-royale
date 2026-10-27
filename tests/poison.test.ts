@@ -99,7 +99,7 @@ describe("native Poison card", () => {
 
   it("reduces Crown Tower damage, skips hidden Tesla and preserves peer and replay state", () => {
     const match = battle();
-    const tower = match.entities.find((entity) => entity.kind === "tower" && entity.team === "red" && entity.x === 4)!;
+    const tower = match.entities.find((entity) => entity.kind === "tower" && entity.team === "red" && entity.lane === "left")!;
     match.players.red.hand[0] = "tesla";
     match.players.red.elixir = 10;
     expect(match.play("red", 0, 4, 9).ok).toBe(true);
@@ -119,7 +119,7 @@ describe("native Poison card", () => {
     const guestBattle = new Battle({ seed: 9, ai: false });
     applySnapshot(guestBattle, host, "red");
     expect(guestBattle.areas).toEqual(guest.areas);
-    expect(guestBattle.entities.find((entity) => entity.kind === "tower" && entity.team === "blue" && entity.x === 14)?.hp).toBeCloseTo(tower.hp);
+    expect(guestBattle.entities.find((entity) => entity.kind === "tower" && entity.team === "blue" && entity.lane === "right")?.hp).toBeCloseTo(tower.hp);
     const replay = new Battle({ replay: match.exportReplay() });
     while (replay.tick < match.tick) replay.step();
     expect(replay.areas[0]).toMatchObject({
@@ -129,7 +129,7 @@ describe("native Poison card", () => {
       remaining: match.areas[0].remaining,
       hitAt: match.areas[0].hitAt,
     });
-    expect(replay.entities.find((entity) => entity.kind === "tower" && entity.team === "red" && entity.x === 4)?.hp).toBeCloseTo(tower.hp);
+    expect(replay.entities.find((entity) => entity.kind === "tower" && entity.team === "red" && entity.lane === "left")?.hp).toBeCloseTo(tower.hp);
     expect(match.time).toBeCloseTo(30 * STEP);
   });
 

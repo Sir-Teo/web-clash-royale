@@ -1,5 +1,5 @@
 import definitions from "./death-audio-data.json";
-import { TOWER_SITES } from "./arena-layout";
+import { towerSites } from "./arena-layout";
 import type { BattleEvent, Team } from "./engine";
 import type { GameAudio } from "./audio";
 
@@ -53,7 +53,7 @@ export function deathAudioPlan(
 export class NativeDeathAudio {
   private pending: (DeathCue & { time: number })[] = [];
   constructor(private readonly audio: Pick<GameAudio, "enabled" | "play">) {}
-  queue(event: BattleEvent, seed: number, now: number) {
+  queue(event: BattleEvent, seed: number, now: number, nativeTowerLayout?: true) {
     if (
       event.type !== "death" ||
       !this.audio.enabled ||
@@ -62,7 +62,7 @@ export class NativeDeathAudio {
       return;
     const king =
       event.card === "tower" &&
-      TOWER_SITES.some(
+      towerSites(nativeTowerLayout).some(
         (site) =>
           site.king &&
           site.team === event.team &&

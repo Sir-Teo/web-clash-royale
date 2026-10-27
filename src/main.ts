@@ -2384,7 +2384,7 @@ function processEvents() {
   for (const ev of battle.events) {
     if (ev.id <= eventCursor) continue;
     eventCursor = ev.id;
-    deathAudio.queue(ev, battle.seed, battle.time);
+    deathAudio.queue(ev, battle.seed, battle.time, battle.nativeTowerLayout);
     if (
       ev.team === "blue" &&
       (ev.type === "deploy" || ev.type === "spell") &&

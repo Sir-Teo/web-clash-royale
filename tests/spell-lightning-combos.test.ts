@@ -156,7 +156,7 @@ describe("spells that redirect active Lightning", () => {
 
   it("keeps a reserved blocker as an aim point for an indirect King win", () => {
     const { battle, king, blocker } = setup();
-    Object.assign(blocker, { x: 6, y: 27 });
+    Object.assign(blocker, { x: king.x - 3, y: king.y - 2.5 });
     battle.entities = battle.entities.filter(
       (e) => !(e.team === "blue" && e.kind === "tower" && !e.king),
     );

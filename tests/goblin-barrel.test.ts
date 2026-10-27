@@ -85,7 +85,7 @@ describe("native Goblin Barrel spell", () => {
   it("flies at source speed and releases exactly three delayed Goblins without landing damage", () => {
     const match = battle();
     const tower = match.entities.find(
-      (e) => e.team === "red" && e.kind === "tower" && e.x === 4,
+      (e) => e.team === "red" && e.kind === "tower" && e.lane === "left",
     )!;
     const hp = tower.hp;
     expect(match.play("blue", 0, 4, 6).ok).toBe(true);

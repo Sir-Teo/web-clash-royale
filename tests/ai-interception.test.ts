@@ -8,7 +8,8 @@ function scene(start: number) {
   const b = new Battle({ seed: 8, ai: false });
   // Isolate the guard's interception from tower artillery, retaining real target movement.
   for (const tower of b.entities) tower.active = false;
-  (b as any).spawn("hog-rider", "blue", 14, start);
+  const crown = b.entities.find((body) => body.team === "red" && body.lane === "right")!;
+  (b as any).spawn("hog-rider", "blue", crown.x, start);
   const hog = b.entities.at(-1)!;
   hog.deploy = 0;
   b.players.red.hand = ["mini-pekka", "giant", "pekka", "three-musketeers"];
@@ -221,12 +222,13 @@ describe("bounded melee interception forecast", () => {
     );
   });
   it("preserves the ordinary affordable-card and placement RNG budget", () => {
-    const { b } = scene(13);
+    const { b, hog } = scene(13);
+    const expected = intercept(b, "mini-pekka", hog)!;
     const random = vi.spyOn(b, "random");
     (b as any).think();
     expect(random).toHaveBeenCalledTimes(2);
     random.mockRestore();
-    expect(b.actions[0]).toMatchObject({ x: 14, y: 10 });
+    expect(b.actions[0]).toMatchObject({ card: "mini-pekka", ...expected });
   });
 });
 

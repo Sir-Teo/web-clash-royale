@@ -62,7 +62,7 @@ describe("archived Miner", () => {
     expect(battle.events.some((e) => e.type === "deploy" && e.card === "miner" && e.y === 8)).toBe(true);
     miner.y = 7;
     miner.deploy = 0;
-    const tower = battle.entities.find((e) => e.kind === "tower" && !e.king && e.team === "red" && e.x === 4)!;
+    const tower = battle.entities.find((e) => e.kind === "tower" && !e.king && e.team === "red" && e.lane === "left")!;
     for (let i = 0; i < 60 && !battle.events.some((e) => e.type === "hit" && e.card === "miner"); i++) battle.step();
     const hit = battle.events.find((e) => e.type === "hit" && e.card === "miner")!;
     expect(hit.value).toBe(78);

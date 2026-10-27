@@ -37,7 +37,7 @@ import {
   KING_ACTIVATION_TIME,
   HEAL_PER_TICK,
 } from "./combat";
-import { TOWER_SITES } from "./arena-layout";
+import { towerSites } from "./arena-layout";
 import { audioProfile } from "./combat-audio-events";
 import flyingHeights from "./flight-heights.json" with { type: "json" };
 import collisionRadii from "./archived-collision-radii.json" with { type: "json" };
@@ -241,7 +241,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -285,6 +285,8 @@ export class Battle {
   readonly enemyDeck: CardId[];
   readonly rulesFamily: "local" | "origin" = "origin";
   readonly rulesVersion: Replay["version"];
+  /** Rules 31 world layout; snapshots also preserve older hosts' policy. */
+  nativeTowerLayout?: true;
   tick = 0;
   entities: Entity[] = [];
   projectiles: Projectile[] = [];
@@ -321,7 +323,8 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 30;
+    this.rulesVersion = r?.version ?? 31;
+    this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -358,7 +361,7 @@ export class Battle {
       };
     };
     this.players = { blue: player(this.deck), red: player(this.enemyDeck) };
-    for (const site of TOWER_SITES)
+    for (const site of towerSites(this.nativeTowerLayout))
       this.makeTower(site.team, site.x, site.y, site.king, site.lane);
     // Constructors may return a compatible legacy instance. Initialize the
     // modern branch first so all shared fields retain definite initialization.

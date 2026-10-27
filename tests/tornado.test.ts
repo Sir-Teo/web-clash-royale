@@ -79,7 +79,7 @@ describe("native Tornado spell", () => {
   it("pulls enemy troops on ground and in air, damages on half-second beats, and ignores buildings", () => {
     const match = battle();
     const tower = match.entities.find(
-      (e) => e.team === "red" && e.kind === "tower" && e.x === 4,
+      (e) => e.team === "red" && e.kind === "tower" && e.lane === "left",
     )!;
     match.players.red.hand[0] = "giant";
     match.players.red.elixir = 10;

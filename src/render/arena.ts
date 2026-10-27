@@ -37,7 +37,7 @@ import { BlindSpotIndicator } from "./blind-spot";
 import { placementRanges } from "./placement-ranges";
 import { BuildingLibrary } from "./buildings";
 import type { BuildingSprite } from "./buildings";
-import { destroyedTowerSites, TOWER_SITES } from "../game/arena-layout";
+import { destroyedTowerSites, towerSites } from "../game/arena-layout";
 import { DestructionEffects, deathEffect, impactEffect } from "./destruction";
 import { NativeDeploymentEffects } from "./deployment-effects";
 import { NativeLaunchEffects } from "./launch-effects";
@@ -1061,7 +1061,7 @@ export class Arena {
     // Authored effects use elapsed presentation time. Movement and legacy
     // particle integration keep the bounded step supplied separately.
     this.destruction.advance(effectDelta);
-    const ruins = destroyedTowerSites(b.entities);
+    const ruins = destroyedTowerSites(b.entities, b.nativeTowerLayout);
     const ruinKeys = new Set(ruins.map((s) => `${s.team}-${s.x}`));
     for (const [key, mesh] of this.rubble)
       if (!ruinKeys.has(key)) {
@@ -1074,10 +1074,11 @@ export class Arena {
       if (!mesh) {
         mesh = this.buildings.rubble(site.king) ?? undefined;
         if (!mesh) continue;
-        mesh.position.set(site.x - 9, 0.19, site.y - 16);
         this.rubble.set(key, mesh);
         this.scene.add(mesh);
       }
+      // Guest snapshots can change layout policy while retaining a King key.
+      mesh.position.set(site.x - 9, 0.19, site.y - 16);
       // Ground artwork retains its authored projected proportions without the
       // bottom half of a billboard intersecting the opaque arena floor.
       mesh.rotation.x = -Math.PI / 2;
@@ -1713,7 +1714,7 @@ export class Arena {
           );
       }
       if (event.type === "death" && this.effects.asset) {
-        const site = TOWER_SITES.find(
+        const site = towerSites(b.nativeTowerLayout).find(
           (s) => s.team === event.team && s.x === event.x && s.y === event.y,
         );
         const effect = deathEffect(event.card ?? "", !!site?.king);

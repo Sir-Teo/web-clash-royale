@@ -1,0 +1,21 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "layout": "LayoutPvp",
+  "sourceUnitsPerTile": 1000,
+  "sourceUnitsPerCell": 500,
+  "inputs": [
+    {
+      "path": "reference/client/tower-layout-native-trace.json",
+      "sha256": "0d3ddf3aa7bafaf3b03e252205a846ccea27528d9a39f2de4370ad1ed1181be0"
+    },
+    {
+      "path": "src/game/primary-score-data.json",
+      "sha256": "7971038b66fc29909428a41bbefefcccc30ede29aead651d085af5fd7c0d94f7"
+    }
+  ],
+  "output": {
+    "path": "src/game/tower-layout-data.json",
+    "sha256": "c5e2851c3b503cc4cf354a889e3c955385f84899e061e85ed5e65fcb6dd3911d"
+  }
+}

@@ -79,7 +79,7 @@ describe("native Log spell", () => {
   it("launches then rolls once through ground enemies with knockback and reduced tower damage", () => {
     const match = battle();
     const tower = match.entities.find(
-      (e) => e.team === "red" && e.kind === "tower" && e.x === 4,
+      (e) => e.team === "red" && e.kind === "tower" && e.lane === "left",
     )!;
     match.players.red.hand[0] = "knight";
     match.players.red.elixir = 10;
@@ -150,7 +150,7 @@ describe("native Log spell", () => {
     match.players.red.hand[0] = "log";
     match.players.red.elixir = 10;
     const blueTower = match.entities.find(
-      (e) => e.team === "blue" && e.kind === "tower" && e.x === 14,
+      (e) => e.team === "blue" && e.kind === "tower" && e.lane === "right",
     )!;
     match.players.blue.hand[0] = "knight";
     expect(match.play("blue", 0, 14, 22).ok).toBe(true);

@@ -434,7 +434,7 @@ describe("versioned battle replay", () => {
     }
     expect(b.winner).not.toBeNull();
     const record = b.exportReplay();
-    expect(record.version).toBe(30);
+    expect(record.version).toBe(31);
     const replay = new Battle({ replay: record });
     for (let i = 0; i < record.duration; i++) replay.step();
     expect(replay.winner).toEqual(b.winner);

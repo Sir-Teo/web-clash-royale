@@ -55,6 +55,7 @@ export function snapshot(b: Battle): BattleSnapshot {
   );
   return {
     tick: b.tick,
+    ...(b.nativeTowerLayout ? { nativeTowerLayout: true as const } : {}),
     entities: b.entities,
     projectiles: b.projectiles,
     ...(b.areas.length ? { areas: b.areas } : {}),
@@ -75,6 +76,7 @@ export function snapshot(b: Battle): BattleSnapshot {
 export function applySnapshot(b: Battle, s: BattleSnapshot, team: Team) {
   const view = perspective(s, team);
   b.tick = view.tick;
+  b.nativeTowerLayout = view.nativeTowerLayout;
   b.entities = view.entities;
   b.projectiles = view.projectiles;
   b.areas = view.areas ?? [];

@@ -52,7 +52,7 @@ describe("archived Heal card", () => {
 
   it("heals friendly ground and air troops at source cadence, never enemy troops or structures", () => {
     const match = battle();
-    const blueTower = match.entities.find((e) => e.kind === "tower" && e.team === "blue" && e.x === 4)!;
+    const blueTower = match.entities.find((e) => e.kind === "tower" && e.team === "blue" && e.lane === "left")!;
     blueTower.hp -= 500;
     for (const [team, card, x, y] of [
       ["blue", "knight", 4, 22],

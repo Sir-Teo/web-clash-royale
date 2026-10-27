@@ -1,0 +1,44 @@
+{
+  "sites": [
+    {
+      "team": "red",
+      "x": 3.5,
+      "y": 6.5,
+      "king": false,
+      "lane": "left"
+    },
+    {
+      "team": "red",
+      "x": 14.5,
+      "y": 6.5,
+      "king": false,
+      "lane": "right"
+    },
+    {
+      "team": "red",
+      "x": 9,
+      "y": 3,
+      "king": true
+    },
+    {
+      "team": "blue",
+      "x": 3.5,
+      "y": 25.5,
+      "king": false,
+      "lane": "left"
+    },
+    {
+      "team": "blue",
+      "x": 14.5,
+      "y": 25.5,
+      "king": false,
+      "lane": "right"
+    },
+    {
+      "team": "blue",
+      "x": 9,
+      "y": 29,
+      "king": true
+    }
+  ]
+}

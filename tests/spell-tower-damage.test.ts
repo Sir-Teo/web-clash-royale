@@ -37,7 +37,7 @@ describe("archived spell damage to Crown Towers", () => {
           : new Battle({ replay: { ...base.exportReplay(), version } as Replay });
         const tower = battle.entities.find((entity) =>
           entity.team === "red" && entity.kind === "tower" &&
-          !entity.king && entity.x === 4,
+          !entity.king && entity.lane === "left",
         )!;
         for (const entity of battle.entities) entity.active = false;
         battle.players.blue.hand[0] = id;

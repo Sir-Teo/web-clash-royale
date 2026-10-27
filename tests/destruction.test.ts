@@ -16,18 +16,18 @@ import { CARDS } from "../src/game/cards";
 describe("native tower destruction", () => {
   it("derives correct ruins from current state, including rebuilt replay states", () => {
     const b = new Battle({ seed: 7, ai: false });
-    expect(destroyedTowerSites(b.entities)).toEqual([]);
+    expect(destroyedTowerSites(b.entities, b.nativeTowerLayout)).toEqual([]);
     const king = b.entities.find((e) => e.king && e.team === "red")!;
     const princess = b.entities.find(
       (e) => e.team === "blue" && e.lane === "left",
     )!;
     king.hp = 0;
     b.entities = b.entities.filter((e) => e.id !== princess.id);
-    expect(destroyedTowerSites(b.entities)).toEqual([
-      { team: "red", x: 9, y: 2.5, king: true },
-      { team: "blue", x: 4, y: 26, king: false, lane: "left" },
+    expect(destroyedTowerSites(b.entities, b.nativeTowerLayout)).toEqual([
+      { team: "red", x: 9, y: 3, king: true },
+      { team: "blue", x: 3.5, y: 25.5, king: false, lane: "left" },
     ]);
-    expect(destroyedTowerSites(new Battle({ seed: 7 }).entities)).toEqual([]);
+    expect(destroyedTowerSites(new Battle({ seed: 7 }).entities, true)).toEqual([]);
   });
   it("preserves source composition counts, delays and seeded variety", () => {
     const a = destructionPlan("tower", 42);

@@ -32,6 +32,7 @@ export interface RoomState {
 }
 export interface BattleSnapshot {
   tick: number;
+  nativeTowerLayout?: true;
   entities: Entity[];
   projectiles: Projectile[];
   areas?: AreaEffect[];

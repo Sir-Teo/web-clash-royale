@@ -259,7 +259,7 @@ describe("AI damaging spell targets", () => {
   });
   it("holds a marginal mirrored Fireball, then spends its real cost on a useful target", () => {
     const b = new Battle({ ai: false });
-    const target = unit(50, "musketeer", 4, 20);
+    const target = unit(50, "musketeer", 4, 18);
     b.entities.push(target);
     b.players.red.hand = ["mirror", "pekka", "pekka", "pekka"];
     b.players.red.lastPlayed = "fireball";

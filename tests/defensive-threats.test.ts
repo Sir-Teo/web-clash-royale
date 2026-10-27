@@ -121,12 +121,12 @@ describe("visible defensive pressure", () => {
   });
   it("places a defender near a central attacker instead of at a fixed far-side lane center", () => {
     const b = battle();
-    const enemy = unit(b, "knight", 9, 3);
+    const enemy = unit(b, "knight", 9, 5);
     think(b);
     const play = b.actions.at(-1)!;
     expect(play.card).toBe("mini-pekka");
     expect(Math.hypot(play.x - enemy.x, play.y - enemy.y)).toBeLessThan(2);
-    expect(play.y).toBeCloseTo(4.3);
+    expect(play.y).toBeCloseTo(6.3);
     expect(b.players.red.elixir).toBe(0);
   });
   it.each([false, true])(

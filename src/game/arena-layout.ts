@@ -1,4 +1,5 @@
 import type { Entity, Team } from "./engine";
+import native from "./tower-layout-data.json" with { type: "json" };
 
 export interface TowerSite {
   team: Team;
@@ -27,8 +28,18 @@ export const TOWER_SITES: readonly TowerSite[] = (
   },
   { team, x: 9, y: team === "blue" ? 29.5 : 2.5, king: true },
 ]);
-export function destroyedTowerSites(entities: readonly Entity[]) {
-  return TOWER_SITES.filter(
+export const NATIVE_TOWER_SITES: readonly TowerSite[] =
+  native.sites as TowerSite[];
+
+/** The legacy constant remains stable for historical and local recordings. */
+export const towerSites = (nativeLayout?: true) =>
+  nativeLayout ? NATIVE_TOWER_SITES : TOWER_SITES;
+
+export function destroyedTowerSites(
+  entities: readonly Entity[],
+  nativeLayout?: true,
+) {
+  return towerSites(nativeLayout).filter(
     (site) =>
       !entities.some(
         (e) =>

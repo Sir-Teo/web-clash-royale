@@ -1,3 +1,4 @@
+import { applySnapshot, snapshot } from "../../src/network/perspective";
 import { defensiveThreats } from "../../src/game/defensive-threats";
 import { attackReach, minimumAttackDistance } from "../../src/game/attack-range";
 import mortarRules from "../../src/game/mortar-data.json" with { type: "json" };
@@ -45,6 +46,7 @@ let battle: Battle,
   renderedTime = 0,
   extraVisualTime = 0,
   last = performance.now();
+let guestLayoutToggle = false;
 let victims: { team: Team; x: number; y: number }[] = [];
 const clockModes = new Map<number, string>();
 const attackClockTargets = new Map<number, number>();
@@ -79,6 +81,7 @@ function unit(id: CardId, team: Team, x: number, y: number) {
 }
 function setup() {
   chargeCues = 0;
+  guestLayoutToggle = false;
   playing = false;
   elapsed = 0;
   renderedTime = 0;
@@ -102,13 +105,14 @@ function setup() {
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
-  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "primary-score", "primary-geometry"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30"].includes(rangeRules ?? "")) {
-    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 } });
+  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "primary-score", "primary-geometry", "tower-layout"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31"].includes(rangeRules ?? "")) {
+    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
   for (const t of battle.entities) t.active = false;
   const scenario = (document.querySelector("#scenario") as HTMLSelectElement)
     .value;
+  (document.querySelector("#guest-ruins") as HTMLElement).hidden = scenario !== "tower-layout";
   (document.querySelector("#warm-sprite-cache") as HTMLElement).hidden = scenario !== "sprite-cache";
   for (const id of ["clock-clear", "clock-freeze"])
     (document.querySelector(`#${id}`) as HTMLElement).hidden = scenario !== "animation-clock";
@@ -170,7 +174,7 @@ function setup() {
     "destruction",
   ])
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
-      scenario !== "king" &&
+      scenario !== "king" && scenario !== "tower-layout" &&
       !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
       !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "primary-score", "primary-geometry", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
@@ -1032,6 +1036,8 @@ function setup() {
           e.active = false;
           e.hp = e.maxHp = 10000;
         }
+  } else if (scenario === "tower-layout") {
+    // Keep only the six actual Crown bodies for layout/rebuild checks.
   } else if (scenario === "king") {
     for (const [team, x, y] of [
       ["blue", 12, 7],
@@ -1059,6 +1065,14 @@ function setup() {
   }
   arena.setBattle(battle);
 }
+document.querySelector("#guest-ruins")!.addEventListener("click", () => {
+  const version = guestLayoutToggle ? battle.rulesVersion : battle.rulesVersion === 31 ? 30 : 31;
+  guestLayoutToggle = !guestLayoutToggle;
+  const host = new Battle({ replay: { ...battle.exportReplay(), version, actions: [], duration: 0 } });
+  host.entities = [];
+  host.winner = "draw";
+  applySnapshot(battle, snapshot(host), "red");
+});
 document.querySelector("#scenario")!.addEventListener("change", setup);
 document.querySelector("#break-shield")!.addEventListener("click", () =>
   cast("fireball", "red",
@@ -1346,6 +1360,19 @@ function render(now: number) {
   document.querySelector("#king-hits")!.textContent =
     `${battle.events.filter((e) => e.type === "hit" && e.card === undefined).length} tower hits`;
   const destruction = arena.destructionState;
+  if (sceneSelect.value === "tower-layout")
+    (document.querySelector("#destruction") as HTMLElement).dataset.towerLayout = JSON.stringify({
+      version: battle.rulesVersion, policy: !!battle.nativeTowerLayout, tick: battle.tick,
+      crowns: battle.entities.filter((body) => body.card === "tower").map((body) => {
+        const visual = (arena as any).units.get(body.id);
+        return { id: body.id, team: body.team, king: body.king, lane: body.lane,
+          x: body.x, y: body.y, hp: body.hp, native: !!visual?.building,
+          worldX: visual?.object.position.x, worldZ: visual?.object.position.z };
+      }),
+      ruins: [...(arena as any).rubble.entries()].map(([key, mesh]: [string, any]) => ({ key, x: mesh.position.x + 9, y: mesh.position.z + 16 })),
+      clips: destruction.clips,
+      deaths: battle.events.filter((event) => event.type === "death" && event.card === "tower").map(({ team, x, y }) => ({ team, x, y })),
+    });
   if (sceneSelect.value === "sprite-cache") {
     const visuals = [...(arena as any).units.values()] as any[];
     const geometry = new Set<any>();
