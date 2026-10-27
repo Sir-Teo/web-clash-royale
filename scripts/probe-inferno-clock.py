@@ -80,10 +80,13 @@ cpu.mem_map(stack, 0x100000)
 cpu.mem_map(stop, 0x1000, UC_PROT_READ | UC_PROT_EXEC)
 body, data, component, world, buffs, array = [heap + i * 0x1000 for i in range(6)]
 registers = [UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX, UC_X86_REG_EDX, UC_X86_REG_ESI, UC_X86_REG_EDI, UC_X86_REG_EBP]
-allowed = [(0x25f754, 0x25f8d3), (0x25c080, 0x25c152), (0x1d7f10, 0x1d7f20),
+from lib.instruction_ranges import InstructionRanges
+
+allowed = InstructionRanges([(0x25f754, 0x25f8d3), (0x25c080, 0x25c152), (0x1d7f10, 0x1d7f20),
            (0x2147c8, 0x2147ef), (0x21960e, 0x21961e), (0x2199b0, 0x2199c8),
            (0x1ddf7a, 0x1ddf8e), (0x1deb6e, 0x1deb82), (0x1cc746, 0x1cc75b),
-           (0x1ded02, 0x1ded7d), (0x35bdb0, 0x35be20)]
+           (0x1ded02, 0x1ded7d), (0x35bdb0, 0x35be20)])
+stack_callbacks = {0x25fa64, 0x25fa3a, 0x356eb0, 0x351d10, 0x21698e}
 profile = None
 reset_calls = 0
 
@@ -106,7 +109,7 @@ def return_hook(value=0):
 
 def instruction(_cpu, address, _size, _data):
     global reset_calls
-    sp = cpu.reg_read(UC_X86_REG_ESP)
+    sp = cpu.reg_read(UC_X86_REG_ESP) if address in stack_callbacks else 0
     if address == stop:
         cpu.emu_stop()
     elif address in [0x25fa64, 0x25fa3a]:
@@ -127,7 +130,7 @@ def instruction(_cpu, address, _size, _data):
             raise RuntimeError("Unexpected reset notification owner")
         reset_calls += 1
         return_hook()
-    elif not any(start <= address < end for start, end in allowed):
+    elif not allowed.allows(address):
         raise RuntimeError(f"Native instruction escaped clock ranges: {address:#x}")
 
 

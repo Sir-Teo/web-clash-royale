@@ -52,7 +52,8 @@ def capture(env, context):
             requests.append(identity(pointer))
             return_hook()
 
-    cpu.hook_add(UC_HOOK_CODE, hook)
+    for address in [0x25e27d, 0x25e310, 0x25d4b0]:
+        cpu.hook_add(UC_HOOK_CODE, hook, begin=address, end=address)
 
     def predict(owner, candidates, add_radius, team, state, fallback):
         if state in [3, 4, 6]:

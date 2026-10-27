@@ -65,7 +65,8 @@ def capture(env, context):
         elif address == 0x1d9760:
             cpu.reg_write(UC_X86_REG_EIP, env["stop"])
 
-    cpu.hook_add(UC_HOOK_CODE, hook)
+    for address in [0x25d7c2, 0x25fa2a, 0x1c8aba, 0x1c9abe, 0x1d9747, 0x1d9760]:
+        cpu.hook_add(UC_HOOK_CODE, hook, begin=address, end=address)
     truth = lambda row, field: row[field].lower() == "true"
 
     def prepare(owner_name, target_name, team=0, friendly=False, gate=True, world_value=0, options=None):

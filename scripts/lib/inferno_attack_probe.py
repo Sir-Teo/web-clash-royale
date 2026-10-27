@@ -52,8 +52,8 @@ def capture(env):
 
     def hook(_cpu, address, _size, _data):
         nonlocal damage_context
-        sp = cpu.reg_read(UC_X86_REG_ESP)
         if address in constants:
+            sp = cpu.reg_read(UC_X86_REG_ESP)
             if address in [0x25fa9c, 0x25fa2a, 0x25d6f2, 0x25d7c2, 0x25deb6, 0x25d95e]:
                 if read(sp + 4) != component:
                     raise RuntimeError("Unexpected attack-component callback owner")

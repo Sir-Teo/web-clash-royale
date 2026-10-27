@@ -48,7 +48,7 @@ def capture(env, context):
         else:
             return_hook()
 
-    cpu.hook_add(UC_HOOK_CODE, candidate_hook)
+    cpu.hook_add(UC_HOOK_CODE, candidate_hook, begin=0x25deb6, end=0x25deb6)
     cases, boundaries = [], []
     for card, source in [("inferno-tower", env["rows"]["reference/logic/buildings.csv"]["InfernoTower"]),
                          ("inferno-dragon", env["rows"]["reference/logic/characters.csv"]["InfernoDragon"])]:

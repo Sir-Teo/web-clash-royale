@@ -93,7 +93,8 @@ def capture(env):
         elif address == 0x25dd10:
             nominations.append(read(sp + 0x34))
 
-    cpu.hook_add(UC_HOOK_CODE, hook)
+    for address in [*hooks, 0x1dd78c, 0x1dd7b2, 0x25dd10]:
+        cpu.hook_add(UC_HOOK_CODE, hook, begin=address, end=address)
     bool_value = lambda row, key: row[key].lower() == "true"
 
     def initialize(owner, candidates, team, add_radius, current):
