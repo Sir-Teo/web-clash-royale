@@ -14,6 +14,7 @@ def capture(env, context):
     cpu, heap, body, data, component = [env[k] for k in ["cpu", "heap", "body", "data", "component"]]
     read, write, run, initialize, set_buffs = [env[k] for k in ["read", "write", "run", "initialize", "set_buffs"]]
     state, pulses, calls = [context[k] for k in ["state", "pulses", "calls"]]
+    roster = env["args"].roster_first_attacks
     env["allowed"].extend([
         (0x25c3e6, 0x25c4f9), (0x25f9ba, 0x25fa0c),
         (0x35d220, 0x35d245), (0x35d250, 0x35d281),
@@ -24,6 +25,11 @@ def capture(env, context):
         {"name": "VariableDamageTime1", "string": 0x613eb8, "gotOffset": 0x1768},
         {"name": "VariableDamageTime2", "string": 0x613ea4, "gotOffset": 0x1764},
     ]
+    if roster:
+        columns += [
+            {"name": "LoadFirstHit", "string": 0x61438a, "gotOffset": 0x18e4, "dataOffset": 0x288},
+            {"name": "AttackDashTime", "string": 0x613d22, "dataOffset": 0x2f4},
+        ]
     for column in columns:
         expected = column["name"].encode() + b"\0"
         if bytes(cpu.mem_read(column["string"], len(expected))) != expected:
@@ -34,13 +40,23 @@ def capture(env, context):
         "characters": ["Knight", "Archer", "Musketeer", "Giant", "HogRider", "Balloon", "Prince", "InfernoDragon", "ElectroWizard"],
         "buildings": ["Cannon", "Mortar", "InfernoTower", "KingTower", "PrincessTower"],
     }
+    if roster:
+        names = {
+            table: [name for name, row in env["rows"][f"reference/logic/{table}.csv"].items()
+                    if name not in ["", "string"] and int(row["HitSpeed"] or 0) > 0]
+            for table in ["characters", "buildings"]
+        }
     cases = []
     steps = 240
     for table, source_names in names.items():
         for name in source_names:
             source = env["rows"][f"reference/logic/{table}.csv"][name]
-            if any(source[field] for field in ["LoadFirstHit", "StopTimeAfterAttack", "Burst", "BurstDelay", "AttackDashTime", "ActivationTime", "RetargetAfterAttack"]):
+            unsupported = ["StopTimeAfterAttack", "Burst", "BurstDelay", "ActivationTime", "RetargetAfterAttack"]
+            if not roster:
+                unsupported += ["LoadFirstHit", "AttackDashTime"]
+            if any(source[field] for field in unsupported):
                 raise RuntimeError(f"Recheck unsupported first-attack profile: {name}")
+            source_first_load = source["LoadFirstHit"].lower() == "true"
             variable = all(int(source[field] or 0) > 0 for field in ["VariableDamageTime1", "VariableDamageTime2"])
             for buffs in [[], ["Rage"], ["IceWizardSlowDown"], ["Rage", "IceWizardSlowDown"]]:
                 for first_load in [False, True]:
@@ -110,10 +126,11 @@ def capture(env, context):
                         if tick <= 5 or tick in [8, 16, 20, 24, 30, 40, 60, 80, 100, 120, 160, 200, 240]:
                             checkpoints.append({"tick": tick, **state()})
                     measured = [{key: pulse[key] for key in ["tick", "elapsedMs", "reloadMs", "hitIndex", "reloadAfterMs"]} for pulse in pulses]
-                    if not pulses or measured != expected_pulses:
+                    if (not roster and not pulses) or measured != expected_pulses:
                         raise RuntimeError(f"Dispatch calculation differs: {name}, {buffs}, {first_load}")
                     cases.append({"sourceTable": table, "sourceName": name, "buffs": buffs,
-                                  "loadFirstHit": first_load, "syntheticFirstLoad": first_load,
+                                  **({"sourceLoadFirstHit": source_first_load, "attackDashTimeMs": int(source["AttackDashTime"] or 0)} if roster else {}),
+                                  "loadFirstHit": first_load, "syntheticFirstLoad": first_load != source_first_load,
                                   "hitSpeedMs": int(source["HitSpeed"]), "loadTimeMs": int(source["LoadTime"] or 0),
                                   "variableDamage": variable, "constructed": constructed, "assigned": assigned,
                                   "pulses": list(pulses), "checkpoints": checkpoints,
@@ -133,6 +150,12 @@ def capture(env, context):
         ("pulseBoundary", 0x25cac4, 0x25cc50, "Actual elapsed/HitSpeed crossing and active-clock update choose dispatches."),
         ("damageReload", 0x25e681, 0x25e69f, "Actual damage prefix reloads the source LoadTime."),
     ]
+    if roster:
+        static += [
+            ("firstLoadColumn", 0x1dd4d9, 0x1dd501, "Static LoadFirstHit string/column binding caches at GOT+0x18e4."),
+            ("firstLoadField", 0x1d9c0d, 0x1d9c25, "Static boolean column read stores LoadFirstHit at Data+0x288."),
+            ("attackDashField", 0x1db193, 0x1db1bb, "Static AttackDashTime source-name integer read stores Data+0x2f4."),
+        ]
     blocks = []
     for name, start, end, interpretation in static:
         assembly = subprocess.check_output(["objdump", "-d", "-Mintel", f"--start-address={start:#x}", f"--stop-address={end:#x}", str(env["args"].library)], text=True)
@@ -144,14 +167,15 @@ def capture(env, context):
         "inputs": [*env["inputs"], {"path": context["globals_path"], "sha256": hashlib.sha256(context["globals_bytes"]).hexdigest()}],
         "limits": [
             "Source-selected minimal Data profiles, not full table loading or inheritance. Blank numeric fields supply zero. Data variable-damage flag follows both positive source times.",
-            "Actual attack, base and point constructors execute. Archived LoadFirstHit is false in all selected rows; true cases are synthetic controls.",
+            ("Actual attack, base and point constructors execute. Every positive archived HitSpeed row is selected, including unused/spawner data rows without a claim that they naturally construct an attack component. ZapMachine's true LoadFirstHit is retained; each opposite first-load setting is a synthetic control. Source Bat AttackDashTime=150 is supplied under the same fixed owner state."
+             if roster else "Actual attack, base and point constructors execute. Archived LoadFirstHit is false in all selected rows; true cases are synthetic controls."),
             "Owner state is fixed at numeric 2, with no movement component, supplied in-range eligible primary and no scanned primary/extra target. Full owner/deployment/movement/control/Freeze/Zap state machines do not execute.",
             "Owner/data/world resolution and state/aim/movement notifications are supplied. Only ATTACK_FINISH_TIME_MS is populated in Globals; other fields remain zero.",
             "Actual main loop, setter and damage reload prefix execute. Damage dispatch records hit indices and reload, then restores its frame before damage allocation. HP, projectiles, level scaling and target death are outside this capture.",
             "Uninterrupted 20-Hz integer clocks are controlled evidence; they do not establish browser timing changes or live initial-owner state behavior.",
         ], "sourceColumns": columns, "blocks": blocks, "cases": cases,
     }, indent=2) + "\n"
-    path = Path("reference/client/first-attacks-native-trace.json")
+    path = Path("reference/client/roster-first-attacks-native-trace.json" if roster else "reference/client/first-attacks-native-trace.json")
     if env["args"].check:
         if path.read_text() != output:
             raise RuntimeError("Native first-attacks capture differs")

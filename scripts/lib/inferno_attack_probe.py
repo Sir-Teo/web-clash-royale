@@ -89,7 +89,11 @@ def capture(env):
             cpu.reg_write(UC_X86_REG_EBP, read(base))
             return_hook()
 
-    cpu.hook_add(UC_HOOK_CODE, hook)
+    # Keep the global instruction allowlist in the root harness. These explicit
+    # callback boundaries need Python dispatch only at their own addresses.
+    # First-attack continuation adds the extra-scan provider after registration.
+    for address in [*constants, 0x25d95e, 0x25e637, 0x25e69f]:
+        cpu.hook_add(UC_HOOK_CODE, hook, begin=address, end=address)
     if args.range_loss or args.first_attacks or args.target_switches:
         if args.target_switches:
             from lib.target_switch_probe import capture as capture_continuation
