@@ -1,0 +1,11 @@
+{
+  "modes": {
+    "Princess": "point",
+    "Bowler": "point",
+    "AxeMan": "point",
+    "Bomber": "point",
+    "Valkyrie": "self",
+    "Mortar": "point",
+    "BombTower": "point"
+  }
+}

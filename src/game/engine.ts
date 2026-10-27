@@ -17,6 +17,7 @@ import { clonePosition, deploymentPositions, deploymentTime, deploymentVisualDel
 import { deploymentYBounds } from "./placement-bounds";
 import { sparkyLoadRate } from "./sparky-preload";
 import { hasPendingRange, pendingAttackInRange } from "./pending-range";
+import { targetLossMode, type TargetLossMode } from "./target-loss";
 import { advanceAnimationClock } from "./animation-clock";
 import { areaSpellTarget, isAreaSpell } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targeting";
@@ -161,6 +162,8 @@ export interface Entity extends Point {
   nativeSparkyPreload?: true;
   /** Rules 38: source started-projectile maximum-range allowance. */
   nativePendingRange?: true;
+  /** Rules 39: finish one pending attack after victim death/removal. */
+  nativeLostAttack?: TargetLossMode;
   dash?: { target: number; elapsed: number; remaining: number };
   dashCooldown?: number;
   attack: number;
@@ -176,7 +179,7 @@ export interface Entity extends Point {
   /** Rules 21: next child within a serial summon wave. */
   spawnIndex?: number;
   spawnBurst?: number;
-  pendingAttack?: { target: number; remaining: number; damage: number };
+  pendingAttack?: { target: number; remaining: number; damage: number; lastPoint?: Point };
   burrow?: {
     exposure: number;
     idle: number;
@@ -255,7 +258,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -289,8 +292,8 @@ export function entityProjectileStartHeight(e: Pick<Entity, "card" | "air">): nu
   const flight = flyingHeights[e.card as keyof typeof flyingHeights];
   return flight ? flight.flyingHeight + flight.projectileStartZ : null;
 }
-export function projectileHitHeight(e: Pick<Entity, "card" | "air" | "kind">): number {
-  return e.air ? entityVisualHeight(e) + 0.1 : e.kind === "tower" ? 1.8 : 0.6;
+export function projectileHitHeight(e?: Pick<Entity, "card" | "air" | "kind">): number {
+  return e?.air ? entityVisualHeight(e) + 0.1 : e?.kind === "tower" ? 1.8 : 0.6;
 }
 export class Battle {
   readonly seed: number;
@@ -345,7 +348,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 38;
+    this.rulesVersion = r?.version ?? 39;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -827,6 +830,7 @@ export class Battle {
     const radius = this.rulesVersion >= 15
       ? (collisionRadii.cards as Record<string, number>)[id]
       : legacyRadius;
+    const lostAttack = this.rulesVersion >= 39 ? targetLossMode({ card: id }) : undefined;
     this.entities.push({
       id: this.nextId++,
       team,
@@ -843,6 +847,7 @@ export class Battle {
       ...(this.rulesVersion >= 26 && id === "mortar" ? { minimumRange: mortar.minimumRange } : {}),
       ...(this.rulesVersion >= 27 && id === "electro-wizard" ? { nativeExtraTargets: true as const } : {}),
       ...(this.rulesVersion >= 38 && hasPendingRange(id) ? { nativePendingRange: true as const } : {}),
+      ...(lostAttack ? { nativeLostAttack: lostAttack } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
@@ -1782,16 +1787,20 @@ export class Battle {
       }
       if (e.pendingAttack) {
         const pending = e.pendingAttack;
-        const target = this.entities.find(
-          (t) => t.id === pending.target && this.validTarget(e, t),
-        );
-        if (!target || !(e.nativePendingRange
-          ? pendingAttackInRange(e, target) : this.inRange(e, target))) this.cancelAttack(e);
+        const previous = this.entities.find((t) => t.id === pending.target);
+        const target = previous && this.validTarget(e, previous) ? previous : undefined;
+        const lost = !!e.nativeLostAttack && (!previous || previous.hp <= 0) &&
+          (e.nativeLostAttack === "self" || !!pending.lastPoint);
+        if ((!target && !lost) || (target && !(e.nativePendingRange
+          ? pendingAttackInRange(e, target) : this.inRange(e, target)))) this.cancelAttack(e);
         else {
+          if (target && e.nativeLostAttack === "point")
+            pending.lastPoint = { x: target.x, y: target.y };
           pending.remaining -= STEP * hitSpeed;
           if (pending.remaining > 1e-8) continue;
           e.pendingAttack = undefined;
-          this.releaseAttack(e, target, pending.damage);
+          this.releaseAttack(e, target, pending.damage,
+            e.nativeLostAttack === "self" ? e : pending.lastPoint);
         }
       }
       const target = e.nativeSparkyPreload ? preloadTarget : this.acquireTarget(e);
@@ -1826,6 +1835,7 @@ export class Battle {
               Math.min(e.interval, combatTraits(e).windup),
             ),
             damage,
+            ...(e.nativeLostAttack === "point" ? { lastPoint: { x: target.x, y: target.y } } : {}),
           };
           this.beginAudio(e);
         }
@@ -1960,8 +1970,53 @@ export class Battle {
     this.emit("hit", e.team, e.x, e.y, "zap", damage);
     this.emitAudio("impact", e.team, "zap");
   }
-  private releaseAttack(e: Entity, target: Entity, damage: number) {
+  private releaseAttack(e: Entity, target: Entity | undefined, damage: number, point?: Point) {
     this.audioAttacks.delete(e.id);
+    const aim = target ?? point;
+    if (!aim || (!target && !e.nativeLostAttack)) return;
+    if (e.card === "executioner") {
+      // The retained minimum and maximum travel values bound the endpoint;
+      // the exact historical extension beyond the selected target is absent.
+      const { start, end: turn, duration } = attackFlight(e, aim)!;
+      this.projectiles.push({
+        id: this.nextId++, team: e.team, x: e.x, y: e.y,
+        tx: turn.x, ty: turn.y, turn, target: null, damage,
+        remaining: duration, duration, splash: 0, air: true,
+        style: "executioner", stun: 0, source: e.id,
+        flight: start, speed: executioner.projectile.speed,
+        elapsed: 0, homing: false,
+        fromHeight: executioner.projectile.height,
+        toHeight: executioner.projectile.height,
+        arc: 0, rollHits: [], returning: false,
+      });
+      this.audioProjectiles.set(this.projectiles.at(-1)!.id, audioProfile(e));
+      this.emitAudio("launch", e.team, audioProfile(e), e.id, undefined, { x: e.x, y: e.y });
+      return;
+    }
+    if (e.card === "bowler") {
+      const {
+        start: { x, y },
+        end: { x: tx, y: ty },
+        duration,
+      } = attackFlight(e, aim)!;
+      const p: Projectile = {
+        id: this.nextId++, team: e.team, x, y, tx, ty, target: null,
+        damage, remaining: duration, duration, splash: 0, air: false,
+        style: "bowler", stun: 0, source: e.id, flight: { x, y },
+        speed: bowler.projectile.speed, elapsed: 0, homing: false,
+        fromHeight: 0.9, toHeight: 0.9, arc: 0,
+        knockback: bowler.projectile.knockback, rollHits: [],
+      };
+      this.projectiles.push(p);
+      this.audioProjectiles.set(p.id, audioProfile(e));
+      this.emitAudio("launch", e.team, audioProfile(e), e.id, undefined, { x: e.x, y: e.y });
+      return;
+    }
+    if (!target) {
+      if (e.nativeLostAttack === "self") this.releaseAreaAttack(e, damage, this.attackSplash(e.card));
+      else this.releaseProjectileAttack(e, undefined, aim, damage);
+      return;
+    }
     if (e.card === "sparky") {
       e.sparkyCharge = 0;
       const { start, duration } = attackFlight(e, target)!;
@@ -1981,25 +2036,6 @@ export class Battle {
         { x: e.x, y: e.y });
       return;
     }
-    if (e.card === "executioner") {
-      // The retained minimum and maximum travel values bound the endpoint;
-      // the exact historical extension beyond the selected target is absent.
-      const { start, end: turn, duration } = attackFlight(e, target)!;
-      this.projectiles.push({
-        id: this.nextId++, team: e.team, x: e.x, y: e.y,
-        tx: turn.x, ty: turn.y, turn, target: null, damage,
-        remaining: duration, duration, splash: 0, air: true,
-        style: "executioner", stun: 0, source: e.id,
-        flight: start, speed: executioner.projectile.speed,
-        elapsed: 0, homing: false,
-        fromHeight: executioner.projectile.height,
-        toHeight: executioner.projectile.height,
-        arc: 0, rollHits: [], returning: false,
-      });
-      this.audioProjectiles.set(this.projectiles.at(-1)!.id, audioProfile(e));
-      this.emitAudio("launch", e.team, audioProfile(e), e.id, undefined, { x: e.x, y: e.y });
-      return;
-    }
     if (e.card === "battle-ram") {
       this.hurt(target, damage);
       this.emit("hit", e.team, target.x, target.y, "battle-ram", damage);
@@ -2015,25 +2051,6 @@ export class Battle {
         this.emit("hit", e.team, victim.x, victim.y, "dark-prince", damage);
         this.emitImpactAudio(e, damage);
       }
-      return;
-    }
-    if (e.card === "bowler") {
-      const {
-        start: { x, y },
-        end: { x: tx, y: ty },
-        duration,
-      } = attackFlight(e, target)!;
-      const p: Projectile = {
-        id: this.nextId++, team: e.team, x, y, tx, ty, target: null,
-        damage, remaining: duration, duration, splash: 0, air: false,
-        style: "bowler", stun: 0, source: e.id, flight: { x, y },
-        speed: bowler.projectile.speed, elapsed: 0, homing: false,
-        fromHeight: 0.9, toHeight: 0.9, arc: 0,
-        knockback: bowler.projectile.knockback, rollHits: [],
-      };
-      this.projectiles.push(p);
-      this.audioProjectiles.set(p.id, audioProfile(e));
-      this.emitAudio("launch", e.team, audioProfile(e), e.id, undefined, { x: e.x, y: e.y });
       return;
     }
     if (e.card === "electro-wizard") {
@@ -2084,104 +2101,13 @@ export class Battle {
       }
       return;
     }
-    const card = e.card === "tower" ? null : CARD_MAP[e.card];
     const splash = this.attackSplash(e.card);
     const traits = combatTraits(e);
     const p = traits.projectile;
     if (p || e.card === "balloon" || e.card === "tesla") {
-      const {
-        start: { x: launchX, y: launchY },
-        speed,
-        duration,
-      } = attackFlight(e, target)!;
-      const defaultFromHeight =
-        e.kind === "tower"
-          ? e.king
-            ? 3.1
-            : 3.5
-          : e.card === "balloon"
-            ? 3.8
-            : e.card === "tesla"
-              ? 1.8
-              : e.card === "cannon"
-                ? 1.1
-                : e.card === "mortar"
-                  ? 1
-                  : e.card === "bomb-tower"
-                    ? 4.5
-                  : e.card === "x-bow"
-                    ? xBow.projectileStartHeight
-                : e.air
-                  ? 2.3
-                  : 0.8;
-      const fromHeight = entityProjectileStartHeight(e) ?? defaultFromHeight;
-      this.projectiles.push({
-        id: this.nextId++,
-        team: e.team,
-        x: launchX,
-        y: launchY,
-        tx: target.x,
-        ty: target.y,
-        target: target.id,
-        damage,
-        remaining: duration,
-        duration,
-        splash,
-        air: e.kind === "tower" || !!card?.hitsAir,
-        style: e.kind === "tower" ? (e.king ? "cannonball" : "arrow") : e.card,
-        stun: e.card === "ice-spirit" ? iceSpirit.freezeDuration : 0,
-        source: e.id,
-        ...(e.card === "ice-wizard" ? { slow: iceWizard.slowDuration } : {}),
-        flight: { x: launchX, y: launchY },
-        speed,
-        elapsed: 0,
-        homing: p?.homing ?? true,
-        fromHeight,
-        toHeight: projectileHitHeight(target),
-        arc:
-          e.card === "balloon" || e.card === "tesla"
-            ? 0
-            : (p?.gravity ?? 0) / 100,
-      });
-      this.audioProjectiles.set(this.projectiles.at(-1)!.id, audioProfile(e));
-      if (e.card === "ice-spirit" || e.card === "fire-spirits")
-        this.hurt(e, e.hp);
-      if (e.card === "princess") {
-        // The archived character fires one damaging custom first projectile
-        // and four copies of PrincessProjectileDeco without damage.
-        const first = this.projectiles.at(-1)!;
-        for (const offset of [-2, -1, 1, 2]) {
-          const tx = clamp(target.x + offset * 0.38, 0.5, 17.5);
-          const ty = clamp(target.y + Math.abs(offset) * 0.14, 0.6, 31.4);
-          const duration = Math.max(
-            STEP,
-            dist(e, { x: tx, y: ty }) / (speed ?? 1),
-          );
-          this.projectiles.push({
-            ...first,
-            id: this.nextId++,
-            tx,
-            ty,
-            target: null,
-            damage: 0,
-            splash: 0,
-            remaining: duration,
-            duration,
-            flight: { x: e.x, y: e.y },
-            decorative: true,
-          });
-        }
-      }
-      this.emitAudio("launch", e.team, audioProfile(e), e.id, undefined, {
-        x: e.x,
-        y: e.y,
-      });
+      this.releaseProjectileAttack(e, target, target, damage);
     } else if (splash) {
-      for (const v of this.entities)
-        if (this.validTarget(e, v) && dist(v, e) <= splash + v.radius)
-          this.hurt(v, damage);
-      this.emit("hit", e.team, e.x, e.y, e.card, damage);
-      this.emitImpactAudio(e, damage);
+      this.releaseAreaAttack(e, damage, splash);
     } else {
       const dealt = e.card === "miner" && target.kind === "tower"
         ? Math.round(damage * miner.crownTowerDamageFraction)
@@ -2190,6 +2116,105 @@ export class Battle {
       this.emit("hit", e.team, target.x, target.y, e.card, dealt);
       this.emitImpactAudio(e, dealt);
     }
+  }
+  private releaseProjectileAttack(e: Entity, target: Entity | undefined, aim: Point, damage: number) {
+    const card = e.card === "tower" ? null : CARD_MAP[e.card];
+    const splash = this.attackSplash(e.card);
+    const p = combatTraits(e).projectile;
+    const {
+      start: { x: launchX, y: launchY },
+      speed,
+      duration,
+    } = attackFlight(e, aim)!;
+    const defaultFromHeight =
+      e.kind === "tower"
+        ? e.king
+          ? 3.1
+          : 3.5
+        : e.card === "balloon"
+          ? 3.8
+          : e.card === "tesla"
+            ? 1.8
+            : e.card === "cannon"
+              ? 1.1
+              : e.card === "mortar"
+                ? 1
+                : e.card === "bomb-tower"
+                  ? 4.5
+                : e.card === "x-bow"
+                  ? xBow.projectileStartHeight
+              : e.air
+                ? 2.3
+                : 0.8;
+    const fromHeight = entityProjectileStartHeight(e) ?? defaultFromHeight;
+    this.projectiles.push({
+      id: this.nextId++,
+      team: e.team,
+      x: launchX,
+      y: launchY,
+      tx: aim.x,
+      ty: aim.y,
+      target: target?.id ?? null,
+      damage,
+      remaining: duration,
+      duration,
+      splash,
+      air: e.kind === "tower" || !!card?.hitsAir,
+      style: e.kind === "tower" ? (e.king ? "cannonball" : "arrow") : e.card,
+      stun: e.card === "ice-spirit" ? iceSpirit.freezeDuration : 0,
+      source: e.id,
+      ...(e.card === "ice-wizard" ? { slow: iceWizard.slowDuration } : {}),
+      flight: { x: launchX, y: launchY },
+      speed,
+      elapsed: 0,
+      homing: p?.homing ?? true,
+      fromHeight,
+      toHeight: projectileHitHeight(target),
+      arc:
+        e.card === "balloon" || e.card === "tesla"
+          ? 0
+          : (p?.gravity ?? 0) / 100,
+    });
+    this.audioProjectiles.set(this.projectiles.at(-1)!.id, audioProfile(e));
+    if (e.card === "ice-spirit" || e.card === "fire-spirits")
+      this.hurt(e, e.hp);
+    if (e.card === "princess") {
+      // The archived character fires one damaging custom first projectile
+      // and four copies of PrincessProjectileDeco without damage.
+      const first = this.projectiles.at(-1)!;
+      for (const offset of [-2, -1, 1, 2]) {
+        const tx = clamp(aim.x + offset * 0.38, 0.5, 17.5);
+        const ty = clamp(aim.y + Math.abs(offset) * 0.14, 0.6, 31.4);
+        const duration = Math.max(
+          STEP,
+          dist(e, { x: tx, y: ty }) / (speed ?? 1),
+        );
+        this.projectiles.push({
+          ...first,
+          id: this.nextId++,
+          tx,
+          ty,
+          target: null,
+          damage: 0,
+          splash: 0,
+          remaining: duration,
+          duration,
+          flight: { x: e.x, y: e.y },
+          decorative: true,
+        });
+      }
+    }
+    this.emitAudio("launch", e.team, audioProfile(e), e.id, undefined, {
+      x: e.x,
+      y: e.y,
+    });
+  }
+  private releaseAreaAttack(e: Entity, damage: number, splash: number) {
+    for (const v of this.entities)
+      if (this.validTarget(e, v) && dist(v, e) <= splash + v.radius)
+        this.hurt(v, damage);
+    this.emit("hit", e.team, e.x, e.y, e.card, damage);
+    this.emitImpactAudio(e, damage);
   }
   private updateProjectiles() {
     for (const p of [...this.projectiles]) {

@@ -1276,7 +1276,10 @@ export class Arena {
         this.units.set(e.id, v);
         if (v.model) this.renderer.shadowMap.needsUpdate = true;
       }
-      this.updateUnit(v, e, entityById.get(e.target ?? -1), dt, time);
+      const target = entityById.get(e.target ?? -1);
+      const aim = e.nativeLostAttack === "point" && e.pendingAttack && (!target || target.hp <= 0)
+        ? e.pendingAttack.lastPoint : target;
+      this.updateUnit(v, e, aim, dt, time);
     }
     for (const [id, v] of this.units)
       if (!alive.has(id)) {
@@ -1912,7 +1915,7 @@ export class Arena {
     this.impacts.push({ sprite, start: this.destruction.time - age, life });
     return sprite;
   }
-  private updateUnit(v: Visual, e: Entity, target: Entity | undefined, dt: number, time: number) {
+  private updateUnit(v: Visual, e: Entity, target: Point | undefined, dt: number, time: number) {
     const o = v.object;
     const y = entityVisualHeight(e);
     const jump = hogJumpHeight(e);

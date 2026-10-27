@@ -188,7 +188,7 @@ export class BuildingLibrary {
   update(
     sprite: BuildingSprite,
     e: Entity,
-    target: Entity | undefined,
+    target: { x: number; y: number } | undefined,
     camera: T.Camera,
     time = 0,
   ) {

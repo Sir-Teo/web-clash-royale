@@ -193,6 +193,7 @@
           <option value="poison">Poison area and skulls</option>
           <option value="attack-impacts">Projectile hit effects</option>
           <option value="inferno-clock">Inferno buffed damage clocks</option>
+          <option value="target-loss">Pending attacks after victim death</option>
           <option value="pending-range">Started projectile range allowance</option>
           <option value="sparky-preload">Sparky passive preload clocks</option>
           <option value="attack-clock">Shared native attack clocks</option>
@@ -271,7 +272,7 @@
       ><button id="warm-sprite-cache" hidden>Warm native frame cache</button
       ><button id="preload-in" hidden>Bring Sparky targets into range</button><button id="clock-clear" hidden>Clear movement buffs</button
       ><button id="clock-freeze" hidden>Freeze both teams</button
-      ><button id="range-out" hidden>Move targets outside attack reach</button
+      ><button id="lose-target" hidden>Defeat queued victims</button><button id="range-out" hidden>Move targets outside attack reach</button
       ><label id="electro-config" hidden>Bolts
         <select id="electro-mode"><option value="lone">Lone target</option><option value="split">Split targets</option><option value="rear">Clipped rear target</option></select></label
       ><label id="minimum-config" hidden>Target
@@ -298,6 +299,11 @@
           <option value="bomb-tower">Bomb Tower</option>
           <option value="balloon">Balloon</option>
           <option value="tesla">Tesla</option>
+          <option value="valkyrie">Valkyrie</option>
+          <option value="princess">Princess</option>
+          <option value="bowler">Bowler</option>
+          <option value="executioner">Executioner</option>
+          <option value="mortar">Mortar</option>
         </select></label
       ><button id="defeat" hidden>Defeat troops</button
       ><button id="spawn" hidden>Deploy both teams</button

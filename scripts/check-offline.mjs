@@ -199,7 +199,7 @@ try {
   await page.locator("#hand .game-card").first().waitFor();
   await page.waitForFunction(
     () =>
-      window.__arena?.state.rulesVersion === 38 &&
+      window.__arena?.state.rulesVersion === 39 &&
       window.__arena.state.time > 0,
   );
   await page.getByRole("button", { name: "King emotes", exact: true }).click();

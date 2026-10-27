@@ -25,6 +25,9 @@ export function perspective(s: BattleSnapshot, team: Team): BattleSnapshot {
             : ("left" as const)
           : undefined,
       };
+      if (e.pendingAttack?.lastPoint) {
+        rotated.pendingAttack = { ...e.pendingAttack, lastPoint: rotatePoint(e.pendingAttack.lastPoint) };
+      }
       if (e.nativeDistantTargets) {
         rotated.nativeLane =
           e.nativeLane === 1 ? 2 : e.nativeLane === 2 ? 1 : e.nativeLane;

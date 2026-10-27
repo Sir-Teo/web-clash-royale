@@ -1,0 +1,39 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/client/targetless-policy-native-trace.json",
+      "sha256": "3bf3ea6a641b394749f4acf9db6ae27bdde0df3f2a40331185b0048dbe6691d0"
+    },
+    {
+      "path": "reference/client/target-loss-clock-native-trace.json",
+      "sha256": "150d3bf4cb8b477b3616657116266c9950606fe033351fe2d52ab480cf6b4b1a"
+    },
+    {
+      "path": "reference/client/target-loss-request-native-trace.json",
+      "sha256": "8b2bc98ba357cf25dc5b17812cd02a38145a9ba05a43f6c5a4e3c64dfc5249c5"
+    },
+    {
+      "path": "src/game/combat-data.json",
+      "sha256": "e538686581e80101518c0b24373ad0024a0cfb9878f35bf80ee22dfad079cc54"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    }
+  ],
+  "output": {
+    "path": "src/game/target-loss-data.json",
+    "sha256": "d5c465a637f4ae01abbf6d4fa2ee3d13ba0ae3613ab6a9728fd133a7ed4c405b"
+  },
+  "scope": "One pending attack after victim death/removal on the existing browser scheduler and flight model; complete native owner/retarget/finish scheduling remains separate"
+}
