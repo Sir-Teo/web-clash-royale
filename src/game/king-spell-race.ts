@@ -8,6 +8,7 @@ import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import miner from "./miner-data.json" with { type: "json" };
 import { attackHitSteps } from "./attack-flight";
 import { createKingSpellRace } from "./king-damage";
+import { electroExtraTarget } from "./electro-bolts";
 
 const contains = (area: Point & { radius: number }, body: Entity) =>
   Math.hypot(area.x - body.x, area.y - body.y) < area.radius + body.radius;
@@ -23,6 +24,16 @@ export function fatalKingWindups(
   if (!king) return [];
   return entities.flatMap((attacker) => {
     const pending = attacker.pendingAttack;
+    const nativeElectro = attacker.card === "electro-wizard" && attacker.nativeExtraTargets;
+    const primary = nativeElectro && pending
+      ? entities.find((entity) => entity.id === pending.target && entity.hp > 0)
+      : king;
+    const kingDamage = !pending || !primary ? 0 : nativeElectro
+      ? pending.damage * (Number(primary.id === king.id) +
+        Number(electroExtraTarget(attacker, primary, entities)?.id === king.id))
+      : attacker.card === "miner"
+        ? Math.round(pending.damage * miner.crownTowerDamageFraction)
+        : pending.damage;
     if (
       attacker.team === team ||
       attacker.hp <= 0 ||
@@ -31,15 +42,14 @@ export function fatalKingWindups(
       attacker.stun > 0 ||
       attacker.dash ||
       !pending ||
-      pending.target !== king.id ||
-      (attacker.card === "miner"
-        ? Math.round(pending.damage * miner.crownTowerDamageFraction)
-        : pending.damage) < king.hp ||
+      !primary ||
+      (!nativeElectro && pending.target !== king.id) ||
+      kingDamage < king.hp ||
       pending.remaining > 1 ||
-      Math.hypot(attacker.x - king.x, attacker.y - king.y) >
-        attackReach(attacker, king) ||
+      Math.hypot(attacker.x - primary.x, attacker.y - primary.y) >
+        attackReach(attacker, primary) ||
       (attacker.minimumRange !== undefined &&
-        Math.hypot(attacker.x - king.x, attacker.y - king.y) < minimumAttackDistance(attacker, king)) ||
+        Math.hypot(attacker.x - primary.x, attacker.y - primary.y) < minimumAttackDistance(attacker, primary)) ||
       areas.some(
         (a) =>
           a.card === "freeze" &&
@@ -88,7 +98,7 @@ export function fatalKingWindups(
         (boost >= 1e-8 ? rage.hitSpeedMultiplier : 1) *
         (slow >= 1e-8 ? iceWizard.hitSpeedMultiplier : 1);
       if (remaining <= 1e-8) {
-        const flight = attackHitSteps(attacker, king);
+        const flight = attackHitSteps(attacker, primary);
         return Number.isFinite(flight)
           ? [{ attacker, step: step + flight - 1 }]
           : [];

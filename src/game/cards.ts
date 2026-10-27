@@ -746,7 +746,7 @@ const originalCards: Card[] = [
     electroWizard.sourceSpeed / 60,
     electroWizard.sourceRange / 1000,
     electroWizard.sourceHitSpeed / 1000,
-    "Strikes two targets, stuns them briefly, and Zaps enemies when he arrives.",
+    "Fires two stunning bolts, concentrating both on a lone target, and Zaps enemies when he arrives.",
     { rarity: "Legendary", hitsAir: electroWizard.hitsAir },
   ),
   troop(

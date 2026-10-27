@@ -1,6 +1,7 @@
 import { attackReach, minimumAttackDistance, NATIVE_RANGE_RADIUS_FACTOR } from "./attack-range";
 import { areaRandom, areaRandomSeed } from "./area-random";
 import { acquisitionSight, nativeSightRange } from "./sight-range";
+import { electroExtraTarget } from "./electro-bolts";
 import { advanceSummonClock, summonProfile, type SummonProfile } from "./summon-clock";
 import { balloonBombProfile } from "./balloon-bomb";
 import { chargeRange, chargedAttackDamage, resetMovement } from "./charge";
@@ -107,6 +108,8 @@ export interface Entity extends Point {
   sightRange?: number;
   /** Rules 26: source inner range, resolved against each target's body size. */
   minimumRange?: number;
+  /** Rules 27: native extra-bolt scan and AllTargetsHit fallback. */
+  nativeExtraTargets?: true;
   air: boolean;
   damage: number;
   range: number;
@@ -227,7 +230,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -307,7 +310,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 26;
+    this.rulesVersion = r?.version ?? 27;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -791,6 +794,7 @@ export class Battle {
       ...(this.rulesVersion >= 24 ? { rangeRadiusFactor: NATIVE_RANGE_RADIUS_FACTOR } : {}),
       ...(this.rulesVersion >= 25 ? { sightRange: nativeSightRange({ card: id, radius }) } : {}),
       ...(this.rulesVersion >= 26 && id === "mortar" ? { minimumRange: mortar.minimumRange } : {}),
+      ...(this.rulesVersion >= 27 && id === "electro-wizard" ? { nativeExtraTargets: true as const } : {}),
       air: !!c.air,
       damage: legacyBalloon?.damage ?? legacyVitals?.damage ?? c.damage,
       range: legacyBalloon?.range ?? stats.range,
@@ -1959,6 +1963,27 @@ export class Battle {
       return;
     }
     if (e.card === "electro-wizard") {
+      if (e.nativeExtraTargets) {
+        const strike = (victim: Entity) => {
+          if (victim.hp <= 0) return;
+          this.hurt(victim, damage);
+          if (victim.hp > 0 && !victim.dash) {
+            victim.stun = Math.max(victim.stun, electroWizard.stun);
+            this.cancelAttack(victim);
+            victim.move = 0;
+          }
+          this.emit("hit", e.team, victim.x, victim.y, "electro-wizard", damage, {
+            origin: { x: e.x, y: e.y, height: 1.5 },
+            height: projectileHitHeight(victim),
+          });
+          this.emitImpactAudio(e, damage);
+        };
+        strike(target);
+        // Primary damage/death spawns precede the native additional-hit scan.
+        const extra = electroExtraTarget(e, target, this.entities);
+        if (extra && e.hp > 0 && !this.winner) strike(extra);
+        return;
+      }
       const targets = [
         target,
         ...this.entities

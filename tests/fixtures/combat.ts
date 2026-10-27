@@ -49,6 +49,7 @@ let victims: { team: Team; x: number; y: number }[] = [];
 const clockModes = new Map<number, string>();
 const sightTargets = new Map<number, number>();
 const minimumTargets = new Map<number, number>();
+const electroTargets = new Map<number, { primary: number; other?: number }>();
 document.querySelector("#death-card")!.innerHTML = CARDS.filter(
   (c) => c.kind !== "spell",
 )
@@ -83,6 +84,7 @@ function setup() {
   clockModes.clear();
   sightTargets.clear();
   minimumTargets.clear();
+  electroTargets.clear();
   document.querySelector("#play")!.textContent = "Play";
   const selectedScene = (
     document.querySelector("#scenario") as HTMLSelectElement
@@ -94,8 +96,8 @@ function setup() {
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
-  if (["attack-range", "sight-range", "minimum-range"].includes(selectedScene) && ["23", "24", "25"].includes(rangeRules ?? "")) {
-    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 } });
+  if (["attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(selectedScene) && ["23", "24", "25", "26", "27"].includes(rangeRules ?? "")) {
+    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
   for (const t of battle.entities) t.active = false;
@@ -117,6 +119,7 @@ function setup() {
   document.querySelector("#range-out")!.textContent = scenario === "sight-range"
     ? "Move targets outside sight" : "Move targets outside attack reach";
   (document.querySelector("#minimum-config") as HTMLElement).hidden = scenario !== "minimum-range";
+  (document.querySelector("#electro-config") as HTMLElement).hidden = scenario !== "electro-bolts";
   (document.querySelector("#break-shield") as HTMLElement).hidden =
     scenario !== "dark-prince" && scenario !== "guards";
   (document.querySelector("#kill-night-witch") as HTMLElement).hidden =
@@ -163,7 +166,7 @@ function setup() {
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king" &&
       !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
-      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-range", "sight-range", "minimum-range"].includes(scenario) && ["rebuild", "destruction"].includes(id));
+      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -748,6 +751,25 @@ function setup() {
       target.speed = target.damage = 0;
       target.hp = target.maxHp = 10000;
     }
+  } else if (scenario === "electro-bolts") {
+    const mode = (document.querySelector("#electro-mode") as HTMLSelectElement).value;
+    for (const team of ["blue", "red"] as const) {
+      const x = team === "blue" ? 4 : 14, y = team === "blue" ? 23 : 9;
+      const front = team === "blue" ? -1 : 1, enemy = team === "blue" ? "red" : "blue";
+      const attacker = unit("electro-wizard", team, x, y)[0];
+      Object.assign(attacker, { speed: 0, age: 3 });
+      const primary = unit("knight", enemy, x, y + front * 2)[0];
+      Object.assign(primary, { active: false, hp: 1e6, maxHp: 1e6, age: 3 });
+      attacker.target = primary.id;
+      let other: Entity | undefined;
+      if (mode !== "lone") {
+        other = unit(mode === "split" ? "giant" : "knight", enemy,
+          mode === "split" ? x + (team === "blue" ? 2.5 : -2.5) : x,
+          mode === "split" ? y : y - front * 5.501)[0];
+        Object.assign(other, { active: false, hp: 1e6, maxHp: 1e6, age: 3 });
+      }
+      electroTargets.set(attacker.id, { primary: primary.id, other: other?.id });
+    }
   } else if (scenario === "minimum-range") {
     const large = (document.querySelector("#minimum-target") as HTMLSelectElement).value === "large";
     for (const team of ["blue", "red"] as const) {
@@ -1038,6 +1060,7 @@ document.querySelector("#freeze-towers")!.addEventListener("click", () => {
     cast("freeze", tower.team === "blue" ? "red" : "blue", tower.x, tower.y);
 });
 document.querySelector("#reset")!.addEventListener("click", setup);
+document.querySelector("#electro-mode")!.addEventListener("change", setup);
 document.querySelector("#warm-sprite-cache")!.addEventListener("click", () => {
   const library = (arena as any).sprites;
   for (const id of ["inferno-dragon", "electro-wizard", "sparky", "ice-wizard", "golem", "executioner"]) {
@@ -1320,6 +1343,20 @@ function render(now: number) {
             lock: entity.inferno, pending: entity.pendingAttack,
             native: !!(visual?.sprite || visual?.building),
           };
+        }) });
+  if (sceneSelect.value === "electro-bolts")
+    (document.querySelector("#destruction") as HTMLElement).dataset.electroBolts =
+      JSON.stringify({ version: battle.rulesVersion, time: battle.time,
+        mode: (document.querySelector("#electro-mode") as HTMLSelectElement).value,
+        beams: arena.impactSpriteState.filter((sprite) => sprite.name === "electro_wiz_beam").length,
+        bodies: battle.entities.filter((entity) => electroTargets.has(entity.id)).map((entity) => {
+          const targets = electroTargets.get(entity.id)!;
+          const primary = battle.entities.find((body) => body.id === targets.primary)!;
+          const other = battle.entities.find((body) => body.id === targets.other);
+          return { id: entity.id, team: entity.team, damage: entity.damage, policy: !!entity.nativeExtraTargets,
+            primaryHp: primary.hp, otherHp: other?.hp,
+            hits: battle.events.filter((event) => event.type === "hit" && event.card === "electro-wizard" && event.team === entity.team).length,
+            native: !!(arena as any).units.get(entity.id)?.sprite };
         }) });
   if (sceneSelect.value === "minimum-range")
     (document.querySelector("#destruction") as HTMLElement).dataset.minimumRange =

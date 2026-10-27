@@ -526,6 +526,10 @@ The 88 archived-flag cases make 172 dispatches: the first uses hit index zero, t
 
 The native damage function `0x25e61c` is intercepted to record target and hit index. Damage allocation, level scaling, shields, HP/death propagation, beam attachment geometry and surrounding attack clocks/state machines are not executed. Source-selected minimal bodies/Data, candidate collection/eligibility and null projectile pointers remain controlled. The primary-clear case does not recover the native death notifier. The source-backed browser correction must retain its existing normalization and damage handling while respecting these verified dispatch choices; application rules 26 are unchanged by this capture alone.
 
+## Imported Electro Wizard dispatch footprint
+
+Rules 27 import `AllTargetsHit`, the recovered extra-target rear clip and the zero/two-tile building/Crown sight extensions into `electro-wizard-data.json`. `assets:electro-wizard` pins/verifies all three native captures and their source inputs, confirms the archived two-target flag and lone/split dispatch witnesses, and retains the existing per-bolt damage normalization, stun, deploy Zap and artwork. New Electro Wizard bodies retain their optional `nativeExtraTargets` policy through clones and snapshots; earlier origin versions retain their former in-range secondary scan and lone single hit. The application recovers additional-hit selection/fallback only, without applying the secondary scanner's metric to primary acquisition or claiming native damage scaling, death notification or beam attachment geometry.
+
 
 ## Native candidate minimum-range gate
 

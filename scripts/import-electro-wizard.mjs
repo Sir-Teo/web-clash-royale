@@ -9,6 +9,10 @@ const paths = [
   "reference/logic/character_buffs.csv",
   "reference/logic/area_effect_objects.csv",
   "reference/sc/chr_electro_wizard.bin",
+  "reference/logic/globals.csv",
+  "reference/client/sight-target-types-native-trace.json",
+  "reference/client/candidate-ranking-native-trace.json",
+  "reference/client/electro-bolts-native-trace.json",
 ];
 const inputs = await Promise.all(paths.map((path) => readFile(path)));
 const find = (index, name) => csvRows(inputs[index].toString()).find((row) => row.Name === name);
@@ -17,12 +21,34 @@ const unit = find(1, "ElectroWizard");
 const buff = find(2, "ZapFreeze");
 const zap = find(3, "Zap");
 const sprite = parseSC(inputs[4]);
+const nativeTypes = JSON.parse(inputs[6]);
+const ranking = JSON.parse(inputs[7]);
+const bolts = JSON.parse(inputs[8]);
+const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
+for (const capture of [nativeTypes, ranking, bolts]) {
+  if (capture.sha256 !== "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746")
+    throw new Error("Recheck native Electro Wizard evidence binary");
+  for (const input of capture.inputs)
+    if (sha256(await readFile(input.path)) !== input.sha256)
+      throw new Error(`Native Electro Wizard input changed: ${input.path}`);
+}
+if (bolts.owner.name !== "ElectroWizard" || !bolts.owner.AllTargetsHit ||
+    bolts.owner.MultipleTargets !== 2 || bolts.owner.SightRange !== 5500 ||
+    bolts.owner.CollisionRadius !== 500 || nativeTypes.extraSightToBuilding !== 0 ||
+    nativeTypes.extraSightToCrownTowers !== 2000 ||
+    !bolts.cases.every((row) => row.resolvedSightClip === 1000) ||
+    !bolts.cases.some((row) => row.case === "lone-primary" && row.allTargetsHit &&
+      row.dispatches.length === 2 && row.dispatches.every((hit) => hit.target === "primary")) ||
+    !bolts.cases.some((row) => row.case === "split-ground" && row.allTargetsHit &&
+      row.dispatches.map((hit) => hit.target).join(",") === "primary,other"))
+  throw new Error("Recheck native Electro Wizard extra-target dispatch rules");
 if (
   card?.Rarity !== "Legendary" || card.ManaCost !== "4" ||
   card.SummonCharacter !== "ElectroWizard" || card.IconFile !== "electro_wizard" ||
   unit?.Hitpoints !== "600" || unit.Damage !== "100" ||
   unit.Speed !== "90" || unit.Range !== "5000" ||
   unit.HitSpeed !== "1700" || unit.MultipleTargets !== "2" ||
+  unit.SightRange !== "5500" || unit.CollisionRadius !== "500" ||
   unit.AllTargetsHit !== "true" || unit.AttacksAir !== "true" ||
   unit.BuffOnDamage !== "ZapFreeze" || unit.BuffOnDamageTime !== "500" ||
   unit.SpawnAreaObject !== "Zap" || unit.SpawnAreaObjectLevelIndex !== "8" ||
@@ -49,6 +75,13 @@ const output = Buffer.from(JSON.stringify({
   sourceRange: Number(unit.Range),
   sourceHitSpeed: Number(unit.HitSpeed),
   targets: Number(unit.MultipleTargets),
+  allTargetsHit: unit.AllTargetsHit === "true",
+  extraTargetScan: {
+    sightClip: bolts.cases[0].resolvedSightClip / 1000,
+    sightClipSide: bolts.owner.SightClipSide / 1000,
+    buildingSightExtra: nativeTypes.extraSightToBuilding / 1000,
+    crownSightExtra: nativeTypes.extraSightToCrownTowers / 1000,
+  },
   hitsAir: unit.AttacksAir === "true",
   stun: Number(unit.BuffOnDamageTime) / 1000,
   deployZap: {
@@ -63,7 +96,6 @@ const output = Buffer.from(JSON.stringify({
   redExport: unit.RedExportName,
   deployFilter: unit.DeployBaseAnimExportName,
 }, null, 2) + "\n");
-const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 await writeFile(outputPath, output);
 await writeFile("reference/client/electro-wizard-manifest.json", JSON.stringify({
   source: "https://github.com/smlbiobot/cr",

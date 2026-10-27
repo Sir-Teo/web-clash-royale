@@ -12,6 +12,7 @@ import freeze from "./freeze-data.json" with { type: "json" };
 import { infernoKingPackets } from "./inferno-forecast";
 import { createWindupHealth } from "./windup-health";
 import tornado from "./tornado-data.json" with { type: "json" };
+import { electroExtraTarget } from "./electro-bolts";
 
 /** Complete current attack packet, including both Executioner passes. The
  * release frame already advances a projectile; melee precedes projectiles. */
@@ -20,6 +21,8 @@ export function pendingKingPackets(
   king: Entity,
   projection: WindupProjection,
   order: number,
+  entities: readonly Entity[] = [king],
+  primary: Entity = king,
 ): DamagePacket[] {
   const release = projection.releaseStep;
   if (release === undefined || !attacker.pendingAttack) return [];
@@ -30,6 +33,11 @@ export function pendingKingPackets(
           attacker.pendingAttack.damage * miner.crownTowerDamageFraction,
         )
       : attacker.pendingAttack.damage;
+  if (actor.card === "electro-wizard" && actor.nativeExtraTargets) {
+    const extra = electroExtraTarget(actor, primary, entities);
+    return [primary, extra].filter((victim) => victim?.id === king.id)
+      .map(() => ({ step: release, damage, phase: 0.75, born: 0, order }));
+  }
   const flight = attackFlight(actor, king);
   if (!flight) return [{ step: release, damage, phase: 0.75, born: 0, order }];
   const rolling = actor.card === "bowler" || actor.card === "executioner";
@@ -122,17 +130,23 @@ export function createKingDefense(
             attacker.card === "inferno-dragon") &&
           attacker.inferno?.target === king.id &&
           attacker.target === king.id;
+        const nativeElectro = attacker.card === "electro-wizard" && attacker.nativeExtraTargets;
+        const target = nativeElectro
+          ? entities.find((entity) => entity.id === pending?.target && entity.hp > 0)
+          : king;
         if (
           !channel &&
           (!pending ||
-            pending.target !== king.id ||
+            (!nativeElectro && pending.target !== king.id) ||
+            !target ||
             pending.damage <= 0 ||
             pending.remaining > 1)
         )
           return [];
+        if (!target) return [];
         const projection = projectTornadoWindup(
           attacker,
-          king,
+          target,
           areas,
           undefined,
           health,
@@ -141,11 +155,12 @@ export function createKingDefense(
         return [
           {
             attacker,
+            target,
             order,
             channel,
             packets: channel
               ? infernoKingPackets(attacker, king, areas, order, health, undefined, version)
-              : pendingKingPackets(attacker, king, projection, order),
+              : pendingKingPackets(attacker, king, projection, order, entities, target),
           },
         ];
       })
@@ -231,12 +246,14 @@ export function createKingDefense(
             king,
             projectTornadoWindup(
               a.attacker,
-              king,
+              a.target,
               clouds,
               card === "tornado" ? point : undefined,
               health,
             ),
             a.order,
+            entities,
+            a.target,
           ),
     );
     const key = pending

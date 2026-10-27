@@ -22,10 +22,26 @@
     {
       "path": "reference/sc/chr_electro_wizard.bin",
       "sha256": "07ffb1b1a89239a268e3e8c08034451110956e1a4ccd5ed7be58d83e7f0c3f45"
+    },
+    {
+      "path": "reference/logic/globals.csv",
+      "sha256": "28f97cbeb6c6de2489422b1bcc65bebd62db35fbb3ec72203eba29caa33c5641"
+    },
+    {
+      "path": "reference/client/sight-target-types-native-trace.json",
+      "sha256": "f216b428e6e92b710562040b0175b4457bf7afaa4ae675f8a6b906d499285619"
+    },
+    {
+      "path": "reference/client/candidate-ranking-native-trace.json",
+      "sha256": "cf10804f67e8a159ea366f29b5a836af7844b456c56b5cedafa43f168ab259a5"
+    },
+    {
+      "path": "reference/client/electro-bolts-native-trace.json",
+      "sha256": "bb1121b73d0ecda79bdae69dee4b59a83fe14e1ce6677a6e826943d92b31d4dc"
     }
   ],
   "output": {
     "path": "src/game/electro-wizard-data.json",
-    "sha256": "db53d05d344e84f9290d4b7034e89b73ec3263b890db280fa0925c8857120c46"
+    "sha256": "b9298e5c13487a6e3ca463c5118aab75239e7b22f2cf0095e0663c6923bf8d24"
   }
 }

@@ -8,6 +8,13 @@
   "sourceRange": 5000,
   "sourceHitSpeed": 1700,
   "targets": 2,
+  "allTargetsHit": true,
+  "extraTargetScan": {
+    "sightClip": 1,
+    "sightClipSide": 0,
+    "buildingSightExtra": 0,
+    "crownSightExtra": 2
+  },
   "hitsAir": true,
   "stun": 0.5,
   "deployZap": {

@@ -31,6 +31,7 @@ import nightWitch from "../game/night-witch-data.json" with { type: "json" };
 import mortar from "../game/mortar-data.json" with { type: "json" };
 import { infernoDamage, infernoProfile } from "../game/inferno";
 import giantSkeleton from "../game/giant-skeleton-data.json" with { type: "json" };
+import electroWizard from "../game/electro-wizard-data.json" with { type: "json" };
 
 const buildingSpawns = {
   "goblin-hut": { name: "Spear Goblin", rules: goblinHut, stagger: 0, deploy: 1 },
@@ -357,6 +358,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
       : "",
     spawn ? `${spawn.note} Spawn hitpoints and damage are per troop.` : "",
     id === "mortar" ? "Cannot target enemies inside the minimum range. Larger enemies can be targeted closer to the Mortar." : "",
+    id === "electro-wizard" ? "Fires two bolts per attack. Both hit one opponent when no second target qualifies; otherwise each target takes one bolt." : "",
     inferno ? "Damage is per hit. Stage times use the attack clock: Rage accelerates the ramp and slow delays it. Stun, losing range or changing targets resets the beam." : "",
     id === "witch" ? "The first Skeleton wave starts as deployment finishes. Skeletons appear separately at the listed spacing. Rage and slow affect the spawn clock. Spawn hitpoints and damage are per Skeleton." : "",
     id === "balloon" ? "Drops a timed bomb where it is destroyed. The bomb damages nearby enemy air and ground troops and buildings. Its normal attack targets buildings." : "",
@@ -379,10 +381,11 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
       ...(inferno ? ([0, 1, 2] as const).map((stage) =>
         stat(`Stage ${stage + 1} damage`, infernoDamage(inferno, stage), "swords"),
       ) : [stat(
-        c.count > 1 ? "Damage per troop" : "Damage per hit",
+        id === "electro-wizard" ? "Damage per bolt" : c.count > 1 ? "Damage per troop" : "Damage per hit",
         c.damage,
         "swords",
       )]),
+      ...(id === "electro-wizard" ? [stat("Bolts per attack", electroWizard.targets, "crosshair")] : []),
       ...(beam ? [
         stat("Stage 2 after", seconds(beam.stageDurations[0]), "timer"),
         stat("Stage 3 after", seconds(beam.stageDurations[0] + beam.stageDurations[1]), "timer"),
