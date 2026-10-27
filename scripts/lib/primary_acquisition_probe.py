@@ -89,8 +89,10 @@ def capture(env, context):
         candidate = next((candidate for candidate in candidates if candidate["id"] == fallback and candidate.get("eligible", True)), None)
         return None, [candidate["id"]] if candidate else [], 1
 
-    if env["args"].spawn_priority or env["args"].target_eligibility:
-        if env["args"].target_eligibility:
+    if env["args"].spawn_priority or env["args"].target_eligibility or env["args"].primary_geometry:
+        if env["args"].primary_geometry:
+            from lib.primary_geometry_probe import capture as capture_continuation
+        elif env["args"].target_eligibility:
             from lib.target_eligibility_probe import capture as capture_continuation
         else:
             from lib.spawn_priority_probe import capture as capture_continuation
@@ -102,7 +104,7 @@ def capture(env, context):
             return {"nominated": nominated, "setterRequests": list(requests),
                     "fallbackCalls": fallback_calls, "queryCalls": len(queries())}
 
-        capture_continuation(env, {**context, "acquire": acquire})
+        capture_continuation(env, {**context, "acquire": acquire, "predict": predict})
         return
 
     cases = []
