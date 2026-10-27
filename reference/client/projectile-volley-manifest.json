@@ -4,7 +4,7 @@
   "inputs": [
     {
       "path": "reference/client/attack-projectile-goals-native-trace.json",
-      "sha256": "d67ce55b9cbfe611274862fd5624c4f317bef3b7c652324b792b44f1a4283b8d"
+      "sha256": "c1fa979993b62d663252d213bf0426e9565db91df319490ad6a1b2ab1038ad08"
     },
     {
       "path": "reference/logic/characters.csv",

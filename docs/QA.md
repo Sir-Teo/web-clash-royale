@@ -2484,3 +2484,10 @@ All 2,757 checks across 199 files are validated: the complete serial suite passe
 Desktop Chromium and phone WebKit both pass the new Princess browser workflow, comparing rules 40/41 on both teams. Actual native actor/projectile sprites, every circular offset, older fixed offsets, retained goals after paused rebuilding and real defender HP loss are checked without page errors. JSON traces and screenshots are preserved under `/workspace/scratch/projectile-volley-browser-artifacts`; both screenshots were inspected.
 
 Pages-prefixed production offline reload, rules-41 battle startup, browser match worker, all 278 combat/death/music files and connection/emote/voice/font/quick-chat controls pass. Hosting and root builds both exit successfully. The root production build is restored with cache `89eda74de18b`: 921 URLs, 894 unique files and 8.1 MB of omitted duplicate bytes. No push or deployment was performed.
+
+
+## Initialized-motion scope correction
+
+The named ProjectileRadius column/store identifies Data+0x4c, previously mislabeled as a child-count gate in the initialized-motion probe. Every sample in that bounded capture deliberately supplies this field as zero; it therefore proves controlled movement with native radius/range collision suppressed, including Bowler, Log and Executioner source speed/clock profiles. The capture now records both the source radius and explicit zero override, uses the correct predicate label and retains an eleventh source-binding block. The independent source SpawnCharacterCount filter selects the case inventory; it does not describe this runtime gate.
+
+All 5,461 positions, selected branches, Data reads and getter counts (after label normalization) are byte-equivalent to the previous capture. Native regeneration passes. The dependent 584-request volley capture and generated volley manifest are regenerated for changed provenance hashes; volley geometry and application rules remain unchanged at 41.

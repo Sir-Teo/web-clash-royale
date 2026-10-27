@@ -82,7 +82,7 @@ def capture(env, context):
     names = {
         0x21960E: "Data",
         0x1FB78E: "speed",
-        0x1FB488: "spawnPolicy",
+        0x1FB488: "radiusRangePolicy",
         0x21961E: "baseNoop",
         0x21E9FE: "targetRefresh",
         0x219B26: "pointReference",
@@ -116,7 +116,7 @@ def capture(env, context):
             pointer = read(sp + 4)
             expected = (
                 data
-                if name in ["speed", "spawnPolicy"]
+                if name in ["speed", "radiusRangePolicy"]
                 else body + 0x5C if name == "distance" else body
             )
             if name != "sine" and pointer != expected:
@@ -159,6 +159,8 @@ def capture(env, context):
             "minimum": int(r["MinDistance"] or 0),
             "maximum": int(r["MaxDistance"] or 0),
             "homing": r["Homing"].lower() == "true",
+            "sourceProjectileRadius": int(r["ProjectileRadius"] or 0),
+            "providedProjectileRadius": 0,
         }
         for r in rows
         if int(r["Speed"] or 0) > 0 and int(r["SpawnCharacterCount"] or 0) == 0
@@ -191,7 +193,7 @@ def capture(env, context):
             (0x94, values["constantHeight"]),
             (0x80, values["minimum"]),
             (0x84, values["maximum"]),
-            (0x4C, 0),
+            (0x4C, values["providedProjectileRadius"]),
         ]:
             write(data + offset, value)
         cpu.mem_write(data + 0x78, bytes([values["homing"]]))
@@ -308,7 +310,7 @@ def capture(env, context):
             }
             if moved:
                 expected_calls.update(
-                    {"x": 1, "y": 1, "z": 1, "spawnPolicy": 1, "positionStore": 1}
+                    {"x": 1, "y": 1, "z": 1, "radiusRangePolicy": 1, "positionStore": 1}
                 )
                 if duration:
                     expected_calls["sine"] = 2
@@ -440,10 +442,16 @@ def capture(env, context):
             "Actual Data+0x54 speed getter, measured per invoked native update.",
         ),
         (
-            "noChildPolicy",
+            "suppressedRadiusRangePolicy",
             0x1FB488,
             0x1FB4D6,
-            "Actual nonpositive source child-count gate returns false without table lookup.",
+            "Actual radius/range predicate returns false for supplied Data+0x4c zero; that field is ProjectileRadius, not SpawnCharacterCount.",
+        ),
+        (
+            "projectileRadiusColumnStore",
+            0x1FA4A7,
+            0x1FA4CF,
+            "Named ProjectileRadius lookup stores Data+0x4c; capture supplies zero to suppress range/collision behavior, including rows with a positive source radius.",
         ),
         (
             "sineMultiply",
@@ -507,10 +515,10 @@ def capture(env, context):
             "quarter": sine_quarter,
         },
         "limits": [
-            "Actual bounded min/max and ConstantHeight initialization precede native projectile update invocation. Positive-Speed source rows with no spawned characters cover translated zero/tiny/cardinal/diagonal goals. Projectile/Data, initialized points, target height and null target are supplied; data-only rows do not establish natural construction.",
+            "Actual bounded min/max and ConstantHeight initialization precede controlled projectile update invocation. Positive-Speed source rows selected without spawned characters supply speed/clocks/bounds/height for translated zero/tiny/cardinal/diagonal goals. ProjectileRadius at Data+0x4c is explicitly overridden to zero in every case, including three positive-radius source rows; the earlier range initializer and rolling collision path are excluded. This field is not SpawnCharacterCount. Projectile/Data, initialized points, target height and null target are supplied; data-only rows do not establish natural construction.",
             "The captured vtable update executes its real no-op base call, null-target refresh, distance/speed decisions, integer linear XYZ motion or positive PingpongVisualTime clock/sine motion, midpoint raw-field reset and position stores. The native elapsed word increments fifty per applicable invocation. Global owner/world update cadence is not executed; raw Speed is measured per update, not assigned a per-second interpretation.",
             "Native Q10 sine lookup is verified against independent rounded sine values for every quarter-wave entry. Every initialized goal/height, frame, selected arrival/midpoint branch, getter count, allowed Data field read and complete heap mutation matches independent integer calculations. Controls alter clocks, speed, null-target homing flags and arrival boundaries.",
-            "Arrival stops before the actual arrived-flag, damage/refund/effect/removal path. Moving updates return before collision/hit work; this does not execute full projectile collision, registration, owner/target propagation, child spawning, world cadence or visuals. Stored/native sampled positions are not claims about full natural flights or browser timing. Application rules remain unchanged.",
+            "Arrival stops before the actual arrived-flag, damage/refund/effect/removal path. The supplied zero radius suppresses the native radius/range predicate and its moving collision call; this does not execute full projectile collision, registration, owner/target propagation, child spawning, world cadence or visuals. Stored/native sampled positions are not claims about full natural flights or browser timing. Application rules remain unchanged.",
         ],
         "profiles": profiles,
         "blocks": blocks,

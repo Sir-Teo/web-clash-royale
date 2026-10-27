@@ -5,7 +5,7 @@
   "inputs": [
     {
       "path": "reference/client/projectile-motion-native-trace.json",
-      "sha256": "9607b414de37a9543749f287f86ce4ec20eb45d277112b91d4b6892582888d17"
+      "sha256": "5429bb9fee64e6f84ff790707cb6603bc8725c595eb382c4d5051d25569b0516"
     },
     {
       "path": "reference/client/target-loss-request-native-trace.json",
