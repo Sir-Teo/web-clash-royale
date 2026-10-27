@@ -116,8 +116,8 @@ function setup() {
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
-  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "pending-range", "projectile-muzzle", "target-loss", "sparky-preload", "sparky", "primary-score", "primary-geometry", "tower-layout", "distant-targets", "barrel-formation", "army-formation", "group-formation", "ground-deployment", "deployment"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41"].includes(rangeRules ?? "")) {
-    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 } });
+  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "pending-range", "projectile-muzzle", "target-loss", "sparky-preload", "sparky", "primary-score", "primary-geometry", "tower-layout", "distant-targets", "barrel-formation", "army-formation", "group-formation", "ground-deployment", "deployment"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42"].includes(rangeRules ?? "")) {
+    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
   for (const t of battle.entities) t.active = false;
@@ -673,14 +673,14 @@ function setup() {
     }
   } else if (scenario === "projectile-muzzle") {
     const chosen = (document.querySelector("#attack-card") as HTMLSelectElement).value;
-    const card = ["musketeer", "cannon", "princess", "baby-dragon", "king-tower", "executioner"].includes(chosen) ? chosen : "musketeer";
+    const card = ["musketeer", "cannon", "princess", "baby-dragon", "king-tower", "executioner", "bowler"].includes(chosen) ? chosen : "musketeer";
     for (const team of ["blue", "red"] as const) {
       const attacker = card === "king-tower" ? battle.entities.find(e=>e.team === team && e.king)!
         : unit(card as CardId, team, team === "blue" ? 4 : 14, team === "blue" ? 22 : 10)[0];
       Object.assign(attacker, { active: true, activation: 0, speed: 0, cooldown: 0, deploy: 0, lifetime: undefined });
       const enemy = team === "blue" ? "red" : "blue";
       const victim = unit("cannon", enemy, team === "blue" ? 7 : 11, team === "blue" ? 10 : 22)[0];
-      const reach = attackReach(attacker, victim) - 0.05;
+      const reach = new URL(location.href).searchParams.get("rangeDistance") === "near" ? 2 : attackReach(attacker, victim) - 0.05;
       Object.assign(victim, { x: attacker.x + (team === "blue" ? 1 : -1) * reach * 0.6,
         y: attacker.y + (team === "blue" ? -1 : 1) * reach * 0.8,
         active: false, deploy: 0, hp: 1e6, maxHp: 1e6, lifetime: undefined });
@@ -1479,7 +1479,7 @@ function advance(ticks: number) {
       for (const before of muzzleBefore) {
         const shots = battle.projectiles.filter(p=>p.source === before.id);
         if (shots.length && !muzzleReleases.has(before.id)) muzzleReleases.set(before.id, { ...before, tick: battle.tick,
-          shots: shots.map(p=>({ id: p.id, x:p.x, y:p.y, tx:p.tx, ty:p.ty, fromHeight:p.fromHeight, duration:p.duration, decorative:!!p.decorative })) });
+          shots: shots.map(p=>({ id: p.id, x:p.x, y:p.y, tx:p.tx, ty:p.ty, fromHeight:p.fromHeight, duration:p.duration, damage:p.damage, decorative:!!p.decorative })) });
       }
       if (sceneSelect.value === "pending-range" || sceneSelect.value === "attack-clock" || sceneSelect.value === "sparky-preload")
         for (const id of attackClockTargets.keys())
@@ -1673,7 +1673,7 @@ function render(now: number) {
       bodies: [...attackClockTargets].map(([id,victimId])=>{
         const actor=battle.entities.find(e=>e.id === id)!, victim=battle.entities.find(e=>e.id === victimId)!;
         const visual=(arena as any).units.get(id);
-        return { id, card: actor.king ? "king-tower" : actor.card, team:actor.team, policy:!!actor.nativeProjectileMuzzle, volley:!!actor.nativeProjectileVolley,
+        return { id, card: actor.king ? "king-tower" : actor.card, team:actor.team, policy:!!actor.nativeProjectileMuzzle, volley:!!actor.nativeProjectileVolley, rangePolicy:!!actor.nativeProjectileRange,
           native:!!(visual?.sprite || visual?.building), release:muzzleReleases.get(id), victimHp:victim.hp,
           shots:battle.projectiles.filter(p=>p.source === id).map(p=>({ id:p.id,height:arena.projectileState.find(v=>v.id === p.id)?.position[1],native:arena.projectileState.some(v=>v.id === p.id && v.sprites.length>0) })) };
       }),

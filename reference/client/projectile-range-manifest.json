@@ -1,0 +1,31 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/client/projectile-range-native-trace.json",
+      "sha256": "00ad2748642484c288447edd17fbd1ac3dd29640d3e31b2828bafe7c40a2dfb9"
+    },
+    {
+      "path": "reference/client/projectile-flight-native-trace.json",
+      "sha256": "f0d8f005abf109dadcb798c3e141d8bc305c4f22b5f0bf8d67ce2fe858525efd"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "src/game/combat-data.json",
+      "sha256": "e538686581e80101518c0b24373ad0024a0cfb9878f35bf80ee22dfad079cc54"
+    }
+  ],
+  "output": {
+    "path": "src/game/projectile-range-data.json",
+    "sha256": "d3bec17a13baccf6e9cc2a292c084249736a8ceef487a854b4ed9a049bce439e"
+  },
+  "scope": "Source Bowler/Executioner caster-center range normalization and later muzzle-relative bounds after rounding browser points to source units; no arena endpoint clamp. Existing browser speed, trajectories, collision and timing retained; rolling Log caller chain remains separate."
+}

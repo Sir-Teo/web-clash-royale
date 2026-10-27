@@ -1,4 +1,5 @@
 import { COMBAT_STEP, combatTraits } from "./combat";
+import { projectileRangeEnd } from "./projectile-range";
 import { projectileMuzzle } from "./projectile-muzzle";
 import type { Entity, Point } from "./engine";
 import bowler from "./bowler-data.json" with { type: "json" };
@@ -41,15 +42,17 @@ export function attackFlight(
           executioner.projectile.minDistance,
           executioner.projectile.range,
         );
-    const end = boulder
-      ? {
-          x: clamp(start.x + ux * bowler.projectile.range, 0.5, 17.5),
-          y: clamp(start.y + uy * bowler.projectile.range, 0.6, 31.4),
-        }
-      : {
-          x: clamp(attacker.x + ux * reach, 0.5, 17.5),
-          y: clamp(attacker.y + uy * reach, 0.6, 31.4),
-        };
+    const end =
+      projectileRangeEnd(attacker, target, start) ??
+      (boulder
+        ? {
+            x: clamp(start.x + ux * bowler.projectile.range, 0.5, 17.5),
+            y: clamp(start.y + uy * bowler.projectile.range, 0.6, 31.4),
+          }
+        : {
+            x: clamp(attacker.x + ux * reach, 0.5, 17.5),
+            y: clamp(attacker.y + uy * reach, 0.6, 31.4),
+          });
     return {
       start,
       end,

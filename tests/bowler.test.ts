@@ -60,7 +60,7 @@ describe("archived Bowler", () => {
     const boulder = battle.projectiles.find((p) => p.style === "bowler")!;
     expect(boulder).toBeTruthy();
     expect(boulder.target).toBeNull();
-    expect(Math.hypot(boulder.tx - boulder.x, boulder.ty - boulder.y)).toBeCloseTo(6, 3);
+    expect(Math.hypot(boulder.tx - bowler.x, boulder.ty - bowler.y)).toBeCloseTo(6, 3);
     for (let i = 0; i < 90 && battle.projectiles.some((p) => p.id === boulder.id); i++) battle.step();
     expect(battle.projectiles.some((p) => p.id === boulder.id)).toBe(false);
     expect(victims[0].hp).toBe(9710);

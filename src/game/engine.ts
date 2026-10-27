@@ -20,6 +20,7 @@ import { hasPendingRange, pendingAttackInRange } from "./pending-range";
 import { targetLossMode, type TargetLossMode } from "./target-loss";
 import { hasProjectileMuzzle, projectileMuzzleHeight } from "./projectile-muzzle";
 import { hasProjectileVolley, projectileVolley, volleyRandom } from "./projectile-volley";
+import { hasProjectileRange } from "./projectile-range";
 import { advanceAnimationClock } from "./animation-clock";
 import { areaSpellTarget, isAreaSpell } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targeting";
@@ -171,6 +172,8 @@ export interface Entity extends Point {
   /** Rules 41: source circular decorative projectile offsets. */
   nativeProjectileVolley?: true;
   volleyRandomState?: number;
+  /** Rules 42: source caster-center projectile extension and muzzle bounds. */
+  nativeProjectileRange?: true;
   dash?: { target: number; elapsed: number; remaining: number };
   dashCooldown?: number;
   attack: number;
@@ -265,7 +268,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -355,7 +358,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 41;
+    this.rulesVersion = r?.version ?? 42;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -857,6 +860,7 @@ export class Battle {
       ...(this.rulesVersion >= 38 && hasPendingRange(id) ? { nativePendingRange: true as const } : {}),
       ...(this.rulesVersion >= 40 && hasProjectileMuzzle(id) ? { nativeProjectileMuzzle: true as const } : {}),
       ...(this.rulesVersion >= 41 && hasProjectileVolley(id) ? { nativeProjectileVolley: true as const } : {}),
+      ...(this.rulesVersion >= 42 && hasProjectileRange(id) ? { nativeProjectileRange: true as const } : {}),
       ...(lostAttack ? { nativeLostAttack: lostAttack } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
@@ -1986,8 +1990,8 @@ export class Battle {
     const aim = target ?? point;
     if (!aim || (!target && !e.nativeLostAttack)) return;
     if (e.card === "executioner") {
-      // The retained minimum and maximum travel values bound the endpoint;
-      // the exact historical extension beyond the selected target is absent.
+      // Shared flight geometry selects source range initialization for new
+      // bodies and retains the historical extension for older replays.
       const { start, end: turn, duration } = attackFlight(e, aim)!;
       const height = projectileMuzzleHeight(e, entityVisualHeight(e)) ?? executioner.projectile.height;
       this.projectiles.push({

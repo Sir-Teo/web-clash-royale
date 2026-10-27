@@ -1,0 +1,21 @@
+{
+  "sourceUnitsPerTile": 1000,
+  "ranges": {
+    "Bowler": {
+      "projectile": "BowlerProjectile",
+      "projectileRadius": 1000,
+      "projectileRange": 6000,
+      "homing": false,
+      "minimum": 0,
+      "maximum": 0
+    },
+    "AxeMan": {
+      "projectile": "AxeManProjectile",
+      "projectileRadius": 900,
+      "projectileRange": 6500,
+      "homing": false,
+      "minimum": 4500,
+      "maximum": 0
+    }
+  }
+}
