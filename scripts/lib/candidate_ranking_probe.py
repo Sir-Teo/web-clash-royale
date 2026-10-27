@@ -67,15 +67,21 @@ def capture(env):
         elif address == 0x1e6cee:
             return_hook(config)
         elif address == 0x21f5f6:
-            if [read(sp + i) for i in [0, 4, 8, 12, 16, 20]] != [0x25da19, grid, body + 0x20, expected_query, 0, 0]:
+            primary_mode = env["args"].primary_acquisition
+            if [read(sp + i) for i in [0, 4, 8, 12, 16, 20]] != [0x25df91 if primary_mode else 0x25da19, grid, body + 0x20, expected_query, 0, int(primary_mode)]:
                 raise RuntimeError("Unexpected native candidate query")
             broadphase_calls.append(read(sp + 12))
             return_hook(collection)
         elif address == 0x25d7c2:
             candidate = read(sp + 8)
-            if read(sp + 4) != component or read(sp + 12) != 0 or candidate not in active:
+            if read(sp + 4) != component or read(sp + 12) != 0:
                 raise RuntimeError("Unexpected eligibility boundary")
-            return_hook(int(active[candidate].get("eligible", True)))
+            if env["args"].primary_acquisition and candidate == 0:
+                return_hook(0)
+            elif candidate in active:
+                return_hook(int(active[candidate].get("eligible", True)))
+            else:
+                raise RuntimeError("Unknown candidate at eligibility boundary")
         elif address == 0x1dd78c:
             if read(sp + 4) != data:
                 raise RuntimeError("Unexpected source clipping initialization")
@@ -168,6 +174,11 @@ def capture(env):
         selected = nominee["id"] if inner ** 2 <= distance2 <= maximum ** 2 else None
         return nominee["id"], selected
 
+    if env["args"].primary_acquisition:
+        from lib.primary_acquisition_probe import capture as capture_primary
+        capture_primary(env, {"initialize": initialize, "sources": sources, "targets": targets,
+                              "active": lambda: active, "queries": lambda: broadphase_calls, "extras": extras})
+        return
     if env["args"].electro_bolts:
         from lib.electro_bolts_probe import capture as capture_bolts
         capture_bolts(env, {"initialize": initialize, "predict": predict, "sources": sources,
