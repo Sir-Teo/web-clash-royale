@@ -36,6 +36,10 @@ def capture(env, context):
             raise RuntimeError("Unexpected native clock column string")
     # Extra-target choice is absent; the actual AllTargetsHit fallback remains.
     context["constants"][0x25d95e] = 0
+    if env["args"].preload_transitions:
+        from lib.preload_transition_probe import capture
+
+        return capture(env, context)
     names = {
         "characters": ["Knight", "Archer", "Musketeer", "Giant", "HogRider", "Balloon", "Prince", "InfernoDragon", "ElectroWizard"],
         "buildings": ["Cannon", "Mortar", "InfernoTower", "KingTower", "PrincessTower"],
