@@ -629,3 +629,7 @@ New battles use this evidence for troop destinations after nearby acquisition fi
 ## Native target-setter evidence
 
 `reference/client/target-switch-native-trace.json` retains 1,176 source-profile cases and eleven controls from `--attack-loop --target-switches`. It pins the binary/source tables and eight instruction blocks, including the actual setter, variable-damage/stop-time predicates, raw state and movement getters, position getters and reload/interval getters. Explicit clock/flag/target seeds separate equal-pointer refresh, changed in-range/out-of-range assignment and null removal. Range, eligibility, reset/movement effects and assertion reporting remain supplied boundaries. Synthetic first-load/stop-time controls are labeled separately from the archived profiles; no browser combat rule changes with this evidence.
+
+## Native primary-transition evidence
+
+`reference/client/primary-transition-native-trace.json` pins the source tables, target-type and setter captures, and five combined instruction blocks. Its 3,536 cases and 91 controls execute primary acquisition into the real setter and range predicate on explicit states. Candidate order, common eligibility, fallback, broadphase and initial clocks remain controlled. The fixture distinguishes nominee acceptance from actual attack reach and records both target/clock effects and unchanged-lock outcomes when no setter is called. It adds no browser combat policy.

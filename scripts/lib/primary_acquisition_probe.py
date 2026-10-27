@@ -50,7 +50,8 @@ def capture(env, context):
             if pointer not in active():
                 raise RuntimeError("Primary scan requested an unknown target")
             requests.append(identity(pointer))
-            return_hook()
+            if not env["args"].primary_transitions:
+                return_hook()
 
     for address in [0x25e27d, 0x25e310, 0x25d4b0]:
         cpu.hook_add(UC_HOOK_CODE, hook, begin=address, end=address)
@@ -89,17 +90,19 @@ def capture(env, context):
         candidate = next((candidate for candidate in candidates if candidate["id"] == fallback and candidate.get("eligible", True)), None)
         return None, [candidate["id"]] if candidate else [], 1
 
-    if env["args"].spawn_priority or env["args"].target_eligibility or env["args"].primary_geometry:
-        if env["args"].primary_geometry:
+    if env["args"].spawn_priority or env["args"].target_eligibility or env["args"].primary_geometry or env["args"].primary_transitions:
+        if env["args"].primary_transitions:
+            from lib.primary_transition_probe import capture as capture_continuation
+        elif env["args"].primary_geometry:
             from lib.primary_geometry_probe import capture as capture_continuation
         elif env["args"].target_eligibility:
             from lib.target_eligibility_probe import capture as capture_continuation
         else:
             from lib.spawn_priority_probe import capture as capture_continuation
 
-        def acquire():
+        def acquire(fallback=None):
             nonlocal nominated, requests, fallback_calls, fallback_id
-            nominated, requests, fallback_calls, fallback_id = None, [], 0, None
+            nominated, requests, fallback_calls, fallback_id = None, [], 0, fallback
             run(0x25deb6, component, instruction_budget=16000)
             return {"nominated": nominated, "setterRequests": list(requests),
                     "fallbackCalls": fallback_calls, "queryCalls": len(queries())}

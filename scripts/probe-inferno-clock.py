@@ -32,6 +32,7 @@ parser.add_argument("--native-target-types", action="store_true", help="Run sigh
 parser.add_argument("--candidate-ranking", action="store_true", help="Run the native extra-target scanner through ranking and final attack-range validation")
 parser.add_argument("--electro-bolts", action="store_true", help="Capture Electro Wizard's native primary/extra-hit dispatch loop and fallback")
 parser.add_argument("--primary-acquisition", action="store_true", help="Capture the native primary-lock scanner through its setter-dispatch boundary")
+parser.add_argument("--primary-transitions", action="store_true", help="Execute primary acquisition through real target-setter clock effects")
 parser.add_argument("--spawn-priority", action="store_true", help="Trace projectile child-spawn priority fields into native primary acquisition")
 parser.add_argument("--target-eligibility", action="store_true", help="Execute native eligibility through source air/ground, target component and team gates")
 parser.add_argument("--primary-geometry", action="store_true", help="Capture exact primary sight, rear/side clipping and adjusted minimum boundaries")
@@ -70,6 +71,8 @@ if args.primary_geometry and (not args.primary_acquisition or args.spawn_priorit
     parser.error("--primary-geometry requires --sight-range --primary-acquisition without another continuation")
 if args.distant_targets and (not args.primary_acquisition or args.spawn_priority or args.target_eligibility or args.primary_geometry):
     parser.error("--distant-targets requires --sight-range --primary-acquisition without another continuation")
+if args.primary_transitions and (not args.primary_acquisition or args.spawn_priority or args.target_eligibility or args.primary_geometry or args.distant_targets):
+    parser.error("--primary-transitions requires --sight-range --primary-acquisition without another continuation")
 if args.lane_assignment and (not args.sight_range or args.candidate_minimum or args.native_target_types or args.candidate_ranking or args.primary_acquisition):
     parser.error("--lane-assignment requires --sight-range without another sight mode")
 if args.tower_layout and not args.lane_assignment:
