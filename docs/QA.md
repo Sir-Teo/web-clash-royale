@@ -2462,3 +2462,10 @@ The regenerated capture is byte-identical. The prior 228-case/48-control Constan
 All 555 source cases and 32 controls pass across 37 positive-Speed/no-child projectile rows, totaling 5,461 native updates. Actual min/max and ConstantHeight initialization precedes actual null-target movement updates. Independent integer calculations reproduce linear XYZ motion, the Q10 sine return, the midpoint hold/raw-field reset and pre-effect arrival decisions. Full supplied heap comparisons, guarded object arguments, exact relevant getter counts and permitted Data reads pass for every update.
 
 All 91 native sine entries agree with independent rounded sine values. Regeneration is byte-identical; the prior 1,152-case/408-control destination capture is unchanged. Three Python modules parse, the new module is Black-formatted and eleven invalid continuation combinations reject. Arrival damage/removal, world cadence, attack-selected goals and full flight/collision behavior remain excluded. The validated rules-40 app and production build are unchanged.
+
+
+## Native projectile-goal verification
+
+All 324 source cases and 52 controls pass across 27 projectile actor profiles, totaling 584 factory/shoot/registration request groups. Both owners, three origins and live/null target arguments agree with independently calculated reference selection and circular offsets. Synthetic controls cover negative/zero/changed counts, extreme radii and bounded RNG results, custom-first absence/zero radius and signed alternate-point flags. Actual source Princess uses custom Radius 2,000; the zero-radius branch is explicitly synthetic.
+
+Full supplied heap comparisons, exact relevant getter/provider counts, permitted Data reads, selected references and every request/RNG tuple pass. Regeneration is byte-identical and the preceding 5,461-update motion capture is unchanged. Three Python modules parse, the new module is Black-formatted and twelve invalid continuation combinations reject. This proves the bounded request loop; supplied world RNG results and intercepted shoot/registration boundaries do not establish full native world behavior.

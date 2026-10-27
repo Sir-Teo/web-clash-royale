@@ -34,6 +34,7 @@ parser.add_argument("--projectile-launch", action="store_true", help="Execute na
 parser.add_argument("--projectile-height", action="store_true", help="Execute native late-initializer ConstantHeight gate and position stores")
 parser.add_argument("--projectile-distance", action="store_true", help="Execute native initializer minimum/maximum destination rewriting")
 parser.add_argument("--projectile-motion", action="store_true", help="Execute native initialized null-target linear and ping-pong projectile motion")
+parser.add_argument("--projectile-goals", action="store_true", help="Execute native normal-attack projectile selection, circular spread and goal requests")
 parser.add_argument("--attack-range", action="store_true", help="Capture maximum attack geometry across troop, building and Crown Tower profiles")
 parser.add_argument("--minimum-range", action="store_true", help="Capture minimum-range boundaries instead of maximum-range boundaries")
 parser.add_argument("--sight-range", action="store_true", help="Capture native sight getters and the bounded candidate sight gate")
@@ -81,6 +82,8 @@ if args.projectile_distance and (not args.first_attacks or args.roster_first_att
     parser.error("--projectile-distance requires --attack-loop --first-attacks without another continuation")
 if args.projectile_motion and (not args.first_attacks or args.roster_first_attacks or args.preload_transitions or args.pending_range or args.targetless_policy or args.target_loss_clocks or args.target_loss_requests or args.projectile_launch or args.projectile_height or args.projectile_distance):
     parser.error("--projectile-motion requires --attack-loop --first-attacks without another continuation")
+if args.projectile_goals and (not args.first_attacks or args.roster_first_attacks or args.preload_transitions or args.pending_range or args.targetless_policy or args.target_loss_clocks or args.target_loss_requests or args.projectile_launch or args.projectile_height or args.projectile_distance or args.projectile_motion):
+    parser.error("--projectile-goals requires --attack-loop --first-attacks without another continuation")
 if args.target_switches and (not args.attack_loop or args.range_loss or args.first_attacks):
     parser.error("--target-switches requires --attack-loop without another continuation")
 if args.attack_range and args.attack_loop:
