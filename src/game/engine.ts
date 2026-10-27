@@ -58,6 +58,7 @@ import princess from "./princess-data.json" with { type: "json" };
 import { advanceInfernoClock, infernoAttackRate, infernoDamage, infernoProfile } from "./inferno";
 import { attackClockRate } from "./attack-clock";
 import { barrelTargetScoreBias, comparePrimaryScores, primaryTargetScore } from "./primary-score";
+import { primaryCandidateVisible } from "./primary-geometry";
 import electroWizard from "./electro-wizard-data.json" with { type: "json" };
 import miner from "./miner-data.json" with { type: "json" };
 import bowler from "./bowler-data.json" with { type: "json" };
@@ -116,6 +117,8 @@ export interface Entity extends Point {
   nativeAttackClock?: true;
   /** Rules 29: nearby candidate ordering by adjusted squared center distance. */
   nativePrimaryScore?: true;
+  /** Rules 30: source primary sight, class extensions and clipping. */
+  nativePrimaryGeometry?: true;
   /** Native source units squared; assigned to actual Barrel children. */
   targetScoreBias?: number;
   air: boolean;
@@ -238,7 +241,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -318,7 +321,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 29;
+    this.rulesVersion = r?.version ?? 30;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -429,6 +432,7 @@ export class Battle {
       ...(this.rulesVersion >= 25 ? { sightRange: nativeSightRange({ card: "tower", king, radius }) } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
+      ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
       air: false,
       damage: king ? 109 : 109,
       range: king ? 7 : 7.5,
@@ -807,6 +811,7 @@ export class Battle {
       ...(this.rulesVersion >= 27 && id === "electro-wizard" ? { nativeExtraTargets: true as const } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
+      ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
       air: !!c.air,
       damage: legacyBalloon?.damage ?? legacyVitals?.damage ?? c.damage,
       range: legacyBalloon?.range ?? stats.range,
@@ -1490,7 +1495,7 @@ export class Battle {
       const edgeDistance = distance - candidate.radius;
       const nearbyScore = e.nativePrimaryScore ? primaryTargetScore(e, candidate) : edgeDistance;
       // Strictly smaller keeps the first entity on ties, matching stable sort.
-      if (distance <= sight + candidate.radius && comparePrimaryScores(e, nearbyScore, nearbyDistance) < 0) {
+      if (primaryCandidateVisible(e, candidate) && comparePrimaryScores(e, nearbyScore, nearbyDistance) < 0) {
         nearby = candidate;
         nearbyDistance = nearbyScore;
       }

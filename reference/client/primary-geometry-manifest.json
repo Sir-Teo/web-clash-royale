@@ -1,0 +1,34 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/logic/globals.csv",
+      "sha256": "28f97cbeb6c6de2489422b1bcc65bebd62db35fbb3ec72203eba29caa33c5641"
+    },
+    {
+      "path": "src/game/combat-data.json",
+      "sha256": "e538686581e80101518c0b24373ad0024a0cfb9878f35bf80ee22dfad079cc54"
+    },
+    {
+      "path": "reference/client/primary-geometry-native-trace.json",
+      "sha256": "9ceef5ef4fcd1e87a152bbb23ef8922eec5d57896ac9166d731fcdabde683165"
+    },
+    {
+      "path": "reference/client/sight-target-types-native-trace.json",
+      "sha256": "f216b428e6e92b710562040b0175b4457bf7afaa4ae675f8a6b906d499285619"
+    }
+  ],
+  "output": {
+    "path": "src/game/primary-geometry-data.json",
+    "sha256": "db25bbee8280828dc45304bce71463f4f1402e889c20dcf91b4e1674dc17d516"
+  }
+}

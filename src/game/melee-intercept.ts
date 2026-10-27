@@ -1,6 +1,6 @@
 import { attackRadius, attackReach } from "./attack-range";
 import { comparePrimaryTargets } from "./primary-score";
-import { acquisitionSight } from "./sight-range";
+import { primaryCandidateVisible } from "./primary-geometry";
 import { CARD_MAP, type CardId } from "./cards";
 import { combatTraits } from "./combat";
 import { deploymentRadius, deploymentTime } from "./deployment";
@@ -43,7 +43,6 @@ export function meleeInterceptTarget(
       e.kind !== "troop" &&
       !(e.deploy <= 0 && e.burrow?.phase === "hidden"),
   );
-  const sight = acquisitionSight(threat);
   const closest = (a: Entity, b: Entity) =>
     distance(threat, a) - a.radius - (distance(threat, b) - b.radius) ||
     a.id - b.id;
@@ -57,7 +56,7 @@ export function meleeInterceptTarget(
   if (current && inRange(current)) return;
   const target =
     targets
-      .filter((e) => distance(threat, e) <= sight + e.radius)
+      .filter((e) => primaryCandidateVisible(threat, e))
       .sort(nearbyClosest)[0] ?? targets.sort(closest)[0];
   if (!target || inRange(target)) return;
   // Match moveToward's routing, including the approach before the river band.

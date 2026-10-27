@@ -117,7 +117,7 @@ export function validRecordEntry(value: unknown): value is RecordEntry {
     (r.replay?.rulesFamily !== "local" || r.replay.version <= 5) &&
     Number.isInteger(r.replay?.version) &&
     r.replay.version >= 1 &&
-    r.replay.version <= 29 &&
+    r.replay.version <= 30 &&
     Number.isSafeInteger(r.replay.seed) &&
     r.replay.mode === r.mode &&
     Number.isInteger(r.replay.duration) &&

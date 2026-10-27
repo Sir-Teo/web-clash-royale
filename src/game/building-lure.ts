@@ -1,6 +1,6 @@
 import { attackReach } from "./attack-range";
 import { comparePrimaryTargets } from "./primary-score";
-import { acquisitionSight } from "./sight-range";
+import { primaryCandidateVisible } from "./primary-geometry";
 import { CARD_MAP, type CardId } from "./cards";
 import { deploymentRadius } from "./deployment";
 import type { Entity, Point, Team } from "./engine";
@@ -54,12 +54,11 @@ export function buildingLureTarget(
     ? crowns.every((crown) => comparePrimaryTargets(threat, target, crown) < 0)
     : distance(threat, target) - target.radius < crownDistance;
   const radius = deploymentRadius(card);
-  const sight = acquisitionSight(threat);
   if (
     visible.some(
       (e) =>
         e.kind === "building" &&
-        distance(threat, e) <= sight + e.radius &&
+        primaryCandidateVisible(threat, e) &&
         closerThanCrowns(e),
     )
   )
@@ -74,10 +73,9 @@ export function buildingLureTarget(
   ]) {
     const point =
       team === "red" ? { x: 9 + dx, y: 10 + dy } : { x: 9 - dx, y: 22 - dy };
-    const gap = distance(threat, point);
     // Strictly closer: equal candidate scores retain the existing Crown Tower.
     if (
-      gap <= sight + radius &&
+      primaryCandidateVisible(threat, { ...point, radius, kind: "building" }) &&
       closerThanCrowns({ ...point, radius }) &&
       legal(point)
     )

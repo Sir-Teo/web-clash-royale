@@ -1,0 +1,242 @@
+{
+  "buildingSightExtra": 0,
+  "crownSightExtra": 2,
+  "profiles": {
+    "Knight": {
+      "rear": 1,
+      "side": 0
+    },
+    "Archer": {
+      "rear": 1,
+      "side": 0
+    },
+    "Giant": {
+      "rear": 2,
+      "side": 2
+    },
+    "GiantSkeleton": {
+      "rear": 1,
+      "side": 0
+    },
+    "SkeletonWarrior": {
+      "rear": 1,
+      "side": 0
+    },
+    "Musketeer": {
+      "rear": 1,
+      "side": 0
+    },
+    "MiniPekka": {
+      "rear": 1,
+      "side": 0
+    },
+    "Goblin": {
+      "rear": 1,
+      "side": 0
+    },
+    "Barbarian": {
+      "rear": 1,
+      "side": 0
+    },
+    "AngryBarbarian": {
+      "rear": 1,
+      "side": 0
+    },
+    "RoyalGiant": {
+      "rear": 2,
+      "side": 2
+    },
+    "MegaMinion": {
+      "rear": 1,
+      "side": 0
+    },
+    "BlowdartGoblin": {
+      "rear": 1,
+      "side": 0
+    },
+    "IceWizard": {
+      "rear": 1,
+      "side": 0
+    },
+    "IceSpirits": {
+      "rear": 1,
+      "side": 0
+    },
+    "FireSpirits": {
+      "rear": 1,
+      "side": 0
+    },
+    "IceGolemite": {
+      "rear": 2,
+      "side": 2
+    },
+    "Princess": {
+      "rear": 1,
+      "side": 0
+    },
+    "InfernoDragon": {
+      "rear": 1,
+      "side": 0
+    },
+    "ElectroWizard": {
+      "rear": 1,
+      "side": 0
+    },
+    "Miner": {
+      "rear": 1,
+      "side": 0
+    },
+    "Bowler": {
+      "rear": 1,
+      "side": 0
+    },
+    "DarkPrince": {
+      "rear": 1,
+      "side": 0
+    },
+    "BattleRam": {
+      "rear": 1,
+      "side": 0
+    },
+    "AxeMan": {
+      "rear": 1,
+      "side": 0
+    },
+    "ZapMachine": {
+      "rear": 1,
+      "side": 0
+    },
+    "RageBarbarian": {
+      "rear": 1,
+      "side": 0
+    },
+    "SpearGoblin": {
+      "rear": 1,
+      "side": 0
+    },
+    "Skeleton": {
+      "rear": 1,
+      "side": 0
+    },
+    "Bomber": {
+      "rear": 1,
+      "side": 0
+    },
+    "Valkyrie": {
+      "rear": 1,
+      "side": 0
+    },
+    "HogRider": {
+      "rear": 4,
+      "side": 4
+    },
+    "BabyDragon": {
+      "rear": 1,
+      "side": 0
+    },
+    "Minion": {
+      "rear": 1,
+      "side": 0
+    },
+    "Bat": {
+      "rear": 1,
+      "side": 0
+    },
+    "DarkWitch": {
+      "rear": 1,
+      "side": 0
+    },
+    "Assassin": {
+      "rear": 1,
+      "side": 0
+    },
+    "Golem": {
+      "rear": 2,
+      "side": 2
+    },
+    "Golemite": {
+      "rear": 2,
+      "side": 2
+    },
+    "LavaHound": {
+      "rear": 1,
+      "side": 0
+    },
+    "LavaPups": {
+      "rear": 1,
+      "side": 0
+    },
+    "Witch": {
+      "rear": 1,
+      "side": 0
+    },
+    "Wizard": {
+      "rear": 1,
+      "side": 0
+    },
+    "Prince": {
+      "rear": 1,
+      "side": 0
+    },
+    "Pekka": {
+      "rear": 1,
+      "side": 0
+    },
+    "Balloon": {
+      "rear": 1,
+      "side": 2
+    },
+    "Cannon": {
+      "rear": 0,
+      "side": 0
+    },
+    "Tesla": {
+      "rear": 0,
+      "side": 0
+    },
+    "Mortar": {
+      "rear": 0,
+      "side": 0
+    },
+    "BombTower": {
+      "rear": 0,
+      "side": 0
+    },
+    "InfernoTower": {
+      "rear": 0,
+      "side": 0
+    },
+    "Xbow": {
+      "rear": 0,
+      "side": 0
+    },
+    "ElixirCollector": {
+      "rear": 0,
+      "side": 0
+    },
+    "GoblinHut": {
+      "rear": 0,
+      "side": 0
+    },
+    "Tombstone": {
+      "rear": 0,
+      "side": 0
+    },
+    "FirespiritHut": {
+      "rear": 0,
+      "side": 0
+    },
+    "BarbarianHut": {
+      "rear": 0,
+      "side": 0
+    },
+    "KingTower": {
+      "rear": 0,
+      "side": 0
+    },
+    "PrincessTower": {
+      "rear": 0,
+      "side": 0
+    }
+  }
+}

@@ -102,8 +102,8 @@ function setup() {
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
-  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "primary-score"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29"].includes(rangeRules ?? "")) {
-    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 } });
+  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "primary-score", "primary-geometry"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30"].includes(rangeRules ?? "")) {
+    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
   for (const t of battle.entities) t.active = false;
@@ -121,9 +121,9 @@ function setup() {
     scenario !== "death" && scenario !== "deployment";
   (document.querySelector("#attack-config") as HTMLElement).hidden =
     scenario !== "attack-impacts" && scenario !== "inferno-clock" && scenario !== "attack-range" && scenario !== "sight-range";
-  (document.querySelector("#range-out") as HTMLElement).hidden = scenario !== "attack-range" && scenario !== "sight-range";
+  (document.querySelector("#range-out") as HTMLElement).hidden = scenario !== "attack-range" && scenario !== "sight-range" && scenario !== "primary-geometry";
   document.querySelector("#range-out")!.textContent = scenario === "sight-range"
-    ? "Move targets outside sight" : "Move targets outside attack reach";
+    ? "Move targets outside sight" : scenario === "primary-geometry" ? "Bring selected target into attack reach" : "Move targets outside attack reach";
   (document.querySelector("#minimum-config") as HTMLElement).hidden = scenario !== "minimum-range";
   (document.querySelector("#electro-config") as HTMLElement).hidden = scenario !== "electro-bolts";
   (document.querySelector("#break-shield") as HTMLElement).hidden =
@@ -172,7 +172,7 @@ function setup() {
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king" &&
       !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
-      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "primary-score", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
+      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "primary-score", "primary-geometry", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -816,6 +816,17 @@ function setup() {
       attacker.target = target.id;
       clockModes.set(attacker.id, "range");
     }
+  } else if (scenario === "primary-geometry") {
+    const team: Team = new URL(location.href).searchParams.get("team") === "blue" ? "blue" : "red";
+    const enemy = team === "blue" ? "red" : "blue", direction = team === "red" ? 1 : -1;
+    for (const body of battle.entities) Object.assign(body, { x: 60, y: 60 });
+    const actor = unit("hog-rider", team, 2, 16)[0];
+    Object.assign(actor, { x: 2, y: 16, speed: 0, age: 3 });
+    const cannon = unit("cannon", enemy, 9, 16 + direction * 6)[0];
+    Object.assign(cannon, { x: 9, y: 16 + direction * 6, active: false, lifetime: undefined, hp: 1e6, maxHp: 1e6 });
+    const crown = battle.entities.find((body) => body.team === enemy && body.card === "tower" && !body.king)!;
+    Object.assign(crown, { x: 4, y: 16 + direction * 10, hp: 1e6, maxHp: 1e6 });
+    primaryScoreTargets.set(actor.id, { mode: "geometry", candidates: [cannon.id, crown.id] });
   } else if (scenario === "primary-score") {
     // Real Barrel impacts create the score fields before controlled positioning.
     const children = new Map<Team, Entity[]>();
@@ -1133,6 +1144,13 @@ document.querySelector("#clock-freeze")!.addEventListener("click", () => {
       cast("freeze", team === "blue" ? "red" : "blue", x, team === "blue" ? 21 : 11);
 });
 document.querySelector("#range-out")!.addEventListener("click", () => {
+  if (sceneSelect.value === "primary-geometry") {
+    for (const actor of battle.entities.filter((body) => primaryScoreTargets.has(body.id))) {
+      const target = battle.entities.find((body) => body.id === actor.target);
+      if (target) Object.assign(target, { x: actor.x, y: actor.y + (actor.team === "red" ? 1 : -1) });
+    }
+    return;
+  }
   for (const attacker of battle.entities.filter((entity) => clockModes.has(entity.id))) {
     const target = battle.entities.find((entity) => entity.id === (sightTargets.get(attacker.id) ?? attacker.target));
     if (target) target.y = attacker.y + (attacker.team === "blue" ? -1 : 1) *
@@ -1372,14 +1390,14 @@ function render(now: number) {
       bodies: battle.entities.filter((entity) => clockModes.has(entity.id) && entity.card.startsWith("inferno-"))
         .map((entity) => ({ id: entity.id, card: entity.card, team: entity.team,
           mode: clockModes.get(entity.id), lock: entity.inferno })) });
-  if (sceneSelect.value === "primary-score")
+  if (["primary-score", "primary-geometry"].includes(sceneSelect.value))
     (document.querySelector("#destruction") as HTMLElement).dataset.primaryScore =
       JSON.stringify({ version: battle.rulesVersion, tick: battle.tick, time: battle.time,
         bodies: battle.entities.filter((entity) => primaryScoreTargets.has(entity.id)).map((entity) => {
           const control = primaryScoreTargets.get(entity.id)!;
           const visual = (arena as any).units.get(entity.id);
           return { id: entity.id, team: entity.team, mode: control.mode, target: entity.target,
-            policy: !!entity.nativePrimaryScore, native: !!(visual?.sprite || visual?.building),
+            policy: sceneSelect.value === "primary-geometry" ? !!entity.nativePrimaryGeometry : !!entity.nativePrimaryScore, native: !!(visual?.sprite || visual?.building),
             candidates: control.candidates.map((id) => {
               const victim = battle.entities.find((body) => body.id === id)!;
               return { id, hp: victim.hp, bias: victim.targetScoreBias };
