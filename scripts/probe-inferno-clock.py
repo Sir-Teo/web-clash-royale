@@ -27,6 +27,7 @@ parser.add_argument("--minimum-range", action="store_true", help="Capture minimu
 parser.add_argument("--sight-range", action="store_true", help="Capture native sight getters and the bounded candidate sight gate")
 parser.add_argument("--candidate-minimum", action="store_true", help="Capture candidate minimum-range boundaries through the sight scanner")
 parser.add_argument("--native-target-types", action="store_true", help="Run sight gates with native target vtables, source class flags and radius getters")
+parser.add_argument("--candidate-ranking", action="store_true", help="Run the native extra-target scanner through ranking and final attack-range validation")
 args = parser.parse_args()
 if args.range_loss and not args.attack_loop:
     parser.error("--range-loss requires --attack-loop")
@@ -40,6 +41,8 @@ if args.candidate_minimum and not args.sight_range:
     parser.error("--candidate-minimum requires --sight-range")
 if args.native_target_types and (not args.sight_range or args.candidate_minimum):
     parser.error("--native-target-types requires --sight-range without --candidate-minimum")
+if args.candidate_ranking and (not args.sight_range or args.candidate_minimum or args.native_target_types):
+    parser.error("--candidate-ranking requires --sight-range without another sight mode")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()
@@ -121,7 +124,7 @@ cpu.hook_add(UC_HOOK_CODE, instruction)
 cpu.hook_add(UC_HOOK_INTR, interrupt)
 
 
-def run(start, *arguments):
+def run(start, *arguments, instruction_budget=4000):
     for register in registers:
         cpu.reg_write(register, 0)
     cpu.reg_write(UC_X86_REG_EFLAGS, 2)
@@ -131,7 +134,7 @@ def run(start, *arguments):
         write(sp + 4 * (index + 1), value)
     cpu.reg_write(UC_X86_REG_ESP, sp)
     cpu.reg_write(UC_X86_REG_EBX, 0x7b8a14)
-    cpu.emu_start(start, stop + 1, count=4000)
+    cpu.emu_start(start, stop + 1, count=instruction_budget)
     if cpu.reg_read(UC_X86_REG_EIP) != stop:
         raise RuntimeError("Native clock exceeded instruction budget")
     return cpu.reg_read(UC_X86_REG_EAX)
@@ -173,7 +176,9 @@ def initialize(source):
 
 
 if args.sight_range:
-    if args.native_target_types:
+    if args.candidate_ranking:
+        from lib.candidate_ranking_probe import capture
+    elif args.native_target_types:
         from lib.sight_type_probe import capture
     else:
         from lib.sight_range_probe import capture
