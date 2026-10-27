@@ -1,0 +1,17 @@
+{
+  "repository": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "directory": "apk/1.8.0/com.supercell.clashroyale_1.8.0_unpack/assets/",
+  "files": [
+    {
+      "path": "reference/locations/tilemap.csv",
+      "source": "locations/tilemap.decoded.csv",
+      "sha256": "b9f8d48b49b465b66d5d316b35cc13c5db73a31fb3be2aa5981fa31d7710209b"
+    },
+    {
+      "path": "reference/locations/locations.csv",
+      "source": "csv_logic/locations.decoded.csv",
+      "sha256": "8cc03a576dc9e6db75126a4d2717fa09bc6667f2ce6f84b37823e56136a37174"
+    }
+  ]
+}

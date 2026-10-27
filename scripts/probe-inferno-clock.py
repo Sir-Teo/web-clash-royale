@@ -35,6 +35,7 @@ parser.add_argument("--spawn-priority", action="store_true", help="Trace project
 parser.add_argument("--target-eligibility", action="store_true", help="Execute native eligibility through source air/ground, target component and team gates")
 parser.add_argument("--primary-geometry", action="store_true", help="Capture exact primary sight, rear/side clipping and adjusted minimum boundaries")
 parser.add_argument("--distant-targets", action="store_true", help="Execute native default-target reference, lane scoring and partial tower collections")
+parser.add_argument("--lane-assignment", action="store_true", help="Load archived lane maps and execute native grid selection and spawn lane storage")
 args = parser.parse_args()
 if args.range_loss and not args.attack_loop:
     parser.error("--range-loss requires --attack-loop")
@@ -64,6 +65,8 @@ if args.primary_geometry and (not args.primary_acquisition or args.spawn_priorit
     parser.error("--primary-geometry requires --sight-range --primary-acquisition without another continuation")
 if args.distant_targets and (not args.primary_acquisition or args.spawn_priority or args.target_eligibility or args.primary_geometry):
     parser.error("--distant-targets requires --sight-range --primary-acquisition without another continuation")
+if args.lane_assignment and (not args.sight_range or args.candidate_minimum or args.native_target_types or args.candidate_ranking or args.primary_acquisition):
+    parser.error("--lane-assignment requires --sight-range without another sight mode")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()
@@ -200,7 +203,9 @@ def initialize(source):
 
 
 if args.sight_range:
-    if args.candidate_ranking or args.primary_acquisition:
+    if args.lane_assignment:
+        from lib.lane_assignment_probe import capture
+    elif args.candidate_ranking or args.primary_acquisition:
         from lib.candidate_ranking_probe import capture
     elif args.native_target_types:
         from lib.sight_type_probe import capture
