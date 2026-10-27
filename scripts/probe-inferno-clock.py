@@ -39,6 +39,7 @@ parser.add_argument("--primary-geometry", action="store_true", help="Capture exa
 parser.add_argument("--distant-targets", action="store_true", help="Execute native default-target reference, lane scoring and partial tower collections")
 parser.add_argument("--lane-assignment", action="store_true", help="Load archived lane maps and execute native grid selection and spawn lane storage")
 parser.add_argument("--tower-layout", action="store_true", help="Execute archived Crown layout selection, coordinate scaling and position stores")
+parser.add_argument("--projectile-formation", action="store_true", help="Execute projectile child formation, map lane and factory coordinate arguments")
 parser.add_argument("--spawn-lanes", action="store_true", help="Execute all direct spawn caller lane-hint argument bindings")
 args = parser.parse_args()
 if args.range_loss and not args.attack_loop:
@@ -79,6 +80,8 @@ if args.tower_layout and not args.lane_assignment:
     parser.error("--tower-layout requires --sight-range --lane-assignment")
 if args.spawn_lanes and (not args.lane_assignment or args.tower_layout):
     parser.error("--spawn-lanes requires --sight-range --lane-assignment without --tower-layout")
+if args.projectile_formation and (not args.lane_assignment or args.tower_layout or args.spawn_lanes):
+    parser.error("--projectile-formation requires --sight-range --lane-assignment without another continuation")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()

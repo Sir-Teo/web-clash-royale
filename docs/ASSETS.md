@@ -633,3 +633,7 @@ New battles use this evidence for troop destinations after nearby acquisition fi
 ## Native primary-transition evidence
 
 `reference/client/primary-transition-native-trace.json` pins the source tables, target-type and setter captures, and five combined instruction blocks. Its 3,536 cases and 91 controls execute primary acquisition into the real setter and range predicate on explicit states. Candidate order, common eligibility, fallback, broadphase and initial clocks remain controlled. The fixture distinguishes nominee acceptance from actual attack reach and records both target/clock effects and unchanged-lock outcomes when no setter is called. It adds no browser combat policy.
+
+## Native projectile child formation evidence
+
+`projectile-formation-native-trace.json` retains the source three-Goblin profile, two loaded maps, 220 cases, forty controls, 760 requested children and seven instruction blocks. It pins the projectile/character/global tables, integer formation data and preceding formation/lane captures. Native coordinate stores and reads feed the actual child loop, lane selector, fixed-point formation helper, owner/account resolution, factory arguments and priority stores. Full projectile/body construction, natural travel/landing and post-factory collision/registration remain excluded. The preceding lane/Crown/spawn-hint outputs remain unchanged.
