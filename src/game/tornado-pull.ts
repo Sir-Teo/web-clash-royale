@@ -1,5 +1,6 @@
 import { attackReach, minimumAttackDistance } from "./attack-range";
 import { attackClockDelta, attackClockRate } from "./attack-clock";
+import { pendingAttackInRange } from "./pending-range";
 import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point } from "./engine";
 import tornado from "./tornado-data.json" with { type: "json" };
@@ -215,16 +216,23 @@ export function resolveWindup(
   if (!attacker.pendingAttack) return { position };
   let remaining = attacker.pendingAttack.remaining;
   let shotSlow = 0;
+  const projected = attacker.nativePendingRange
+    ? { ...attacker, pendingAttack: { ...attacker.pendingAttack } } : undefined;
   for (const [index, frame] of frames.entries()) {
     const step = index + 1,
       status = statuses?.[index];
     position = frame.position;
+    if (projected) {
+      projected.x = position.x;
+      projected.y = position.y;
+      projected.pendingAttack.remaining = remaining;
+    }
     shotSlow = Math.max(0, shotSlow - COMBAT_STEP);
     if (
       (status && (!status.beforeAlive || status.beforeInterrupt)) ||
       frame.stun > 0 ||
-      distance(position, target) >
-        attackReach(attacker, target) ||
+      (projected ? !pendingAttackInRange(projected, target) :
+        distance(position, target) > attackReach(attacker, target)) ||
       (attacker.minimumRange !== undefined &&
         distance(position, target) < minimumAttackDistance(attacker, target))
     )

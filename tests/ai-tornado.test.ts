@@ -1,14 +1,16 @@
 import { attackReach } from "../src/game/attack-range";
 import { describe, expect, it } from "vitest";
-import { Battle, type Team } from "../src/game/engine";
+import { Battle, type Replay, type Team } from "../src/game/engine";
 import { CARD_MAP, type CardId } from "../src/game/cards";
 import { areaSpellTarget, isAreaSpell } from "../src/game/area-spell-targeting";
 import { tornadoEscapeStep } from "../src/game/tornado-pull";
 import { perspective, snapshot } from "../src/network/perspective";
 import golden from "./fixtures/tornado-pull-golden.json";
 
-function setup(team: Team = "red") {
-  const battle = new Battle({ seed: 12, ai: false });
+function setup(team: Team = "red", version?: Replay["version"]) {
+  const initial = new Battle({ seed: 12, ai: false });
+  const battle = version === undefined ? initial : new Battle({ replay: { ...initial.exportReplay(), version } });
+  if (version !== undefined) Object.assign(battle, { replayActions: null, replayDuration: undefined });
   for (const e of battle.entities) e.active = false;
   const enemy = team === "red" ? "blue" : "red";
   const king = battle.entities.find((e) => e.team === team && e.king)!;
@@ -277,10 +279,12 @@ describe("AI Tornado control", () => {
     expect(king.hp).toBe(100);
   });
 
-  it.each(["deep", "edge"] as const)(
-    "tests the release range of a %s ranged attacker",
-    (position) => {
-      const { battle, attacker, king, spawn } = setup();
+  it.each([
+    ["deep", 37], ["edge", 37], ["deep", 38], ["edge", 38],
+  ] as const)(
+    "tests the release range of a %s ranged attacker under rules %s",
+    (position, version) => {
+      const { battle, attacker, king, spawn } = setup("red", version);
       attacker.hp = 0;
       const ranged = spawn("musketeer", king.x, king.y + 3);
       if (position === "edge")
@@ -297,10 +301,10 @@ describe("AI Tornado control", () => {
       });
       const point = { x: king.x, y: ranged.y + 5 };
       const expected = tornadoEscapeStep(ranged, king, [], point);
-      expect(expected !== undefined).toBe(position === "edge");
+      expect(expected !== undefined).toBe(position === "edge" && version === 37);
       battle.play("red", 0, point.x, point.y);
       step(battle, 40);
-      expect(king.hp > 0).toBe(position === "edge");
+      expect(king.hp > 0).toBe(position === "edge" && version === 37);
     },
   );
 

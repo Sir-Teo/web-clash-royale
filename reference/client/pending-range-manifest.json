@@ -1,0 +1,31 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/client/pending-range-native-trace.json",
+      "sha256": "fc330c99478bff9c94ac40aadab87628e90cec318b2afe5e2dbdc87e7cf9a4ce"
+    },
+    {
+      "path": "src/game/combat-data.json",
+      "sha256": "e538686581e80101518c0b24373ad0024a0cfb9878f35bf80ee22dfad079cc54"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "src/game/primary-score-data.json",
+      "sha256": "7971038b66fc29909428a41bbefefcccc30ede29aead651d085af5fd7c0d94f7"
+    }
+  ],
+  "output": {
+    "path": "src/game/pending-range-data.json",
+    "sha256": "53b381a47aaab6405587af84a1b5fac5915372d59faab395a94dc49f2187eee5"
+  },
+  "scope": "Started projectile maximum-range allowance on the existing browser attack clock; complete native owner/target-loss scheduling remains separate"
+}

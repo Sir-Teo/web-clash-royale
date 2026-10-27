@@ -1,0 +1,32 @@
+{
+  "extraRange": 0.5,
+  "startedThresholdMs": 50,
+  "projectileSources": [
+    "Archer",
+    "AxeMan",
+    "BabyDragon",
+    "BlowdartGoblin",
+    "BombTower",
+    "Bomber",
+    "Bowler",
+    "Cannon",
+    "FireSpirits",
+    "IceSpirits",
+    "IceWizard",
+    "KingTower",
+    "LavaHound",
+    "LavaPups",
+    "MegaMinion",
+    "Minion",
+    "Mortar",
+    "Musketeer",
+    "Princess",
+    "PrincessTower",
+    "RoyalGiant",
+    "SpearGoblin",
+    "Witch",
+    "Wizard",
+    "Xbow",
+    "ZapMachine"
+  ]
+}

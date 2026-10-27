@@ -62,6 +62,8 @@ Troops, buildings and Crown Towers now use their archived collision radii for sp
 
 The attacking buildings also use their archived range, cadence and lifetime. Cannon and Tesla both fire every 0.8 seconds; Tesla lasts 40 seconds. Existing replays preserve the earlier building values.
 
+Started projectile attacks can finish when their target moves up to half a tile beyond ordinary reach, when their attack-cycle clock is past its initial 50 ms guard. Troops, buildings and Crown Towers share this recovered range rule. Targets beyond that allowance still cancel the shot, and Mortar keeps its minimum distance. Earlier replays retain their original behavior.
+
 Nine cards with large health or damage gaps now use source values at the roster's established rarity scales. This changes the health of Mini P.E.K.K.A., Bomber, Baby Dragon, Prince and P.E.K.K.A., and the damage of Goblins, Goblin Gang, Spear Goblins, Bomber and Witch. Earlier replays retain their previous values. Regenerate the projection with `npm run assets:card-vitals`.
 
 Balloon's main bomb now uses its archived three-second hit interval, close attack reach and Epic-scaled damage. The delayed bomb it drops on death remains a separate attack. Versions 1–9 keep the earlier main-bomb values during replay.

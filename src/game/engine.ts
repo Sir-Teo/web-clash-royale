@@ -16,6 +16,7 @@ import type { CardId } from "./cards";
 import { clonePosition, deploymentPositions, deploymentTime, deploymentVisualDelay, goblinGangCharacter } from "./deployment";
 import { deploymentYBounds } from "./placement-bounds";
 import { sparkyLoadRate } from "./sparky-preload";
+import { hasPendingRange, pendingAttackInRange } from "./pending-range";
 import { advanceAnimationClock } from "./animation-clock";
 import { areaSpellTarget, isAreaSpell } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targeting";
@@ -158,6 +159,8 @@ export interface Entity extends Point {
   sparkyCharge?: number;
   /** Rules 37: passive Sparky preload advances in real time. */
   nativeSparkyPreload?: true;
+  /** Rules 38: source started-projectile maximum-range allowance. */
+  nativePendingRange?: true;
   dash?: { target: number; elapsed: number; remaining: number };
   dashCooldown?: number;
   attack: number;
@@ -252,7 +255,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -342,7 +345,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 37;
+    this.rulesVersion = r?.version ?? 38;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -456,6 +459,7 @@ export class Battle {
       ...(this.rulesVersion >= 24 ? { rangeRadiusFactor: NATIVE_RANGE_RADIUS_FACTOR } : {}),
       ...(this.rulesVersion >= 25 ? { sightRange: nativeSightRange({ card: "tower", king, radius }) } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
+      ...(this.rulesVersion >= 38 && hasPendingRange("tower", king) ? { nativePendingRange: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
       ...(this.rulesVersion >= 32 ? { nativeDistantTargets: true as const, nativeLane: king ? 0 as const : lane === "left" ? 1 as const : 2 as const } : {}),
@@ -838,6 +842,7 @@ export class Battle {
       ...(this.rulesVersion >= 25 ? { sightRange: nativeSightRange({ card: id, radius }) } : {}),
       ...(this.rulesVersion >= 26 && id === "mortar" ? { minimumRange: mortar.minimumRange } : {}),
       ...(this.rulesVersion >= 27 && id === "electro-wizard" ? { nativeExtraTargets: true as const } : {}),
+      ...(this.rulesVersion >= 38 && hasPendingRange(id) ? { nativePendingRange: true as const } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
@@ -1513,6 +1518,8 @@ export class Battle {
     if (
       current &&
       (this.inRange(e, current) ||
+        (e.nativePendingRange && e.pendingAttack?.target === current.id &&
+          pendingAttackInRange(e, current)) ||
         (current.kind === "troop" &&
           dist(e, current) <= sight + current.radius))
     )
@@ -1778,7 +1785,8 @@ export class Battle {
         const target = this.entities.find(
           (t) => t.id === pending.target && this.validTarget(e, t),
         );
-        if (!target || !this.inRange(e, target)) this.cancelAttack(e);
+        if (!target || !(e.nativePendingRange
+          ? pendingAttackInRange(e, target) : this.inRange(e, target))) this.cancelAttack(e);
         else {
           pending.remaining -= STEP * hitSpeed;
           if (pending.remaining > 1e-8) continue;

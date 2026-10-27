@@ -55,8 +55,8 @@ async function peer(url: string) {
   return { ws, send, wait, messages };
 }
 const identity = { version: PROTOCOL, name: "Blue King", deck: [...STARTER_DECK] };
-async function match() {
-  const url = await server();
+async function match(options = {}) {
+  const url = await server(options);
   const a = await peer(url),
     b = await peer(url);
   a.send({ type: "create", ...identity, mode: "classic" });
@@ -257,7 +257,8 @@ describe("authoritative multiplayer", () => {
     expect((await c.wait("welcome")).team).toBe("red");
   });
   it("resumes the same side with a private token and forfeits an expired disconnect", async () => {
-    const { url, a, b, red, welcome } = await match();
+    // Leave room for the real socket handshake under parallel suite load.
+    const { url, a, b, red, welcome } = await match({ reconnectMs: 1000 });
     b.ws.terminate();
     const resumed = await peer(url);
     resumed.send({

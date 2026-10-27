@@ -1,5 +1,6 @@
 import { attackReach, minimumAttackDistance } from "./attack-range";
 import { attackClockDelta } from "./attack-clock";
+import { pendingAttackInRange } from "./pending-range";
 import type { CardId } from "./cards";
 import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
@@ -46,8 +47,9 @@ export function fatalKingWindups(
       (!nativeElectro && pending.target !== king.id) ||
       kingDamage < king.hp ||
       pending.remaining > 1 ||
-      Math.hypot(attacker.x - primary.x, attacker.y - primary.y) >
-        attackReach(attacker, primary) ||
+      (attacker.nativePendingRange ? !pendingAttackInRange(attacker, primary) :
+        Math.hypot(attacker.x - primary.x, attacker.y - primary.y) >
+          attackReach(attacker, primary)) ||
       (attacker.minimumRange !== undefined &&
         Math.hypot(attacker.x - primary.x, attacker.y - primary.y) < minimumAttackDistance(attacker, primary)) ||
       areas.some(
