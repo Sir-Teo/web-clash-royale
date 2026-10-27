@@ -84,6 +84,10 @@ def capture(env, context):
         from lib.projectile_flight_probe import capture
 
         return capture(env, context)
+    if env["args"].world_steps:
+        from lib.world_step_probe import capture
+
+        return capture(env, context)
     names = {
         "characters": ["Knight", "Archer", "Musketeer", "Giant", "HogRider", "Balloon", "Prince", "InfernoDragon", "ElectroWizard"],
         "buildings": ["Cannon", "Mortar", "InfernoTower", "KingTower", "PrincessTower"],
