@@ -1,0 +1,6427 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "sha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "emulator": "unicorn==2.1.4",
+  "instructionBudget": 16000,
+  "inputs": [
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/logic/globals.csv",
+      "sha256": "28f97cbeb6c6de2489422b1bcc65bebd62db35fbb3ec72203eba29caa33c5641"
+    },
+    {
+      "path": "reference/client/sight-target-types-native-trace.json",
+      "sha256": "f216b428e6e92b710562040b0175b4457bf7afaa4ae675f8a6b906d499285619"
+    },
+    {
+      "path": "reference/client/candidate-ranking-native-trace.json",
+      "sha256": "cf10804f67e8a159ea366f29b5a836af7844b456c56b5cedafa43f168ab259a5"
+    }
+  ],
+  "owner": {
+    "name": "ElectroWizard",
+    "Range": 5000,
+    "MinimumRange": 0,
+    "SightRange": 5500,
+    "CollisionRadius": 500,
+    "Speed": 90,
+    "MultipleTargets": 2,
+    "SightClip": 0,
+    "SightClipSide": 0,
+    "AllTargetsHit": true
+  },
+  "limits": [
+    "Executes native pulse dispatch from0x25cf20 through the completed extra-hit loop at0x25d05e, including the actual extra-target scanner, source clipping defaults, class/radius/priority methods and final range validation.",
+    "The primary lock, entry frame, minimal source-selected objects and candidate eligibility/collection are supplied. The source AllTargetsHit=true setting and synthetic false control are explicit; no-projectile Data pointers remain controlled null.",
+    "The actual damage dispatcher at0x25e61c is intercepted to record target and hit index. Damage allocation, level scaling, shields, HP changes, real death propagation, beam attachment geometry and full attack clocks/state machines are not emulated.",
+    "Primary-clear controls externally clear the lock after the first dispatch and supply false eligibility for that body. They do not establish native death notification behavior. Native team indices are numeric controls, not browser player-color identities."
+  ],
+  "blocks": [
+    {
+      "name": "multipleTargetsField",
+      "start": "0x1db00b",
+      "end": "0x1db036",
+      "interpretation": "MultipleTargets string0x613cbc loads Data+0x2e4.",
+      "instructions": [
+        "1db00b:\t8d 83 a8 b2 e5 ff    \tlea    eax,[ebx-0x1a4d58]",
+        "1db011:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1db015:\t8d b4 24 d0 00 00 00 \tlea    esi,[esp+0xd0]",
+        "1db01c:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1db01f:\te8 7c e3 0b 00       \tcall   2993a0",
+        "1db024:\t89 74 24 04          \tmov    DWORD PTR [esp+0x4],esi",
+        "1db028:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1db02b:\te8 0a 9d 00 00       \tcall   1e4d3a",
+        "1db030:\t89 87 e4 02 00 00    \tmov    DWORD PTR [edi+0x2e4],eax"
+      ]
+    },
+    {
+      "name": "allTargetsHitField",
+      "start": "0x1db03e",
+      "end": "0x1db069",
+      "interpretation": "AllTargetsHit string0x613ccc loads Data byte+0x16d.",
+      "instructions": [
+        "1db03e:\t8d 83 b8 b2 e5 ff    \tlea    eax,[ebx-0x1a4d48]",
+        "1db044:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1db048:\t8d b4 24 b8 00 00 00 \tlea    esi,[esp+0xb8]",
+        "1db04f:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1db052:\te8 49 e3 0b 00       \tcall   2993a0",
+        "1db057:\t89 74 24 04          \tmov    DWORD PTR [esp+0x4],esi",
+        "1db05b:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1db05e:\te8 17 9d 00 00       \tcall   1e4d7a",
+        "1db063:\t88 87 6d 01 00 00    \tmov    BYTE PTR [edi+0x16d],al"
+      ]
+    },
+    {
+      "name": "primaryDispatch",
+      "start": "0x25cf20",
+      "end": "0x25cf83",
+      "interpretation": "Dispatch the assigned primary at hit index0, then enter the extra-target loop when MultipleTargets>=2.",
+      "instructions": [
+        "25cf20:\t8b 47 08             \tmov    eax,DWORD PTR [edi+0x8]",
+        "25cf23:\t89 44 24 38          \tmov    DWORD PTR [esp+0x38],eax",
+        "25cf27:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "25cf2a:\te8 6d 2b 00 00       \tcall   25fa9c",
+        "25cf2f:\t31 f6                \txor    esi,esi",
+        "25cf31:\t83 b8 e4 02 00 00 02 \tcmp    DWORD PTR [eax+0x2e4],0x2",
+        "25cf38:\tb8 ff ff ff ff       \tmov    eax,0xffffffff",
+        "25cf3d:\t0f 4d c6             \tcmovge eax,esi",
+        "25cf40:\t89 44 24 08          \tmov    DWORD PTR [esp+0x8],eax",
+        "25cf44:\t8b 44 24 38          \tmov    eax,DWORD PTR [esp+0x38]",
+        "25cf48:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "25cf4c:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "25cf4f:\te8 c8 16 00 00       \tcall   25e61c",
+        "25cf54:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "25cf57:\te8 40 2b 00 00       \tcall   25fa9c",
+        "25cf5c:\t83 b8 e4 02 00 00 02 \tcmp    DWORD PTR [eax+0x2e4],0x2",
+        "25cf63:\t0f 8c f5 00 00 00    \tjl     25d05e",
+        "25cf69:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "25cf6c:\te8 2b 2b 00 00       \tcall   25fa9c",
+        "25cf71:\t83 b8 e4 02 00 00 02 \tcmp    DWORD PTR [eax+0x2e4],0x2",
+        "25cf78:\t0f 8c e0 00 00 00    \tjl     25d05e",
+        "25cf7e:\te9 88 00 00 00       \tjmp    25d00b"
+      ]
+    },
+    {
+      "name": "extraTargetFallback",
+      "start": "0x25d00b",
+      "end": "0x25d05e",
+      "interpretation": "Run the real extra-target scanner. A null result with AllTargetsHit=true falls back to the current primary; a cleared primary skips that extra dispatch.",
+      "instructions": [
+        "25d00b:\t89 74 24 04          \tmov    DWORD PTR [esp+0x4],esi",
+        "25d00f:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "25d012:\te8 47 09 00 00       \tcall   25d95e",
+        "25d017:\t85 c0                \ttest   eax,eax",
+        "25d019:\t75 1c                \tjne    25d037",
+        "25d01b:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "25d01e:\te8 79 2a 00 00       \tcall   25fa9c",
+        "25d023:\t80 b8 6d 01 00 00 00 \tcmp    BYTE PTR [eax+0x16d],0x0",
+        "25d02a:\t0f 84 53 ff ff ff    \tje     25cf83",
+        "25d030:\t8b 47 08             \tmov    eax,DWORD PTR [edi+0x8]",
+        "25d033:\t85 c0                \ttest   eax,eax",
+        "25d035:\t74 13                \tje     25d04a",
+        "25d037:\t8d 4e 01             \tlea    ecx,[esi+0x1]",
+        "25d03a:\t89 4c 24 08          \tmov    DWORD PTR [esp+0x8],ecx",
+        "25d03e:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "25d042:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "25d045:\te8 d2 15 00 00       \tcall   25e61c",
+        "25d04a:\t46                   \tinc    esi",
+        "25d04b:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "25d04e:\te8 49 2a 00 00       \tcall   25fa9c",
+        "25d053:\t8b 80 e4 02 00 00    \tmov    eax,DWORD PTR [eax+0x2e4]",
+        "25d059:\t48                   \tdec    eax",
+        "25d05a:\t39 c6                \tcmp    esi,eax",
+        "25d05c:\t7c ad                \tjl     25d00b"
+      ]
+    },
+    {
+      "name": "noProjectileControl",
+      "start": "0x25cf83",
+      "end": "0x25cfb8",
+      "interpretation": "With the flag false and no extra target, the native projectile getter returns the controlled null pointer and the loop advances without another dispatch.",
+      "instructions": [
+        "25cf83:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "25cf86:\te8 11 2b 00 00       \tcall   25fa9c",
+        "25cf8b:\t80 b8 6d 01 00 00 00 \tcmp    BYTE PTR [eax+0x16d],0x0",
+        "25cf92:\t0f 85 b2 00 00 00    \tjne    25d04a",
+        "25cf98:\t8b 44 24 24          \tmov    eax,DWORD PTR [esp+0x24]",
+        "25cf9c:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25cf9f:\tc7 44 24 04 00 00 00 \tmov    DWORD PTR [esp+0x4],0x0",
+        "25cfa6:\t00",
+        "25cfa7:\te8 f8 1f f8 ff       \tcall   1defa4",
+        "25cfac:\t89 44 24 38          \tmov    DWORD PTR [esp+0x38],eax",
+        "25cfb0:\t85 c0                \ttest   eax,eax",
+        "25cfb2:\t0f 84 92 00 00 00    \tje     25d04a"
+      ]
+    },
+    {
+      "name": "projectileGetter",
+      "start": "0x1defa4",
+      "end": "0x1defc7",
+      "interpretation": "The native projectile getter reads the controlled Data+0x84/+0x88 pointer; source ElectroWizard has no Projectile row.",
+      "instructions": [
+        "1defa4:\t55                   \tpush   ebp",
+        "1defa5:\t89 e5                \tmov    ebp,esp",
+        "1defa7:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "1defaa:\t8a 45 0c             \tmov    al,BYTE PTR [ebp+0xc]",
+        "1defad:\t8b 4d 08             \tmov    ecx,DWORD PTR [ebp+0x8]",
+        "1defb0:\t8d 91 88 00 00 00    \tlea    edx,[ecx+0x88]",
+        "1defb6:\t81 c1 84 00 00 00    \tadd    ecx,0x84",
+        "1defbc:\t84 c0                \ttest   al,al",
+        "1defbe:\t0f 45 ca             \tcmovne ecx,edx",
+        "1defc1:\t8b 01                \tmov    eax,DWORD PTR [ecx]",
+        "1defc3:\t89 ec                \tmov    esp,ebp",
+        "1defc5:\t5d                   \tpop    ebp",
+        "1defc6:\tc3                   \tret"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "case": "lone-primary",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "lone-primary",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": 6001,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6101,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": 6001,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6101,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6101,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": 6001,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6101,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": 6001,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6101,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6101,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6101,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6101,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "cleared-after-primary",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": true,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "cleared-after-primary",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": true,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -4999,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -4999,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -4999,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -4999,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5000,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5000,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5001,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5001,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5001,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": false,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5001,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "lone-primary",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "lone-primary",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": -6001,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6101,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": -6001,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6101,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6101,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": -6001,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6101,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": -6001,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6101,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6101,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6101,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6101,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "cleared-after-primary",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": true,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "cleared-after-primary",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": true,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 4999,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 4999,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 4999,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 4999,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5000,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5000,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5001,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5001,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5001,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": false,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5001,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "lone-primary",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "lone-primary",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": 6501,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6601,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": 6501,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6601,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6601,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": 6501,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6601,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": 6501,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6601,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6601,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6601,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": 6601,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "cleared-after-primary",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": true,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "cleared-after-primary",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": true,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5499,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5499,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5499,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5499,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5500,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5500,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5500,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5500,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5501,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5501,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5501,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": true,
+      "teamIndex": 0,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": -5501,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": 1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "lone-primary",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "lone-primary",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "split-ground",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "source-balloon-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Balloon",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "ineligible-candidate",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 2500,
+          "y": 0,
+          "eligible": false
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "center-over-edge",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 3700,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -3600,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "a",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "stable-center-tie",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "Giant",
+          "x": 2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "Knight",
+          "x": -2500,
+          "y": 0,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": -6501,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6601,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": -6501,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6601,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6601,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": -6501,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "nominee-range-veto",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6601,
+          "eligible": true
+        },
+        {
+          "id": "a",
+          "name": "PrincessTower",
+          "x": 0,
+          "y": -6501,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6601,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6601,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6601,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "farther-king-alone",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "b",
+          "name": "KingTower",
+          "x": 0,
+          "y": -6601,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "cleared-after-primary",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": true,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "cleared-after-primary",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": false
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": true,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5499,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5499,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5499,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip--1",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5499,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5500,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5500,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5500,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-0",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5500,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "other",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5501,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        },
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5501,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": false,
+      "sourceControl": "synthetic-false",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5501,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "case": "rear-clip-1",
+      "addOwnRadius": true,
+      "teamIndex": 1,
+      "allTargetsHit": true,
+      "sourceControl": "archived",
+      "resolvedSightClip": 1000,
+      "candidates": [
+        {
+          "id": "other",
+          "name": "Knight",
+          "x": 0,
+          "y": 5501,
+          "eligible": true
+        },
+        {
+          "id": "primary",
+          "name": "Knight",
+          "x": 0,
+          "y": -1000,
+          "eligible": true
+        }
+      ],
+      "clearPrimaryAfterFirstDispatch": false,
+      "dispatches": [
+        {
+          "target": "primary",
+          "index": 0
+        },
+        {
+          "target": "primary",
+          "index": 1
+        }
+      ]
+    }
+  ]
+}

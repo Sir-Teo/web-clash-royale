@@ -91,7 +91,8 @@ def capture(env):
     def initialize(owner, candidates, team, add_radius, current):
         nonlocal active, expected_query, broadphase_calls, nominations
         cpu.mem_write(heap, b"\0" * 0x10000)
-        write(body, int(targets[owner["Name"]]["vtable"], 16))
+        kind = "king" if owner["Name"] == "KingTower" else "character"
+        write(body, next(int(v["address"], 16) for v in types["vtables"] if v["kind"] == kind))
         write(body + 0x10, data)
         write(body + 0x1c, team)
         write(body + 0x60, 2)
@@ -166,6 +167,12 @@ def capture(env):
         distance2 = nominee["x"] ** 2 + nominee["y"] ** 2
         selected = nominee["id"] if inner ** 2 <= distance2 <= maximum ** 2 else None
         return nominee["id"], selected
+
+    if env["args"].electro_bolts:
+        from lib.electro_bolts_probe import capture as capture_bolts
+        capture_bolts(env, {"initialize": initialize, "predict": predict, "sources": sources,
+                            "candidate_id": lambda pointer: active[pointer]["id"] if pointer in active else None})
+        return
 
     cases = []
     for name, owner in sources.items():

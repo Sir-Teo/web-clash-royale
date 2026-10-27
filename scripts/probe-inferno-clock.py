@@ -28,6 +28,7 @@ parser.add_argument("--sight-range", action="store_true", help="Capture native s
 parser.add_argument("--candidate-minimum", action="store_true", help="Capture candidate minimum-range boundaries through the sight scanner")
 parser.add_argument("--native-target-types", action="store_true", help="Run sight gates with native target vtables, source class flags and radius getters")
 parser.add_argument("--candidate-ranking", action="store_true", help="Run the native extra-target scanner through ranking and final attack-range validation")
+parser.add_argument("--electro-bolts", action="store_true", help="Capture Electro Wizard's native primary/extra-hit dispatch loop and fallback")
 args = parser.parse_args()
 if args.range_loss and not args.attack_loop:
     parser.error("--range-loss requires --attack-loop")
@@ -43,6 +44,8 @@ if args.native_target_types and (not args.sight_range or args.candidate_minimum)
     parser.error("--native-target-types requires --sight-range without --candidate-minimum")
 if args.candidate_ranking and (not args.sight_range or args.candidate_minimum or args.native_target_types):
     parser.error("--candidate-ranking requires --sight-range without another sight mode")
+if args.electro_bolts and not args.candidate_ranking:
+    parser.error("--electro-bolts requires --sight-range --candidate-ranking")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()
