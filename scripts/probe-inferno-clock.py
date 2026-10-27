@@ -39,6 +39,7 @@ parser.add_argument("--target-eligibility", action="store_true", help="Execute n
 parser.add_argument("--primary-geometry", action="store_true", help="Capture exact primary sight, rear/side clipping and adjusted minimum boundaries")
 parser.add_argument("--distant-targets", action="store_true", help="Execute native default-target reference, lane scoring and partial tower collections")
 parser.add_argument("--lane-assignment", action="store_true", help="Load archived lane maps and execute native grid selection and spawn lane storage")
+parser.add_argument("--terrain-grid", action="store_true", help="Execute archived terrain predicates and bounded non-water coordinate repair")
 parser.add_argument("--tower-layout", action="store_true", help="Execute archived Crown layout selection, coordinate scaling and position stores")
 parser.add_argument("--crown-owners", action="store_true", help="Continue source King placements through native owner selection and stores")
 parser.add_argument("--placement-bounds", action="store_true", help="Execute source building deployment masks and ground-group Y bounds")
@@ -82,6 +83,8 @@ if args.primary_transitions and (not args.primary_acquisition or args.spawn_prio
     parser.error("--primary-transitions requires --sight-range --primary-acquisition without another continuation")
 if args.lane_assignment and (not args.sight_range or args.candidate_minimum or args.native_target_types or args.candidate_ranking or args.primary_acquisition):
     parser.error("--lane-assignment requires --sight-range without another sight mode")
+if args.terrain_grid and (not args.lane_assignment or args.tower_layout or args.spawn_lanes or args.projectile_formation or args.group_formation):
+    parser.error("--terrain-grid requires --sight-range --lane-assignment without another continuation")
 if args.tower_layout and not args.lane_assignment:
     parser.error("--tower-layout requires --sight-range --lane-assignment")
 if args.crown_owners and not args.tower_layout:

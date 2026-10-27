@@ -229,7 +229,11 @@ def capture(env):
         return read(body + 0x8C)
 
     continuation = None
-    if env["args"].tower_layout:
+    if env["args"].terrain_grid:
+        from lib.terrain_grid_probe import create_collector
+
+        continuation = create_collector(env, grid)
+    elif env["args"].tower_layout:
         from lib.tower_layout_probe import create_collector
 
         continuation = create_collector(env, grid, section, selected_sections)
