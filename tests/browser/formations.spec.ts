@@ -4,13 +4,13 @@ import native from "../fixtures/native-formation-golden.json" with { type: "json
 import mixed from "../fixtures/native-mixed-formation-golden.json" with { type: "json" };
 import { expectedEffects } from "./native-assets";
 
-test("native card formations align placement previews and both rendered teams", async ({
+test("rules-34 card formations retain placement previews and both rendered teams", async ({
   page,
 }, info) => {
   test.setTimeout(180000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/tests/fixtures/combat.html?scene=deployment");
+  await page.goto("/tests/fixtures/combat.html?scene=deployment&rules=34");
   await expect(page.locator("#status")).toContainText(
     `${expectedEffects} effects`,
     { timeout: 60000 },

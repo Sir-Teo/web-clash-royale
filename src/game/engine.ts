@@ -248,7 +248,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -296,6 +296,8 @@ export class Battle {
   nativeTowerLayout?: true;
   /** Rules 34 formation/preview policy, also carried by authoritative snapshots. */
   nativeArmyFormation?: true;
+  /** Rules 35 physical lane and parity orientation for ordinary groups. */
+  nativeGroupFormation?: true;
   /** View-only X reflection for previews after a guest rotates the arena. */
   nativeArmyViewMirrored?: true;
   tick = 0;
@@ -334,9 +336,10 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 34;
+    this.rulesVersion = r?.version ?? 35;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
+    this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";

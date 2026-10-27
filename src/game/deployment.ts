@@ -1,3 +1,4 @@
+import { groupFormation } from "./group-formation";
 import { armyFormation } from "./army-formation";
 import { CARD_MAP } from "./cards";
 import type { CardId } from "./cards";
@@ -86,6 +87,12 @@ export function deploymentPositions(
   const count = countOverride ?? CARD_MAP[id].count;
   if (id === "skeleton-army" && rulesVersion >= 34 && count === CARD_MAP[id].count)
     return armyFormation(point, team, armyViewMirrored).map((position) => ({
+      x: Math.max(0.6, Math.min(17.4, position.x)),
+      y: Math.max(0.8, Math.min(31.2, position.y)),
+    }));
+  const physical = rulesVersion >= 35 ? groupFormation(id, point, team, armyViewMirrored) : undefined;
+  if (physical && physical.length === count)
+    return physical.map((position) => ({
       x: Math.max(0.6, Math.min(17.4, position.x)),
       y: Math.max(0.8, Math.min(31.2, position.y)),
     }));

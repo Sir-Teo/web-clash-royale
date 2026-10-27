@@ -1,6 +1,6 @@
 # Asset provenance
 
-The integrated game includes all 74 playable card rows from the archived roster and uses simulation rules version 34 for new battles. The checked-in generated manifests are the authority for the current asset inventory; incremental counts in the feature history below describe earlier imports. Current outputs include 74 native card portraits, 49 animation families, 208 effect exports, 78 combat-audio profiles and 250 combat sound groups. Source metadata, source configuration, inferred scheduling and browser balance choices remain distinct; none establishes current live-game balance or exact original runtime parity.
+The integrated game includes all 74 playable card rows from the archived roster and uses simulation rules version 35 for new battles. The checked-in generated manifests are the authority for the current asset inventory; incremental counts in the feature history below describe earlier imports. Current outputs include 74 native card portraits, 49 animation families, 208 effect exports, 78 combat-audio profiles and 250 combat sound groups. Source metadata, source configuration, inferred scheduling and browser balance choices remain distinct; none establishes current live-game balance or exact original runtime parity.
 
 `src/game/archived-card-stats.json`, `archived-card-vitals.json`, `archived-card-splash.json` and `archived-collision-radii.json` hold the source-derived projections used by the current rules. Their importers retain the pinned CSV bindings; the engine selects older values for recorded rules versions. Card detail panels read the current effective arena stats, including when a historical deck is inspected.
 
@@ -653,3 +653,9 @@ New games use the recovered integer fifteen-body layout with the established tea
 ## Native ordinary group pipeline evidence
 
 `group-formation-native-trace.json` pins the archived summon/character/global rows, portrait aliases, retained formation projections, integer/mixed CPU fixtures and lane trace. Fourteen profiles, 76 cases, 68 controls, 544 child requests and seven instruction blocks connect actual account lookup/parity and radius precedence to map-backed geometry, child selection and factory arguments. Allocation, natural factory lanes, optional Y override, levels/buffs, collision, registration and presentation effects remain explicit boundaries. Earlier lane/Crown/spawn-hint/Barrel captures remain unchanged.
+
+## Physical ordinary group formations (origin rules 35)
+
+`npm run assets:group-formation` verifies the ordinary group capture against the retained formation, Goblin Gang and lane projections, then writes thirteen profiles to `group-formation-data.json`. The manifest pins all inputs and output. Skeleton Army retains its separate rules-34 projection. Source physical lane selection and owner-parity Y reflection now determine ordinary child requests; a rotated guest recovers canonical X before lane lookup and reflects the resulting offsets before browser clamps. Goblin Gang retains the source child order.
+
+Rules 35 apply these requests to actual deployment, Mirror and previews. Authoritative snapshots carry the group policy even when empty; previews follow the host through older/newer wrappers, and receiving an older host clears the newer flag. Historical rules through 34 retain their exact formation path. Existing browser arena clamps and collision remain; the native ordinary caller's optional ground Y override, complete factory allocation/registration and natural owner construction remain outside this projection.

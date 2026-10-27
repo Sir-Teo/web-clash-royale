@@ -177,7 +177,7 @@ describe("Three Musketeers", () => {
     const troops = b.entities.filter((e) => e.card === "musketeer");
     expect(troops).toHaveLength(3);
     expect(troops.map(({ x, y }) => ({ x, y }))).toEqual(
-      deploymentPositions(card, { x: 4, y: 23 }),
+      deploymentPositions(card, { x: 4, y: 23 }, "blue", undefined, b.rulesVersion),
     );
     expect(new Set(troops.map((e) => e.id)).size).toBe(3);
     expect(

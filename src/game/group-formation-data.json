@@ -1,0 +1,70 @@
+{
+  "sourceUnitsPerTile": 1000,
+  "cards": {
+    "archers": {
+      "count": 2,
+      "radius": 500,
+      "angleShift": 0
+    },
+    "guards": {
+      "count": 3,
+      "radius": 800,
+      "angleShift": 0
+    },
+    "three-musketeers": {
+      "count": 3,
+      "radius": 800,
+      "angleShift": 0
+    },
+    "goblins": {
+      "count": 3,
+      "radius": 500,
+      "angleShift": 0
+    },
+    "barbarians": {
+      "count": 4,
+      "radius": 500,
+      "angleShift": 0
+    },
+    "elite-barbarians": {
+      "count": 2,
+      "radius": 700,
+      "angleShift": 0
+    },
+    "fire-spirits": {
+      "count": 3,
+      "radius": 650,
+      "angleShift": 0
+    },
+    "spear-goblins": {
+      "count": 3,
+      "radius": 500,
+      "angleShift": 0
+    },
+    "skeletons": {
+      "count": 4,
+      "radius": 500,
+      "angleShift": 0
+    },
+    "minions": {
+      "count": 3,
+      "radius": 500,
+      "angleShift": 0
+    },
+    "minion-horde": {
+      "count": 6,
+      "radius": 500,
+      "angleShift": 0
+    },
+    "bats": {
+      "count": 5,
+      "radius": 750,
+      "angleShift": 45
+    },
+    "goblin-gang": {
+      "count": 6,
+      "radius": 700,
+      "angleShift": 0
+    }
+  }
+}

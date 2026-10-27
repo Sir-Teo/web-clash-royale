@@ -61,7 +61,7 @@ export function perspective(s: BattleSnapshot, team: Team): BattleSnapshot {
       ...(e.origin ? { origin: rotatePoint(e.origin) } : {}),
     })),
   };
-  if (s.nativeArmyFormation) {
+  if (s.nativeArmyFormation || s.nativeGroupFormation) {
     if (s.nativeArmyViewMirrored) delete view.nativeArmyViewMirrored;
     else view.nativeArmyViewMirrored = true;
   }
@@ -75,7 +75,9 @@ export function snapshot(b: Battle): BattleSnapshot {
     tick: b.tick,
     ...(b.nativeTowerLayout ? { nativeTowerLayout: true as const } : {}),
     ...(b.nativeArmyFormation ? { nativeArmyFormation: true as const } : {}),
-    ...(b.nativeArmyFormation && b.nativeArmyViewMirrored
+    ...(b.nativeGroupFormation ? { nativeGroupFormation: true as const } : {}),
+    ...((b.nativeArmyFormation || b.nativeGroupFormation) &&
+    b.nativeArmyViewMirrored
       ? { nativeArmyViewMirrored: true as const }
       : {}),
     entities: b.entities,
@@ -100,6 +102,7 @@ export function applySnapshot(b: Battle, s: BattleSnapshot, team: Team) {
   b.tick = view.tick;
   b.nativeTowerLayout = view.nativeTowerLayout;
   b.nativeArmyFormation = view.nativeArmyFormation;
+  b.nativeGroupFormation = view.nativeGroupFormation;
   b.nativeArmyViewMirrored = view.nativeArmyViewMirrored;
   b.entities = view.entities;
   b.projectiles = view.projectiles;

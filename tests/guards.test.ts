@@ -65,11 +65,11 @@ describe("archived Guards", () => {
     expect(combatTraits({ card: "guards" })).toMatchObject({
       source: "SkeletonWarrior", windup: 0.4, sight: 5.5,
     });
-    const positions = deploymentPositions("guards", { x: 4, y: 22 });
+    const battle = new Battle({ seed, ai: false, deck, enemyDeck: deck });
+    const positions = deploymentPositions("guards", { x: 4, y: 22 }, "blue", undefined, battle.rulesVersion);
     expect(positions).toHaveLength(3);
     expect(positions.every((p) => Math.hypot(p.x - 4, p.y - 22) <= 0.924 + 1e-8))
       .toBe(true);
-    const battle = new Battle({ seed, ai: false, deck, enemyDeck: deck });
     for (const tower of battle.entities) tower.active = false;
     const beforeElixir = battle.players.blue.elixir;
     expect(battle.play("blue", battle.players.blue.hand.indexOf("guards"), 4, 22).ok)

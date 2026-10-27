@@ -1,0 +1,27 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/client/group-formation-native-trace.json",
+      "sha256": "65bddb82e6273916820406c7aaf8b68f1b398591b8d92d3fbee92bcc098f2d0f"
+    },
+    {
+      "path": "src/game/formation-data.json",
+      "sha256": "36db566ee0f1bfeb9db6eb5cdc1bed616999121d724d674da5662babcecfef90"
+    },
+    {
+      "path": "src/game/goblin-gang-data.json",
+      "sha256": "a880a7c7dd97cd9cf63f503834e677de85c6b0a0fd490386dd18f51c87c34ad3"
+    },
+    {
+      "path": "src/game/distant-target-data.json",
+      "sha256": "1f50b820e1a30fdc94e15c70afcded7c875458b623bb2f722c822e3aeea1630e"
+    }
+  ],
+  "output": {
+    "path": "src/game/group-formation-data.json",
+    "sha256": "892d758d93003db25a0eec11e8897db764fc7a8b2a3ad73099bc3b1b98cee535"
+  },
+  "scope": "Two-account ordinary group factory requests with native physical lanes and owner reflection"
+}

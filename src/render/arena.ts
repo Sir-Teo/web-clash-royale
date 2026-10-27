@@ -988,7 +988,7 @@ export class Arena {
     );
     const previewVersion = id === "skeleton-army" && this.battle
       ? this.battle.nativeArmyFormation ? 34 : 33
-      : this.battle?.rulesVersion ?? 22;
+      : this.battle?.nativeGroupFormation ? 35 : Math.min(this.battle?.rulesVersion ?? 22, 34);
     if (card.kind !== "spell") this.deployment.show(id, point, valid, previewVersion, this.battle?.nativeArmyViewMirrored);
     else this.deployment.object.visible = false;
     this.placementFeedback.classList.toggle("invalid", !valid);

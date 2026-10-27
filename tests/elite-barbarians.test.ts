@@ -48,9 +48,9 @@ describe("archived Elite Barbarians", () => {
     expect(combatTraits({ card: "elite-barbarians" })).toMatchObject({
       source: "AngryBarbarian", windup: 0.4, sight: 5.5,
     });
-    const positions = deploymentPositions("elite-barbarians", { x: 4, y: 22 });
-    expect(positions).toEqual([{ x: 3.3, y: 22 }, { x: 4.7, y: 22 }]);
     const battle = new Battle({ seed, ai: false, deck, enemyDeck: deck });
+    const positions = deploymentPositions("elite-barbarians", { x: 4, y: 22 }, "blue", undefined, battle.rulesVersion);
+    expect(positions).toEqual([{ x: 4.7, y: 22 }, { x: 3.3, y: 22 }]);
     while (battle.players.blue.elixir < 6) battle.step();
     const beforeElixir = battle.players.blue.elixir;
     expect(battle.play("blue", battle.players.blue.hand.indexOf("elite-barbarians"), 4, 22).ok).toBe(true);
