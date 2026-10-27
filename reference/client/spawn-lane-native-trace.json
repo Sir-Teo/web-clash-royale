@@ -1,0 +1,2397 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "sha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "emulator": "unicorn==2.1.4",
+  "inputs": [
+    {
+      "path": "reference/locations/manifest.json",
+      "sha256": "54b29ce949eb65a27cc399314c1872fccb70a2f9464bf48e081593372924fac4"
+    },
+    {
+      "path": "reference/locations/tilemap.csv",
+      "sha256": "b9f8d48b49b465b66d5d316b35cc13c5db73a31fb3be2aa5981fa31d7710209b"
+    },
+    {
+      "path": "reference/locations/locations.csv",
+      "sha256": "8cc03a576dc9e6db75126a4d2717fa09bc6667f2ce6f84b37823e56136a37174"
+    },
+    {
+      "path": "reference/client/lane-assignment-native-trace.json",
+      "sha256": "596c36148df3aee51ae2cad1c464d9023536a814b1a05ea2910a6288ca5dd887"
+    }
+  ],
+  "limits": [
+    "Actual final argument preparation executes at all thirteen direct calls to the pinned spawn function. Eleven write hint=-1; formation frame+0x14 and projectile local+0x84 supply an X hint.",
+    "Caller frames, origin/spawn coordinates, source Data/world/account pointers and existing argument buffers are supplied. Geometry, random formation offsets, complete caller methods and factory allocation do not execute. No indirect caller inventory is claimed.",
+    "Captured coordinate/hint values are passed to the actual bounded native lane-selector/store fragment. Full constructor clamping, world registration, ownership, levels, hint lifecycle and subsequent field mutation remain outside scope.",
+    "Both archived maps load through the retained native copy path. Mirror/half-plane source label checks support a compact nearest-lane reduction; the full native selector remains the executed authority."
+  ],
+  "maps": [
+    {
+      "section": "Map",
+      "mode": 0,
+      "width": 36,
+      "height": 64,
+      "copiedCells": 2304,
+      "nativeCellSha256": "b26825cb1f47f5508eff8b3ac117e6c5689978429020932f89ae9eb95fb8cb01",
+      "laneCells": {
+        "1": 346,
+        "2": 346
+      }
+    },
+    {
+      "section": "MapTeamVsTeam",
+      "mode": 1,
+      "width": 36,
+      "height": 64,
+      "copiedCells": 2304,
+      "nativeCellSha256": "881a712f34cdb61787805336213d50c1d2370986e915b1efbf26949263a06a5d",
+      "laneCells": {
+        "1": 268,
+        "2": 268
+      }
+    }
+  ],
+  "directCallerCount": 13,
+  "blocks": [
+    {
+      "name": "spawnCaller_1ccbdf",
+      "start": "0x1ccbab",
+      "end": "0x1ccbe4",
+      "binding": "formation-frame-x",
+      "instructions": [
+        "1ccbab:\t8b 45 20             \tmov    eax,DWORD PTR [ebp+0x20]",
+        "1ccbae:\t8b 54 24 50          \tmov    edx,DWORD PTR [esp+0x50]",
+        "1ccbb2:\t8b 4d 14             \tmov    ecx,DWORD PTR [ebp+0x14]",
+        "1ccbb5:\t89 4c 24 1c          \tmov    DWORD PTR [esp+0x1c],ecx",
+        "1ccbb9:\t89 44 24 10          \tmov    DWORD PTR [esp+0x10],eax",
+        "1ccbbd:\t89 7c 24 0c          \tmov    DWORD PTR [esp+0xc],edi",
+        "1ccbc1:\t89 54 24 08          \tmov    DWORD PTR [esp+0x8],edx",
+        "1ccbc5:\t89 74 24 04          \tmov    DWORD PTR [esp+0x4],esi",
+        "1ccbc9:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "1ccbcc:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1ccbcf:\tc7 44 24 18 01 00 00 \tmov    DWORD PTR [esp+0x18],0x1",
+        "1ccbd6:\t00",
+        "1ccbd7:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "1ccbde:\t00",
+        "1ccbdf:\te8 b6 c9 ff ff       \tcall   1c959a"
+      ]
+    },
+    {
+      "name": "spawnCaller_212f5d",
+      "start": "0x212f45",
+      "end": "0x212f62",
+      "binding": "no-hint",
+      "instructions": [
+        "212f45:\tc7 44 24 1c ff ff ff \tmov    DWORD PTR [esp+0x1c],0xffffffff",
+        "212f4c:\tff",
+        "212f4d:\tc7 44 24 18 01 00 00 \tmov    DWORD PTR [esp+0x18],0x1",
+        "212f54:\t00",
+        "212f55:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "212f5c:\t00",
+        "212f5d:\te8 38 66 fb ff       \tcall   1c959a"
+      ]
+    },
+    {
+      "name": "spawnCaller_2137d9",
+      "start": "0x2137c9",
+      "end": "0x2137de",
+      "binding": "no-hint",
+      "instructions": [
+        "2137c9:\tc7 44 24 1c ff ff ff \tmov    DWORD PTR [esp+0x1c],0xffffffff",
+        "2137d0:\tff",
+        "2137d1:\tc7 44 24 18 00 00 00 \tmov    DWORD PTR [esp+0x18],0x0",
+        "2137d8:\t00",
+        "2137d9:\te8 bc 5d fb ff       \tcall   1c959a"
+      ]
+    },
+    {
+      "name": "spawnCaller_215339",
+      "start": "0x215321",
+      "end": "0x21533e",
+      "binding": "no-hint",
+      "instructions": [
+        "215321:\tc7 44 24 1c ff ff ff \tmov    DWORD PTR [esp+0x1c],0xffffffff",
+        "215328:\tff",
+        "215329:\tc7 44 24 18 00 00 00 \tmov    DWORD PTR [esp+0x18],0x0",
+        "215330:\t00",
+        "215331:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "215338:\t00",
+        "215339:\te8 5c 42 fb ff       \tcall   1c959a"
+      ]
+    },
+    {
+      "name": "spawnCaller_215cb7",
+      "start": "0x215ca7",
+      "end": "0x215cbc",
+      "binding": "no-hint",
+      "instructions": [
+        "215ca7:\tc7 44 24 1c ff ff ff \tmov    DWORD PTR [esp+0x1c],0xffffffff",
+        "215cae:\tff",
+        "215caf:\tc7 44 24 18 00 00 00 \tmov    DWORD PTR [esp+0x18],0x0",
+        "215cb6:\t00",
+        "215cb7:\te8 de 38 fb ff       \tcall   1c959a"
+      ]
+    },
+    {
+      "name": "spawnCaller_216720",
+      "start": "0x216708",
+      "end": "0x216725",
+      "binding": "no-hint",
+      "instructions": [
+        "216708:\tc7 44 24 1c ff ff ff \tmov    DWORD PTR [esp+0x1c],0xffffffff",
+        "21670f:\tff",
+        "216710:\tc7 44 24 18 00 00 00 \tmov    DWORD PTR [esp+0x18],0x0",
+        "216717:\t00",
+        "216718:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "21671f:\t00",
+        "216720:\te8 75 2e fb ff       \tcall   1c959a"
+      ]
+    },
+    {
+      "name": "spawnCaller_216eee",
+      "start": "0x216ed6",
+      "end": "0x216ef3",
+      "binding": "no-hint",
+      "instructions": [
+        "216ed6:\tc7 44 24 1c ff ff ff \tmov    DWORD PTR [esp+0x1c],0xffffffff",
+        "216edd:\tff",
+        "216ede:\tc7 44 24 18 00 00 00 \tmov    DWORD PTR [esp+0x18],0x0",
+        "216ee5:\t00",
+        "216ee6:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "216eed:\t00",
+        "216eee:\te8 a7 26 fb ff       \tcall   1c959a"
+      ]
+    },
+    {
+      "name": "spawnCaller_217cbf",
+      "start": "0x217ca7",
+      "end": "0x217cc4",
+      "binding": "no-hint",
+      "instructions": [
+        "217ca7:\tc7 44 24 1c ff ff ff \tmov    DWORD PTR [esp+0x1c],0xffffffff",
+        "217cae:\tff",
+        "217caf:\tc7 44 24 18 00 00 00 \tmov    DWORD PTR [esp+0x18],0x0",
+        "217cb6:\t00",
+        "217cb7:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "217cbe:\t00",
+        "217cbf:\te8 d6 18 fb ff       \tcall   1c959a"
+      ]
+    },
+    {
+      "name": "spawnCaller_2188dd",
+      "start": "0x2188c5",
+      "end": "0x2188e2",
+      "binding": "no-hint",
+      "instructions": [
+        "2188c5:\tc7 44 24 1c ff ff ff \tmov    DWORD PTR [esp+0x1c],0xffffffff",
+        "2188cc:\tff",
+        "2188cd:\tc7 44 24 18 00 00 00 \tmov    DWORD PTR [esp+0x18],0x0",
+        "2188d4:\t00",
+        "2188d5:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "2188dc:\t00",
+        "2188dd:\te8 b8 0c fb ff       \tcall   1c959a"
+      ]
+    },
+    {
+      "name": "spawnCaller_21e506",
+      "start": "0x21e4cd",
+      "end": "0x21e50b",
+      "binding": "projectile-stack-x",
+      "instructions": [
+        "21e4cd:\t8b 8c 24 84 00 00 00 \tmov    ecx,DWORD PTR [esp+0x84]",
+        "21e4d4:\t89 4c 24 1c          \tmov    DWORD PTR [esp+0x1c],ecx",
+        "21e4d8:\t89 44 24 10          \tmov    DWORD PTR [esp+0x10],eax",
+        "21e4dc:\t89 7c 24 0c          \tmov    DWORD PTR [esp+0xc],edi",
+        "21e4e0:\t8b 7d 08             \tmov    edi,DWORD PTR [ebp+0x8]",
+        "21e4e3:\t89 74 24 08          \tmov    DWORD PTR [esp+0x8],esi",
+        "21e4e7:\t8b 44 24 78          \tmov    eax,DWORD PTR [esp+0x78]",
+        "21e4eb:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "21e4ef:\t8b 44 24 74          \tmov    eax,DWORD PTR [esp+0x74]",
+        "21e4f3:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "21e4f6:\tc7 44 24 18 00 00 00 \tmov    DWORD PTR [esp+0x18],0x0",
+        "21e4fd:\t00",
+        "21e4fe:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "21e505:\t00",
+        "21e506:\te8 8f b0 fa ff       \tcall   1c959a"
+      ]
+    },
+    {
+      "name": "spawnCaller_21e63e",
+      "start": "0x21e626",
+      "end": "0x21e643",
+      "binding": "no-hint",
+      "instructions": [
+        "21e626:\tc7 44 24 1c ff ff ff \tmov    DWORD PTR [esp+0x1c],0xffffffff",
+        "21e62d:\tff",
+        "21e62e:\tc7 44 24 18 00 00 00 \tmov    DWORD PTR [esp+0x18],0x0",
+        "21e635:\t00",
+        "21e636:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "21e63d:\t00",
+        "21e63e:\te8 57 af fa ff       \tcall   1c959a"
+      ]
+    },
+    {
+      "name": "spawnCaller_220f8b",
+      "start": "0x220f73",
+      "end": "0x220f90",
+      "binding": "no-hint",
+      "instructions": [
+        "220f73:\tc7 44 24 1c ff ff ff \tmov    DWORD PTR [esp+0x1c],0xffffffff",
+        "220f7a:\tff",
+        "220f7b:\tc7 44 24 18 00 00 00 \tmov    DWORD PTR [esp+0x18],0x0",
+        "220f82:\t00",
+        "220f83:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "220f8a:\t00",
+        "220f8b:\te8 0a 86 fa ff       \tcall   1c959a"
+      ]
+    },
+    {
+      "name": "spawnCaller_2214a0",
+      "start": "0x221488",
+      "end": "0x2214a5",
+      "binding": "no-hint",
+      "instructions": [
+        "221488:\tc7 44 24 1c ff ff ff \tmov    DWORD PTR [esp+0x1c],0xffffffff",
+        "22148f:\tff",
+        "221490:\tc7 44 24 18 00 00 00 \tmov    DWORD PTR [esp+0x18],0x0",
+        "221497:\t00",
+        "221498:\tc7 44 24 14 00 00 00 \tmov    DWORD PTR [esp+0x14],0x0",
+        "22149f:\t00",
+        "2214a0:\te8 f5 80 fa ff       \tcall   1c959a"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3500,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3500,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3995,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3995,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4000,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4000,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4005,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4005,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4500,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4500,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8500,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8500,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8995,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9000,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9000,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9005,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9005,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9500,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9500,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9500,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9500,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9995,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9995,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10000,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10000,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10005,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10005,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10500,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10500,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x212f5d",
+      "start": "0x212f45",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x2137d9",
+      "start": "0x2137c9",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x215339",
+      "start": "0x215321",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x215cb7",
+      "start": "0x215ca7",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x216720",
+      "start": "0x216708",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x216eee",
+      "start": "0x216ed6",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x217cbf",
+      "start": "0x217ca7",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x2188dd",
+      "start": "0x2188c5",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3500,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3500,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3995,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3995,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4000,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4000,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4005,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4005,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4500,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4500,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8500,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8500,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8995,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9000,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9000,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9005,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9005,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9500,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9500,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9500,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9500,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9995,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9995,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10000,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10000,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10005,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10005,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10500,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10500,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x21e63e",
+      "start": "0x21e626",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x220f8b",
+      "start": "0x220f73",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "Map",
+      "caller": "0x2214a0",
+      "start": "0x221488",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3500,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3500,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3995,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3995,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4000,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4000,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4005,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4005,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4500,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4500,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8500,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8500,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8995,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9000,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9000,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9005,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9005,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9500,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9500,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9500,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9500,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9995,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9995,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10000,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10000,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10005,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10005,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10500,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x1ccbdf",
+      "start": "0x1ccbab",
+      "binding": "formation-frame-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10500,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x212f5d",
+      "start": "0x212f45",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 1
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x2137d9",
+      "start": "0x2137c9",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x215339",
+      "start": "0x215321",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x215cb7",
+      "start": "0x215ca7",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x216720",
+      "start": "0x216708",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x216eee",
+      "start": "0x216ed6",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x217cbf",
+      "start": "0x217ca7",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x2188dd",
+      "start": "0x2188c5",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3500,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3500,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3995,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 3995,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4000,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4000,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4005,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4005,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4500,
+        "y": 8000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 4500,
+        "y": 16000,
+        "hint": 4000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8500,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8500,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8995,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9000,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9000,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9005,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9005,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9500,
+        "y": 8000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 9000,
+      "prepared": {
+        "x": 9500,
+        "y": 16000,
+        "hint": 9000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9500,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9500,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9995,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 9995,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10000,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10000,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10005,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10005,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10500,
+        "y": 8000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e506",
+      "start": "0x21e4cd",
+      "binding": "projectile-stack-x",
+      "suppliedOriginX": 10000,
+      "prepared": {
+        "x": 10500,
+        "y": 16000,
+        "hint": 10000,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 2
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x21e63e",
+      "start": "0x21e626",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x220f8b",
+      "start": "0x220f73",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    },
+    {
+      "mapSection": "MapTeamVsTeam",
+      "caller": "0x2214a0",
+      "start": "0x221488",
+      "binding": "no-hint",
+      "suppliedOriginX": 4000,
+      "prepared": {
+        "x": 8995,
+        "y": 16000,
+        "hint": -1,
+        "argument6": 0,
+        "argument7": 0
+      },
+      "storedLane": 1
+    }
+  ]
+}

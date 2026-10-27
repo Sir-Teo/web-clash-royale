@@ -218,11 +218,25 @@ def capture(env):
     maps = []
     controls = []
     hinted = []
-    tower_collector = None
+
+    def store_spawn_lane(x, y, hint):
+        nonlocal case_point, fragment
+        case_point = (x, y, hint)
+        fragment = "spawn"
+        write(body + 0x8C, 99)
+        run(0x1C96F4, instruction_budget=1000000)
+        fragment = None
+        return read(body + 0x8C)
+
+    continuation = None
     if env["args"].tower_layout:
         from lib.tower_layout_probe import create_collector
 
-        tower_collector = create_collector(env, grid, section, selected_sections)
+        continuation = create_collector(env, grid, section, selected_sections)
+    elif env["args"].spawn_lanes:
+        from lib.spawn_lane_probe import create_collector
+
+        continuation = create_collector(env, grid, store_spawn_lane)
     for mode, current in [(0, "Map"), (1, "MapTeamVsTeam")]:
         reads = 0
         run(0x2053D2, grid, mode, instruction_budget=1000000)
@@ -257,12 +271,11 @@ def capture(env):
                 },
             }
         )
-        if tower_collector:
-            tower_collector[0](mode, current)
+        if continuation:
+            continuation[0](mode, current)
             continue
 
         def sample(x, y, hint=-1):
-            nonlocal case_point, fragment
             gx, gy = int(x / 500), int(y / 500)
 
             def nearest(column):
@@ -298,12 +311,7 @@ def capture(env):
                         }
                     )
                 )
-            case_point = (x, y, hint)
-            fragment = "spawn"
-            write(body + 0x8C, 99)
-            run(0x1C96F4, instruction_budget=1000000)
-            fragment = None
-            stored = read(body + 0x8C)
+            stored = store_spawn_lane(x, y, hint)
             if stored != expected:
                 raise RuntimeError("Native spawn lane setter differs")
             return {
@@ -351,8 +359,8 @@ def capture(env):
                 }
             )
         write(cells, original)
-    if tower_collector:
-        tower_collector[1](maps)
+    if continuation:
+        continuation[1](maps)
         return
     static = [
         (
