@@ -32,6 +32,7 @@ parser.add_argument("--candidate-ranking", action="store_true", help="Run the na
 parser.add_argument("--electro-bolts", action="store_true", help="Capture Electro Wizard's native primary/extra-hit dispatch loop and fallback")
 parser.add_argument("--primary-acquisition", action="store_true", help="Capture the native primary-lock scanner through its setter-dispatch boundary")
 parser.add_argument("--spawn-priority", action="store_true", help="Trace projectile child-spawn priority fields into native primary acquisition")
+parser.add_argument("--target-eligibility", action="store_true", help="Execute native eligibility through source air/ground, target component and team gates")
 args = parser.parse_args()
 if args.range_loss and not args.attack_loop:
     parser.error("--range-loss requires --attack-loop")
@@ -55,6 +56,8 @@ if args.primary_acquisition and (not args.sight_range or args.candidate_minimum 
     parser.error("--primary-acquisition requires --sight-range without another sight mode")
 if args.spawn_priority and not args.primary_acquisition:
     parser.error("--spawn-priority requires --sight-range --primary-acquisition")
+if args.target_eligibility and (not args.primary_acquisition or args.spawn_priority):
+    parser.error("--target-eligibility requires --sight-range --primary-acquisition without --spawn-priority")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()

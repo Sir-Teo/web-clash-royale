@@ -74,6 +74,8 @@ def capture(env):
             return_hook(collection)
         elif address == 0x25d7c2:
             candidate = read(sp + 8)
+            if env["args"].target_eligibility and candidate != 0:
+                return
             if read(sp + 4) != component or read(sp + 12) != 0:
                 raise RuntimeError("Unexpected eligibility boundary")
             if env["args"].primary_acquisition and candidate == 0:
