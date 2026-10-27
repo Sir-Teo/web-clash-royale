@@ -1,0 +1,5078 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "sha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "emulator": "unicorn==2.1.4",
+  "inputs": [
+    {
+      "path": "reference/client/terrain-grid-native-trace.json",
+      "sha256": "2f3ad877353229f157188f12e525daaa46e89a6181ebc146056922f819672a0b"
+    }
+  ],
+  "limits": [
+    "Both source maps load through the native shared collector. Allocated body, manager/world/level references and caller frame are supplied; the full enclosing character update and its earlier state/class/air/control gates do not execute.",
+    "Actual bounds/special/water predicate, conditional coordinate repair, packed decode, position setter and history stores execute. Body position and first-history fields are supplied as explicit states.",
+    "The helper runs only for blocked/out-of-arena points. Interior nonblocked points need not receive its quarter-cell clamp. The synthetic opaque caller local is not assigned gameplay meaning.",
+    "Retained helper witnesses supply expected water-point results; a separate source bit/arena calculation supplies the caller predicate. All source terrain input hashes are validated.",
+    "Unusual packed edge results are preserved, not repaired. Synthetic cell bits and MAX_INT history controls do not establish naturally reachable units. Complete movement/pathfinding, collision, flying/Hog/knockback lifecycle and surrounding caller behavior remain outside scope. No gameplay change is made."
+  ],
+  "maps": [
+    {
+      "section": "Map",
+      "mode": 0,
+      "width": 36,
+      "height": 64,
+      "copiedCells": 2304,
+      "nativeCellSha256": "b26825cb1f47f5508eff8b3ac117e6c5689978429020932f89ae9eb95fb8cb01",
+      "laneCells": {
+        "1": 346,
+        "2": 346
+      }
+    },
+    {
+      "section": "MapTeamVsTeam",
+      "mode": 1,
+      "width": 36,
+      "height": 64,
+      "copiedCells": 2304,
+      "nativeCellSha256": "881a712f34cdb61787805336213d50c1d2370986e915b1efbf26949263a06a5d",
+      "laneCells": {
+        "1": 268,
+        "2": 268
+      }
+    }
+  ],
+  "blocks": [
+    {
+      "name": "callerPipeline",
+      "start": "0x2158ea",
+      "end": "0x21599c",
+      "interpretation": "Actual world/level reference, position getters, blocked predicate, conditional repair, packed decode and real position store execute. Earlier caller state and subsequent source predicate/update are excluded.",
+      "instructions": [
+        "2158ea:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "2158ed:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "2158f0:\te8 55 3f 00 00       \tcall   21984a",
+        "2158f5:\t8b 40 04             \tmov    eax,DWORD PTR [eax+0x4]",
+        "2158f8:\t89 44 24 60          \tmov    DWORD PTR [esp+0x60],eax",
+        "2158fc:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "2158ff:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "215902:\te8 ef 41 00 00       \tcall   219af6",
+        "215907:\t89 44 24 5c          \tmov    DWORD PTR [esp+0x5c],eax",
+        "21590b:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "21590e:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "215911:\te8 f0 41 00 00       \tcall   219b06",
+        "215916:\t89 44 24 08          \tmov    DWORD PTR [esp+0x8],eax",
+        "21591a:\t8b 44 24 5c          \tmov    eax,DWORD PTR [esp+0x5c]",
+        "21591e:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "215922:\t8b 44 24 60          \tmov    eax,DWORD PTR [esp+0x60]",
+        "215926:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "215929:\te8 d0 64 02 00       \tcall   23bdfe",
+        "21592e:\t84 c0                \ttest   al,al",
+        "215930:\t8b 44 24 64          \tmov    eax,DWORD PTR [esp+0x64]",
+        "215934:\t74 66                \tje     21599c",
+        "215936:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "215939:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "21593c:\te8 09 3f 00 00       \tcall   21984a",
+        "215941:\t89 44 24 60          \tmov    DWORD PTR [esp+0x60],eax",
+        "215945:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "215948:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "21594b:\te8 a6 41 00 00       \tcall   219af6",
+        "215950:\t89 44 24 5c          \tmov    DWORD PTR [esp+0x5c],eax",
+        "215954:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "215957:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "21595a:\te8 a7 41 00 00       \tcall   219b06",
+        "21595f:\t89 44 24 08          \tmov    DWORD PTR [esp+0x8],eax",
+        "215963:\t8b 44 24 5c          \tmov    eax,DWORD PTR [esp+0x5c]",
+        "215967:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "21596b:\t8b 44 24 60          \tmov    eax,DWORD PTR [esp+0x60]",
+        "21596f:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "215972:\te8 37 3a fb ff       \tcall   1c93ae",
+        "215977:\t0f b7 c8             \tmovzx  ecx,ax",
+        "21597a:\tc1 f8 10             \tsar    eax,0x10",
+        "21597d:\t89 44 24 08          \tmov    DWORD PTR [esp+0x8],eax",
+        "215981:\t89 4c 24 04          \tmov    DWORD PTR [esp+0x4],ecx",
+        "215985:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "215988:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "21598b:\tc7 44 24 0c 00 00 00 \tmov    DWORD PTR [esp+0xc],0x0",
+        "215992:\t00",
+        "215993:\te8 16 41 00 00       \tcall   219aae",
+        "215998:\t8b 44 24 64          \tmov    eax,DWORD PTR [esp+0x64]"
+      ]
+    },
+    {
+      "name": "blockedPredicate",
+      "start": "0x23bdfe",
+      "end": "0x23bea2",
+      "interpretation": "Actual arena bounds and source special/water predicates execute.",
+      "instructions": [
+        "23bdfe:\t55                   \tpush   ebp",
+        "23bdff:\t89 e5                \tmov    ebp,esp",
+        "23be01:\t53                   \tpush   ebx",
+        "23be02:\t57                   \tpush   edi",
+        "23be03:\t56                   \tpush   esi",
+        "23be04:\t83 e4 f0             \tand    esp,0xfffffff0",
+        "23be07:\t83 ec 10             \tsub    esp,0x10",
+        "23be0a:\te8 00 00 00 00       \tcall   23be0f",
+        "23be0f:\t5b                   \tpop    ebx",
+        "23be10:\t81 c3 05 cc 57 00    \tadd    ebx,0x57cc05",
+        "23be16:\t8b 4d 10             \tmov    ecx,DWORD PTR [ebp+0x10]",
+        "23be19:\t8b 45 0c             \tmov    eax,DWORD PTR [ebp+0xc]",
+        "23be1c:\t89 ca                \tmov    edx,ecx",
+        "23be1e:\t09 c2                \tor     edx,eax",
+        "23be20:\t78 58                \tjs     23be7a",
+        "23be22:\t8b 55 08             \tmov    edx,DWORD PTR [ebp+0x8]",
+        "23be25:\t69 12 f4 01 00 00    \timul   edx,DWORD PTR [edx],0x1f4",
+        "23be2b:\t39 c2                \tcmp    edx,eax",
+        "23be2d:\t7e 4b                \tjle    23be7a",
+        "23be2f:\t8b 55 08             \tmov    edx,DWORD PTR [ebp+0x8]",
+        "23be32:\t69 52 04 f4 01 00 00 \timul   edx,DWORD PTR [edx+0x4],0x1f4",
+        "23be39:\t39 ca                \tcmp    edx,ecx",
+        "23be3b:\t7e 3d                \tjle    23be7a",
+        "23be3d:\tbf d3 4d 62 10       \tmov    edi,0x10624dd3",
+        "23be42:\tf7 ef                \timul   edi",
+        "23be44:\t89 d6                \tmov    esi,edx",
+        "23be46:\t89 f0                \tmov    eax,esi",
+        "23be48:\tc1 e8 1f             \tshr    eax,0x1f",
+        "23be4b:\tc1 fe 05             \tsar    esi,0x5",
+        "23be4e:\t01 c6                \tadd    esi,eax",
+        "23be50:\t89 c8                \tmov    eax,ecx",
+        "23be52:\tf7 ef                \timul   edi",
+        "23be54:\t89 d7                \tmov    edi,edx",
+        "23be56:\t89 f8                \tmov    eax,edi",
+        "23be58:\tc1 e8 1f             \tshr    eax,0x1f",
+        "23be5b:\tc1 ff 05             \tsar    edi,0x5",
+        "23be5e:\t01 c7                \tadd    edi,eax",
+        "23be60:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "23be63:\t8b 40 0c             \tmov    eax,DWORD PTR [eax+0xc]",
+        "23be66:\t89 7c 24 08          \tmov    DWORD PTR [esp+0x8],edi",
+        "23be6a:\t89 74 24 04          \tmov    DWORD PTR [esp+0x4],esi",
+        "23be6e:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "23be71:\te8 b6 8e fc ff       \tcall   204d2c",
+        "23be76:\t84 c0                \ttest   al,al",
+        "23be78:\t74 0d                \tje     23be87",
+        "23be7a:\tb8 01 00 00 00       \tmov    eax,0x1",
+        "23be7f:\t8d 65 f4             \tlea    esp,[ebp-0xc]",
+        "23be82:\t5e                   \tpop    esi",
+        "23be83:\t5f                   \tpop    edi",
+        "23be84:\t5b                   \tpop    ebx",
+        "23be85:\t5d                   \tpop    ebp",
+        "23be86:\tc3                   \tret",
+        "23be87:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "23be8a:\t8b 40 0c             \tmov    eax,DWORD PTR [eax+0xc]",
+        "23be8d:\t89 7c 24 08          \tmov    DWORD PTR [esp+0x8],edi",
+        "23be91:\t89 74 24 04          \tmov    DWORD PTR [esp+0x4],esi",
+        "23be95:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "23be98:\te8 69 8e fc ff       \tcall   204d06",
+        "23be9d:\t0f b6 c0             \tmovzx  eax,al",
+        "23bea0:\teb dd                \tjmp    23be7f"
+      ]
+    },
+    {
+      "name": "worldReference",
+      "start": "0x21984a",
+      "end": "0x219874",
+      "interpretation": "Actual body manager/world reference getter.",
+      "instructions": [
+        "21984a:\t55                   \tpush   ebp",
+        "21984b:\t89 e5                \tmov    ebp,esp",
+        "21984d:\t53                   \tpush   ebx",
+        "21984e:\t83 e4 f0             \tand    esp,0xfffffff0",
+        "219851:\t83 ec 10             \tsub    esp,0x10",
+        "219854:\te8 00 00 00 00       \tcall   219859",
+        "219859:\t5b                   \tpop    ebx",
+        "21985a:\t81 c3 bb f1 59 00    \tadd    ebx,0x59f1bb",
+        "219860:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "219863:\t8b 40 14             \tmov    eax,DWORD PTR [eax+0x14]",
+        "219866:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "219869:\te8 b8 16 00 00       \tcall   21af26",
+        "21986e:\t8d 65 fc             \tlea    esp,[ebp-0x4]",
+        "219871:\t5b                   \tpop    ebx",
+        "219872:\t5d                   \tpop    ebp",
+        "219873:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "managerWorld",
+      "start": "0x21af26",
+      "end": "0x21af36",
+      "interpretation": "Actual manager+0x28 world getter.",
+      "instructions": [
+        "21af26:\t55                   \tpush   ebp",
+        "21af27:\t89 e5                \tmov    ebp,esp",
+        "21af29:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "21af2c:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "21af2f:\t8b 40 28             \tmov    eax,DWORD PTR [eax+0x28]",
+        "21af32:\t89 ec                \tmov    esp,ebp",
+        "21af34:\t5d                   \tpop    ebp",
+        "21af35:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "positionGetters",
+      "start": "0x219af6",
+      "end": "0x219b16",
+      "interpretation": "Actual current X/Y getters.",
+      "instructions": [
+        "219af6:\t55                   \tpush   ebp",
+        "219af7:\t89 e5                \tmov    ebp,esp",
+        "219af9:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "219afc:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "219aff:\t8b 40 20             \tmov    eax,DWORD PTR [eax+0x20]",
+        "219b02:\t89 ec                \tmov    esp,ebp",
+        "219b04:\t5d                   \tpop    ebp",
+        "219b05:\tc3                   \tret",
+        "219b06:\t55                   \tpush   ebp",
+        "219b07:\t89 e5                \tmov    ebp,esp",
+        "219b09:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "219b0c:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "219b0f:\t8b 40 24             \tmov    eax,DWORD PTR [eax+0x24]",
+        "219b12:\t89 ec                \tmov    esp,ebp",
+        "219b14:\t5d                   \tpop    ebp",
+        "219b15:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "positionSetter",
+      "start": "0x219aae",
+      "end": "0x219ae2",
+      "interpretation": "Actual current position stores and MAX_INT initial-X history handling.",
+      "instructions": [
+        "219aae:\t55                   \tpush   ebp",
+        "219aaf:\t89 e5                \tmov    ebp,esp",
+        "219ab1:\t56                   \tpush   esi",
+        "219ab2:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "219ab5:\t8b 45 14             \tmov    eax,DWORD PTR [ebp+0x14]",
+        "219ab8:\t8b 4d 10             \tmov    ecx,DWORD PTR [ebp+0x10]",
+        "219abb:\t8b 75 0c             \tmov    esi,DWORD PTR [ebp+0xc]",
+        "219abe:\t8b 55 08             \tmov    edx,DWORD PTR [ebp+0x8]",
+        "219ac1:\t81 7a 20 ff ff ff 7f \tcmp    DWORD PTR [edx+0x20],0x7fffffff",
+        "219ac8:\t75 09                \tjne    219ad3",
+        "219aca:\t89 72 28             \tmov    DWORD PTR [edx+0x28],esi",
+        "219acd:\t89 4a 2c             \tmov    DWORD PTR [edx+0x2c],ecx",
+        "219ad0:\t89 42 34             \tmov    DWORD PTR [edx+0x34],eax",
+        "219ad3:\t89 72 20             \tmov    DWORD PTR [edx+0x20],esi",
+        "219ad6:\t89 4a 24             \tmov    DWORD PTR [edx+0x24],ecx",
+        "219ad9:\t89 42 30             \tmov    DWORD PTR [edx+0x30],eax",
+        "219adc:\t8d 65 fc             \tlea    esp,[ebp-0x4]",
+        "219adf:\t5e                   \tpop    esi",
+        "219ae0:\t5d                   \tpop    ebp",
+        "219ae1:\tc3                   \tret"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 250,
+        "y": 14500
+      },
+      "blocked": true,
+      "point": {
+        "x": 250,
+        "y": 14500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 250,
+          "y": 14500
+        },
+        {
+          "kind": "positionStore",
+          "x": 250,
+          "y": 14500,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 250,
+        "y": 15000
+      },
+      "blocked": true,
+      "point": {
+        "x": 0,
+        "y": 14750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 250,
+          "y": 15000
+        },
+        {
+          "kind": "positionStore",
+          "x": 0,
+          "y": 14750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 250,
+        "y": 15750
+      },
+      "blocked": true,
+      "point": {
+        "x": 65036,
+        "y": -1
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 250,
+          "y": 15750
+        },
+        {
+          "kind": "positionStore",
+          "x": 65036,
+          "y": -1,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 250,
+        "y": 16000
+      },
+      "blocked": true,
+      "point": {
+        "x": 65036,
+        "y": -1
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 250,
+          "y": 16000
+        },
+        {
+          "kind": "positionStore",
+          "x": 65036,
+          "y": -1,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 250,
+        "y": 17000
+      },
+      "blocked": true,
+      "point": {
+        "x": 250,
+        "y": 17000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 250,
+          "y": 17000
+        },
+        {
+          "kind": "positionStore",
+          "x": 250,
+          "y": 17000,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 250,
+        "y": 17500
+      },
+      "blocked": true,
+      "point": {
+        "x": 250,
+        "y": 17500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 250,
+          "y": 17500
+        },
+        {
+          "kind": "positionStore",
+          "x": 250,
+          "y": 17500,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 3500,
+        "y": 14500
+      },
+      "blocked": false,
+      "point": {
+        "x": 3500,
+        "y": 14500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 3500,
+        "y": 15000
+      },
+      "blocked": false,
+      "point": {
+        "x": 3500,
+        "y": 15000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 3500,
+        "y": 15750
+      },
+      "blocked": false,
+      "point": {
+        "x": 3500,
+        "y": 15750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 3500,
+        "y": 16000
+      },
+      "blocked": false,
+      "point": {
+        "x": 3500,
+        "y": 16000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 3500,
+        "y": 17000
+      },
+      "blocked": false,
+      "point": {
+        "x": 3500,
+        "y": 17000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 3500,
+        "y": 17500
+      },
+      "blocked": false,
+      "point": {
+        "x": 3500,
+        "y": 17500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 14500
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 14500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 15000
+      },
+      "blocked": true,
+      "point": {
+        "x": 8750,
+        "y": 14750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 15000
+        },
+        {
+          "kind": "positionStore",
+          "x": 8750,
+          "y": 14750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 15750
+      },
+      "blocked": true,
+      "point": {
+        "x": 8750,
+        "y": 14500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 15750
+        },
+        {
+          "kind": "positionStore",
+          "x": 8750,
+          "y": 14500,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 16000
+      },
+      "blocked": true,
+      "point": {
+        "x": 8750,
+        "y": 14750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 16000
+        },
+        {
+          "kind": "positionStore",
+          "x": 8750,
+          "y": 14750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 17000
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 17000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 17500
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 17500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 14500,
+        "y": 14500
+      },
+      "blocked": false,
+      "point": {
+        "x": 14500,
+        "y": 14500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 14500,
+        "y": 15000
+      },
+      "blocked": false,
+      "point": {
+        "x": 14500,
+        "y": 15000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 14500,
+        "y": 15750
+      },
+      "blocked": false,
+      "point": {
+        "x": 14500,
+        "y": 15750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 14500,
+        "y": 16000
+      },
+      "blocked": false,
+      "point": {
+        "x": 14500,
+        "y": 16000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 14500,
+        "y": 17000
+      },
+      "blocked": false,
+      "point": {
+        "x": 14500,
+        "y": 17000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 14500,
+        "y": 17500
+      },
+      "blocked": false,
+      "point": {
+        "x": 14500,
+        "y": 17500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 17750,
+        "y": 14500
+      },
+      "blocked": true,
+      "point": {
+        "x": 17750,
+        "y": 14500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 17750,
+          "y": 14500
+        },
+        {
+          "kind": "positionStore",
+          "x": 17750,
+          "y": 14500,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 17750,
+        "y": 15000
+      },
+      "blocked": true,
+      "point": {
+        "x": 17500,
+        "y": 14750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 17750,
+          "y": 15000
+        },
+        {
+          "kind": "positionStore",
+          "x": 17500,
+          "y": 14750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 17750,
+        "y": 15750
+      },
+      "blocked": true,
+      "point": {
+        "x": 18000,
+        "y": 16500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 17750,
+          "y": 15750
+        },
+        {
+          "kind": "positionStore",
+          "x": 18000,
+          "y": 16500,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 17750,
+        "y": 16000
+      },
+      "blocked": true,
+      "point": {
+        "x": 18000,
+        "y": 16750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 17750,
+          "y": 16000
+        },
+        {
+          "kind": "positionStore",
+          "x": 18000,
+          "y": 16750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 17750,
+        "y": 17000
+      },
+      "blocked": true,
+      "point": {
+        "x": 17750,
+        "y": 17000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 17750,
+          "y": 17000
+        },
+        {
+          "kind": "positionStore",
+          "x": 17750,
+          "y": 17000,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "Map",
+      "input": {
+        "x": 17750,
+        "y": 17500
+      },
+      "blocked": true,
+      "point": {
+        "x": 17750,
+        "y": 17500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 17750,
+          "y": 17500
+        },
+        {
+          "kind": "positionStore",
+          "x": 17750,
+          "y": 17500,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 250,
+        "y": 14500
+      },
+      "blocked": true,
+      "point": {
+        "x": 250,
+        "y": 14500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 250,
+          "y": 14500
+        },
+        {
+          "kind": "positionStore",
+          "x": 250,
+          "y": 14500,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 250,
+        "y": 15000
+      },
+      "blocked": true,
+      "point": {
+        "x": 0,
+        "y": 14750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 250,
+          "y": 15000
+        },
+        {
+          "kind": "positionStore",
+          "x": 0,
+          "y": 14750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 250,
+        "y": 15750
+      },
+      "blocked": true,
+      "point": {
+        "x": 65036,
+        "y": -1
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 250,
+          "y": 15750
+        },
+        {
+          "kind": "positionStore",
+          "x": 65036,
+          "y": -1,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 250,
+        "y": 16000
+      },
+      "blocked": true,
+      "point": {
+        "x": 65036,
+        "y": -1
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 250,
+          "y": 16000
+        },
+        {
+          "kind": "positionStore",
+          "x": 65036,
+          "y": -1,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 250,
+        "y": 17000
+      },
+      "blocked": true,
+      "point": {
+        "x": 250,
+        "y": 17000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 250,
+          "y": 17000
+        },
+        {
+          "kind": "positionStore",
+          "x": 250,
+          "y": 17000,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 250,
+        "y": 17500
+      },
+      "blocked": true,
+      "point": {
+        "x": 250,
+        "y": 17500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 250,
+          "y": 17500
+        },
+        {
+          "kind": "positionStore",
+          "x": 250,
+          "y": 17500,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 3500,
+        "y": 14500
+      },
+      "blocked": false,
+      "point": {
+        "x": 3500,
+        "y": 14500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 3500,
+        "y": 15000
+      },
+      "blocked": false,
+      "point": {
+        "x": 3500,
+        "y": 15000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 3500,
+        "y": 15750
+      },
+      "blocked": false,
+      "point": {
+        "x": 3500,
+        "y": 15750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 3500,
+        "y": 16000
+      },
+      "blocked": false,
+      "point": {
+        "x": 3500,
+        "y": 16000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 3500,
+        "y": 17000
+      },
+      "blocked": false,
+      "point": {
+        "x": 3500,
+        "y": 17000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 3500,
+        "y": 17500
+      },
+      "blocked": false,
+      "point": {
+        "x": 3500,
+        "y": 17500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 14500
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 14500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 15000
+      },
+      "blocked": true,
+      "point": {
+        "x": 8750,
+        "y": 14750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 15000
+        },
+        {
+          "kind": "positionStore",
+          "x": 8750,
+          "y": 14750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 15750
+      },
+      "blocked": true,
+      "point": {
+        "x": 8750,
+        "y": 14500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 15750
+        },
+        {
+          "kind": "positionStore",
+          "x": 8750,
+          "y": 14500,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 16000
+      },
+      "blocked": true,
+      "point": {
+        "x": 8750,
+        "y": 14750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 16000
+        },
+        {
+          "kind": "positionStore",
+          "x": 8750,
+          "y": 14750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 17000
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 17000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 17500
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 17500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 14500,
+        "y": 14500
+      },
+      "blocked": false,
+      "point": {
+        "x": 14500,
+        "y": 14500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 14500,
+        "y": 15000
+      },
+      "blocked": false,
+      "point": {
+        "x": 14500,
+        "y": 15000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 14500,
+        "y": 15750
+      },
+      "blocked": false,
+      "point": {
+        "x": 14500,
+        "y": 15750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 14500,
+        "y": 16000
+      },
+      "blocked": false,
+      "point": {
+        "x": 14500,
+        "y": 16000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 14500,
+        "y": 17000
+      },
+      "blocked": false,
+      "point": {
+        "x": 14500,
+        "y": 17000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 14500,
+        "y": 17500
+      },
+      "blocked": false,
+      "point": {
+        "x": 14500,
+        "y": 17500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 17750,
+        "y": 14500
+      },
+      "blocked": true,
+      "point": {
+        "x": 17750,
+        "y": 14500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 17750,
+          "y": 14500
+        },
+        {
+          "kind": "positionStore",
+          "x": 17750,
+          "y": 14500,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 17750,
+        "y": 15000
+      },
+      "blocked": true,
+      "point": {
+        "x": 17500,
+        "y": 14750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 17750,
+          "y": 15000
+        },
+        {
+          "kind": "positionStore",
+          "x": 17500,
+          "y": 14750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 17750,
+        "y": 15750
+      },
+      "blocked": true,
+      "point": {
+        "x": 18000,
+        "y": 16500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 17750,
+          "y": 15750
+        },
+        {
+          "kind": "positionStore",
+          "x": 18000,
+          "y": 16500,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 17750,
+        "y": 16000
+      },
+      "blocked": true,
+      "point": {
+        "x": 18000,
+        "y": 16750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 17750,
+          "y": 16000
+        },
+        {
+          "kind": "positionStore",
+          "x": 18000,
+          "y": 16750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 17750,
+        "y": 17000
+      },
+      "blocked": true,
+      "point": {
+        "x": 17750,
+        "y": 17000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 17750,
+          "y": 17000
+        },
+        {
+          "kind": "positionStore",
+          "x": 17750,
+          "y": 17000,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "sourceRiverAndBridge",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 17750,
+        "y": 17500
+      },
+      "blocked": true,
+      "point": {
+        "x": 17750,
+        "y": 17500
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 17750,
+          "y": 17500
+        },
+        {
+          "kind": "positionStore",
+          "x": 17750,
+          "y": 17500,
+          "flag": 0
+        }
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "kind": "outsideArenaInput",
+      "section": "Map",
+      "input": {
+        "x": -1000,
+        "y": -1000
+      },
+      "blocked": true,
+      "point": {
+        "x": 250,
+        "y": 250
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": -1000,
+          "y": -1000
+        },
+        {
+          "kind": "positionStore",
+          "x": 250,
+          "y": 250,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "Map",
+      "input": {
+        "x": 0,
+        "y": 0
+      },
+      "blocked": true,
+      "point": {
+        "x": 250,
+        "y": 250
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 0,
+          "y": 0
+        },
+        {
+          "kind": "positionStore",
+          "x": 250,
+          "y": 250,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "Map",
+      "input": {
+        "x": 100,
+        "y": 100
+      },
+      "blocked": true,
+      "point": {
+        "x": 250,
+        "y": 250
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 100,
+          "y": 100
+        },
+        {
+          "kind": "positionStore",
+          "x": 250,
+          "y": 250,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "Map",
+      "input": {
+        "x": 18000,
+        "y": 32000
+      },
+      "blocked": true,
+      "point": {
+        "x": 17750,
+        "y": 31750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 18000,
+          "y": 32000
+        },
+        {
+          "kind": "positionStore",
+          "x": 17750,
+          "y": 31750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "Map",
+      "input": {
+        "x": 20000,
+        "y": 35000
+      },
+      "blocked": true,
+      "point": {
+        "x": 17750,
+        "y": 31750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 20000,
+          "y": 35000
+        },
+        {
+          "kind": "positionStore",
+          "x": 17750,
+          "y": 31750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "Map",
+      "input": {
+        "x": -1000,
+        "y": 16000
+      },
+      "blocked": true,
+      "point": {
+        "x": 65036,
+        "y": -1
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": -1000,
+          "y": 16000
+        },
+        {
+          "kind": "positionStore",
+          "x": 65036,
+          "y": -1,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "Map",
+      "input": {
+        "x": 20000,
+        "y": 16000
+      },
+      "blocked": true,
+      "point": {
+        "x": 18000,
+        "y": 16750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 20000,
+          "y": 16000
+        },
+        {
+          "kind": "positionStore",
+          "x": 18000,
+          "y": 16750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": -1000
+      },
+      "blocked": true,
+      "point": {
+        "x": 9000,
+        "y": 250
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": -1000
+        },
+        {
+          "kind": "positionStore",
+          "x": 9000,
+          "y": 250,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 35000
+      },
+      "blocked": true,
+      "point": {
+        "x": 9000,
+        "y": 31750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 35000
+        },
+        {
+          "kind": "positionStore",
+          "x": 9000,
+          "y": 31750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "conditionalClampAndHistory",
+      "section": "Map",
+      "input": {
+        "x": 100,
+        "y": 8000
+      },
+      "blocked": false,
+      "point": {
+        "x": 100,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "conditionalClampAndHistory",
+      "section": "Map",
+      "input": {
+        "x": 17900,
+        "y": 8000
+      },
+      "blocked": false,
+      "point": {
+        "x": 17900,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "conditionalClampAndHistory",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 100
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 100
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "conditionalClampAndHistory",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 31900
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 31900
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "conditionalClampAndHistory",
+      "section": "Map",
+      "input": {
+        "x": 2147483647,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 17750,
+        "y": 8000
+      },
+      "history": {
+        "x": 17750,
+        "y": 8000
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 2147483647,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 17750,
+          "y": 8000,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "conditionalClampAndHistory",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 2147483647
+      },
+      "blocked": true,
+      "point": {
+        "x": 9000,
+        "y": 31750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 2147483647
+        },
+        {
+          "kind": "positionStore",
+          "x": 9000,
+          "y": 31750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 0,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 1,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 2,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 3,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 4,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 5,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 6,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 7,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 8,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 9,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 10,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 11,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 12,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 13,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 14,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 15,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 16,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 17,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 18,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 19,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 20,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 21,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 22,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 23,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 24,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 25,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 26,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 27,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 28,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 29,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 30,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 31,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 32,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 33,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 34,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 35,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 36,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 37,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 38,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 39,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 40,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 41,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 42,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 43,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 44,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 45,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 46,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 47,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 48,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 49,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 50,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 51,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 52,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 53,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 54,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 55,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 56,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 57,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 58,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 59,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 60,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 61,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 62,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 63,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 64,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 65,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 66,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 67,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 68,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 69,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 70,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 71,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 72,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 73,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 74,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 75,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 76,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 77,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 78,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 79,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 80,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 81,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 82,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 83,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 84,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 85,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 86,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 87,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 88,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 89,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 90,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 91,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 92,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 93,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 94,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 95,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 96,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 97,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 98,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 99,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 100,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 101,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 102,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 103,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 104,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 105,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 106,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 107,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 108,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 109,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 110,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 111,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 112,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 113,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 114,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 115,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 116,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 117,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 118,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 119,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 120,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 121,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 122,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 123,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 124,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 125,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 126,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "Map",
+      "providedCellBits": 127,
+      "blocked": true
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ],
+      "providedCellBits": 0
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ],
+      "providedCellBits": 1
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ],
+      "providedCellBits": 2
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 9000,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 9000,
+          "y": 8000,
+          "flag": 0
+        }
+      ],
+      "providedCellBits": 16
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 8750,
+        "y": 7750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 8750,
+          "y": 7750,
+          "flag": 0
+        }
+      ],
+      "providedCellBits": 32
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 9000,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 9000,
+          "y": 8000,
+          "flag": 0
+        }
+      ],
+      "providedCellBits": 64
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 8750,
+        "y": 7750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 8750,
+          "y": 7750,
+          "flag": 0
+        }
+      ],
+      "providedCellBits": 48
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 8750,
+        "y": 7750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 8750,
+          "y": 7750,
+          "flag": 0
+        }
+      ],
+      "providedCellBits": 96
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 9000,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 9000,
+          "y": 8000,
+          "flag": 0
+        }
+      ],
+      "providedCellBits": 80
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "Map",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 8750,
+        "y": 7750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 8750,
+          "y": 7750,
+          "flag": 0
+        }
+      ],
+      "providedCellBits": 127
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": -1000,
+        "y": -1000
+      },
+      "blocked": true,
+      "point": {
+        "x": 250,
+        "y": 250
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": -1000,
+          "y": -1000
+        },
+        {
+          "kind": "positionStore",
+          "x": 250,
+          "y": 250,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 0,
+        "y": 0
+      },
+      "blocked": true,
+      "point": {
+        "x": 250,
+        "y": 250
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 0,
+          "y": 0
+        },
+        {
+          "kind": "positionStore",
+          "x": 250,
+          "y": 250,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 100,
+        "y": 100
+      },
+      "blocked": true,
+      "point": {
+        "x": 250,
+        "y": 250
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 100,
+          "y": 100
+        },
+        {
+          "kind": "positionStore",
+          "x": 250,
+          "y": 250,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 18000,
+        "y": 32000
+      },
+      "blocked": true,
+      "point": {
+        "x": 17750,
+        "y": 31750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 18000,
+          "y": 32000
+        },
+        {
+          "kind": "positionStore",
+          "x": 17750,
+          "y": 31750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 20000,
+        "y": 35000
+      },
+      "blocked": true,
+      "point": {
+        "x": 17750,
+        "y": 31750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 20000,
+          "y": 35000
+        },
+        {
+          "kind": "positionStore",
+          "x": 17750,
+          "y": 31750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": -1000,
+        "y": 16000
+      },
+      "blocked": true,
+      "point": {
+        "x": 65036,
+        "y": -1
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": -1000,
+          "y": 16000
+        },
+        {
+          "kind": "positionStore",
+          "x": 65036,
+          "y": -1,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 20000,
+        "y": 16000
+      },
+      "blocked": true,
+      "point": {
+        "x": 18000,
+        "y": 16750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 20000,
+          "y": 16000
+        },
+        {
+          "kind": "positionStore",
+          "x": 18000,
+          "y": 16750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": -1000
+      },
+      "blocked": true,
+      "point": {
+        "x": 9000,
+        "y": 250
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": -1000
+        },
+        {
+          "kind": "positionStore",
+          "x": 9000,
+          "y": 250,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "outsideArenaInput",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 35000
+      },
+      "blocked": true,
+      "point": {
+        "x": 9000,
+        "y": 31750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 35000
+        },
+        {
+          "kind": "positionStore",
+          "x": 9000,
+          "y": 31750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "conditionalClampAndHistory",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 100,
+        "y": 8000
+      },
+      "blocked": false,
+      "point": {
+        "x": 100,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "conditionalClampAndHistory",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 17900,
+        "y": 8000
+      },
+      "blocked": false,
+      "point": {
+        "x": 17900,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "conditionalClampAndHistory",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 100
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 100
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "conditionalClampAndHistory",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 31900
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 31900
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ]
+    },
+    {
+      "kind": "conditionalClampAndHistory",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 2147483647,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 17750,
+        "y": 8000
+      },
+      "history": {
+        "x": 17750,
+        "y": 8000
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 2147483647,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 17750,
+          "y": 8000,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "conditionalClampAndHistory",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 2147483647
+      },
+      "blocked": true,
+      "point": {
+        "x": 9000,
+        "y": 31750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 2147483647
+        },
+        {
+          "kind": "positionStore",
+          "x": 9000,
+          "y": 31750,
+          "flag": 0
+        }
+      ]
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 0,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 1,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 2,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 3,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 4,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 5,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 6,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 7,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 8,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 9,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 10,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 11,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 12,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 13,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 14,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 15,
+      "blocked": false
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 16,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 17,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 18,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 19,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 20,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 21,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 22,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 23,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 24,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 25,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 26,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 27,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 28,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 29,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 30,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 31,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 32,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 33,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 34,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 35,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 36,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 37,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 38,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 39,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 40,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 41,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 42,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 43,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 44,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 45,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 46,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 47,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 48,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 49,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 50,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 51,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 52,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 53,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 54,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 55,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 56,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 57,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 58,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 59,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 60,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 61,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 62,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 63,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 64,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 65,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 66,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 67,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 68,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 69,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 70,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 71,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 72,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 73,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 74,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 75,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 76,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 77,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 78,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 79,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 80,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 81,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 82,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 83,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 84,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 85,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 86,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 87,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 88,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 89,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 90,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 91,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 92,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 93,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 94,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 95,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 96,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 97,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 98,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 99,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 100,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 101,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 102,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 103,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 104,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 105,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 106,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 107,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 108,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 109,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 110,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 111,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 112,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 113,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 114,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 115,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 116,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 117,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 118,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 119,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 120,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 121,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 122,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 123,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 124,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 125,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 126,
+      "blocked": true
+    },
+    {
+      "kind": "providedPredicateBits",
+      "section": "MapTeamVsTeam",
+      "providedCellBits": 127,
+      "blocked": true
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ],
+      "providedCellBits": 0
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ],
+      "providedCellBits": 1
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": false,
+      "point": {
+        "x": 9000,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": false
+        }
+      ],
+      "providedCellBits": 2
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 9000,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 9000,
+          "y": 8000,
+          "flag": 0
+        }
+      ],
+      "providedCellBits": 16
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 8750,
+        "y": 7750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 8750,
+          "y": 7750,
+          "flag": 0
+        }
+      ],
+      "providedCellBits": 32
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 9000,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 9000,
+          "y": 8000,
+          "flag": 0
+        }
+      ],
+      "providedCellBits": 64
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 8750,
+        "y": 7750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 8750,
+          "y": 7750,
+          "flag": 0
+        }
+      ],
+      "providedCellBits": 48
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 8750,
+        "y": 7750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 8750,
+          "y": 7750,
+          "flag": 0
+        }
+      ],
+      "providedCellBits": 96
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 9000,
+        "y": 8000
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 9000,
+          "y": 8000,
+          "flag": 0
+        }
+      ],
+      "providedCellBits": 80
+    },
+    {
+      "kind": "providedPipelineBits",
+      "section": "MapTeamVsTeam",
+      "input": {
+        "x": 9000,
+        "y": 8000
+      },
+      "blocked": true,
+      "point": {
+        "x": 8750,
+        "y": 7750
+      },
+      "history": {
+        "x": 1234,
+        "y": 5678
+      },
+      "events": [
+        {
+          "kind": "blockedPredicate",
+          "result": true
+        },
+        {
+          "kind": "repairRequest",
+          "x": 9000,
+          "y": 8000
+        },
+        {
+          "kind": "positionStore",
+          "x": 8750,
+          "y": 7750,
+          "flag": 0
+        }
+      ],
+      "providedCellBits": 127
+    }
+  ]
+}

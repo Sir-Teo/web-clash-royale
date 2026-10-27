@@ -26,6 +26,10 @@ def create_collector(env, grid):
             (0x35C990, 0x35CA5D),
         ]
     )
+    if env["args"].position_repair:
+        from lib.position_repair_probe import create_collector
+
+        return create_collector(env, grid)
     rows = list(
         csv.reader(io.StringIO(Path("reference/locations/tilemap.csv").read_text()))
     )
