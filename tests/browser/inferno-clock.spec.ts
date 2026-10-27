@@ -58,7 +58,7 @@ for (const card of ["inferno-tower", "inferno-dragon"] as const)
     const check = async (seconds: number) => {
       const current = await state(),
         visual = await beams();
-      expect(current.version).toBe(32);
+      expect(current.version).toBe(33);
       expect(current.time).toBe(seconds);
       expect(current.bodies).toHaveLength(8);
       expect(visual).toHaveLength(8);

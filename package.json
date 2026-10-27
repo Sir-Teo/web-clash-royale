@@ -22,6 +22,7 @@
     "assets:attack-clock": "node scripts/import-attack-clock.mjs",
     "assets:primary-score": "node scripts/import-primary-score.mjs",
     "assets:primary-geometry": "node scripts/import-primary-geometry.mjs",
+    "assets:barrel-formation": "node scripts/import-barrel-formation.mjs",
     "assets:distant-targets": "node scripts/import-distant-targets.mjs",
     "assets:tower-layout": "node scripts/import-tower-layout.mjs",
     "assets:card-stats": "node scripts/import-card-stats.mjs",

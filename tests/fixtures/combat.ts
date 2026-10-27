@@ -48,6 +48,7 @@ let battle: Battle,
   last = performance.now();
 let guestLayoutToggle = false;
 let distantStage = 0;
+let barrelSpawnIds: number[] = [];
 let victims: { team: Team; x: number; y: number }[] = [];
 const clockModes = new Map<number, string>();
 const attackClockTargets = new Map<number, number>();
@@ -106,8 +107,8 @@ function setup() {
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
-  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "primary-score", "primary-geometry", "tower-layout", "distant-targets"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31", "32"].includes(rangeRules ?? "")) {
-    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 } });
+  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "primary-score", "primary-geometry", "tower-layout", "distant-targets", "barrel-formation"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33"].includes(rangeRules ?? "")) {
+    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
   for (const t of battle.entities) t.active = false;
@@ -126,9 +127,9 @@ function setup() {
     scenario !== "death" && scenario !== "deployment";
   (document.querySelector("#attack-config") as HTMLElement).hidden =
     scenario !== "attack-impacts" && scenario !== "inferno-clock" && scenario !== "attack-range" && scenario !== "sight-range";
-  (document.querySelector("#range-out") as HTMLElement).hidden = scenario !== "attack-range" && scenario !== "sight-range" && scenario !== "primary-geometry" && scenario !== "distant-targets";
+  (document.querySelector("#range-out") as HTMLElement).hidden = scenario !== "attack-range" && scenario !== "sight-range" && scenario !== "primary-geometry" && scenario !== "distant-targets" && scenario !== "barrel-formation";
   document.querySelector("#range-out")!.textContent = scenario === "sight-range"
-    ? "Move targets outside sight" : scenario === "distant-targets" ? "Remove lane tower, then reveal Cannon" : scenario === "primary-geometry" ? "Bring selected target into attack reach" : "Move targets outside attack reach";
+    ? "Move targets outside sight" : scenario === "barrel-formation" ? "Release Goblins to attack" : scenario === "distant-targets" ? "Remove lane tower, then reveal Cannon" : scenario === "primary-geometry" ? "Bring selected target into attack reach" : "Move targets outside attack reach";
   (document.querySelector("#minimum-config") as HTMLElement).hidden = scenario !== "minimum-range";
   (document.querySelector("#electro-config") as HTMLElement).hidden = scenario !== "electro-bolts";
   (document.querySelector("#break-shield") as HTMLElement).hidden =
@@ -177,7 +178,7 @@ function setup() {
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king" && scenario !== "tower-layout" &&
       !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
-      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "primary-score", "primary-geometry", "distant-targets", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
+      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "primary-score", "primary-geometry", "distant-targets", "barrel-formation", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -821,6 +822,15 @@ function setup() {
       attacker.target = target.id;
       clockModes.set(attacker.id, "range");
     }
+  } else if (scenario === "barrel-formation") {
+    const team: Team = new URL(location.href).searchParams.get("team") === "red" ? "red" : "blue";
+    const target = battle.entities.find((body) => body.team !== team && body.lane === "left")!;
+    const previous = new Set(battle.entities.map((body) => body.id));
+    cast("goblin-barrel", team, target.x, target.y);
+    for (let tick = 0; tick < 240 && battle.projectiles.some((shot) => shot.style === "goblin-barrel"); tick++) battle.step();
+    const children = battle.entities.filter((body) => !previous.has(body.id) && body.card === "goblins");
+    barrelSpawnIds = children.map((body) => body.id);
+    for (const body of children) body.active = false;
   } else if (scenario === "distant-targets") {
     distantStage = 0;
     const team: Team = new URL(location.href).searchParams.get("team") === "blue" ? "blue" : "red";
@@ -1170,6 +1180,11 @@ document.querySelector("#clock-freeze")!.addEventListener("click", () => {
       cast("freeze", team === "blue" ? "red" : "blue", x, team === "blue" ? 21 : 11);
 });
 document.querySelector("#range-out")!.addEventListener("click", () => {
+  if (sceneSelect.value === "barrel-formation") {
+    for (const body of battle.entities.filter((body) => barrelSpawnIds.includes(body.id)))
+      Object.assign(body, { active: true, deploy: 0, cooldown: 0, speed: 0 });
+    return;
+  }
   if (sceneSelect.value === "distant-targets") {
     for (const actor of battle.entities.filter((body) => primaryScoreTargets.has(body.id))) {
       const ids = primaryScoreTargets.get(actor.id)!.candidates;
@@ -1440,6 +1455,21 @@ function render(now: number) {
       bodies: battle.entities.filter((entity) => clockModes.has(entity.id) && entity.card.startsWith("inferno-"))
         .map((entity) => ({ id: entity.id, card: entity.card, team: entity.team,
           mode: clockModes.get(entity.id), lock: entity.inferno })) });
+  if (sceneSelect.value === "barrel-formation")
+    (document.querySelector("#destruction") as HTMLElement).dataset.barrelFormation = JSON.stringify({
+      version: battle.rulesVersion, tick: battle.tick,
+      children: battle.entities.filter((body) => barrelSpawnIds.includes(body.id)).map((body) => {
+        const visual = (arena as any).units.get(body.id);
+        return { id: body.id, team: body.team, x: body.x, y: body.y, hp: body.hp,
+          lane: body.nativeLane, bias: body.targetScoreBias, deploy: body.deploy,
+          native: !!visual?.sprite, worldX: visual?.object.position.x, worldZ: visual?.object.position.z };
+      }),
+      target: (() => {
+        const team = battle.entities.find((body) => barrelSpawnIds.includes(body.id))?.team;
+        const target = battle.entities.find((body) => body.team !== team && body.lane === "left")!;
+        return { id: target.id, hp: target.hp, x: target.x, y: target.y };
+      })(),
+    });
   if (sceneSelect.value === "distant-targets")
     (document.querySelector("#destruction") as HTMLElement).dataset.distantTargets = JSON.stringify({
       version: battle.rulesVersion, tick: battle.tick, stage: distantStage,

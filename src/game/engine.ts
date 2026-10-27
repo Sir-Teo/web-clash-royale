@@ -1,3 +1,4 @@
+import { barrelFormation } from "./barrel-formation";
 import { distantTarget, spawnLane, type NativeLane } from "./distant-targets";
 import { attackReach, minimumAttackDistance, NATIVE_RANGE_RADIUS_FACTOR } from "./attack-range";
 import { areaRandom, areaRandomSeed } from "./area-random";
@@ -247,7 +248,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -329,7 +330,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 32;
+    this.rulesVersion = r?.version ?? 33;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
@@ -2366,6 +2367,7 @@ export class Battle {
       }
       if (p.style === "goblin-barrel") {
         if (p.remaining <= 1e-8) {
+          const formation = this.rulesVersion >= 33 ? barrelFormation({ x: p.tx, y: p.ty }, p.team) : undefined;
           for (let i = 0; i < goblinBarrel.spawnCount; i++) {
             const angle =
               -Math.PI / 2 + (i * Math.PI * 2) / goblinBarrel.spawnCount;
@@ -2373,8 +2375,8 @@ export class Battle {
             this.spawn(
               goblinBarrel.spawnCard as CardId,
               p.team,
-              clamp(p.tx + Math.cos(angle) * spread, 0.6, 17.4),
-              clamp(p.ty + Math.sin(angle) * spread, 0.8, 31.2),
+              clamp(formation?.[i].x ?? p.tx + Math.cos(angle) * spread, 0.6, 17.4),
+              clamp(formation?.[i].y ?? p.ty + Math.sin(angle) * spread, 0.8, 31.2),
               true, 1, 0, p.tx,
             );
             this.entities.at(-1)!.deploy = goblinBarrel.spawnDeployTime;

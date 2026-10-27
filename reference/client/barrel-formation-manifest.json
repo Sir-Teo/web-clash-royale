@@ -1,0 +1,23 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/client/projectile-formation-native-trace.json",
+      "sha256": "2ae5e3a477e78797a517eed902d9c3ce80ffe1787265c19982ca6692e2a2a43c"
+    },
+    {
+      "path": "src/game/formation-data.json",
+      "sha256": "36db566ee0f1bfeb9db6eb5cdc1bed616999121d724d674da5662babcecfef90"
+    },
+    {
+      "path": "src/game/distant-target-data.json",
+      "sha256": "1f50b820e1a30fdc94e15c70afcded7c875458b623bb2f722c822e3aeea1630e"
+    }
+  ],
+  "output": {
+    "path": "src/game/barrel-formation-data.json",
+    "sha256": "ec43adbc005e3852f653d8e4d46f1b455ba42bfe2b761e9a6286bd13d8fca550"
+  },
+  "scope": "Regular-arena Barrel child formation requests before browser edge clamps and collision adjustment"
+}
