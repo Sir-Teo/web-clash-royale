@@ -15,6 +15,7 @@ import { CARD_MAP, LEGACY_BALLOON_STATS, LEGACY_BUILDING_STATS, LEGACY_CARD_SPLA
 import type { CardId } from "./cards";
 import { clonePosition, deploymentPositions, deploymentTime, deploymentVisualDelay, goblinGangCharacter } from "./deployment";
 import { deploymentYBounds } from "./placement-bounds";
+import { sparkyLoadRate } from "./sparky-preload";
 import { advanceAnimationClock } from "./animation-clock";
 import { areaSpellTarget, isAreaSpell } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targeting";
@@ -155,6 +156,8 @@ export interface Entity extends Point {
     stage: 0 | 1 | 2;
   };
   sparkyCharge?: number;
+  /** Rules 37: passive Sparky preload advances in real time. */
+  nativeSparkyPreload?: true;
   dash?: { target: number; elapsed: number; remaining: number };
   dashCooldown?: number;
   attack: number;
@@ -249,7 +252,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -339,7 +342,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 36;
+    this.rulesVersion = r?.version ?? 37;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -853,6 +856,7 @@ export class Battle {
       stun: 0,
       attack: 0,
       ...(id === "sparky" ? { sparkyCharge: 0 } : {}),
+      ...(id === "sparky" && this.rulesVersion >= 37 ? { nativeSparkyPreload: true as const } : {}),
       move: 0,
       ...(this.rulesVersion >= 17 && Number.isFinite(chargeRange(id))
         ? { chargeDistance: 0 } : {}),
@@ -1596,7 +1600,11 @@ export class Battle {
           : attackClockRate(e, !!e.rage, !!e.slow);
       e.age += STEP;
       e.attack = Math.max(0, e.attack - STEP * hitSpeed);
-      e.cooldown = Math.max(0, e.cooldown - STEP * hitSpeed);
+      const cooldownBefore = e.cooldown;
+      const cooldownRate = e.nativeSparkyPreload && !e.pendingAttack
+        ? sparkyLoadRate(e, false, hitSpeed) : hitSpeed;
+      e.cooldown = Math.max(0, e.cooldown - STEP * cooldownRate);
+      let preloadTarget: Entity | undefined;
       if (e.card === "bandit")
         e.dashCooldown = Math.max(0, (e.dashCooldown ?? 0) - STEP);
       e.stun = Math.max(0, e.stun - STEP);
@@ -1706,9 +1714,14 @@ export class Battle {
         continue;
       }
       if (e.card === "sparky") {
+        if (e.nativeSparkyPreload) preloadTarget = this.acquireTarget(e);
+        const loadRate = sparkyLoadRate(e,
+          !!preloadTarget && this.inRange(e, preloadTarget), hitSpeed);
+        if (e.nativeSparkyPreload && !e.pendingAttack)
+          e.cooldown = Math.max(0, cooldownBefore - STEP * loadRate);
         const before = e.sparkyCharge ?? 0;
         e.sparkyCharge = Math.min(sparky.sourceLoadTime,
-          before + STEP * hitSpeed);
+          before + STEP * loadRate);
         for (const [index, phase] of ["load-1", "load-2", "load-3", "load-ready"].entries()) {
           const threshold = sparky.sourceLoadTime * (index + 1) / 4;
           if (before < threshold && e.sparkyCharge >= threshold)
@@ -1773,7 +1786,7 @@ export class Battle {
           this.releaseAttack(e, target, pending.damage);
         }
       }
-      const target = this.acquireTarget(e);
+      const target = e.nativeSparkyPreload ? preloadTarget : this.acquireTarget(e);
       if (!target) {
         resetMovement(e);
         continue;

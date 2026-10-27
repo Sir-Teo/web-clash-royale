@@ -110,18 +110,19 @@ function setup() {
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
-  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "primary-score", "primary-geometry", "tower-layout", "distant-targets", "barrel-formation", "army-formation", "group-formation", "ground-deployment", "deployment"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36"].includes(rangeRules ?? "")) {
+  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "sparky-preload", "sparky", "primary-score", "primary-geometry", "tower-layout", "distant-targets", "barrel-formation", "army-formation", "group-formation", "ground-deployment", "deployment"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37"].includes(rangeRules ?? "")) {
     battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
   for (const t of battle.entities) t.active = false;
   const scenario = (document.querySelector("#scenario") as HTMLSelectElement)
     .value;
+  (document.querySelector("#preload-in") as HTMLElement).hidden = scenario !== "sparky-preload";
   (document.querySelector("#open-deployment") as HTMLElement).hidden = scenario !== "ground-deployment";
   (document.querySelector("#guest-ruins") as HTMLElement).hidden = scenario !== "tower-layout" && scenario !== "army-formation" && scenario !== "group-formation" && scenario !== "ground-deployment";
   (document.querySelector("#warm-sprite-cache") as HTMLElement).hidden = scenario !== "sprite-cache";
   for (const id of ["clock-clear", "clock-freeze"])
-    (document.querySelector(`#${id}`) as HTMLElement).hidden = scenario !== "animation-clock";
+    (document.querySelector(`#${id}`) as HTMLElement).hidden = scenario !== "animation-clock" && scenario !== "sparky-preload";
   (document.querySelector("#attackers") as HTMLButtonElement).hidden =
     scenario !== "burrow";
   for (const id of ["death-config", "defeat", "death-stats"])
@@ -182,7 +183,7 @@ function setup() {
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king" && scenario !== "tower-layout" &&
       !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
-      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "primary-score", "primary-geometry", "distant-targets", "barrel-formation", "army-formation", "group-formation", "ground-deployment", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
+      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "sparky-preload", "primary-score", "primary-geometry", "distant-targets", "barrel-formation", "army-formation", "group-formation", "ground-deployment", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -663,6 +664,15 @@ function setup() {
         target.hp = target.maxHp = 10000;
       }
     }
+  } else if (scenario === "sparky-preload") {
+    for (const team of ["blue", "red"] as const)
+      for (const [index, mode] of ["normal", "rage", "slow", "both"].entries()) {
+        const attacker = unit("sparky", team, 2 + index * 4, team === "blue" ? 24 : 8)[0];
+        Object.assign(attacker, { speed: 0, cooldown: 4.5 });
+        if (mode === "rage" || mode === "both") attacker.rage = { remaining: 100 };
+        if (mode === "slow" || mode === "both") attacker.slow = { remaining: 100 };
+        clockModes.set(attacker.id, mode);
+      }
   } else if (scenario === "sparky") {
     const attacker = unit("sparky", "blue", 4, 21)[0];
     attacker.speed = 0;
@@ -1238,6 +1248,13 @@ document.querySelector("#warm-sprite-cache")!.addEventListener("click", () => {
     if (asset) for (let frame = 0; frame < asset.data.frames.length; frame++) spriteGeometry(asset, frame);
   }
 });
+document.querySelector("#preload-in")!.addEventListener("click", () => {
+  for (const actor of battle.entities.filter(e=>e.card === "sparky" && clockModes.has(e.id))) {
+    const target = unit("knight", actor.team === "blue" ? "red" : "blue", actor.x, actor.y + (actor.team === "blue" ? -3 : 3))[0];
+    Object.assign(target, { active: false, speed: 0, damage: 0, hp: 1e6, maxHp: 1e6 });
+    attackClockTargets.set(actor.id, target.id);
+  }
+});
 document.querySelector("#clock-clear")!.addEventListener("click", () => {
   for (const entity of battle.entities) {
     entity.rage = undefined;
@@ -1379,7 +1396,7 @@ function advance(ticks: number) {
         cast("lightning", "blue", king.x, king.y);
       }
       battle.step();
-      if (sceneSelect.value === "attack-clock")
+      if (sceneSelect.value === "attack-clock" || sceneSelect.value === "sparky-preload")
         for (const id of attackClockTargets.keys())
           if (!attackClockReleases.has(id) && battle.projectiles.some((shot) => shot.source === id))
             attackClockReleases.set(id, battle.tick);
@@ -1565,6 +1582,18 @@ function render(now: number) {
               return { id, hp: victim.hp, bias: victim.targetScoreBias };
             }) };
         }) });
+  if (sceneSelect.value === "sparky-preload")
+    (document.querySelector("#destruction") as HTMLElement).dataset.preload = JSON.stringify({
+      version: battle.rulesVersion, tick: battle.tick, time: battle.time,
+      bodies: battle.entities.filter(e=>e.card === "sparky" && clockModes.has(e.id)).map(entity=>({
+        id: entity.id, team: entity.team, mode: clockModes.get(entity.id),
+        charge: entity.sparkyCharge, cooldown: entity.cooldown, policy: !!entity.nativeSparkyPreload,
+        releaseTick: attackClockReleases.get(entity.id), native: !!(arena as any).units.get(entity.id)?.sprite,
+        targetHp: battle.entities.find(e=>e.id === attackClockTargets.get(entity.id))?.hp,
+        cues: battle.audioEvents.filter(e=>e.actor === entity.id && e.profile === "sparky" && e.phase.startsWith("load-")).map(e=>e.phase),
+      })),
+      visuals: arena.projectileState.filter(shot=>shot.sprites.some(sprite=>sprite.name === "zapMachine_projectile")),
+    });
   if (sceneSelect.value === "attack-clock")
     (document.querySelector("#destruction") as HTMLElement).dataset.attackClock =
       JSON.stringify({ version: battle.rulesVersion, tick: battle.tick, time: battle.time,

@@ -1,0 +1,19 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/client/preload-transition-native-trace.json",
+      "sha256": "d3b7671fba6bbf7ec4bd44634cef25938f45c397e4b165244f04c6d7b0eddfbb"
+    },
+    {
+      "path": "src/game/sparky-data.json",
+      "sha256": "df6ab8f26eaebdb8c5ffe476be291696afd16ee7329498c86f7f2e4c2715cf6a"
+    }
+  ],
+  "output": {
+    "path": "src/game/sparky-preload-data.json",
+    "sha256": "98c9725e29d38168766e0f77895e0eccc8a79945dfe9d171daac67c43c3d8026"
+  },
+  "scope": "Sparky passive preload rate; active attack clocks and browser deployment, target-loss, stun and first-shot scheduling remain separate"
+}
