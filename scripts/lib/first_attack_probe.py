@@ -40,6 +40,10 @@ def capture(env, context):
         from lib.preload_transition_probe import capture
 
         return capture(env, context)
+    if env["args"].pending_range:
+        from lib.pending_range_probe import capture
+
+        return capture(env, context)
     names = {
         "characters": ["Knight", "Archer", "Musketeer", "Giant", "HogRider", "Balloon", "Prince", "InfernoDragon", "ElectroWizard"],
         "buildings": ["Cannon", "Mortar", "InfernoTower", "KingTower", "PrincessTower"],
