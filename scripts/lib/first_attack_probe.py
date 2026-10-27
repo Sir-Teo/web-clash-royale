@@ -52,6 +52,10 @@ def capture(env, context):
         from lib.target_loss_clock_probe import capture
 
         return capture(env, context)
+    if env["args"].target_loss_requests:
+        from lib.target_loss_request_probe import capture
+
+        return capture(env, context)
     names = {
         "characters": ["Knight", "Archer", "Musketeer", "Giant", "HogRider", "Balloon", "Prince", "InfernoDragon", "ElectroWizard"],
         "buildings": ["Cannon", "Mortar", "InfernoTower", "KingTower", "PrincessTower"],

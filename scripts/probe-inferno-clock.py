@@ -29,6 +29,7 @@ parser.add_argument("--preload-transitions", action="store_true", help="Execute 
 parser.add_argument("--pending-range", action="store_true", help="Execute native started-projectile range allowance with actual geometry")
 parser.add_argument("--targetless-policy", action="store_true", help="Execute native targetless finish/active policy and its bounded caller branch")
 parser.add_argument("--target-loss-clocks", action="store_true", help="Execute native removal/null assignment through pending attack and finish clocks")
+parser.add_argument("--target-loss-requests", action="store_true", help="Execute native null-target projectile and self-area request preparation")
 parser.add_argument("--attack-range", action="store_true", help="Capture maximum attack geometry across troop, building and Crown Tower profiles")
 parser.add_argument("--minimum-range", action="store_true", help="Capture minimum-range boundaries instead of maximum-range boundaries")
 parser.add_argument("--sight-range", action="store_true", help="Capture native sight getters and the bounded candidate sight gate")
@@ -66,6 +67,8 @@ if args.targetless_policy and (not args.first_attacks or args.roster_first_attac
     parser.error("--targetless-policy requires --attack-loop --first-attacks without another continuation")
 if args.target_loss_clocks and (not args.first_attacks or args.roster_first_attacks or args.preload_transitions or args.pending_range or args.targetless_policy):
     parser.error("--target-loss-clocks requires --attack-loop --first-attacks without another continuation")
+if args.target_loss_requests and (not args.first_attacks or args.roster_first_attacks or args.preload_transitions or args.pending_range or args.targetless_policy or args.target_loss_clocks):
+    parser.error("--target-loss-requests requires --attack-loop --first-attacks without another continuation")
 if args.target_switches and (not args.attack_loop or args.range_loss or args.first_attacks):
     parser.error("--target-switches requires --attack-loop without another continuation")
 if args.attack_range and args.attack_loop:
