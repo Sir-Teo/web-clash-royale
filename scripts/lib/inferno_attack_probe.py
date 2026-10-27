@@ -54,7 +54,7 @@ def capture(env):
         nonlocal damage_context
         sp = cpu.reg_read(UC_X86_REG_ESP)
         if address in constants:
-            if address in [0x25fa9c, 0x25fa2a, 0x25d6f2, 0x25d7c2, 0x25deb6]:
+            if address in [0x25fa9c, 0x25fa2a, 0x25d6f2, 0x25d7c2, 0x25deb6, 0x25d95e]:
                 if read(sp + 4) != component:
                     raise RuntimeError("Unexpected attack-component callback owner")
             elif address != 0x1e6cee and read(sp + 4) != body:
@@ -74,6 +74,8 @@ def capture(env):
                 raise RuntimeError("Unexpected native damage-dispatch owner")
             target_label(read(base + 12))
             damage_context = {"tick": tick, **state()}
+            if args.first_attacks:
+                damage_context["hitIndex"] = read(base + 16)
             cpu.reg_write(UC_X86_REG_EIP, 0x25e681)
         elif address == 0x25e69f:
             if damage_context is None:
@@ -88,14 +90,17 @@ def capture(env):
             return_hook()
 
     cpu.hook_add(UC_HOOK_CODE, hook)
-    if args.range_loss:
-        from lib.inferno_range_probe import capture as capture_range
+    if args.range_loss or args.first_attacks:
+        if args.first_attacks:
+            from lib.first_attack_probe import capture as capture_continuation
+        else:
+            from lib.inferno_range_probe import capture as capture_continuation
 
         def set_tick(value):
             nonlocal tick
             tick = value
 
-        capture_range(env, {"config": config, "target_a": target_a, "target_b": target_b,
+        capture_continuation(env, {"config": config, "target_a": target_a, "target_b": target_b,
                             "finish_ms": finish_ms, "state": state, "pulses": pulses,
                             "calls": calls, "constants": constants, "set_tick": set_tick,
                             "globals_path": globals_path, "globals_bytes": globals_bytes,
