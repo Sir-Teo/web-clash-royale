@@ -2448,3 +2448,10 @@ Initial integration tests exposed sampling assumptions in older card fixtures: c
 The final complete suite passes all 2,747 checks across 198 files, and TypeScript passes. Four browser workflows pass across desktop Chromium and phone WebKit: the muzzle matrix covers Musketeer, Cannon, Princess, King and Baby Dragon in rules 39/40; a separate Executioner workflow verifies actual rendered three-tile axe height, native art, rebuilding and impact damage in both versions. There are no page errors. The matrix predates the later height helper refactor, whose only nonzero source override is Executioner; the final complete unit suite and dedicated axe browsers cover that integration. JSON traces and screenshots are retained under `/workspace/scratch/projectile-muzzle-browser-artifacts`; the desktop King and phone axe captures were inspected.
 
 Pages-prefixed production offline reload, rules-40 battle startup, the browser match worker, all 278 combat/death/music files and connection/emote/voice/font/quick-chat controls pass. The root production build is restored with cache `3ef5c82af35c`: 921 URLs, 894 unique content groups and 8.1 MB of omitted duplicate bytes. Hosting and root builds both exit successfully. No push or deployment was performed.
+
+
+## Native projectile destination verification
+
+The distance capture passes all 1,152 source cases and 408 controls across 38 projectile rows. Three translated origins, cardinal/diagonal/zero/tiny/arena-sized vectors, exact minimum boundaries, signed/reversed bounds and saturating-distance controls match an independent integer model. Getter/point pointers and the native caller frame are guarded; exact Data reads, call counts, exit branches and complete unrelated heap preservation are checked.
+
+The regenerated capture is byte-identical. The prior 228-case/48-control ConstantHeight capture remains unchanged. Three Python modules parse, the new module is Black-formatted, and ten invalid continuation combinations reject before capture. No application rule is inferred from this initializer fragment alone; complete projectile movement and final endpoints remain separate work.
