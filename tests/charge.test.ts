@@ -285,7 +285,7 @@ it("records and reconstructs a complete current match with all three chargers", 
   expect(live.winner).toBeTruthy();
   expect([...seen]).toEqual(expect.arrayContaining([...chargers]));
   const record = live.exportReplay();
-  expect(record.version).toBe(28);
+  expect(record.version).toBe(29);
   const replay = new Battle({ replay: record });
   for (const checkpoint of checkpoints) {
     while (replay.tick < checkpoint.tick && !replay.winner) replay.step();

@@ -20,6 +20,7 @@
     "assets:scenery": "node scripts/compose-scene.mjs",
     "assets:combat": "node scripts/import-combat.mjs",
     "assets:attack-clock": "node scripts/import-attack-clock.mjs",
+    "assets:primary-score": "node scripts/import-primary-score.mjs",
     "assets:card-stats": "node scripts/import-card-stats.mjs",
     "assets:card-vitals": "node scripts/import-card-vitals.mjs",
     "assets:card-splash": "node scripts/import-card-splash.mjs",

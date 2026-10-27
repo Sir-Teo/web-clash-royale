@@ -1,0 +1,8 @@
+{
+  "sourceUnitsPerTile": 1000,
+  "barrelScoreBias": [
+    0,
+    400,
+    1600
+  ]
+}

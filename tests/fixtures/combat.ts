@@ -49,6 +49,7 @@ let victims: { team: Team; x: number; y: number }[] = [];
 const clockModes = new Map<number, string>();
 const attackClockTargets = new Map<number, number>();
 const attackClockReleases = new Map<number, number>();
+const primaryScoreTargets = new Map<number, { mode: string; candidates: number[] }>();
 const sightTargets = new Map<number, number>();
 const minimumTargets = new Map<number, number>();
 const electroTargets = new Map<number, { primary: number; other?: number }>();
@@ -86,6 +87,7 @@ function setup() {
   clockModes.clear();
   attackClockTargets.clear();
   attackClockReleases.clear();
+  primaryScoreTargets.clear();
   sightTargets.clear();
   minimumTargets.clear();
   electroTargets.clear();
@@ -100,8 +102,8 @@ function setup() {
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
-  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28"].includes(rangeRules ?? "")) {
-    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 } });
+  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "primary-score"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29"].includes(rangeRules ?? "")) {
+    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
   for (const t of battle.entities) t.active = false;
@@ -170,7 +172,7 @@ function setup() {
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king" &&
       !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
-      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
+      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "primary-score", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -814,6 +816,38 @@ function setup() {
       attacker.target = target.id;
       clockModes.set(attacker.id, "range");
     }
+  } else if (scenario === "primary-score") {
+    // Real Barrel impacts create the score fields before controlled positioning.
+    const children = new Map<Team, Entity[]>();
+    for (const team of ["blue", "red"] as const) {
+      const enemy = team === "blue" ? "red" : "blue";
+      const ids = new Set(battle.entities.map((entity) => entity.id));
+      cast("goblin-barrel", enemy, 14, team === "blue" ? 24 : 8);
+      for (let tick = 0; tick < 240 && battle.projectiles.some((shot) => shot.style === "goblin-barrel"); tick++) battle.step();
+      const goblins = battle.entities.filter((entity) => !ids.has(entity.id) && entity.card === "goblins");
+      for (const entity of goblins) Object.assign(entity, { active: false, hp: 1e6, maxHp: 1e6 });
+      children.set(team, goblins);
+    }
+    for (const team of ["blue", "red"] as const) {
+      const enemy = team === "blue" ? "red" : "blue", y = team === "blue" ? 24 : 8;
+      const knight = unit("knight", team, 4, y)[0];
+      const closer = unit("knight", enemy, 4, y + (team === "blue" ? -2.1 : 2.1))[0];
+      const larger = unit("giant", enemy, 6.2, y)[0];
+      Object.assign(knight, { x: 4, y, age: 3 });
+      Object.assign(closer, { x: 4, y: y + (team === "blue" ? -2.1 : 2.1) });
+      Object.assign(larger, { x: 6.2, y });
+      for (const entity of [closer, larger]) Object.assign(entity, { active: false, hp: 1e6, maxHp: 1e6 });
+      primaryScoreTargets.set(knight.id, { mode: "center", candidates: [closer.id, larger.id] });
+      const cannon = unit("cannon", team, 14, y)[0];
+      Object.assign(cannon, { x: 14, y, age: 3 });
+      const goblins = children.get(team)!;
+      for (const [index, child] of goblins.entries()) Object.assign(child, {
+        x: index === 0 ? 12 : index === 1 ? 14 : 16,
+        y: index === 1 ? y + (team === "blue" ? -2 : 2) : y,
+        deploy: 0, speed: 0, active: false, age: 3,
+      });
+      primaryScoreTargets.set(cannon.id, { mode: "barrel", candidates: goblins.map((child) => child.id) });
+    }
   } else if (scenario === "attack-clock") {
     // A source Mortar windup has 0.9 s left when these modifiers are applied.
     for (const team of ["blue", "red"] as const)
@@ -1338,6 +1372,19 @@ function render(now: number) {
       bodies: battle.entities.filter((entity) => clockModes.has(entity.id) && entity.card.startsWith("inferno-"))
         .map((entity) => ({ id: entity.id, card: entity.card, team: entity.team,
           mode: clockModes.get(entity.id), lock: entity.inferno })) });
+  if (sceneSelect.value === "primary-score")
+    (document.querySelector("#destruction") as HTMLElement).dataset.primaryScore =
+      JSON.stringify({ version: battle.rulesVersion, tick: battle.tick, time: battle.time,
+        bodies: battle.entities.filter((entity) => primaryScoreTargets.has(entity.id)).map((entity) => {
+          const control = primaryScoreTargets.get(entity.id)!;
+          const visual = (arena as any).units.get(entity.id);
+          return { id: entity.id, team: entity.team, mode: control.mode, target: entity.target,
+            policy: !!entity.nativePrimaryScore, native: !!(visual?.sprite || visual?.building),
+            candidates: control.candidates.map((id) => {
+              const victim = battle.entities.find((body) => body.id === id)!;
+              return { id, hp: victim.hp, bias: victim.targetScoreBias };
+            }) };
+        }) });
   if (sceneSelect.value === "attack-clock")
     (document.querySelector("#destruction") as HTMLElement).dataset.attackClock =
       JSON.stringify({ version: battle.rulesVersion, tick: battle.tick, time: battle.time,

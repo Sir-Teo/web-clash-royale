@@ -1,4 +1,5 @@
 import { attackRadius, attackReach } from "./attack-range";
+import { comparePrimaryTargets } from "./primary-score";
 import { acquisitionSight } from "./sight-range";
 import { CARD_MAP, type CardId } from "./cards";
 import { combatTraits } from "./combat";
@@ -46,6 +47,9 @@ export function meleeInterceptTarget(
   const closest = (a: Entity, b: Entity) =>
     distance(threat, a) - a.radius - (distance(threat, b) - b.radius) ||
     a.id - b.id;
+  const nearbyClosest = threat.nativePrimaryScore
+    ? (a: Entity, b: Entity) => comparePrimaryTargets(threat, a, b)
+    : closest;
   const current = targets.find((e) => e.id === threat.target);
   const inRange = (target: Entity) =>
     distance(threat, target) <=
@@ -54,7 +58,7 @@ export function meleeInterceptTarget(
   const target =
     targets
       .filter((e) => distance(threat, e) <= sight + e.radius)
-      .sort(closest)[0] ?? targets.sort(closest)[0];
+      .sort(nearbyClosest)[0] ?? targets.sort(closest)[0];
   if (!target || inRange(target)) return;
   // Match moveToward's routing, including the approach before the river band.
   if (

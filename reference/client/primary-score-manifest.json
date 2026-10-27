@@ -1,0 +1,26 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/client/primary-acquisition-native-trace.json",
+      "sha256": "501399e0f5756ad1cf7a3d22870eb5e8968e64cd2dfb2ebfcecf90ac75f0f71c"
+    },
+    {
+      "path": "reference/client/spawn-priority-native-trace.json",
+      "sha256": "f9f7c93256d803562b8ec6cb31040a47c0bb0ac836bcb489954a469a13ce4c0e"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "src/game/goblin-barrel-data.json",
+      "sha256": "26bf30f9cf83e08707f9003f20691f90c406b7638c204cab8585aae82efcc25e"
+    }
+  ],
+  "output": {
+    "path": "src/game/primary-score-data.json",
+    "sha256": "7971038b66fc29909428a41bbefefcccc30ede29aead651d085af5fd7c0d94f7"
+  }
+}
