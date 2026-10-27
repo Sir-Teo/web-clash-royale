@@ -40,6 +40,7 @@ parser.add_argument("--distant-targets", action="store_true", help="Execute nati
 parser.add_argument("--lane-assignment", action="store_true", help="Load archived lane maps and execute native grid selection and spawn lane storage")
 parser.add_argument("--tower-layout", action="store_true", help="Execute archived Crown layout selection, coordinate scaling and position stores")
 parser.add_argument("--crown-owners", action="store_true", help="Continue source King placements through native owner selection and stores")
+parser.add_argument("--placement-bounds", action="store_true", help="Execute source building deployment masks and ground-group Y bounds")
 parser.add_argument("--group-formation", action="store_true", help="Execute ordinary group owner/radius/lane/formation and factory argument bindings")
 parser.add_argument("--projectile-formation", action="store_true", help="Execute projectile child formation, map lane and factory coordinate arguments")
 parser.add_argument("--spawn-lanes", action="store_true", help="Execute all direct spawn caller lane-hint argument bindings")
@@ -82,6 +83,8 @@ if args.tower_layout and not args.lane_assignment:
     parser.error("--tower-layout requires --sight-range --lane-assignment")
 if args.crown_owners and not args.tower_layout:
     parser.error("--crown-owners requires --sight-range --lane-assignment --tower-layout")
+if args.placement_bounds and (not args.sight_range or args.attack_loop or args.attack_range or args.lane_assignment or args.candidate_minimum or args.native_target_types or args.candidate_ranking or args.primary_acquisition):
+    parser.error("--placement-bounds requires --sight-range without another capture mode")
 if args.spawn_lanes and (not args.lane_assignment or args.tower_layout):
     parser.error("--spawn-lanes requires --sight-range --lane-assignment without --tower-layout")
 if args.projectile_formation and (not args.lane_assignment or args.tower_layout or args.spawn_lanes):
@@ -224,7 +227,9 @@ def initialize(source):
 
 
 if args.sight_range:
-    if args.lane_assignment:
+    if args.placement_bounds:
+        from lib.placement_bounds_probe import capture
+    elif args.lane_assignment:
         from lib.lane_assignment_probe import capture
     elif args.candidate_ranking or args.primary_acquisition:
         from lib.candidate_ranking_probe import capture
