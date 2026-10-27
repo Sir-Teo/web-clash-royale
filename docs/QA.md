@@ -2491,3 +2491,10 @@ Pages-prefixed production offline reload, rules-41 battle startup, browser match
 The named ProjectileRadius column/store identifies Data+0x4c, previously mislabeled as a child-count gate in the initialized-motion probe. Every sample in that bounded capture deliberately supplies this field as zero; it therefore proves controlled movement with native radius/range collision suppressed, including Bowler, Log and Executioner source speed/clock profiles. The capture now records both the source radius and explicit zero override, uses the correct predicate label and retains an eleventh source-binding block. The independent source SpawnCharacterCount filter selects the case inventory; it does not describe this runtime gate.
 
 All 5,461 positions, selected branches, Data reads and getter counts (after label normalization) are byte-equivalent to the previous capture. Native regeneration passes. The dependent 584-request volley capture and generated volley manifest are regenerated for changed provenance hashes; volley geometry and application rules remain unchanged at 41.
+
+
+## Native range-initializer verification
+
+All 1,824 cases and 154 controls pass across 38 projectile rows. Exact range predicates, caster-center/caller-start fallback direction, target clearing, subsequent muzzle-relative min/max bounds and complete heap mutations match independent integer calculations. Source fields produce 211 active initializations in the combined inventory and 458 supplied indexed lookup requests. Synthetic controls cover signed/zero/changed radii and ranges, opposite homing flags, min/max combinations, independent caller-start/owner/target references and saturated large-vector distance.
+
+Twenty-four initial scratch cases agree with the formal capture. Regeneration is byte-identical and the preceding 584-request normal-attack volley capture is unchanged. Three Python modules parse, the new module is Black-formatted and thirteen invalid continuation combinations reject. This proves the bounded initializer contract while preserving explicit table/caller/world boundaries; app rules remain at 41.

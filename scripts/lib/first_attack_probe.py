@@ -76,6 +76,10 @@ def capture(env, context):
         from lib.attack_projectile_goals_probe import capture
 
         return capture(env, context)
+    if env["args"].projectile_range:
+        from lib.projectile_range_probe import capture
+
+        return capture(env, context)
     names = {
         "characters": ["Knight", "Archer", "Musketeer", "Giant", "HogRider", "Balloon", "Prince", "InfernoDragon", "ElectroWizard"],
         "buildings": ["Cannon", "Mortar", "InfernoTower", "KingTower", "PrincessTower"],
