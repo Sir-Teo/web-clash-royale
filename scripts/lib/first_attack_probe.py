@@ -44,6 +44,10 @@ def capture(env, context):
         from lib.pending_range_probe import capture
 
         return capture(env, context)
+    if env["args"].targetless_policy:
+        from lib.targetless_policy_probe import capture
+
+        return capture(env, context)
     names = {
         "characters": ["Knight", "Archer", "Musketeer", "Giant", "HogRider", "Balloon", "Prince", "InfernoDragon", "ElectroWizard"],
         "buildings": ["Cannon", "Mortar", "InfernoTower", "KingTower", "PrincessTower"],

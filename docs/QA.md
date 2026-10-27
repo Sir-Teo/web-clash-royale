@@ -2390,3 +2390,7 @@ All six browser checks pass on desktop Chromium and phone WebKit. The new fixtur
 
 
 The final Pages-prefixed production offline check passes with rules 38, the match worker and all 278 native combat/death/music files. The root production build is restored with cache `240a35e884ef`: 921 URLs, 894 unique content groups and 8.1 MB of omitted duplicate bytes. No push or deployment was performed.
+
+## Native targetless policy verification
+
+The targetless-policy capture retains 63 source cases, 63 opposite-global controls and 32 exhaustive synthetic field/alternate-pointer controls. Each sample independently checks the direct result, actual caller selection, getter call counts and unchanged supplied heap. The 316 policy calls select the finish branch for 56 archived profiles and the active branch for seven. Dynamic reads are confined to Globals+0x201, Data+0x291/+0x28 and Projectile+0x78. Regeneration is byte-identical; the preceding 112-case first-attack and 1,512-case pending-range captures also remain unchanged. Three Python modules parse and five invalid continuation combinations reject. Rules 38 and root cache `240a35e884ef` remain unchanged; natural target loss and post-selection effects are separate work.

@@ -1,0 +1,4429 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "sha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "emulator": "unicorn==2.1.4",
+  "inputs": [
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "reference/logic/globals.csv",
+      "sha256": "28f97cbeb6c6de2489422b1bcc65bebd62db35fbb3ec72203eba29caa33c5641"
+    }
+  ],
+  "sourceAllowWithoutTarget": true,
+  "limits": [
+    "Actual targetless policy, owner Data/field getters and bounded caller selection execute. Owner lookup, minimal Data records, source primary projectile references and caller frame are supplied; full construction/class resolution is excluded.",
+    "Caller entry is 0x25ca7a with a null component target. Earlier owner/state/target/raw-field gates remain outside execution. Finish at 0x25ca86 and active at 0x25cab4 are stop boundaries; neither finish timers/reset nor active clock/damage effects execute.",
+    "Return one means the caller's finish branch, not proof of immediate cancellation. Return zero selects its active branch, not proof of a completed attack without a target.",
+    "Archived positive HitSpeed rows supply self-center and primary Homing fields. Alternate pointers are zero in source cases; synthetic non-null opposite-Homing alternates prove that this primary selector ignores them.",
+    "Getter call counts check every short circuit. Dynamic global/Data/projectile reads verify only populated fields are consumed, and the complete supplied heap remains unchanged by both calls. Natural target disappearance, target setters, damage, movement, artwork and application rules remain separate."
+  ],
+  "globalReads": [
+    {
+      "offset": "0x201",
+      "size": 1,
+      "pc": "0x25f6d2"
+    }
+  ],
+  "dataReads": [
+    {
+      "offset": "0x28",
+      "size": 4,
+      "pc": "0x1ddc1f"
+    },
+    {
+      "offset": "0x291",
+      "size": 1,
+      "pc": "0x1def35"
+    }
+  ],
+  "projectileReads": [
+    {
+      "offset": "0x78",
+      "size": 1,
+      "pc": "0x1fb843"
+    }
+  ],
+  "profiles": [
+    {
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Archer",
+      "selfAsAoeCenter": false,
+      "projectile": "ArcherArrow",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Goblin",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Giant",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Pekka",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Minion",
+      "selfAsAoeCenter": false,
+      "projectile": "MinionSpit",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Balloon",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Witch",
+      "selfAsAoeCenter": false,
+      "projectile": "WitchProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Skeleton",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Barbarian",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Golem",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Golemite",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Valkyrie",
+      "selfAsAoeCenter": true,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Bomber",
+      "selfAsAoeCenter": false,
+      "projectile": "BombSkeletonProjectile",
+      "homing": false
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Musketeer",
+      "selfAsAoeCenter": false,
+      "projectile": "MusketeerProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "BabyDragon",
+      "selfAsAoeCenter": false,
+      "projectile": "BabyDragonProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "MiniPekka",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Wizard",
+      "selfAsAoeCenter": false,
+      "projectile": "chr_wizardProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Prince",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "SpearGoblin",
+      "selfAsAoeCenter": false,
+      "projectile": "SpearGoblinProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "GiantSkeleton",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "HogRider",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "TowerPrincess",
+      "selfAsAoeCenter": false,
+      "projectile": "TowerPrincessProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "IceWizard",
+      "selfAsAoeCenter": false,
+      "projectile": "ice_wizardProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "RoyalGiant",
+      "selfAsAoeCenter": false,
+      "projectile": "RoyalGiantProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Princess",
+      "selfAsAoeCenter": false,
+      "projectile": "PrincessProjectileDeco",
+      "homing": false
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "DarkPrince",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "SkeletonWarrior",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "LavaHound",
+      "selfAsAoeCenter": false,
+      "projectile": "LavaHoundProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "LavaPups",
+      "selfAsAoeCenter": false,
+      "projectile": "LavaPupProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "RageBarbarian",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "IceSpirits",
+      "selfAsAoeCenter": false,
+      "projectile": "IceSpiritsProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "FireSpirits",
+      "selfAsAoeCenter": false,
+      "projectile": "FireSpiritsProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Miner",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "ZapMachine",
+      "selfAsAoeCenter": false,
+      "projectile": "ZapMachineProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Bowler",
+      "selfAsAoeCenter": false,
+      "projectile": "BowlerProjectile",
+      "homing": false
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "IceGolemite",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "MegaMinion",
+      "selfAsAoeCenter": false,
+      "projectile": "MegaMinionSpit",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "InfernoDragon",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "BattleRam",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "BlowdartGoblin",
+      "selfAsAoeCenter": false,
+      "projectile": "BlowdartGoblinProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "ElectroWizard",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "AngryBarbarian",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "AxeMan",
+      "selfAsAoeCenter": false,
+      "projectile": "AxeManProjectile",
+      "homing": false
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Assassin",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "NotInUseC1",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "NotInUseC2",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "NotInUseC3",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "NotInUseC4",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "DarkWitch",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "characters",
+      "sourceName": "Bat",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "buildings",
+      "sourceName": "KingTower",
+      "selfAsAoeCenter": false,
+      "projectile": "KingProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "buildings",
+      "sourceName": "PrincessTower",
+      "selfAsAoeCenter": false,
+      "projectile": "TowerPrincessProjectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "buildings",
+      "sourceName": "Cannon",
+      "selfAsAoeCenter": false,
+      "projectile": "TowerCannonball",
+      "homing": true
+    },
+    {
+      "sourceTable": "buildings",
+      "sourceName": "GoblinHut",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "buildings",
+      "sourceName": "Mortar",
+      "selfAsAoeCenter": false,
+      "projectile": "MortarProjectile",
+      "homing": false
+    },
+    {
+      "sourceTable": "buildings",
+      "sourceName": "InfernoTower",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "buildings",
+      "sourceName": "BombTower",
+      "selfAsAoeCenter": false,
+      "projectile": "BombTowerProjectile",
+      "homing": false
+    },
+    {
+      "sourceTable": "buildings",
+      "sourceName": "BarbarianHut",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "buildings",
+      "sourceName": "Tesla",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "buildings",
+      "sourceName": "Xbow",
+      "selfAsAoeCenter": false,
+      "projectile": "xbow_projectile",
+      "homing": true
+    },
+    {
+      "sourceTable": "buildings",
+      "sourceName": "Tombstone",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    },
+    {
+      "sourceTable": "buildings",
+      "sourceName": "FirespiritHut",
+      "selfAsAoeCenter": false,
+      "projectile": null,
+      "homing": null
+    }
+  ],
+  "blocks": [
+    {
+      "name": "targetlessPolicy",
+      "start": "0x25f6b4",
+      "end": "0x25f73c",
+      "interpretation": "Actual global/self-center/primary-projectile/homing decision; return one selects the finish branch at the bounded caller.",
+      "instructions": [
+        "25f6b4:\t55                   \tpush   ebp",
+        "25f6b5:\t89 e5                \tmov    ebp,esp",
+        "25f6b7:\t53                   \tpush   ebx",
+        "25f6b8:\t56                   \tpush   esi",
+        "25f6b9:\t83 e4 f0             \tand    esp,0xfffffff0",
+        "25f6bc:\t83 ec 10             \tsub    esp,0x10",
+        "25f6bf:\te8 00 00 00 00       \tcall   25f6c4",
+        "25f6c4:\t5b                   \tpop    ebx",
+        "25f6c5:\t81 c3 50 93 55 00    \tadd    ebx,0x559350",
+        "25f6cb:\te8 1e 76 f8 ff       \tcall   1e6cee",
+        "25f6d0:\tb1 01                \tmov    cl,0x1",
+        "25f6d2:\t80 b8 01 02 00 00 00 \tcmp    BYTE PTR [eax+0x201],0x0",
+        "25f6d9:\t74 57                \tje     25f732",
+        "25f6db:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "25f6de:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25f6e1:\te8 7e 03 00 00       \tcall   25fa64",
+        "25f6e6:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25f6e9:\te8 da 50 fb ff       \tcall   2147c8",
+        "25f6ee:\t89 c6                \tmov    esi,eax",
+        "25f6f0:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "25f6f3:\te8 34 f8 f7 ff       \tcall   1def2c",
+        "25f6f8:\t84 c0                \ttest   al,al",
+        "25f6fa:\t75 34                \tjne    25f730",
+        "25f6fc:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "25f6ff:\tc7 44 24 04 00 00 00 \tmov    DWORD PTR [esp+0x4],0x0",
+        "25f706:\t00",
+        "25f707:\te8 fc e4 f7 ff       \tcall   1ddc08",
+        "25f70c:\t85 c0                \ttest   eax,eax",
+        "25f70e:\t74 1c                \tje     25f72c",
+        "25f710:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "25f713:\tc7 44 24 04 00 00 00 \tmov    DWORD PTR [esp+0x4],0x0",
+        "25f71a:\t00",
+        "25f71b:\te8 e8 e4 f7 ff       \tcall   1ddc08",
+        "25f720:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25f723:\te8 12 c1 f9 ff       \tcall   1fb83a",
+        "25f728:\t84 c0                \ttest   al,al",
+        "25f72a:\t74 04                \tje     25f730",
+        "25f72c:\tb1 01                \tmov    cl,0x1",
+        "25f72e:\teb 02                \tjmp    25f732",
+        "25f730:\t31 c9                \txor    ecx,ecx",
+        "25f732:\t0f b6 c1             \tmovzx  eax,cl",
+        "25f735:\t8d 65 f8             \tlea    esp,[ebp-0x8]",
+        "25f738:\t5e                   \tpop    esi",
+        "25f739:\t5b                   \tpop    ebx",
+        "25f73a:\t5d                   \tpop    ebp",
+        "25f73b:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "callerSelection",
+      "start": "0x25ca68",
+      "end": "0x25cab4",
+      "interpretation": "Earlier target/raw-field gates are retained statically. Executed entry at 0x25ca7a calls the real policy and stops at finish at 0x25ca86 or active at 0x25cab4 before their effects.",
+      "instructions": [
+        "25ca68:\t80 7e 1d 00          \tcmp    BYTE PTR [esi+0x1d],0x0",
+        "25ca6c:\t75 0c                \tjne    25ca7a",
+        "25ca6e:\t83 7e 2c 00          \tcmp    DWORD PTR [esi+0x2c],0x0",
+        "25ca72:\t78 06                \tjs     25ca7a",
+        "25ca74:\t83 7e 40 00          \tcmp    DWORD PTR [esi+0x40],0x0",
+        "25ca78:\t7e 0c                \tjle    25ca86",
+        "25ca7a:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "25ca7d:\te8 32 2c 00 00       \tcall   25f6b4",
+        "25ca82:\t84 c0                \ttest   al,al",
+        "25ca84:\t74 2e                \tje     25cab4",
+        "25ca86:\t8b 46 28             \tmov    eax,DWORD PTR [esi+0x28]",
+        "25ca89:\t85 c0                \ttest   eax,eax",
+        "25ca8b:\t89 f7                \tmov    edi,esi",
+        "25ca8d:\t0f 8e 4b 01 00 00    \tjle    25cbde",
+        "25ca93:\t83 c0 32             \tadd    eax,0x32",
+        "25ca96:\t89 47 28             \tmov    DWORD PTR [edi+0x28],eax",
+        "25ca99:\te8 50 a2 f8 ff       \tcall   1e6cee",
+        "25ca9e:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "25caa1:\te8 c2 6a f9 ff       \tcall   1f3568",
+        "25caa6:\t39 47 28             \tcmp    DWORD PTR [edi+0x28],eax",
+        "25caa9:\t0f 8c d9 fe ff ff    \tjl     25c988",
+        "25caaf:\te9 b4 fe ff ff       \tjmp    25c968"
+      ]
+    },
+    {
+      "name": "ownerData",
+      "start": "0x2147c8",
+      "end": "0x2147ef",
+      "interpretation": "Actual owner Data getter through native base getter; owner resolution itself is supplied.",
+      "instructions": [
+        "2147c8:\t55                   \tpush   ebp",
+        "2147c9:\t89 e5                \tmov    ebp,esp",
+        "2147cb:\t53                   \tpush   ebx",
+        "2147cc:\t83 e4 f0             \tand    esp,0xfffffff0",
+        "2147cf:\t83 ec 10             \tsub    esp,0x10",
+        "2147d2:\te8 00 00 00 00       \tcall   2147d7",
+        "2147d7:\t5b                   \tpop    ebx",
+        "2147d8:\t81 c3 3d 42 5a 00    \tadd    ebx,0x5a423d",
+        "2147de:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "2147e1:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "2147e4:\te8 25 4e 00 00       \tcall   21960e",
+        "2147e9:\t8d 65 fc             \tlea    esp,[ebp-0x4]",
+        "2147ec:\t5b                   \tpop    ebx",
+        "2147ed:\t5d                   \tpop    ebp",
+        "2147ee:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "bodyData",
+      "start": "0x21960e",
+      "end": "0x21961e",
+      "interpretation": "Actual body Data pointer field.",
+      "instructions": [
+        "21960e:\t55                   \tpush   ebp",
+        "21960f:\t89 e5                \tmov    ebp,esp",
+        "219611:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "219614:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "219617:\t8b 40 10             \tmov    eax,DWORD PTR [eax+0x10]",
+        "21961a:\t89 ec                \tmov    esp,ebp",
+        "21961c:\t5d                   \tpop    ebp",
+        "21961d:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "selfCenterGetter",
+      "start": "0x1def2c",
+      "end": "0x1def40",
+      "interpretation": "Actual SelfAsAoeCenter field at Data+0x291.",
+      "instructions": [
+        "1def2c:\t55                   \tpush   ebp",
+        "1def2d:\t89 e5                \tmov    ebp,esp",
+        "1def2f:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "1def32:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "1def35:\t0f b6 80 91 02 00 00 \tmovzx  eax,BYTE PTR [eax+0x291]",
+        "1def3c:\t89 ec                \tmov    esp,ebp",
+        "1def3e:\t5d                   \tpop    ebp",
+        "1def3f:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "projectileGetter",
+      "start": "0x1ddc08",
+      "end": "0x1ddc26",
+      "interpretation": "Actual primary/alternate getter, invoked with primary selector zero.",
+      "instructions": [
+        "1ddc08:\t55                   \tpush   ebp",
+        "1ddc09:\t89 e5                \tmov    ebp,esp",
+        "1ddc0b:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "1ddc0e:\t8b 4d 08             \tmov    ecx,DWORD PTR [ebp+0x8]",
+        "1ddc11:\t8a 45 0c             \tmov    al,BYTE PTR [ebp+0xc]",
+        "1ddc14:\t84 c0                \ttest   al,al",
+        "1ddc16:\t74 07                \tje     1ddc1f",
+        "1ddc18:\t8b 41 34             \tmov    eax,DWORD PTR [ecx+0x34]",
+        "1ddc1b:\t85 c0                \ttest   eax,eax",
+        "1ddc1d:\t75 03                \tjne    1ddc22",
+        "1ddc1f:\t8b 41 28             \tmov    eax,DWORD PTR [ecx+0x28]",
+        "1ddc22:\t89 ec                \tmov    esp,ebp",
+        "1ddc24:\t5d                   \tpop    ebp",
+        "1ddc25:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "homingGetter",
+      "start": "0x1fb83a",
+      "end": "0x1fb84b",
+      "interpretation": "Actual Projectile+0x78 Homing getter.",
+      "instructions": [
+        "1fb83a:\t55                   \tpush   ebp",
+        "1fb83b:\t89 e5                \tmov    ebp,esp",
+        "1fb83d:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "1fb840:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "1fb843:\t0f b6 40 78          \tmovzx  eax,BYTE PTR [eax+0x78]",
+        "1fb847:\t89 ec                \tmov    esp,ebp",
+        "1fb849:\t5d                   \tpop    ebp",
+        "1fb84a:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "allowGlobalSource",
+      "start": "0x1ef7ba",
+      "end": "0x1ef7f5",
+      "interpretation": "Static ALLOW_AOE_ATTACKS_WITHOUT_TARGET loader/store at Globals+0x201.",
+      "instructions": [
+        "1ef7ba:\t8d 83 f7 de e5 ff    \tlea    eax,[ebx-0x1a2109]",
+        "1ef7c0:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1ef7c4:\t8d b4 24 d0 16 00 00 \tlea    esi,[esp+0x16d0]",
+        "1ef7cb:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1ef7ce:\te8 cd 9b 0a 00       \tcall   2993a0",
+        "1ef7d3:\t89 74 24 04          \tmov    DWORD PTR [esp+0x4],esi",
+        "1ef7d7:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1ef7da:\te8 c5 39 00 00       \tcall   1f31a4",
+        "1ef7df:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1ef7e2:\te8 c7 f2 ff ff       \tcall   1eeaae",
+        "1ef7e7:\t88 87 01 02 00 00    \tmov    BYTE PTR [edi+0x201],al",
+        "1ef7ed:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1ef7f0:\te8 eb 97 0a 00       \tcall   298fe0"
+      ]
+    },
+    {
+      "name": "selfCenterSource",
+      "start": "0x1d96e1",
+      "end": "0x1d970c",
+      "interpretation": "Static SelfAsAoeCenter loader/store.",
+      "instructions": [
+        "1d96e1:\t8d 83 f4 ae e5 ff    \tlea    eax,[ebx-0x1a510c]",
+        "1d96e7:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1d96eb:\t8d b4 24 98 05 00 00 \tlea    esi,[esp+0x598]",
+        "1d96f2:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1d96f5:\te8 a6 fc 0b 00       \tcall   2993a0",
+        "1d96fa:\t89 74 24 04          \tmov    DWORD PTR [esp+0x4],esi",
+        "1d96fe:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1d9701:\te8 74 b6 00 00       \tcall   1e4d7a",
+        "1d9706:\t88 87 91 02 00 00    \tmov    BYTE PTR [edi+0x291],al"
+      ]
+    },
+    {
+      "name": "homingColumnSource",
+      "start": "0x1facdd",
+      "end": "0x1fad08",
+      "interpretation": "Static Homing column reference retained at GOT+0x1b9c.",
+      "instructions": [
+        "1facdd:\t8d 83 f1 0a e6 ff    \tlea    eax,[ebx-0x19f50f]",
+        "1face3:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1face7:\t8d bc 24 f8 01 00 00 \tlea    edi,[esp+0x1f8]",
+        "1facee:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1facf1:\te8 aa e6 09 00       \tcall   2993a0",
+        "1facf6:\t89 7c 24 04          \tmov    DWORD PTR [esp+0x4],edi",
+        "1facfa:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1facfd:\te8 9e 7c 15 00       \tcall   3529a0",
+        "1fad02:\t89 83 9c 1b 00 00    \tmov    DWORD PTR [ebx+0x1b9c],eax"
+      ]
+    },
+    {
+      "name": "homingFieldSource",
+      "start": "0x1fa24b",
+      "end": "0x1fa260",
+      "interpretation": "Static referenced Homing column boolean loads and stores Projectile+0x78.",
+      "instructions": [
+        "1fa24b:\t8b 83 9c 1b 00 00    \tmov    eax,DWORD PTR [ebx+0x1b9c]",
+        "1fa251:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1fa255:\t89 3c 24             \tmov    DWORD PTR [esp],edi",
+        "1fa258:\te8 cd af fe ff       \tcall   1e522a",
+        "1fa25d:\t88 47 78             \tmov    BYTE PTR [edi+0x78],al"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Archer",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Goblin",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Giant",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Pekka",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Minion",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Balloon",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Witch",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Skeleton",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Barbarian",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Golem",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Golemite",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Valkyrie",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": true,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Bomber",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Musketeer",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "BabyDragon",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "MiniPekka",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Wizard",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Prince",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "SpearGoblin",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "GiantSkeleton",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "HogRider",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "TowerPrincess",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "IceWizard",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "RoyalGiant",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Princess",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "DarkPrince",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "SkeletonWarrior",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "LavaHound",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "LavaPups",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "RageBarbarian",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "IceSpirits",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "FireSpirits",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Miner",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "ZapMachine",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Bowler",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "IceGolemite",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "MegaMinion",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "InfernoDragon",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "BattleRam",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "BlowdartGoblin",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "ElectroWizard",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "AngryBarbarian",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "AxeMan",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Assassin",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "NotInUseC1",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "NotInUseC2",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "NotInUseC3",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "NotInUseC4",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "DarkWitch",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "characters",
+      "sourceName": "Bat",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "buildings",
+      "sourceName": "KingTower",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "buildings",
+      "sourceName": "PrincessTower",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "buildings",
+      "sourceName": "Cannon",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "buildings",
+      "sourceName": "GoblinHut",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "buildings",
+      "sourceName": "Mortar",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "buildings",
+      "sourceName": "InfernoTower",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "buildings",
+      "sourceName": "BombTower",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "buildings",
+      "sourceName": "BarbarianHut",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "buildings",
+      "sourceName": "Tesla",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "buildings",
+      "sourceName": "Xbow",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "buildings",
+      "sourceName": "Tombstone",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "sourceProfile",
+      "sourceTable": "buildings",
+      "sourceName": "FirespiritHut",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    }
+  ],
+  "controls": [
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Archer",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Goblin",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Giant",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Pekka",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Minion",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Balloon",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Witch",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Skeleton",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Barbarian",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Golem",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Golemite",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Valkyrie",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": true,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Bomber",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Musketeer",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "BabyDragon",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "MiniPekka",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Wizard",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Prince",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "SpearGoblin",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "GiantSkeleton",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "HogRider",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "TowerPrincess",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "IceWizard",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "RoyalGiant",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Princess",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "DarkPrince",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "SkeletonWarrior",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "LavaHound",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "LavaPups",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "RageBarbarian",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "IceSpirits",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "FireSpirits",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Miner",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "ZapMachine",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Bowler",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "IceGolemite",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "MegaMinion",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "InfernoDragon",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "BattleRam",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "BlowdartGoblin",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "ElectroWizard",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "AngryBarbarian",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "AxeMan",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Assassin",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "NotInUseC1",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "NotInUseC2",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "NotInUseC3",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "NotInUseC4",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "DarkWitch",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "characters",
+      "sourceName": "Bat",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "buildings",
+      "sourceName": "KingTower",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "buildings",
+      "sourceName": "PrincessTower",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "buildings",
+      "sourceName": "Cannon",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "buildings",
+      "sourceName": "GoblinHut",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "buildings",
+      "sourceName": "Mortar",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "buildings",
+      "sourceName": "InfernoTower",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "buildings",
+      "sourceName": "BombTower",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "buildings",
+      "sourceName": "BarbarianHut",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "buildings",
+      "sourceName": "Tesla",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "buildings",
+      "sourceName": "Xbow",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "buildings",
+      "sourceName": "Tombstone",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "oppositeGlobalControl",
+      "sourceTable": "buildings",
+      "sourceName": "FirespiritHut",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": true,
+      "alternateHoming": true,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": true,
+      "alternatePresent": true,
+      "alternateHoming": false,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": true,
+      "alternateHoming": true,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": true,
+      "alternateHoming": false,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": true,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": true,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": true,
+      "alternateHoming": true,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": true,
+      "hasProjectile": false,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": true,
+      "hasProjectile": false,
+      "projectileHoming": true,
+      "alternatePresent": true,
+      "alternateHoming": false,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": true,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": true,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": true,
+      "alternateHoming": true,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": true,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": false,
+      "selfAsAoeCenter": true,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": true,
+      "alternateHoming": false,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": true,
+      "alternateHoming": true,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": false,
+      "projectileHoming": true,
+      "alternatePresent": true,
+      "alternateHoming": false,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": true,
+      "alternateHoming": true,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": false,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": true,
+      "alternateHoming": false,
+      "useFinishBranch": true,
+      "callerBranch": "finish",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1,
+        "primaryProjectile": 2,
+        "homing": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": true,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": true,
+      "hasProjectile": false,
+      "projectileHoming": false,
+      "alternatePresent": true,
+      "alternateHoming": true,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": true,
+      "hasProjectile": false,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": true,
+      "hasProjectile": false,
+      "projectileHoming": true,
+      "alternatePresent": true,
+      "alternateHoming": false,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": true,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": true,
+      "hasProjectile": true,
+      "projectileHoming": false,
+      "alternatePresent": true,
+      "alternateHoming": true,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": true,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": false,
+      "alternateHoming": null,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "heapUnchanged": true
+    },
+    {
+      "kind": "syntheticTruthTable",
+      "sourceTable": "characters",
+      "sourceName": "Knight",
+      "allowWithoutTarget": true,
+      "selfAsAoeCenter": true,
+      "hasProjectile": true,
+      "projectileHoming": true,
+      "alternatePresent": true,
+      "alternateHoming": false,
+      "useFinishBranch": false,
+      "callerBranch": "active",
+      "directGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "callerGetterCalls": {
+        "policy": 1,
+        "ownerData": 1,
+        "selfCenter": 1
+      },
+      "heapUnchanged": true
+    }
+  ]
+}
