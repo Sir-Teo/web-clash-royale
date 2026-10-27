@@ -90,8 +90,10 @@ def capture(env):
             return_hook()
 
     cpu.hook_add(UC_HOOK_CODE, hook)
-    if args.range_loss or args.first_attacks:
-        if args.first_attacks:
+    if args.range_loss or args.first_attacks or args.target_switches:
+        if args.target_switches:
+            from lib.target_switch_probe import capture as capture_continuation
+        elif args.first_attacks:
             from lib.first_attack_probe import capture as capture_continuation
         else:
             from lib.inferno_range_probe import capture as capture_continuation
