@@ -2435,8 +2435,11 @@ export class Battle {
         // rather than become trapped behind one in front of its building.
         if (a.card === "battle-ram" || b.card === "battle-ram" || a.dash || b.dash) continue;
         if (a.air !== b.air) continue;
-        const d = dist(a, b),
-          min = (a.radius + b.radius) * 0.86;
+        const min = (a.radius + b.radius) * 0.86;
+        // A full distance cannot overlap when either axis is already outside.
+        // Keep the existing pair order and exact distance for possible overlaps.
+        if (Math.abs(a.x - b.x) >= min || Math.abs(a.y - b.y) >= min) continue;
+        const d = dist(a, b);
         if (d < min && d > 0.001) {
           const push = (min - d) * 0.18,
             dx = ((a.x - b.x) / d) * push,
@@ -2453,8 +2456,9 @@ export class Battle {
     for (const unit of units) {
       if (unit.air || unit.dash) continue;
       for (const building of buildings) {
-        const d = dist(unit, building),
-          min = unit.radius + building.radius;
+        const min = unit.radius + building.radius;
+        if (Math.abs(unit.x - building.x) >= min || Math.abs(unit.y - building.y) >= min) continue;
+        const d = dist(unit, building);
         if (d > 0.001 && d < min) {
           unit.x = building.x + ((unit.x - building.x) / d) * min;
           unit.y = building.y + ((unit.y - building.y) / d) * min;

@@ -1,0 +1,1105 @@
+{
+  "sourceCommit": "eccdaa5",
+  "cases": [
+    {
+      "name": "dense-1",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "7f6e54228092ecf4b3a18a7078065561ed08851b5c99490df5bf4706463ff5bf"
+        },
+        {
+          "step": 1,
+          "digest": "b0e9710eba8cc0483fd091cf7c3d187ca34cd45de4d7b36e155bd6e076586c91"
+        },
+        {
+          "step": 2,
+          "digest": "eb7ebf39cad87b0b26b52dbdaaeccd744a250cb26989f7b18f6eb1819257cbd1"
+        },
+        {
+          "step": 5,
+          "digest": "736b346bb9c0a79cddba254358e90d24ef7e1c43e5982e9942ec0e36912c7a69"
+        },
+        {
+          "step": 30,
+          "digest": "31cd7be01c67075c9ce9892ccb86ad5e0c21536b56af3710a307b95fc48caf4c"
+        }
+      ]
+    },
+    {
+      "name": "scattered-1",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "b898e07436ac58a3214c33b96baa90bedd14594b5503a93741e72a510aca3e37"
+        },
+        {
+          "step": 1,
+          "digest": "98755e49b33302e50637a639d3358c1705c6ad45c8720ccf032edd6f3c54973f"
+        },
+        {
+          "step": 2,
+          "digest": "98755e49b33302e50637a639d3358c1705c6ad45c8720ccf032edd6f3c54973f"
+        },
+        {
+          "step": 5,
+          "digest": "98755e49b33302e50637a639d3358c1705c6ad45c8720ccf032edd6f3c54973f"
+        },
+        {
+          "step": 30,
+          "digest": "98755e49b33302e50637a639d3358c1705c6ad45c8720ccf032edd6f3c54973f"
+        }
+      ]
+    },
+    {
+      "name": "dense-14",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "7f6e54228092ecf4b3a18a7078065561ed08851b5c99490df5bf4706463ff5bf"
+        },
+        {
+          "step": 1,
+          "digest": "98b1373aba34f630ab5185fb91d738e99709c0acf38861b71ea04b2005aca75c"
+        },
+        {
+          "step": 2,
+          "digest": "952a83450aa4f2ff7b23eeda22ddef1ce0da535dac83eb2aa9983375af5f26e5"
+        },
+        {
+          "step": 5,
+          "digest": "7852e24e905b3a7e6baabbdd7e2bcf140b3034ffda64a114a04a839ce6f6d847"
+        },
+        {
+          "step": 30,
+          "digest": "966a1a83d1996a6acdb80e87f0f4ce3a20325e27f4423302215b6a1999a5a11a"
+        }
+      ]
+    },
+    {
+      "name": "scattered-14",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "b898e07436ac58a3214c33b96baa90bedd14594b5503a93741e72a510aca3e37"
+        },
+        {
+          "step": 1,
+          "digest": "98755e49b33302e50637a639d3358c1705c6ad45c8720ccf032edd6f3c54973f"
+        },
+        {
+          "step": 2,
+          "digest": "98755e49b33302e50637a639d3358c1705c6ad45c8720ccf032edd6f3c54973f"
+        },
+        {
+          "step": 5,
+          "digest": "98755e49b33302e50637a639d3358c1705c6ad45c8720ccf032edd6f3c54973f"
+        },
+        {
+          "step": 30,
+          "digest": "98755e49b33302e50637a639d3358c1705c6ad45c8720ccf032edd6f3c54973f"
+        }
+      ]
+    },
+    {
+      "name": "dense-15",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "7f6e54228092ecf4b3a18a7078065561ed08851b5c99490df5bf4706463ff5bf"
+        },
+        {
+          "step": 1,
+          "digest": "b8660a1826476432c487c493cabb1935c90a5fd737b1add809e084bdba9032de"
+        },
+        {
+          "step": 2,
+          "digest": "20a8cb075af45ae6b517334953134b2289c7ca21d9b8505079dea0b469d370d3"
+        },
+        {
+          "step": 5,
+          "digest": "65c37d03e8aba85dd016c3291a77c73239d3a0ab02062609156f82d12257a0c2"
+        },
+        {
+          "step": 30,
+          "digest": "eb1eb3028f3074ca843ea5ddff2c84949bc83b1957d4ce7f3b6a26d2533265ef"
+        }
+      ]
+    },
+    {
+      "name": "scattered-15",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "b898e07436ac58a3214c33b96baa90bedd14594b5503a93741e72a510aca3e37"
+        },
+        {
+          "step": 1,
+          "digest": "ec5f1fb70393f7802d4901cf411a759df7d369e222c404c0aceb541e69f2c2ed"
+        },
+        {
+          "step": 2,
+          "digest": "a62d252f990b42ac42fadd7bf977728dc1706f4aff8600e6249e8396d3206f62"
+        },
+        {
+          "step": 5,
+          "digest": "a62d252f990b42ac42fadd7bf977728dc1706f4aff8600e6249e8396d3206f62"
+        },
+        {
+          "step": 30,
+          "digest": "a62d252f990b42ac42fadd7bf977728dc1706f4aff8600e6249e8396d3206f62"
+        }
+      ]
+    },
+    {
+      "name": "dense-23",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "7f6e54228092ecf4b3a18a7078065561ed08851b5c99490df5bf4706463ff5bf"
+        },
+        {
+          "step": 1,
+          "digest": "b8660a1826476432c487c493cabb1935c90a5fd737b1add809e084bdba9032de"
+        },
+        {
+          "step": 2,
+          "digest": "20a8cb075af45ae6b517334953134b2289c7ca21d9b8505079dea0b469d370d3"
+        },
+        {
+          "step": 5,
+          "digest": "65c37d03e8aba85dd016c3291a77c73239d3a0ab02062609156f82d12257a0c2"
+        },
+        {
+          "step": 30,
+          "digest": "eb1eb3028f3074ca843ea5ddff2c84949bc83b1957d4ce7f3b6a26d2533265ef"
+        }
+      ]
+    },
+    {
+      "name": "scattered-23",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "b898e07436ac58a3214c33b96baa90bedd14594b5503a93741e72a510aca3e37"
+        },
+        {
+          "step": 1,
+          "digest": "ec5f1fb70393f7802d4901cf411a759df7d369e222c404c0aceb541e69f2c2ed"
+        },
+        {
+          "step": 2,
+          "digest": "a62d252f990b42ac42fadd7bf977728dc1706f4aff8600e6249e8396d3206f62"
+        },
+        {
+          "step": 5,
+          "digest": "a62d252f990b42ac42fadd7bf977728dc1706f4aff8600e6249e8396d3206f62"
+        },
+        {
+          "step": 30,
+          "digest": "a62d252f990b42ac42fadd7bf977728dc1706f4aff8600e6249e8396d3206f62"
+        }
+      ]
+    },
+    {
+      "name": "dense-26",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "7f6e54228092ecf4b3a18a7078065561ed08851b5c99490df5bf4706463ff5bf"
+        },
+        {
+          "step": 1,
+          "digest": "b8660a1826476432c487c493cabb1935c90a5fd737b1add809e084bdba9032de"
+        },
+        {
+          "step": 2,
+          "digest": "20a8cb075af45ae6b517334953134b2289c7ca21d9b8505079dea0b469d370d3"
+        },
+        {
+          "step": 5,
+          "digest": "65c37d03e8aba85dd016c3291a77c73239d3a0ab02062609156f82d12257a0c2"
+        },
+        {
+          "step": 30,
+          "digest": "eb1eb3028f3074ca843ea5ddff2c84949bc83b1957d4ce7f3b6a26d2533265ef"
+        }
+      ]
+    },
+    {
+      "name": "scattered-26",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "b898e07436ac58a3214c33b96baa90bedd14594b5503a93741e72a510aca3e37"
+        },
+        {
+          "step": 1,
+          "digest": "ec5f1fb70393f7802d4901cf411a759df7d369e222c404c0aceb541e69f2c2ed"
+        },
+        {
+          "step": 2,
+          "digest": "a62d252f990b42ac42fadd7bf977728dc1706f4aff8600e6249e8396d3206f62"
+        },
+        {
+          "step": 5,
+          "digest": "a62d252f990b42ac42fadd7bf977728dc1706f4aff8600e6249e8396d3206f62"
+        },
+        {
+          "step": 30,
+          "digest": "a62d252f990b42ac42fadd7bf977728dc1706f4aff8600e6249e8396d3206f62"
+        }
+      ]
+    },
+    {
+      "name": "troop-0--0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "94c8dd2df8466e9a06c6b5f90d8b089aec400a5400e26383bc6f6dd1361a4b3a"
+        },
+        {
+          "step": 1,
+          "digest": "8dc73696ca0e415deee6a2438beb03af0930c415d92f4cde344b4430e0aebbe6"
+        },
+        {
+          "step": 2,
+          "digest": "405f70f303c3760d8c24975b7289b75f2e6b90f59113764acdeed4bf00b53aea"
+        },
+        {
+          "step": 5,
+          "digest": "397e5ba9e8e44d424dd5faf8e4054658fc6dc2c2350497b3f0bbaaa2dbe456ab"
+        },
+        {
+          "step": 30,
+          "digest": "9092799c06dfefd81104bb28bfc353a23c6ec75fa18d1cb1b83c21d7c7271bed"
+        }
+      ]
+    },
+    {
+      "name": "troop-0-0",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "9c0afa707860d4539368d873a22c88a3e4a74d1bc9f17c7c27b17638e4a33f3e"
+        },
+        {
+          "step": 1,
+          "digest": "9c0afa707860d4539368d873a22c88a3e4a74d1bc9f17c7c27b17638e4a33f3e"
+        },
+        {
+          "step": 2,
+          "digest": "9c0afa707860d4539368d873a22c88a3e4a74d1bc9f17c7c27b17638e4a33f3e"
+        },
+        {
+          "step": 5,
+          "digest": "9c0afa707860d4539368d873a22c88a3e4a74d1bc9f17c7c27b17638e4a33f3e"
+        },
+        {
+          "step": 30,
+          "digest": "9c0afa707860d4539368d873a22c88a3e4a74d1bc9f17c7c27b17638e4a33f3e"
+        }
+      ]
+    },
+    {
+      "name": "troop-0-0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "85f134aafac5af4ca338f08c8402a6af07871f9e6a962cc7c5cee26a5e670d5f"
+        },
+        {
+          "step": 1,
+          "digest": "85f134aafac5af4ca338f08c8402a6af07871f9e6a962cc7c5cee26a5e670d5f"
+        },
+        {
+          "step": 2,
+          "digest": "85f134aafac5af4ca338f08c8402a6af07871f9e6a962cc7c5cee26a5e670d5f"
+        },
+        {
+          "step": 5,
+          "digest": "85f134aafac5af4ca338f08c8402a6af07871f9e6a962cc7c5cee26a5e670d5f"
+        },
+        {
+          "step": 30,
+          "digest": "85f134aafac5af4ca338f08c8402a6af07871f9e6a962cc7c5cee26a5e670d5f"
+        }
+      ]
+    },
+    {
+      "name": "troop-0.7853981633974483--0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "9b730c7988f042aa0dd9a61eda01a90ad7adc663b6e1c9bbf38a43b62cc0ef79"
+        },
+        {
+          "step": 1,
+          "digest": "acf302f3e5edb94acbabc1bf9fb4908402b70680ae4126a97bb2c541d0cba1ce"
+        },
+        {
+          "step": 2,
+          "digest": "0fcca09467b78b747a7dbbae64a7097224b9aa225d08a354472a8d9729a467f9"
+        },
+        {
+          "step": 5,
+          "digest": "1045bb1c3a0eabe27a305fcf253017e39d9206c315b15c566cbe5582c764a5b9"
+        },
+        {
+          "step": 30,
+          "digest": "3fec32ab032963e6e5292cb5a06885b9eb04c7018176b1013852b80afbdd3c32"
+        }
+      ]
+    },
+    {
+      "name": "troop-0.7853981633974483-0",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "baf43164249a2c50f01a95db621be0329893296c9809085ffe7b1375a2b434c7"
+        },
+        {
+          "step": 1,
+          "digest": "baf43164249a2c50f01a95db621be0329893296c9809085ffe7b1375a2b434c7"
+        },
+        {
+          "step": 2,
+          "digest": "baf43164249a2c50f01a95db621be0329893296c9809085ffe7b1375a2b434c7"
+        },
+        {
+          "step": 5,
+          "digest": "baf43164249a2c50f01a95db621be0329893296c9809085ffe7b1375a2b434c7"
+        },
+        {
+          "step": 30,
+          "digest": "baf43164249a2c50f01a95db621be0329893296c9809085ffe7b1375a2b434c7"
+        }
+      ]
+    },
+    {
+      "name": "troop-0.7853981633974483-0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "6740b82e7c8dd05f8d2306439732b865e428e4fad8c6b09ec1339f3d69bbe232"
+        },
+        {
+          "step": 1,
+          "digest": "6740b82e7c8dd05f8d2306439732b865e428e4fad8c6b09ec1339f3d69bbe232"
+        },
+        {
+          "step": 2,
+          "digest": "6740b82e7c8dd05f8d2306439732b865e428e4fad8c6b09ec1339f3d69bbe232"
+        },
+        {
+          "step": 5,
+          "digest": "6740b82e7c8dd05f8d2306439732b865e428e4fad8c6b09ec1339f3d69bbe232"
+        },
+        {
+          "step": 30,
+          "digest": "6740b82e7c8dd05f8d2306439732b865e428e4fad8c6b09ec1339f3d69bbe232"
+        }
+      ]
+    },
+    {
+      "name": "troop-1.5707963267948966--0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "d98ded40e7eb86e812c1f9e06689e043836dc2f9e99b5caac2939a7eb63b7614"
+        },
+        {
+          "step": 1,
+          "digest": "c3437e509d339041a26c96d397b8a2aa61a13c42d6db560e65490b56a2999ebb"
+        },
+        {
+          "step": 2,
+          "digest": "ea9ce530d9b1b3b0560dc7071a13167966ab80c608a3250f93bcfebb63039afa"
+        },
+        {
+          "step": 5,
+          "digest": "79d46ac7e355280203877267254bd41ac6fc848a160637511c7c882c4fa34532"
+        },
+        {
+          "step": 30,
+          "digest": "0264bc15efed74287ff848c33a314feae28a67ac912f65bd122d2b895f1b4eba"
+        }
+      ]
+    },
+    {
+      "name": "troop-1.5707963267948966-0",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "3f204b8c65ce66965fe1375f47cf1bc8f6e7c43079daa1f468049726fda1b4de"
+        },
+        {
+          "step": 1,
+          "digest": "3f204b8c65ce66965fe1375f47cf1bc8f6e7c43079daa1f468049726fda1b4de"
+        },
+        {
+          "step": 2,
+          "digest": "3f204b8c65ce66965fe1375f47cf1bc8f6e7c43079daa1f468049726fda1b4de"
+        },
+        {
+          "step": 5,
+          "digest": "3f204b8c65ce66965fe1375f47cf1bc8f6e7c43079daa1f468049726fda1b4de"
+        },
+        {
+          "step": 30,
+          "digest": "3f204b8c65ce66965fe1375f47cf1bc8f6e7c43079daa1f468049726fda1b4de"
+        }
+      ]
+    },
+    {
+      "name": "troop-1.5707963267948966-0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "2aaa57717874c9f2897878322ff975b2ffb2df6851ddebbefe97fa2bdda18f2a"
+        },
+        {
+          "step": 1,
+          "digest": "2aaa57717874c9f2897878322ff975b2ffb2df6851ddebbefe97fa2bdda18f2a"
+        },
+        {
+          "step": 2,
+          "digest": "2aaa57717874c9f2897878322ff975b2ffb2df6851ddebbefe97fa2bdda18f2a"
+        },
+        {
+          "step": 5,
+          "digest": "2aaa57717874c9f2897878322ff975b2ffb2df6851ddebbefe97fa2bdda18f2a"
+        },
+        {
+          "step": 30,
+          "digest": "2aaa57717874c9f2897878322ff975b2ffb2df6851ddebbefe97fa2bdda18f2a"
+        }
+      ]
+    },
+    {
+      "name": "troop-3.141592653589793--0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "42fb9ef77018d8df20d7abcf61c5d8f1e74bafe3e630c59f9cc74a73c10a808c"
+        },
+        {
+          "step": 1,
+          "digest": "11edfc1c6ade0e456347820e71818204079aa7d4fa067c2bef8347153c1a9fce"
+        },
+        {
+          "step": 2,
+          "digest": "11edfc1c6ade0e456347820e71818204079aa7d4fa067c2bef8347153c1a9fce"
+        },
+        {
+          "step": 5,
+          "digest": "11edfc1c6ade0e456347820e71818204079aa7d4fa067c2bef8347153c1a9fce"
+        },
+        {
+          "step": 30,
+          "digest": "11edfc1c6ade0e456347820e71818204079aa7d4fa067c2bef8347153c1a9fce"
+        }
+      ]
+    },
+    {
+      "name": "troop-3.141592653589793-0",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "609816b7383c687deca8eed64fd375c359d9573be7fae8b7fb9c240c6bacf30d"
+        },
+        {
+          "step": 1,
+          "digest": "609816b7383c687deca8eed64fd375c359d9573be7fae8b7fb9c240c6bacf30d"
+        },
+        {
+          "step": 2,
+          "digest": "609816b7383c687deca8eed64fd375c359d9573be7fae8b7fb9c240c6bacf30d"
+        },
+        {
+          "step": 5,
+          "digest": "609816b7383c687deca8eed64fd375c359d9573be7fae8b7fb9c240c6bacf30d"
+        },
+        {
+          "step": 30,
+          "digest": "609816b7383c687deca8eed64fd375c359d9573be7fae8b7fb9c240c6bacf30d"
+        }
+      ]
+    },
+    {
+      "name": "troop-3.141592653589793-0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "fd2f1d6ced6c022dc6450841369e4bd28d2cda7ea5b7032b7f65ce60e88898d2"
+        },
+        {
+          "step": 1,
+          "digest": "fd2f1d6ced6c022dc6450841369e4bd28d2cda7ea5b7032b7f65ce60e88898d2"
+        },
+        {
+          "step": 2,
+          "digest": "fd2f1d6ced6c022dc6450841369e4bd28d2cda7ea5b7032b7f65ce60e88898d2"
+        },
+        {
+          "step": 5,
+          "digest": "fd2f1d6ced6c022dc6450841369e4bd28d2cda7ea5b7032b7f65ce60e88898d2"
+        },
+        {
+          "step": 30,
+          "digest": "fd2f1d6ced6c022dc6450841369e4bd28d2cda7ea5b7032b7f65ce60e88898d2"
+        }
+      ]
+    },
+    {
+      "name": "troop--1.5707963267948966--0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "3f43c9dadb852dfc057e565bb1dc65addc133db2e1e21df48118f47cd7858128"
+        },
+        {
+          "step": 1,
+          "digest": "11edfc1c6ade0e456347820e71818204079aa7d4fa067c2bef8347153c1a9fce"
+        },
+        {
+          "step": 2,
+          "digest": "11edfc1c6ade0e456347820e71818204079aa7d4fa067c2bef8347153c1a9fce"
+        },
+        {
+          "step": 5,
+          "digest": "11edfc1c6ade0e456347820e71818204079aa7d4fa067c2bef8347153c1a9fce"
+        },
+        {
+          "step": 30,
+          "digest": "11edfc1c6ade0e456347820e71818204079aa7d4fa067c2bef8347153c1a9fce"
+        }
+      ]
+    },
+    {
+      "name": "troop--1.5707963267948966-0",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "64d92c40c6e028b5d928e8f52d5da5c10b018ea5e5bb8c1222f312a235889d2c"
+        },
+        {
+          "step": 1,
+          "digest": "64d92c40c6e028b5d928e8f52d5da5c10b018ea5e5bb8c1222f312a235889d2c"
+        },
+        {
+          "step": 2,
+          "digest": "64d92c40c6e028b5d928e8f52d5da5c10b018ea5e5bb8c1222f312a235889d2c"
+        },
+        {
+          "step": 5,
+          "digest": "64d92c40c6e028b5d928e8f52d5da5c10b018ea5e5bb8c1222f312a235889d2c"
+        },
+        {
+          "step": 30,
+          "digest": "64d92c40c6e028b5d928e8f52d5da5c10b018ea5e5bb8c1222f312a235889d2c"
+        }
+      ]
+    },
+    {
+      "name": "troop--1.5707963267948966-0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "58f148f570fa8ab1ed220e91af330f538f81ee7ef3a339806fc5e9c055ac7334"
+        },
+        {
+          "step": 1,
+          "digest": "58f148f570fa8ab1ed220e91af330f538f81ee7ef3a339806fc5e9c055ac7334"
+        },
+        {
+          "step": 2,
+          "digest": "58f148f570fa8ab1ed220e91af330f538f81ee7ef3a339806fc5e9c055ac7334"
+        },
+        {
+          "step": 5,
+          "digest": "58f148f570fa8ab1ed220e91af330f538f81ee7ef3a339806fc5e9c055ac7334"
+        },
+        {
+          "step": 30,
+          "digest": "58f148f570fa8ab1ed220e91af330f538f81ee7ef3a339806fc5e9c055ac7334"
+        }
+      ]
+    },
+    {
+      "name": "building-0--0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "287370817846dfcfe9b6b62451e40eac16d34a2914fb88dec59f298384c2ff99"
+        },
+        {
+          "step": 1,
+          "digest": "21ad1e515555cfc4a40972c085d0ce2ecebd5ef281a6d5dba918b335b2659483"
+        },
+        {
+          "step": 2,
+          "digest": "21ad1e515555cfc4a40972c085d0ce2ecebd5ef281a6d5dba918b335b2659483"
+        },
+        {
+          "step": 5,
+          "digest": "21ad1e515555cfc4a40972c085d0ce2ecebd5ef281a6d5dba918b335b2659483"
+        },
+        {
+          "step": 30,
+          "digest": "21ad1e515555cfc4a40972c085d0ce2ecebd5ef281a6d5dba918b335b2659483"
+        }
+      ]
+    },
+    {
+      "name": "building-0-0",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "b98bf4f2e4f37d5c1117859eb33a32a7cc8f8372426a9db1531a4a40af67c3a5"
+        },
+        {
+          "step": 1,
+          "digest": "b98bf4f2e4f37d5c1117859eb33a32a7cc8f8372426a9db1531a4a40af67c3a5"
+        },
+        {
+          "step": 2,
+          "digest": "b98bf4f2e4f37d5c1117859eb33a32a7cc8f8372426a9db1531a4a40af67c3a5"
+        },
+        {
+          "step": 5,
+          "digest": "b98bf4f2e4f37d5c1117859eb33a32a7cc8f8372426a9db1531a4a40af67c3a5"
+        },
+        {
+          "step": 30,
+          "digest": "b98bf4f2e4f37d5c1117859eb33a32a7cc8f8372426a9db1531a4a40af67c3a5"
+        }
+      ]
+    },
+    {
+      "name": "building-0-0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "a7d48d12ebf3ff6a9ce16664bd558243c4cf6bd91a101972191ab3e0d5cde41c"
+        },
+        {
+          "step": 1,
+          "digest": "a7d48d12ebf3ff6a9ce16664bd558243c4cf6bd91a101972191ab3e0d5cde41c"
+        },
+        {
+          "step": 2,
+          "digest": "a7d48d12ebf3ff6a9ce16664bd558243c4cf6bd91a101972191ab3e0d5cde41c"
+        },
+        {
+          "step": 5,
+          "digest": "a7d48d12ebf3ff6a9ce16664bd558243c4cf6bd91a101972191ab3e0d5cde41c"
+        },
+        {
+          "step": 30,
+          "digest": "a7d48d12ebf3ff6a9ce16664bd558243c4cf6bd91a101972191ab3e0d5cde41c"
+        }
+      ]
+    },
+    {
+      "name": "building-0.7853981633974483--0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "d2e4d6601eca9251a6cc2388c257fb69cb6d4e6e15dbb7f237fffa2792ca2bee"
+        },
+        {
+          "step": 1,
+          "digest": "0d481dcc21b8dd1307d433092bf46797b136d832ff73b535a6c56d99eb543bae"
+        },
+        {
+          "step": 2,
+          "digest": "0d481dcc21b8dd1307d433092bf46797b136d832ff73b535a6c56d99eb543bae"
+        },
+        {
+          "step": 5,
+          "digest": "0d481dcc21b8dd1307d433092bf46797b136d832ff73b535a6c56d99eb543bae"
+        },
+        {
+          "step": 30,
+          "digest": "0d481dcc21b8dd1307d433092bf46797b136d832ff73b535a6c56d99eb543bae"
+        }
+      ]
+    },
+    {
+      "name": "building-0.7853981633974483-0",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "75afa5deb19493a0c89f2070941e0aa1a7918ee56924c02a65b2d16cbc4e0ecb"
+        },
+        {
+          "step": 1,
+          "digest": "75afa5deb19493a0c89f2070941e0aa1a7918ee56924c02a65b2d16cbc4e0ecb"
+        },
+        {
+          "step": 2,
+          "digest": "75afa5deb19493a0c89f2070941e0aa1a7918ee56924c02a65b2d16cbc4e0ecb"
+        },
+        {
+          "step": 5,
+          "digest": "75afa5deb19493a0c89f2070941e0aa1a7918ee56924c02a65b2d16cbc4e0ecb"
+        },
+        {
+          "step": 30,
+          "digest": "75afa5deb19493a0c89f2070941e0aa1a7918ee56924c02a65b2d16cbc4e0ecb"
+        }
+      ]
+    },
+    {
+      "name": "building-0.7853981633974483-0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "4363df30e2efc3e70b4369810ada1a5190c0223425283e1b7c50261ea95784ef"
+        },
+        {
+          "step": 1,
+          "digest": "4363df30e2efc3e70b4369810ada1a5190c0223425283e1b7c50261ea95784ef"
+        },
+        {
+          "step": 2,
+          "digest": "4363df30e2efc3e70b4369810ada1a5190c0223425283e1b7c50261ea95784ef"
+        },
+        {
+          "step": 5,
+          "digest": "4363df30e2efc3e70b4369810ada1a5190c0223425283e1b7c50261ea95784ef"
+        },
+        {
+          "step": 30,
+          "digest": "4363df30e2efc3e70b4369810ada1a5190c0223425283e1b7c50261ea95784ef"
+        }
+      ]
+    },
+    {
+      "name": "building-1.5707963267948966--0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "9137b922a8e9deed0745c64bddaca8fc62515f686894c4ae061ee5cd39ac459a"
+        },
+        {
+          "step": 1,
+          "digest": "5e76a6953ba1941f27461146196227c1040bbf264cd26e4ccbff73b8d6c51180"
+        },
+        {
+          "step": 2,
+          "digest": "5e76a6953ba1941f27461146196227c1040bbf264cd26e4ccbff73b8d6c51180"
+        },
+        {
+          "step": 5,
+          "digest": "5e76a6953ba1941f27461146196227c1040bbf264cd26e4ccbff73b8d6c51180"
+        },
+        {
+          "step": 30,
+          "digest": "5e76a6953ba1941f27461146196227c1040bbf264cd26e4ccbff73b8d6c51180"
+        }
+      ]
+    },
+    {
+      "name": "building-1.5707963267948966-0",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "e1db490b301be50115513c31b50b748b7e9a45ea6d646b8f7add4eb02e2d2467"
+        },
+        {
+          "step": 1,
+          "digest": "e1db490b301be50115513c31b50b748b7e9a45ea6d646b8f7add4eb02e2d2467"
+        },
+        {
+          "step": 2,
+          "digest": "e1db490b301be50115513c31b50b748b7e9a45ea6d646b8f7add4eb02e2d2467"
+        },
+        {
+          "step": 5,
+          "digest": "e1db490b301be50115513c31b50b748b7e9a45ea6d646b8f7add4eb02e2d2467"
+        },
+        {
+          "step": 30,
+          "digest": "e1db490b301be50115513c31b50b748b7e9a45ea6d646b8f7add4eb02e2d2467"
+        }
+      ]
+    },
+    {
+      "name": "building-1.5707963267948966-0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "4da858827a958eb4dd7351da930c6d3502ecfc331d2679e89050a7d29dc772dc"
+        },
+        {
+          "step": 1,
+          "digest": "4da858827a958eb4dd7351da930c6d3502ecfc331d2679e89050a7d29dc772dc"
+        },
+        {
+          "step": 2,
+          "digest": "4da858827a958eb4dd7351da930c6d3502ecfc331d2679e89050a7d29dc772dc"
+        },
+        {
+          "step": 5,
+          "digest": "4da858827a958eb4dd7351da930c6d3502ecfc331d2679e89050a7d29dc772dc"
+        },
+        {
+          "step": 30,
+          "digest": "4da858827a958eb4dd7351da930c6d3502ecfc331d2679e89050a7d29dc772dc"
+        }
+      ]
+    },
+    {
+      "name": "building-3.141592653589793--0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "4aad485aecaf4abe180e70e63106457305831863f6751ccf523d89460f68333d"
+        },
+        {
+          "step": 1,
+          "digest": "61ff2e2af4444e8106b38f1adb587b56b9a6aa51a8e9b980fbb49e1aa462af65"
+        },
+        {
+          "step": 2,
+          "digest": "61ff2e2af4444e8106b38f1adb587b56b9a6aa51a8e9b980fbb49e1aa462af65"
+        },
+        {
+          "step": 5,
+          "digest": "61ff2e2af4444e8106b38f1adb587b56b9a6aa51a8e9b980fbb49e1aa462af65"
+        },
+        {
+          "step": 30,
+          "digest": "61ff2e2af4444e8106b38f1adb587b56b9a6aa51a8e9b980fbb49e1aa462af65"
+        }
+      ]
+    },
+    {
+      "name": "building-3.141592653589793-0",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "db2dcc93346fb282f96f4a6fbda3651c19d64b38260a117493840b54b75339ce"
+        },
+        {
+          "step": 1,
+          "digest": "db2dcc93346fb282f96f4a6fbda3651c19d64b38260a117493840b54b75339ce"
+        },
+        {
+          "step": 2,
+          "digest": "db2dcc93346fb282f96f4a6fbda3651c19d64b38260a117493840b54b75339ce"
+        },
+        {
+          "step": 5,
+          "digest": "db2dcc93346fb282f96f4a6fbda3651c19d64b38260a117493840b54b75339ce"
+        },
+        {
+          "step": 30,
+          "digest": "db2dcc93346fb282f96f4a6fbda3651c19d64b38260a117493840b54b75339ce"
+        }
+      ]
+    },
+    {
+      "name": "building-3.141592653589793-0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "9fad25d370c8ac1453eebaa3018f120b5705e7b4b74aba005ea716d3dbf6c34a"
+        },
+        {
+          "step": 1,
+          "digest": "9fad25d370c8ac1453eebaa3018f120b5705e7b4b74aba005ea716d3dbf6c34a"
+        },
+        {
+          "step": 2,
+          "digest": "9fad25d370c8ac1453eebaa3018f120b5705e7b4b74aba005ea716d3dbf6c34a"
+        },
+        {
+          "step": 5,
+          "digest": "9fad25d370c8ac1453eebaa3018f120b5705e7b4b74aba005ea716d3dbf6c34a"
+        },
+        {
+          "step": 30,
+          "digest": "9fad25d370c8ac1453eebaa3018f120b5705e7b4b74aba005ea716d3dbf6c34a"
+        }
+      ]
+    },
+    {
+      "name": "building--1.5707963267948966--0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "33a185512f6165e086192e34a8cf088bc7a233112dfce601521eac9bb5637ce7"
+        },
+        {
+          "step": 1,
+          "digest": "17d8f1b725660466a35d082170557fd487ecfd7ee65e8631c2a6f11a8dfbef8d"
+        },
+        {
+          "step": 2,
+          "digest": "17d8f1b725660466a35d082170557fd487ecfd7ee65e8631c2a6f11a8dfbef8d"
+        },
+        {
+          "step": 5,
+          "digest": "17d8f1b725660466a35d082170557fd487ecfd7ee65e8631c2a6f11a8dfbef8d"
+        },
+        {
+          "step": 30,
+          "digest": "17d8f1b725660466a35d082170557fd487ecfd7ee65e8631c2a6f11a8dfbef8d"
+        }
+      ]
+    },
+    {
+      "name": "building--1.5707963267948966-0",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "189d371fb863b8444147974468892cceea7bdb7ec20e4def323dadddb9c25493"
+        },
+        {
+          "step": 1,
+          "digest": "189d371fb863b8444147974468892cceea7bdb7ec20e4def323dadddb9c25493"
+        },
+        {
+          "step": 2,
+          "digest": "189d371fb863b8444147974468892cceea7bdb7ec20e4def323dadddb9c25493"
+        },
+        {
+          "step": 5,
+          "digest": "189d371fb863b8444147974468892cceea7bdb7ec20e4def323dadddb9c25493"
+        },
+        {
+          "step": 30,
+          "digest": "189d371fb863b8444147974468892cceea7bdb7ec20e4def323dadddb9c25493"
+        }
+      ]
+    },
+    {
+      "name": "building--1.5707963267948966-0.000001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "8403ea64511deafb48c51b453f9850b975786a7d95c92aef505089433ee43ba5"
+        },
+        {
+          "step": 1,
+          "digest": "8403ea64511deafb48c51b453f9850b975786a7d95c92aef505089433ee43ba5"
+        },
+        {
+          "step": 2,
+          "digest": "8403ea64511deafb48c51b453f9850b975786a7d95c92aef505089433ee43ba5"
+        },
+        {
+          "step": 5,
+          "digest": "8403ea64511deafb48c51b453f9850b975786a7d95c92aef505089433ee43ba5"
+        },
+        {
+          "step": 30,
+          "digest": "8403ea64511deafb48c51b453f9850b975786a7d95c92aef505089433ee43ba5"
+        }
+      ]
+    },
+    {
+      "name": "coincident-0",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "8646d51a06197506abf7185b9a270939e68cc3541e3ad20671919bd30540b64c"
+        },
+        {
+          "step": 1,
+          "digest": "8646d51a06197506abf7185b9a270939e68cc3541e3ad20671919bd30540b64c"
+        },
+        {
+          "step": 2,
+          "digest": "8646d51a06197506abf7185b9a270939e68cc3541e3ad20671919bd30540b64c"
+        },
+        {
+          "step": 5,
+          "digest": "8646d51a06197506abf7185b9a270939e68cc3541e3ad20671919bd30540b64c"
+        },
+        {
+          "step": 30,
+          "digest": "8646d51a06197506abf7185b9a270939e68cc3541e3ad20671919bd30540b64c"
+        }
+      ]
+    },
+    {
+      "name": "coincident-0.000999",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "12d5dc42ba865a09f5800a7cba73bf69d90aa1daa5faf658ad5230b0e8e5ae3e"
+        },
+        {
+          "step": 1,
+          "digest": "12d5dc42ba865a09f5800a7cba73bf69d90aa1daa5faf658ad5230b0e8e5ae3e"
+        },
+        {
+          "step": 2,
+          "digest": "12d5dc42ba865a09f5800a7cba73bf69d90aa1daa5faf658ad5230b0e8e5ae3e"
+        },
+        {
+          "step": 5,
+          "digest": "12d5dc42ba865a09f5800a7cba73bf69d90aa1daa5faf658ad5230b0e8e5ae3e"
+        },
+        {
+          "step": 30,
+          "digest": "12d5dc42ba865a09f5800a7cba73bf69d90aa1daa5faf658ad5230b0e8e5ae3e"
+        }
+      ]
+    },
+    {
+      "name": "coincident-0.001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "dfb7c4ed4028212f2a4f4ee7ea27ffcf12555afa6e89487ea200a7c7a20e2243"
+        },
+        {
+          "step": 1,
+          "digest": "dfb7c4ed4028212f2a4f4ee7ea27ffcf12555afa6e89487ea200a7c7a20e2243"
+        },
+        {
+          "step": 2,
+          "digest": "dfb7c4ed4028212f2a4f4ee7ea27ffcf12555afa6e89487ea200a7c7a20e2243"
+        },
+        {
+          "step": 5,
+          "digest": "dfb7c4ed4028212f2a4f4ee7ea27ffcf12555afa6e89487ea200a7c7a20e2243"
+        },
+        {
+          "step": 30,
+          "digest": "dfb7c4ed4028212f2a4f4ee7ea27ffcf12555afa6e89487ea200a7c7a20e2243"
+        }
+      ]
+    },
+    {
+      "name": "coincident-0.001001",
+      "checkpoints": [
+        {
+          "step": 0,
+          "digest": "1f4d121d5175ac2c3fff6f15fa5f4307d014337c9fc3edaa20514f3c43b84142"
+        },
+        {
+          "step": 1,
+          "digest": "11edfc1c6ade0e456347820e71818204079aa7d4fa067c2bef8347153c1a9fce"
+        },
+        {
+          "step": 2,
+          "digest": "11edfc1c6ade0e456347820e71818204079aa7d4fa067c2bef8347153c1a9fce"
+        },
+        {
+          "step": 5,
+          "digest": "11edfc1c6ade0e456347820e71818204079aa7d4fa067c2bef8347153c1a9fce"
+        },
+        {
+          "step": 30,
+          "digest": "11edfc1c6ade0e456347820e71818204079aa7d4fa067c2bef8347153c1a9fce"
+        }
+      ]
+    }
+  ]
+}

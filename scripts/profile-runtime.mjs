@@ -64,7 +64,10 @@ const expectedAnimations = JSON.parse(
   readFileSync("public/assets/animations/manifest.json", "utf8"),
 ).files.length;
 await page.waitForFunction(
-  ({ count, stress }) => (stress ? window.__arenaProfile : window.__arena).state.loadedAnimations === count,
+  ({ count, stress }) => {
+    const state = (stress ? window.__arenaProfile : window.__arena).state;
+    return state.loadedAnimations === count && (!stress || state.ready);
+  },
   { count: expectedAnimations, stress },
   { timeout: 120000 },
 );

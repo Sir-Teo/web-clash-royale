@@ -63,6 +63,8 @@ Object.defineProperty(window, "__arenaProfile", {
     burstCrowns,
     get state() {
       return {
+        // needsFrame includes pending asset loads and the requested rebuild.
+        ready: !arena.needsFrame,
         renderedFrames: frames,
         entities: battle.entities.length,
         particles: arena.particleCount,
