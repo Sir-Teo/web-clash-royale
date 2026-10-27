@@ -4,6 +4,7 @@ import type { CardId } from "../game/cards";
 import { entityVisualHeight } from "../game/engine";
 import type { Point } from "../game/engine";
 import { deploymentPositions, goblinGangCharacter } from "../game/deployment";
+import type { DeploymentYBounds } from "../game/placement-bounds";
 import { troopModel } from "./models";
 import { SpriteLibrary } from "./sprites";
 import type { AnimatedSprite, SpriteState } from "./sprites";
@@ -29,7 +30,7 @@ export class DeploymentPreview {
   get count() {
     return this.units.length;
   }
-  show(id: CardId, point: Point, valid: boolean, rulesVersion = 22, armyViewMirrored?: true) {
+  show(id: CardId, point: Point, valid: boolean, rulesVersion = 22, armyViewMirrored?: true, yBounds?: DeploymentYBounds) {
     if (this.card !== id) {
       this.clear();
       this.card = id;
@@ -91,7 +92,7 @@ export class DeploymentPreview {
       }
     }
     this.object.visible = true;
-    const points = deploymentPositions(id, point, "blue", undefined, rulesVersion, armyViewMirrored);
+    const points = deploymentPositions(id, point, "blue", undefined, rulesVersion, armyViewMirrored, yBounds);
     this.units.forEach((unit, i) => {
       unit.object.position.set(
         points[i].x - 9,

@@ -1,0 +1,35 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/client/placement-bounds-native-trace.json",
+      "sha256": "8b01ae1ed437db08ecbc9cee3903084e132d033ea16c2a5617991e96694f3f3b"
+    },
+    {
+      "path": "reference/logic/spells_characters.csv",
+      "sha256": "4feb86264d17e08717d36ea3bb19815e59653994b2283a89871811e8510c9215"
+    },
+    {
+      "path": "reference/logic/spells_buildings.csv",
+      "sha256": "f302372ce1d0870e3edb37d0520be9164865eb207ea600910616b9cbf024f456"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "public/assets/ui/cards/cards.json",
+      "sha256": "f1b2cb232984f6c87e2f53182a2ee35318cb1d01598609dcc5f9c604b2b6d7f7"
+    }
+  ],
+  "output": {
+    "path": "src/game/placement-bounds-data.json",
+    "sha256": "c0d12011e9c51bb10b22a31ed5472a9255d81646f06da1e592fa72c773a3e575"
+  },
+  "scope": "Ordinary troop ground-child Y bounds; browser placement permissions and factory collision remain separate"
+}

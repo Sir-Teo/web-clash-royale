@@ -1,4 +1,5 @@
 import { groupFormation } from "./group-formation";
+import { clampDeploymentY, type DeploymentYBounds } from "./placement-bounds";
 import { armyFormation } from "./army-formation";
 import { CARD_MAP } from "./cards";
 import type { CardId } from "./cards";
@@ -77,6 +78,22 @@ export function deploymentTime(id: CardId, rulesVersion = 19): number {
 }
 
 export function deploymentPositions(
+  id: CardId,
+  point: Point,
+  team: Team = "blue",
+  countOverride?: number,
+  rulesVersion = 22,
+  armyViewMirrored?: true,
+  yBounds?: DeploymentYBounds,
+): Point[] {
+  const positions = deploymentLayout(id, point, team, countOverride, rulesVersion, armyViewMirrored);
+  return rulesVersion >= 36 && yBounds ? positions.map(position => ({
+    x: position.x,
+    y: Math.max(0.8, Math.min(31.2, clampDeploymentY(position.y, yBounds))),
+  })) : positions;
+}
+
+function deploymentLayout(
   id: CardId,
   point: Point,
   team: Team = "blue",

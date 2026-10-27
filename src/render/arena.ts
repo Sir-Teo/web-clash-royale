@@ -1,5 +1,6 @@
 import * as T from "three";
 import { Battle, entityVisualHeight } from "../game/engine";
+import { deploymentYBounds } from "../game/placement-bounds";
 import type { Entity, Point, Team } from "../game/engine";
 import { CARD_MAP } from "../game/cards";
 import type { CardId } from "../game/cards";
@@ -986,10 +987,12 @@ export class Arena {
     (this.rangeRing.material as T.MeshBasicMaterial).color.setHex(
       valid ? 0x9bffca : 0xff536a,
     );
-    const previewVersion = id === "skeleton-army" && this.battle
+    const previewVersion = this.battle?.nativeGroundDeployment ? 36 : id === "skeleton-army" && this.battle
       ? this.battle.nativeArmyFormation ? 34 : 33
       : this.battle?.nativeGroupFormation ? 35 : Math.min(this.battle?.rulesVersion ?? 22, 34);
-    if (card.kind !== "spell") this.deployment.show(id, point, valid, previewVersion, this.battle?.nativeArmyViewMirrored);
+    const yBounds = this.battle?.nativeGroundDeployment
+      ? deploymentYBounds(id, this.battle.entities, "blue", point.x, this.battle.nativeArmyViewMirrored) : undefined;
+    if (card.kind !== "spell") this.deployment.show(id, point, valid, previewVersion, this.battle?.nativeArmyViewMirrored, yBounds);
     else this.deployment.object.visible = false;
     this.placementFeedback.classList.toggle("invalid", !valid);
     const feedback = valid

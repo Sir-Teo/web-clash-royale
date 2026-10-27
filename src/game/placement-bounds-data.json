@@ -1,0 +1,266 @@
+{
+  "sourceUnitsPerTile": 1000,
+  "width": 18,
+  "height": 32,
+  "cards": {
+    "knight": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "archers": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "giant": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "musketeer": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "mini-pekka": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "goblins": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "spear-goblins": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "skeletons": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "skeleton-army": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "bomber": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "valkyrie": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "hog-rider": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "baby-dragon": {
+      "flying": true,
+      "canDeployOnEnemySide": false
+    },
+    "minions": {
+      "flying": true,
+      "canDeployOnEnemySide": false
+    },
+    "witch": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "wizard": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "prince": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "pekka": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "balloon": {
+      "flying": true,
+      "canDeployOnEnemySide": false
+    },
+    "minion-horde": {
+      "flying": true,
+      "canDeployOnEnemySide": false
+    },
+    "bats": {
+      "flying": true,
+      "canDeployOnEnemySide": false
+    },
+    "night-witch": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "bandit": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "golem": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "lava-hound": {
+      "flying": true,
+      "canDeployOnEnemySide": false
+    },
+    "three-musketeers": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "goblin-gang": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "barbarians": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "elite-barbarians": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "ice-spirit": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "fire-spirits": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "giant-skeleton": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "guards": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "ice-golem": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "royal-giant": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "mega-minion": {
+      "flying": true,
+      "canDeployOnEnemySide": false
+    },
+    "dart-goblin": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "ice-wizard": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "princess": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "inferno-dragon": {
+      "flying": true,
+      "canDeployOnEnemySide": false
+    },
+    "electro-wizard": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "miner": {
+      "flying": false,
+      "canDeployOnEnemySide": true
+    },
+    "bowler": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "dark-prince": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "battle-ram": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "executioner": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "sparky": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    },
+    "lumberjack": {
+      "flying": false,
+      "canDeployOnEnemySide": false
+    }
+  },
+  "bodies": {
+    "cannon": {
+      "tileSize": 3,
+      "noDeployWidth": 0,
+      "noDeployHeight": 0
+    },
+    "tesla": {
+      "tileSize": 2,
+      "noDeployWidth": 0,
+      "noDeployHeight": 0
+    },
+    "mortar": {
+      "tileSize": 3,
+      "noDeployWidth": 0,
+      "noDeployHeight": 0
+    },
+    "bomb-tower": {
+      "tileSize": 3,
+      "noDeployWidth": 0,
+      "noDeployHeight": 0
+    },
+    "inferno-tower": {
+      "tileSize": 3,
+      "noDeployWidth": 0,
+      "noDeployHeight": 0
+    },
+    "x-bow": {
+      "tileSize": 3,
+      "noDeployWidth": 0,
+      "noDeployHeight": 0
+    },
+    "elixir-collector": {
+      "tileSize": 3,
+      "noDeployWidth": 0,
+      "noDeployHeight": 0
+    },
+    "goblin-hut": {
+      "tileSize": 3,
+      "noDeployWidth": 0,
+      "noDeployHeight": 0
+    },
+    "tombstone": {
+      "tileSize": 3,
+      "noDeployWidth": 0,
+      "noDeployHeight": 0
+    },
+    "furnace": {
+      "tileSize": 3,
+      "noDeployWidth": 0,
+      "noDeployHeight": 0
+    },
+    "barbarian-hut": {
+      "tileSize": 3,
+      "noDeployWidth": 0,
+      "noDeployHeight": 0
+    },
+    "king": {
+      "tileSize": 2,
+      "noDeployWidth": 18,
+      "noDeployHeight": 16
+    },
+    "princess": {
+      "tileSize": 3,
+      "noDeployWidth": 11,
+      "noDeployHeight": 21
+    }
+  }
+}

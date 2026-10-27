@@ -14,6 +14,7 @@ import { Battle as LegacyLocalBattle, type EngineOptions as LegacyLocalOptions }
 import { CARD_MAP, LEGACY_BALLOON_STATS, LEGACY_BUILDING_STATS, LEGACY_CARD_SPLASH, LEGACY_CARD_STATS, LEGACY_CARD_VITALS, STARTER_DECK } from "./cards";
 import type { CardId } from "./cards";
 import { clonePosition, deploymentPositions, deploymentTime, deploymentVisualDelay, goblinGangCharacter } from "./deployment";
+import { deploymentYBounds } from "./placement-bounds";
 import { advanceAnimationClock } from "./animation-clock";
 import { areaSpellTarget, isAreaSpell } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targeting";
@@ -248,7 +249,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -298,6 +299,8 @@ export class Battle {
   nativeArmyFormation?: true;
   /** Rules 35 physical lane and parity orientation for ordinary groups. */
   nativeGroupFormation?: true;
+  /** Rules 36 source column bounds for ordinary ground troop requests. */
+  nativeGroundDeployment?: true;
   /** View-only X reflection for previews after a guest rotates the arena. */
   nativeArmyViewMirrored?: true;
   tick = 0;
@@ -336,10 +339,11 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 35;
+    this.rulesVersion = r?.version ?? 36;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
+    this.nativeGroundDeployment = this.rulesVersion >= 36 ? true : undefined;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -782,6 +786,8 @@ export class Battle {
           ? id === "goblins" ? 4 : id === "skeletons" ? 3 : undefined
           : undefined,
         this.rulesVersion,
+        undefined,
+        this.nativeGroundDeployment ? deploymentYBounds(id, this.entities, team, x) : undefined,
       );
       for (const [index, point] of positions.entries())
         this.spawn(

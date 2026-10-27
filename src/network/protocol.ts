@@ -35,6 +35,7 @@ export interface BattleSnapshot {
   nativeTowerLayout?: true;
   nativeArmyFormation?: true;
   nativeGroupFormation?: true;
+  nativeGroundDeployment?: true;
   nativeArmyViewMirrored?: true;
   entities: Entity[];
   projectiles: Projectile[];

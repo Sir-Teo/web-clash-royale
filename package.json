@@ -22,6 +22,7 @@
     "assets:attack-clock": "node scripts/import-attack-clock.mjs",
     "assets:primary-score": "node scripts/import-primary-score.mjs",
     "assets:primary-geometry": "node scripts/import-primary-geometry.mjs",
+    "assets:placement-bounds": "node scripts/import-placement-bounds.mjs",
     "assets:group-formation": "node scripts/import-group-formation.mjs",
     "assets:army-formation": "node scripts/import-army-formation.mjs",
     "assets:barrel-formation": "node scripts/import-barrel-formation.mjs",
