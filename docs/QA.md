@@ -2069,3 +2069,22 @@ Production compilation and Pages-prefixed offline reload pass, including the cac
 The `--sight-range --candidate-minimum` capture and independent `--check` reproduce byte-for-byte: 1,092 candidate boundary samples, 26 getter controls, thirteen profiles and thirteen disassembly blocks. They cover both own-radius flag values, zero/positive source minimums, seven radii and both signs of the inner boundary. Under the actual enabled flag, the scanner and attack predicate agree for the tested real roster radii through 1.4 tiles. Controls record the scanner's distinct flag-disabled and oversized-radius behavior. Passing the bounded range gates is not claimed as full acquisition.
 
 The original sight capture still regenerates byte-for-byte, so the current imported source-sight evidence and manifest hashes are unchanged. Syntax and whitespace checks pass. App rules 25 and root cache `1a88a75dd712` remain unchanged; no application rebuild, push or deployment was performed.
+
+
+## Mortar minimum range and placement bounds
+
+New origin matches record rules 26. Mortar now resolves its 4.5-tile source minimum by adding its 0.6-tile body radius and subtracting the target radius, accepting equality. The optional `minimumRange` travels in snapshots. Earlier versions omit it and retain the flat 4.5-tile center bound. Current windup/King forecasts, support engagement and approach-path checks respect the new optional bound; the historical forecast paths remain unchanged.
+
+The shared importer pins both independently captured minimum gates, Mortar data and roster radii. It verifies the actual enabled setting and directly shared boundaries, while retaining controls where the native predicates differ. Real roster bodies are at most 1.4 tiles, within the verified agreeing domain. Thirty-three new checks bind all native predicate samples and applicable scanner boundaries to the helper; test five real target types, both teams, exact equality and adjacent source units; cancel a live windup when a Knight crosses inward; match actual King damage/cancellation to forecasts; preserve peer projection and all earlier fields; and verify inner/outer placement bounds without adding attack rings to passive buildings or changing spell/troop previews.
+
+Three complete earlier rules-25 games independently built from `79b3ca6` retain 28 world/action/RNG checkpoints over 16,654 ticks. One reruns historical AI, and the ground case launches four real Mortar projectiles. Fixture regeneration matches exactly. The complete current match also requires actual Mortar launches and matches recorded/replayed world and RNG.
+
+All 1,964 unit/asset checks across 183 files are verified. The full run passes 1,963 and identifies one older guidance fixture that equated the nominal stat to center distance. That fixture now relates the stat to both radii and accepts native equality; all 35 affected minimum/guidance checks pass. TypeScript passes.
+
+
+All six desktop Chromium/phone WebKit browser cases are verified. The new minimum-range comparison exercises both teams against small Knights and larger Goblin Huts under rules 25/26. It verifies actual windups and landed damage, the inverse old/new outcomes at each radius, and preserved state/native Mortar models after renderer rebuild. Each project retains a complete comparison trace. Placement checks verify the 5.1/12.1 inner/outer bounds, invalid-state color, hiding, switching to Cannon/troop previews, readable feedback and phone landscape. Real-hand cases retain the nominal 4.5-tile card stat, keyboard aiming, mouse/touch deployment, native model and projectile artwork, with the new radius label inside the arena. Desktop and phone production captures were inspected.
+
+The first browser run passed the new desktop comparison and then caught an older live-hand expectation for the previous 4.5-tile preview radius/label. Only that expectation was updated; the nominal card-stat assertion stays 4.5. Both desktop UI cases and all three phone cases then passed, retaining the already passing desktop comparison.
+
+
+Production compilation and Pages-prefixed offline reload pass, including the cached browser match worker, rules-26 startup and all 278 native combat/death/music files. The normal root build is restored with cache version `6ea3e3ac1265`. The pack remains 921 URLs and 894 unique content groups, omitting 8.1 MB of duplicate bytes. No push or deployment was performed.

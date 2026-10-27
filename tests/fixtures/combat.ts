@@ -1,5 +1,6 @@
 import { defensiveThreats } from "../../src/game/defensive-threats";
-import { attackReach } from "../../src/game/attack-range";
+import { attackReach, minimumAttackDistance } from "../../src/game/attack-range";
+import mortarRules from "../../src/game/mortar-data.json" with { type: "json" };
 import { acquisitionSight } from "../../src/game/sight-range";
 import { Arena } from "../../src/render/arena";
 import { spriteGeometry } from "../../src/render/sprites";
@@ -47,6 +48,7 @@ let battle: Battle,
 let victims: { team: Team; x: number; y: number }[] = [];
 const clockModes = new Map<number, string>();
 const sightTargets = new Map<number, number>();
+const minimumTargets = new Map<number, number>();
 document.querySelector("#death-card")!.innerHTML = CARDS.filter(
   (c) => c.kind !== "spell",
 )
@@ -80,6 +82,7 @@ function setup() {
   victims = [];
   clockModes.clear();
   sightTargets.clear();
+  minimumTargets.clear();
   document.querySelector("#play")!.textContent = "Play";
   const selectedScene = (
     document.querySelector("#scenario") as HTMLSelectElement
@@ -91,8 +94,8 @@ function setup() {
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
-  if (["attack-range", "sight-range"].includes(selectedScene) && (rangeRules === "23" || rangeRules === "24")) {
-    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 } });
+  if (["attack-range", "sight-range", "minimum-range"].includes(selectedScene) && ["23", "24", "25"].includes(rangeRules ?? "")) {
+    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
   for (const t of battle.entities) t.active = false;
@@ -113,6 +116,7 @@ function setup() {
   (document.querySelector("#range-out") as HTMLElement).hidden = scenario !== "attack-range" && scenario !== "sight-range";
   document.querySelector("#range-out")!.textContent = scenario === "sight-range"
     ? "Move targets outside sight" : "Move targets outside attack reach";
+  (document.querySelector("#minimum-config") as HTMLElement).hidden = scenario !== "minimum-range";
   (document.querySelector("#break-shield") as HTMLElement).hidden =
     scenario !== "dark-prince" && scenario !== "guards";
   (document.querySelector("#kill-night-witch") as HTMLElement).hidden =
@@ -159,7 +163,7 @@ function setup() {
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king" &&
       !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
-      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-range", "sight-range"].includes(scenario) && ["rebuild", "destruction"].includes(id));
+      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-range", "sight-range", "minimum-range"].includes(scenario) && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -744,6 +748,17 @@ function setup() {
       target.speed = target.damage = 0;
       target.hp = target.maxHp = 10000;
     }
+  } else if (scenario === "minimum-range") {
+    const large = (document.querySelector("#minimum-target") as HTMLSelectElement).value === "large";
+    for (const team of ["blue", "red"] as const) {
+      const x = team === "blue" ? 4 : 14, y = team === "blue" ? 23 : 9;
+      const attacker = unit("mortar", team, x, y)[0];
+      const target = unit(large ? "goblin-hut" : "knight", team === "blue" ? "red" : "blue", x, y)[0];
+      Object.assign(target, { active: false, hp: 1e6, maxHp: 1e6, lifetime: undefined });
+      target.x = attacker.x;
+      target.y = attacker.y + (team === "blue" ? -1 : 1) * (large ? 4.3 : 4.55);
+      minimumTargets.set(attacker.id, target.id);
+    }
   } else if (scenario === "sight-range") {
     const card = (document.querySelector("#attack-card") as HTMLSelectElement).value as CardId;
     for (const team of ["blue", "red"] as const) {
@@ -965,6 +980,7 @@ document.querySelector("#break-shield")!.addEventListener("click", () =>
     21));
 document.querySelector("#death-card")!.addEventListener("change", setup);
 document.querySelector("#attack-card")!.addEventListener("change", setup);
+document.querySelector("#minimum-target")!.addEventListener("change", setup);
 document.querySelector("#defeat")!.addEventListener("click", () => {
   for (const v of victims)
     cast("zap", v.team === "red" ? "blue" : "red", v.x, v.y);
@@ -1303,6 +1319,21 @@ function render(now: number) {
             noticed: entity.target === target.id, targetHp: target.hp,
             lock: entity.inferno, pending: entity.pendingAttack,
             native: !!(visual?.sprite || visual?.building),
+          };
+        }) });
+  if (sceneSelect.value === "minimum-range")
+    (document.querySelector("#destruction") as HTMLElement).dataset.minimumRange =
+      JSON.stringify({ version: battle.rulesVersion, time: battle.time,
+        mode: (document.querySelector("#minimum-target") as HTMLSelectElement).value,
+        bodies: battle.entities.filter((entity) => minimumTargets.has(entity.id)).map((entity) => {
+          const target = battle.entities.find((entry) => entry.id === minimumTargets.get(entity.id))!;
+          const visual = (arena as any).units.get(entity.id);
+          return { id: entity.id, team: entity.team, targetCard: target.card, targetRadius: target.radius,
+            minimum: minimumAttackDistance(entity, target, mortarRules.minimumRange),
+            gap: Math.hypot(entity.x - target.x, entity.y - target.y),
+            targetHp: target.hp, pending: entity.pendingAttack,
+            native: !!visual?.building,
+            shots: battle.projectiles.filter((shot) => shot.source === entity.id).length,
           };
         }) });
   const collector = battle.entities.find((entity) => entity.card === "elixir-collector");

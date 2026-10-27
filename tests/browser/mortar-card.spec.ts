@@ -57,9 +57,9 @@ test("native Mortar deploys, aims and fires on desktop and phone", async ({
   await page.locator(`#hand [data-slot="${slot}"]`).click();
   await page.locator("canvas").focus();
   await page.keyboard.press("ArrowUp");
-  await expect.poll(async () => (await state()).placement?.minimumRange).toBe(4.5);
+  await expect.poll(async () => (await state()).placement?.minimumRange).toBe(5.1);
   const feedback = page.locator(".placement-feedback");
-  await expect(feedback).toContainText("Blind spot: 4.5 tiles");
+  await expect(feedback).toContainText("Blind spot radius: 5.1 tiles");
   const label = await feedback.boundingBox();
   const arena = await page.locator("#arena-canvas").boundingBox();
   expect(label!.x).toBeGreaterThanOrEqual(arena!.x);

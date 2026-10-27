@@ -1,4 +1,4 @@
-import { attackReach } from "./attack-range";
+import { attackReach, minimumAttackDistance } from "./attack-range";
 import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point } from "./engine";
 import tornado from "./tornado-data.json" with { type: "json" };
@@ -224,7 +224,9 @@ export function resolveWindup(
       (status && (!status.beforeAlive || status.beforeInterrupt)) ||
       frame.stun > 0 ||
       distance(position, target) >
-        attackReach(attacker, target)
+        attackReach(attacker, target) ||
+      (attacker.minimumRange !== undefined &&
+        distance(position, target) < minimumAttackDistance(attacker, target))
     )
       return { position, cancelledStep: step };
     remaining -=

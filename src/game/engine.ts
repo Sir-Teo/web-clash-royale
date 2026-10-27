@@ -1,4 +1,4 @@
-import { attackReach, NATIVE_RANGE_RADIUS_FACTOR } from "./attack-range";
+import { attackReach, minimumAttackDistance, NATIVE_RANGE_RADIUS_FACTOR } from "./attack-range";
 import { areaRandom, areaRandomSeed } from "./area-random";
 import { acquisitionSight, nativeSightRange } from "./sight-range";
 import { advanceSummonClock, summonProfile, type SummonProfile } from "./summon-clock";
@@ -105,6 +105,8 @@ export interface Entity extends Point {
   rangeRadiusFactor?: number;
   /** Rules 25: resolved source sight, including own collision radius. */
   sightRange?: number;
+  /** Rules 26: source inner range, resolved against each target's body size. */
+  minimumRange?: number;
   air: boolean;
   damage: number;
   range: number;
@@ -225,7 +227,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -305,7 +307,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 25;
+    this.rulesVersion = r?.version ?? 26;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -788,6 +790,7 @@ export class Battle {
       radius,
       ...(this.rulesVersion >= 24 ? { rangeRadiusFactor: NATIVE_RANGE_RADIUS_FACTOR } : {}),
       ...(this.rulesVersion >= 25 ? { sightRange: nativeSightRange({ card: id, radius }) } : {}),
+      ...(this.rulesVersion >= 26 && id === "mortar" ? { minimumRange: mortar.minimumRange } : {}),
       air: !!c.air,
       damage: legacyBalloon?.damage ?? legacyVitals?.damage ?? c.damage,
       range: legacyBalloon?.range ?? stats.range,
@@ -1439,7 +1442,7 @@ export class Battle {
       target.team !== e.team &&
       (!target.air || e.kind === "tower" || !!card?.hitsAir) &&
       (!card?.buildingsOnly || target.kind !== "troop") &&
-      (e.card !== "mortar" || dist(e, target) >= mortar.minimumRange)
+      (e.card !== "mortar" || dist(e, target) >= minimumAttackDistance(e, target, mortar.minimumRange))
     );
   }
   private inRange(e: Entity, target: Entity) {

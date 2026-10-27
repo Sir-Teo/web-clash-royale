@@ -1,6 +1,6 @@
 import * as T from "three";
 
-/** A nominal minimum attack range, kept separate from placement validity. */
+/** Inner boundary for target-body overlap, separate from placement validity. */
 export class BlindSpotIndicator {
   readonly object = new T.Group();
   private fill = new T.Mesh(

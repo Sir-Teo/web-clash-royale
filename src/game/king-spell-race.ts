@@ -1,4 +1,4 @@
-import { attackReach } from "./attack-range";
+import { attackReach, minimumAttackDistance } from "./attack-range";
 import type { CardId } from "./cards";
 import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
@@ -38,6 +38,8 @@ export function fatalKingWindups(
       pending.remaining > 1 ||
       Math.hypot(attacker.x - king.x, attacker.y - king.y) >
         attackReach(attacker, king) ||
+      (attacker.minimumRange !== undefined &&
+        Math.hypot(attacker.x - king.x, attacker.y - king.y) < minimumAttackDistance(attacker, king)) ||
       areas.some(
         (a) =>
           a.card === "freeze" &&

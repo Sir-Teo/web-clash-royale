@@ -46,7 +46,7 @@ describe("Mortar minimum-range guidance", () => {
     expect(indicator.object.children).toHaveLength(0);
   });
 
-  it("matches the displayed blind spot and deployment timer to actual targeting", () => {
+  it("relates nominal minimum range and both body radii to actual targeting", () => {
     const battle = new Battle({ seed: 17, ai: false });
     battle.players.blue.hand[0] = "mortar";
     battle.players.blue.elixir = 10;
@@ -58,17 +58,20 @@ describe("Mortar minimum-range guidance", () => {
     expect(parseFloat(stats["Deploy time"])).toBe(unit.deploy);
     expect(parseFloat(stats.Range)).toBe(unit.range);
     const minimum = parseFloat(stats["Minimum range"]);
+    expect(unit.minimumRange).toBe(minimum);
     battle.players.red.hand[0] = "knight";
     battle.players.red.elixir = 10;
     expect(battle.play("red", 0, 4, 10).ok).toBe(true);
     const target = battle.entities.find(
       (entity) => entity.team === "red" && entity.card === "knight",
     )!;
-    target.x = unit.x;
-    target.y = unit.y - minimum + 0.001;
+    const boundary = minimum + unit.radius - target.radius;
+    unit.x = unit.y = target.y = 0;
+    target.x = boundary - 0.001;
     expect((battle as any).validTarget(unit, target)).toBe(false);
-    target.y = unit.y - minimum;
+    target.x = boundary;
     expect((battle as any).validTarget(unit, target)).toBe(true);
     expect(cardDetails("mortar").note).toContain("inside the minimum range");
+    expect(cardDetails("mortar").note).toContain("Larger enemies");
   });
 });

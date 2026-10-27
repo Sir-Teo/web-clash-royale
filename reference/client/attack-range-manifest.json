@@ -21,6 +21,22 @@
     {
       "path": "reference/client/sight-range-native-trace.json",
       "sha256": "f06ad9d12232699a27af7f0215eb9177c0aa1fcdcdda88626196fd2bfe08141b"
+    },
+    {
+      "path": "reference/client/attack-minimum-native-trace.json",
+      "sha256": "4b6eed250e0d52564bd3e8f7e7c30c99802588bd7261f187166d971d03a8c1d4"
+    },
+    {
+      "path": "reference/client/candidate-minimum-native-trace.json",
+      "sha256": "476786f49f6be6a77d687129a5638679d1766da5e35ee0a09ff108f59a568d14"
+    },
+    {
+      "path": "src/game/mortar-data.json",
+      "sha256": "6144cc899be606f62f1594bc806ae30c88d718a62a92bb0f492f75a311e3d23e"
+    },
+    {
+      "path": "src/game/archived-collision-radii.json",
+      "sha256": "162f067fe3b3075e1417ed7cd89293d95a1568af10c95ef9a02ba1e0a8871d47"
     }
   ],
   "output": {

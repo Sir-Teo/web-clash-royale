@@ -21,6 +21,7 @@ test("Mortar placement marks its blind spot and clears it when hidden or switchi
       placement: null | {
         card: string;
         minimumRange: number;
+        maximumRange: number;
         valid: boolean;
         count: number;
       };
@@ -36,15 +37,16 @@ test("Mortar placement marks its blind spot and clears it when hidden or switchi
   const initial = await state();
   expect(initial.placement).toMatchObject({
     card: "mortar",
-    minimumRange: 4.5,
+    minimumRange: 5.1,
+    maximumRange: 12.1,
     valid: true,
     count: 1,
   });
-  expect(initial.inner).toBeLessThan(4.5);
-  expect(initial.outer).toBeGreaterThan(4.5);
+  expect(initial.inner).toBeLessThan(5.1);
+  expect(initial.outer).toBeGreaterThan(5.1);
   expect(initial.color).toBe(0xffcf78);
   await expect(page.locator(".placement-feedback")).toContainText(
-    "Blind spot: 4.5 tiles",
+    "Blind spot radius: 5.1 tiles",
   );
   const label = await page.locator(".placement-feedback").boundingBox();
   expect(label!.x).toBeGreaterThanOrEqual(0);
@@ -58,7 +60,7 @@ test("Mortar placement marks its blind spot and clears it when hidden or switchi
   await page.locator("#preview-invalid").click();
   await expect.poll(async () => (await state()).color).toBe(0xff536a);
   expect((await state()).placement).toMatchObject({
-    minimumRange: 4.5,
+    minimumRange: 5.1,
     valid: false,
   });
   await expect(page.locator(".placement-feedback")).toHaveText(
@@ -72,6 +74,9 @@ test("Mortar placement marks its blind spot and clears it when hidden or switchi
     await page.locator("#preview-formation").click();
     await expect.poll(async () => (await state()).placement?.card).toBe(card);
     expect((await state()).placement?.minimumRange).toBe(0);
+    expect((await state()).placement?.maximumRange).toBe(
+      card === "cannon" ? 6.1 : 0.8,
+    );
     expect((await state()).visible).toBe(false);
     await expect(page.locator(".placement-feedback")).not.toContainText(
       "Blind spot",
@@ -80,7 +85,7 @@ test("Mortar placement marks its blind spot and clears it when hidden or switchi
   await page.locator("#death-card").selectOption("mortar");
   await page.locator("#preview-formation").click();
   await expect.poll(async () => (await state()).visible).toBe(true);
-  expect((await state()).placement?.minimumRange).toBe(4.5);
+  expect((await state()).placement?.minimumRange).toBe(5.1);
   if (info.project.name !== "desktop") {
     await page.setViewportSize({ width: 844, height: 390 });
     await expect.poll(async () => (await state()).visible).toBe(true);

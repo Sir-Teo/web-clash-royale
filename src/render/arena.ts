@@ -34,7 +34,7 @@ import {
 import type { ProjectileVisual } from "./projectiles";
 import { DeploymentPreview } from "./deployment";
 import { BlindSpotIndicator } from "./blind-spot";
-import mortar from "../game/mortar-data.json" with { type: "json" };
+import { placementRanges } from "./placement-ranges";
 import { BuildingLibrary } from "./buildings";
 import type { BuildingSprite } from "./buildings";
 import { destroyedTowerSites, TOWER_SITES } from "../game/arena-layout";
@@ -850,6 +850,7 @@ export class Arena {
             : 0,
           blockedUntil: this.blockedLanes.map((o) => o.scale.y),
           minimumRange: this.blindSpot.radius,
+          maximumRange: this.rangeRing.scale.x,
         }
       : null;
   }
@@ -957,7 +958,8 @@ export class Arena {
     this.placement = id ? { card: id, point, valid, reason } : null;
     this.block.visible = !!id && CARD_MAP[id].kind !== "spell";
     this.cursor.visible = !!id && !!point;
-    this.blindSpot.show(id === "mortar" && point ? mortar.minimumRange : 0, valid);
+    const ranges = id ? placementRanges(id, this.battle?.rulesVersion ?? 0) : { inner: 0, outer: 0 };
+    this.blindSpot.show(point ? ranges.inner : 0, valid);
     this.placementFeedback.classList.toggle("hidden", !id || !point);
     this.blockedLanes.forEach((overlay, i) => {
       const lane = i === 0 ? "left" : "right";
@@ -979,7 +981,7 @@ export class Arena {
     }
     this.cursor.position.set(point.x - 9, 0.2, point.y - 16);
     const card = CARD_MAP[id];
-    const radius = card.radius ?? (card.kind === "building" ? card.range : 0.8);
+    const radius = ranges.outer;
     this.rangeRing.scale.set(radius, radius, 1);
     (this.rangeRing.material as T.MeshBasicMaterial).color.setHex(
       valid ? 0x9bffca : 0xff536a,
@@ -988,7 +990,7 @@ export class Arena {
     else this.deployment.object.visible = false;
     this.placementFeedback.classList.toggle("invalid", !valid);
     const feedback = valid
-      ? `${card.name}${card.count > 1 ? ` ×${card.count}` : ""} · Level 11${id === "mortar" ? ` · Blind spot: ${mortar.minimumRange} tiles` : ""}`
+      ? `${card.name}${card.count > 1 ? ` ×${card.count}` : ""} · Level 11${id === "mortar" ? ` · Blind spot radius: ${ranges.inner} tiles` : ""}`
       : reason || "Cannot deploy here";
     if (this.placementFeedback.textContent !== feedback)
       this.placementFeedback.textContent = feedback;
