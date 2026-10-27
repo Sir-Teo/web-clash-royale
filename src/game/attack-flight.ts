@@ -1,4 +1,5 @@
 import { COMBAT_STEP, combatTraits } from "./combat";
+import { projectileMuzzle } from "./projectile-muzzle";
 import type { Entity, Point } from "./engine";
 import bowler from "./bowler-data.json" with { type: "json" };
 import executioner from "./executioner-data.json" with { type: "json" };
@@ -20,6 +21,7 @@ export function attackFlight(
   attacker: Entity,
   target: Point,
 ): AttackFlight | undefined {
+  const muzzle = projectileMuzzle(attacker, target);
   const dx = target.x - attacker.x,
     dy = target.y - attacker.y;
   const distance = Math.hypot(dx, dy) || 1;
@@ -29,7 +31,9 @@ export function attackFlight(
     const boulder = attacker.card === "bowler";
     const projectile = boulder ? bowler.projectile : executioner.projectile;
     const offset = boulder ? 1 : 0.6;
-    const start = { x: attacker.x + ux * offset, y: attacker.y + uy * offset };
+    const start = muzzle
+      ? { x: muzzle.x, y: muzzle.y }
+      : { x: attacker.x + ux * offset, y: attacker.y + uy * offset };
     const reach = boulder
       ? offset + bowler.projectile.range
       : clamp(
@@ -63,7 +67,9 @@ export function attackFlight(
       : attacker.card === "x-bow"
         ? xBow.projectileStartRadius
         : 0;
-  const start = { x: attacker.x + ux * offset, y: attacker.y + uy * offset };
+  const start = muzzle
+    ? { x: muzzle.x, y: muzzle.y }
+    : { x: attacker.x + ux * offset, y: attacker.y + uy * offset };
   const end = { x: target.x, y: target.y };
   const speed =
     attacker.card === "sparky"

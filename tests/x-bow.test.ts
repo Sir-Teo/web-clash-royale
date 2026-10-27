@@ -81,7 +81,7 @@ describe("archived X-Bow siege building", () => {
     }
     expect(shot).toMatchObject({
       style: "x-bow", target: redPrincess.id, damage: 32,
-      air: false, homing: true, fromHeight: 2.4,
+      air: false, homing: true, fromHeight: 2.6,
     });
     expect(shot!.y).toBeCloseTo(17.5);
     expect(shot!.speed).toBeCloseTo(1400 / 60);

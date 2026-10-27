@@ -77,7 +77,7 @@ describe("archived Bomb Tower", () => {
       shot = battle.projectiles.find((p) => p.source === building.id);
     }
     expect(shot).toMatchObject({ style: "bomb-tower", damage: 256,
-      splash: 1.5, air: false, homing: false, fromHeight: 4.5, arc: 2 });
+      splash: 1.5, air: false, homing: false, fromHeight: 4.7, arc: 2 });
     expect(shot?.target).toBe(target.id);
     expect(projectileArt(shot!)).toBe("projectile_bomb");
     for (let i = 0; i < 120 && battle.projectiles.some((p) => p.id === shot?.id); i++)

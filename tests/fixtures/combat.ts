@@ -6,7 +6,7 @@ import mortarRules from "../../src/game/mortar-data.json" with { type: "json" };
 import { acquisitionSight } from "../../src/game/sight-range";
 import { Arena } from "../../src/render/arena";
 import { spriteGeometry } from "../../src/render/sprites";
-import { Battle, STEP } from "../../src/game/engine";
+import { Battle, STEP, entityVisualHeight } from "../../src/game/engine";
 import type { Entity, Team } from "../../src/game/engine";
 import type { CardId } from "../../src/game/cards";
 import { CARD_MAP, CARDS, STARTER_DECK } from "../../src/game/cards";
@@ -55,6 +55,7 @@ let groupGuestPhase = 0;
 let victims: { team: Team; x: number; y: number }[] = [];
 const clockModes = new Map<number, string>();
 const attackClockTargets = new Map<number, number>();
+const muzzleReleases = new Map<number, unknown>();
 const lostWitnesses = new Map<number, number>();
 const lostPoints = new Map<number, { x: number; y: number }>();
 const attackClockReleases = new Map<number, number>();
@@ -96,6 +97,7 @@ function setup() {
   victims = [];
   clockModes.clear();
   attackClockTargets.clear();
+  muzzleReleases.clear();
   lostWitnesses.clear();
   lostPoints.clear();
   attackClockReleases.clear();
@@ -114,8 +116,8 @@ function setup() {
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
-  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "pending-range", "target-loss", "sparky-preload", "sparky", "primary-score", "primary-geometry", "tower-layout", "distant-targets", "barrel-formation", "army-formation", "group-formation", "ground-deployment", "deployment"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39"].includes(rangeRules ?? "")) {
-    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 } });
+  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "pending-range", "projectile-muzzle", "target-loss", "sparky-preload", "sparky", "primary-score", "primary-geometry", "tower-layout", "distant-targets", "barrel-formation", "army-formation", "group-formation", "ground-deployment", "deployment"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40"].includes(rangeRules ?? "")) {
+    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
   for (const t of battle.entities) t.active = false;
@@ -136,7 +138,7 @@ function setup() {
   (document.querySelector("#death-config") as HTMLElement).hidden =
     scenario !== "death" && scenario !== "deployment" && scenario !== "army-formation" && scenario !== "group-formation" && scenario !== "ground-deployment";
   (document.querySelector("#attack-config") as HTMLElement).hidden =
-    scenario !== "target-loss" && scenario !== "pending-range" && scenario !== "attack-impacts" && scenario !== "inferno-clock" && scenario !== "attack-range" && scenario !== "sight-range";
+    scenario !== "projectile-muzzle" && scenario !== "target-loss" && scenario !== "pending-range" && scenario !== "attack-impacts" && scenario !== "inferno-clock" && scenario !== "attack-range" && scenario !== "sight-range";
   (document.querySelector("#range-out") as HTMLElement).hidden = scenario !== "pending-range" && scenario !== "attack-range" && scenario !== "sight-range" && scenario !== "primary-geometry" && scenario !== "distant-targets" && scenario !== "barrel-formation";
   document.querySelector("#range-out")!.textContent = scenario === "sight-range"
     ? "Move targets outside sight" : scenario === "barrel-formation" ? "Release Goblins to attack" : scenario === "distant-targets" ? "Remove lane tower, then reveal Cannon" : scenario === "primary-geometry" ? "Bring selected target into attack reach" : "Move targets outside attack reach";
@@ -188,7 +190,7 @@ function setup() {
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king" && scenario !== "tower-layout" &&
       !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
-      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "pending-range", "target-loss", "sparky-preload", "primary-score", "primary-geometry", "distant-targets", "barrel-formation", "army-formation", "group-formation", "ground-deployment", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
+      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "pending-range", "projectile-muzzle", "target-loss", "sparky-preload", "primary-score", "primary-geometry", "distant-targets", "barrel-formation", "army-formation", "group-formation", "ground-deployment", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -668,6 +670,22 @@ function setup() {
         target.speed = target.damage = 0;
         target.hp = target.maxHp = 10000;
       }
+    }
+  } else if (scenario === "projectile-muzzle") {
+    const chosen = (document.querySelector("#attack-card") as HTMLSelectElement).value;
+    const card = ["musketeer", "cannon", "princess", "baby-dragon", "king-tower", "executioner"].includes(chosen) ? chosen : "musketeer";
+    for (const team of ["blue", "red"] as const) {
+      const attacker = card === "king-tower" ? battle.entities.find(e=>e.team === team && e.king)!
+        : unit(card as CardId, team, team === "blue" ? 4 : 14, team === "blue" ? 22 : 10)[0];
+      Object.assign(attacker, { active: true, activation: 0, speed: 0, cooldown: 0, deploy: 0, lifetime: undefined });
+      const enemy = team === "blue" ? "red" : "blue";
+      const victim = unit("cannon", enemy, team === "blue" ? 7 : 11, team === "blue" ? 10 : 22)[0];
+      const reach = attackReach(attacker, victim) - 0.05;
+      Object.assign(victim, { x: attacker.x + (team === "blue" ? 1 : -1) * reach * 0.6,
+        y: attacker.y + (team === "blue" ? -1 : 1) * reach * 0.8,
+        active: false, deploy: 0, hp: 1e6, maxHp: 1e6, lifetime: undefined });
+      attacker.target = victim.id;
+      attackClockTargets.set(attacker.id, victim.id);
     }
   } else if (scenario === "target-loss") {
     const chosen = (document.querySelector("#attack-card") as HTMLSelectElement).value as CardId;
@@ -1453,7 +1471,16 @@ function advance(ticks: number) {
         const king = battle.entities.find((e) => e.team === "red" && e.king)!;
         cast("lightning", "blue", king.x, king.y);
       }
+      const muzzleBefore = sceneSelect.value === "projectile-muzzle" ? [...attackClockTargets].map(([id,victim])=>{
+        const actor = battle.entities.find(e=>e.id === id)!, target = battle.entities.find(e=>e.id === victim)!;
+        return { id, actor: { x: actor.x, y: actor.y, z: entityVisualHeight(actor) }, goal: { x: target.x, y: target.y } };
+      }) : [];
       battle.step();
+      for (const before of muzzleBefore) {
+        const shots = battle.projectiles.filter(p=>p.source === before.id);
+        if (shots.length && !muzzleReleases.has(before.id)) muzzleReleases.set(before.id, { ...before, tick: battle.tick,
+          shots: shots.map(p=>({ id: p.id, x:p.x, y:p.y, tx:p.tx, ty:p.ty, fromHeight:p.fromHeight, duration:p.duration, decorative:!!p.decorative })) });
+      }
       if (sceneSelect.value === "pending-range" || sceneSelect.value === "attack-clock" || sceneSelect.value === "sparky-preload")
         for (const id of attackClockTargets.keys())
           if (!attackClockReleases.has(id) && battle.projectiles.some((shot) => shot.source === id))
@@ -1640,6 +1667,17 @@ function render(now: number) {
               return { id, hp: victim.hp, bias: victim.targetScoreBias };
             }) };
         }) });
+  if (sceneSelect.value === "projectile-muzzle")
+    (document.querySelector("#destruction") as HTMLElement).dataset.muzzle = JSON.stringify({
+      version: battle.rulesVersion, tick: battle.tick, time: battle.time,
+      bodies: [...attackClockTargets].map(([id,victimId])=>{
+        const actor=battle.entities.find(e=>e.id === id)!, victim=battle.entities.find(e=>e.id === victimId)!;
+        const visual=(arena as any).units.get(id);
+        return { id, card: actor.king ? "king-tower" : actor.card, team:actor.team, policy:!!actor.nativeProjectileMuzzle,
+          native:!!(visual?.sprite || visual?.building), release:muzzleReleases.get(id), victimHp:victim.hp,
+          shots:battle.projectiles.filter(p=>p.source === id).map(p=>({ id:p.id,height:arena.projectileState.find(v=>v.id === p.id)?.position[1],native:arena.projectileState.some(v=>v.id === p.id && v.sprites.length>0) })) };
+      }),
+    });
   if (sceneSelect.value === "target-loss")
     (document.querySelector("#destruction") as HTMLElement).dataset.targetLoss = JSON.stringify({
       version: battle.rulesVersion, tick: battle.tick, time: battle.time,

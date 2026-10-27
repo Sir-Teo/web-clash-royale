@@ -18,6 +18,7 @@ import { deploymentYBounds } from "./placement-bounds";
 import { sparkyLoadRate } from "./sparky-preload";
 import { hasPendingRange, pendingAttackInRange } from "./pending-range";
 import { targetLossMode, type TargetLossMode } from "./target-loss";
+import { hasProjectileMuzzle, projectileMuzzleHeight } from "./projectile-muzzle";
 import { advanceAnimationClock } from "./animation-clock";
 import { areaSpellTarget, isAreaSpell } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targeting";
@@ -164,6 +165,8 @@ export interface Entity extends Point {
   nativePendingRange?: true;
   /** Rules 39: finish one pending attack after victim death/removal. */
   nativeLostAttack?: TargetLossMode;
+  /** Rules 40: source muzzle fields and integer launch normalization. */
+  nativeProjectileMuzzle?: true;
   dash?: { target: number; elapsed: number; remaining: number };
   dashCooldown?: number;
   attack: number;
@@ -258,7 +261,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -348,7 +351,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 39;
+    this.rulesVersion = r?.version ?? 40;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -463,6 +466,7 @@ export class Battle {
       ...(this.rulesVersion >= 25 ? { sightRange: nativeSightRange({ card: "tower", king, radius }) } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 38 && hasPendingRange("tower", king) ? { nativePendingRange: true as const } : {}),
+      ...(this.rulesVersion >= 40 && hasProjectileMuzzle("tower", king) ? { nativeProjectileMuzzle: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
       ...(this.rulesVersion >= 32 ? { nativeDistantTargets: true as const, nativeLane: king ? 0 as const : lane === "left" ? 1 as const : 2 as const } : {}),
@@ -847,6 +851,7 @@ export class Battle {
       ...(this.rulesVersion >= 26 && id === "mortar" ? { minimumRange: mortar.minimumRange } : {}),
       ...(this.rulesVersion >= 27 && id === "electro-wizard" ? { nativeExtraTargets: true as const } : {}),
       ...(this.rulesVersion >= 38 && hasPendingRange(id) ? { nativePendingRange: true as const } : {}),
+      ...(this.rulesVersion >= 40 && hasProjectileMuzzle(id) ? { nativeProjectileMuzzle: true as const } : {}),
       ...(lostAttack ? { nativeLostAttack: lostAttack } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
@@ -1978,6 +1983,7 @@ export class Battle {
       // The retained minimum and maximum travel values bound the endpoint;
       // the exact historical extension beyond the selected target is absent.
       const { start, end: turn, duration } = attackFlight(e, aim)!;
+      const height = projectileMuzzleHeight(e, entityVisualHeight(e)) ?? executioner.projectile.height;
       this.projectiles.push({
         id: this.nextId++, team: e.team, x: e.x, y: e.y,
         tx: turn.x, ty: turn.y, turn, target: null, damage,
@@ -1985,8 +1991,8 @@ export class Battle {
         style: "executioner", stun: 0, source: e.id,
         flight: start, speed: executioner.projectile.speed,
         elapsed: 0, homing: false,
-        fromHeight: executioner.projectile.height,
-        toHeight: executioner.projectile.height,
+        fromHeight: height,
+        toHeight: height,
         arc: 0, rollHits: [], returning: false,
       });
       this.audioProjectiles.set(this.projectiles.at(-1)!.id, audioProfile(e));
@@ -1999,12 +2005,13 @@ export class Battle {
         end: { x: tx, y: ty },
         duration,
       } = attackFlight(e, aim)!;
+      const height = projectileMuzzleHeight(e, entityVisualHeight(e)) ?? 0.9;
       const p: Projectile = {
         id: this.nextId++, team: e.team, x, y, tx, ty, target: null,
         damage, remaining: duration, duration, splash: 0, air: false,
         style: "bowler", stun: 0, source: e.id, flight: { x, y },
         speed: bowler.projectile.speed, elapsed: 0, homing: false,
-        fromHeight: 0.9, toHeight: 0.9, arc: 0,
+        fromHeight: height, toHeight: height, arc: 0,
         knockback: bowler.projectile.knockback, rollHits: [],
       };
       this.projectiles.push(p);
@@ -2028,7 +2035,7 @@ export class Battle {
         knockback: sparky.pushback,
         flight: start, speed: sparky.projectile.speed,
         elapsed: 0, homing: true,
-        fromHeight: sparky.projectileStart.height,
+        fromHeight: projectileMuzzleHeight(e, entityVisualHeight(e)) ?? sparky.projectileStart.height,
         toHeight: target.kind === "tower" ? 1.8 : 0.6, arc: 0,
       });
       this.audioProjectiles.set(this.projectiles.at(-1)!.id, audioProfile(e));
@@ -2146,7 +2153,7 @@ export class Battle {
               : e.air
                 ? 2.3
                 : 0.8;
-    const fromHeight = entityProjectileStartHeight(e) ?? defaultFromHeight;
+    const fromHeight = projectileMuzzleHeight(e, entityVisualHeight(e)) ?? entityProjectileStartHeight(e) ?? defaultFromHeight;
     this.projectiles.push({
       id: this.nextId++,
       team: e.team,
@@ -2185,13 +2192,15 @@ export class Battle {
       for (const offset of [-2, -1, 1, 2]) {
         const tx = clamp(aim.x + offset * 0.38, 0.5, 17.5);
         const ty = clamp(aim.y + Math.abs(offset) * 0.14, 0.6, 31.4);
-        const duration = Math.max(
+        const childFlight = e.nativeProjectileMuzzle ? attackFlight(e, { x: tx, y: ty })! : undefined;
+        const duration = childFlight?.duration ?? Math.max(
           STEP,
           dist(e, { x: tx, y: ty }) / (speed ?? 1),
         );
         this.projectiles.push({
           ...first,
           id: this.nextId++,
+          ...(childFlight ? { x: childFlight.start.x, y: childFlight.start.y } : {}),
           tx,
           ty,
           target: null,
@@ -2199,7 +2208,7 @@ export class Battle {
           splash: 0,
           remaining: duration,
           duration,
-          flight: { x: e.x, y: e.y },
+          flight: childFlight ? { ...childFlight.start } : { x: e.x, y: e.y },
           decorative: true,
         });
       }

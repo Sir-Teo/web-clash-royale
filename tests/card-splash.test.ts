@@ -65,9 +65,9 @@ describe("archived troop splash radii", () => {
       // the defender's collision radius for this replay version.
       const secondary = (LEGACY_CARD_SPLASH[id]! + projected[id]) / 2 +
         nearEdge.radius;
-      Object.assign(primary, { x: 9, y: 20.5, deploy: 0, active: false });
+      Object.assign(primary, { x: 9, y: 19.5, deploy: 0, active: false });
       Object.assign(nearEdge, {
-        x: 9 + secondary, y: id === "valkyrie" ? 21 : 20.5,
+        x: 9 + secondary, y: id === "valkyrie" ? 21 : 19.5,
         deploy: 0, active: false,
       });
       let observedSplash: number | undefined;

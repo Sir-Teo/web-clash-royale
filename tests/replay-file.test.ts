@@ -40,7 +40,7 @@ describe("individual replay files", () => {
             readFileSync(`tests/fixtures/combat-v${v}-replay.json`, "utf8"),
           ).replay,
       ),
-      ...[19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39].map(version => ({ ...new Battle({ seed: 42, ai: false }).exportReplay(), version: version as Replay["version"] })),
+      ...[19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40].map(version => ({ ...new Battle({ seed: 42, ai: false }).exportReplay(), version: version as Replay["version"] })),
     ];
     for (const replay of replays) {
       const original = record(replay),
@@ -92,7 +92,7 @@ describe("individual replay files", () => {
     p.version = 2;
     expect(() => importReplayFile(JSON.stringify(p))).toThrow(/replay/i);
     p.version = 1;
-    p.match.replay.version = 40;
+    p.match.replay.version = 41;
     expect(() => importReplayFile(JSON.stringify(p))).toThrow(/invalid/i);
   });
   it("bounds file bytes, names and recording duration", () => {

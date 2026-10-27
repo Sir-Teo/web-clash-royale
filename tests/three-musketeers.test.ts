@@ -200,7 +200,7 @@ describe("Three Musketeers", () => {
       play(b, "red", target, 4, 10);
       for (const e of b.entities.filter((e) => e.kind === "troop")) {
         e.x = 4;
-        e.y = e.team === "blue" ? 23 : 22;
+        e.y = e.team === "blue" ? 23 : 19;
         e.deploy = 0;
         e.cooldown = 0;
         e.speed = 0;
@@ -210,8 +210,14 @@ describe("Three Musketeers", () => {
           (e) => e.team === "red" && e.card === target,
         ),
         before = enemies.reduce((sum, e) => sum + e.hp, 0);
-      step(b, 16);
-      const shots = b.projectiles.filter((p) => p.style === "musketeer");
+      // The source muzzle shortens flight; the earliest shot may hit before
+      // the last sibling releases. Observe each actual projectile as it flies.
+      const shots: Battle["projectiles"] = [];
+      for (let i = 0; i < 16; i++) {
+        b.step();
+        for (const shot of b.projectiles)
+          if (shot.style === "musketeer" && !shots.some(p=>p.source === shot.source)) shots.push(shot);
+      }
       expect(shots).toHaveLength(3);
       expect(
         shots.every((p) => projectileArt(p) === "projectile_cannonball_small"),

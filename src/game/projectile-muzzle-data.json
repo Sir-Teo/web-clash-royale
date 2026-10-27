@@ -1,0 +1,140 @@
+{
+  "sourceUnitsPerTile": 1000,
+  "ownerForTeam": {
+    "red": 0,
+    "blue": 1
+  },
+  "muzzles": {
+    "Archer": {
+      "radius": 450,
+      "z": 450,
+      "y": 0
+    },
+    "Musketeer": {
+      "radius": 450,
+      "z": 450,
+      "y": 0
+    },
+    "RoyalGiant": {
+      "radius": 1200,
+      "z": 2900,
+      "y": 0
+    },
+    "MegaMinion": {
+      "radius": 450,
+      "z": 450,
+      "y": 0
+    },
+    "BlowdartGoblin": {
+      "radius": 1200,
+      "z": 1600,
+      "y": 0
+    },
+    "IceWizard": {
+      "radius": 550,
+      "z": 1500,
+      "y": 0
+    },
+    "IceSpirits": {
+      "radius": 0,
+      "z": 0,
+      "y": 0
+    },
+    "FireSpirits": {
+      "radius": 0,
+      "z": 0,
+      "y": 0
+    },
+    "Princess": {
+      "radius": 450,
+      "z": 450,
+      "y": 0
+    },
+    "Bowler": {
+      "radius": 1000,
+      "z": 1000,
+      "y": 0
+    },
+    "AxeMan": {
+      "radius": 600,
+      "z": 600,
+      "y": 0,
+      "constantHeight": 3000
+    },
+    "ZapMachine": {
+      "radius": 1200,
+      "z": 1800,
+      "y": 0
+    },
+    "SpearGoblin": {
+      "radius": 0,
+      "z": 600,
+      "y": 0
+    },
+    "Bomber": {
+      "radius": 350,
+      "z": 350,
+      "y": 0
+    },
+    "BabyDragon": {
+      "radius": 500,
+      "z": 1900,
+      "y": 0
+    },
+    "Minion": {
+      "radius": 450,
+      "z": 450,
+      "y": 0
+    },
+    "LavaHound": {
+      "radius": 1000,
+      "z": 1800,
+      "y": 0
+    },
+    "LavaPups": {
+      "radius": 500,
+      "z": 100,
+      "y": 0
+    },
+    "Witch": {
+      "radius": 450,
+      "z": 450,
+      "y": 0
+    },
+    "Wizard": {
+      "radius": 550,
+      "z": 1500,
+      "y": 0
+    },
+    "Cannon": {
+      "radius": 1000,
+      "z": 2500,
+      "y": 0
+    },
+    "Mortar": {
+      "radius": 1000,
+      "z": 1000,
+      "y": 0
+    },
+    "BombTower": {
+      "radius": 0,
+      "z": 4500,
+      "y": 0
+    },
+    "Xbow": {
+      "radius": 1000,
+      "z": 2400,
+      "y": 0
+    },
+    "KingTower": {
+      "radius": 750,
+      "z": 3500,
+      "y": 400
+    },
+    "PrincessTower": {
+      "radius": 300,
+      "z": 3000,
+      "y": 0
+    }
+  }
+}

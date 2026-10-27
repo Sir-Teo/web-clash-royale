@@ -1,0 +1,39 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/client/projectile-launch-native-trace.json",
+      "sha256": "63e7d1b8ef80b9fc3302deacad68de2dca8bc5ecc744d655d7fa26c4b8f04e47"
+    },
+    {
+      "path": "reference/client/crown-owner-native-trace.json",
+      "sha256": "0823267f9a51ad90ec8d3c2f90c5c557ebe559c7a80fe9256bf9a76b7eef04ba"
+    },
+    {
+      "path": "src/game/combat-data.json",
+      "sha256": "e538686581e80101518c0b24373ad0024a0cfb9878f35bf80ee22dfad079cc54"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/buildings.csv",
+      "sha256": "ec81aa6c0a2c4ea2413204cd3f7a551e950b4ff2565859802981cd4ef697d3e6"
+    },
+    {
+      "path": "reference/client/projectile-height-native-trace.json",
+      "sha256": "b465f9fcfe256d95e8758f64bcaacd9549fa3fee54bbb67f10f2385af53add54"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    }
+  ],
+  "output": {
+    "path": "src/game/projectile-muzzle-data.json",
+    "sha256": "66b5f3863d663e8ff28cd5f7ac3924e8c2b05c469883344889c397b3cdd862a8"
+  },
+  "scope": "Source muzzle radius/Z/Y, integer XY normalization and later ConstantHeight override on the existing browser scheduler and trajectories; browser XY rounds to source units, ordinary Z is relative to rendered body height and ConstantHeight replaces it absolutely"
+}
