@@ -241,6 +241,10 @@ def capture(env):
         from lib.projectile_formation_probe import create_collector
 
         continuation = create_collector(env, grid, store_spawn_lane)
+    elif env["args"].group_formation:
+        from lib.group_formation_probe import create_collector
+
+        continuation = create_collector(env, grid)
     for mode, current in [(0, "Map"), (1, "MapTeamVsTeam")]:
         reads = 0
         run(0x2053D2, grid, mode, instruction_budget=1000000)
