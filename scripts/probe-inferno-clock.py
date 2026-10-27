@@ -34,6 +34,7 @@ parser.add_argument("--primary-acquisition", action="store_true", help="Capture 
 parser.add_argument("--spawn-priority", action="store_true", help="Trace projectile child-spawn priority fields into native primary acquisition")
 parser.add_argument("--target-eligibility", action="store_true", help="Execute native eligibility through source air/ground, target component and team gates")
 parser.add_argument("--primary-geometry", action="store_true", help="Capture exact primary sight, rear/side clipping and adjusted minimum boundaries")
+parser.add_argument("--distant-targets", action="store_true", help="Execute native default-target reference, lane scoring and partial tower collections")
 args = parser.parse_args()
 if args.range_loss and not args.attack_loop:
     parser.error("--range-loss requires --attack-loop")
@@ -61,6 +62,8 @@ if args.target_eligibility and (not args.primary_acquisition or args.spawn_prior
     parser.error("--target-eligibility requires --sight-range --primary-acquisition without --spawn-priority")
 if args.primary_geometry and (not args.primary_acquisition or args.spawn_priority or args.target_eligibility):
     parser.error("--primary-geometry requires --sight-range --primary-acquisition without another continuation")
+if args.distant_targets and (not args.primary_acquisition or args.spawn_priority or args.target_eligibility or args.primary_geometry):
+    parser.error("--distant-targets requires --sight-range --primary-acquisition without another continuation")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()

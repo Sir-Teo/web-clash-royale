@@ -178,7 +178,10 @@ def capture(env):
         return nominee["id"], selected
 
     if env["args"].primary_acquisition:
-        from lib.primary_acquisition_probe import capture as capture_primary
+        if env["args"].distant_targets:
+            from lib.distant_target_probe import capture as capture_primary
+        else:
+            from lib.primary_acquisition_probe import capture as capture_primary
         capture_primary(env, {"initialize": initialize, "sources": sources, "targets": targets,
                               "active": lambda: active, "queries": lambda: broadphase_calls, "extras": extras})
         return
