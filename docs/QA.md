@@ -2455,3 +2455,10 @@ Pages-prefixed production offline reload, rules-40 battle startup, the browser m
 The distance capture passes all 1,152 source cases and 408 controls across 38 projectile rows. Three translated origins, cardinal/diagonal/zero/tiny/arena-sized vectors, exact minimum boundaries, signed/reversed bounds and saturating-distance controls match an independent integer model. Getter/point pointers and the native caller frame are guarded; exact Data reads, call counts, exit branches and complete unrelated heap preservation are checked.
 
 The regenerated capture is byte-identical. The prior 228-case/48-control ConstantHeight capture remains unchanged. Three Python modules parse, the new module is Black-formatted, and ten invalid continuation combinations reject before capture. No application rule is inferred from this initializer fragment alone; complete projectile movement and final endpoints remain separate work.
+
+
+## Native initialized-motion verification
+
+All 555 source cases and 32 controls pass across 37 positive-Speed/no-child projectile rows, totaling 5,461 native updates. Actual min/max and ConstantHeight initialization precedes actual null-target movement updates. Independent integer calculations reproduce linear XYZ motion, the Q10 sine return, the midpoint hold/raw-field reset and pre-effect arrival decisions. Full supplied heap comparisons, guarded object arguments, exact relevant getter counts and permitted Data reads pass for every update.
+
+All 91 native sine entries agree with independent rounded sine values. Regeneration is byte-identical; the prior 1,152-case/408-control destination capture is unchanged. Three Python modules parse, the new module is Black-formatted and eleven invalid continuation combinations reject. Arrival damage/removal, world cadence, attack-selected goals and full flight/collision behavior remain excluded. The validated rules-40 app and production build are unchanged.

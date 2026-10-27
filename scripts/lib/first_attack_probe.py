@@ -68,6 +68,10 @@ def capture(env, context):
         from lib.projectile_distance_probe import capture
 
         return capture(env, context)
+    if env["args"].projectile_motion:
+        from lib.projectile_motion_probe import capture
+
+        return capture(env, context)
     names = {
         "characters": ["Knight", "Archer", "Musketeer", "Giant", "HogRider", "Balloon", "Prince", "InfernoDragon", "ElectroWizard"],
         "buildings": ["Cannon", "Mortar", "InfernoTower", "KingTower", "PrincessTower"],
