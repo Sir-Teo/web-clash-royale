@@ -88,6 +88,19 @@ def capture(env, context):
         candidate = next((candidate for candidate in candidates if candidate["id"] == fallback and candidate.get("eligible", True)), None)
         return None, [candidate["id"]] if candidate else [], 1
 
+    if env["args"].spawn_priority:
+        from lib.spawn_priority_probe import capture as capture_spawn
+
+        def acquire():
+            nonlocal nominated, requests, fallback_calls, fallback_id
+            nominated, requests, fallback_calls, fallback_id = None, [], 0, None
+            run(0x25deb6, component, instruction_budget=16000)
+            return {"nominated": nominated, "setterRequests": list(requests),
+                    "fallbackCalls": fallback_calls, "queryCalls": len(queries())}
+
+        capture_spawn(env, {**context, "acquire": acquire})
+        return
+
     cases = []
     for name, owner in sources.items():
         for add_radius in [False, True]:
