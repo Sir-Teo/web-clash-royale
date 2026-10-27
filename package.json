@@ -22,6 +22,7 @@
     "assets:attack-clock": "node scripts/import-attack-clock.mjs",
     "assets:primary-score": "node scripts/import-primary-score.mjs",
     "assets:primary-geometry": "node scripts/import-primary-geometry.mjs",
+    "assets:projectile-volley": "node scripts/import-projectile-volley.mjs",
     "assets:projectile-muzzle": "node scripts/import-projectile-muzzle.mjs",
     "assets:target-loss": "node scripts/import-target-loss.mjs",
     "assets:pending-range": "node scripts/import-pending-range.mjs",

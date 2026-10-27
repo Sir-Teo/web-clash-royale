@@ -1,0 +1,27 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/client/attack-projectile-goals-native-trace.json",
+      "sha256": "d67ce55b9cbfe611274862fd5624c4f317bef3b7c652324b792b44f1a4283b8d"
+    },
+    {
+      "path": "reference/logic/characters.csv",
+      "sha256": "b52794aad1d6445e244ee19df9c6c4ae67d70cbf703b49556186e0c878e4c34b"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    },
+    {
+      "path": "src/game/combat-data.json",
+      "sha256": "e538686581e80101518c0b24373ad0024a0cfb9878f35bf80ee22dfad079cc54"
+    }
+  ],
+  "output": {
+    "path": "src/game/projectile-volley-data.json",
+    "sha256": "2ebcb80a0301d528075336ac3adc5c5f1bd2a1368d04b0fe9c5f2a551e5b1dbf"
+  },
+  "scope": "Native circular offsets and four bounded draws using a persisted per-body browser LCG stream seeded from match seed and entity ID; continuous cached aim and existing flight/scheduler retained, without native RNG stream parity"
+}

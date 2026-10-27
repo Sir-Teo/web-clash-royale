@@ -19,6 +19,7 @@ import { sparkyLoadRate } from "./sparky-preload";
 import { hasPendingRange, pendingAttackInRange } from "./pending-range";
 import { targetLossMode, type TargetLossMode } from "./target-loss";
 import { hasProjectileMuzzle, projectileMuzzleHeight } from "./projectile-muzzle";
+import { hasProjectileVolley, projectileVolley, volleyRandom } from "./projectile-volley";
 import { advanceAnimationClock } from "./animation-clock";
 import { areaSpellTarget, isAreaSpell } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targeting";
@@ -167,6 +168,9 @@ export interface Entity extends Point {
   nativeLostAttack?: TargetLossMode;
   /** Rules 40: source muzzle fields and integer launch normalization. */
   nativeProjectileMuzzle?: true;
+  /** Rules 41: source circular decorative projectile offsets. */
+  nativeProjectileVolley?: true;
+  volleyRandomState?: number;
   dash?: { target: number; elapsed: number; remaining: number };
   dashCooldown?: number;
   attack: number;
@@ -261,7 +265,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -351,7 +355,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 40;
+    this.rulesVersion = r?.version ?? 41;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -852,6 +856,7 @@ export class Battle {
       ...(this.rulesVersion >= 27 && id === "electro-wizard" ? { nativeExtraTargets: true as const } : {}),
       ...(this.rulesVersion >= 38 && hasPendingRange(id) ? { nativePendingRange: true as const } : {}),
       ...(this.rulesVersion >= 40 && hasProjectileMuzzle(id) ? { nativeProjectileMuzzle: true as const } : {}),
+      ...(this.rulesVersion >= 41 && hasProjectileVolley(id) ? { nativeProjectileVolley: true as const } : {}),
       ...(lostAttack ? { nativeLostAttack: lostAttack } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
@@ -1117,6 +1122,7 @@ export class Battle {
           });
           // A new copy has no projectile-spawn ordinal of its own.
           if (this.rulesVersion >= 29) delete this.entities.at(-1)!.targetScoreBias;
+          if (this.rulesVersion >= 41) delete this.entities.at(-1)!.volleyRandomState;
           this.emit("deploy", area.team, x, y, entity.card, 0, {
             effect: "clone-appear",
           });
@@ -2189,9 +2195,12 @@ export class Battle {
       // The archived character fires one damaging custom first projectile
       // and four copies of PrincessProjectileDeco without damage.
       const first = this.projectiles.at(-1)!;
-      for (const offset of [-2, -1, 1, 2]) {
-        const tx = clamp(aim.x + offset * 0.38, 0.5, 17.5);
-        const ty = clamp(aim.y + Math.abs(offset) * 0.14, 0.6, 31.4);
+      const goals = projectileVolley(e, aim, (bound) => Math.floor(volleyRandom(e, this.seed) * bound))?.slice(1)
+        ?? [-2, -1, 1, 2].map((offset) => ({
+          x: clamp(aim.x + offset * 0.38, 0.5, 17.5),
+          y: clamp(aim.y + Math.abs(offset) * 0.14, 0.6, 31.4),
+        }));
+      for (const { x: tx, y: ty } of goals) {
         const childFlight = e.nativeProjectileMuzzle ? attackFlight(e, { x: tx, y: ty })! : undefined;
         const duration = childFlight?.duration ?? Math.max(
           STEP,

@@ -38,7 +38,7 @@ describe("source-normalized Crown Tower health", () => {
     const older = new Battle({ replay: {
       ...current.exportReplay(), version: 10,
     } as Replay });
-    expect(current.rulesVersion).toBe(40);
+    expect(current.rulesVersion).toBe(41);
     expect(current.entities.filter((e) => e.king).map((e) => e.maxHp))
       .toEqual([5232, 5232]);
     expect(older.entities.filter((e) => e.king).map((e) => e.maxHp))

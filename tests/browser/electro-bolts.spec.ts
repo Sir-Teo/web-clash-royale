@@ -163,7 +163,7 @@ test("Electro Wizard card explains each bolt and deploys from the real hand", as
     .poll(async () => (await state())?.elixir, { timeout: 30000 })
     .toBeGreaterThanOrEqual(4);
   const before = await state();
-  expect(before.rulesVersion).toBe(40);
+  expect(before.rulesVersion).toBe(41);
   const slot = before.hand.indexOf("electro-wizard");
   expect(slot).toBeGreaterThanOrEqual(0);
   await page.locator(`#hand [data-slot="${slot}"]`).click();

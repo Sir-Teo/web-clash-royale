@@ -1,0 +1,11 @@
+{
+  "sourceUnitsPerTile": 1000,
+  "volleys": {
+    "Princess": {
+      "count": 5,
+      "areaRadius": 2500,
+      "firstProjectile": "PrincessProjectile",
+      "decorativeProjectile": "PrincessProjectileDeco"
+    }
+  }
+}
