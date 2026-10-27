@@ -11,7 +11,7 @@ export const rotatePoint = <T extends Point>(p: T): T => ({
 /** Keep simulation coordinates canonical; only the presentation rotates. */
 export function perspective(s: BattleSnapshot, team: Team): BattleSnapshot {
   if (team === "blue") return s;
-  return {
+  const view: BattleSnapshot = {
     ...s,
     winner: s.winner && s.winner !== "draw" ? other(s.winner) : s.winner,
     players: { blue: s.players.red, red: s.players.blue },
@@ -61,6 +61,11 @@ export function perspective(s: BattleSnapshot, team: Team): BattleSnapshot {
       ...(e.origin ? { origin: rotatePoint(e.origin) } : {}),
     })),
   };
+  if (s.nativeArmyFormation) {
+    if (s.nativeArmyViewMirrored) delete view.nativeArmyViewMirrored;
+    else view.nativeArmyViewMirrored = true;
+  }
+  return view;
 }
 export function snapshot(b: Battle): BattleSnapshot {
   const lifecycleAudioEvents = b.audioEvents.filter(
@@ -69,6 +74,10 @@ export function snapshot(b: Battle): BattleSnapshot {
   return {
     tick: b.tick,
     ...(b.nativeTowerLayout ? { nativeTowerLayout: true as const } : {}),
+    ...(b.nativeArmyFormation ? { nativeArmyFormation: true as const } : {}),
+    ...(b.nativeArmyFormation && b.nativeArmyViewMirrored
+      ? { nativeArmyViewMirrored: true as const }
+      : {}),
     entities: b.entities,
     projectiles: b.projectiles,
     ...(b.areas.length ? { areas: b.areas } : {}),
@@ -90,6 +99,8 @@ export function applySnapshot(b: Battle, s: BattleSnapshot, team: Team) {
   const view = perspective(s, team);
   b.tick = view.tick;
   b.nativeTowerLayout = view.nativeTowerLayout;
+  b.nativeArmyFormation = view.nativeArmyFormation;
+  b.nativeArmyViewMirrored = view.nativeArmyViewMirrored;
   b.entities = view.entities;
   b.projectiles = view.projectiles;
   b.areas = view.areas ?? [];

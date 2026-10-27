@@ -248,7 +248,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -294,6 +294,10 @@ export class Battle {
   readonly rulesVersion: Replay["version"];
   /** Rules 31 world layout; snapshots also preserve older hosts' policy. */
   nativeTowerLayout?: true;
+  /** Rules 34 formation/preview policy, also carried by authoritative snapshots. */
+  nativeArmyFormation?: true;
+  /** View-only X reflection for previews after a guest rotates the arena. */
+  nativeArmyViewMirrored?: true;
   tick = 0;
   entities: Entity[] = [];
   projectiles: Projectile[] = [];
@@ -330,8 +334,9 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 33;
+    this.rulesVersion = r?.version ?? 34;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
+    this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
     this.mode = r?.mode ?? options.mode ?? "classic";
@@ -2508,10 +2513,14 @@ export class Battle {
         // Keep the existing pair order and exact distance for possible overlaps.
         if (Math.abs(a.x - b.x) >= min || Math.abs(a.y - b.y) >= min) continue;
         const d = dist(a, b);
-        if (d < min && d > 0.001) {
+        const coincident = d <= 0.001 && this.nativeArmyFormation;
+        if (d < min && (d > 0.001 || coincident)) {
+          // Native Army requests include coincident centers. Give the browser's
+          // existing separation rule a stable axis instead of dividing by zero.
+          const axis = (a.id ^ b.id) & 1;
           const push = (min - d) * 0.18,
-            dx = ((a.x - b.x) / d) * push,
-            dy = ((a.y - b.y) / d) * push;
+            dx = (coincident ? axis : (a.x - b.x) / d) * push,
+            dy = (coincident ? 1 - axis : (a.y - b.y) / d) * push;
           a.x = clamp(a.x + dx, 0.5, 17.5);
           b.x = clamp(b.x - dx, 0.5, 17.5);
           a.y = clamp(a.y + dy, 0.6, 31.4);

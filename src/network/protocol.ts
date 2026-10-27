@@ -33,6 +33,8 @@ export interface RoomState {
 export interface BattleSnapshot {
   tick: number;
   nativeTowerLayout?: true;
+  nativeArmyFormation?: true;
+  nativeArmyViewMirrored?: true;
   entities: Entity[];
   projectiles: Projectile[];
   areas?: AreaEffect[];

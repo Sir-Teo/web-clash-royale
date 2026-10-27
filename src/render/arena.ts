@@ -986,7 +986,10 @@ export class Arena {
     (this.rangeRing.material as T.MeshBasicMaterial).color.setHex(
       valid ? 0x9bffca : 0xff536a,
     );
-    if (card.kind !== "spell") this.deployment.show(id, point, valid);
+    const previewVersion = id === "skeleton-army" && this.battle
+      ? this.battle.nativeArmyFormation ? 34 : 33
+      : this.battle?.rulesVersion ?? 22;
+    if (card.kind !== "spell") this.deployment.show(id, point, valid, previewVersion, this.battle?.nativeArmyViewMirrored);
     else this.deployment.object.visible = false;
     this.placementFeedback.classList.toggle("invalid", !valid);
     const feedback = valid

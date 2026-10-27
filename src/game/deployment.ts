@@ -1,3 +1,4 @@
+import { armyFormation } from "./army-formation";
 import { CARD_MAP } from "./cards";
 import type { CardId } from "./cards";
 import type { Point } from "./engine";
@@ -80,8 +81,14 @@ export function deploymentPositions(
   team: Team = "blue",
   countOverride?: number,
   rulesVersion = 22,
+  armyViewMirrored?: true,
 ): Point[] {
   const count = countOverride ?? CARD_MAP[id].count;
+  if (id === "skeleton-army" && rulesVersion >= 34 && count === CARD_MAP[id].count)
+    return armyFormation(point, team, armyViewMirrored).map((position) => ({
+      x: Math.max(0.6, Math.min(17.4, position.x)),
+      y: Math.max(0.8, Math.min(31.2, position.y)),
+    }));
   const formation = rulesVersion >= 22 && id === "goblin-gang"
     ? goblinGang.formation
     : rulesVersion >= 19 ? nativeCardFormation(id) : undefined;

@@ -49,6 +49,7 @@ let battle: Battle,
 let guestLayoutToggle = false;
 let distantStage = 0;
 let barrelSpawnIds: number[] = [];
+let armyGuestPhase = 0;
 let victims: { team: Team; x: number; y: number }[] = [];
 const clockModes = new Map<number, string>();
 const attackClockTargets = new Map<number, number>();
@@ -107,14 +108,14 @@ function setup() {
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
-  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "primary-score", "primary-geometry", "tower-layout", "distant-targets", "barrel-formation"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33"].includes(rangeRules ?? "")) {
-    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 } });
+  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "primary-score", "primary-geometry", "tower-layout", "distant-targets", "barrel-formation", "army-formation"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34"].includes(rangeRules ?? "")) {
+    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
   for (const t of battle.entities) t.active = false;
   const scenario = (document.querySelector("#scenario") as HTMLSelectElement)
     .value;
-  (document.querySelector("#guest-ruins") as HTMLElement).hidden = scenario !== "tower-layout";
+  (document.querySelector("#guest-ruins") as HTMLElement).hidden = scenario !== "tower-layout" && scenario !== "army-formation";
   (document.querySelector("#warm-sprite-cache") as HTMLElement).hidden = scenario !== "sprite-cache";
   for (const id of ["clock-clear", "clock-freeze"])
     (document.querySelector(`#${id}`) as HTMLElement).hidden = scenario !== "animation-clock";
@@ -124,7 +125,7 @@ function setup() {
     (document.querySelector(`#${id}`) as HTMLElement).hidden =
       scenario !== "death";
   (document.querySelector("#death-config") as HTMLElement).hidden =
-    scenario !== "death" && scenario !== "deployment";
+    scenario !== "death" && scenario !== "deployment" && scenario !== "army-formation";
   (document.querySelector("#attack-config") as HTMLElement).hidden =
     scenario !== "attack-impacts" && scenario !== "inferno-clock" && scenario !== "attack-range" && scenario !== "sight-range";
   (document.querySelector("#range-out") as HTMLElement).hidden = scenario !== "attack-range" && scenario !== "sight-range" && scenario !== "primary-geometry" && scenario !== "distant-targets" && scenario !== "barrel-formation";
@@ -147,11 +148,11 @@ function setup() {
   (document.querySelector("#kill-lava-hound") as HTMLElement).hidden =
     scenario !== "lava-hound";
   (document.querySelector("#spawn") as HTMLElement).hidden =
-    scenario !== "deployment";
+    scenario !== "deployment" && scenario !== "army-formation";
   (document.querySelector("#preview-formation") as HTMLElement).hidden =
-    scenario !== "deployment";
+    scenario !== "deployment" && scenario !== "army-formation";
   for (const id of ["preview-invalid", "preview-hide"])
-    (document.querySelector(`#${id}`) as HTMLElement).hidden = scenario !== "deployment";
+    (document.querySelector(`#${id}`) as HTMLElement).hidden = scenario !== "deployment" && scenario !== "army-formation";
   (document.querySelector("#freeze-cast") as HTMLElement).hidden =
     scenario !== "freeze";
   for (const id of ["rage-cast", "rage-towers"])
@@ -178,7 +179,7 @@ function setup() {
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king" && scenario !== "tower-layout" &&
       !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
-      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "primary-score", "primary-geometry", "distant-targets", "barrel-formation", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
+      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "primary-score", "primary-geometry", "distant-targets", "barrel-formation", "army-formation", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -969,6 +970,9 @@ function setup() {
         target.hp = target.maxHp = 10000;
       }
     }
+  } else if (scenario === "army-formation") {
+    armyGuestPhase = 0;
+    (document.querySelector("#death-card") as HTMLSelectElement).value = "skeleton-army";
   } else if (scenario === "deployment") {
     // Spawn through the normal engine after setBattle, so lifecycle events
     // are fresh rather than treated as history by the renderer.
@@ -1088,6 +1092,23 @@ function setup() {
   arena.setBattle(battle);
 }
 document.querySelector("#guest-ruins")!.addEventListener("click", () => {
+  if (sceneSelect.value === "army-formation") {
+    const originalVersion = Number(new URL(location.href).searchParams.get("rules") ?? 34);
+    const version = armyGuestPhase === 0 ? originalVersion : originalVersion === 34 ? 33 : 34;
+    const host = new Battle({ replay: { ...battle.exportReplay(), version: version as 33 | 34, actions: [], duration: 0 } });
+    for (const body of host.entities) body.active = false;
+    if (armyGuestPhase === 0) {
+      host.players.red.elixir = 10;
+      host.players.red.hand[0] = "skeleton-army";
+      host.play("red", 0, 9, 10);
+      for (const body of host.entities) if (body.kind === "troop") body.active = false;
+    } else host.entities = [];
+    applySnapshot(battle, snapshot(host), "red");
+    armyGuestPhase++;
+    arena.setBattle(battle);
+    arena.showPlacement("skeleton-army", { x: 9, y: 22 });
+    return;
+  }
   const version = guestLayoutToggle ? battle.rulesVersion : battle.rulesVersion === 31 ? 30 : 31;
   guestLayoutToggle = !guestLayoutToggle;
   const host = new Battle({ replay: { ...battle.exportReplay(), version, actions: [], duration: 0 } });
@@ -1896,7 +1917,7 @@ function render(now: number) {
     JSON.stringify(arena.chargeFilterState);
   (document.querySelector("#destruction") as HTMLElement).dataset.deployFilter =
     JSON.stringify(arena.deployFilterState);
-  if (sceneSelect.value === "deployment")
+  if (["deployment", "army-formation"].includes(sceneSelect.value))
     (document.querySelector("#destruction") as HTMLElement).dataset.deploymentTiming =
       JSON.stringify(battle.entities.filter((e) => e.kind === "troop").map((e) => ({
         id: e.id, card: e.card, team: e.team, age: e.age, deploy: e.deploy,
@@ -1904,7 +1925,7 @@ function render(now: number) {
         delay: e.deployVisualDelay ?? 0,
         native: !!(arena as any).units.get(e.id)?.sprite,
       })));
-  if (sceneSelect.value === "deployment") {
+  if (["deployment", "army-formation"].includes(sceneSelect.value)) {
     const preview = (arena as any).deployment;
     const indicator = (arena as any).blindSpot;
     const boundary = indicator.object.children[1];
@@ -1918,6 +1939,7 @@ function render(now: number) {
     });
     (document.querySelector("#destruction") as HTMLElement).dataset.formation = JSON.stringify({
       rulesVersion: battle.rulesVersion,
+      nativeArmy: !!battle.nativeArmyFormation, armyMirrored: !!battle.nativeArmyViewMirrored, armyGuestPhase,
       visible: preview.object.visible,
       preview: preview.units.map((u: any) => ({ x: u.object.position.x + 9, y: u.object.position.z + 16,
         card: u.state.card, native: !!u.sprite })),

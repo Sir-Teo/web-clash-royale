@@ -29,7 +29,7 @@ export class DeploymentPreview {
   get count() {
     return this.units.length;
   }
-  show(id: CardId, point: Point, valid: boolean) {
+  show(id: CardId, point: Point, valid: boolean, rulesVersion = 22, armyViewMirrored?: true) {
     if (this.card !== id) {
       this.clear();
       this.card = id;
@@ -91,7 +91,7 @@ export class DeploymentPreview {
       }
     }
     this.object.visible = true;
-    const points = deploymentPositions(id, point);
+    const points = deploymentPositions(id, point, "blue", undefined, rulesVersion, armyViewMirrored);
     this.units.forEach((unit, i) => {
       unit.object.position.set(
         points[i].x - 9,
