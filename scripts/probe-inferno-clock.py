@@ -39,6 +39,7 @@ parser.add_argument("--primary-geometry", action="store_true", help="Capture exa
 parser.add_argument("--distant-targets", action="store_true", help="Execute native default-target reference, lane scoring and partial tower collections")
 parser.add_argument("--lane-assignment", action="store_true", help="Load archived lane maps and execute native grid selection and spawn lane storage")
 parser.add_argument("--tower-layout", action="store_true", help="Execute archived Crown layout selection, coordinate scaling and position stores")
+parser.add_argument("--crown-owners", action="store_true", help="Continue source King placements through native owner selection and stores")
 parser.add_argument("--group-formation", action="store_true", help="Execute ordinary group owner/radius/lane/formation and factory argument bindings")
 parser.add_argument("--projectile-formation", action="store_true", help="Execute projectile child formation, map lane and factory coordinate arguments")
 parser.add_argument("--spawn-lanes", action="store_true", help="Execute all direct spawn caller lane-hint argument bindings")
@@ -79,6 +80,8 @@ if args.lane_assignment and (not args.sight_range or args.candidate_minimum or a
     parser.error("--lane-assignment requires --sight-range without another sight mode")
 if args.tower_layout and not args.lane_assignment:
     parser.error("--tower-layout requires --sight-range --lane-assignment")
+if args.crown_owners and not args.tower_layout:
+    parser.error("--crown-owners requires --sight-range --lane-assignment --tower-layout")
 if args.spawn_lanes and (not args.lane_assignment or args.tower_layout):
     parser.error("--spawn-lanes requires --sight-range --lane-assignment without --tower-layout")
 if args.projectile_formation and (not args.lane_assignment or args.tower_layout or args.spawn_lanes):

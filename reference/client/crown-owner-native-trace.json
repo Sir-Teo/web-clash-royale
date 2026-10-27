@@ -1,0 +1,1061 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "sha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "emulator": "unicorn==2.1.4",
+  "inputs": [
+    {
+      "path": "reference/locations/manifest.json",
+      "sha256": "54b29ce949eb65a27cc399314c1872fccb70a2f9464bf48e081593372924fac4"
+    },
+    {
+      "path": "reference/locations/tilemap.csv",
+      "sha256": "b9f8d48b49b465b66d5d316b35cc13c5db73a31fb3be2aa5981fa31d7710209b"
+    },
+    {
+      "path": "reference/client/tower-layout-native-trace.json",
+      "sha256": "0d3ddf3aa7bafaf3b03e252205a846ccea27528d9a39f2de4370ad1ed1181be0"
+    }
+  ],
+  "limits": [
+    "Source KingTower placements first execute the retained coordinate capture. This continuation receives a supplied allocated body, caller ordinal, world dimension object and King classification.",
+    "Actual native height threshold, Y getter, ordinal/side selection, occupied-slot checks, world slots and owner setter execute. Natural world initialization, classification, account construction and Princess ownership are not recovered.",
+    "Duplicate diagnostic requests are counted without running string/report effects; subsequent global source-identity verification, registration, levels, orientation and presentation are skipped.",
+    "The two-player source King at Y3000 receives owner0 and Y29000 receives owner1. Browser red/top and blue/bottom use these physical halves; native color artwork/account presentation is not asserted.",
+    "Four-player cases retain source King owners0/1/2/3; KingTowerMiddle and complete team-game roles remain outside this capture. Synthetic ordinals, heights and occupied slots are controls, not claims about naturally constructed worlds."
+  ],
+  "blocks": [
+    {
+      "name": "heightAndY",
+      "start": "0x1c8d9c",
+      "end": "0x1c8dbb",
+      "interpretation": "Actual supplied-grid height times 500 divided by two and native Y getter; component orientation and King classification are skipped.",
+      "instructions": [
+        "1c8d9c:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "1c8d9f:\t8b 40 04             \tmov    eax,DWORD PTR [eax+0x4]",
+        "1c8da2:\t69 78 04 f4 01 00 00 \timul   edi,DWORD PTR [eax+0x4],0x1f4",
+        "1c8da9:\td1 ff                \tsar    edi,1",
+        "1c8dab:\t89 7c 24 28          \tmov    DWORD PTR [esp+0x28],edi",
+        "1c8daf:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1c8db2:\te8 4f 0d 05 00       \tcall   219b06",
+        "1c8db7:\t89 44 24 30          \tmov    DWORD PTR [esp+0x30],eax"
+      ]
+    },
+    {
+      "name": "kingSlotSelection",
+      "start": "0x1c8e28",
+      "end": "0x1c8eee",
+      "interpretation": "Actual ordinal and Y-side selection, occupied-slot checks, primary world slot and owner writes. Diagnostic string/report calls are intercepted.",
+      "instructions": [
+        "1c8e28:\t8b 44 24 24          \tmov    eax,DWORD PTR [esp+0x24]",
+        "1c8e2c:\t83 f8 01             \tcmp    eax,0x1",
+        "1c8e2f:\t7f 5b                \tjg     1c8e8c",
+        "1c8e31:\t8b 44 24 30          \tmov    eax,DWORD PTR [esp+0x30]",
+        "1c8e35:\t3b 44 24 28          \tcmp    eax,DWORD PTR [esp+0x28]",
+        "1c8e39:\t0f 9d c0             \tsetge  al",
+        "1c8e3c:\t0f b6 c0             \tmovzx  eax,al",
+        "1c8e3f:\t8b 7d 08             \tmov    edi,DWORD PTR [ebp+0x8]",
+        "1c8e42:\t83 7c 87 50 00       \tcmp    DWORD PTR [edi+eax*4+0x50],0x0",
+        "1c8e47:\t0f 84 91 00 00 00    \tje     1c8ede",
+        "1c8e4d:\t89 44 24 08          \tmov    DWORD PTR [esp+0x8],eax",
+        "1c8e51:\t8d 83 cf 99 e5 ff    \tlea    eax,[ebx-0x1a6631]",
+        "1c8e57:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1c8e5b:\t8d 44 24 78          \tlea    eax,[esp+0x78]",
+        "1c8e5f:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1c8e62:\te8 a9 20 0d 00       \tcall   29af10",
+        "1c8e67:\t83 ec 04             \tsub    esp,0x4",
+        "1c8e6a:\t8d 44 24 78          \tlea    eax,[esp+0x78]",
+        "1c8e6e:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1c8e71:\te8 1a d8 18 00       \tcall   356690",
+        "1c8e76:\t8d 44 24 78          \tlea    eax,[esp+0x78]",
+        "1c8e7a:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1c8e7d:\te8 5e 01 0d 00       \tcall   298fe0",
+        "1c8e82:\teb 6a                \tjmp    1c8eee",
+        "1c8e84:\t8b 7d 08             \tmov    edi,DWORD PTR [ebp+0x8]",
+        "1c8e87:\te9 db 00 00 00       \tjmp    1c8f67",
+        "1c8e8c:\t8b 44 24 30          \tmov    eax,DWORD PTR [esp+0x30]",
+        "1c8e90:\t3b 44 24 28          \tcmp    eax,DWORD PTR [esp+0x28]",
+        "1c8e94:\t0f 9d c0             \tsetge  al",
+        "1c8e97:\t0f b6 c0             \tmovzx  eax,al",
+        "1c8e9a:\t8b 7d 08             \tmov    edi,DWORD PTR [ebp+0x8]",
+        "1c8e9d:\t83 7c 87 58 00       \tcmp    DWORD PTR [edi+eax*4+0x58],0x0",
+        "1c8ea2:\t8d 40 02             \tlea    eax,[eax+0x2]",
+        "1c8ea5:\t74 7a                \tje     1c8f21",
+        "1c8ea7:\t89 44 24 08          \tmov    DWORD PTR [esp+0x8],eax",
+        "1c8eab:\t8d 83 cf 99 e5 ff    \tlea    eax,[ebx-0x1a6631]",
+        "1c8eb1:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1c8eb5:\t8d 44 24 60          \tlea    eax,[esp+0x60]",
+        "1c8eb9:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1c8ebc:\te8 4f 20 0d 00       \tcall   29af10",
+        "1c8ec1:\t83 ec 04             \tsub    esp,0x4",
+        "1c8ec4:\t8d 44 24 60          \tlea    eax,[esp+0x60]",
+        "1c8ec8:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1c8ecb:\te8 c0 d7 18 00       \tcall   356690",
+        "1c8ed0:\t8d 44 24 60          \tlea    eax,[esp+0x60]",
+        "1c8ed4:\t89 04 24             \tmov    DWORD PTR [esp],eax",
+        "1c8ed7:\te8 04 01 0d 00       \tcall   298fe0",
+        "1c8edc:\teb 53                \tjmp    1c8f31",
+        "1c8ede:\t89 74 87 50          \tmov    DWORD PTR [edi+eax*4+0x50],esi",
+        "1c8ee2:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1c8ee6:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1c8ee9:\te8 ae 0a 05 00       \tcall   21999c"
+      ]
+    },
+    {
+      "name": "secondaryOwnerStore",
+      "start": "0x1c8f21",
+      "end": "0x1c8f31",
+      "interpretation": "Actual secondary slot and owner setter call. The source-identity verification between these instruction blocks is skipped.",
+      "instructions": [
+        "1c8f21:\t89 74 87 50          \tmov    DWORD PTR [edi+eax*4+0x50],esi",
+        "1c8f25:\t89 44 24 04          \tmov    DWORD PTR [esp+0x4],eax",
+        "1c8f29:\t89 34 24             \tmov    DWORD PTR [esp],esi",
+        "1c8f2c:\te8 6b 0a 05 00       \tcall   21999c"
+      ]
+    },
+    {
+      "name": "ownerSetter",
+      "start": "0x21999c",
+      "end": "0x2199af",
+      "interpretation": "Actual owner-index store at body+0x1c.",
+      "instructions": [
+        "21999c:\t55                   \tpush   ebp",
+        "21999d:\t89 e5                \tmov    ebp,esp",
+        "21999f:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "2199a2:\t8b 45 0c             \tmov    eax,DWORD PTR [ebp+0xc]",
+        "2199a5:\t8b 4d 08             \tmov    ecx,DWORD PTR [ebp+0x8]",
+        "2199a8:\t89 41 1c             \tmov    DWORD PTR [ecx+0x1c],eax",
+        "2199ab:\t89 ec                \tmov    esp,ebp",
+        "2199ad:\t5d                   \tpop    ebp",
+        "2199ae:\tc3                   \tret"
+      ]
+    },
+    {
+      "name": "yGetter",
+      "start": "0x219b06",
+      "end": "0x219b16",
+      "interpretation": "Actual Y-coordinate getter at body+0x24.",
+      "instructions": [
+        "219b06:\t55                   \tpush   ebp",
+        "219b07:\t89 e5                \tmov    ebp,esp",
+        "219b09:\t83 e4 fc             \tand    esp,0xfffffffc",
+        "219b0c:\t8b 45 08             \tmov    eax,DWORD PTR [ebp+0x8]",
+        "219b0f:\t8b 40 24             \tmov    eax,DWORD PTR [eax+0x24]",
+        "219b12:\t89 ec                \tmov    esp,ebp",
+        "219b14:\t5d                   \tpop    ebp",
+        "219b15:\tc3                   \tret"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "section": "LayoutPvp",
+      "mapSection": "Map",
+      "sourceCharacter": "KingTower",
+      "nativePoint": {
+        "x": 9000,
+        "y": 3000
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 2,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 0,
+      "ownerIndex": 0,
+      "worldSlots": [
+        16818688,
+        0,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "section": "LayoutPvp",
+      "mapSection": "Map",
+      "sourceCharacter": "KingTower",
+      "nativePoint": {
+        "x": 9000,
+        "y": 29000
+      },
+      "providedKingOrdinal": 1,
+      "providedAccountCount": 2,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": 1,
+      "worldSlots": [
+        0,
+        16818688,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "section": "LayoutTeamVsTeam",
+      "mapSection": "MapTeamVsTeam",
+      "sourceCharacter": "KingTower",
+      "nativePoint": {
+        "x": 11000,
+        "y": 3000
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 0,
+      "ownerIndex": 0,
+      "worldSlots": [
+        16818688,
+        0,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "section": "LayoutTeamVsTeam",
+      "mapSection": "MapTeamVsTeam",
+      "sourceCharacter": "KingTower",
+      "nativePoint": {
+        "x": 11000,
+        "y": 29000
+      },
+      "providedKingOrdinal": 1,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": 1,
+      "worldSlots": [
+        0,
+        16818688,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "section": "LayoutTeamVsTeam",
+      "mapSection": "MapTeamVsTeam",
+      "sourceCharacter": "KingTower",
+      "nativePoint": {
+        "x": 7000,
+        "y": 3000
+      },
+      "providedKingOrdinal": 2,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 2,
+      "ownerIndex": 2,
+      "worldSlots": [
+        0,
+        0,
+        16818688,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "section": "LayoutTeamVsTeam",
+      "mapSection": "MapTeamVsTeam",
+      "sourceCharacter": "KingTower",
+      "nativePoint": {
+        "x": 7000,
+        "y": 29000
+      },
+      "providedKingOrdinal": 3,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 3,
+      "ownerIndex": 3,
+      "worldSlots": [
+        0,
+        0,
+        0,
+        16818688
+      ],
+      "reports": []
+    }
+  ],
+  "controls": [
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 15999
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 2,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 0,
+      "ownerIndex": 0,
+      "worldSlots": [
+        16818688,
+        0,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16000
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 2,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": 1,
+      "worldSlots": [
+        0,
+        16818688,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16001
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 2,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": 1,
+      "worldSlots": [
+        0,
+        16818688,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 15999
+      },
+      "providedKingOrdinal": 1,
+      "providedAccountCount": 2,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 0,
+      "ownerIndex": 0,
+      "worldSlots": [
+        16818688,
+        0,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16000
+      },
+      "providedKingOrdinal": 1,
+      "providedAccountCount": 2,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": 1,
+      "worldSlots": [
+        0,
+        16818688,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16001
+      },
+      "providedKingOrdinal": 1,
+      "providedAccountCount": 2,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": 1,
+      "worldSlots": [
+        0,
+        16818688,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 15999
+      },
+      "providedKingOrdinal": 2,
+      "providedAccountCount": 2,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 2,
+      "ownerIndex": 2,
+      "worldSlots": [
+        0,
+        0,
+        16818688,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16000
+      },
+      "providedKingOrdinal": 2,
+      "providedAccountCount": 2,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 3,
+      "ownerIndex": 3,
+      "worldSlots": [
+        0,
+        0,
+        0,
+        16818688
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16001
+      },
+      "providedKingOrdinal": 2,
+      "providedAccountCount": 2,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 3,
+      "ownerIndex": 3,
+      "worldSlots": [
+        0,
+        0,
+        0,
+        16818688
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 15999
+      },
+      "providedKingOrdinal": 3,
+      "providedAccountCount": 2,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 2,
+      "ownerIndex": 2,
+      "worldSlots": [
+        0,
+        0,
+        16818688,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16000
+      },
+      "providedKingOrdinal": 3,
+      "providedAccountCount": 2,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 3,
+      "ownerIndex": 3,
+      "worldSlots": [
+        0,
+        0,
+        0,
+        16818688
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16001
+      },
+      "providedKingOrdinal": 3,
+      "providedAccountCount": 2,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 3,
+      "ownerIndex": 3,
+      "worldSlots": [
+        0,
+        0,
+        0,
+        16818688
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 15999
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 0,
+      "ownerIndex": 0,
+      "worldSlots": [
+        16818688,
+        0,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16000
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": 1,
+      "worldSlots": [
+        0,
+        16818688,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16001
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": 1,
+      "worldSlots": [
+        0,
+        16818688,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 15999
+      },
+      "providedKingOrdinal": 1,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 0,
+      "ownerIndex": 0,
+      "worldSlots": [
+        16818688,
+        0,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16000
+      },
+      "providedKingOrdinal": 1,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": 1,
+      "worldSlots": [
+        0,
+        16818688,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16001
+      },
+      "providedKingOrdinal": 1,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": 1,
+      "worldSlots": [
+        0,
+        16818688,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 15999
+      },
+      "providedKingOrdinal": 2,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 2,
+      "ownerIndex": 2,
+      "worldSlots": [
+        0,
+        0,
+        16818688,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16000
+      },
+      "providedKingOrdinal": 2,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 3,
+      "ownerIndex": 3,
+      "worldSlots": [
+        0,
+        0,
+        0,
+        16818688
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16001
+      },
+      "providedKingOrdinal": 2,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 3,
+      "ownerIndex": 3,
+      "worldSlots": [
+        0,
+        0,
+        0,
+        16818688
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 15999
+      },
+      "providedKingOrdinal": 3,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 2,
+      "ownerIndex": 2,
+      "worldSlots": [
+        0,
+        0,
+        16818688,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16000
+      },
+      "providedKingOrdinal": 3,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 3,
+      "ownerIndex": 3,
+      "worldSlots": [
+        0,
+        0,
+        0,
+        16818688
+      ],
+      "reports": []
+    },
+    {
+      "kind": "midpointAndOrdinal",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16001
+      },
+      "providedKingOrdinal": 3,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 3,
+      "ownerIndex": 3,
+      "worldSlots": [
+        0,
+        0,
+        0,
+        16818688
+      ],
+      "reports": []
+    },
+    {
+      "kind": "occupiedSlot",
+      "nativePoint": {
+        "x": 9000,
+        "y": 3000
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": true,
+      "expectedOwnerIndex": 0,
+      "ownerIndex": -7,
+      "worldSlots": [
+        1192960,
+        1192961,
+        1192962,
+        1192963
+      ],
+      "reports": [
+        "occupiedPrimary"
+      ]
+    },
+    {
+      "kind": "occupiedSlot",
+      "nativePoint": {
+        "x": 9000,
+        "y": 29000
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": true,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": -7,
+      "worldSlots": [
+        1192960,
+        1192961,
+        1192962,
+        1192963
+      ],
+      "reports": [
+        "occupiedPrimary"
+      ]
+    },
+    {
+      "kind": "occupiedSlot",
+      "nativePoint": {
+        "x": 9000,
+        "y": 3000
+      },
+      "providedKingOrdinal": 1,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": true,
+      "expectedOwnerIndex": 0,
+      "ownerIndex": -7,
+      "worldSlots": [
+        1192960,
+        1192961,
+        1192962,
+        1192963
+      ],
+      "reports": [
+        "occupiedPrimary"
+      ]
+    },
+    {
+      "kind": "occupiedSlot",
+      "nativePoint": {
+        "x": 9000,
+        "y": 29000
+      },
+      "providedKingOrdinal": 1,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": true,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": -7,
+      "worldSlots": [
+        1192960,
+        1192961,
+        1192962,
+        1192963
+      ],
+      "reports": [
+        "occupiedPrimary"
+      ]
+    },
+    {
+      "kind": "occupiedSlot",
+      "nativePoint": {
+        "x": 9000,
+        "y": 3000
+      },
+      "providedKingOrdinal": 2,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": true,
+      "expectedOwnerIndex": 2,
+      "ownerIndex": -7,
+      "worldSlots": [
+        1192960,
+        1192961,
+        1192962,
+        1192963
+      ],
+      "reports": [
+        "occupiedSecondary"
+      ]
+    },
+    {
+      "kind": "occupiedSlot",
+      "nativePoint": {
+        "x": 9000,
+        "y": 29000
+      },
+      "providedKingOrdinal": 2,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": true,
+      "expectedOwnerIndex": 3,
+      "ownerIndex": -7,
+      "worldSlots": [
+        1192960,
+        1192961,
+        1192962,
+        1192963
+      ],
+      "reports": [
+        "occupiedSecondary"
+      ]
+    },
+    {
+      "kind": "occupiedSlot",
+      "nativePoint": {
+        "x": 9000,
+        "y": 3000
+      },
+      "providedKingOrdinal": 3,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": true,
+      "expectedOwnerIndex": 2,
+      "ownerIndex": -7,
+      "worldSlots": [
+        1192960,
+        1192961,
+        1192962,
+        1192963
+      ],
+      "reports": [
+        "occupiedSecondary"
+      ]
+    },
+    {
+      "kind": "occupiedSlot",
+      "nativePoint": {
+        "x": 9000,
+        "y": 29000
+      },
+      "providedKingOrdinal": 3,
+      "providedAccountCount": 4,
+      "providedGridHeight": 64,
+      "providedOccupiedSlots": true,
+      "expectedOwnerIndex": 3,
+      "ownerIndex": -7,
+      "worldSlots": [
+        1192960,
+        1192961,
+        1192962,
+        1192963
+      ],
+      "reports": [
+        "occupiedSecondary"
+      ]
+    },
+    {
+      "kind": "syntheticHeight",
+      "nativePoint": {
+        "x": 9000,
+        "y": 15499
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 2,
+      "providedGridHeight": 62,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 0,
+      "ownerIndex": 0,
+      "worldSlots": [
+        16818688,
+        0,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "syntheticHeight",
+      "nativePoint": {
+        "x": 9000,
+        "y": 15500
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 2,
+      "providedGridHeight": 62,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": 1,
+      "worldSlots": [
+        0,
+        16818688,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "syntheticHeight",
+      "nativePoint": {
+        "x": 9000,
+        "y": 15501
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 2,
+      "providedGridHeight": 62,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": 1,
+      "worldSlots": [
+        0,
+        16818688,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "syntheticHeight",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16499
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 2,
+      "providedGridHeight": 66,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 0,
+      "ownerIndex": 0,
+      "worldSlots": [
+        16818688,
+        0,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "syntheticHeight",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16500
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 2,
+      "providedGridHeight": 66,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": 1,
+      "worldSlots": [
+        0,
+        16818688,
+        0,
+        0
+      ],
+      "reports": []
+    },
+    {
+      "kind": "syntheticHeight",
+      "nativePoint": {
+        "x": 9000,
+        "y": 16501
+      },
+      "providedKingOrdinal": 0,
+      "providedAccountCount": 2,
+      "providedGridHeight": 66,
+      "providedOccupiedSlots": false,
+      "expectedOwnerIndex": 1,
+      "ownerIndex": 1,
+      "worldSlots": [
+        0,
+        16818688,
+        0,
+        0
+      ],
+      "reports": []
+    }
+  ]
+}

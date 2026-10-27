@@ -37,6 +37,11 @@ def create_collector(env, grid, section, selected_sections):
         csv.reader(io.StringIO(Path("reference/locations/tilemap.csv").read_text()))
     )
     cases = []
+    owners = None
+    if env["args"].crown_owners:
+        from lib.crown_owner_probe import create_collector
+
+        owners = create_collector(env)
 
     def hook(_cpu, address, _size, _data):
         sp = cpu.reg_read(UC_X86_REG_ESP)
@@ -66,6 +71,7 @@ def create_collector(env, grid, section, selected_sections):
 
     def collect(mode, map_name):
         nonlocal point, cell_reads
+        king_ordinal = 0
         expected_section = "LayoutPvp" if mode == 0 else "LayoutTeamVsTeam"
         result = run(0x2055BA, grid, mode)
         if result != section or selected_sections[-1] != expected_section:
@@ -104,6 +110,9 @@ def create_collector(env, grid, section, selected_sections):
                     },
                 }
             )
+            if owners and kind == "KingTower":
+                owners[0](cases[-1], king_ordinal, 2 if mode == 0 else 4)
+                king_ordinal += 1
         point = None
 
     def finish(maps):
@@ -219,5 +228,7 @@ def create_collector(env, grid, section, selected_sections):
                 }
             )
         )
+        if owners:
+            owners[1]()
 
     return collect, finish
