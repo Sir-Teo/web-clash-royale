@@ -36,6 +36,7 @@ parser.add_argument("--target-eligibility", action="store_true", help="Execute n
 parser.add_argument("--primary-geometry", action="store_true", help="Capture exact primary sight, rear/side clipping and adjusted minimum boundaries")
 parser.add_argument("--distant-targets", action="store_true", help="Execute native default-target reference, lane scoring and partial tower collections")
 parser.add_argument("--lane-assignment", action="store_true", help="Load archived lane maps and execute native grid selection and spawn lane storage")
+parser.add_argument("--tower-layout", action="store_true", help="Execute archived Crown layout selection, coordinate scaling and position stores")
 args = parser.parse_args()
 if args.range_loss and not args.attack_loop:
     parser.error("--range-loss requires --attack-loop")
@@ -67,6 +68,8 @@ if args.distant_targets and (not args.primary_acquisition or args.spawn_priority
     parser.error("--distant-targets requires --sight-range --primary-acquisition without another continuation")
 if args.lane_assignment and (not args.sight_range or args.candidate_minimum or args.native_target_types or args.candidate_ranking or args.primary_acquisition):
     parser.error("--lane-assignment requires --sight-range without another sight mode")
+if args.tower_layout and not args.lane_assignment:
+    parser.error("--tower-layout requires --sight-range --lane-assignment")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()

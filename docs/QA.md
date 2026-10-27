@@ -2226,3 +2226,9 @@ The new source fetcher pins exact archive bytes for the tile map and location me
 The initial bounded dimension epilogue excluded its return instruction; the instruction admission guard stopped execution. Its corrected range includes that verified return before any final fixture was retained. The later complete capture and independent `--check` pass. Explicit parser/allocation providers validate source names, caller addresses, arguments, dimensions, cell bounds/alignment and allocation size. CSV parsing, subsequent spatial-index allocation, complete world/object construction and natural hint lifecycle remain outside scope.
 
 Six retained modes regenerate unchanged alongside the new capture: distant targets, primary, primary geometry, sight, target types and the shared Inferno clock. Both changed/new Python files parse, source hashes and diff whitespace checks pass. Application rules 30, the 2,279 verified checks and root production cache `69d784bf46a3` remain unchanged. No application rebuild, push or deployment was required.
+
+## Native Crown placement continuation
+
+Native `--sight-range --lane-assignment --tower-layout` independently reproduces all sixteen source placement rows: six regular Crowns and ten team-layout bodies. Actual layout selection, integer scaling, current/previous position writes and X/Y getters agree with the pinned archive. The new mode validates coordinate provider columns and factory caller context, while complete object construction, owner assignment, health and registration remain supplied or excluded. The regular lane, distant-target and primary captures reproduce unchanged. All three changed/new Python files parse and diff whitespace checks pass.
+
+Application rules 30, 2,279 verified checks and root production cache `69d784bf46a3` remain unchanged. Source positions are retained for the next replay-safe gameplay correction; no rebuild, push or deployment was performed for this evidence-only commit.

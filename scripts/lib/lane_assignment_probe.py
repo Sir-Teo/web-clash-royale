@@ -66,6 +66,7 @@ def capture(env):
         )
     current = "Map"
     strings = {}
+    selected_sections = []
     reads = 0
     frame = heap + 0x8000
     fragment = None
@@ -138,17 +139,34 @@ def capture(env):
         elif address == 0x2993A0:
             dest, literal = read(sp + 4), read(sp + 8)
             text = bytes(cpu.mem_read(literal, 20)).split(b"\0")[0].decode()
-            if text != current or read(sp) not in [0x205412, 0x205448]:
+            layout = "LayoutPvp" if current == "Map" else "LayoutTeamVsTeam"
+            permitted = [current, layout] if env["args"].tower_layout else [current]
+            if text not in permitted or read(sp) not in [
+                0x205412,
+                0x205448,
+                *([0x20560F] if env["args"].tower_layout else []),
+            ]:
                 raise RuntimeError(("string", text, current))
             strings[dest] = text
             ret()
         elif address == 0x351280:
             if (
                 read(sp + 4) != table
-                or strings.get(read(sp + 8)) != current
-                or read(sp) not in [0x205422, 0x205454]
+                or strings.get(read(sp + 8))
+                not in (
+                    [current, "LayoutPvp" if current == "Map" else "LayoutTeamVsTeam"]
+                    if env["args"].tower_layout
+                    else [current]
+                )
+                or read(sp)
+                not in [
+                    0x205422,
+                    0x205454,
+                    *([0x20561B] if env["args"].tower_layout else []),
+                ]
             ):
                 raise RuntimeError("sectionlookup")
+            selected_sections.append(strings[read(sp + 8)])
             ret(section)
         elif address == 0x351200:
             if read(sp + 4) != section or read(sp) not in [0x20542A, 0x20545C]:
@@ -177,7 +195,10 @@ def capture(env):
             cpu.reg_write(UC_X86_REG_EAX, datasets[current][row][col])
             cpu.reg_write(UC_X86_REG_EIP, 0x20551A)
         elif address == 0x298FE0:
-            if read(sp + 4) not in strings or read(sp) != 0x20546D:
+            if read(sp + 4) not in strings or read(sp) not in [
+                0x20546D,
+                *([0x205625] if env["args"].tower_layout else []),
+            ]:
                 raise RuntimeError("stringcleanup")
             ret()
         elif address == 0x55EE0:
@@ -197,6 +218,11 @@ def capture(env):
     maps = []
     controls = []
     hinted = []
+    tower_collector = None
+    if env["args"].tower_layout:
+        from lib.tower_layout_probe import create_collector
+
+        tower_collector = create_collector(env, grid, section, selected_sections)
     for mode, current in [(0, "Map"), (1, "MapTeamVsTeam")]:
         reads = 0
         run(0x2053D2, grid, mode, instruction_budget=1000000)
@@ -231,6 +257,9 @@ def capture(env):
                 },
             }
         )
+        if tower_collector:
+            tower_collector[0](mode, current)
+            continue
 
         def sample(x, y, hint=-1):
             nonlocal case_point, fragment
@@ -322,6 +351,9 @@ def capture(env):
                 }
             )
         write(cells, original)
+    if tower_collector:
+        tower_collector[1](maps)
+        return
     static = [
         (
             "mapLoader",
