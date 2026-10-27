@@ -47,6 +47,7 @@ let battle: Battle,
   extraVisualTime = 0,
   last = performance.now();
 let guestLayoutToggle = false;
+let distantStage = 0;
 let victims: { team: Team; x: number; y: number }[] = [];
 const clockModes = new Map<number, string>();
 const attackClockTargets = new Map<number, number>();
@@ -105,8 +106,8 @@ function setup() {
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
-  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "primary-score", "primary-geometry", "tower-layout"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31"].includes(rangeRules ?? "")) {
-    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 } });
+  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "primary-score", "primary-geometry", "tower-layout", "distant-targets"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31", "32"].includes(rangeRules ?? "")) {
+    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
   for (const t of battle.entities) t.active = false;
@@ -125,9 +126,9 @@ function setup() {
     scenario !== "death" && scenario !== "deployment";
   (document.querySelector("#attack-config") as HTMLElement).hidden =
     scenario !== "attack-impacts" && scenario !== "inferno-clock" && scenario !== "attack-range" && scenario !== "sight-range";
-  (document.querySelector("#range-out") as HTMLElement).hidden = scenario !== "attack-range" && scenario !== "sight-range" && scenario !== "primary-geometry";
+  (document.querySelector("#range-out") as HTMLElement).hidden = scenario !== "attack-range" && scenario !== "sight-range" && scenario !== "primary-geometry" && scenario !== "distant-targets";
   document.querySelector("#range-out")!.textContent = scenario === "sight-range"
-    ? "Move targets outside sight" : scenario === "primary-geometry" ? "Bring selected target into attack reach" : "Move targets outside attack reach";
+    ? "Move targets outside sight" : scenario === "distant-targets" ? "Remove lane tower, then reveal Cannon" : scenario === "primary-geometry" ? "Bring selected target into attack reach" : "Move targets outside attack reach";
   (document.querySelector("#minimum-config") as HTMLElement).hidden = scenario !== "minimum-range";
   (document.querySelector("#electro-config") as HTMLElement).hidden = scenario !== "electro-bolts";
   (document.querySelector("#break-shield") as HTMLElement).hidden =
@@ -176,7 +177,7 @@ function setup() {
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king" && scenario !== "tower-layout" &&
       !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
-      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "primary-score", "primary-geometry", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
+      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "primary-score", "primary-geometry", "distant-targets", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -820,6 +821,17 @@ function setup() {
       attacker.target = target.id;
       clockModes.set(attacker.id, "range");
     }
+  } else if (scenario === "distant-targets") {
+    distantStage = 0;
+    const team: Team = new URL(location.href).searchParams.get("team") === "blue" ? "blue" : "red";
+    const enemy = team === "blue" ? "red" : "blue", direction = team === "red" ? 1 : -1;
+    const actor = unit("hog-rider", team, 2, 16 - direction * 4)[0];
+    Object.assign(actor, { speed: 0, age: 3 });
+    const cannon = unit("cannon", enemy, 9, actor.y + direction * 6)[0];
+    Object.assign(cannon, { active: false, lifetime: undefined, hp: 1e6, maxHp: 1e6 });
+    const princess = battle.entities.find((body) => body.team === enemy && body.lane === "left")!;
+    const king = battle.entities.find((body) => body.team === enemy && body.king)!;
+    primaryScoreTargets.set(actor.id, { mode: "distant", candidates: [cannon.id, princess.id, king.id] });
   } else if (scenario === "primary-geometry") {
     const team: Team = new URL(location.href).searchParams.get("team") === "blue" ? "blue" : "red";
     const enemy = team === "blue" ? "red" : "blue", direction = team === "red" ? 1 : -1;
@@ -1158,6 +1170,17 @@ document.querySelector("#clock-freeze")!.addEventListener("click", () => {
       cast("freeze", team === "blue" ? "red" : "blue", x, team === "blue" ? 21 : 11);
 });
 document.querySelector("#range-out")!.addEventListener("click", () => {
+  if (sceneSelect.value === "distant-targets") {
+    for (const actor of battle.entities.filter((body) => primaryScoreTargets.has(body.id))) {
+      const ids = primaryScoreTargets.get(actor.id)!.candidates;
+      if (distantStage === 0) battle.entities.find((body) => body.id === ids[1])!.hp = 0;
+      else Object.assign(battle.entities.find((body) => body.id === ids[0])!, {
+        x: actor.x, y: actor.y + (actor.team === "red" ? 1.5 : -1.5),
+      });
+    }
+    distantStage++;
+    return;
+  }
   if (sceneSelect.value === "primary-geometry") {
     for (const actor of battle.entities.filter((body) => primaryScoreTargets.has(body.id))) {
       const target = battle.entities.find((body) => body.id === actor.target);
@@ -1417,6 +1440,18 @@ function render(now: number) {
       bodies: battle.entities.filter((entity) => clockModes.has(entity.id) && entity.card.startsWith("inferno-"))
         .map((entity) => ({ id: entity.id, card: entity.card, team: entity.team,
           mode: clockModes.get(entity.id), lock: entity.inferno })) });
+  if (sceneSelect.value === "distant-targets")
+    (document.querySelector("#destruction") as HTMLElement).dataset.distantTargets = JSON.stringify({
+      version: battle.rulesVersion, tick: battle.tick, stage: distantStage,
+      bodies: battle.entities.filter((body) => primaryScoreTargets.has(body.id)).map((body) => ({
+        id: body.id, team: body.team, target: body.target, lane: body.nativeLane,
+        policy: !!body.nativeDistantTargets, native: !!(arena as any).units.get(body.id)?.sprite,
+        candidates: primaryScoreTargets.get(body.id)!.candidates.map((id) => {
+          const victim = battle.entities.find((entry) => entry.id === id);
+          return { id, hp: victim?.hp ?? 0, native: !!(arena as any).units.get(id)?.building };
+        }),
+      })),
+    });
   if (["primary-score", "primary-geometry"].includes(sceneSelect.value))
     (document.querySelector("#destruction") as HTMLElement).dataset.primaryScore =
       JSON.stringify({ version: battle.rulesVersion, tick: battle.tick, time: battle.time,

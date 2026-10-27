@@ -1,0 +1,31 @@
+{
+  "source": "apk/1.8.1/x86/libg.so",
+  "nativeSha256": "c5c6b06925a422c5933614541adbb197605e189f8537de3c163217d118b14746",
+  "inputs": [
+    {
+      "path": "reference/client/distant-target-native-trace.json",
+      "sha256": "59442b6c9d8b98a7a3e4dc2fd178509a069a2b794f60ce75f5f16777c6780789"
+    },
+    {
+      "path": "reference/client/lane-assignment-native-trace.json",
+      "sha256": "596c36148df3aee51ae2cad1c464d9023536a814b1a05ea2910a6288ca5dd887"
+    },
+    {
+      "path": "reference/client/spawn-lane-native-trace.json",
+      "sha256": "62573d4e7d6790362aaa2102394322d70b418af407193b0f50d04c88add9d9f9"
+    },
+    {
+      "path": "reference/locations/tilemap.csv",
+      "sha256": "b9f8d48b49b465b66d5d316b35cc13c5db73a31fb3be2aa5981fa31d7710209b"
+    },
+    {
+      "path": "src/game/primary-score-data.json",
+      "sha256": "7971038b66fc29909428a41bbefefcccc30ede29aead651d085af5fd7c0d94f7"
+    }
+  ],
+  "output": {
+    "path": "src/game/distant-target-data.json",
+    "sha256": "1f50b820e1a30fdc94e15c70afcded7c875458b623bb2f722c822e3aeea1630e"
+  },
+  "scope": "Archived two-account regular-arena troop destinations and spawn lane policy"
+}

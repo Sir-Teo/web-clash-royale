@@ -43,7 +43,7 @@ describe("portable progress backups", () => {
     const restored = importProgress(exportProgress(profile));
     expect(restored).toEqual(profile);
     expect(restored.history.map((entry) => entry.replay.version)).toEqual([
-      31, 1, 2, 3, 4,
+      32, 1, 2, 3, 4,
     ]);
     expect(localStorage.setItem).not.toHaveBeenCalled();
     restored.deck[0] = "knight";

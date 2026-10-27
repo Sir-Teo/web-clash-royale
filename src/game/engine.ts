@@ -1,3 +1,4 @@
+import { distantTarget, spawnLane, type NativeLane } from "./distant-targets";
 import { attackReach, minimumAttackDistance, NATIVE_RANGE_RADIUS_FACTOR } from "./attack-range";
 import { areaRandom, areaRandomSeed } from "./area-random";
 import { acquisitionSight, nativeSightRange } from "./sight-range";
@@ -119,6 +120,11 @@ export interface Entity extends Point {
   nativePrimaryScore?: true;
   /** Rules 30: source primary sight, class extensions and clipping. */
   nativePrimaryGeometry?: true;
+  /** Rules 32: archived lane-aware troop movement destinations. */
+  nativeDistantTargets?: true;
+  nativeLane?: NativeLane;
+  /** View-only flag preserving canonical boundary quantization for guests. */
+  nativeDistantMirrored?: true;
   /** Native source units squared; assigned to actual Barrel children. */
   targetScoreBias?: number;
   air: boolean;
@@ -241,7 +247,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -323,7 +329,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 31;
+    this.rulesVersion = r?.version ?? 32;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.seed = r?.seed ?? options.seed ?? Date.now() % 2147483647;
     this.randomState = this.seed || 1;
@@ -436,6 +442,7 @@ export class Battle {
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
+      ...(this.rulesVersion >= 32 ? { nativeDistantTargets: true as const, nativeLane: king ? 0 as const : lane === "left" ? 1 as const : 2 as const } : {}),
       air: false,
       damage: king ? 109 : 109,
       range: king ? 7 : 7.5,
@@ -778,11 +785,12 @@ export class Battle {
           true,
           deploymentTime(id, this.rulesVersion),
           this.rulesVersion >= 18 ? deploymentVisualDelay(id, index, positions.length, this.rulesVersion) : 0,
+          x,
         );
     }
     return { ok: true, reason: "" };
   }
-  private spawn(id: CardId, team: Team, x: number, y: number, audio = true, deploy = 1, visualDelay = 0) {
+  private spawn(id: CardId, team: Team, x: number, y: number, audio = true, deploy = 1, visualDelay = 0, laneHintX?: number) {
     const c = CARD_MAP[id];
     const stats = this.rulesVersion < 7 ? LEGACY_CARD_STATS[id] ?? c : c;
     const legacyBuilding = this.rulesVersion < 8 ? LEGACY_BUILDING_STATS[id] : undefined;
@@ -815,6 +823,7 @@ export class Battle {
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
+      ...(this.rulesVersion >= 32 ? { nativeDistantTargets: true as const, nativeLane: spawnLane(x, laneHintX) } : {}),
       air: !!c.air,
       damage: legacyBalloon?.damage ?? legacyVitals?.damage ?? c.damage,
       range: legacyBalloon?.range ?? stats.range,
@@ -1054,6 +1063,7 @@ export class Battle {
           const { x, y } = clonePosition(entity, area, area.team);
           this.entities.push({
             ...structuredClone(entity),
+            ...(entity.nativeDistantTargets ? { nativeLane: spawnLane(x, undefined, entity.nativeDistantMirrored) } : {}),
             id: this.nextId++,
             x,
             y,
@@ -1502,12 +1512,18 @@ export class Battle {
         nearby = candidate;
         nearbyDistance = nearbyScore;
       }
-      if (e.kind === "troop" && candidate.kind !== "troop" && edgeDistance < structureDistance) {
+      if (!e.nativeDistantTargets && e.kind === "troop" && candidate.kind !== "troop" && edgeDistance < structureDistance) {
         structure = candidate;
         structureDistance = edgeDistance;
       }
     }
-    const target = nearby ?? structure;
+    let target = nearby;
+    if (!target) {
+      if (e.nativeDistantTargets && e.kind === "troop") {
+        const destination = distantTarget(e, this.entities);
+        if (destination && this.validTarget(e, destination)) target = destination;
+      } else target = structure;
+    }
     e.target = target?.id ?? null;
     return target;
   }
@@ -2359,6 +2375,7 @@ export class Battle {
               p.team,
               clamp(p.tx + Math.cos(angle) * spread, 0.6, 17.4),
               clamp(p.ty + Math.sin(angle) * spread, 0.8, 31.2),
+              true, 1, 0, p.tx,
             );
             this.entities.at(-1)!.deploy = goblinBarrel.spawnDeployTime;
             if (this.rulesVersion >= 29)

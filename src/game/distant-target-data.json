@@ -1,0 +1,15 @@
+{
+  "sourceUnitsPerTile": 1000,
+  "sourceUnitsPerCell": 500,
+  "gridWidth": 36,
+  "gridHeight": 64,
+  "hintXBias": 5,
+  "distanceNumerator": 53,
+  "distanceDenominator": 128,
+  "interiorLaneBias": 125,
+  "boundaryLaneBias": 1000,
+  "boundaryCells": 3,
+  "expectedPrincesses": 2,
+  "useLaneId": true,
+  "alwaysPrincess": true
+}

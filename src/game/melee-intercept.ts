@@ -1,3 +1,4 @@
+import { distantTarget } from "./distant-targets";
 import { attackRadius, attackReach } from "./attack-range";
 import { comparePrimaryTargets } from "./primary-score";
 import { primaryCandidateVisible } from "./primary-geometry";
@@ -57,8 +58,8 @@ export function meleeInterceptTarget(
   const target =
     targets
       .filter((e) => primaryCandidateVisible(threat, e))
-      .sort(nearbyClosest)[0] ?? targets.sort(closest)[0];
-  if (!target || inRange(target)) return;
+      .sort(nearbyClosest)[0] ?? (threat.nativeDistantTargets ? distantTarget(threat, entities) : targets.sort(closest)[0]);
+  if (!target || target.hp <= 0 || inRange(target)) return;
   // Match moveToward's routing, including the approach before the river band.
   if (
     !threat.air &&

@@ -15,11 +15,24 @@ export function perspective(s: BattleSnapshot, team: Team): BattleSnapshot {
     ...s,
     winner: s.winner && s.winner !== "draw" ? other(s.winner) : s.winner,
     players: { blue: s.players.red, red: s.players.blue },
-    entities: s.entities.map((e) => ({
-      ...rotatePoint(e),
-      team: other(e.team),
-      lane: e.lane ? (e.lane === "left" ? "right" : "left") : undefined,
-    })),
+    entities: s.entities.map((e) => {
+      const rotated = {
+        ...rotatePoint(e),
+        team: other(e.team),
+        lane: e.lane
+          ? e.lane === "left"
+            ? ("right" as const)
+            : ("left" as const)
+          : undefined,
+      };
+      if (e.nativeDistantTargets) {
+        rotated.nativeLane =
+          e.nativeLane === 1 ? 2 : e.nativeLane === 2 ? 1 : e.nativeLane;
+        if (e.nativeDistantMirrored) delete rotated.nativeDistantMirrored;
+        else rotated.nativeDistantMirrored = true;
+      }
+      return rotated;
+    }),
     projectiles: s.projectiles.map((p) => ({
       ...rotatePoint(p),
       team: other(p.team),
