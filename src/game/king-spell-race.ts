@@ -1,9 +1,9 @@
 import { attackReach, minimumAttackDistance } from "./attack-range";
+import { attackClockDelta } from "./attack-clock";
 import type { CardId } from "./cards";
 import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import rage from "./rage-data.json" with { type: "json" };
-import iceWizard from "./ice-wizard-data.json" with { type: "json" };
 import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import miner from "./miner-data.json" with { type: "json" };
 import { attackHitSteps } from "./attack-flight";
@@ -74,7 +74,7 @@ export function fatalKingWindups(
       )
       .map((a) => ({ ...a }));
     // At most one second of unmodified windup, or 47 steps under the current
-    // 0.65 slow. Buffs expire before the combat clock advances each step.
+    // slow. Buffs expire before the combat clock advances each step.
     for (let step = 1; step <= 60; step++) {
       for (const cloud of clouds) {
         if (cloud.remaining <= 0) continue;
@@ -94,9 +94,7 @@ export function fatalKingWindups(
       boost = Math.max(0, boost - COMBAT_STEP);
       slow = Math.max(0, slow - COMBAT_STEP);
       remaining -=
-        COMBAT_STEP *
-        (boost >= 1e-8 ? rage.hitSpeedMultiplier : 1) *
-        (slow >= 1e-8 ? iceWizard.hitSpeedMultiplier : 1);
+        attackClockDelta(attacker, COMBAT_STEP, boost >= 1e-8, slow >= 1e-8);
       if (remaining <= 1e-8) {
         const flight = attackHitSteps(attacker, primary);
         return Number.isFinite(flight)

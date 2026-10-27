@@ -1,4 +1,5 @@
 import { attackRadius, attackReach, minimumAttackDistance } from "./attack-range";
+import { attackClockRate } from "./attack-clock";
 import type { AreaEffect, Entity, Point, Projectile } from "./engine";
 import { COMBAT_STEP } from "./combat";
 import { advanceMovement } from "./movement";
@@ -144,7 +145,7 @@ export function createSpellApproachPaths(
         ? 0
         : 1 +
           Math.ceil(
-            ((horizon - first) * rage.hitSpeedMultiplier) /
+            ((horizon - first) * attackClockRate(body, true, false)) /
               Math.max(0.1, body.interval),
           );
     const decay = target.lifetime

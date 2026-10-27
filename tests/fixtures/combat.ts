@@ -47,6 +47,8 @@ let battle: Battle,
   last = performance.now();
 let victims: { team: Team; x: number; y: number }[] = [];
 const clockModes = new Map<number, string>();
+const attackClockTargets = new Map<number, number>();
+const attackClockReleases = new Map<number, number>();
 const sightTargets = new Map<number, number>();
 const minimumTargets = new Map<number, number>();
 const electroTargets = new Map<number, { primary: number; other?: number }>();
@@ -82,6 +84,8 @@ function setup() {
   extraVisualTime = 0;
   victims = [];
   clockModes.clear();
+  attackClockTargets.clear();
+  attackClockReleases.clear();
   sightTargets.clear();
   minimumTargets.clear();
   electroTargets.clear();
@@ -96,8 +100,8 @@ function setup() {
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
-  if (["attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(selectedScene) && ["23", "24", "25", "26", "27"].includes(rangeRules ?? "")) {
-    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 } });
+  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28"].includes(rangeRules ?? "")) {
+    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
   for (const t of battle.entities) t.active = false;
@@ -166,7 +170,7 @@ function setup() {
     (document.querySelector(`#${id}`) as HTMLButtonElement).hidden =
       scenario !== "king" &&
       !(scenario === "rocket" && ["rebuild", "destruction"].includes(id)) &&
-      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
+      !(["animation-clock", "sprite-cache", "inferno-clock", "attack-clock", "attack-range", "sight-range", "minimum-range", "electro-bolts"].includes(scenario) && ["rebuild", "destruction"].includes(id));
   if (scenario === "volley") {
     unit("skeleton-army", "red", 4, 12);
     unit("giant", "red", 14, 12);
@@ -810,6 +814,21 @@ function setup() {
       attacker.target = target.id;
       clockModes.set(attacker.id, "range");
     }
+  } else if (scenario === "attack-clock") {
+    // A source Mortar windup has 0.9 s left when these modifiers are applied.
+    for (const team of ["blue", "red"] as const)
+      for (const [index, mode] of ["normal", "rage", "slow", "both"].entries()) {
+        const x = 2 + index * 4.6, y = team === "blue" ? 24 : 8;
+        const attacker = unit("mortar", team, x, y)[0];
+        const target = unit("giant", team === "blue" ? "red" : "blue", x, y + (team === "blue" ? -6 : 6))[0];
+        Object.assign(target, { active: false, hp: 1e6, maxHp: 1e6 });
+        Object.assign(attacker, { target: target.id, age: 3, cooldown: 100,
+          pendingAttack: { target: target.id, remaining: 0.9, damage: attacker.damage } });
+        if (mode === "rage" || mode === "both") attacker.rage = { remaining: 100 };
+        if (mode === "slow" || mode === "both") attacker.slow = { remaining: 100 };
+        clockModes.set(attacker.id, mode);
+        attackClockTargets.set(attacker.id, target.id);
+      }
   } else if (scenario === "inferno-clock") {
     const selected = (document.querySelector("#attack-card") as HTMLSelectElement).value;
     const card = selected === "inferno-tower" ? "inferno-tower" : "inferno-dragon";
@@ -1186,6 +1205,10 @@ function advance(ticks: number) {
         cast("lightning", "blue", king.x, king.y);
       }
       battle.step();
+      if (sceneSelect.value === "attack-clock")
+        for (const id of attackClockTargets.keys())
+          if (!attackClockReleases.has(id) && battle.projectiles.some((shot) => shot.source === id))
+            attackClockReleases.set(id, battle.tick);
     }
   }
 }
@@ -1315,6 +1338,17 @@ function render(now: number) {
       bodies: battle.entities.filter((entity) => clockModes.has(entity.id) && entity.card.startsWith("inferno-"))
         .map((entity) => ({ id: entity.id, card: entity.card, team: entity.team,
           mode: clockModes.get(entity.id), lock: entity.inferno })) });
+  if (sceneSelect.value === "attack-clock")
+    (document.querySelector("#destruction") as HTMLElement).dataset.attackClock =
+      JSON.stringify({ version: battle.rulesVersion, tick: battle.tick, time: battle.time,
+        bodies: battle.entities.filter((entity) => attackClockTargets.has(entity.id)).map((entity) => {
+          const target = battle.entities.find((entry) => entry.id === attackClockTargets.get(entity.id))!;
+          return { id: entity.id, team: entity.team, mode: clockModes.get(entity.id),
+            policy: !!entity.nativeAttackClock, remaining: entity.pendingAttack?.remaining,
+            cooldown: entity.cooldown, releaseTick: attackClockReleases.get(entity.id),
+            targetHp: target.hp, damage: entity.damage,
+            native: !!(arena as any).units.get(entity.id)?.building };
+        }) });
   if (sceneSelect.value === "attack-range")
     (document.querySelector("#destruction") as HTMLElement).dataset.attackRange =
       JSON.stringify({ version: battle.rulesVersion, time: battle.time,

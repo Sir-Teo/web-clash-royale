@@ -1,9 +1,9 @@
 import { attackReach, minimumAttackDistance } from "./attack-range";
+import { attackClockDelta, attackClockRate } from "./attack-clock";
 import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point } from "./engine";
 import tornado from "./tornado-data.json" with { type: "json" };
 import rage from "./rage-data.json" with { type: "json" };
-import iceWizard from "./ice-wizard-data.json" with { type: "json" };
 import iceGolem from "./ice-golem-data.json" with { type: "json" };
 
 const clamp = (n: number, min: number, max: number) =>
@@ -185,7 +185,7 @@ export function projectTornadoWindup(
         Math.max(
           1,
           Math.ceil(
-            (remaining + 1e-8) / (COMBAT_STEP * iceWizard.hitSpeedMultiplier),
+            (remaining + 1e-8) / (COMBAT_STEP * attackClockRate(attacker, false, true)),
           ),
         ),
       )
@@ -230,11 +230,8 @@ export function resolveWindup(
     )
       return { position, cancelledStep: step };
     remaining -=
-      COMBAT_STEP *
-      (frame.boost >= 1e-8 ? rage.hitSpeedMultiplier : 1) *
-      (Math.max(frame.slow, shotSlow) >= 1e-8
-        ? iceWizard.hitSpeedMultiplier
-        : 1);
+      attackClockDelta(attacker, COMBAT_STEP, frame.boost >= 1e-8,
+        Math.max(frame.slow, shotSlow) >= 1e-8);
     if (remaining <= 1e-8) return { position, releaseStep: step };
     if (status && (!status.afterAlive || status.interrupt))
       return { position, cancelledStep: step };
