@@ -10,6 +10,7 @@ const paths = [
   "reference/sc/chr_bandit_tex.png",
   "reference/sc/ui-spells.bin",
   "reference/client/dash-lifecycle-native-trace.json",
+  "reference/client/dash-goals-native-trace.json",
 ];
 const inputs = await Promise.all(paths.map((path) => readFile(path)));
 const card = csvRows(inputs[0].toString()).find((row) => row.Name === "Assassin");
@@ -17,6 +18,12 @@ const unit = csvRows(inputs[1].toString()).find((row) => row.Name === "Assassin"
 const model = parseSC(inputs[2]);
 const portraits = parseSC(inputs[4]);
 const native = JSON.parse(inputs[5]);
+const goals = JSON.parse(inputs[6]);
+if (createHash("sha256").update(inputs[6]).digest("hex") !== "26422f0a0f651353044e75f39f9530c459a6754e00d67ee2fce40f414a636959" ||
+    goals.profiles.headingScale !== 256 || goals.profiles.chunkUnits !== 250 ||
+    !goals.controls.some((row) => row.fields.motion === "target-cleared" && row.frames.at(-1).state === 1 && row.frames.at(-1).targetHp === 1000) ||
+    !goals.controls.some((row) => row.fields.motion === "dashing-target" && row.ordinaryHitCheck.returned === 0 && row.frames.at(-1).targetHp === 680))
+  throw new Error("Recheck native Bandit goal, fixed movement and landing evidence");
 if (createHash("sha256").update(inputs[5]).digest("hex") !== "91a9123774e707aadf59a1d706b9fa5af4e3695d6e3ba94415c36da6011a74eb" ||
     native.profiles.sourceJumpSpeed !== 500 || native.stepMs !== 50 ||
     !native.cases.some((row) => row.fields.damage === 121 && row.frames.some((frame) =>
@@ -56,6 +63,15 @@ const output = Buffer.from(JSON.stringify({
     cooldown: Number(unit.DashCooldown) / 1000,
     speed: native.profiles.sourceJumpSpeed / 1000 / (native.stepMs / 1000),
     legacySpeed: Number(unit.JumpSpeed) / 60,
+    goal: {
+      stepMs: goals.stepMs,
+      unitsPerTile: goals.profiles.sourceUnitsPerTile,
+      tileUnits: goals.profiles.goalTileSize,
+      unitsPerStep: goals.profiles.sourceJumpSpeed,
+      chunkUnits: goals.profiles.chunkUnits,
+      headingScale: goals.profiles.headingScale,
+      landingExtensionUnits: goals.profiles.landingRangeExtension,
+    },
     filter: unit.DashFilter,
     startEffect: unit.DashStartEffect,
     travelEffect: unit.DashEffect,
@@ -78,6 +94,13 @@ await writeFile("reference/client/bandit-manifest.json", JSON.stringify({
     sourceUnitsPerStep: native.profiles.sourceJumpSpeed,
     unitsPerTile: 1000,
     retainedPoison: "0x218f48 -> 0x2601ae -> 0x2602d0",
+  },
+  nativeGoal: {
+    launch: "0x25cd18 -> 0x263c4a",
+    movement: "0x260c2c -> 0x2613f6 -> 0x26344e",
+    landing: "0x2157eb..0x2159bc",
+    fixedStepMs: goals.stepMs,
+    landingExtensionUnits: goals.profiles.landingRangeExtension,
   },
   output: { path: outputPath, sha256: sha256(output) },
 }, null, 2) + "\n");

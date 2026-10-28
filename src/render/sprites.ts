@@ -283,7 +283,10 @@ export class SpriteLibrary {
     camera: T.Camera,
     motion?: { x: number; y: number },
   ) {
-    if (e.attack > 0 && !moving && target) {
+    if (e.card === "bandit" && e.dash?.goal) {
+      sprite.facingX = e.dash.goal.x - e.x;
+      sprite.facingY = e.dash.goal.y - e.y;
+    } else if (e.attack > 0 && !moving && target) {
       sprite.facingX = target.x - e.x;
       sprite.facingY = target.y - e.y;
     } else if (moving && motion && Math.hypot(motion.x, motion.y) > 0.0001) {

@@ -26,6 +26,10 @@
     {
       "path": "reference/client/dash-lifecycle-native-trace.json",
       "sha256": "91a9123774e707aadf59a1d706b9fa5af4e3695d6e3ba94415c36da6011a74eb"
+    },
+    {
+      "path": "reference/client/dash-goals-native-trace.json",
+      "sha256": "26422f0a0f651353044e75f39f9530c459a6754e00d67ee2fce40f414a636959"
     }
   ],
   "nativeDash": {
@@ -36,8 +40,15 @@
     "unitsPerTile": 1000,
     "retainedPoison": "0x218f48 -> 0x2601ae -> 0x2602d0"
   },
+  "nativeGoal": {
+    "launch": "0x25cd18 -> 0x263c4a",
+    "movement": "0x260c2c -> 0x2613f6 -> 0x26344e",
+    "landing": "0x2157eb..0x2159bc",
+    "fixedStepMs": 50,
+    "landingExtensionUnits": 500
+  },
   "output": {
     "path": "src/game/bandit-data.json",
-    "sha256": "025df779bb7f1f04e4157ff1ec2c689cdc34d31b430a5a7c0ced75bb69031aec"
+    "sha256": "149035cdef92abd350ce9eda3c4a41bd1de16bbde3b262dc861c11ea885f23b6"
   }
 }

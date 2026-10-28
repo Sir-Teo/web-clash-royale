@@ -709,7 +709,7 @@ const originalCards: Card[] = [
     bandit.sourceSpeed / 60,
     bandit.sourceRange,
     bandit.sourceHitSpeed,
-    "Dashes to distant targets for a heavy hit and evades incoming hits during travel. Existing Poison keeps ticking.",
+    "Dashes toward a distant target for a heavy hit. Evades ordinary hits; existing Poison and dash strikes can still hurt her.",
     { rarity: "Legendary", hitsAir: bandit.hitsAir },
   ),
   troop(

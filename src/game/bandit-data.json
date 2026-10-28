@@ -17,6 +17,15 @@
     "cooldown": 1,
     "speed": 10,
     "legacySpeed": 8.333333333333334,
+    "goal": {
+      "stepMs": 50,
+      "unitsPerTile": 1000,
+      "tileUnits": 500,
+      "unitsPerStep": 500,
+      "chunkUnits": 250,
+      "headingScale": 256,
+      "landingExtensionUnits": 500
+    },
     "filter": "filter_bandit_charge",
     "startEffect": "assassin_dash_start",
     "travelEffect": "assassin_dashing",

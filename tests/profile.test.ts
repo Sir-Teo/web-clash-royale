@@ -168,7 +168,7 @@ describe("local progress", () => {
     p.history.push({ ...old, id: 16, replay: { ...old.replay, version: 15 } });
     saveProfile(p);
     expect(loadProfile().history.map((r) => r.replay.version)).toEqual([
-      48, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+      49, 1, 2, 3, 4, 5, 6, 7, 8, 9,
     ]);
     const raw = JSON.parse(data.get("browser-royale.profile.v1")!);
     raw.history.shift();
