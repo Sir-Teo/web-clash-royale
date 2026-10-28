@@ -454,11 +454,15 @@ def capture(env, context, shared):
             "sideways": (-3000 * dy, 3000 * dx),
             "away": (3000 * dx, 3000 * dy),
             "closer": (-2000 * dx, -2000 * dy),
+            "landing-inside": (1099 * dx, 1099 * dy),
+            "landing-equal": (1100 * dx, 1100 * dy),
+            "landing-outside": (1101 * dx, 1101 * dy),
         }[motion]
         for offset, initial, delta in zip([0x20, 0x24], initial_target, displacement):
             write(target + offset, initial + delta)
         frames = []
         final_step = 7 if motion == "stationary" else 3 if motion == "closer" else 8
+        will_hit = motion in ["stationary", "closer", "landing-inside", "landing-equal"]
         for step in range(1, final_step + 1):
             events.clear()
             calls.clear()
@@ -478,14 +482,14 @@ def capture(env, context, shared):
             expected[movement + 0x1EA - heap] = 1
             if landing:
                 put(expected, body + 0x60, 1)
-                if motion in ["stationary", "closer"]:
+                if will_hit:
                     put(expected, target_health + 8, 680)
             invoke("movement", 0x260C2C, movement)
             exact(expected, "native goal movement/landing")
             expected_events = [["providedOpenPlaneWrite", 250 * dx, 250 * dy]]
             if landing:
                 expected_events += [["stateRequest", 1], ["providedDashDamage", 320]]
-                if motion in ["stationary", "closer"]:
+                if will_hit:
                     expected_events += [["targetHp", 680], ["providedAttackReload"]]
                 expected_events += [
                     ["providedBlockedTile", False],
@@ -533,13 +537,17 @@ def capture(env, context, shared):
             "launchFrameHold": held,
             "frames": frames,
         }
-        (controls if initial_clock else cases).append(result)
+        (controls if initial_clock or motion.startswith("landing-") else cases).append(
+            result
+        )
 
     for axis in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
         for motion in ["stationary", "sideways", "away", "closer"]:
             episode(axis, motion)
         for initial in [50, 500]:
             episode(axis, "stationary", initial)
+        for motion in ["landing-inside", "landing-equal", "landing-outside"]:
+            episode(axis, motion)
     definitions = [
         (
             "countdown",

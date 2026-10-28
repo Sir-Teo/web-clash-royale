@@ -28,7 +28,7 @@ it("pins dash goals to the source binary, fields and prerequisite captures", () 
     ownRadius: 600, targetRadius: 500, goalTileSize: 500, worldWidth: 36,
     addCharacterRangeToRadius: true });
   expect(trace.cases).toHaveLength(16);
-  expect(trace.controls).toHaveLength(8);
+  expect(trace.controls).toHaveLength(20);
   expect(trace.blocks).toHaveLength(12);
 });
 
@@ -56,7 +56,7 @@ function launch(row: Episode) {
 
 it("independently reconstructs the countdown, launch point, tile and initial movement hold", () => {
   rows.forEach(launch);
-  expect(rows.reduce((n, r) => n + r.countdown.length, 0)).toBe(364);
+  expect(rows.reduce((n, r) => n + r.countdown.length, 0)).toBe(604);
   for (const row of trace.cases as Episode[]) {
     expect(row.countdown).toHaveLength(20);
     expect(row.countdown.slice(0, 19).every((f) => f.state === 2)).toBe(true);
@@ -97,9 +97,9 @@ it("reproduces native travel and hit/miss frames with independent geometry", () 
     }
     expect(landed).toBe(true);
   }
-  expect(rows.reduce((n, r) => n + r.frames.length, 0)).toBe(160);
-  expect(rows.filter((r) => r.frames.at(-1)!.targetHp === 680)).toHaveLength(16);
-  expect(rows.filter((r) => r.frames.at(-1)!.targetHp === 1000)).toHaveLength(8);
+  expect(rows.reduce((n, r) => n + r.frames.length, 0)).toBe(256);
+  expect(rows.filter((r) => r.frames.at(-1)!.targetHp === 680)).toHaveLength(24);
+  expect(rows.filter((r) => r.frames.at(-1)!.targetHp === 1000)).toHaveLength(12);
 });
 
 for (const motion of ["stationary", "sideways", "away", "closer"])
@@ -116,9 +116,24 @@ for (const motion of ["stationary", "sideways", "away", "closer"])
   });
 
 it("continues partial clocks without replaying the start view notification", () => {
-  for (const row of trace.controls as Episode[]) {
+  for (const row of (trace.controls as Episode[]).filter((r) => r.fields.initialClockMs > 0)) {
     expect(row.countdown).toHaveLength(row.fields.initialClockMs / 50);
     expect(row.countdown.flatMap((f) => f.events).filter((e) => e[0] === "providedView" && e[1] === "start")).toHaveLength(0);
     expect(row.frames.at(-1)!.targetHp).toBe(680);
+  }
+});
+
+it("accepts equality at the extended landing bound and rejects one source unit outside", () => {
+  const selected = (trace.controls as Episode[]).filter((r) => r.fields.motion.startsWith("landing-"));
+  expect(selected).toHaveLength(12);
+  const reach = trace.profiles.range + trace.profiles.ownRadius + trace.profiles.targetRadius;
+  for (const row of selected) {
+    const last = row.frames.at(-1)!;
+    const offset = row.fields.motion === "landing-inside" ? -1 : row.fields.motion === "landing-equal" ? 0 : 1;
+    const distance = Math.hypot(last.xy[0] - row.fields.movedTarget[0], last.xy[1] - row.fields.movedTarget[1]);
+    expect(distance).toBe(reach + 500 + offset);
+    expect(distance).toBeGreaterThan(reach);
+    expect(last.state).toBe(1);
+    expect(last.targetHp).toBe(offset <= 0 ? 680 : 1000);
   }
 });
