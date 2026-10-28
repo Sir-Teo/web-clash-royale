@@ -5,6 +5,7 @@ import { cardDetails } from "./ui/card-details";
 import { DeckEditHistory, copyDeckSelection } from "./ui/deck-edit-history";
 import { collectionCards } from "./ui/card-collection";
 import type { CollectionKind, CollectionOrder } from "./ui/card-collection";
+import { historyMatches, type HistoryQuery } from "./ui/battle-history";
 import "@fontsource/lilita-one/latin-400.css";
 import "@fontsource/nunito-sans/latin-400.css";
 import "@fontsource/nunito-sans/latin-600.css";
@@ -17,6 +18,7 @@ import {
   moveKeyboardTarget,
 } from "./ui/keyboard-deployment";
 import "./ui/match-details.css";
+import "./ui/battle-history.css";
 import "./ui/replay-files.css";
 import "./ui/replay-controls.css";
 import "./ui/deck-codes.css";
@@ -274,6 +276,13 @@ let filter: CollectionKind = "all";
 let search = "";
 let collectionCost: number | "all" = "all";
 let collectionOrder: CollectionOrder = "collection";
+const historyQuery: HistoryQuery = { search: "", result: "all", mode: "all" };
+let historyReturn: {
+  records: RecordEntry[];
+  panel: number;
+  list: number;
+  focus: string;
+} | null = null;
 // Rows belong to their builder grid, including during a read-only inspection.
 const collectionRows = new WeakMap<HTMLElement, Map<CardId, HTMLDivElement>>();
 const deckEdits = new DeckEditHistory();
@@ -2082,31 +2091,104 @@ function renderCollection() {
       }),
   );
 }
-function showHistory() {
-  modal(
-    "Your battle log",
-    `${screen === "lobby" ? `<div class="replay-file-toolbar"><button class="secondary-button" id="open-replay-file">${icon("upload")} Open replay file</button><input id="replay-file" type="file" accept=".json,application/json" aria-label="Choose replay file" hidden/><p>Watch a shared recording without changing your progress.</p><p class="replay-file-error" role="alert" hidden></p></div>` : ""}<div class="history-summary"><div>${icon("swords")}<b>${profile.battles}</b><span>BATTLES</span></div><div>${icon("trophy")}<b>${profile.wins}</b><span>VICTORIES</span></div><div>${icon("crown")}<b>${profile.crowns}</b><span>CROWNS</span></div></div><div class="history-list">${profile.history.length ? profile.history.map((r, i) => `<div class="history-entry"><span class="history-outcome ${r.winner === "blue" ? "win" : "loss"}">${icon(r.winner === "blue" ? "trophy" : r.winner === "draw" ? "equal" : "swords")}</span><div><b>${r.winner === "blue" ? "Victory" : r.winner === "draw" ? "Draw" : "Defeat"} <small>vs ${esc(r.opponent ?? "Royal Trainer")}</small></b><span>${modeNames[r.mode] ?? "Classic 1v1"} · ${new Date(r.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span></div><strong>${r.crowns[0]} – ${r.crowns[1]}</strong><div class="history-actions"><button class="secondary-button" data-match-details="${i}" aria-label="View battle details against ${esc(r.opponent ?? "Royal Trainer")}">${icon("layers-2")} Details</button><button class="secondary-button" data-replay="${i}">${icon("play")} Replay</button></div></div>`).join("") : `<div class="empty-history">${icon("swords")}<h3>Your story starts in the arena.</h3><p>Play a battle to see your results and replays here.</p><button class="primary-button" id="history-battle">Let's battle ${icon("arrow-right")}</button></div>`}</div><p class="modal-footnote">Your latest 10 battles are saved locally, with playable replays.</p>`,
-    "history",
-    true,
-  );
+function rememberHistoryPosition(focus: string) {
+  if (modalKey !== "history") return;
+  historyReturn = {
+    records: profile.history,
+    panel: $(".modal").scrollTop,
+    list: $(".history-list").scrollTop,
+    focus,
+  };
+}
+function renderHistoryMatches() {
+  if (!profile.history.length) return;
+  const matches = historyMatches(profile.history, historyQuery);
+  $("#history-count").textContent =
+    `Showing ${matches.length} of ${profile.history.length} saved ${profile.history.length === 1 ? "battle" : "battles"}.`;
+  $<HTMLButtonElement>("#clear-history-filters").disabled =
+    !historyQuery.search &&
+    historyQuery.result === "all" &&
+    historyQuery.mode === "all";
+  $(".history-list").innerHTML = matches.length
+    ? matches
+        .map(
+          ({ record: r, index: i }) =>
+            `<div class="history-entry" data-history-index="${i}"><span class="history-outcome ${r.winner === "blue" ? "win" : r.winner === "draw" ? "draw" : "loss"}">${icon(r.winner === "blue" ? "trophy" : r.winner === "draw" ? "equal" : "swords")}</span><div><b>${r.winner === "blue" ? "Victory" : r.winner === "draw" ? "Draw" : "Defeat"} <small>vs ${esc(r.opponent ?? "Royal Trainer")}</small></b><span>${modeNames[r.mode]} · ${new Date(r.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span></div><strong aria-label="Your crowns ${r.crowns[0]}, opponent crowns ${r.crowns[1]}">${r.crowns[0]} – ${r.crowns[1]}</strong><div class="history-actions"><button class="secondary-button" data-match-details="${i}" aria-label="View battle details against ${esc(r.opponent ?? "Royal Trainer")}">${icon("layers-2")} Details</button><button class="secondary-button" data-replay="${i}" aria-label="Replay battle against ${esc(r.opponent ?? "Royal Trainer")}">${icon("play")} Replay</button></div></div>`,
+        )
+        .join("")
+    : `<div class="history-no-results"><h3>No battles match these filters.</h3><p>Try another opponent or card, or clear the filters.</p></div>`;
+  $(".history-list").scrollTop = 0;
   document
     .querySelectorAll<HTMLButtonElement>("[data-replay]")
-    .forEach(
-      (e) =>
-        (e.onclick = () =>
-          playReplay(profile.history[Number(e.dataset.replay)])),
-    );
+    .forEach((button) => {
+      button.onclick = () => {
+        rememberHistoryPosition(`[data-replay="${button.dataset.replay}"]`);
+        playReplay(profile.history[Number(button.dataset.replay)]);
+      };
+    });
   document
     .querySelectorAll<HTMLButtonElement>("[data-match-details]")
     .forEach((button) => {
-      button.onclick = () =>
+      button.onclick = () => {
+        rememberHistoryPosition(
+          `[data-match-details="${button.dataset.matchDetails}"]`,
+        );
         showMatchDetails(Number(button.dataset.matchDetails));
+      };
     });
+  refreshIcons();
+}
+function showHistory() {
+  const modeOptions = Object.entries(modeNames)
+    .map(([value, label]) => `<option value="${value}">${label}</option>`)
+    .join("");
+  const filters = profile.history.length
+    ? `<div class="history-filters"><label>Search battles<input type="search" id="history-search" placeholder="Opponent or card" maxlength="100" autocomplete="off" aria-describedby="history-search-help" value="${esc(historyQuery.search)}"/></label><label>Result<span class="history-select"><select id="history-result"><option value="all">All results</option><option value="blue">Victory</option><option value="red">Defeat</option><option value="draw">Draw</option></select>${icon("chevron-down")}</span></label><label>Mode<span class="history-select"><select id="history-mode"><option value="all">All modes</option>${modeOptions}</select>${icon("chevron-down")}</span></label><p class="history-search-help" id="history-search-help">Search opponents and cards in either starting deck.</p></div><div class="history-filter-status"><p id="history-count" role="status" aria-live="polite" aria-atomic="true"></p><button class="text-button" id="clear-history-filters">Clear filters</button></div>`
+    : "";
+  modal(
+    "Your battle log",
+    `${screen === "lobby" ? `<div class="replay-file-toolbar"><button class="secondary-button" id="open-replay-file">${icon("upload")} Open replay file</button><input id="replay-file" type="file" accept=".json,application/json" aria-label="Choose replay file" hidden/><p>Watch a shared recording without changing your progress.</p><p class="replay-file-error" role="alert" hidden></p></div>` : ""}<div class="history-summary"><div>${icon("swords")}<b>${profile.battles}</b><span>BATTLES</span></div><div>${icon("trophy")}<b>${profile.wins}</b><span>VICTORIES</span></div><div>${icon("crown")}<b>${profile.crowns}</b><span>CROWNS</span></div></div>${filters}<div class="history-list">${profile.history.length ? "" : `<div class="empty-history">${icon("swords")}<h3>Your story starts in the arena.</h3><p>Play a battle to see your results and replays here.</p><button class="primary-button" id="history-battle">Let's battle ${icon("arrow-right")}</button></div>`}</div><p class="modal-footnote">Your latest 10 battles are saved locally, with playable replays.</p>`,
+    "history",
+    true,
+  );
+  if (profile.history.length) {
+    const search = $<HTMLInputElement>("#history-search");
+    const result = $<HTMLSelectElement>("#history-result");
+    const mode = $<HTMLSelectElement>("#history-mode");
+    result.value = historyQuery.result;
+    mode.value = historyQuery.mode;
+    search.oninput = () => {
+      historyQuery.search = search.value;
+      renderHistoryMatches();
+    };
+    result.onchange = () => {
+      historyQuery.result = result.value as HistoryQuery["result"];
+      renderHistoryMatches();
+    };
+    mode.onchange = () => {
+      historyQuery.mode = mode.value as HistoryQuery["mode"];
+      renderHistoryMatches();
+    };
+    $("#clear-history-filters").onclick = () => {
+      historyQuery.search = search.value = "";
+      historyQuery.result = result.value = "all";
+      historyQuery.mode = mode.value = "all";
+      renderHistoryMatches();
+      search.focus();
+    };
+    renderHistoryMatches();
+  }
   bindReplayFileInput();
   if (document.querySelector("#history-battle"))
-    $("#history-battle").onclick = () => {
-      closeModal();
-    };
+    $("#history-battle").onclick = () => closeModal();
+  if (historyReturn && historyReturn.records === profile.history) {
+    document
+      .querySelector<HTMLElement>(historyReturn.focus)
+      ?.focus({ preventScroll: true });
+    $(".modal").scrollTop = historyReturn.panel;
+    $(".history-list").scrollTop = historyReturn.list;
+  }
+  historyReturn = null;
 }
 function downloadJson(text: string, filename: string) {
   const url = URL.createObjectURL(
@@ -2143,6 +2225,7 @@ function bindReplayFileInput() {
         document.querySelector("#replay-file") !== input
       )
         return;
+      rememberHistoryPosition("#open-replay-file");
       showSharedReplay(shared);
     } catch (cause) {
       if (document.querySelector("#replay-file") !== input) return;
