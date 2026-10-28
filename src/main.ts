@@ -3171,7 +3171,8 @@ function frame(now: number) {
   const idle = screen === "lobby" || presentationPaused || !!battle.winner;
   const frozen =
     (paused && !multiplayer && screen !== "lobby" && !battle.winner) ||
-    (screen === "lobby" && !!modalKey);
+    (screen === "lobby" && !!modalKey) ||
+    (screen === "battle" && !!battle.winner && modalKey === "result");
   const frozenChanged = !renderedFrozen || arena.needsFrame || renderedBattle !== battle ||
     renderedTick !== battle.tick;
   if (frozen && !frozenChanged) {

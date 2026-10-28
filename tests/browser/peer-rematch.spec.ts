@@ -116,6 +116,8 @@ for (const reverse of [false, true])
               "--use-gl=angle",
               "--use-angle=swiftshader",
               "--enable-unsafe-swiftshader",
+              // WebKit in the test container cannot resolve Chromium's mDNS candidates.
+              "--disable-features=WebRtcHideLocalIpsWithMdns",
             ],
           })
         : undefined;
@@ -220,6 +222,18 @@ for (const reverse of [false, true])
           await expect(p.locator("#rematch-status")).toContainText(
             "Both players must agree",
           );
+          await expect
+            .poll(async () => {
+              const s = await state(p);
+              return !s.renderPending && s.fps === 0;
+            })
+            .toBe(true);
+          const held = await state(p);
+          await p.waitForTimeout(400);
+          const rested = await state(p);
+          expect(rested.renderedFrames).toBe(held.renderedFrames);
+          expect(rested.destruction.time).toBe(held.destruction.time);
+          expect(rested.time).toBe(held.time);
         }
         const blue = await saved(host),
           red = await saved(guest);
