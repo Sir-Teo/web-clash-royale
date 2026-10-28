@@ -35,6 +35,7 @@ import { collectorTarget } from "./collector-targeting";
 import { spawnerPlan } from "./spawner-targeting";
 import { siegePlan, isSiegeCard } from "./siege-targeting";
 import { minerTarget } from "./miner-targeting";
+import { barrelTarget } from "./barrel-targeting";
 import { meleeInterceptTarget } from "./melee-intercept";
 import { finishesKingBefore } from "./king-spell-race";
 import { createKingDefense } from "./king-defense";
@@ -3255,9 +3256,18 @@ export class Battle {
           legal: (point) => this.canPlace("red", a.played, point.x, point.y).ok,
         })] as const) : [],
     );
+    const barrels = new Map(
+      !threat && currentPlacementPolicy ? affordable
+        .filter((a) => a.played === "goblin-barrel")
+        .map((a) => [a.id, barrelTarget({
+          team: "red", elixir: p.elixir, cost: a.cost!, remaining: this.remaining,
+          entities: this.entities, projectiles: this.projectiles, areas: this.areas,
+          legal: (point) => this.canPlace("red", a.played, point.x, point.y).ok,
+        })] as const) : [],
+    );
     if (pressureBuilding && p.elixir + 1e-6 < pressureBuilding.requiredElixir &&
         !hasSpellTarget && ![...collectors.values()].some(Boolean) &&
-        ![...miners.values()].some((target) => target && target.score > 4)) return;
+        ![...miners.values(), ...barrels.values()].some((target) => target && target.score > 4)) return;
     const scored = affordable
       .map((a) => {
         const jitter = this.random() * 2;
@@ -3269,6 +3279,8 @@ export class Battle {
           score = 4 + jitter * 0.1;
         else if (!threat && currentPlacementPolicy && a.played === "miner")
           score = miners.get(a.id) ? miners.get(a.id)!.score + jitter * 0.1 : -Infinity;
+        else if (!threat && currentPlacementPolicy && a.played === "goblin-barrel")
+          score = barrels.get(a.id) ? barrels.get(a.id)!.score + jitter * 0.1 : -Infinity;
         else if (!threat && currentPlacementPolicy && isSiegeCard(a.played)) score = -Infinity;
         else if (a.c.kind === "spell") {
           if (optimizedSpell(a.played))
@@ -3308,7 +3320,7 @@ export class Battle {
     let x = lane + (this.random() - 0.5) * 1.4,
       y = threat ? clamp(threat.y + 1.3, 4, 13.8) : a.c.buildingsOnly ? 3.5 : 9;
     if (a.c.kind === "spell") {
-      const target = a.target ?? (!optimizedSpell(a.played)
+      const target = barrels.get(a.id)?.point ?? a.target ?? (!optimizedSpell(a.played)
         ? threat ?? this.entities.find((e) => e.team === "blue" && e.kind === "tower" && !e.king && e.hp > 0)
         : undefined);
       if (!target) return;
