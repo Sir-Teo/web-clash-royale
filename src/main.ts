@@ -849,18 +849,36 @@ function updateBattleUI(force = false) {
 }
 function syncKeyboardArena() {
   const canvas = arena.renderer.domElement;
-  const role = screen === "battle" && !battle.winner ? "application" : "img";
-  if (canvas.getAttribute("role") === role) return;
-  canvas.setAttribute("role", role);
-  if (role === "application") {
-    canvas.setAttribute("aria-describedby", "keyboard-deployment-instructions");
-    canvas.setAttribute(
+  const live = screen === "battle" && !battle.winner;
+  const replay = screen === "replay";
+  setAttribute(canvas, "role", live || replay ? "application" : "img");
+  setAttribute(
+    canvas,
+    "aria-label",
+    replay
+      ? "Battle replay arena."
+      : live
+        ? "Battle arena. Select a card to deploy."
+        : screen === "battle"
+          ? "Completed battle arena."
+          : "Goblin Stadium arena preview.",
+  );
+  if (live || replay) {
+    setAttribute(
+      canvas,
+      "aria-describedby",
+      replay ? "replay-keyboard-help" : "keyboard-deployment-instructions",
+    );
+    setAttribute(
+      canvas,
       "aria-keyshortcuts",
-      "1 2 3 4 ArrowUp ArrowDown ArrowLeft ArrowRight Enter Escape Space",
+      replay
+        ? "ArrowLeft ArrowRight Home End [ ] Space"
+        : "1 2 3 4 ArrowUp ArrowDown ArrowLeft ArrowRight Enter Escape Space",
     );
   } else {
-    canvas.removeAttribute("aria-describedby");
-    canvas.removeAttribute("aria-keyshortcuts");
+    for (const attribute of ["aria-describedby", "aria-keyshortcuts"])
+      if (canvas.hasAttribute(attribute)) canvas.removeAttribute(attribute);
   }
 }
 function clearKeyboardAim(reset = false) {

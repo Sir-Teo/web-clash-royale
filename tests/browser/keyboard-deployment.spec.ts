@@ -48,6 +48,10 @@ test("keyboard targeting previews a troop, records the chosen tile and deploys o
   await select(page, "knight");
   await expect(page.locator("canvas")).toHaveAttribute("role", "application");
   await expect(page.locator("canvas")).toHaveAttribute(
+    "aria-label",
+    "Battle arena. Select a card to deploy.",
+  );
+  await expect(page.locator("canvas")).toHaveAttribute(
     "aria-describedby",
     "keyboard-deployment-instructions",
   );
@@ -92,6 +96,18 @@ test("keyboard targeting previews a troop, records the chosen tile and deploys o
   expect(commands).toHaveLength(1);
   expect(commands[0]).toMatchObject({ card: "knight", x: 7, y: 23.5 });
   await expect(page.locator("canvas")).toHaveAttribute("role", "img");
+  await expect(page.locator("canvas")).toHaveAttribute(
+    "aria-label",
+    "Completed battle arena.",
+  );
+  await expect(page.locator("canvas")).not.toHaveAttribute(
+    "aria-describedby",
+    /./,
+  );
+  await expect(page.locator("canvas")).not.toHaveAttribute(
+    "aria-keyshortcuts",
+    /./,
+  );
   expect(errors).toEqual([]);
 });
 

@@ -45,7 +45,23 @@ async function replay(page: Page) {
 test("Space activates focused replay speed, pause, resume and exit controls", async ({
   page,
 }) => {
+  const canvas = page.locator("#arena-canvas canvas");
+  await expect(canvas).toHaveAttribute("role", "img");
+  await expect(canvas).toHaveAttribute(
+    "aria-label",
+    "Goblin Stadium arena preview.",
+  );
   await replay(page);
+  await expect(canvas).toHaveAttribute("role", "application");
+  await expect(canvas).toHaveAttribute("aria-label", "Battle replay arena.");
+  await expect(canvas).toHaveAttribute(
+    "aria-describedby",
+    "replay-keyboard-help",
+  );
+  await expect(canvas).toHaveAttribute(
+    "aria-keyshortcuts",
+    "ArrowLeft ArrowRight Home End [ ] Space",
+  );
   const speed = page.locator("#replay-speed");
   await speed.focus();
   await page.keyboard.press("Space");
@@ -62,6 +78,13 @@ test("Space activates focused replay speed, pause, resume and exit controls", as
   await page.locator("#replay-exit").focus();
   await page.keyboard.press("Space");
   await expect.poll(async () => (await state(page)).screen).toBe("lobby");
+  await expect(canvas).toHaveAttribute("role", "img");
+  await expect(canvas).toHaveAttribute(
+    "aria-label",
+    "Goblin Stadium arena preview.",
+  );
+  await expect(canvas).not.toHaveAttribute("aria-describedby", /./);
+  await expect(canvas).not.toHaveAttribute("aria-keyshortcuts", /./);
 });
 
 test("Space restarts a completed replay through its focused native button", async ({
@@ -79,6 +102,14 @@ test("Space restarts a completed replay through its focused native button", asyn
     exact: true,
   });
   await expect(restart).toBeVisible();
+  await expect(page.locator("#arena-canvas canvas")).toHaveAttribute(
+    "role",
+    "application",
+  );
+  await expect(page.locator("#arena-canvas canvas")).toHaveAttribute(
+    "aria-describedby",
+    "replay-keyboard-help",
+  );
   await restart.focus();
   await page.keyboard.press("Space");
   await expect(page.locator("#replay-play")).toHaveAttribute(

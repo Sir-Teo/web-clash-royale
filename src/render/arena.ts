@@ -205,7 +205,7 @@ export class Arena {
     this.renderer.toneMappingExposure = 0.95;
     this.renderer.domElement.setAttribute(
       "aria-label",
-      "3D battle arena. Select a card, then click your side of the arena to deploy.",
+      "Goblin Stadium arena preview.",
     );
     this.renderer.domElement.setAttribute("role", "img");
     this.renderer.domElement.addEventListener("webglcontextlost", (e) => {
