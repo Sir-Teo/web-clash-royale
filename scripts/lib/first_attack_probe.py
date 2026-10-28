@@ -128,7 +128,7 @@ def capture(env, context):
         from lib.dash_admission_probe import capture
 
         return capture(env, context)
-    if env["args"].dash_lifecycle or env["args"].dash_goals:
+    if env["args"].dash_lifecycle or env["args"].dash_goals or env["args"].dash_startup:
         from lib.dash_lifecycle_probe import capture
 
         return capture(env, context)

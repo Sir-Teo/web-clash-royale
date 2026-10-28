@@ -156,18 +156,24 @@ def capture(env, context, shared):
         if pc in labels:
             extra_calls[labels[pc]] += 1
         if pc == 0x25CC50:
+            if phase == "startup":
+                return False  # The complete caller supplies its own registers/frame.
             require(phase == "countdown", "Unexpected countdown fragment phase")
             cpu.reg_write(UC_X86_REG_ESI, body)
             cpu.reg_write(UC_X86_REG_EDI, attack)
             write(sp + 0x24, data)
         elif pc == 0x25C95F:
+            if phase == "startup":
+                return False
             require(phase == "clear", "Unexpected dash clock clear phase")
             cpu.reg_write(UC_X86_REG_ESI, attack)
         elif pc in [0x25C988, 0x25CE04]:
+            if phase == "startup":
+                return True  # Continue through the actual caller epilogue.
             cpu.reg_write(UC_X86_REG_EIP, env["stop"])
             return True
         elif pc == 0x25CDF4:
-            require(phase == "countdown", "Unexpected dash state request")
+            require(phase in ["countdown", "startup"], "Unexpected dash state request")
             events.append(["stateRequest", 4])
             return True
         elif pc == 0x214F60:
@@ -208,7 +214,7 @@ def capture(env, context, shared):
             return True
         elif pc == 0x55E80:
             require(
-                phase == "countdown" and read(sp + 4) == 8,
+                phase in ["countdown", "startup"] and read(sp + 4) == 8,
                 "Unexpected launch allocation",
             )
             events.append(["providedAllocate", 8])
@@ -338,6 +344,11 @@ def capture(env, context, shared):
 
     def inventory():
         return dict(sorted((calls + extra_calls).items()))
+
+    if env["args"].dash_startup:
+        from lib.dash_startup_probe import capture as capture_startup
+
+        return capture_startup(env, context, shared, locals())
 
     cases, controls = [], []
 

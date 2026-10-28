@@ -334,7 +334,7 @@ def capture(env, context):
         ]
         require(not changes, f"Unexpected dash heap mutation ({label}): {changes[:12]}")
 
-    if env["args"].dash_goals:
+    if env["args"].dash_goals or env["args"].dash_startup:
         from lib.dash_goal_probe import capture as capture_goals
 
         def set_phase(value):
