@@ -2,9 +2,18 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Battle, STEP } from "../src/game/engine";
 import { PRESETS, STARTER_DECK } from "../src/game/cards";
 import { recordedPractice } from "../src/game/match-decks";
-import { loadProfile, recordBattle } from "../src/game/profile";
+import {
+  loadProfile,
+  recordBattle,
+  validRecordEntry,
+  exportProgress,
+  importProgress,
+} from "../src/game/profile";
 import type { RecordEntry } from "../src/game/profile";
 import { snapshot } from "../src/network/perspective";
+import { exportReplayFile, importReplayFile } from "../src/game/replay-file";
+
+const paces = ["training", "classic", "double"] as const;
 
 beforeEach(() => {
   const values = new Map<string, string>();
@@ -34,16 +43,16 @@ function record(red = false): RecordEntry {
 }
 
 describe("practice against a recorded deck", () => {
-  it.each([false, true])(
-    "starts fresh Training AI from the recorded opponent with red perspective %s",
-    (red) => {
+  it.each(paces.flatMap((mode) => [false, true].map((red) => ({ mode, red }))))(
+    "starts fresh $mode AI from the recorded opponent with red perspective $red",
+    ({ mode, red }) => {
       const source = record(red),
         before = structuredClone(source),
-        setup = recordedPractice(source);
+        setup = recordedPractice(source, mode);
       const expected = red ? STARTER_DECK : PRESETS[1].deck;
       expect(setup).toMatchObject({
         name: source.opponent,
-        mode: "training",
+        mode,
         deck: expected,
       });
       const b = new Battle({
@@ -53,7 +62,8 @@ describe("practice against a recorded deck", () => {
         seed: 7103,
       });
       for (let i = 0; i < 18 / STEP; i++) b.step();
-      expect(b.mode).toBe("training");
+      expect(b.mode).toBe(mode);
+      expect(b.multiplier).toBe(mode === "double" ? 2 : 1);
       expect(b.seed).toBe(7103);
       expect(b.deck).toEqual(PRESETS[2].deck);
       expect(b.enemyDeck).toEqual(expected);
@@ -94,9 +104,13 @@ describe("practice against a recorded deck", () => {
     expect(source).toEqual(before);
   });
 
-  it.each(["blue", "red", "draw"] as const)(
-    "saves a new %s Training result without trophies, gold or chests",
-    (winner) => {
+  it.each(
+    paces.flatMap((mode) =>
+      (["blue", "red", "draw"] as const).map((winner) => ({ mode, winner })),
+    ),
+  )(
+    "saves a new $mode/$winner practice result without trophies, gold or chests",
+    ({ mode, winner }) => {
       const p = loadProfile(),
         source = record(true);
       p.history = [source];
@@ -105,7 +119,7 @@ describe("practice against a recorded deck", () => {
       p.gold = 4321;
       p.chests = ["silver"];
       const before = structuredClone(p),
-        setup = recordedPractice(source);
+        setup = recordedPractice(source, mode);
       const b = new Battle({
         ...setup,
         enemyDeck: setup.deck,
@@ -115,6 +129,7 @@ describe("practice against a recorded deck", () => {
       b.finish(winner, "Practice complete");
       expect(
         recordBattle(p, b, {
+          practice: true,
           opponent: setup.name,
           opponentType: "ai",
           playerName: p.name,
@@ -133,15 +148,54 @@ describe("practice against a recorded deck", () => {
       expect(p.battles).toBe(before.battles + 1);
       expect(p.wins).toBe(before.wins + (winner === "blue" ? 1 : 0));
       expect(p.history[0]).toMatchObject({
-        mode: "training",
+        practice: true,
+        mode,
         opponent: source.opponent,
         opponentType: "ai",
-        replay: { mode: "training", deck: p.deck, enemyDeck: STARTER_DECK },
+        replay: { mode, deck: p.deck, enemyDeck: STARTER_DECK },
       });
       expect(p.history[0].matchId).toBeUndefined();
       expect(p.history[0].replay.perspective).toBeUndefined();
       expect(p.history[1]).toEqual(source);
       expect(loadProfile()).toEqual(p);
+      expect(importProgress(exportProgress(p))).toEqual(p);
+      expect(
+        importReplayFile(exportReplayFile(p.history[0], p.name)).record,
+      ).toMatchObject({ practice: true, mode });
     },
   );
+
+  it.each(["classic", "double"] as const)(
+    "keeps normal %s AI rewards and practice metadata separate",
+    (mode) => {
+      const p = loadProfile(),
+        b = new Battle({ mode, ai: false, seed: 7 });
+      b.finish("blue", "Normal battle");
+      expect(recordBattle(p, b, { opponentType: "ai" })).toEqual({
+        trophies: 30,
+        gold: 125,
+        chest: "silver",
+      });
+      expect(p.history[0].practice).toBeUndefined();
+      expect(
+        importReplayFile(exportReplayFile(p.history[0], p.name)).record
+          .practice,
+      ).toBeUndefined();
+    },
+  );
+
+  it("rejects invalid practice metadata in progress and shared replay files", () => {
+    const entry = record();
+    for (const value of [false, "true", 1, null, {}]) {
+      const corrupt = { ...entry, practice: value };
+      expect(validRecordEntry(corrupt)).toBe(false);
+      const file = JSON.parse(exportReplayFile(entry, "King"));
+      file.match.practice = value;
+      expect(() => importReplayFile(JSON.stringify(file))).toThrow("invalid");
+      const p = loadProfile();
+      p.history = [corrupt as never];
+      expect(() => importProgress(exportProgress(p))).toThrow();
+    }
+    expect(validRecordEntry(entry)).toBe(true);
+  });
 });

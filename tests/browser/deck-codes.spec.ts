@@ -155,13 +155,17 @@ test("copies only the active deck, previews without mutation, selects a slot, un
     .getByRole("button", { name: "Use this deck", exact: true })
     .click();
   await page.reload();
-  expect(
-    await page
-      .locator("#deck-preview [data-card-info]")
-      .evaluateAll((els) =>
-        els.map((e) => (e as HTMLElement).dataset.cardInfo),
-      ),
-  ).toEqual(shared);
+  await expect
+    .poll(
+      () =>
+        page
+          .locator("#deck-preview [data-card-info]")
+          .evaluateAll((els) =>
+            els.map((e) => (e as HTMLElement).dataset.cardInfo),
+          ),
+      { timeout: 15000 },
+    )
+    .toEqual(shared);
   current = JSON.parse((await saved(page))!);
   expect(current.trophies).toBe(before.trophies);
   expect(current.chests).toEqual(before.chests);
@@ -379,7 +383,7 @@ test("practices the shared code with the active deck, repeats it and preserves s
     );
     await expect(page.locator(".competitor.enemy b")).toHaveText("Shared deck");
     await expect(page.locator(".competitor.enemy div > span")).toHaveText(
-      "Deck code · Practice AI",
+      "Deck code · Training camp · Practice AI",
     );
     expect((await state()).enemyDeck).toEqual(shared);
     expect(

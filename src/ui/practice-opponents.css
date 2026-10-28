@@ -45,6 +45,18 @@
   line-height: 1.6;
   margin: 18px 0 0;
 }
+.practice-pace {
+  margin: 16px 0;
+}
+.practice-pace .practice-choice {
+  margin-bottom: 8px;
+}
+.practice-pace-help {
+  margin: 0;
+  color: #a9bdd3;
+  font-size: 12px;
+  line-height: 1.6;
+}
 @media (max-width: 600px) {
   .practice-choice select {
     font-size: 16px;

@@ -181,7 +181,7 @@ test("starts the selected practice, saves reward-free replays and repeats the sa
     );
     await expect(page.locator(".competitor.enemy b")).toHaveText(opponent.name);
     await expect(page.locator(".competitor.enemy div > span")).toHaveText(
-      `${opponent.style} · Practice AI`,
+      `${opponent.style} · Training camp · Practice AI`,
     );
     expect((await state(page)).enemyDeck).toEqual(opponent.deck);
     expect(
@@ -273,6 +273,7 @@ test("keeps practice controls and deck cards usable on narrow and rotated screen
       .toBe(true);
     for (const selector of [
       "#practice-opponent",
+      "#practice-pace",
       "#start-practice",
       "[data-practice-card]",
     ]) {
