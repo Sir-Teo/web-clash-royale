@@ -14,6 +14,8 @@ import { validPeerPlayer } from "./peer-match";
 
 const INCOMPATIBLE_PEER =
   "The other browser sent an incompatible battle update. Update both games and create a new invite.";
+const CONNECTION_TIMEOUT =
+  "The browsers could not connect. Try the same Wi-Fi or another network; some networks require a relay.";
 
 export type PeerSetup =
   "idle" | "gathering" | "offer" | "answer" | "connecting" | "connected";
@@ -93,6 +95,17 @@ export class PeerRoomClient {
     this.setup = setup;
     this.onSetup();
   }
+  private clearDeadline() {
+    clearTimeout(this.timeout);
+    this.timeout = undefined;
+  }
+  private waitForConnection(generation: number, message: string) {
+    this.clearDeadline();
+    if (generation !== this.generation || this.connected) return;
+    this.timeout = setTimeout(() => {
+      if (generation === this.generation && !this.connected) this.fail(message);
+    }, 25000);
+  }
   private post(message: PeerHostCommand) {
     this.worker?.postMessage(message);
   }
@@ -128,6 +141,10 @@ export class PeerRoomClient {
       }
       this.bind(event.channel, generation);
     };
+    this.waitForConnection(
+      generation,
+      "Preparing the connection took too long. Create a new invite and try again.",
+    );
     this.changed("gathering");
     return { pc, generation };
   }
@@ -170,7 +187,7 @@ export class PeerRoomClient {
       this.bind(pc.createDataChannel("royale", { ordered: true }), generation);
       await pc.setLocalDescription(await pc.createOffer());
       await this.gather(pc);
-      if (generation !== this.generation) return;
+      if (generation !== this.generation || this.setup !== "gathering") return;
       this.signal = encodeSignal({
         version: 1,
         type: "offer",
@@ -178,6 +195,7 @@ export class PeerRoomClient {
         mode,
         sdp: pc.localDescription!.sdp,
       });
+      this.clearDeadline();
       this.changed("offer");
     } catch (error) {
       if (generation === this.generation) this.setupError(error);
@@ -196,12 +214,13 @@ export class PeerRoomClient {
       await pc.setRemoteDescription({ type: "offer", sdp: signal.sdp });
       await pc.setLocalDescription(await pc.createAnswer());
       await this.gather(pc);
-      if (generation !== this.generation) return;
+      if (generation !== this.generation || this.setup !== "gathering") return;
       this.signal = encodeSignal({
         ...signal,
         type: "answer",
         sdp: pc.localDescription!.sdp,
       });
+      this.clearDeadline();
       this.changed("answer");
     } catch (error) {
       if (generation === this.generation) this.setupError(error);
@@ -220,15 +239,18 @@ export class PeerRoomClient {
         "That reply belongs to another invite. Ask your friend to use the current invite.",
       );
     const generation = this.generation;
-    await this.pc.setRemoteDescription({ type: "answer", sdp: signal.sdp });
-    if (generation !== this.generation) return;
+    if (this.connected || this.setup === "connecting") return;
+    const pc = this.pc;
+    this.waitForConnection(generation, CONNECTION_TIMEOUT);
     this.changed("connecting");
-    this.timeout = setTimeout(() => {
-      if (generation === this.generation && !this.connected)
-        this.fail(
-          "The browsers could not connect. Try the same Wi-Fi or another network; some networks require a relay.",
-        );
-    }, 25000);
+    try {
+      await pc.setRemoteDescription({ type: "answer", sdp: signal.sdp });
+    } catch (error) {
+      if (generation !== this.generation || this.connected) return;
+      this.clearDeadline();
+      this.changed("offer");
+      throw error;
+    }
   }
   private gather(pc: RTCPeerConnection) {
     if (pc.iceGatheringState === "complete") return Promise.resolve();
@@ -270,6 +292,14 @@ export class PeerRoomClient {
       if (generation !== this.generation) return;
       this.lastReceived = performance.now();
       this.budgetAt = this.lastReceived;
+      if (!this.connected) {
+        this.waitForConnection(
+          generation,
+          "The connection opened, but the game did not respond. Update both games and create a new invite.",
+        );
+        if (this.setup !== "connecting") this.changed("connecting");
+      }
+      if (generation !== this.generation) return;
       if (this.team === "red")
         this.wire({
           kind: "hello",
@@ -399,9 +429,9 @@ export class PeerRoomClient {
       )
         this.pendingPlayer = undefined;
       this.joined = true;
+      this.clearDeadline();
       this.connection(true);
       this.changed("connected");
-      clearTimeout(this.timeout);
     }
     if (message.type === "room") {
       this.room = message.room;
@@ -486,7 +516,7 @@ export class PeerRoomClient {
   }
   disconnect(_clear = true) {
     this.generation++;
-    clearTimeout(this.timeout);
+    this.clearDeadline();
     clearInterval(this.timer);
     this.worker?.terminate();
     this.worker = undefined;
@@ -513,7 +543,7 @@ export class PeerRoomClient {
       pc = this.pc;
     this.generation++;
     clearInterval(this.timer);
-    clearTimeout(this.timeout);
+    this.clearDeadline();
     this.worker = undefined;
     this.channel = undefined;
     this.pc = undefined;
