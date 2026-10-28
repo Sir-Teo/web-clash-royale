@@ -38,6 +38,7 @@ parser.add_argument("--world-steps", action="store_true", help="Execute active o
 parser.add_argument("--projectile-flight", action="store_true", help="Execute native rolling/returning range and late height initialization, movement and collision requests")
 parser.add_argument("--projectile-range", action="store_true", help="Execute native ProjectileRadius/Range/Homing initialization and later destination bounds")
 parser.add_argument("--projectile-goals", action="store_true", help="Execute native normal-attack projectile selection, circular spread and goal requests")
+parser.add_argument("--projectile-targets", action="store_true", help="Execute native live/null-target projectile destination refresh")
 parser.add_argument("--attack-range", action="store_true", help="Capture maximum attack geometry across troop, building and Crown Tower profiles")
 parser.add_argument("--minimum-range", action="store_true", help="Capture minimum-range boundaries instead of maximum-range boundaries")
 parser.add_argument("--sight-range", action="store_true", help="Capture native sight getters and the bounded candidate sight gate")
@@ -139,6 +140,10 @@ if args.projectile_formation and (not args.lane_assignment or args.tower_layout 
     parser.error("--projectile-formation requires --sight-range --lane-assignment without another continuation")
 if args.group_formation and (not args.lane_assignment or args.tower_layout or args.spawn_lanes or args.projectile_formation):
     parser.error("--group-formation requires --sight-range --lane-assignment without another continuation")
+if args.projectile_targets:
+    target_modes = {"library", "check", "attack_loop", "first_attacks", "projectile_targets"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in target_modes):
+        parser.error("--projectile-targets requires --attack-loop --first-attacks without another capture mode")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()
