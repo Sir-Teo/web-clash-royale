@@ -284,7 +284,12 @@ let filter: CollectionKind = "all";
 let search = "";
 let collectionCost: number | "all" = "all";
 let collectionOrder: CollectionOrder = "collection";
-const historyQuery: HistoryQuery = { search: "", result: "all", mode: "all" };
+const historyQuery: HistoryQuery = {
+  search: "",
+  result: "all",
+  mode: "all",
+  type: "all",
+};
 let historyReturn: {
   records: RecordEntry[];
   panel: number;
@@ -2198,7 +2203,8 @@ function renderHistoryMatches() {
   $<HTMLButtonElement>("#clear-history-filters").disabled =
     !historyQuery.search &&
     historyQuery.result === "all" &&
-    historyQuery.mode === "all";
+    historyQuery.mode === "all" &&
+    historyQuery.type === "all";
   $(".history-list").innerHTML = matches.length
     ? matches
         .map(
@@ -2233,7 +2239,7 @@ function showHistory() {
     .map(([value, label]) => `<option value="${value}">${label}</option>`)
     .join("");
   const filters = profile.history.length
-    ? `<div class="history-filters"><label>Search battles<input type="search" id="history-search" placeholder="Opponent or card" maxlength="100" autocomplete="off" aria-describedby="history-search-help" value="${esc(historyQuery.search)}"/></label><label>Result<span class="history-select"><select id="history-result"><option value="all">All results</option><option value="blue">Victory</option><option value="red">Defeat</option><option value="draw">Draw</option></select>${icon("chevron-down")}</span></label><label>Mode<span class="history-select"><select id="history-mode"><option value="all">All modes</option>${modeOptions}</select>${icon("chevron-down")}</span></label><p class="history-search-help" id="history-search-help">Search opponents and cards in either starting deck.</p></div><div class="history-filter-status"><p id="history-count" role="status" aria-live="polite" aria-atomic="true"></p><button class="text-button" id="clear-history-filters">Clear filters</button></div>`
+    ? `<div class="history-filters"><label>Search battles<input type="search" id="history-search" placeholder="Opponent or card" maxlength="100" autocomplete="off" aria-describedby="history-search-help" value="${esc(historyQuery.search)}"/></label><label>Result<span class="history-select"><select id="history-result"><option value="all">All results</option><option value="blue">Victory</option><option value="red">Defeat</option><option value="draw">Draw</option></select>${icon("chevron-down")}</span></label><label>Mode<span class="history-select"><select id="history-mode"><option value="all">All modes</option>${modeOptions}</select>${icon("chevron-down")}</span></label><label>Battle type<span class="history-select"><select id="history-type"><option value="all">All battles</option><option value="practice">Practice</option><option value="ai">AI battles</option><option value="friend">Friends</option></select>${icon("chevron-down")}</span></label><p class="history-search-help" id="history-search-help">Search opponents and cards in either starting deck.</p></div><div class="history-filter-status"><p id="history-count" role="status" aria-live="polite" aria-atomic="true"></p><button class="text-button" id="clear-history-filters">Clear filters</button></div>`
     : "";
   modal(
     "Your battle log",
@@ -2245,8 +2251,10 @@ function showHistory() {
     const search = $<HTMLInputElement>("#history-search");
     const result = $<HTMLSelectElement>("#history-result");
     const mode = $<HTMLSelectElement>("#history-mode");
+    const type = $<HTMLSelectElement>("#history-type");
     result.value = historyQuery.result;
     mode.value = historyQuery.mode;
+    type.value = historyQuery.type;
     search.oninput = () => {
       historyQuery.search = search.value;
       renderHistoryMatches();
@@ -2259,10 +2267,15 @@ function showHistory() {
       historyQuery.mode = mode.value as HistoryQuery["mode"];
       renderHistoryMatches();
     };
+    type.onchange = () => {
+      historyQuery.type = type.value as HistoryQuery["type"];
+      renderHistoryMatches();
+    };
     $("#clear-history-filters").onclick = () => {
       historyQuery.search = search.value = "";
       historyQuery.result = result.value = "all";
       historyQuery.mode = mode.value = "all";
+      historyQuery.type = type.value = "all";
       renderHistoryMatches();
       search.focus();
     };

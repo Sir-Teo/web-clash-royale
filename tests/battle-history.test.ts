@@ -29,6 +29,22 @@ const history = [
 ];
 const positions = (query: Parameters<typeof historyMatches>[1]) =>
   historyMatches(history, query).map(({ index }) => index);
+const mixedHistory = [
+  record(),
+  record({ opponent: "Old friend" }),
+  record({ matchId: "old-room" }),
+  record({ opponentType: "ai", opponent: "Royal Trainer" }),
+  record({ opponentType: "friend" }),
+  record({ practice: true, opponentType: "ai", opponent: "Practice Captain" }),
+  record({
+    practice: true,
+    mode: "double",
+    winner: "red",
+    opponent: "Shared deck",
+  }),
+  record({ opponentType: "ai", mode: "training" }),
+  record({ opponentType: "ai", opponent: "Royal Trainer", matchId: "old-tag" }),
+];
 
 describe("battle log browsing", () => {
   it.each([
@@ -56,9 +72,16 @@ describe("battle log browsing", () => {
   });
 
   it("uses the recorded viewer's result for red-side guests", () => {
-    const guest = record({ replay: { ...replay, perspective: "red" } });
-    expect(historyMatches([guest], { result: "blue" })[0].record).toBe(guest);
-    expect(historyMatches([guest], { result: "red" })).toEqual([]);
+    const guest = record({
+      opponentType: "friend",
+      replay: { ...replay, perspective: "red" },
+    });
+    expect(
+      historyMatches([guest], { result: "blue", type: "friend" })[0].record,
+    ).toBe(guest);
+    expect(historyMatches([guest], { result: "red", type: "friend" })).toEqual(
+      [],
+    );
     expect(historyMatches([guest], { search: "cannon" })).toHaveLength(1);
   });
 
@@ -74,6 +97,55 @@ describe("battle log browsing", () => {
   });
 
   it("handles an empty history", () => {
-    expect(historyMatches([], { search: "giant", result: "red" })).toEqual([]);
+    expect(
+      historyMatches([], { search: "giant", result: "red", type: "practice" }),
+    ).toEqual([]);
+  });
+
+  it.each([
+    ["all", [0, 1, 2, 3, 4, 5, 6, 7, 8]],
+    ["ai", [0, 3, 7, 8]],
+    ["friend", [1, 2, 4]],
+    ["practice", [5, 6]],
+  ] as const)(
+    "selects %s battles across current and older save formats",
+    (type, expected) => {
+      expect(
+        historyMatches(mixedHistory, { type }).map(({ index }) => index),
+      ).toEqual(expected);
+    },
+  );
+
+  it("combines battle type with name/card search, viewer result and pace", () => {
+    const query = {
+      type: "practice",
+      mode: "double",
+      result: "red",
+      search: "shared cannon",
+    } as const;
+    expect(
+      historyMatches(mixedHistory, query).map(({ index }) => index),
+    ).toEqual([6]);
+    expect(historyMatches(mixedHistory, { ...query, type: "friend" })).toEqual(
+      [],
+    );
+    expect(historyMatches(mixedHistory, { ...query, result: "blue" })).toEqual(
+      [],
+    );
+    expect(historyMatches(mixedHistory, { ...query, mode: "classic" })).toEqual(
+      [],
+    );
+  });
+
+  it("keeps the original records and positions when filtering duplicate IDs by type", () => {
+    const before = structuredClone(mixedHistory);
+    const filtered = historyMatches(mixedHistory, { type: "practice" });
+    expect(filtered).toEqual([
+      { record: mixedHistory[5], index: 5 },
+      { record: mixedHistory[6], index: 6 },
+    ]);
+    expect(filtered[0].record).toBe(mixedHistory[5]);
+    expect(filtered[1].record).toBe(mixedHistory[6]);
+    expect(mixedHistory).toEqual(before);
   });
 });

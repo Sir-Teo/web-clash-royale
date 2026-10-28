@@ -29,7 +29,16 @@ const history = Array.from({ length: 10 }, (_, index) => ({
         ? "<b>Élodie & King</b>"
         : index === 2
           ? "王小明"
-          : `Royal Guard ${index}`,
+          : index === 9
+            ? undefined
+            : `Royal Guard ${index}`,
+  opponentType: [0, 2, 3, 5, 6, 8].includes(index)
+    ? "ai"
+    : index === 7
+      ? "friend"
+      : undefined,
+  ...([0, 3, 6].includes(index) ? { practice: true } : {}),
+  ...(index === 4 ? { matchId: "old-room" } : {}),
   replay:
     index === 1
       ? { ...fixture, version: 5 }
@@ -276,4 +285,175 @@ test("keeps the first-battle prompt when there are no saved recordings", async (
   await expect(page.locator("#open-replay-file")).toBeVisible();
   await page.getByRole("button", { name: /Let's battle/ }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
+});
+
+test("filters battle types with other criteria and clears a type-only selection", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  const before = await saved(page);
+  await open(page);
+  const type = page.getByRole("combobox", { name: "Battle type", exact: true });
+  const clear = page.getByRole("button", {
+    name: "Clear filters",
+    exact: true,
+  });
+  const search = page.getByRole("searchbox", {
+    name: "Search battles",
+    exact: true,
+  });
+  await expect(type).toHaveValue("all");
+  await expect(clear).toBeDisabled();
+  for (const [value, expected] of [
+    ["ai", [2, 5, 8, 9]],
+    ["friend", [1, 4, 7]],
+    ["practice", [0, 3, 6]],
+  ] as const) {
+    await type.focus();
+    await type.selectOption(value);
+    await expect(type).toBeFocused();
+    await expect.poll(() => positions(page)).toEqual(expected);
+    await expect(page.locator("#history-count")).toHaveText(
+      `Showing ${expected.length} of 10 saved battles.`,
+    );
+    await expect(clear).toBeEnabled();
+  }
+  await search.fill("Royal Guard");
+  await page.locator("#history-result").selectOption("draw");
+  await page.locator("#history-mode").selectOption("classic");
+  await expect.poll(() => positions(page)).toEqual([3, 6]);
+  await page.locator("#history-mode").selectOption("double");
+  await expect(
+    page.getByRole("heading", { name: "No battles match these filters." }),
+  ).toBeVisible();
+  await clear.click();
+  await expect(type).toHaveValue("all");
+  await expect(search).toHaveValue("");
+  await expect(search).toBeFocused();
+  await expect(page.locator("#history-result")).toHaveValue("all");
+  await expect(page.locator("#history-mode")).toHaveValue("all");
+  await expect
+    .poll(() => positions(page))
+    .toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  await expect(clear).toBeDisabled();
+  await type.selectOption("practice");
+  await expect(clear).toBeEnabled();
+  await expect(page.locator(".history-entry").first()).toContainText(
+    "Practice",
+  );
+  await page.screenshot({
+    path: info.outputPath("battle-type-filter.png"),
+    animations: "disabled",
+  });
+  await clear.click();
+  await expect(type).toHaveValue("all");
+  await expect(clear).toBeDisabled();
+  expect(await saved(page)).toBe(before);
+  expect(errors).toEqual([]);
+});
+
+test("retains battle type through details, cards, playback and a shared preview", async ({
+  page,
+}) => {
+  const before = await saved(page);
+  await open(page);
+  await page.locator("#history-type").selectOption("ai");
+  await page.locator("#history-search").fill("Royal Guard");
+  await page.locator("#history-result").selectOption("draw");
+  await page.locator("#history-mode").selectOption("classic");
+  await expect.poll(() => positions(page)).toEqual([5, 8]);
+  const details = page.locator('[data-match-details="8"]');
+  await details.scrollIntoViewIfNeeded();
+  await details.focus();
+  const scroll = await page.evaluate(() => ({
+    panel: document.querySelector(".modal")!.scrollTop,
+    list: document.querySelector(".history-list")!.scrollTop,
+  }));
+  await details.click();
+  await expect(page.locator(".match-result span")).toHaveText(
+    "vs Royal Guard 8",
+  );
+  await page.locator("[data-match-card]").first().click();
+  await page.locator("#card-back").click();
+  await page.locator("#match-log").click();
+  await expect(page.locator("#history-type")).toHaveValue("ai");
+  await expect(details).toBeFocused();
+  expect(
+    await page.evaluate(() => ({
+      panel: document.querySelector(".modal")!.scrollTop,
+      list: document.querySelector(".history-list")!.scrollTop,
+    })),
+  ).toEqual(scroll);
+  await page.locator('[data-replay="8"]').click();
+  await expect(page.locator(".competitor.enemy b")).toHaveText("Royal Guard 8");
+  await page.locator("#replay-exit").click();
+  await open(page);
+  await expect(page.locator("#history-type")).toHaveValue("ai");
+  await expect(page.locator('[data-replay="8"]')).toBeFocused();
+  await expect.poll(() => positions(page)).toEqual([5, 8]);
+  const { id: _id, ...match } = history[1];
+  await page.locator("#replay-file").setInputFiles({
+    name: "friend-replay.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      JSON.stringify({
+        format: "browser-royale-replay",
+        version: 1,
+        playerName: "Sender",
+        match,
+      }),
+    ),
+  });
+  await expect(
+    page.getByRole("heading", { name: "Shared replay", exact: true }),
+  ).toBeVisible();
+  await page.locator("#shared-replay-back").click();
+  await expect(page.locator("#history-type")).toHaveValue("ai");
+  await expect(page.locator("#history-search")).toHaveValue("Royal Guard");
+  await expect(page.locator("#history-result")).toHaveValue("draw");
+  await expect(page.locator("#history-mode")).toHaveValue("classic");
+  await expect(page.locator("#open-replay-file")).toBeFocused();
+  await expect.poll(() => positions(page)).toEqual([5, 8]);
+  expect(await saved(page)).toBe(before);
+  await page.reload();
+  await open(page);
+  await expect(page.locator("#history-type")).toHaveValue("all");
+  // The existing unload save fills profile defaults omitted by this fixture.
+  const original = JSON.parse(before!),
+    restored = JSON.parse((await saved(page))!);
+  for (const field of Object.keys(original))
+    expect(restored[field]).toEqual(original[field]);
+});
+
+test("fits battle-type controls on narrow and rotated screens", async ({
+  page,
+}, info) => {
+  await open(page);
+  await page.locator("#history-type").selectOption("practice");
+  for (const viewport of [
+    { width: 320, height: 740 },
+    { width: 844, height: 390 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    expect(
+      await page
+        .getByRole("dialog")
+        .evaluate((element) => element.scrollWidth <= element.clientWidth + 1),
+    ).toBe(true);
+    for (const control of await page
+      .locator(".history-filters input, .history-filters select")
+      .all()) {
+      const bounds = (await control.boundingBox())!;
+      expect(bounds.width).toBeGreaterThanOrEqual(44);
+      expect(bounds.height).toBeGreaterThanOrEqual(44);
+      expect(bounds.x).toBeGreaterThanOrEqual(0);
+      expect(bounds.x + bounds.width).toBeLessThanOrEqual(viewport.width);
+    }
+  }
+  await page.screenshot({
+    path: info.outputPath("battle-type-phone.png"),
+    animations: "disabled",
+  });
 });
