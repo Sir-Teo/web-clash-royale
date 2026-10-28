@@ -227,6 +227,29 @@ function setup() {
       : ["freeze", "clone", "pekka", "pekka"];
     battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
     battle.players.red.elixir = fast ? 4 : race ? 6 : 4;
+  } else if (scenario.startsWith("ai-graveyard-")) {
+    for (const tower of battle.entities.filter(e => e.team === "blue" && !e.king)) tower.active = true;
+    battle.players.red.hand = ["graveyard", "knight", "golem", "three-musketeers"];
+    battle.players.red.queue = ["golem", "three-musketeers", "knight", "archers"];
+    battle.players.red.elixir = scenario.endsWith("saving") || scenario.endsWith("pressure") ? 6 : 7;
+    if (scenario.endsWith("king")) {
+      for (const tower of battle.entities.filter(e => e.team === "blue" && !e.king))
+        (battle as unknown as { hurt: (body: Entity, damage: number) => void }).hurt(tower, tower.hp);
+      Object.assign(battle.entities.find(e => e.team === "blue" && e.king)!, { hp: 1000, active: true });
+    } else if (scenario.endsWith("pressure")) {
+      battle.players.red.hand[3] = "musketeer";
+      for (const body of unit("baby-dragon", "blue", 4, 10)) Object.assign(body, { active: false, speed: 0 });
+    } else if (scenario.endsWith("late")) battle.tick = 166 * 30;
+    else if (!scenario.endsWith("saving")) {
+      battle.entities.find(e => e.team === "blue" && e.lane === "right")!.hp = 1000;
+      if (scenario.endsWith("mirror")) {
+        battle.players.red.hand[0] = "mirror";
+        battle.players.red.lastPlayed = "graveyard";
+        battle.players.red.elixir = 8;
+      } else if (scenario.endsWith("blast")) cast("poison", "blue", 14.5, 25.5);
+      else if (scenario.endsWith("guard"))
+        for (const body of unit("wizard", "blue", 14.5, 25.5)) body.speed = 0;
+    }
   } else if (scenario.startsWith("ai-barrel-")) {
     for (const tower of battle.entities.filter(e => e.team === "blue" && !e.king)) tower.active = true;
     battle.players.red.hand = ["goblin-barrel", "knight", "golem", "three-musketeers"];
@@ -2394,6 +2417,8 @@ function render(now: number) {
         .map(e => ({ id: e.id, x: e.x, y: e.y, hp: e.hp, maxHp: e.maxHp, king: !!e.king, lane: e.lane })),
       siegeHits: battle.events.filter(event => event.type === "hit" && (event.card === "x-bow" || event.card === "mortar")),
       minerHits: battle.events.filter(event => event.type === "hit" && event.card === "miner"),
+      graveyardHits: battle.events.filter(event => event.type === "hit" && event.card === "skeletons" && event.team === "red"),
+      enemyKingActive: battle.entities.some(e => e.team === "blue" && e.king && e.active),
       barrelHits: battle.events.filter(event => event.type === "hit" && event.card === "goblins" && event.team === "red"),
       barrelChildren: battle.entities.filter(e => e.card === "goblins" && e.team === "red")
         .map(e => ({ id: e.id, x: e.x, y: e.y, hp: e.hp, deploy: e.deploy, target: e.target,
