@@ -1016,3 +1016,11 @@ Sixteen source-seeded cardinal episodes and eight partial-clock controls produce
 ### Exact Bandit landing range boundary
 
 The dash-goal capture now includes twelve controlled landing-distance boundaries: one source unit inside, exactly on, and one unit outside the extended bound in all four cardinal directions. Ordinary reach is 1,850 source units for these Bandit/Knight profiles; the native landing gate accepts 2,350 and rejects 2,351. These targets remain outside ordinary reach through arrival, so the HP difference comes from the native landing extension. The expanded capture has sixteen source-seeded cases, twenty controls, 604 countdown steps, 256 movement steps, 24 hits and twelve misses. Existing scope exclusions still apply; gameplay remains rules 48.
+
+### Diagonal Bandit routes and retained target references
+
+The goal capture now executes eight 3-4-5 diagonal directions in addition to four cardinal directions. Its independent heap model checks native 256-unit heading quantization, two 250-unit movement chunks and the zero chunk, stored tile-center goals, current-target range stops and remaining-travel stops. Thirteen instruction blocks retain the fixed movement geometry. Profiles now expose source units per tile, chunk size, heading scale and landing extension for a later runtime consumer.
+
+Supplied null attack-target references after launch still finish the stored route and produce no damage. Supplied target state 4 makes its virtual collision radius zero; an actual diagnostic ordinary 75-damage wrapper call returns zero with unchanged heap/HP, while the later direct native landing request reduces the same target from 1,000 to 680 HP. The ordinary check's result, HP, call inventory and exact-heap result are retained. Actual target removal and a naturally moving second dash remain excluded.
+
+The expanded evidence contains 48 source-seeded cases and 44 controls, with 1,724 countdown steps, 632 movement steps, 52 hits and 40 misses. All frames retain whole-heap checks and ordered events. Eleven independent tests reproduce the complete capture, including diagonal rounding, cleared references and the dashing-target lower damage path. Full native startup/admission, arbitrary angles, terrain collision, post-damage reactions and later path/reload work retain the earlier exclusions. Gameplay remains rules 48.

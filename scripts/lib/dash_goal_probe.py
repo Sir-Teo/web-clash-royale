@@ -8,6 +8,7 @@ excluded. Native countdown, launch arithmetic, movement and landing gates run.
 from collections import Counter
 import hashlib
 import json
+import math
 from pathlib import Path
 import re
 import subprocess
@@ -240,6 +241,24 @@ def capture(env, context, shared):
             events.append(["targetHp", read(target_health + 8)])
             cpu.reg_write(UC_X86_REG_EIP, 0x260655)
             return True
+        elif pc == 0x23BF26:
+            collision_world, owner_point, mx, my, owner, collision = [
+                read(sp + i) for i in [4, 8, 12, 16, 20, 24]
+            ]
+            require(
+                phase == "movement"
+                and collision_world == 0
+                and owner_point == body + 0x20
+                and owner == body
+                and collision == 0
+                and mx * mx + my * my <= 250 * 250,
+                "Unexpected native dash displacement request",
+            )
+            write(owner_point, read(owner_point) + mx)
+            write(owner_point + 4, read(owner_point + 4) + my)
+            events.append(["providedOpenPlaneWrite", mx, my])
+            ret()
+            return True
         elif pc == 0x261050:
             require(read(sp + 4) == movement, "Unexpected post-dash path refresh")
             events.append(["providedPathRefresh"])
@@ -274,6 +293,7 @@ def capture(env, context, shared):
         0x25FA9C,
         0x20205A,
         0x260412,
+        0x23BF26,
     }
     addresses = {
         *labels,
@@ -293,6 +313,7 @@ def capture(env, context, shared):
         0x20205A,
         0x260412,
         0x261050,
+        0x23BF26,
         0x23BDFE,
         0x25C4FA,
     }
@@ -313,7 +334,7 @@ def capture(env, context, shared):
         nonlocal phase
         phase = label
         set_phase(label)
-        run(start, *args, instruction_budget=25000)
+        return run(start, *args, instruction_budget=25000)
 
     def inventory():
         return dict(sorted((calls + extra_calls).items()))
@@ -326,7 +347,9 @@ def capture(env, context, shared):
         dx, dy = axis
         cpu.mem_write(heap, b"\0" * 0x10000)
         origin = [8250, 8250]
-        initial_target = [8250 + 5000 * dx, 8250 + 5000 * dy]
+        initial_target = [int(8250 + 5000 * dx), int(8250 + 5000 * dy)]
+        target_dashing = motion == "dashing-target"
+        radius_sum = 600 + (0 if target_dashing else 500)
         for ptr, value in [
             (body, 0x7B34A0),
             (body + 0x10, data),
@@ -362,6 +385,7 @@ def capture(env, context, shared):
             (target + 0x20, initial_target[0]),
             (target + 0x24, initial_target[1]),
             (target + 0x38, 4),
+            (target + 0x60, 4 if target_dashing else 0),
             (target + 0x44, target_health),
             (target_health + 4, target),
             (target_health + 8, 1000),
@@ -369,6 +393,26 @@ def capture(env, context, shared):
         ]:
             write(ptr, value)
         cpu.mem_write(settings + 0x295, b"\1")
+        ordinary_check = None
+        if target_dashing:
+            events.clear()
+            calls.clear()
+            extra_calls.clear()
+            before = snapshot()
+            before_hp = read(target_health + 8)
+            returned = invoke("ordinary", 0x25FF6E, target_health, 75, 0, 0, 0, 0)
+            require(
+                returned == 0,
+                "Dashing victim accepted an ordinary hit",
+            )
+            exact(before, "dashing victim ordinary immunity")
+            ordinary_check = {
+                "returned": returned,
+                "hpBefore": before_hp,
+                "hpAfter": read(target_health + 8),
+                "calls": inventory(),
+                "exactHeapChangesOnly": True,
+            }
         countdown = []
         expected_clock = initial_clock or 1000
         for step in range(1, 21):
@@ -382,7 +426,10 @@ def capture(env, context, shared):
             if launched:
                 put(expected, body + 0x60, 4)
                 put(expected, movement + 0x10, 1)
-                goal = [initial_target[0] - 1100 * dx, initial_target[1] - 1100 * dy]
+                goal = [
+                    initial_target[0] - radius_sum * dx,
+                    initial_target[1] - radius_sum * dy,
+                ]
                 put(
                     expected,
                     movement + 0x14,
@@ -406,7 +453,10 @@ def capture(env, context, shared):
             require(
                 current_goal
                 == (
-                    [initial_target[0] - 1100 * dx, initial_target[1] - 1100 * dy]
+                    [
+                        initial_target[0] - radius_sum * dx,
+                        initial_target[1] - radius_sum * dy,
+                    ]
                     if launched
                     else None
                 ),
@@ -457,24 +507,50 @@ def capture(env, context, shared):
             "landing-inside": (1099 * dx, 1099 * dy),
             "landing-equal": (1100 * dx, 1100 * dy),
             "landing-outside": (1101 * dx, 1101 * dy),
+            "target-cleared": (0, 0),
+            "dashing-target": (0, 0),
         }[motion]
         for offset, initial, delta in zip([0x20, 0x24], initial_target, displacement):
-            write(target + offset, initial + delta)
+            write(target + offset, int(initial + delta))
+        has_target = motion != "target-cleared"
+        if not has_target:
+            write(attack + 8, 0)
         frames = []
-        final_step = 7 if motion == "stationary" else 3 if motion == "closer" else 8
-        will_hit = motion in ["stationary", "closer", "landing-inside", "landing-equal"]
-        for step in range(1, final_step + 1):
+        model_xy = list(origin)
+        model_goal = [launch_tile % 36 * 500 + 250, launch_tile // 36 * 500 + 250]
+        moved_target = [read(target + 0x20), read(target + 0x24)]
+        reach = 750 + radius_sum
+        for step in range(1, 21):
             events.clear()
             calls.clear()
             extra_calls.clear()
             expected = bytearray(snapshot())
-            landing = step == final_step
-            travelled = step * 500 - (250 if landing else 0)
+            expected_events = []
+            landing = False
+            for chunk in [250, 250, 0]:
+                delta = [goal - value for goal, value in zip(model_goal, model_xy)]
+                distance = max(1, math.isqrt(sum(v * v for v in delta)))
+                heading = [math.trunc(v * 256 / distance) for v in delta]
+                shift = [math.trunc(v * min(distance, chunk) / 256) for v in heading]
+                model_xy = [value + change for value, change in zip(model_xy, shift)]
+                expected_events.append(["providedOpenPlaneWrite", *shift])
+                target_distance2 = sum(
+                    (a - b) ** 2 for a, b in zip(model_xy, moved_target)
+                )
+                remaining = math.isqrt(
+                    sum((a - b) ** 2 for a, b in zip(model_xy, model_goal))
+                )
+                landing = (
+                    has_target and target_distance2 <= reach * reach
+                ) or remaining // 500 == 0
+                if landing:
+                    break
+            will_hit = landing and has_target and target_distance2 <= (reach + 500) ** 2
             for ptr, value in [
-                (body + 0x20, 8250 + travelled * dx),
-                (body + 0x24, 8250 + travelled * dy),
-                (body + 0x50, 256 * dx),
-                (body + 0x54, 256 * dy),
+                (body + 0x20, model_xy[0]),
+                (body + 0x24, model_xy[1]),
+                (body + 0x50, heading[0]),
+                (body + 0x54, heading[1]),
                 (movement + 0x1DC, step * 50),
                 (movement + 0x1FC, (step - 1) * 50),
             ]:
@@ -486,7 +562,6 @@ def capture(env, context, shared):
                     put(expected, target_health + 8, 680)
             invoke("movement", 0x260C2C, movement)
             exact(expected, "native goal movement/landing")
-            expected_events = [["providedOpenPlaneWrite", 250 * dx, 250 * dy]]
             if landing:
                 expected_events += [["stateRequest", 1], ["providedDashDamage", 320]]
                 if will_hit:
@@ -495,11 +570,6 @@ def capture(env, context, shared):
                     ["providedBlockedTile", False],
                     ["providedPathRefresh"],
                     ["providedView", "state"],
-                ]
-            else:
-                expected_events += [
-                    ["providedOpenPlaneWrite", 250 * dx, 250 * dy],
-                    ["providedOpenPlaneWrite", 0, 0],
                 ]
             require(
                 events == expected_events, "Dash landing/movement event order differs"
@@ -523,6 +593,9 @@ def capture(env, context, shared):
                     "exactHeapChangesOnly": True,
                 }
             )
+            if landing:
+                break
+        require(landing, "Dash did not finish its stored goal")
         result = {
             "fields": {
                 "direction": list(axis),
@@ -535,20 +608,45 @@ def capture(env, context, shared):
             "countdown": countdown,
             "launchGoal": launch_goal,
             "launchFrameHold": held,
+            "ordinaryHitCheck": ordinary_check,
             "frames": frames,
         }
-        (controls if initial_clock or motion.startswith("landing-") else cases).append(
-            result
-        )
+        (
+            controls
+            if initial_clock
+            or motion.startswith("landing-")
+            or motion in ["target-cleared", "dashing-target"]
+            else cases
+        ).append(result)
 
-    for axis in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-        for motion in ["stationary", "sideways", "away", "closer"]:
+    axes = [(1, 0), (-1, 0), (0, 1), (0, -1)] + [
+        (sx * a, sy * b)
+        for a, b in [(0.6, 0.8), (0.8, 0.6)]
+        for sx in [1, -1]
+        for sy in [1, -1]
+    ]
+    for axis in axes:
+        for motion in [
+            "stationary",
+            "sideways",
+            "away",
+            "closer",
+            "target-cleared",
+            "dashing-target",
+        ]:
             episode(axis, motion)
-        for initial in [50, 500]:
-            episode(axis, "stationary", initial)
-        for motion in ["landing-inside", "landing-equal", "landing-outside"]:
-            episode(axis, motion)
+        if abs(axis[0]) + abs(axis[1]) == 1:
+            for initial in [50, 500]:
+                episode(axis, "stationary", initial)
+            for motion in ["landing-inside", "landing-equal", "landing-outside"]:
+                episode(axis, motion)
     definitions = [
+        (
+            "fixedMovementGeometry",
+            0x26344E,
+            0x26398A,
+            "Actual 256-unit heading normalization, 250-unit movement chunks, target direction and open-plane write request. Diagonal rounding is checked against full heap changes.",
+        ),
         (
             "countdown",
             0x25CC50,
@@ -684,13 +782,17 @@ def capture(env, context, shared):
             "goalTileSize": 500,
             "worldWidth": 36,
             "sourceJumpSpeed": 500,
+            "chunkUnits": 250,
+            "headingScale": 256,
+            "landingRangeExtension": 500,
+            "sourceUnitsPerTile": 1000,
             "addCharacterRangeToRadius": True,
         },
         "limits": [
             "Supplied eligible existing target/components enter the actual countdown fragment; natural acquisition, eligibility, outer attack update and actor scheduling remain excluded. Source 1000-ms countdown runs in 50-ms buff-adjusted increments without active buffs. Initial partial clocks are controlled. Source-state 2 is retained until launch; this does not reconstruct complete natural startup behavior.",
-            "Native launch point normalization/addition, native tile setter/decoder, state 4 entry and actual movement frames execute. Goal admission is limited to the source launch request; supplied width 36 and cardinal positions avoid diagonal quantization/obstacles. Exact-coordinate goal override is disabled. Target displacement after launch is controlled, not native target movement.",
+            "Native launch point normalization/addition, native tile setter/decoder, state 4 entry and actual movement frames execute. Goal admission is limited to the source launch request; supplied width 36, four cardinal and eight 3-4-5 diagonal directions exercise native integer geometry. Exact-coordinate goal override is disabled. Target displacement after launch is controlled, not native target movement.",
             "Source Range 750, CollisionRadius 600/500, absent DashRadius/DashPushBack and source DashDamage base 320 are supplied. Actual native DashDamage getter executes against a checked row/column/level/rarity table result provider; level/rarity scaling is excluded. Native target stop and landing +500 range gates execute, including actual target HP reduction on hits.",
-            "Point allocation/free, facing/view notifications, open-plane collision writes, blocked-tile false, post-hit attack reload and post-dash path refresh are checked boundaries. Visual fields and optional world modifiers are supplied zero. Full navigation, target removal/death, spell interruption, diagonal travel, shields/lethal paths, post-HP damage reactions and next walking/attacking behavior remain excluded.",
+            "Point allocation/free, facing/view notifications, open-plane collision writes, blocked-tile false, post-hit attack reload and post-dash path refresh are checked boundaries. Visual fields and optional world modifiers are supplied zero. Null attack-target references after launch and raw target state 4 are supplied controls. Full navigation, actual target removal/death, spell interruption, arbitrary angles, shields/lethal paths, post-HP damage reactions and next walking/attacking behavior remain excluded.",
             "Each countdown/movement step checks exact 64-KiB heap changes and driver counts. Source attack clock holds movement on the launch frame; the actual state-4 attack-clear fragment permits movement on the following supplied frame. Ordinary immunity/retained status behavior is supplied by the prerequisite lifecycle capture, not re-executed here. Gameplay remains rules 48.",
         ],
         "blocks": blocks,

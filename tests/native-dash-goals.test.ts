@@ -13,6 +13,7 @@ interface Episode {
     events: unknown[][]; calls: Record<string, number>; exactHeapChangesOnly: boolean }[];
   launchGoal: [number, number];
   launchFrameHold: { state: number; clockMs: number; calls: Record<string, number>; exactHeapChangesOnly: boolean };
+  ordinaryHitCheck: { returned: number; hpBefore: number; hpAfter: number; calls: Record<string, number>; exactHeapChangesOnly: boolean } | null;
   frames: Frame[];
 }
 const trace = JSON.parse(readFileSync("reference/client/dash-goals-native-trace.json", "utf8"));
@@ -27,14 +28,17 @@ it("pins dash goals to the source binary, fields and prerequisite captures", () 
     sourceDashDamage: 320, sourceDashCooldownMs: 1000, range: 750,
     ownRadius: 600, targetRadius: 500, goalTileSize: 500, worldWidth: 36,
     addCharacterRangeToRadius: true });
-  expect(trace.cases).toHaveLength(16);
-  expect(trace.controls).toHaveLength(20);
-  expect(trace.blocks).toHaveLength(12);
+  expect(trace.cases).toHaveLength(48);
+  expect(trace.controls).toHaveLength(44);
+  expect(trace.blocks).toHaveLength(13);
+  expect(trace.profiles).toMatchObject({ chunkUnits: 250, headingScale: 256,
+    landingRangeExtension: 500, sourceUnitsPerTile: 1000 });
 });
 
 function launch(row: Episode) {
   const f = row.fields, p = trace.profiles;
-  const goal = f.initialTarget.map((v, i) => v - f.direction[i] * (p.ownRadius + p.targetRadius));
+  const targetRadius = f.motion === "dashing-target" ? 0 : p.targetRadius;
+  const goal = f.initialTarget.map((v, i) => v - f.direction[i] * (p.ownRadius + targetRadius));
   const tileXY = goal.map((v) => Math.trunc(v / p.goalTileSize));
   const tile = tileXY[1] * p.worldWidth + tileXY[0];
   expect(row.launchGoal).toEqual(goal);
@@ -56,7 +60,7 @@ function launch(row: Episode) {
 
 it("independently reconstructs the countdown, launch point, tile and initial movement hold", () => {
   rows.forEach(launch);
-  expect(rows.reduce((n, r) => n + r.countdown.length, 0)).toBe(604);
+  expect(rows.reduce((n, r) => n + r.countdown.length, 0)).toBe(1724);
   for (const row of trace.cases as Episode[]) {
     expect(row.countdown).toHaveLength(20);
     expect(row.countdown.slice(0, 19).every((f) => f.state === 2)).toBe(true);
@@ -66,23 +70,25 @@ it("independently reconstructs the countdown, launch point, tile and initial mov
 
 it("reproduces native travel and hit/miss frames with independent geometry", () => {
   const p = trace.profiles;
-  const reach = p.range + p.ownRadius + p.targetRadius;
   for (const row of rows) {
+    const reach = p.range + p.ownRadius + (row.fields.motion === "dashing-target" ? 0 : p.targetRadius);
+    const hasTarget = row.fields.motion !== "target-cleared";
     const { tile, point } = launch(row);
     let xy = [...row.fields.origin], landed = false;
     for (const frame of row.frames) {
       const events: unknown[][] = [];
-      for (const chunk of [250, 250, 0]) {
-        const distance = Math.hypot(point[0] - xy[0], point[1] - xy[1]);
+      for (const chunk of [p.chunkUnits, p.chunkUnits, 0]) {
+        const distance = Math.max(1, Math.floor(Math.hypot(point[0] - xy[0], point[1] - xy[1])));
         const travel = Math.min(distance, chunk);
-        const move = xy.map((v, i) => travel ? Math.sign(point[i] - v) * travel : 0);
+        const heading = xy.map((v, i) => Math.trunc((point[i] - v) * p.headingScale / distance));
+        const move = heading.map((v) => Math.trunc(v * travel / p.headingScale) || 0);
         xy = xy.map((v, i) => v + move[i]);
         events.push(["providedOpenPlaneWrite", ...move]);
         const targetDistance = Math.hypot(xy[0] - row.fields.movedTarget[0], xy[1] - row.fields.movedTarget[1]);
-        landed = targetDistance <= reach || Math.trunc(Math.hypot(point[0] - xy[0], point[1] - xy[1]) / p.sourceJumpSpeed) === 0;
+        landed = (hasTarget && targetDistance <= reach) || Math.trunc(Math.hypot(point[0] - xy[0], point[1] - xy[1]) / p.sourceJumpSpeed) === 0;
         if (landed) break;
       }
-      const hit = landed && Math.hypot(xy[0] - row.fields.movedTarget[0], xy[1] - row.fields.movedTarget[1]) <= reach + 500;
+      const hit = landed && hasTarget && Math.hypot(xy[0] - row.fields.movedTarget[0], xy[1] - row.fields.movedTarget[1]) <= reach + p.landingRangeExtension;
       if (landed) {
         events.push(["stateRequest", 1], ["providedDashDamage", 320]);
         if (hit) events.push(["targetHp", 680], ["providedAttackReload"]);
@@ -97,21 +103,22 @@ it("reproduces native travel and hit/miss frames with independent geometry", () 
     }
     expect(landed).toBe(true);
   }
-  expect(rows.reduce((n, r) => n + r.frames.length, 0)).toBe(256);
-  expect(rows.filter((r) => r.frames.at(-1)!.targetHp === 680)).toHaveLength(24);
-  expect(rows.filter((r) => r.frames.at(-1)!.targetHp === 1000)).toHaveLength(12);
+  expect(rows.reduce((n, r) => n + r.frames.length, 0)).toBe(632);
+  expect(rows.filter((r) => r.frames.at(-1)!.targetHp === 680)).toHaveLength(52);
+  expect(rows.filter((r) => r.frames.at(-1)!.targetHp === 1000)).toHaveLength(40);
 });
 
 for (const motion of ["stationary", "sideways", "away", "closer"])
   it(`keeps the launch tile when the supplied target is ${motion}`, () => {
     const selected = (trace.cases as Episode[]).filter((r) => r.fields.motion === motion);
-    expect(selected).toHaveLength(4);
+    expect(selected).toHaveLength(12);
     for (const row of selected) {
       expect(new Set(row.frames.map((f) => f.goalTile)).size).toBe(1);
       const last = row.frames.at(-1)!;
       expect(last.state).toBe(1);
       expect(last.targetHp).toBe(["stationary", "closer"].includes(motion) ? 680 : 1000);
-      expect(row.frames).toHaveLength(motion === "stationary" ? 7 : motion === "closer" ? 3 : 8);
+      if (Math.abs(row.fields.direction[0]) + Math.abs(row.fields.direction[1]) === 1)
+        expect(row.frames).toHaveLength(motion === "stationary" ? 7 : motion === "closer" ? 3 : 8);
     }
   });
 
@@ -135,5 +142,29 @@ it("accepts equality at the extended landing bound and rejects one source unit o
     expect(distance).toBeGreaterThan(reach);
     expect(last.state).toBe(1);
     expect(last.targetHp).toBe(offset <= 0 ? 680 : 1000);
+  }
+});
+
+it("finishes the stored route after the supplied attack target reference is cleared", () => {
+  const selected = (trace.controls as Episode[]).filter((r) => r.fields.motion === "target-cleared");
+  expect(selected).toHaveLength(12);
+  for (const row of selected) {
+    expect(row.frames.length).toBeGreaterThan(0);
+    expect(row.frames.at(-1)).toMatchObject({ state: 1, targetHp: 1000 });
+    expect(row.frames.every((f) => !f.calls.attackRange && !f.calls.damageReducer)).toBe(true);
+    expect(row.frames.every((f) => f.goalTile === row.countdown.at(-1)!.goalTile)).toBe(true);
+  }
+});
+
+it("executes the direct landing hit against a supplied dashing target with ordinary-hit immunity", () => {
+  const selected = (trace.controls as Episode[]).filter((r) => r.fields.motion === "dashing-target");
+  expect(selected).toHaveLength(12);
+  for (const row of selected) {
+    expect(row.ordinaryHitCheck).toMatchObject({ returned: 0, hpBefore: 1000, hpAfter: 1000, exactHeapChangesOnly: true });
+    expect(row.ordinaryHitCheck!.calls.ordinaryHit).toBe(1);
+    expect(row.ordinaryHitCheck!.calls.lowerDamageProxy).toBeUndefined();
+    expect(row.launchGoal).toEqual(row.fields.initialTarget.map((v, i) => v - row.fields.direction[i] * 600));
+    expect(row.frames.at(-1)).toMatchObject({ state: 1, targetHp: 680 });
+    expect(row.frames.at(-1)!.calls.damageReducer).toBe(1);
   }
 });
