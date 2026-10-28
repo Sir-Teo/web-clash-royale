@@ -1096,3 +1096,22 @@ New bodies carry optional `nativeBanditCadence`. After an ordinary post-landing 
 The already pinned recovery capture supplies all 3,200 updates and 104 ordinary requests over 32 episodes. Runtime comparisons now continue through the entire capture in both team perspectives. For the cardinal stationary fixture, normal request ticks remain 69/99/129. Rage requests become 63/86/108/129 rather than the former 63/86/109/132; slow becomes 86/132 rather than 86/134; combined modifiers become 75/110/144 rather than 75/110/145. Integer crossing retains the source's small remainder between cycles instead of accumulating rounding in fresh windups. These game ticks resample the native 50-ms updates to the browser's 30-Hz loop.
 
 Later current-windup forecasts reuse the same clock, including modifier expiry, without mutating live state. Existing guest clock copies, optional policy replacement and Mirror carry the version boundary. Fresh Clones clear the parent's retained cycle and keep their existing attack setup. Six complete rules-52 games independently built from `566a885` preserve 58 state/RNG/audio checkpoints across 33,947 ticks. Legal Bandit/Knight openings and optional Rage reconstruct all four ordinary hits from commands for both teams. Native acquisition, natural modifier scheduling, terrain, ordinary damage allocation and view bodies remain outside the supplied capture; runtime target selection, preparation art/audio and damage delivery keep their existing contracts.
+
+### Native ordinary-cycle to Bandit dash transitions
+
+`--dash-transition` adds a separate `dash-transition-native-trace.json` capture (SHA-256 `00fe570575dad3081b4ae98f9afae62b8bf8d5a271fdddc2f5608a1733860077`). Twelve cases and 48 controls execute 2,868 complete native updates, 48 surviving dash HP reductions and 68 ordinary requests. Each frame checks the entire supplied 64-KiB heap, ordered external events, ordinary request/reload records and selected native driver counts. The same archived Bandit/Knight profiles and checked providers are used; earlier lifecycle, goal, startup and recovery captures remain byte-identical.
+
+The complete attack update adds a gate around the pure admission helper's result. At `0x25cb57..0x25cc50`, the supplied zero extra clock allows countdown only when ordinary elapsed modulo source HitSpeed (1,000 ms) is at most 50 ms. Raw 49/50/51 and 1,049/1,050/1,051 controls establish the inclusive edge in all four cardinal directions. A raw 999-ms cycle issues an ordinary request at 1,049, then can charge on the next update. A valid supplied target displaced 5,000 units away earlier in the ordinary cycle remains queued through its request before the new charge is accepted.
+
+The following are native 50-ms update numbers on the supplied existing-reference path. Ordinary damage allocation/delivery is excluded; these are requests, not proof that distant melee damage lands.
+
+| Post-landing modifier | First ordinary request | Supplied shift | Next charge | Second launch | Second landing |
+| --- | --- | --- | --- | --- | --- |
+| None | 46 | 47 | 47 | 66 | 73 |
+| Rage | 42 | 43 | 87 | 101 | 108 |
+| Slow | 57 | 58 | 58 | 89 | 96 |
+| Rage and slow | 50 | 51 | 51 | 74 | 81 |
+
+Rage leaves ordinary remainders 55, 60 and 65 ms after its first three requests, outside the fresh-charge window. The next remainder is 3 ms, admitting the charge on update 87 despite a 550-ms reload. The movement time counter also scales by `trunc(50 * effectiveSpeed / sourceSpeed)`: source speed 90 becomes 121/58/78 under these modifiers, giving counter increments 67/32/43. Actual protected dash geometry still uses the same 500-unit steps and final 250-unit stop. This counter result does not execute native animation/view bodies.
+
+Target references, displacement, raw phase/reload and buff vectors are supplied controls. Natural acquisition/application/expiry, full hard-stun actor scheduling, terrain/index writes, real path refresh, views and ordinary damage/world delivery remain excluded or checked providers. Only the surviving dash HP path executes downstream damage. Gameplay remains rules 53; this evidence does not yet change runtime admission or distant ordinary hits.

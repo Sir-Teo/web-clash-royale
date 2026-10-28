@@ -180,7 +180,11 @@ def capture(env, context, shared):
             require(
                 read(sp + 4) == body
                 and read(sp + 8)
-                in ([1, 2, 4] if env["args"].dash_recovery else [1, 4]),
+                in (
+                    [1, 2, 4]
+                    if (env["args"].dash_recovery or env["args"].dash_transition)
+                    else [1, 4]
+                ),
                 "Unexpected goal actor state request",
             )
             if read(sp + 8) == 1:
@@ -203,7 +207,7 @@ def capture(env, context, shared):
                 and read(sp)
                 in (
                     [0x25CCA0, 0x21546E, 0x25CEC5]
-                    if env["args"].dash_recovery
+                    if (env["args"].dash_recovery or env["args"].dash_transition)
                     else [0x25CCA0, 0x21546E]
                 ),
                 "Unexpected dash goal view callback",
@@ -297,7 +301,7 @@ def capture(env, context, shared):
             ret(0)
             return True
         elif pc == 0x25C4FA:
-            if env["args"].dash_recovery:
+            if env["args"].dash_recovery or env["args"].dash_transition:
                 return False  # Execute the actual landing reload initializer.
             require(
                 read(sp + 4) == attack,
@@ -361,6 +365,11 @@ def capture(env, context, shared):
 
     def inventory():
         return dict(sorted((calls + extra_calls).items()))
+
+    if env["args"].dash_transition:
+        from lib.dash_transition_probe import capture as capture_transition
+
+        return capture_transition(env, context, shared, locals())
 
     if env["args"].dash_recovery:
         from lib.dash_recovery_probe import capture as capture_recovery
