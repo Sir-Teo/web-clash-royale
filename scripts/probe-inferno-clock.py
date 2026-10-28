@@ -42,6 +42,7 @@ parser.add_argument("--projectile-targets", action="store_true", help="Execute n
 parser.add_argument("--projectile-homing", action="store_true", help="Execute initialized native projectile movement with moving and changing target references")
 parser.add_argument("--projectile-arrival", action="store_true", help="Execute native arrival bookkeeping, latch and destination position stores")
 parser.add_argument("--projectile-bookkeeping", action="store_true", help="Execute initializer target bookkeeping through native homing flight and arrival")
+parser.add_argument("--projectile-hit-damage", action="store_true", help="Execute per-candidate projectile damage component gate, Crown amount and hit request")
 parser.add_argument("--attack-range", action="store_true", help="Capture maximum attack geometry across troop, building and Crown Tower profiles")
 parser.add_argument("--minimum-range", action="store_true", help="Capture minimum-range boundaries instead of maximum-range boundaries")
 parser.add_argument("--sight-range", action="store_true", help="Capture native sight getters and the bounded candidate sight gate")
@@ -159,6 +160,10 @@ if args.projectile_bookkeeping:
     bookkeeping_modes = {"library", "check", "attack_loop", "first_attacks", "projectile_bookkeeping"}
     if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in bookkeeping_modes):
         parser.error("--projectile-bookkeeping requires --attack-loop --first-attacks without another capture mode")
+if args.projectile_hit_damage:
+    hit_modes = {"library", "check", "attack_loop", "first_attacks", "projectile_hit_damage"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in hit_modes):
+        parser.error("--projectile-hit-damage requires --attack-loop --first-attacks without another capture mode")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()
