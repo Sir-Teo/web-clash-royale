@@ -34,6 +34,7 @@ import { buildingLureTarget } from "./building-lure";
 import { collectorTarget } from "./collector-targeting";
 import { spawnerPlan } from "./spawner-targeting";
 import { siegePlan, isSiegeCard } from "./siege-targeting";
+import { minerTarget } from "./miner-targeting";
 import { meleeInterceptTarget } from "./melee-intercept";
 import { finishesKingBefore } from "./king-spell-race";
 import { createKingDefense } from "./king-defense";
@@ -3227,8 +3228,8 @@ export class Battle {
       entities: this.entities, projectiles: this.projectiles, areas: this.areas,
       legal: (card, point) => this.canPlace("red", card, point.x, point.y).ok,
     }) : undefined;
-    const currentSiegePolicy = this.rulesVersion >= 56;
-    const siege = !threat && currentSiegePolicy ? siegePlan({
+    const currentPlacementPolicy = this.rulesVersion >= 56;
+    const siege = !threat && currentPlacementPolicy ? siegePlan({
       team: "red", cards: hand, remaining: this.remaining, overtime: this.time >= 180,
       entities: this.entities, projectiles: this.projectiles, areas: this.areas,
       legal: (card, point) => this.canPlace("red", card, point.x, point.y).ok,
@@ -3245,8 +3246,18 @@ export class Battle {
           legal: (point) => this.canPlace("red", a.played, point.x, point.y).ok,
         })]),
     );
+    const miners = new Map(
+      !threat && currentPlacementPolicy ? affordable
+        .filter((a) => a.played === "miner")
+        .map((a) => [a.id, minerTarget({
+          team: "red", elixir: p.elixir, cost: a.cost!, remaining: this.remaining,
+          entities: this.entities, projectiles: this.projectiles, areas: this.areas,
+          legal: (point) => this.canPlace("red", a.played, point.x, point.y).ok,
+        })] as const) : [],
+    );
     if (pressureBuilding && p.elixir + 1e-6 < pressureBuilding.requiredElixir &&
-        !hasSpellTarget && ![...collectors.values()].some(Boolean)) return;
+        !hasSpellTarget && ![...collectors.values()].some(Boolean) &&
+        ![...miners.values()].some((target) => target && target.score > 4)) return;
     const scored = affordable
       .map((a) => {
         const jitter = this.random() * 2;
@@ -3256,7 +3267,9 @@ export class Battle {
           score = collectors.get(a.id) ? 4 + jitter * 0.1 : -Infinity;
         else if (pressureBuilding?.id === a.id && p.elixir + 1e-6 >= pressureBuilding.requiredElixir)
           score = 4 + jitter * 0.1;
-        else if (!threat && currentSiegePolicy && isSiegeCard(a.played)) score = -Infinity;
+        else if (!threat && currentPlacementPolicy && a.played === "miner")
+          score = miners.get(a.id) ? miners.get(a.id)!.score + jitter * 0.1 : -Infinity;
+        else if (!threat && currentPlacementPolicy && isSiegeCard(a.played)) score = -Infinity;
         else if (a.c.kind === "spell") {
           if (optimizedSpell(a.played))
             score = target ? target.score + jitter * 0.1 : -Infinity;
@@ -3283,7 +3296,7 @@ export class Battle {
             score += 3;
           if (a.c.kind === "building") score += 2;
         } else {
-          if (a.c.kind !== "troop" && (currentSiegePolicy || a.played !== "mortar")) score -= 7;
+          if (a.c.kind !== "troop" && (currentPlacementPolicy || a.played !== "mortar")) score -= 7;
           if (a.c.buildingsOnly) score += 2;
         }
         return { ...a, score, target };
@@ -3310,6 +3323,11 @@ export class Battle {
       x = economy?.x ?? pressurePoint?.x ?? lure?.x ?? (a.played === "mortar" ? lane : 9);
       y = economy?.y ?? pressurePoint?.y ?? lure?.y ?? (a.played === "mortar" ? 14 : 10);
     }
+    const tunnel = miners.get(a.id);
+    if (tunnel) {
+      x = tunnel.point.x;
+      y = tunnel.point.y;
+    }
     const intercept =
       threat && a.c.kind === "troop"
         ? meleeInterceptTarget(
@@ -3325,7 +3343,7 @@ export class Battle {
       x = intercept.x;
       y = intercept.y;
     }
-    if (a.c.kind !== "spell" && !intercept && !pressurePoint) {
+    if (a.c.kind !== "spell" && !intercept && !pressurePoint && !tunnel) {
       // A building can still occupy the preferred tile when the deck cycles.
       // Try nearby legal tiles instead of wasting every subsequent decision.
       const point = [
