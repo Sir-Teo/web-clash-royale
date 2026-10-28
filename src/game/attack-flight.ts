@@ -91,13 +91,14 @@ export function attackFlight(
   };
 }
 
-/** One-based projectile step; the release frame already advances the shot.
+/** One-based hit step, counting the release frame. Rules 43 shots start later.
  * Rolling/returning attacks use first swept contact, not endpoint arrival. */
 export function attackHitSteps(attacker: Entity, target: Entity): number {
   const flight = attackFlight(attacker, target);
   if (!flight) return 1;
+  const delay = attacker.nativeProjectileStep ? 1 : 0;
   const total = Math.max(1, Math.ceil((flight.duration - 1e-8) / COMBAT_STEP));
-  if (flight.contactRadius === undefined) return total;
+  if (flight.contactRadius === undefined) return total + delay;
   let position = { ...flight.start };
   for (let step = 1; step <= total; step++) {
     const dx = flight.end.x - position.x,
@@ -130,7 +131,7 @@ export function attackHitSteps(attacker: Entity, target: Entity): number {
       ) <=
       flight.contactRadius + target.radius
     )
-      return step;
+      return step + delay;
     position = next;
   }
   return Infinity;

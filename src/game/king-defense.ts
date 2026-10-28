@@ -14,8 +14,8 @@ import { createWindupHealth } from "./windup-health";
 import tornado from "./tornado-data.json" with { type: "json" };
 import { electroExtraTarget } from "./electro-bolts";
 
-/** Complete current attack packet, including both Executioner passes. The
- * release frame already advances a projectile; melee precedes projectiles. */
+/** Complete current attack packet, including both Executioner passes and the
+ * rules-43 first-update delay. Melee precedes projectiles. */
 export function pendingKingPackets(
   attacker: Entity,
   king: Entity,
@@ -64,7 +64,7 @@ export function pendingKingPackets(
   };
   return projectileDamagePackets(king, [shot]).map((packet) => ({
     ...packet,
-    step: release + packet.step - 1,
+    step: release + packet.step - 1 + (actor.nativeProjectileStep ? 1 : 0),
     // Combat creates pending shots before children born in projectile updates.
     born: release - 0.25,
     order,

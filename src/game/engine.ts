@@ -174,6 +174,8 @@ export interface Entity extends Point {
   volleyRandomState?: number;
   /** Rules 42: source caster-center projectile extension and muzzle bounds. */
   nativeProjectileRange?: true;
+  /** Rules 43: shots created during combat first move on the next step. */
+  nativeProjectileStep?: true;
   dash?: { target: number; elapsed: number; remaining: number };
   dashCooldown?: number;
   attack: number;
@@ -268,7 +270,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -358,7 +360,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 42;
+    this.rulesVersion = r?.version ?? 43;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -474,6 +476,7 @@ export class Battle {
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 38 && hasPendingRange("tower", king) ? { nativePendingRange: true as const } : {}),
       ...(this.rulesVersion >= 40 && hasProjectileMuzzle("tower", king) ? { nativeProjectileMuzzle: true as const } : {}),
+      ...(this.rulesVersion >= 43 ? { nativeProjectileStep: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
       ...(this.rulesVersion >= 32 ? { nativeDistantTargets: true as const, nativeLane: king ? 0 as const : lane === "left" ? 1 as const : 2 as const } : {}),
@@ -861,6 +864,7 @@ export class Battle {
       ...(this.rulesVersion >= 40 && hasProjectileMuzzle(id) ? { nativeProjectileMuzzle: true as const } : {}),
       ...(this.rulesVersion >= 41 && hasProjectileVolley(id) ? { nativeProjectileVolley: true as const } : {}),
       ...(this.rulesVersion >= 42 && hasProjectileRange(id) ? { nativeProjectileRange: true as const } : {}),
+      ...(this.rulesVersion >= 43 ? { nativeProjectileStep: true as const } : {}),
       ...(lostAttack ? { nativeLostAttack: lostAttack } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
@@ -1618,6 +1622,9 @@ export class Battle {
     return false;
   }
   private updateCombat() {
+    // Native managers snapshot objects before attack components run. Shots
+    // created in combat wait one step; spells already present still advance.
+    const projectileStep = this.rulesVersion >= 43 ? [...this.projectiles] : undefined;
     for (const e of [...this.entities]) {
       if (e.hp <= 0) continue;
       if (this.rulesVersion >= 19) advanceAnimationClock(e, this.time);
@@ -1856,7 +1863,7 @@ export class Battle {
         }
       } else if (e.kind === "troop") this.moveToward(e, target);
     }
-    this.updateProjectiles();
+    this.updateProjectiles(projectileStep);
   }
   private advanceBanditDash(e: Entity) {
     const dash = e.dash!;
@@ -2238,8 +2245,8 @@ export class Battle {
     this.emit("hit", e.team, e.x, e.y, e.card, damage);
     this.emitImpactAudio(e, damage);
   }
-  private updateProjectiles() {
-    for (const p of [...this.projectiles]) {
+  private updateProjectiles(projectileStep = [...this.projectiles]) {
+    for (const p of projectileStep) {
       if (p.delay && p.delay > 1e-8) {
         p.delay = Math.max(0, p.delay - STEP);
         continue;

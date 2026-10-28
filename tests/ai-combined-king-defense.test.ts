@@ -5,8 +5,7 @@ import { CARD_MAP, type CardId } from "../src/game/cards";
 import { createKingDefense } from "../src/game/king-defense";
 import { areaSpellTarget } from "../src/game/area-spell-targeting";
 import { perspective, snapshot } from "../src/network/perspective";
-import { attackFlight } from "../src/game/attack-flight";
-import { impactSteps } from "../src/game/projectile-impacts";
+import { attackHitSteps } from "../src/game/attack-flight";
 import log from "../src/game/log-data.json";
 
 function setup(team: Team = "red") {
@@ -212,7 +211,7 @@ describe("combined pending King damage", () => {
     king.hp = 20;
     king.shield = 50;
     const a = spawn("musketeer", 9, king.y + 3.5, 0.1, 200);
-    const flight = impactSteps(attackFlight(a, king)!.duration);
+    const flight = attackHitSteps(a, king);
     const landing =
       king.y +
       log.collisionRadius +
