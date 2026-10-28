@@ -49,6 +49,7 @@ parser.add_argument("--buff-ticks", action="store_true", help="Execute periodic 
 parser.add_argument("--buff-lifecycle", action="store_true", help="Execute retained Poison, native component phases, expiry and Tesla hide clocks")
 parser.add_argument("--dash-lifecycle", action="store_true", help="Execute Bandit dash entry, bounded open-plane movement and retained Poison damage")
 parser.add_argument("--dash-goals", action="store_true", help="Execute Bandit dash countdown, launch destination and landing hit/miss gates")
+parser.add_argument("--dash-admission", action="store_true", help="Execute Bandit dash admission range, active-clock and buff gates")
 parser.add_argument("--attack-range", action="store_true", help="Capture maximum attack geometry across troop, building and Crown Tower profiles")
 parser.add_argument("--minimum-range", action="store_true", help="Capture minimum-range boundaries instead of maximum-range boundaries")
 parser.add_argument("--sight-range", action="store_true", help="Capture native sight getters and the bounded candidate sight gate")
@@ -194,6 +195,10 @@ if args.dash_goals:
     goal_modes = {"library", "check", "attack_loop", "first_attacks", "dash_goals"}
     if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in goal_modes):
         parser.error("--dash-goals requires --attack-loop --first-attacks without another capture mode")
+if args.dash_admission:
+    admission_modes = {"library", "check", "attack_loop", "first_attacks", "dash_admission"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in admission_modes):
+        parser.error("--dash-admission requires --attack-loop --first-attacks without another capture mode")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()
