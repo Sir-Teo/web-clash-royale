@@ -77,6 +77,7 @@ export function damageSpellTarget(
   cost = CARD_MAP[card].cost,
   kingDeadline = Infinity,
   finisher?: MatchFinisher,
+  rulesVersion = 56,
 ): SpellTarget | undefined {
   if (card === "log")
     return logSpellTarget(
@@ -87,6 +88,7 @@ export function damageSpellTarget(
       cost,
       kingDeadline,
       finisher,
+      rulesVersion,
     );
   if (card === "lightning")
     return lightningSpellTarget(

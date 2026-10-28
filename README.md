@@ -54,6 +54,8 @@ Lightning attacks and follow-up spells also track blockers moved by active Torna
 
 The AI also accounts for friendly Lightning killing or stunning attackers before release, saving Freeze when the current pulse already prevents a King loss. This includes stuns after a shield breaks; a pulse arriving after the attackers release still requires defense.
 
+Log targeting follows known Tornado pulls when choosing a rolling lane, including competing and expiring pulls. It checks contact throughout the launch and roll, so troops leaving an old lane do not justify a wasted cast and troops pulled into reach can become useful targets.
+
 In **Cards**, search plain names such as “pekka” or “Mini Pekka”, combine card type with elixir cost, and sort by elixir or name. The result count follows the active filters. Tap a collection card to inspect it; **Back to collection** preserves the search, filters and sort order. Select a deck card to move or replace it; select it again to cancel and return to inspection. Opening the builder again from the lobby starts with the full collection.
 
 Use **Undo** and **Redo** to restore the latest 50 replacements and card moves from the current builder visit. **Ctrl/Cmd + Z** undoes; **Ctrl/Cmd + Shift + Z** or **Ctrl + Y** redoes. Search and code fields keep their normal text undo. Inspection and viewing deck codes retain the edit history; adopting a different deck clears older edits. Closing and reopening the builder starts a fresh undo history while retaining your saved deck.

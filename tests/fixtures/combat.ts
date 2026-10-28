@@ -117,6 +117,10 @@ function setup() {
     deck: ["hog-rider", "knight", "archers", "skeletons", "goblins", "fireball", "zap", "cannon"],
     enemyDeck: ["miner", "pekka", "three-musketeers", "golem", "rocket", "lightning", "freeze", "balloon"],
   });
+  if (selectedScene === "ai-pulled-log-legal") battle = new Battle({ seed: 2, ai: true,
+    deck: ["wizard", "knight", "archers", "skeletons", "goblins", "fireball", "zap", "cannon"],
+    enemyDeck: ["tornado", "log", "pekka", "golem", "lava-hound", "three-musketeers", "rocket", "lightning"],
+  });
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
@@ -124,7 +128,7 @@ function setup() {
     battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
-  for (const t of battle.entities) t.active = selectedScene === "ai-miner-defense-legal" && !t.king;
+  for (const t of battle.entities) t.active = ["ai-miner-defense-legal", "ai-pulled-log-legal"].includes(selectedScene) && !t.king;
   const scenario = (document.querySelector("#scenario") as HTMLSelectElement)
     .value;
   (document.querySelector("#five") as HTMLButtonElement).hidden = !scenario.startsWith("ai-army-");
@@ -530,12 +534,14 @@ function setup() {
     battle.players.red.hand = [card === "balloon" ? "rocket" : "fireball", "three-musketeers", "three-musketeers", "three-musketeers"];
     battle.players.red.queue = ["three-musketeers", "three-musketeers", "three-musketeers", "three-musketeers"];
     battle.actions = [];
+  } else if (scenario === "ai-pulled-log-legal") {
+    battle.play("blue", battle.players.blue.hand.indexOf("wizard"), 9, 22);
   } else if (scenario.startsWith("ai-pulled-aim-")) {
     const rest: CardId = scenario.includes("doomed") ? "three-musketeers" : "pekka";
     for (const y of [19, 20, 21])
       for (const e of unit("wizard", "blue", 5, y))
         Object.assign(e, { hp: scenario.includes("doomed") ? 200 : 500, active: false });
-    battle.players.red.hand = [scenario.endsWith("rocket") ? "rocket" : "fireball", rest, rest, rest];
+    battle.players.red.hand = [scenario.includes("-log") ? "log" : scenario.endsWith("rocket") ? "rocket" : "fireball", rest, rest, rest];
     battle.players.red.queue = [rest, rest, rest, rest];
     battle.actions = [];
   } else if (scenario.startsWith("ai-pulled-reserve-")) {
@@ -1604,12 +1610,22 @@ function advance(ticks: number) {
       }
       if (sceneSelect.value.startsWith("ai-pulled-aim-") && battle.tick === 73) {
         cast("tornado", "red", 10, 20);
-        const card = sceneSelect.value.endsWith("rocket") ? "rocket" : "fireball";
+        const card = sceneSelect.value.includes("-log") ? "log" : sceneSelect.value.endsWith("rocket") ? "rocket" : "fireball";
         const rest: CardId = sceneSelect.value.includes("doomed") ? "three-musketeers" : "pekka";
         battle.players.red.hand = [card, rest, rest, rest];
         battle.players.red.queue = [rest, rest, rest, rest];
         battle.players.red.elixir = card === "rocket" ? 6 : 4;
+        if (card === "log") {
+          const mirror = sceneSelect.value.endsWith("mirror");
+          battle.players.red.hand[0] = mirror ? "mirror" : "log";
+          battle.players.red.lastPlayed = mirror ? "log" : "tornado";
+          battle.players.red.elixir = mirror ? 3 : 2;
+          if (sceneSelect.value.endsWith("short"))
+            Object.assign(battle.areas.at(-1)!, { duration: 0.1, remaining: 0.1 });
+        }
       }
+      if (sceneSelect.value === "ai-pulled-log-legal" && battle.tick === 73)
+        battle.play("red", battle.players.red.hand.indexOf("tornado"), 13.5, 20);
       if (sceneSelect.value.startsWith("ai-pulled-reserve-") && battle.tick === 73) {
         cast("tornado", "red", sceneSelect.value.endsWith("in") ? 5 : 10, 20);
         cast("fireball", "red", 5, 20);
@@ -2475,6 +2491,7 @@ function render(now: number) {
         .map(e => ({ id: e.id, x: e.x, y: e.y, hp: e.hp, maxHp: e.maxHp, king: !!e.king, lane: e.lane })),
       siegeHits: battle.events.filter(event => event.type === "hit" && (event.card === "x-bow" || event.card === "mortar")),
       minerHits: battle.events.filter(event => event.type === "hit" && event.card === "miner"),
+      logHits: battle.events.filter(event => event.type === "hit" && event.card === "log" && event.value! > 0),
       graveyardHits: battle.events.filter(event => event.type === "hit" && event.card === "skeletons" && event.team === "red"),
       enemyKingActive: battle.entities.some(e => e.team === "blue" && e.king && e.active),
       armyBodies: battle.entities.filter(e => e.team === "red" && e.hp > 0 && ["golem", "lava-hound", "musketeer"].includes(e.card))

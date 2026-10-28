@@ -3133,6 +3133,7 @@ export class Battle {
                 a.cost ?? a.c.cost,
                 kingDeadline,
                 finisher,
+                this.rulesVersion,
               )
             : areaSpellTarget(
                 a.played,
