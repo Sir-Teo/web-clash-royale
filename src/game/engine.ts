@@ -31,6 +31,7 @@ import { areaSpellTarget, isAreaSpell } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targeting";
 import { defensiveThreats } from "./defensive-threats";
 import { buildingLureTarget } from "./building-lure";
+import { collectorTarget } from "./collector-targeting";
 import { meleeInterceptTarget } from "./melee-intercept";
 import { finishesKingBefore } from "./king-spell-race";
 import { createKingDefense } from "./king-defense";
@@ -3186,7 +3187,7 @@ export class Battle {
     for (const enemy of threats) {
       const lures = new Map(
         affordable
-          .filter((a) => a.c.kind === "building")
+          .filter((a) => a.c.kind === "building" && a.played !== "elixir-collector")
           .map((a) => [
             a.id,
             buildingLureTarget(
@@ -3206,6 +3207,7 @@ export class Battle {
         affordable.some(
           (a) =>
             a.c.kind !== "spell" &&
+            a.played !== "elixir-collector" &&
             !a.c.buildingsOnly &&
             (!enemy.air || a.c.hitsAir),
         ) ||
@@ -3218,12 +3220,24 @@ export class Battle {
     }
     if (!threat && p.elixir < 6 && this.mode !== "training" && !hasSpellTarget)
       return;
+    const collectors = new Map(
+      affordable
+        .filter((a) => a.played === "elixir-collector")
+        .map((a) => [a.id, collectorTarget({
+          team: "red", elixir: p.elixir, cost: a.cost!, remaining: this.remaining,
+          overtime: this.time >= 180, entities: this.entities,
+          projectiles: this.projectiles, areas: this.areas,
+          legal: (point) => this.canPlace("red", a.played, point.x, point.y).ok,
+        })]),
+    );
     const scored = affordable
       .map((a) => {
         const jitter = this.random() * 2;
         let score = jitter;
         const target = spellTargets.get(a.id);
-        if (a.c.kind === "spell") {
+        if (a.played === "elixir-collector")
+          score = collectors.get(a.id) ? 4 + jitter * 0.1 : -Infinity;
+        else if (a.c.kind === "spell") {
           if (optimizedSpell(a.played))
             score = target ? target.score + jitter * 0.1 : -Infinity;
           else if (threat) {
@@ -3270,8 +3284,9 @@ export class Battle {
     }
     if (a.c.kind === "building") {
       const lure = buildingLures.get(a.id);
-      x = lure?.x ?? (a.played === "mortar" ? lane : 9);
-      y = lure?.y ?? (a.played === "mortar" ? 14 : 10);
+      const economy = collectors.get(a.id);
+      x = economy?.x ?? lure?.x ?? (a.played === "mortar" ? lane : 9);
+      y = economy?.y ?? lure?.y ?? (a.played === "mortar" ? 14 : 10);
     }
     const intercept =
       threat && a.c.kind === "troop"

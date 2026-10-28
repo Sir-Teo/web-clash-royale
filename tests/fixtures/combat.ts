@@ -227,6 +227,17 @@ function setup() {
       : ["freeze", "clone", "pekka", "pekka"];
     battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
     battle.players.red.elixir = fast ? 4 : race ? 6 : 4;
+  } else if (scenario.startsWith("ai-collector-")) {
+    battle.players.red.hand = ["elixir-collector", "rage", "heal", "clone"];
+    battle.players.red.queue = ["rage", "heal", "clone", "elixir-collector"];
+    battle.players.red.elixir = 8;
+    if (scenario.endsWith("pressure")) {
+      for (const entity of unit("knight", "blue", 4, 10))
+        Object.assign(entity, { active: false, speed: 0 });
+      battle.players.red.hand = ["elixir-collector", "knight", "golem", "giant"];
+    } else if (scenario.endsWith("blast")) {
+      cast("rocket", "blue", 1.5, 1.5);
+    } else if (scenario.endsWith("late")) battle.tick = 3600;
   } else if (["ai-rage", "ai-freeze", "ai-poison", "ai-heal", "ai-clone"].includes(scenario)) {
     const card = scenario.slice(3) as "rage" | "freeze" | "poison" | "heal" | "clone";
     if (card === "rage") {
@@ -307,7 +318,8 @@ function setup() {
       battle.entities.find((e) => e.team === "red" && e.lane === "right")!.hp =
         100;
     } else {
-      for (const e of unit("knight", "blue", 9, 3)) e.active = false;
+      // Approach the King without starting inside its native footprint.
+      for (const e of unit("knight", "blue", 9, 6)) e.active = false;
     }
     battle.players.red.hand =
       scenario === "ai-defense-ground-swarm"
@@ -2257,6 +2269,7 @@ function render(now: number) {
   (document.querySelector("#destruction") as HTMLElement).dataset.aiDefense =
     JSON.stringify({
       scene: (document.querySelector("#scenario") as HTMLSelectElement).value,
+      time: battle.time,
       actions: battle.actions.filter((a) => a.team === "red"),
       priority: (
         document.querySelector("#scenario") as HTMLSelectElement

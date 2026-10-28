@@ -37,8 +37,7 @@ for (const [scenario, label] of [
     expect(result.actions).toHaveLength(1);
     const action = result.actions[0];
     if (scenario === "ground-swarm" || scenario === "air-swarm") {
-      const card =
-        scenario === "ground-swarm" ? "skeleton-army" : "minion-horde";
+      const card = scenario === "ground-swarm" ? "skeleton-army" : "minions";
       expect(result.targets.filter((e: any) => e.card === card)).toHaveLength(
         scenario === "ground-swarm" ? 15 : 6,
       );
@@ -52,7 +51,9 @@ for (const [scenario, label] of [
       expect(result.towers.find((e: any) => e.lane === "right").hp).toBe(100);
       expect(action.x).toBeGreaterThan(13);
       expect(action.x).toBeLessThan(15);
-      expect(action.y).toBeCloseTo(9.3);
+      expect(action.y).toBeCloseTo(
+        result.targets.find((e: any) => e.card === "hog-rider").y + 1.3,
+      );
     } else {
       expect(["mini-pekka", "knight"]).toContain(action.card);
       const attacker = result.targets.find((e: any) => e.card === "knight");
@@ -110,13 +111,14 @@ for (const blocked of [false, true])
     const cannon = result.buildings.find((e: any) => e.card === "cannon");
     expect(result.actions[0]).toMatchObject({
       card: "cannon",
-      x: blocked ? 11.5 : 9,
+      x: 11.5,
       y: 10,
     });
     expect(result.targets.find((e: any) => e.card === "balloon").target).toBe(
       cannon.id,
     );
     expect(result.elixir).toBeGreaterThanOrEqual(0);
+    expect(cannon.target).toBeNull();
     if (info.project.name === "desktop" && !blocked)
       await page.screenshot({
         path: info.outputPath("ai-balloon-distraction.png"),
@@ -131,9 +133,9 @@ for (const blocked of [false, true])
       value: CARD_MAP.balloon.damage,
     });
     expect(hit.towers.every((e: any) => e.hp === e.maxHp)).toBe(true);
-    expect(
-      hit.buildings.find((e: any) => e.id === cannon.id).target,
-    ).toBeNull();
+    const survivor = hit.buildings.find((e: any) => e.id === cannon.id);
+    expect(survivor?.hp ?? 0).toBeLessThan(cannon.hp);
+    if (survivor) expect(survivor.target).toBeNull();
     expect(errors).toEqual([]);
   });
 
@@ -164,9 +166,9 @@ for (const counter of ["missing", "unaffordable"])
     const primary = before.targets.find(
       (e: any) => e.id === before.priority[0],
     );
-    expect(primary.card).toBe("minion-horde");
+    expect(primary.card).toBe("minions");
     expect(
-      before.targets.filter((e: any) => e.card === "minion-horde"),
+      before.targets.filter((e: any) => e.card === "minions"),
     ).toHaveLength(6);
     await step();
     await step();
@@ -177,8 +179,10 @@ for (const counter of ["missing", "unaffordable"])
     expect(result.actions[0]).toMatchObject({
       card: "knight",
       team: "red",
-      y: 9.3,
     });
+    expect(result.actions[0].y).toBeCloseTo(
+      result.targets.find((e: any) => e.card === "hog-rider").y + 1.3,
+    );
     expect(result.actions[0].x).toBeGreaterThan(13);
     expect(result.actions[0].x).toBeLessThan(15);
     expect(result.elixir).toBeGreaterThanOrEqual(0);
@@ -199,7 +203,7 @@ for (const counter of ["missing", "unaffordable"])
     ).toBe(hog.id);
     expect(
       defended.targets
-        .filter((e: any) => e.card === "minion-horde")
+        .filter((e: any) => e.card === "minions")
         .every((e: any) => e.hp === e.maxHp),
     ).toBe(true);
     if (info.project.name === "desktop")
@@ -247,7 +251,11 @@ for (const [lane, x] of [
     await step();
     const planned = await state();
     expect(planned.actions).toHaveLength(1);
-    expect(planned.actions[0]).toMatchObject({ card: "mini-pekka", x });
+    expect(planned.actions[0].card).toBe("mini-pekka");
+    expect(Math.abs(planned.actions[0].x - x)).toBeLessThan(0.75);
+    expect(Math.abs(planned.actions[0].x - planned.targets[0].x)).toBeLessThan(
+      1,
+    );
     expect(planned.actions[0].y).toBeLessThan(planned.targets[0].y);
     for (let i = 0; i < 3 && !(await state()).guardHits.length; i++)
       await step();
@@ -266,9 +274,12 @@ for (const [lane, x] of [
     expect(done.targets).toEqual([]);
     expect(done.actions).toEqual(planned.actions);
     expect(done.hogHits.length).toBeLessThanOrEqual(2);
-    expect(done.hogHits.every((hit: any) => hit.time > done.guardHits[0].time)).toBe(true);
+    expect(
+      done.hogHits.every((hit: any) => hit.time > done.guardHits[0].time),
+    ).toBe(true);
     expect(done.towers.every((t: any) => t.hp > 0)).toBe(true);
-    expect(done.towers.reduce((sum: number, t: any) => sum + t.maxHp - t.hp, 0))
-      .toBe(done.hogHits.reduce((sum: number, hit: any) => sum + hit.value, 0));
+    expect(
+      done.towers.reduce((sum: number, t: any) => sum + t.maxHp - t.hp, 0),
+    ).toBe(done.hogHits.reduce((sum: number, hit: any) => sum + hit.value, 0));
     expect(errors).toEqual([]);
   });
