@@ -19,13 +19,17 @@ export function advanceBanditRecovery(
   step: number,
   rate: number,
   active = true,
+  resetElapsed = false,
 ): boolean {
   clock.carry = Math.min(frameTime, Math.max(0,
     Number.isFinite(clock.carry) ? clock.carry : 0)) + step;
   while (clock.carry + 1e-8 >= frameTime) {
     clock.carry = Math.max(0, clock.carry - frameTime);
     clock.reloadMs = Math.max(0, clock.reloadMs - frameMs);
-    if (!active) continue;
+    if (!active) {
+      if (resetElapsed) { clock.elapsedMs = 0; delete clock.animating; }
+      continue;
+    }
     const cycle = Math.trunc(clock.elapsedMs / intervalMs);
     if (clock.elapsedMs === 0) {
       clock.elapsedMs += loadMs - clock.reloadMs;
@@ -49,4 +53,10 @@ export function banditRecoveryRemaining(clock: BanditRecoveryClock, rate: number
       return Math.max(0, frames * frameTime - clock.carry) * rate;
   }
   return Infinity;
+}
+
+/** The complete native update commits the current ordinary cycle beyond its
+ * first 50 ms; fresh dash admission waits for the next eligible remainder. */
+export function banditOrdinaryCommitted(clock?: BanditRecoveryClock): boolean {
+  return !!clock && clock.elapsedMs % intervalMs > frameMs;
 }

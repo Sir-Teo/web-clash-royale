@@ -1,4 +1,4 @@
-import { advanceBanditRecovery } from "./bandit-recovery";
+import { advanceBanditRecovery, banditOrdinaryCommitted } from "./bandit-recovery";
 import { attackReach, minimumAttackDistance } from "./attack-range";
 import { attackClockDelta } from "./attack-clock";
 import { pendingAttackInRange } from "./pending-range";
@@ -48,9 +48,10 @@ export function fatalKingWindups(
       (!nativeElectro && pending.target !== king.id) ||
       kingDamage < king.hp ||
       pending.remaining > 1 ||
-      (attacker.nativePendingRange ? !pendingAttackInRange(attacker, primary) :
-        Math.hypot(attacker.x - primary.x, attacker.y - primary.y) >
-          attackReach(attacker, primary)) ||
+      (!(attacker.nativeBanditTransitions && banditOrdinaryCommitted(pending.recovery)) &&
+        (attacker.nativePendingRange ? !pendingAttackInRange(attacker, primary) :
+          Math.hypot(attacker.x - primary.x, attacker.y - primary.y) >
+            attackReach(attacker, primary))) ||
       (attacker.minimumRange !== undefined &&
         Math.hypot(attacker.x - primary.x, attacker.y - primary.y) < minimumAttackDistance(attacker, primary)) ||
       areas.some(

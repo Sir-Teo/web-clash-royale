@@ -1,7 +1,7 @@
 import { projectileCrownDamage } from "./crown-damage";
 import { poisonTickDamage } from "./poison-damage";
 import { banditDashSpeed, banditDashGoal, banditGoalFrame } from "./bandit-dash";
-import { advanceBanditRecovery, banditRecoveryRemaining, type BanditRecoveryClock } from "./bandit-recovery";
+import { advanceBanditRecovery, banditRecoveryRemaining, banditOrdinaryCommitted, type BanditRecoveryClock } from "./bandit-recovery";
 import { banditChargeInRange } from "./bandit-startup";
 import { barrelFormation } from "./barrel-formation";
 import { distantTarget, spawnLane, type NativeLane } from "./distant-targets";
@@ -201,6 +201,8 @@ export interface Entity extends Point {
   nativeBanditRecovery?: true;
   /** Rules 53: preserve the integer clock through later ordinary cycles. */
   nativeBanditCadence?: true;
+  /** Rules 54: committed post-dash ordinary hits and native fresh-charge phase. */
+  nativeBanditTransitions?: true;
   banditRecovery?: BanditRecoveryClock;
   dashReentry?: true;
   dashCharge?: { target: number; remainingMs: number; carry: number; started?: true };
@@ -300,7 +302,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53 | 54;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -390,7 +392,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 53;
+    this.rulesVersion = r?.version ?? 54;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -906,6 +908,7 @@ export class Battle {
       ...(this.rulesVersion >= 51 && id === "bandit" ? { nativeBanditReentry: true as const } : {}),
       ...(this.rulesVersion >= 52 && id === "bandit" ? { nativeBanditRecovery: true as const } : {}),
       ...(this.rulesVersion >= 53 && id === "bandit" ? { nativeBanditCadence: true as const } : {}),
+      ...(this.rulesVersion >= 54 && id === "bandit" ? { nativeBanditTransitions: true as const } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
@@ -1710,6 +1713,8 @@ export class Battle {
         continue;
       }
       if (e.card === "bandit" && e.dash) {
+        if (e.nativeBanditTransitions && e.banditRecovery)
+          advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed, false, true);
         this.advanceBanditDash(e);
         continue;
       }
@@ -1868,9 +1873,13 @@ export class Battle {
         const target = previous && this.validTarget(e, previous) ? previous : undefined;
         const lost = !!e.nativeLostAttack && (!previous || previous.hp <= 0) &&
           (e.nativeLostAttack === "self" || !!pending.lastPoint);
-        if ((!target && !lost) || (target && !(e.nativePendingRange
-          ? pendingAttackInRange(e, target) : this.inRange(e, target)))) this.cancelAttack(e);
-        else {
+        const committed = e.nativeBanditTransitions && banditOrdinaryCommitted(pending.recovery);
+        if ((!target && !lost) || (target && !committed && !(e.nativePendingRange
+          ? pendingAttackInRange(e, target) : this.inRange(e, target)))) {
+          const waiting = e.nativeBanditTransitions && target ? pending.recovery : undefined;
+          this.cancelAttack(e);
+          if (waiting) { delete waiting.animating; e.banditRecovery = waiting; }
+        } else {
           if (target && e.nativeLostAttack === "point")
             pending.lastPoint = { x: target.x, y: target.y };
           if (pending.recovery) {
@@ -1891,6 +1900,7 @@ export class Battle {
             e.nativeLostAttack === "self" ? e : pending.lastPoint);
         }
       }
+      if (e.nativeBanditTransitions && banditCycleReleased) { resetMovement(e); continue; }
       const target = e.nativeSparkyPreload ? preloadTarget : this.acquireTarget(e);
       if (!target) {
         if (e.nativeBanditCadence && e.banditRecovery?.elapsedMs) e.banditRecovery = undefined;
@@ -1898,11 +1908,12 @@ export class Battle {
         resetMovement(e);
         continue;
       }
-      if (e.nativeBanditCadence && e.banditRecovery?.elapsedMs && !this.inRange(e, target))
+      const committedCycle = e.nativeBanditTransitions && banditOrdinaryCommitted(e.banditRecovery);
+      if (e.nativeBanditCadence && !e.nativeBanditTransitions && e.banditRecovery?.elapsedMs && !this.inRange(e, target))
         e.banditRecovery = undefined;
       if (e.dashReentry && this.inRange(e, target)) e.dashReentry = undefined;
-      if (e.card === "bandit" && !e.pendingAttack &&
-          (e.dashReentry || ((e.dashCooldown ?? 0) <= 1e-8 && e.cooldown <= 1e-8))) {
+      if (e.card === "bandit" && !e.pendingAttack && !committedCycle &&
+          ((e.nativeBanditTransitions && e.banditRecovery) || e.dashReentry || ((e.dashCooldown ?? 0) <= 1e-8 && e.cooldown <= 1e-8))) {
         const distance = dist(e, target) - target.radius;
         const admitted = e.nativeBanditStartup
           ? !e.dashAttraction && banditChargeInRange(e, target)
@@ -1920,7 +1931,9 @@ export class Battle {
           continue;
         }
       }
-      if (this.inRange(e, target)) {
+      if (e.nativeBanditTransitions && e.banditRecovery?.elapsedMs && !committedCycle && !this.inRange(e, target))
+        e.banditRecovery = undefined;
+      if (this.inRange(e, target) || committedCycle) {
         if (e.banditRecovery) {
           const continuing = e.nativeBanditCadence && e.banditRecovery.elapsedMs > 0;
           if (continuing) {
@@ -2008,7 +2021,7 @@ export class Battle {
     return true;
   }
   private beginBanditDash(e: Entity, target: Entity, carry = 0) {
-    if (e.banditRecovery) e.banditRecovery = undefined;
+    if (e.banditRecovery && !e.nativeBanditTransitions) e.banditRecovery = undefined;
     e.dash = { target: target.id, elapsed: 0,
       remaining: bandit.dash.maximum / banditDashSpeed(e) + STEP,
       ...(e.nativeBanditGoal ? { goal: banditDashGoal(e, target), carry } : {}) };

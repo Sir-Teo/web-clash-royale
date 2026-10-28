@@ -1,4 +1,4 @@
-import { advanceBanditRecovery } from "./bandit-recovery";
+import { advanceBanditRecovery, banditOrdinaryCommitted } from "./bandit-recovery";
 import { attackReach, minimumAttackDistance } from "./attack-range";
 import { attackClockDelta, attackClockRate } from "./attack-clock";
 import { pendingAttackInRange } from "./pending-range";
@@ -233,8 +233,9 @@ export function resolveWindup(
     if (
       (status && (!status.beforeAlive || status.beforeInterrupt)) ||
       frame.stun > 0 ||
-      (projected ? !pendingAttackInRange(projected, target) :
-        distance(position, target) > attackReach(attacker, target)) ||
+      (!(attacker.nativeBanditTransitions && banditOrdinaryCommitted(recovery)) &&
+        (projected ? !pendingAttackInRange(projected, target) :
+          distance(position, target) > attackReach(attacker, target))) ||
       (attacker.minimumRange !== undefined &&
         distance(position, target) < minimumAttackDistance(attacker, target))
     )

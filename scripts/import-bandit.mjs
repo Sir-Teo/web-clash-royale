@@ -14,6 +14,8 @@ const paths = [
   "reference/client/dash-admission-native-trace.json",
   "reference/client/dash-startup-native-trace.json",
   "reference/client/dash-recovery-native-trace.json",
+  "reference/client/dash-transition-native-trace.json",
+  "reference/client/ordinary-delivery-native-trace.json",
 ];
 const inputs = await Promise.all(paths.map((path) => readFile(path)));
 const card = csvRows(inputs[0].toString()).find((row) => row.Name === "Assassin");
@@ -24,6 +26,15 @@ const native = JSON.parse(inputs[5]);
 const goals = JSON.parse(inputs[6]);
 const admission = JSON.parse(inputs[7]), startup = JSON.parse(inputs[8]);
 const recovery = JSON.parse(inputs[9]);
+const transition = JSON.parse(inputs[10]), delivery = JSON.parse(inputs[11]);
+if (createHash("sha256").update(inputs[10]).digest("hex") !== "00fe570575dad3081b4ae98f9afae62b8bf8d5a271fdddc2f5608a1733860077" ||
+    createHash("sha256").update(inputs[11]).digest("hex") !== "728859ae4e7117355e4ef00041286a79ac46d44a4e19cc723e10ce45071c24e7" ||
+    transition.profiles.dashAdmissionPhaseMaximumMs !== startup.stepMs ||
+    transition.cases[2].frames[46].clockMs !== 950 ||
+    transition.controls[0].frames[86].clockMs !== 933 ||
+    delivery.profiles.sourceAmount !== Number(unit.Damage) ||
+    !delivery.cases.every((row) => row.result.targetHp === 840))
+  throw new Error("Recheck native Bandit ordinary commitment, dash phase and selected delivery");
 if (createHash("sha256").update(inputs[9]).digest("hex") !== "678a1a62499b90d53da7d1ea286b23ebd9b3da5f6b5b3dd51db1acc112341fd0" ||
     recovery.profiles.loadTimeMs !== 600 || !recovery.cases.some((row) => row.fields.scenario === "chain" &&
       row.frames[26].hit && row.frames[27].clockMs === 950 && row.frames[27].reloadMs === 550))
@@ -167,6 +178,15 @@ await writeFile("reference/client/bandit-manifest.json", JSON.stringify({
     ordinaryRequests: ordinaryRequestCount,
     rageRequestUpdates: [42, 57, 72, 86],
     scope: "Continuing post-landing ordinary requests; downstream damage and view bodies retain shared runtime behavior",
+  },
+  nativeTransitions: {
+    attackUpdate: "0x25c60c..0x25d068",
+    phaseGate: "0x25cb57..0x25cc50",
+    phaseMaximumMs: transition.profiles.dashAdmissionPhaseMaximumMs,
+    selectedDelivery: "0x25eea7..0x25f329",
+    normalChargeUpdate: 47,
+    rageChargeUpdate: 87,
+    scope: "Post-dash committed ordinary cycles with supplied existing references; packet/level construction and natural acquisition remain excluded",
   },
   output: { path: outputPath, sha256: sha256(output) },
 }, null, 2) + "\n");
