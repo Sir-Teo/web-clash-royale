@@ -1,5 +1,9 @@
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import { deploymentRadius } from "./deployment";
+import {
+  approachingBuildingThreat,
+  buildingSpellDanger,
+} from "./building-investment";
 import collector from "./elixir-collector-data.json" with { type: "json" };
 
 interface CollectorContext {
@@ -28,11 +32,10 @@ export function collectorTarget(context: CollectorContext): Point | undefined {
     entities.some(
       (entity) =>
         entity.hp > 0 &&
-        ((entity.team === team && entity.card === "elixir-collector") ||
-          (entity.team !== team &&
-            entity.kind === "troop" &&
-            (team === "red" ? entity.y <= 18 : entity.y >= 14))),
-    )
+        entity.team === team &&
+        entity.card === "elixir-collector",
+    ) ||
+    approachingBuildingThreat(team, entities)
   )
     return;
   const structures = entities.filter(
@@ -58,24 +61,6 @@ export function collectorTarget(context: CollectorContext): Point | undefined {
     .find(
       ({ point }) =>
         legal(point) &&
-        !projectiles.some(
-          (projectile) =>
-            projectile.team !== team &&
-            !projectile.decorative &&
-            projectile.remaining >= 0 &&
-            projectile.splash > 0 &&
-            (projectile.damage > 0 || projectile.stun > 0) &&
-            distance(point, { x: projectile.tx, y: projectile.ty }) <=
-              projectile.splash + radius,
-        ) &&
-        !areas.some(
-          (area) =>
-            area.team !== team &&
-            area.remaining > 0 &&
-            ["freeze", "poison", "graveyard", "lightning"].includes(
-              area.card,
-            ) &&
-            distance(point, area) <= area.radius + radius,
-        ),
+        !buildingSpellDanger(point, radius, team, projectiles, areas),
     )?.point;
 }

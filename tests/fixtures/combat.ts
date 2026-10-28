@@ -227,6 +227,17 @@ function setup() {
       : ["freeze", "clone", "pekka", "pekka"];
     battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
     battle.players.red.elixir = fast ? 4 : race ? 6 : 4;
+  } else if (scenario.startsWith("ai-spawner-")) {
+    const card = scenario.endsWith("goblin") ? "goblin-hut"
+      : scenario.endsWith("furnace") || scenario.endsWith("blast") ? "furnace" : "barbarian-hut";
+    battle.players.red.hand = [card, "knight", "golem", "three-musketeers"];
+    battle.players.red.queue = ["knight", "golem", "musketeer", "arrows"];
+    battle.players.red.elixir = scenario.endsWith("barbarian") ? 9 : scenario.endsWith("goblin") ? 7 : 6;
+    if (scenario.endsWith("pressure")) {
+      for (const entity of unit("knight", "blue", 4, 10))
+        Object.assign(entity, { active: false, speed: 0 });
+    } else if (scenario.endsWith("blast")) cast("rocket", "blue", 9, 10);
+    else if (scenario.endsWith("late")) battle.tick = 153 * 30;
   } else if (scenario.startsWith("ai-collector-")) {
     battle.players.red.hand = ["elixir-collector", "rage", "heal", "clone"];
     battle.players.red.queue = ["rage", "heal", "clone", "elixir-collector"];
@@ -2284,6 +2295,7 @@ function render(now: number) {
           x: e.x,
           y: e.y,
           target: e.target,
+          native: !!(arena as any).units.get(e.id)?.sprite,
         })),
       targets: battle.entities
         .filter((e) => e.team === "blue" && e.kind === "troop" && e.hp > 0)
@@ -2306,6 +2318,7 @@ function render(now: number) {
           hp: e.hp,
           maxHp: e.maxHp,
           target: e.target,
+          native: !!(arena as any).units.get(e.id)?.building,
         })),
       balloonHits: battle.events.filter(
         (e) => e.type === "hit" && e.card === "balloon",

@@ -16,6 +16,8 @@ Classic and Double Elixir rotate between seventeen named AI opponents, including
 
 On a quiet field, the AI can invest in an Elixir Collector near its rear corners while keeping two elixir in reserve. It avoids duplicate pumps, nearby enemy pushes, incoming blasts and harmful active spells. It saves that investment late in regulation and during sudden death, and chooses a defender when under pressure.
 
+Reinforcement decks also save for Goblin Hut, Barbarian Hut and Furnace while the field is quiet, keeping two elixir after deployment. A push at the river cancels saving so the AI can respond. Useful spells and a ready Collector investment can take priority. Huts use legal central placements, avoid known spell danger and keep producing their original troop waves.
+
 A battle’s Details view can export a replay-only JSON file. Open it from **Battle log → Open replay file** to preview both decks and watch the recording in another browser. Shared playback preserves the exporter’s name and viewing side through seeking and restart, and leaves local decks, progress and rewards unchanged. Progress backups remain a separate restore flow. Replays also retain a card played immediately before a recording ends, including a zero-duration recording, without adding an extra simulation step.
 
 Replay controls show elapsed and recorded time, with ten-second back/forward buttons. Open **Plays** to jump directly to a recorded card play; simultaneous plays share one entry, labeled from the recorded player's side. Outside controls, use Left/Right to skip ten seconds, Home/End to jump to the beginning/end, square brackets to move between card plays and Space to pause or resume. Seeking preserves playback speed and the paused state; reaching the end pauses playback.

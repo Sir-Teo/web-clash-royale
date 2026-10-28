@@ -32,6 +32,7 @@ import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targ
 import { defensiveThreats } from "./defensive-threats";
 import { buildingLureTarget } from "./building-lure";
 import { collectorTarget } from "./collector-targeting";
+import { spawnerPlan } from "./spawner-targeting";
 import { meleeInterceptTarget } from "./melee-intercept";
 import { finishesKingBefore } from "./king-spell-race";
 import { createKingDefense } from "./king-defense";
@@ -3070,14 +3071,14 @@ export class Battle {
   }
   private think() {
     const p = this.players.red;
-    const affordable = p.hand
+    const hand = p.hand
       .map((id, slot) => ({
         id, slot,
         played: this.cardForPlay("red", id) ?? id,
         cost: this.cardCost("red", id),
         c: CARD_MAP[this.cardForPlay("red", id) ?? id],
-      }))
-      .filter((v) => v.cost !== null && v.cost <= p.elixir + 1e-6);
+      }));
+    const affordable = hand.filter((v) => v.cost !== null && v.cost <= p.elixir + 1e-6);
     if (!affordable.length) return;
     const kingDeadline = affordable.some(
       (a) => isDamageSpell(a.played) || a.played === "poison",
@@ -3220,6 +3221,11 @@ export class Battle {
     }
     if (!threat && p.elixir < 6 && this.mode !== "training" && !hasSpellTarget)
       return;
+    const reinforcement = !threat ? spawnerPlan({
+      team: "red", cards: hand, remaining: this.remaining, overtime: this.time >= 180,
+      entities: this.entities, projectiles: this.projectiles, areas: this.areas,
+      legal: (card, point) => this.canPlace("red", card, point.x, point.y).ok,
+    }) : undefined;
     const collectors = new Map(
       affordable
         .filter((a) => a.played === "elixir-collector")
@@ -3230,6 +3236,8 @@ export class Battle {
           legal: (point) => this.canPlace("red", a.played, point.x, point.y).ok,
         })]),
     );
+    if (reinforcement && p.elixir + 1e-6 < reinforcement.requiredElixir &&
+        !hasSpellTarget && ![...collectors.values()].some(Boolean)) return;
     const scored = affordable
       .map((a) => {
         const jitter = this.random() * 2;
@@ -3237,6 +3245,8 @@ export class Battle {
         const target = spellTargets.get(a.id);
         if (a.played === "elixir-collector")
           score = collectors.get(a.id) ? 4 + jitter * 0.1 : -Infinity;
+        else if (reinforcement?.id === a.id && p.elixir + 1e-6 >= reinforcement.requiredElixir)
+          score = 4 + jitter * 0.1;
         else if (a.c.kind === "spell") {
           if (optimizedSpell(a.played))
             score = target ? target.score + jitter * 0.1 : -Infinity;
@@ -3285,8 +3295,9 @@ export class Battle {
     if (a.c.kind === "building") {
       const lure = buildingLures.get(a.id);
       const economy = collectors.get(a.id);
-      x = economy?.x ?? lure?.x ?? (a.played === "mortar" ? lane : 9);
-      y = economy?.y ?? lure?.y ?? (a.played === "mortar" ? 14 : 10);
+      const support = reinforcement?.id === a.id ? reinforcement.point : undefined;
+      x = economy?.x ?? support?.x ?? lure?.x ?? (a.played === "mortar" ? lane : 9);
+      y = economy?.y ?? support?.y ?? lure?.y ?? (a.played === "mortar" ? 14 : 10);
     }
     const intercept =
       threat && a.c.kind === "troop"
