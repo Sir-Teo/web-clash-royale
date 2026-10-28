@@ -193,6 +193,8 @@ it("rejects an enemy ground screen but does not count hidden Tesla or air units 
 
 it("continues ordinary offense when the siege cannot acquire a Crown through a ground screen", () => {
   const battle = setup();
+  // Golem now has a separate savings policy; isolate ordinary offense here.
+  battle.players.red.hand[2] = "pekka";
   unit(battle, "cannon", "blue", 9, 18);
   expect(siegePlan(context(battle))).toBeUndefined();
   think(battle);

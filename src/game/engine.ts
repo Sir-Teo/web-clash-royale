@@ -37,6 +37,7 @@ import { siegePlan, isSiegeCard } from "./siege-targeting";
 import { minerTarget } from "./miner-targeting";
 import { barrelTarget } from "./barrel-targeting";
 import { graveyardPlan } from "./graveyard-targeting";
+import { armyPlan, isArmyCard } from "./army-targeting";
 import { meleeInterceptTarget } from "./melee-intercept";
 import { finishesKingBefore } from "./king-spell-race";
 import { createKingDefense } from "./king-defense";
@@ -3241,7 +3242,13 @@ export class Battle {
       entities: this.entities, projectiles: this.projectiles, areas: this.areas,
       legal: (card, point) => this.canPlace("red", card, point.x, point.y).ok,
     }) : undefined;
-    const pressurePlan = [reinforcement, siege, graveyardPressure]
+    const army = !threat && currentPlacementPolicy ? armyPlan({
+      team: "red", rulesVersion: this.rulesVersion, cards: hand, remaining: this.remaining,
+      elixir: p.elixir, elixirRate: this.multiplier / 2.8,
+      entities: this.entities, projectiles: this.projectiles, areas: this.areas,
+      legal: (card, point) => this.canPlace("red", card, point.x, point.y).ok,
+    }) : undefined;
+    const pressurePlan = [reinforcement, siege, graveyardPressure, army]
       .filter((plan) => plan !== undefined)
       .sort((a, b) => a.requiredElixir - b.requiredElixir)[0];
     const collectors = new Map(
@@ -3274,7 +3281,8 @@ export class Battle {
     );
     if (pressurePlan && p.elixir + 1e-6 < pressurePlan.requiredElixir &&
         !hasSpellTarget && ![...collectors.values()].some(Boolean) &&
-        ![...miners.values(), ...barrels.values()].some((target) => target && target.score > 4)) return;
+        ![...miners.values(), ...barrels.values()].some((target) => target &&
+          (target.score > 4 || pressurePlan === army))) return;
     const scored = affordable
       .map((a) => {
         const jitter = this.random() * 2;
@@ -3289,6 +3297,7 @@ export class Battle {
         else if (!threat && currentPlacementPolicy && a.played === "goblin-barrel")
           score = barrels.get(a.id) ? barrels.get(a.id)!.score + jitter * 0.1 : -Infinity;
         else if (!threat && currentPlacementPolicy && a.played === "graveyard") score = -Infinity;
+        else if (!threat && currentPlacementPolicy && isArmyCard(a.played)) score = -Infinity;
         else if (!threat && currentPlacementPolicy && isSiegeCard(a.played)) score = -Infinity;
         else if (a.c.kind === "spell") {
           if (optimizedSpell(a.played))
@@ -3349,6 +3358,11 @@ export class Battle {
       x = tunnel.point.x;
       y = tunnel.point.y;
     }
+    const armyPoint = a.c.kind === "troop" && pressurePlan?.id === a.id ? pressurePlan.point : undefined;
+    if (armyPoint) {
+      x = armyPoint.x;
+      y = armyPoint.y;
+    }
     const intercept =
       threat && a.c.kind === "troop"
         ? meleeInterceptTarget(
@@ -3364,7 +3378,7 @@ export class Battle {
       x = intercept.x;
       y = intercept.y;
     }
-    if (a.c.kind !== "spell" && !intercept && !pressurePoint && !tunnel) {
+    if (a.c.kind !== "spell" && !intercept && !pressurePoint && !tunnel && !armyPoint) {
       // A building can still occupy the preferred tile when the deck cycles.
       // Try nearby legal tiles instead of wasting every subsequent decision.
       const point = [

@@ -123,6 +123,7 @@ function setup() {
   for (const t of battle.entities) t.active = false;
   const scenario = (document.querySelector("#scenario") as HTMLSelectElement)
     .value;
+  (document.querySelector("#five") as HTMLButtonElement).hidden = !scenario.startsWith("ai-army-");
   (document.querySelector("#lose-target") as HTMLElement).hidden = scenario !== "target-loss";
   (document.querySelector("#preload-in") as HTMLElement).hidden = scenario !== "sparky-preload";
   (document.querySelector("#open-deployment") as HTMLElement).hidden = scenario !== "ground-deployment";
@@ -227,6 +228,30 @@ function setup() {
       : ["freeze", "clone", "pekka", "pekka"];
     battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
     battle.players.red.elixir = fast ? 4 : race ? 6 : 4;
+  } else if (scenario.startsWith("ai-army-")) {
+    const card = scenario.endsWith("hound") ? "lava-hound"
+      : ["ai-army-musketeers", "ai-army-mirror", "ai-army-blast"].includes(scenario) ? "three-musketeers" : "golem";
+    for (const tower of battle.entities.filter(e => e.team === "blue" && !e.king)) tower.active = true;
+    battle.players.red.hand = [card, "knight", "skeletons", "archers"];
+    battle.players.red.queue = ["pekka", "mirror", "rocket", "lightning"];
+    battle.players.red.elixir = scenario.endsWith("saving") || scenario.endsWith("pressure") ? 6 : Math.min(10, CARD_MAP[card].cost + 2);
+    if (scenario.endsWith("pressure")) {
+      battle.players.red.hand[3] = "musketeer";
+      for (const body of unit("baby-dragon", "blue", 4, 10)) Object.assign(body, { active: false, speed: 0 });
+    } else if (scenario.endsWith("late")) {
+      battle.tick = 166 * 30;
+      battle.players.red.elixir = 6;
+    } else {
+      battle.entities.find(e => e.team === "blue" && e.lane === (scenario.endsWith("blast") ? "left" : "right"))!.hp = 2500;
+      if (scenario.endsWith("mirror")) {
+        battle.players.red.hand[0] = "mirror";
+        battle.players.red.lastPlayed = "three-musketeers";
+        battle.players.red.elixir = 10;
+      } else if (scenario.endsWith("blast")) {
+        cast("rocket", "blue", 3.5, 9);
+        battle.projectiles.find(p => p.style === "rocket")!.delay = 2;
+      }
+    }
   } else if (scenario.startsWith("ai-graveyard-")) {
     for (const tower of battle.entities.filter(e => e.team === "blue" && !e.king)) tower.active = true;
     battle.players.red.hand = ["graveyard", "knight", "golem", "three-musketeers"];
@@ -305,6 +330,7 @@ function setup() {
       battle.players.red.hand[3] = "musketeer";
       for (const entity of unit("baby-dragon", "blue", 4, 10)) Object.assign(entity, { active: false, speed: 0 });
     } else if (scenario.endsWith("screen")) {
+      battle.players.red.hand = [card, "knight", "pekka", "mirror"];
       for (const entity of unit("cannon", "blue", 9, 18)) entity.active = false;
     } else if (scenario.endsWith("blast")) {
       battle.entities.find(e => e.team === "blue" && e.lane === "left")!.hp = 1000;
@@ -320,7 +346,11 @@ function setup() {
       for (const entity of unit("knight", "blue", 4, 10))
         Object.assign(entity, { active: false, speed: 0 });
     } else if (scenario.endsWith("blast")) cast("rocket", "blue", 9, 10);
-    else if (scenario.endsWith("late")) battle.tick = 153 * 30;
+    else if (scenario.endsWith("late")) {
+      battle.tick = 153 * 30;
+      // Keep this late-hut check free of a second, faster army investment.
+      battle.players.red.hand[3] = "mirror";
+    }
   } else if (scenario.startsWith("ai-collector-")) {
     battle.players.red.hand = ["elixir-collector", "rage", "heal", "clone"];
     battle.players.red.queue = ["rage", "heal", "clone", "elixir-collector"];
@@ -1597,6 +1627,7 @@ function advance(ticks: number) {
 document.querySelector("#step")!.addEventListener("click", () => advance(3));
 document.querySelector("#tick")!.addEventListener("click", () => advance(1));
 document.querySelector("#second")!.addEventListener("click", () => advance(30));
+document.querySelector("#five")!.addEventListener("click", () => advance(150));
 document.querySelector("#kill-tombstone")!.addEventListener("click", () => {
   const stone = battle.entities.find((e) => e.team === "blue" && e.card === "tombstone" && e.hp > 0);
   if (!stone) return;
@@ -2419,6 +2450,11 @@ function render(now: number) {
       minerHits: battle.events.filter(event => event.type === "hit" && event.card === "miner"),
       graveyardHits: battle.events.filter(event => event.type === "hit" && event.card === "skeletons" && event.team === "red"),
       enemyKingActive: battle.entities.some(e => e.team === "blue" && e.king && e.active),
+      armyBodies: battle.entities.filter(e => e.team === "red" && e.hp > 0 && ["golem", "lava-hound", "musketeer"].includes(e.card))
+        .map(e => ({ id: e.id, card: e.card, x: e.x, y: e.y, hp: e.hp, maxHp: e.maxHp,
+          deploy: e.deploy, target: e.target, native: !!(arena as any).units.get(e.id)?.sprite })),
+      armyHits: battle.events.filter(e => e.type === "hit" && e.team === "red" && ["golem", "lava-hound", "musketeer"].includes(e.card ?? "")),
+      hostileRockets: battle.projectiles.filter(p => p.team === "blue" && p.style === "rocket").length,
       barrelHits: battle.events.filter(event => event.type === "hit" && event.card === "goblins" && event.team === "red"),
       barrelChildren: battle.entities.filter(e => e.card === "goblins" && e.team === "red")
         .map(e => ({ id: e.id, x: e.x, y: e.y, hp: e.hp, deploy: e.deploy, target: e.target,
