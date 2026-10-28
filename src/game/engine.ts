@@ -194,6 +194,9 @@ export interface Entity extends Point {
   nativeBanditGoal?: true;
   /** Rules 50: vulnerable native startup before entering dash travel. */
   nativeBanditStartup?: true;
+  /** Rules 51: a distant follow-up can charge before ordinary recovery. */
+  nativeBanditReentry?: true;
+  dashReentry?: true;
   dashCharge?: { target: number; remainingMs: number; carry: number; started?: true };
   /** Existing source Tornado attraction prevents or cancels startup. */
   dashAttraction?: number;
@@ -291,7 +294,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -381,7 +384,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 50;
+    this.rulesVersion = r?.version ?? 51;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -894,6 +897,7 @@ export class Battle {
       ...(this.rulesVersion >= 48 && id === "bandit" ? { nativeBanditDash: true as const } : {}),
       ...(this.rulesVersion >= 49 && id === "bandit" ? { nativeBanditGoal: true as const } : {}),
       ...(this.rulesVersion >= 50 && id === "bandit" ? { nativeBanditStartup: true as const } : {}),
+      ...(this.rulesVersion >= 51 && id === "bandit" ? { nativeBanditReentry: true as const } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
@@ -1867,13 +1871,15 @@ export class Battle {
         resetMovement(e);
         continue;
       }
-      if (e.card === "bandit" && (e.dashCooldown ?? 0) <= 1e-8 &&
-          !e.pendingAttack && e.cooldown <= 1e-8) {
+      if (e.dashReentry && this.inRange(e, target)) e.dashReentry = undefined;
+      if (e.card === "bandit" && !e.pendingAttack &&
+          (e.dashReentry || ((e.dashCooldown ?? 0) <= 1e-8 && e.cooldown <= 1e-8))) {
         const distance = dist(e, target) - target.radius;
         const admitted = e.nativeBanditStartup
           ? !e.dashAttraction && banditChargeInRange(e, target)
           : distance >= bandit.dash.minimum && distance <= bandit.dash.maximum;
         if (admitted) {
+          if (e.dashReentry) e.dashReentry = undefined;
           if (e.nativeBanditStartup) {
             const frameTime = bandit.dash.startup.stepMs / 1000;
             const before = (this.tick - 1) * STEP;
@@ -1928,17 +1934,17 @@ export class Battle {
         charge.remainingMs - Math.round(bandit.dash.startup.stepMs * hitSpeed));
       if (charge.remainingMs <= 0) {
         e.dashCharge = undefined;
-        this.beginBanditDash(e, target);
+        this.beginBanditDash(e, target, e.nativeBanditReentry ? charge.carry : 0);
         break;
       }
     }
     resetMovement(e);
     return true;
   }
-  private beginBanditDash(e: Entity, target: Entity) {
+  private beginBanditDash(e: Entity, target: Entity, carry = 0) {
     e.dash = { target: target.id, elapsed: 0,
       remaining: bandit.dash.maximum / banditDashSpeed(e) + STEP,
-      ...(e.nativeBanditGoal ? { goal: banditDashGoal(e, target), carry: 0 } : {}) };
+      ...(e.nativeBanditGoal ? { goal: banditDashGoal(e, target), carry } : {}) };
     resetMovement(e);
     if (!e.nativeBanditStartup) this.emitAudio("dash-start", e.team, "bandit", e.id);
     this.emitAudio("dash-travel", e.team, "bandit", e.id);
@@ -1984,6 +1990,7 @@ export class Battle {
   }
   private finishBanditDash(e: Entity, target: Entity | undefined, hit: boolean) {
     e.dash = undefined;
+    if (e.nativeBanditReentry) e.dashReentry = true;
     e.dashCooldown = bandit.dash.cooldown;
     e.cooldown = e.interval;
     resetMovement(e);

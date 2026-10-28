@@ -13,6 +13,7 @@ const paths = [
   "reference/client/dash-goals-native-trace.json",
   "reference/client/dash-admission-native-trace.json",
   "reference/client/dash-startup-native-trace.json",
+  "reference/client/dash-recovery-native-trace.json",
 ];
 const inputs = await Promise.all(paths.map((path) => readFile(path)));
 const card = csvRows(inputs[0].toString()).find((row) => row.Name === "Assassin");
@@ -22,6 +23,11 @@ const portraits = parseSC(inputs[4]);
 const native = JSON.parse(inputs[5]);
 const goals = JSON.parse(inputs[6]);
 const admission = JSON.parse(inputs[7]), startup = JSON.parse(inputs[8]);
+const recovery = JSON.parse(inputs[9]);
+if (createHash("sha256").update(inputs[9]).digest("hex") !== "678a1a62499b90d53da7d1ea286b23ebd9b3da5f6b5b3dd51db1acc112341fd0" ||
+    recovery.profiles.loadTimeMs !== 600 || !recovery.cases.some((row) => row.fields.scenario === "chain" &&
+      row.frames[26].hit && row.frames[27].clockMs === 950 && row.frames[27].reloadMs === 550))
+  throw new Error("Recheck native Bandit immediate reentry evidence");
 if (createHash("sha256").update(inputs[7]).digest("hex") !== "a772e93de669715acf0c798fce3c6cae75e0d425442ac1d2870e11e1ccc0dbce" ||
     createHash("sha256").update(inputs[8]).digest("hex") !== "cce10a224850d79720d667d507222f8bb381169e7f65720fd376376b5d9fff63" ||
     admission.profiles.dashMinimum !== 4000 || startup.profiles.retentionMaximum !== 7500 ||
@@ -122,6 +128,13 @@ await writeFile("reference/client/bandit-manifest.json", JSON.stringify({
     cancellation: "0x25d4b0..0x25d6f2",
     stepMs: startup.stepMs,
     chargeMs: startup.profiles.dashCooldownMs,
+  },
+  nativeReentry: {
+    attackUpdate: "0x25c60c..0x25d068",
+    landingReload: "0x25c4fa..0x25c536",
+    admission: "0x25d852..0x25d946",
+    nextUpdateClockMs: 950,
+    nextUpdateReloadMs: 550,
   },
   output: { path: outputPath, sha256: sha256(output) },
 }, null, 2) + "\n");

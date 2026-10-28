@@ -38,6 +38,10 @@
     {
       "path": "reference/client/dash-startup-native-trace.json",
       "sha256": "cce10a224850d79720d667d507222f8bb381169e7f65720fd376376b5d9fff63"
+    },
+    {
+      "path": "reference/client/dash-recovery-native-trace.json",
+      "sha256": "678a1a62499b90d53da7d1ea286b23ebd9b3da5f6b5b3dd51db1acc112341fd0"
     }
   ],
   "nativeDash": {
@@ -61,6 +65,13 @@
     "cancellation": "0x25d4b0..0x25d6f2",
     "stepMs": 50,
     "chargeMs": 1000
+  },
+  "nativeReentry": {
+    "attackUpdate": "0x25c60c..0x25d068",
+    "landingReload": "0x25c4fa..0x25c536",
+    "admission": "0x25d852..0x25d946",
+    "nextUpdateClockMs": 950,
+    "nextUpdateReloadMs": 550
   },
   "output": {
     "path": "src/game/bandit-data.json",
