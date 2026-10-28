@@ -108,6 +108,10 @@ def capture(env, context):
         from lib.projectile_hit_damage_probe import capture
 
         return capture(env, context)
+    if env["args"].health_shield:
+        from lib.health_shield_probe import capture
+
+        return capture(env, context)
     names = {
         "characters": ["Knight", "Archer", "Musketeer", "Giant", "HogRider", "Balloon", "Prince", "InfernoDragon", "ElectroWizard"],
         "buildings": ["Cannon", "Mortar", "InfernoTower", "KingTower", "PrincessTower"],
