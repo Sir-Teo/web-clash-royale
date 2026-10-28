@@ -13,6 +13,7 @@ export interface HealthPacket extends DamagePacket {
   healing?: boolean;
   bypassShield?: boolean;
   bypassHidden?: boolean;
+  bypassDash?: boolean;
 }
 
 /** Released damage and current status clocks at fixed positions. */
@@ -140,6 +141,7 @@ export function poisonDamagePackets(
         born: 0,
         order: -1,
         ...(target.nativeRetainedPoison ? { bypassHidden: true } : {}),
+        ...(target.nativeBanditDash ? { bypassDash: true } : {}),
       });
     }
     if (status.remaining < 1e-8) status = undefined;

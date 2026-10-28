@@ -9,12 +9,20 @@ const paths = [
   "reference/sc/chr_bandit.bin",
   "reference/sc/chr_bandit_tex.png",
   "reference/sc/ui-spells.bin",
+  "reference/client/dash-lifecycle-native-trace.json",
 ];
 const inputs = await Promise.all(paths.map((path) => readFile(path)));
 const card = csvRows(inputs[0].toString()).find((row) => row.Name === "Assassin");
 const unit = csvRows(inputs[1].toString()).find((row) => row.Name === "Assassin");
 const model = parseSC(inputs[2]);
 const portraits = parseSC(inputs[4]);
+const native = JSON.parse(inputs[5]);
+if (createHash("sha256").update(inputs[5]).digest("hex") !== "91a9123774e707aadf59a1d706b9fa5af4e3695d6e3ba94415c36da6011a74eb" ||
+    native.profiles.sourceJumpSpeed !== 500 || native.stepMs !== 50 ||
+    !native.cases.some((row) => row.fields.damage === 121 && row.frames.some((frame) =>
+      frame.state === 4 && frame.hp === 629 && frame.ordinaryHitBlocked &&
+      frame.calls.movementFrame === 1 && frame.events.some((event) => event[0] === "hp"))))
+  throw new Error("Recheck native Bandit movement and retained Poison evidence");
 if (card?.Rarity !== "Legendary" || card.ManaCost !== "3" ||
     card.SummonCharacter !== "Assassin" || card.IconFile !== "bandit" ||
     unit?.Hitpoints !== "750" || unit.Damage !== "160" ||
@@ -46,7 +54,8 @@ const output = Buffer.from(JSON.stringify({
     maximum: Number(unit.DashMaxRange) / 1000,
     damage: Number(unit.DashDamage),
     cooldown: Number(unit.DashCooldown) / 1000,
-    speed: Number(unit.JumpSpeed) / 60,
+    speed: native.profiles.sourceJumpSpeed / 1000 / (native.stepMs / 1000),
+    legacySpeed: Number(unit.JumpSpeed) / 60,
     filter: unit.DashFilter,
     startEffect: unit.DashStartEffect,
     travelEffect: unit.DashEffect,
@@ -62,6 +71,14 @@ await writeFile("reference/client/bandit-manifest.json", JSON.stringify({
   commit: "7fc7687e6de74690e902543ee4b59f562121e225",
   binarySource: "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_bandit",
   inputs: paths.map((path, i) => ({ path, sha256: sha256(inputs[i]) })),
+  nativeDash: {
+    stateEntry: "0x25cdf4 -> 0x214f60",
+    movementFrame: "0x260c2c -> 0x2613f6",
+    stepMs: native.stepMs,
+    sourceUnitsPerStep: native.profiles.sourceJumpSpeed,
+    unitsPerTile: 1000,
+    retainedPoison: "0x218f48 -> 0x2601ae -> 0x2602d0",
+  },
   output: { path: outputPath, sha256: sha256(output) },
 }, null, 2) + "\n");
 console.log("Imported archived Bandit dash and model.");

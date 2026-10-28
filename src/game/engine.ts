@@ -1,5 +1,6 @@
 import { projectileCrownDamage } from "./crown-damage";
 import { poisonTickDamage } from "./poison-damage";
+import { banditDashSpeed } from "./bandit-dash";
 import { barrelFormation } from "./barrel-formation";
 import { distantTarget, spawnLane, type NativeLane } from "./distant-targets";
 import { attackReach, minimumAttackDistance, NATIVE_RANGE_RADIUS_FACTOR } from "./attack-range";
@@ -186,6 +187,8 @@ export interface Entity extends Point {
   nativeBuffCrownDamage?: true;
   /** Rules 47: retained Poison still ticks after Tesla finishes burrowing. */
   nativeRetainedPoison?: true;
+  /** Rules 48: native dash travel and retained-Poison damage during travel. */
+  nativeBanditDash?: true;
   dash?: { target: number; elapsed: number; remaining: number };
   dashCooldown?: number;
   attack: number;
@@ -280,7 +283,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -370,7 +373,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 47;
+    this.rulesVersion = r?.version ?? 48;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -880,6 +883,7 @@ export class Battle {
       ...(this.rulesVersion >= 43 ? { nativeProjectileStep: true as const } : {}),
       ...(lostAttack ? { nativeLostAttack: lostAttack } : {}),
       ...(this.rulesVersion >= 47 && id === "tesla" ? { nativeRetainedPoison: true as const } : {}),
+      ...(this.rulesVersion >= 48 && id === "bandit" ? { nativeBanditDash: true as const } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
@@ -1326,7 +1330,7 @@ export class Battle {
       if (status.elapsed + 1e-8 >= poison.damageInterval) {
         status.elapsed -= poison.damageInterval;
         const damage = poisonTickDamage(entity);
-        this.hurt(entity, damage, false, !!entity.nativeRetainedPoison);
+        this.hurt(entity, damage, false, !!entity.nativeRetainedPoison, !!entity.nativeBanditDash);
       }
       if (status.remaining < 1e-8) entity.poison = undefined;
     }
@@ -1848,7 +1852,7 @@ export class Battle {
         const distance = dist(e, target) - target.radius;
         if (distance >= bandit.dash.minimum && distance <= bandit.dash.maximum) {
           e.dash = { target: target.id, elapsed: 0,
-            remaining: bandit.dash.maximum / bandit.dash.speed + STEP };
+            remaining: bandit.dash.maximum / banditDashSpeed(e) + STEP };
           resetMovement(e);
           this.emitAudio("dash-start", e.team, "bandit", e.id);
           this.emitAudio("dash-travel", e.team, "bandit", e.id);
@@ -1902,7 +1906,7 @@ export class Battle {
     }
     const dx = target.x - e.x, dy = target.y - e.y;
     const distance = Math.hypot(dx, dy) || 1;
-    const travel = Math.min(distance, bandit.dash.speed * STEP);
+    const travel = Math.min(distance, banditDashSpeed(e) * STEP);
     e.x = clamp(e.x + dx / distance * travel, 0.5, 17.5);
     e.y = clamp(e.y + dy / distance * travel, 0.6, 31.4);
     dash.elapsed += STEP;
@@ -2647,8 +2651,8 @@ export class Battle {
       }
     }
   }
-  private hurt(e: Entity, amount: number, decay = false, bypassHidden = false) {
-    if (e.hp <= 0 || (!decay && ((!bypassHidden && this.isHidden(e)) || e.dash))) return;
+  private hurt(e: Entity, amount: number, decay = false, bypassHidden = false, bypassDash = false) {
+    if (e.hp <= 0 || (!decay && ((!bypassHidden && this.isHidden(e)) || (!bypassDash && e.dash)))) return;
     if (e.shield && !decay) {
       e.shield = Math.max(0, e.shield - amount);
       if (e.shield === 0) {

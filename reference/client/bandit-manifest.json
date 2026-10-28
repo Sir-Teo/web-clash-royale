@@ -22,10 +22,22 @@
     {
       "path": "reference/sc/ui-spells.bin",
       "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    },
+    {
+      "path": "reference/client/dash-lifecycle-native-trace.json",
+      "sha256": "91a9123774e707aadf59a1d706b9fa5af4e3695d6e3ba94415c36da6011a74eb"
     }
   ],
+  "nativeDash": {
+    "stateEntry": "0x25cdf4 -> 0x214f60",
+    "movementFrame": "0x260c2c -> 0x2613f6",
+    "stepMs": 50,
+    "sourceUnitsPerStep": 500,
+    "unitsPerTile": 1000,
+    "retainedPoison": "0x218f48 -> 0x2601ae -> 0x2602d0"
+  },
   "output": {
     "path": "src/game/bandit-data.json",
-    "sha256": "f6b26da98613f0571ab86a45889aae70f3d27abe9037740149fc4e8db744173b"
+    "sha256": "025df779bb7f1f04e4157ff1ec2c689cdc34d31b430a5a7c0ced75bb69031aec"
   }
 }
