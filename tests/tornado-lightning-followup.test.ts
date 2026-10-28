@@ -170,20 +170,19 @@ describe("Tornado changes friendly Lightning finishers", () => {
     s.battle.projectiles.push({
       id: 901,
       team: s.team,
-      source: 0,
+      source: s.battle.entities.find((e) => e.team === s.team && e.king)!.id,
       x: s.king.x,
       y: s.king.y,
       tx: s.king.x,
       ty: s.king.y,
-      target: null,
+      target: s.king.id,
       damage: 100,
       duration: 0.01,
       remaining: 0.01,
-      splash: 0.1,
+      splash: 0,
       air: true,
-      style: "zap",
+      style: "cannonball",
       stun: 0,
-      towerDamageFraction: 1,
     });
     expect(s.forecast().canFinishWithLightning).toBe(true);
     expect(s.forecast().baseline).toBeUndefined();

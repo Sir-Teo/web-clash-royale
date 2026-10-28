@@ -10,6 +10,7 @@ const value = (id: string) =>
 let battle: Battle,
   victim: Entity,
   forecast = 0,
+  replayBuilds = 0,
   renderedTime = 0;
 const freeze = () => {
   for (const e of battle.entities) e.active = false;
@@ -29,7 +30,7 @@ function setup() {
     "log",
     "knight",
     "archers",
-    "mirror",
+    "zap",
   ];
   let seed = 1;
   do {
@@ -38,13 +39,14 @@ function setup() {
   battle = new Battle({
     replay: {
       ...battle.exportReplay(),
-      version: value("rules") === "44" ? 44 : 43,
+      version: Number(value("rules")) as 43 | 44 | 45,
     },
   });
   freeze();
   for (let n = 0; n < 120; n++) battle.step();
   victim = target();
   forecast = 0;
+  replayBuilds = 0;
   renderedTime = battle.time;
   arena.setBattle(battle);
 }
@@ -83,6 +85,7 @@ document.querySelector("#replay")!.addEventListener("click", () => {
   freeze();
   while (battle.tick < tick) battle.step();
   victim = target();
+  replayBuilds++;
   arena.setBattle(battle);
   renderedTime = battle.time;
 });
@@ -99,6 +102,8 @@ function render() {
     forecast,
     damage: victim.maxHp - victim.hp,
     native: !!victim.nativeProjectileCrownDamage,
+    areaNative: !!victim.nativeAreaCrownDamage,
+    replayBuilds,
     effects: arena.loadedEffects,
     shots: battle.projectiles.length,
     areas: battle.areas.length,

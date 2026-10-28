@@ -22,6 +22,7 @@
     "assets:attack-clock": "node scripts/import-attack-clock.mjs",
     "assets:primary-score": "node scripts/import-primary-score.mjs",
     "assets:primary-geometry": "node scripts/import-primary-geometry.mjs",
+    "assets:area-crown-damage": "node scripts/import-area-crown-damage.mjs",
     "assets:crown-damage": "node scripts/import-crown-damage.mjs",
     "assets:projectile-range": "node scripts/import-projectile-range.mjs",
     "assets:projectile-volley": "node scripts/import-projectile-volley.mjs",

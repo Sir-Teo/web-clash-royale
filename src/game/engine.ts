@@ -179,6 +179,8 @@ export interface Entity extends Point {
   nativeProjectileStep?: true;
   /** Rules 44: native integer projectile damage against Crown Towers. */
   nativeProjectileCrownDamage?: true;
+  /** Rules 45: native integer area damage against Crown Towers. */
+  nativeAreaCrownDamage?: true;
   dash?: { target: number; elapsed: number; remaining: number };
   dashCooldown?: number;
   attack: number;
@@ -273,7 +275,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -363,7 +365,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 44;
+    this.rulesVersion = r?.version ?? 45;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -472,6 +474,7 @@ export class Battle {
       card: "tower",
       kind: "tower",
       ...(this.rulesVersion >= 44 ? { nativeProjectileCrownDamage: true as const } : {}),
+      ...(this.rulesVersion >= 45 ? { nativeAreaCrownDamage: true as const } : {}),
       hp: king ? kingHp : 3052,
       maxHp: king ? kingHp : 3052,
       radius,
@@ -1987,7 +1990,7 @@ export class Battle {
       if (!this.validTarget(e, target) ||
           dist(e, target) >= electroWizard.deployZap.radius + target.radius)
         continue;
-      this.hurt(target, damage * (target.kind === "tower" ? 0.4 : 1));
+      this.hurt(target, projectileCrownDamage("zap", target, damage, 0.4));
       if (target.hp > 0 && !target.dash) {
         target.stun = Math.max(target.stun, electroWizard.deployZap.stun);
         this.cancelAttack(target);

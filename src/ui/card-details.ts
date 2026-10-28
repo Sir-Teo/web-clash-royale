@@ -37,7 +37,7 @@ import electroWizard from "../game/electro-wizard-data.json" with { type: "json"
 const crownDamage = (id: CardId, fraction: number) =>
   projectileCrownDamage(
     id,
-    { kind: "tower", nativeProjectileCrownDamage: true },
+    { kind: "tower", nativeProjectileCrownDamage: true, nativeAreaCrownDamage: true },
     CARD_MAP[id].damage,
     fraction,
   );

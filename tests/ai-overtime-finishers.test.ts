@@ -110,7 +110,7 @@ describe("AI overtime finishers", () => {
     finish(battle);
     expect(battle.winner).toBe("red");
     expect(battle.reason).toBe("Tiebreaker");
-    expect(princess.hp).toBeCloseTo(23.2);
+    expect(princess.hp).toBe(23);
   });
 
   it("treats a simultaneous Princess trade as survival, then continues playing", () => {

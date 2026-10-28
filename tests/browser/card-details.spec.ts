@@ -72,7 +72,7 @@ test("spell details describe their actual damage, allegiance and timed effects",
       "arrows",
       { "Volley damage": "366", "Crown Tower damage": "147", Waves: "1" },
     ],
-    ["zap", { Damage: "192", "Crown Tower damage": number(CARD_MAP.zap.damage * 0.4), Stun: "0.5 s" }],
+    ["zap", { Damage: "192", "Crown Tower damage": "77", Stun: "0.5 s" }],
   ] as const;
   for (const [id, expected] of cases) {
     await page.locator(`#deck-preview [data-card-info="${id}"]`).click();

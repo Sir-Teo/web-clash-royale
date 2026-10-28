@@ -43,8 +43,14 @@ test("Crown damage and forecasts agree in current and historical rendered battle
         expect(impact.shots).toBe(0);
         expect(impact.areas).toBe(0);
         await page.locator("#replay").click();
+        await expect
+          .poll(async () => (await state()).replayBuilds)
+          .toBe(impact.replayBuilds + 1);
         await expect.poll(async () => (await state()).hp).toBe(impact.hp);
-        expect(await state()).toEqual(impact);
+        expect(await state()).toEqual({
+          ...impact,
+          replayBuilds: impact.replayBuilds + 1,
+        });
         traces.push({ version, team, card, impact });
       }
     }

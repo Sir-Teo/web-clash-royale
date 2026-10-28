@@ -78,7 +78,7 @@ describe("AI damaging spell targets", () => {
   it.each(["fireball", "arrows", "zap", "rocket"] as const)(
     "uses %s's actual Crown Tower damage to identify a lethal target",
     (card) => {
-      const damage = card === "zap" ? CARD_MAP[card].damage * 0.4 : Math.ceil(CARD_MAP[card].damage * 40 / 100);
+      const damage = Math.ceil(CARD_MAP[card].damage * 40 / 100);
       expect(
         damageSpellTarget(card, "red", [tower(damage)])?.lethalTower,
       ).toBeDefined();
