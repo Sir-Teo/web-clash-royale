@@ -116,6 +116,10 @@ def capture(env, context):
         from lib.area_crown_probe import capture
 
         return capture(env, context)
+    if env["args"].buff_ticks:
+        from lib.buff_tick_probe import capture
+
+        return capture(env, context)
     names = {
         "characters": ["Knight", "Archer", "Musketeer", "Giant", "HogRider", "Balloon", "Prince", "InfernoDragon", "ElectroWizard"],
         "buildings": ["Cannon", "Mortar", "InfernoTower", "KingTower", "PrincessTower"],

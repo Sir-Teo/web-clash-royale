@@ -45,6 +45,7 @@ parser.add_argument("--projectile-bookkeeping", action="store_true", help="Execu
 parser.add_argument("--projectile-hit-damage", action="store_true", help="Execute per-candidate projectile damage component gate, Crown amount and hit request")
 parser.add_argument("--health-shield", action="store_true", help="Execute null-source damage gates, shield absorption and bounded HP reduction")
 parser.add_argument("--area-crown", action="store_true", help="Execute area pulse base/Crown amounts, world request and target damage choice")
+parser.add_argument("--buff-ticks", action="store_true", help="Execute periodic buff clocks, refresh and damage/heal amount requests")
 parser.add_argument("--attack-range", action="store_true", help="Capture maximum attack geometry across troop, building and Crown Tower profiles")
 parser.add_argument("--minimum-range", action="store_true", help="Capture minimum-range boundaries instead of maximum-range boundaries")
 parser.add_argument("--sight-range", action="store_true", help="Capture native sight getters and the bounded candidate sight gate")
@@ -174,6 +175,10 @@ if args.area_crown:
     area_modes = {"library", "check", "attack_loop", "first_attacks", "area_crown"}
     if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in area_modes):
         parser.error("--area-crown requires --attack-loop --first-attacks without another capture mode")
+if args.buff_ticks:
+    buff_modes = {"library", "check", "attack_loop", "first_attacks", "buff_ticks"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in buff_modes):
+        parser.error("--buff-ticks requires --attack-loop --first-attacks without another capture mode")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()
