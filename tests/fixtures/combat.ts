@@ -227,6 +227,24 @@ function setup() {
       : ["freeze", "clone", "pekka", "pekka"];
     battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
     battle.players.red.elixir = fast ? 4 : race ? 6 : 4;
+  } else if (scenario.startsWith("ai-siege-")) {
+    const card = scenario.includes("mortar") ? "mortar" : "x-bow";
+    battle.players.red.hand = [card, "knight", "golem", "three-musketeers"];
+    battle.players.red.queue = ["knight", "musketeer", "archers", "golem"];
+    battle.players.red.elixir = scenario.endsWith("saving") || scenario.endsWith("pressure") ? 6 : CARD_MAP[card].cost + 2;
+    if (scenario.endsWith("weak")) battle.entities.find(e => e.team === "blue" && e.lane === "right")!.hp = 1000;
+    else if (scenario.endsWith("king")) {
+      const tower = battle.entities.find(e => e.team === "blue" && e.lane === "left")!;
+      (battle as unknown as { hurt: (body: Entity, damage: number) => void }).hurt(tower, tower.hp);
+    } else if (scenario.endsWith("pressure")) {
+      battle.players.red.hand[3] = "musketeer";
+      for (const entity of unit("baby-dragon", "blue", 4, 10)) Object.assign(entity, { active: false, speed: 0 });
+    } else if (scenario.endsWith("screen")) {
+      for (const entity of unit("cannon", "blue", 9, 18)) entity.active = false;
+    } else if (scenario.endsWith("blast")) {
+      battle.entities.find(e => e.team === "blue" && e.lane === "left")!.hp = 1000;
+      cast("rocket", "blue", 3.5, 14);
+    }
   } else if (scenario.startsWith("ai-spawner-")) {
     const card = scenario.endsWith("goblin") ? "goblin-hut"
       : scenario.endsWith("furnace") || scenario.endsWith("blast") ? "furnace" : "barbarian-hut";
@@ -2330,6 +2348,9 @@ function render(now: number) {
         (e) => e.type === "hit" && e.card === "hog-rider",
       ),
       elixir: battle.players.red.elixir,
+      enemyCrowns: battle.entities.filter(e => e.team === "blue" && e.kind === "tower")
+        .map(e => ({ id: e.id, x: e.x, y: e.y, hp: e.hp, maxHp: e.maxHp, king: !!e.king, lane: e.lane })),
+      siegeHits: battle.events.filter(event => event.type === "hit" && (event.card === "x-bow" || event.card === "mortar")),
       towers: battle.entities
         .filter((e) => e.team === "red" && e.kind === "tower")
         .map((e) => ({ hp: e.hp, maxHp: e.maxHp, lane: e.lane, king: e.king })),

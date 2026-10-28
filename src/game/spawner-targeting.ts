@@ -30,6 +30,7 @@ export interface SpawnerPlan {
 
 /** A quiet-field reinforcement plan can reserve elixir before a hut is affordable. */
 export function spawnerPlan(context: SpawnerContext): SpawnerPlan | undefined {
+  if (!context.cards.some((card) => pressureSpawners.has(card.played))) return;
   const { team, entities, projectiles, areas, legal } = context;
   if (
     context.overtime ||

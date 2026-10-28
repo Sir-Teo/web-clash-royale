@@ -33,6 +33,7 @@ import { defensiveThreats } from "./defensive-threats";
 import { buildingLureTarget } from "./building-lure";
 import { collectorTarget } from "./collector-targeting";
 import { spawnerPlan } from "./spawner-targeting";
+import { siegePlan, isSiegeCard } from "./siege-targeting";
 import { meleeInterceptTarget } from "./melee-intercept";
 import { finishesKingBefore } from "./king-spell-race";
 import { createKingDefense } from "./king-defense";
@@ -3226,6 +3227,14 @@ export class Battle {
       entities: this.entities, projectiles: this.projectiles, areas: this.areas,
       legal: (card, point) => this.canPlace("red", card, point.x, point.y).ok,
     }) : undefined;
+    const currentSiegePolicy = this.rulesVersion >= 56;
+    const siege = !threat && currentSiegePolicy ? siegePlan({
+      team: "red", cards: hand, remaining: this.remaining, overtime: this.time >= 180,
+      entities: this.entities, projectiles: this.projectiles, areas: this.areas,
+      legal: (card, point) => this.canPlace("red", card, point.x, point.y).ok,
+    }) : undefined;
+    const pressureBuilding = !reinforcement ? siege
+      : !siege || reinforcement.requiredElixir <= siege.requiredElixir ? reinforcement : siege;
     const collectors = new Map(
       affordable
         .filter((a) => a.played === "elixir-collector")
@@ -3236,7 +3245,7 @@ export class Battle {
           legal: (point) => this.canPlace("red", a.played, point.x, point.y).ok,
         })]),
     );
-    if (reinforcement && p.elixir + 1e-6 < reinforcement.requiredElixir &&
+    if (pressureBuilding && p.elixir + 1e-6 < pressureBuilding.requiredElixir &&
         !hasSpellTarget && ![...collectors.values()].some(Boolean)) return;
     const scored = affordable
       .map((a) => {
@@ -3245,8 +3254,9 @@ export class Battle {
         const target = spellTargets.get(a.id);
         if (a.played === "elixir-collector")
           score = collectors.get(a.id) ? 4 + jitter * 0.1 : -Infinity;
-        else if (reinforcement?.id === a.id && p.elixir + 1e-6 >= reinforcement.requiredElixir)
+        else if (pressureBuilding?.id === a.id && p.elixir + 1e-6 >= pressureBuilding.requiredElixir)
           score = 4 + jitter * 0.1;
+        else if (!threat && currentSiegePolicy && isSiegeCard(a.played)) score = -Infinity;
         else if (a.c.kind === "spell") {
           if (optimizedSpell(a.played))
             score = target ? target.score + jitter * 0.1 : -Infinity;
@@ -3273,7 +3283,7 @@ export class Battle {
             score += 3;
           if (a.c.kind === "building") score += 2;
         } else {
-          if (a.c.kind !== "troop" && a.played !== "mortar") score -= 7;
+          if (a.c.kind !== "troop" && (currentSiegePolicy || a.played !== "mortar")) score -= 7;
           if (a.c.buildingsOnly) score += 2;
         }
         return { ...a, score, target };
@@ -3292,12 +3302,13 @@ export class Battle {
       x = target.x;
       y = target.y;
     }
+    const pressurePoint = a.c.kind === "building" && pressureBuilding?.id === a.id
+      ? pressureBuilding.point : undefined;
     if (a.c.kind === "building") {
       const lure = buildingLures.get(a.id);
       const economy = collectors.get(a.id);
-      const support = reinforcement?.id === a.id ? reinforcement.point : undefined;
-      x = economy?.x ?? support?.x ?? lure?.x ?? (a.played === "mortar" ? lane : 9);
-      y = economy?.y ?? support?.y ?? lure?.y ?? (a.played === "mortar" ? 14 : 10);
+      x = economy?.x ?? pressurePoint?.x ?? lure?.x ?? (a.played === "mortar" ? lane : 9);
+      y = economy?.y ?? pressurePoint?.y ?? lure?.y ?? (a.played === "mortar" ? 14 : 10);
     }
     const intercept =
       threat && a.c.kind === "troop"
@@ -3314,7 +3325,7 @@ export class Battle {
       x = intercept.x;
       y = intercept.y;
     }
-    if (a.c.kind !== "spell" && !intercept) {
+    if (a.c.kind !== "spell" && !intercept && !pressurePoint) {
       // A building can still occupy the preferred tile when the deck cycles.
       // Try nearby legal tiles instead of wasting every subsequent decision.
       const point = [
