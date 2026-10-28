@@ -178,7 +178,9 @@ def capture(env, context, shared):
             return True
         elif pc == 0x214F60:
             require(
-                read(sp + 4) == body and read(sp + 8) in [1, 4],
+                read(sp + 4) == body
+                and read(sp + 8)
+                in ([1, 2, 4] if env["args"].dash_recovery else [1, 4]),
                 "Unexpected goal actor state request",
             )
             if read(sp + 8) == 1:
@@ -197,11 +199,24 @@ def capture(env, context, shared):
             return True
         elif pc == 0x25FA16:
             require(
-                read(sp + 4) == view and read(sp) in [0x25CCA0, 0x21546E],
+                read(sp + 4) == view
+                and read(sp)
+                in (
+                    [0x25CCA0, 0x21546E, 0x25CEC5]
+                    if env["args"].dash_recovery
+                    else [0x25CCA0, 0x21546E]
+                ),
                 "Unexpected dash goal view callback",
             )
             events.append(
-                ["providedView", "start" if read(sp) == 0x25CCA0 else "state"]
+                [
+                    "providedView",
+                    (
+                        "start"
+                        if read(sp) == 0x25CCA0
+                        else "attack" if read(sp) == 0x25CEC5 else "state"
+                    ),
+                ]
             )
             ret()
             return True
@@ -282,6 +297,8 @@ def capture(env, context, shared):
             ret(0)
             return True
         elif pc == 0x25C4FA:
+            if env["args"].dash_recovery:
+                return False  # Execute the actual landing reload initializer.
             require(
                 read(sp + 4) == attack,
                 "Unexpected post-hit attack clock initialization",
@@ -344,6 +361,11 @@ def capture(env, context, shared):
 
     def inventory():
         return dict(sorted((calls + extra_calls).items()))
+
+    if env["args"].dash_recovery:
+        from lib.dash_recovery_probe import capture as capture_recovery
+
+        return capture_recovery(env, context, shared, locals())
 
     if env["args"].dash_startup:
         from lib.dash_startup_probe import capture as capture_startup
