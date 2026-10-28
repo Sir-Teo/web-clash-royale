@@ -73,6 +73,16 @@
     "nextUpdateClockMs": 950,
     "nextUpdateReloadMs": 550
   },
+  "nativeRecovery": {
+    "attackUpdate": "0x25c60c..0x25d068",
+    "landingReload": "0x25c4fa..0x25c536",
+    "ordinaryReload": "0x25e681..0x25e69f",
+    "stepMs": 50,
+    "loadTimeMs": 600,
+    "firstRequestAfterHitUpdates": 19,
+    "firstRequestAfterMissUpdates": 8,
+    "scope": "First ordinary request only; downstream damage and view bodies retain shared runtime behavior"
+  },
   "output": {
     "path": "src/game/bandit-data.json",
     "sha256": "867157ab8c7e8fd77e24e84471da7b60c9212167ef33e9efa1cadd9143569f88"

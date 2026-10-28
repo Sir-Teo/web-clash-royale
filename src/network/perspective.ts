@@ -25,10 +25,13 @@ export function perspective(s: BattleSnapshot, team: Team): BattleSnapshot {
             : ("left" as const)
           : undefined,
       };
-      if (e.pendingAttack?.lastPoint) {
-        rotated.pendingAttack = { ...e.pendingAttack, lastPoint: rotatePoint(e.pendingAttack.lastPoint) };
+      if (e.pendingAttack && (e.pendingAttack.lastPoint || e.pendingAttack.recovery)) {
+        rotated.pendingAttack = { ...e.pendingAttack,
+          ...(e.pendingAttack.lastPoint ? { lastPoint: rotatePoint(e.pendingAttack.lastPoint) } : {}),
+          ...(e.pendingAttack.recovery ? { recovery: { ...e.pendingAttack.recovery } } : {}) };
       }
       if (e.dash?.goal) rotated.dash = { ...e.dash, goal: rotatePoint(e.dash.goal) };
+      if (e.banditRecovery) rotated.banditRecovery = { ...e.banditRecovery };
       if (e.dashCharge) rotated.dashCharge = { ...e.dashCharge };
       if (e.nativeDistantTargets) {
         rotated.nativeLane =

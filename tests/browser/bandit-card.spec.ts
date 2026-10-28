@@ -37,7 +37,8 @@ test("Bandit dashes with native blue art, effects and heavy landing hit", async 
   await page.locator("#second").click();
   await expect.poll(time).toBeGreaterThan(second + 0.99);
   expect((await data()).unit.dash).toBeUndefined();
-  expect((await data()).target.hp).toBe(10000 - Math.round(320 * 1.1 ** 2));
+  expect((await data()).normal).toBe(1);
+  expect((await data()).target.hp).toBe(10000 - Math.round(320 * 1.1 ** 2) - Math.round(160 * 1.1 ** 2));
   expect((await data()).end).toBe(1);
   expect((await data()).special).toBe(1);
   expect((await data()).filter).toHaveLength(0);

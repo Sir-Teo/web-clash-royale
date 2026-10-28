@@ -1,3 +1,4 @@
+import { advanceBanditRecovery } from "./bandit-recovery";
 import { attackReach, minimumAttackDistance } from "./attack-range";
 import { attackClockDelta } from "./attack-clock";
 import { pendingAttackInRange } from "./pending-range";
@@ -64,6 +65,7 @@ export function fatalKingWindups(
     let boost = attacker.rage?.remaining ?? 0;
     let slow = attacker.slow?.remaining ?? 0;
     let remaining = pending.remaining;
+    const recovery = pending.recovery ? { ...pending.recovery } : undefined;
     const clouds = areas
       .filter(
         (a) =>
@@ -95,9 +97,10 @@ export function fatalKingWindups(
       }
       boost = Math.max(0, boost - COMBAT_STEP);
       slow = Math.max(0, slow - COMBAT_STEP);
-      remaining -=
-        attackClockDelta(attacker, COMBAT_STEP, boost >= 1e-8, slow >= 1e-8);
-      if (remaining <= 1e-8) {
+      const delta = attackClockDelta(attacker, COMBAT_STEP, boost >= 1e-8, slow >= 1e-8);
+      remaining -= delta;
+      const released = recovery ? advanceBanditRecovery(recovery, COMBAT_STEP, delta / COMBAT_STEP) : remaining <= 1e-8;
+      if (released) {
         const flight = attackHitSteps(attacker, primary);
         return Number.isFinite(flight)
           ? [{ attacker, step: step + flight - 1 }]

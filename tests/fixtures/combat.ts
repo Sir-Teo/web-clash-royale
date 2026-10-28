@@ -1979,6 +1979,7 @@ function render(now: number) {
       charge: battle.events.filter((e) => e.effect === "dash-charge:bandit").length,
       end: battle.events.filter((e) => e.effect === "dash-end:bandit").length,
       special: battle.events.filter((e) => e.effect === "hit-special:bandit").length,
+      normal: battle.events.filter((e) => e.type === "hit" && e.card === "bandit" && !e.effect).length,
       cues: battle.audioEvents.filter((e) => e.profile === "bandit" &&
         e.phase.startsWith("dash-")).map((e) => e.phase),
       filter: arena.banditFilterState,

@@ -28,6 +28,15 @@ if (createHash("sha256").update(inputs[9]).digest("hex") !== "678a1a62499b90d53d
     recovery.profiles.loadTimeMs !== 600 || !recovery.cases.some((row) => row.fields.scenario === "chain" &&
       row.frames[26].hit && row.frames[27].clockMs === 950 && row.frames[27].reloadMs === 550))
   throw new Error("Recheck native Bandit immediate reentry evidence");
+const recoveryWitnesses = [
+  [recovery.cases.find((r) => r.fields.scenario === "hit"), 46],
+  [recovery.cases.find((r) => r.fields.scenario === "miss"), 36],
+  [recovery.controls.find((r) => r.fields.recoveryBuffs.join() === "Rage"), 42],
+  [recovery.controls.find((r) => r.fields.recoveryBuffs.join() === "IceWizardSlowDown"), 57],
+  [recovery.controls.find((r) => r.fields.recoveryBuffs.length === 2), 50],
+];
+if (recoveryWitnesses.some(([row, tick]) => row?.frames.find((f) => f.ordinaryRequests.length)?.step !== tick))
+  throw new Error("Recheck native Bandit first ordinary recovery requests");
 if (createHash("sha256").update(inputs[7]).digest("hex") !== "a772e93de669715acf0c798fce3c6cae75e0d425442ac1d2870e11e1ccc0dbce" ||
     createHash("sha256").update(inputs[8]).digest("hex") !== "cce10a224850d79720d667d507222f8bb381169e7f65720fd376376b5d9fff63" ||
     admission.profiles.dashMinimum !== 4000 || startup.profiles.retentionMaximum !== 7500 ||
@@ -135,6 +144,16 @@ await writeFile("reference/client/bandit-manifest.json", JSON.stringify({
     admission: "0x25d852..0x25d946",
     nextUpdateClockMs: 950,
     nextUpdateReloadMs: 550,
+  },
+  nativeRecovery: {
+    attackUpdate: "0x25c60c..0x25d068",
+    landingReload: "0x25c4fa..0x25c536",
+    ordinaryReload: "0x25e681..0x25e69f",
+    stepMs: recovery.stepMs,
+    loadTimeMs: recovery.profiles.loadTimeMs,
+    firstRequestAfterHitUpdates: 19,
+    firstRequestAfterMissUpdates: 8,
+    scope: "First ordinary request only; downstream damage and view bodies retain shared runtime behavior",
   },
   output: { path: outputPath, sha256: sha256(output) },
 }, null, 2) + "\n");
