@@ -54,6 +54,32 @@
 .replay-jump {
   position: relative;
 }
+.replay-plays {
+  position: relative;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.replay-plays select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.replay-plays:focus-within {
+  outline: 3px solid #86d9ff;
+  outline-offset: 4px;
+}
+.replay-plays[data-empty] {
+  opacity: 0.45;
+  cursor: default;
+}
+.replay-plays[data-empty] select {
+  cursor: default;
+}
 .replay-jump svg {
   width: 27px;
   height: 27px;

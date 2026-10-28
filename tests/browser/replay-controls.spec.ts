@@ -189,7 +189,7 @@ for (const viewer of ["blue", "red"] as const)
           .toBe(size.height);
         const bounds = await page
           .locator(
-            ".replay-actions button,#replay-seek,#replay-clock,#arena-canvas",
+            ".replay-actions button,#replay-plays,#replay-seek,#replay-clock,#arena-canvas",
           )
           .evaluateAll((nodes) =>
             nodes.map((e) => {
