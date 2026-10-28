@@ -204,7 +204,7 @@ for (const red of [false, true])
         opponentType: "ai",
         playerName: before.name,
         replay: {
-          version: 16,
+          version: 56,
           rulesFamily: "origin",
           mode: "training",
           deck: before.deck,
