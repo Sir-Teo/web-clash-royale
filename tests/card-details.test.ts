@@ -285,7 +285,7 @@ describe("current card detail stats", () => {
     }
   });
   it.each(["fireball", "arrows", "zap", "rocket"] as const)(
-    "matches a real %s Crown Tower impact without rounding damage to a whole hitpoint",
+    "matches a real %s Crown Tower impact using the current damage rule",
     (id) => {
       const battle = cast(id);
       const tower = battle.entities.find(

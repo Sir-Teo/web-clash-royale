@@ -316,7 +316,7 @@ describe("spells that redirect active Lightning", () => {
     expect(battle.play("red", 0, king.x, king.y).ok).toBe(true);
     step(battle, 8);
     expect(king.hp).toBeCloseTo(
-      1000 - CARD_MAP.zap.damage * 0.4 - CARD_MAP.lightning.damage * 0.4,
+      1000 - CARD_MAP.zap.damage * 0.4 - 552,
     );
     expect(battle.winner).toBeNull();
   });

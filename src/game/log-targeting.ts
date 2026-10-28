@@ -1,3 +1,4 @@
+import { projectileCrownDamage } from "./crown-damage";
 import { aiBodyValue } from "./ai-body-value";
 import { CARD_MAP } from "./cards";
 import type { AreaEffect, Entity, Projectile, Team } from "./engine";
@@ -38,9 +39,12 @@ export function logSpellTarget(
       const reserved = reserve(entity);
       const hp = Math.max(0, entity.hp + (entity.shield ?? 0) - reserved);
       const shield = Math.max(0, (entity.shield ?? 0) - reserved);
-      const packet =
-        CARD_MAP.log.damage *
-        (entity.kind === "tower" ? log.crownTowerDamageFraction : 1);
+      const packet = projectileCrownDamage(
+        "log",
+        entity,
+        CARD_MAP.log.damage,
+        log.crownTowerDamageFraction,
+      );
       const damage = shield > 0 ? Math.min(shield, packet) : packet;
       const lethal = hp > 1e-6 && hp <= damage + 1e-6;
       const value =

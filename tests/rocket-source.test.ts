@@ -118,7 +118,7 @@ describe("native Rocket spell", () => {
     for (let i = 0; i < 30; i++) match.step();
     expect(tower.hp).toBe(hp);
     while (match.projectiles.length) match.step();
-    expect(tower.hp).toBeCloseTo(hp - CARD_MAP.rocket.damage * 0.4);
+    expect(tower.hp).toBeCloseTo(hp - Math.ceil(CARD_MAP.rocket.damage * 40 / 100));
     expect(knight.hp).toBeLessThan(knight.maxHp);
     expect(minion.hp).toBeLessThan(minion.maxHp);
     expect(knight.y).not.toBe(6);

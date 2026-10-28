@@ -37,7 +37,7 @@ for (const scene of ["out", "race", "in"])
     expect(result.kings.find((e: any) => e.team === "red").hp).toBeCloseTo(
       inward
         ? 600 - CARD_MAP.lumberjack.damage
-        : 600 - CARD_MAP.lightning.damage * 0.4,
+        : 600 - 552,
     );
     const giant = result.entities.find(
       (e: any) => e.team === "red" && e.card === "giant",

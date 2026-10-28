@@ -1,3 +1,4 @@
+import { projectileCrownDamage } from "./crown-damage";
 import { aiBodyValue } from "./ai-body-value";
 import { CARD_MAP } from "./cards";
 import { COMBAT_STEP } from "./combat";
@@ -86,9 +87,12 @@ export function lightningSpellTarget(
           ))
       )
         continue;
-      const packet =
-        CARD_MAP.lightning.damage *
-        (e.kind === "tower" ? lightning.crownTowerDamageFraction : 1);
+      const packet = projectileCrownDamage(
+        "lightning",
+        e,
+        CARD_MAP.lightning.damage,
+        lightning.crownTowerDamageFraction,
+      );
       const shield = e.shield ?? 0;
       if (e.kind === "tower") {
         const { baseline, proposed } = deaths.get(e.id)!;

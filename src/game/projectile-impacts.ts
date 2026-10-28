@@ -1,3 +1,4 @@
+import { projectileCrownDamage } from "./crown-damage";
 import { COMBAT_STEP, SPELL_CROWN_TOWER_DAMAGE_FRACTION } from "./combat";
 import type { Entity, Point, Projectile } from "./engine";
 import bowler from "./bowler-data.json" with { type: "json" };
@@ -174,10 +175,14 @@ export function projectileDamagePackets(
           result.push(
             packet(
               step,
-              p.damage *
-                (p.style === "log" && target.kind === "tower"
-                  ? log.crownTowerDamageFraction
-                  : 1),
+              p.style === "log"
+                ? projectileCrownDamage(
+                    "log",
+                    target,
+                    p.damage,
+                    log.crownTowerDamageFraction,
+                  )
+                : p.damage,
             ),
           );
           struck = true;
@@ -205,10 +210,14 @@ export function projectileDamagePackets(
     return [
       packet(
         arrival,
-        p.damage *
-          (p.splash > 0 && p.source === 0 && target.kind === "tower"
-            ? (p.towerDamageFraction ?? SPELL_CROWN_TOWER_DAMAGE_FRACTION)
-            : 1),
+        p.splash > 0 && p.source === 0
+          ? projectileCrownDamage(
+              p.style,
+              target,
+              p.damage,
+              p.towerDamageFraction ?? SPELL_CROWN_TOWER_DAMAGE_FRACTION,
+            )
+          : p.damage,
       ),
     ];
   };

@@ -28,13 +28,11 @@ describe("archived spell damage to Crown Towers", () => {
     }
   });
 
-  it("uses 40% in new battles and retains 30% for the first three spells in v11 replays", () => {
+  it("uses 40% in v12–16 battles and retains 30% for the first three spells in v11 replays", () => {
     const base = new Battle({ seed: 83, ai: false });
     for (const version of [11, 12, 13, 14, 15, 16] as const) {
       for (const id of ["fireball", "arrows", "zap"] as CardId[]) {
-        const battle = version === 16
-          ? new Battle({ seed: 83, ai: false })
-          : new Battle({ replay: { ...base.exportReplay(), version } as Replay });
+        const battle = new Battle({ replay: { ...base.exportReplay(), version } as Replay });
         const tower = battle.entities.find((entity) =>
           entity.team === "red" && entity.kind === "tower" &&
           !entity.king && entity.lane === "left",

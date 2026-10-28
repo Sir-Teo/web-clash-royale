@@ -1,0 +1,21 @@
+{
+  "source": "https://github.com/smlbiobot/cr",
+  "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "arithmetic": "ceil(nonnegative integer damage * max(0, 100 + percent) / 100)",
+  "nativeHelper": "0x1fb9ba..0x1fba1c",
+  "scope": "Projectile Crown arithmetic applied to the game's normalized integer card damage; native level projection and full hit side effects are outside this capture.",
+  "inputs": [
+    {
+      "path": "reference/client/projectile-arrival-native-trace.json",
+      "sha256": "655c1c273fce4697ff62c6c7010ddcf61964ffef6ac75363a788140747a89a46"
+    },
+    {
+      "path": "reference/logic/projectiles.csv",
+      "sha256": "2c0ab01265fe6c5c00ff446e83018c5b2a0a5cb7a0ac49fb55e9353ea66f16db"
+    }
+  ],
+  "output": {
+    "path": "src/game/crown-damage-data.json",
+    "sha256": "91851e3429a0741630e0fd7dccfb6aec00af0c5f0f29c15d62217c004f41cdeb"
+  }
+}

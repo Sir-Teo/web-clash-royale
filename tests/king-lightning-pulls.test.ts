@@ -149,7 +149,7 @@ describe("King Lightning targets follow current pulls", () => {
       s.freeze();
       s.step(13);
       expect(s.lightning.struck).toEqual([s.king.id]);
-      expect(s.king.hp).toBeCloseTo(600 - CARD_MAP.lightning.damage * 0.4);
+      expect(s.king.hp).toBeCloseTo(600 - 552);
       expect(s.battle.winner).toBeNull();
     },
   );
@@ -266,7 +266,7 @@ describe("King Lightning targets follow current pulls", () => {
           .map((a) => ({ card: a.card, tick: a.tick })),
       ).toEqual(inward ? [] : [{ card: "freeze", tick: 74 }]);
       expect(king.hp).toBeCloseTo(
-        inward ? 358 : 600 - CARD_MAP.lightning.damage * 0.4,
+        inward ? 358 : 600 - 552,
       );
       expect(battle.winner).toBeNull();
     },

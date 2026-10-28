@@ -1,3 +1,4 @@
+import { projectileCrownDamage } from "./crown-damage";
 import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import lightning from "./lightning-data.json" with { type: "json" };
@@ -54,8 +55,12 @@ interface Projection {
   packets: Map<number, DamagePacket[]>;
 }
 const damageFor = (e: Entity) =>
-  CARD_MAP.lightning.damage *
-  (e.kind === "tower" ? lightning.crownTowerDamageFraction : 1);
+  projectileCrownDamage(
+    "lightning",
+    e,
+    CARD_MAP.lightning.damage,
+    lightning.crownTowerDamageFraction,
+  );
 const hidden = (e: Entity) => e.deploy <= 0 && e.burrow?.phase === "hidden";
 function apply(body: Entity, packet: HealthPacket) {
   if (body.hp <= 0) return;

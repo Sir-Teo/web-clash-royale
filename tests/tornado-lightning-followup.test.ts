@@ -250,7 +250,7 @@ describe("Tornado changes friendly Lightning finishers", () => {
     s.cast(point);
     s.step(15);
     expect(s.battle.winner).toBe("red");
-    expect(tower.hp).toBeCloseTo(1448.8);
+    expect(tower.hp).toBe(1448);
     expect(s.battle.reason).toBe("Tiebreaker");
   });
 

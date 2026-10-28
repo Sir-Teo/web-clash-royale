@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Crown damage inspection</title>
+    <style>
+      body {
+        color-scheme: dark;
+        margin: 0;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        background: #123a43;
+        color: white;
+        font: 14px system-ui;
+      }
+      header {
+        padding: 10px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      button,
+      select {
+        padding: 9px;
+        background: #225360;
+        color: white;
+        border: 1px solid #81a9ad;
+        border-radius: 6px;
+      }
+      main {
+        position: relative;
+        flex: 1;
+        min-height: 0;
+        width: 100%;
+        max-width: 760px;
+        margin: auto;
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      output {
+        display: block;
+        padding: 10px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <select id="card" aria-label="Spell">
+        <option>fireball</option>
+        <option>arrows</option>
+        <option>rocket</option>
+        <option>lightning</option>
+        <option>log</option>
+      </select>
+      <select id="team" aria-label="Team">
+        <option>blue</option>
+        <option>red</option>
+      </select>
+      <select id="tower" aria-label="Tower">
+        <option value="princess">Princess</option>
+        <option value="king">King</option>
+      </select>
+      <select id="rules" aria-label="Rules">
+        <option>44</option>
+        <option>43</option>
+      </select>
+      <button id="cast">Cast</button><button id="advance">Advance 6s</button
+      ><button id="replay">Replay</button>
+    </header>
+    <main id="arena"></main>
+    <output id="status"></output>
+    <script type="module" src="./crown-damage.ts"></script>
+  </body>
+</html>

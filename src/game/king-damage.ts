@@ -1,3 +1,4 @@
+import { projectileCrownDamage } from "./crown-damage";
 import { CARD_MAP, type CardId } from "./cards";
 import { directSpellFlight } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
@@ -185,9 +186,12 @@ export function towerDamageForecast(
               ...currentPoison,
               {
                 step,
-                damage:
-                  CARD_MAP[card].damage *
-                  (card === "rocket" ? rocket.crownTowerDamageFraction : 0.4),
+                damage: projectileCrownDamage(
+                  card,
+                  target,
+                  CARD_MAP[card].damage,
+                  card === "rocket" ? rocket.crownTowerDamageFraction : 0.4,
+                ),
                 phase: 1,
                 born: 0,
                 order: projectiles.length,

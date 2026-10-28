@@ -79,7 +79,7 @@ describe("archived Rocket", () => {
       expect(target.hp).toBe(hp);
       expect(b.projectiles).toHaveLength(1);
       b.step();
-      expect(target.hp).toBeCloseTo(hp - CARD_MAP.rocket.damage * 0.4);
+      expect(target.hp).toBeCloseTo(hp - Math.ceil(CARD_MAP.rocket.damage * 40 / 100));
       expect(b.projectiles).toHaveLength(0);
       advance(b, 30);
       expect(
