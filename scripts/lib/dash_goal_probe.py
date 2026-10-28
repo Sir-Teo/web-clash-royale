@@ -366,6 +366,11 @@ def capture(env, context, shared):
     def inventory():
         return dict(sorted((calls + extra_calls).items()))
 
+    if env["args"].ordinary_delivery:
+        from lib.ordinary_delivery_probe import capture as capture_delivery
+
+        return capture_delivery(env, context, shared, locals())
+
     if env["args"].dash_transition:
         from lib.dash_transition_probe import capture as capture_transition
 

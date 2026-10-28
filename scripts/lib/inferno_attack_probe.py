@@ -66,7 +66,7 @@ def capture(env):
                 raise RuntimeError("Unexpected owner-state notification")
             calls[hex(address)] = calls.get(hex(address), 0) + 1
             return_hook(constants[address])
-        elif address == 0x25e637:
+        elif address == 0x25e637 and not args.ordinary_delivery:
             # Keep the actual callee frame and execute its real reload prefix,
             # skipping level/damage/world work. Restore that frame at its end.
             base = cpu.reg_read(UC_X86_REG_EBP)

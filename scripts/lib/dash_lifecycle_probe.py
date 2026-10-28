@@ -32,7 +32,11 @@ def capture(env, context):
         heap + off
         for off in [0x7000, 0x6000, 0x8000, 0xA000, 0xC000, 0xD000, 0xE000, 0xF000]
     ]
-    if env["args"].dash_recovery or env["args"].dash_transition:
+    if (
+        env["args"].dash_recovery
+        or env["args"].dash_transition
+        or env["args"].ordinary_delivery
+    ):
         # The existing ordinary-request boundary owns the root attack pointer.
         attack, health = env["component"], heap + 0x7000
         env["component_resolvers"][health] = (body, world)
@@ -343,6 +347,7 @@ def capture(env, context):
         or env["args"].dash_startup
         or env["args"].dash_recovery
         or env["args"].dash_transition
+        or env["args"].ordinary_delivery
     ):
         from lib.dash_goal_probe import capture as capture_goals
 
