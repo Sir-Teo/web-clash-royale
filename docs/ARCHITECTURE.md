@@ -326,6 +326,8 @@ The lobby-only adoption action validates the selected deck and destination befor
 
 The lobby deck editor provides copy, paste and native-card preview. Copy uses the shared secure clipboard/user-gesture fallback and selects the visible code if both APIs fail. Preview and card inspection do not mutate the profile. Editing pasted text invalidates the previous preview immediately. Adoption uses the same validated `useDeck` action and complete deck-selection Undo as recorded decks, with an explicit destination and session-only notices when storage rejects writes. Card inspection preserves the destination and Undo context; leaving the dialog ends that context. The controls retain the modal focus cycle and phone touch targets.
 
+Validated code previews can also start Training practice against a copy of the shared cards. This action uses the current active player deck and ignores the adoption destination. Its opponent is labeled Shared deck / Deck code because codes contain no sender identity. It enters the existing practice path for repeat battles, recording, replay, reward handling and lobby-mode restoration. Editing the code hides both adoption and practice controls; the practice callback also checks that the preview remains valid. The preview and start action do not replace any saved deck or change the deck-code format.
+
 
 ## Individual replay files
 

@@ -39,6 +39,18 @@
 .deck-codes .match-deck-heading h3 {
   margin: 0;
 }
+.code-practice {
+  margin-top: 18px;
+  padding: 14px 0;
+  border-top: 1px solid #ffffff16;
+  border-bottom: 1px solid #ffffff16;
+}
+.code-practice button {
+  width: 100%;
+}
+.code-practice p {
+  margin: 10px 0 0;
+}
 .deck-code-notice {
   display: flex;
   align-items: center;
