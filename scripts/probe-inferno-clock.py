@@ -47,6 +47,7 @@ parser.add_argument("--health-shield", action="store_true", help="Execute null-s
 parser.add_argument("--area-crown", action="store_true", help="Execute area pulse base/Crown amounts, world request and target damage choice")
 parser.add_argument("--buff-ticks", action="store_true", help="Execute periodic buff clocks, refresh and damage/heal amount requests")
 parser.add_argument("--buff-lifecycle", action="store_true", help="Execute retained Poison, native component phases, expiry and Tesla hide clocks")
+parser.add_argument("--dash-lifecycle", action="store_true", help="Execute Bandit dash entry, bounded open-plane movement and retained Poison damage")
 parser.add_argument("--attack-range", action="store_true", help="Capture maximum attack geometry across troop, building and Crown Tower profiles")
 parser.add_argument("--minimum-range", action="store_true", help="Capture minimum-range boundaries instead of maximum-range boundaries")
 parser.add_argument("--sight-range", action="store_true", help="Capture native sight getters and the bounded candidate sight gate")
@@ -184,6 +185,10 @@ if args.buff_lifecycle:
     lifecycle_modes = {"library", "check", "attack_loop", "first_attacks", "buff_lifecycle"}
     if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in lifecycle_modes):
         parser.error("--buff-lifecycle requires --attack-loop --first-attacks without another capture mode")
+if args.dash_lifecycle:
+    dash_modes = {"library", "check", "attack_loop", "first_attacks", "dash_lifecycle"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in dash_modes):
+        parser.error("--dash-lifecycle requires --attack-loop --first-attacks without another capture mode")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()
