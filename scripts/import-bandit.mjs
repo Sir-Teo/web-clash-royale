@@ -17,6 +17,7 @@ const paths = [
   "reference/client/dash-transition-native-trace.json",
   "reference/client/ordinary-delivery-native-trace.json",
   "reference/client/bandit-ordinary-native-trace.json",
+  "reference/client/bandit-target-reset-native-trace.json",
 ];
 const inputs = await Promise.all(paths.map((path) => readFile(path)));
 const card = csvRows(inputs[0].toString()).find((row) => row.Name === "Assassin");
@@ -29,6 +30,12 @@ const admission = JSON.parse(inputs[7]), startup = JSON.parse(inputs[8]);
 const recovery = JSON.parse(inputs[9]);
 const transition = JSON.parse(inputs[10]), delivery = JSON.parse(inputs[11]);
 const ordinary = JSON.parse(inputs[12]);
+const targetReset = JSON.parse(inputs[13]);
+if (createHash("sha256").update(inputs[13]).digest("hex") !== "22bcccdaed004b4a99542b57a0e9f6334237a37e77d74084455d4b126abd64b8" ||
+    targetReset.profiles.finishTimeMs !== 250 || targetReset.profiles.targetlessPolicyReturn !== 1 ||
+    targetReset.cases[0].frames[19].ordinaryRequests.length !== 1 ||
+    targetReset.cases[1].frames[11].ordinaryRequests.length !== 1)
+  throw new Error("Recheck native Bandit target reset and removal finish window");
 if (createHash("sha256").update(inputs[12]).digest("hex") !== "5266a984039b1772cde8aad4bc64ea7a9788ad8edbcc1110af040b030f6aa745" ||
     ordinary.profiles.initialTargetDistance !== 1750 || ordinary.profiles.initialElapsedMs !== 0 ||
     ordinary.profiles.initialReloadMs !== 0 || ordinary.cases[0].frames[7].ordinaryRequests.length !== 1 ||
@@ -133,7 +140,10 @@ const output = Buffer.from(JSON.stringify({
   redExport: unit.RedExportName,
 }, null, 2) + "\n");
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
+const resetPath = "src/game/bandit-reset-data.json";
+const resetOutput = Buffer.from(JSON.stringify({ finishTimeMs: targetReset.profiles.finishTimeMs }, null, 2) + "\n");
 await writeFile(outputPath, output);
+await writeFile(resetPath, resetOutput);
 await writeFile("reference/client/bandit-manifest.json", JSON.stringify({
   source: "https://github.com/smlbiobot/cr",
   commit: "7fc7687e6de74690e902543ee4b59f562121e225",
@@ -202,6 +212,16 @@ await writeFile("reference/client/bandit-manifest.json", JSON.stringify({
     normalRequestUpdates: [8, 28, 48, 68],
     rageRequestUpdates: [6, 21, 36, 51, 66],
     scope: "Fresh close-range supplied existing references; constructor/target-setter clock values use the separate roster prerequisite; natural deployment and acquisition remain excluded",
+  },
+  nativeTargetReset: {
+    setter: "0x25d4b0..0x25d6f2",
+    removal: "0x25f594..0x25f6b4",
+    expiry: "0x25ca86..0x25cab4",
+    finishTimeMs: targetReset.profiles.finishTimeMs,
+    nullRequestUpdates: [20, 40, 60],
+    removalRequestUpdates: [12, 32, 52],
+    output: { path: resetPath, sha256: sha256(resetOutput) },
+    scope: "Supplied null/removal transitions and close reselection; native natural death propagation and acquisition remain excluded",
   },
   output: { path: outputPath, sha256: sha256(output) },
 }, null, 2) + "\n");

@@ -54,6 +54,10 @@
     {
       "path": "reference/client/bandit-ordinary-native-trace.json",
       "sha256": "5266a984039b1772cde8aad4bc64ea7a9788ad8edbcc1110af040b030f6aa745"
+    },
+    {
+      "path": "reference/client/bandit-target-reset-native-trace.json",
+      "sha256": "22bcccdaed004b4a99542b57a0e9f6334237a37e77d74084455d4b126abd64b8"
     }
   ],
   "nativeDash": {
@@ -135,6 +139,27 @@
       66
     ],
     "scope": "Fresh close-range supplied existing references; constructor/target-setter clock values use the separate roster prerequisite; natural deployment and acquisition remain excluded"
+  },
+  "nativeTargetReset": {
+    "setter": "0x25d4b0..0x25d6f2",
+    "removal": "0x25f594..0x25f6b4",
+    "expiry": "0x25ca86..0x25cab4",
+    "finishTimeMs": 250,
+    "nullRequestUpdates": [
+      20,
+      40,
+      60
+    ],
+    "removalRequestUpdates": [
+      12,
+      32,
+      52
+    ],
+    "output": {
+      "path": "src/game/bandit-reset-data.json",
+      "sha256": "f22671e97ccd8f685e7b4747257d4d555697b3a4c55ebe323ef9c41223212cb1"
+    },
+    "scope": "Supplied null/removal transitions and close reselection; native natural death propagation and acquisition remain excluded"
   },
   "output": {
     "path": "src/game/bandit-data.json",

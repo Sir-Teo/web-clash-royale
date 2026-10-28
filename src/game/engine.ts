@@ -1,7 +1,7 @@
 import { projectileCrownDamage } from "./crown-damage";
 import { poisonTickDamage } from "./poison-damage";
 import { banditDashSpeed, banditDashGoal, banditGoalFrame } from "./bandit-dash";
-import { advanceBanditRecovery, banditRecoveryRemaining, banditOrdinaryCommitted, type BanditRecoveryClock } from "./bandit-recovery";
+import { advanceBanditRecovery, banditRecoveryRemaining, banditOrdinaryCommitted, bindBanditRecovery, type BanditRecoveryClock } from "./bandit-recovery";
 import { banditChargeInRange } from "./bandit-startup";
 import { barrelFormation } from "./barrel-formation";
 import { distantTarget, spawnLane, type NativeLane } from "./distant-targets";
@@ -205,6 +205,8 @@ export interface Entity extends Point {
   nativeBanditTransitions?: true;
   /** Rules 55: use the native clock for newly admitted ordinary attacks too. */
   nativeBanditOrdinary?: true;
+  /** Rules 56: retain reload and the removal finish window across references. */
+  nativeBanditTargetReset?: true;
   banditRecovery?: BanditRecoveryClock;
   dashReentry?: true;
   dashCharge?: { target: number; remainingMs: number; carry: number; started?: true };
@@ -304,7 +306,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 | 56;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -394,7 +396,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 55;
+    this.rulesVersion = r?.version ?? 56;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -912,6 +914,7 @@ export class Battle {
       ...(this.rulesVersion >= 53 && id === "bandit" ? { nativeBanditCadence: true as const } : {}),
       ...(this.rulesVersion >= 54 && id === "bandit" ? { nativeBanditTransitions: true as const } : {}),
       ...(this.rulesVersion >= 55 && id === "bandit" ? { nativeBanditOrdinary: true as const } : {}),
+      ...(this.rulesVersion >= 56 && id === "bandit" ? { nativeBanditTargetReset: true as const } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
@@ -1869,6 +1872,7 @@ export class Battle {
           continue;
         }
       }
+      if (e.nativeBanditTargetReset) this.syncBanditReference(e);
       let banditCycleReleased = false;
       if (e.pendingAttack) {
         const pending = e.pendingAttack;
@@ -1905,7 +1909,14 @@ export class Battle {
       }
       if (e.nativeBanditTransitions && banditCycleReleased) { resetMovement(e); continue; }
       const target = e.nativeSparkyPreload ? preloadTarget : this.acquireTarget(e);
+      if (e.nativeBanditTargetReset && e.banditRecovery)
+        bindBanditRecovery(e.banditRecovery, target?.id, !!target && this.inRange(e, target));
       if (!target) {
+        if (e.nativeBanditTargetReset && e.banditRecovery) {
+          advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed, "targetless");
+          resetMovement(e);
+          continue;
+        }
         if (e.nativeBanditCadence && e.banditRecovery?.elapsedMs) e.banditRecovery = undefined;
         if (e.banditRecovery) advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed, false);
         resetMovement(e);
@@ -1934,19 +1945,28 @@ export class Battle {
           continue;
         }
       }
-      if (e.nativeBanditTransitions && e.banditRecovery?.elapsedMs && !committedCycle && !this.inRange(e, target))
+      if (e.nativeBanditTransitions && !e.nativeBanditTargetReset && e.banditRecovery?.elapsedMs && !committedCycle && !this.inRange(e, target))
         e.banditRecovery = undefined;
       if (this.inRange(e, target) || committedCycle) {
         if (e.nativeBanditOrdinary && !e.banditRecovery && e.cooldown <= 1e-8) {
           const frameTime = bandit.dash.startup.stepMs / 1000;
           const before = (this.tick - 1) * STEP;
           e.banditRecovery = { elapsedMs: 0, reloadMs: 0,
-            carry: Math.max(0, before - Math.floor((before + 1e-8) / frameTime) * frameTime) };
+            carry: Math.max(0, before - Math.floor((before + 1e-8) / frameTime) * frameTime),
+            ...(e.nativeBanditTargetReset ? { target: target.id } : {}) };
         }
         if (e.banditRecovery) {
           const continuing = e.nativeBanditCadence && e.banditRecovery.elapsedMs > 0;
           if (continuing) {
-            if (!banditCycleReleased) advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed);
+            if (e.nativeBanditTargetReset) this.previewBanditRecovery(e, e.banditRecovery);
+            const released = !banditCycleReleased && advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed);
+            if (e.nativeBanditTargetReset && released) {
+              delete e.banditRecovery.animating;
+              e.cooldown = Math.max(0, e.interval - Math.min(e.interval, combatTraits(e).windup));
+              this.releaseAttack(e, target, chargedAttackDamage(e));
+              resetMovement(e);
+              continue;
+            }
             this.previewBanditRecovery(e, e.banditRecovery);
             resetMovement(e);
             // Keep choosing a target until the next attack's preparation starts.
@@ -1976,11 +1996,26 @@ export class Battle {
           this.beginAudio(e);
         }
       } else if (e.kind === "troop") {
-        if (e.banditRecovery) advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed, false);
+        if (e.banditRecovery) advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed, false, !!e.nativeBanditTargetReset);
         this.moveToward(e, target);
       }
     }
     this.updateProjectiles(projectileStep);
+  }
+  private retainBanditRecovery(e: Entity, clock: BanditRecoveryClock, removed: boolean) {
+    this.cancelAttack(e);
+    delete clock.animating;
+    bindBanditRecovery(clock, undefined, true, removed);
+    e.banditRecovery = clock;
+  }
+  private syncBanditReference(e: Entity) {
+    const clock = e.pendingAttack?.recovery ?? e.banditRecovery;
+    const reference = clock?.target ?? e.pendingAttack?.target;
+    if (!clock || reference === undefined) return;
+    clock.target ??= reference;
+    const previous = this.entities.find(t => t.id === reference);
+    if (!previous || previous.hp <= 0 || !this.validTarget(e, previous))
+      this.retainBanditRecovery(e, clock, !previous || previous.hp <= 0);
   }
   private advanceBanditRecoveryAttack(e: Entity, rate: number) {
     const pending = e.pendingAttack!, clock = pending.recovery!;
@@ -2004,6 +2039,10 @@ export class Battle {
     if (!target || e.dashAttraction || !banditChargeInRange(e, target, true)) {
       e.dashCharge = undefined;
       e.target = null;
+      if (e.nativeBanditTargetReset && e.banditRecovery) {
+        const previous = this.entities.find(t => t.id === e.banditRecovery!.target);
+        this.retainBanditRecovery(e, e.banditRecovery, !previous || previous.hp <= 0);
+      }
       resetMovement(e);
       return false;
     }
@@ -2079,7 +2118,8 @@ export class Battle {
   }
   private finishBanditDash(e: Entity, target: Entity | undefined, hit: boolean) {
     if (e.nativeBanditRecovery) e.banditRecovery = { elapsedMs: 0,
-      reloadMs: hit ? bandit.sourceLoadTime * 1000 : 0, carry: e.dash?.carry ?? 0 };
+      reloadMs: hit ? bandit.sourceLoadTime * 1000 : 0, carry: e.dash?.carry ?? 0,
+      ...(e.nativeBanditTargetReset && target ? { target: target.id } : {}) };
     e.dash = undefined;
     if (e.nativeBanditReentry) e.dashReentry = true;
     e.dashCooldown = bandit.dash.cooldown;
