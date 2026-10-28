@@ -11,6 +11,8 @@ const paths = [
   "reference/sc/ui-spells.bin",
   "reference/client/dash-lifecycle-native-trace.json",
   "reference/client/dash-goals-native-trace.json",
+  "reference/client/dash-admission-native-trace.json",
+  "reference/client/dash-startup-native-trace.json",
 ];
 const inputs = await Promise.all(paths.map((path) => readFile(path)));
 const card = csvRows(inputs[0].toString()).find((row) => row.Name === "Assassin");
@@ -19,6 +21,12 @@ const model = parseSC(inputs[2]);
 const portraits = parseSC(inputs[4]);
 const native = JSON.parse(inputs[5]);
 const goals = JSON.parse(inputs[6]);
+const admission = JSON.parse(inputs[7]), startup = JSON.parse(inputs[8]);
+if (createHash("sha256").update(inputs[7]).digest("hex") !== "a772e93de669715acf0c798fce3c6cae75e0d425442ac1d2870e11e1ccc0dbce" ||
+    createHash("sha256").update(inputs[8]).digest("hex") !== "cce10a224850d79720d667d507222f8bb381169e7f65720fd376376b5d9fff63" ||
+    admission.profiles.dashMinimum !== 4000 || startup.profiles.retentionMaximum !== 7500 ||
+    startup.cases[0].frames.find((frame) => frame.state === 4).step !== 20)
+  throw new Error("Recheck native Bandit admission and complete startup evidence");
 if (createHash("sha256").update(inputs[6]).digest("hex") !== "26422f0a0f651353044e75f39f9530c459a6754e00d67ee2fce40f414a636959" ||
     goals.profiles.headingScale !== 256 || goals.profiles.chunkUnits !== 250 ||
     !goals.controls.some((row) => row.fields.motion === "target-cleared" && row.frames.at(-1).state === 1 && row.frames.at(-1).targetHp === 1000) ||
@@ -63,6 +71,12 @@ const output = Buffer.from(JSON.stringify({
     cooldown: Number(unit.DashCooldown) / 1000,
     speed: native.profiles.sourceJumpSpeed / 1000 / (native.stepMs / 1000),
     legacySpeed: Number(unit.JumpSpeed) / 60,
+    startup: {
+      stepMs: startup.stepMs,
+      chargeMs: startup.profiles.dashCooldownMs,
+      retentionExtensionUnits: startup.profiles.retentionMaximum -
+        admission.profiles.dashMaximum - admission.profiles.targetRadius,
+    },
     goal: {
       stepMs: goals.stepMs,
       unitsPerTile: goals.profiles.sourceUnitsPerTile,
@@ -101,6 +115,13 @@ await writeFile("reference/client/bandit-manifest.json", JSON.stringify({
     landing: "0x2157eb..0x2159bc",
     fixedStepMs: goals.stepMs,
     landingExtensionUnits: goals.profiles.landingRangeExtension,
+  },
+  nativeStartup: {
+    attackUpdate: "0x25c60c..0x25d068",
+    admission: "0x25d852..0x25d946",
+    cancellation: "0x25d4b0..0x25d6f2",
+    stepMs: startup.stepMs,
+    chargeMs: startup.profiles.dashCooldownMs,
   },
   output: { path: outputPath, sha256: sha256(output) },
 }, null, 2) + "\n");

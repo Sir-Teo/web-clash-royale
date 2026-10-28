@@ -1593,9 +1593,9 @@ export class Arena {
           eventAge,
         );
       if (event.type === "spell" &&
-          (event.effect === "dash-start:bandit" || event.effect === "dash-end:bandit"))
+          (event.effect === "dash-start:bandit" || event.effect === "dash-charge:bandit" || event.effect === "dash-end:bandit"))
         this.destruction.burst(
-          event.effect,
+          event.effect === "dash-charge:bandit" ? "dash-start:bandit" : event.effect,
           new T.Vector3(event.x - 9, 0.2, event.y - 16),
           b.seed ^ event.id,
           event.team,
@@ -1652,7 +1652,8 @@ export class Arena {
             beam.mesh.rotateZ(angle);
           }
         }
-        const nativeImpact = event.effect ?? impactEffect(event.card ?? "");
+        const nativeImpact = event.effect === "dash-charge:bandit" || event.effect === "dash-launch:bandit"
+          ? undefined : event.effect ?? impactEffect(event.card ?? "");
         if (nativeImpact && this.effects.asset) {
           const offsets =
             event.card === "arrows" && event.arrowVolley

@@ -1975,7 +1975,8 @@ function render(now: number) {
     JSON.stringify({
       unit: battle.entities.find((e) => e.card === "bandit" && e.team === "blue"),
       target: battle.entities.find((e) => e.card === "knight" && e.team === "red"),
-      start: battle.events.filter((e) => e.effect === "dash-start:bandit").length,
+      start: battle.events.filter((e) => e.effect === "dash-start:bandit" || e.effect === "dash-launch:bandit").length,
+      charge: battle.events.filter((e) => e.effect === "dash-charge:bandit").length,
       end: battle.events.filter((e) => e.effect === "dash-end:bandit").length,
       special: battle.events.filter((e) => e.effect === "hit-special:bandit").length,
       cues: battle.audioEvents.filter((e) => e.profile === "bandit" &&

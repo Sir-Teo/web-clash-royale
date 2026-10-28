@@ -17,6 +17,11 @@
     "cooldown": 1,
     "speed": 10,
     "legacySpeed": 8.333333333333334,
+    "startup": {
+      "stepMs": 50,
+      "chargeMs": 1000,
+      "retentionExtensionUnits": 1000
+    },
     "goal": {
       "stepMs": 50,
       "unitsPerTile": 1000,

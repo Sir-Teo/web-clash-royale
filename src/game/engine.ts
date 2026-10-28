@@ -1,6 +1,7 @@
 import { projectileCrownDamage } from "./crown-damage";
 import { poisonTickDamage } from "./poison-damage";
 import { banditDashSpeed, banditDashGoal, banditGoalFrame } from "./bandit-dash";
+import { banditChargeInRange } from "./bandit-startup";
 import { barrelFormation } from "./barrel-formation";
 import { distantTarget, spawnLane, type NativeLane } from "./distant-targets";
 import { attackReach, minimumAttackDistance, NATIVE_RANGE_RADIUS_FACTOR } from "./attack-range";
@@ -191,6 +192,11 @@ export interface Entity extends Point {
   nativeBanditDash?: true;
   /** Rules 49: latched native dash destination and fixed movement frames. */
   nativeBanditGoal?: true;
+  /** Rules 50: vulnerable native startup before entering dash travel. */
+  nativeBanditStartup?: true;
+  dashCharge?: { target: number; remainingMs: number; carry: number; started?: true };
+  /** Existing source Tornado attraction prevents or cancels startup. */
+  dashAttraction?: number;
   dash?: { target: number; elapsed: number; remaining: number; goal?: Point; carry?: number };
   dashCooldown?: number;
   attack: number;
@@ -274,7 +280,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb" | "giant-skeleton-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "shield:guards" | "axe-die" | "bottle:lumberjack" | "summon:night-witch" | "dash-start:bandit" | "dash-end:bandit" | "hit-special:bandit" | "ice-golem-slow";
+  effect?: "balloon-bomb" | "giant-skeleton-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "shield:guards" | "axe-die" | "bottle:lumberjack" | "summon:night-witch" | "dash-start:bandit" | "dash-charge:bandit" | "dash-launch:bandit" | "dash-end:bandit" | "hit-special:bandit" | "ice-golem-slow";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -285,7 +291,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -375,7 +381,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 49;
+    this.rulesVersion = r?.version ?? 50;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -887,6 +893,7 @@ export class Battle {
       ...(this.rulesVersion >= 47 && id === "tesla" ? { nativeRetainedPoison: true as const } : {}),
       ...(this.rulesVersion >= 48 && id === "bandit" ? { nativeBanditDash: true as const } : {}),
       ...(this.rulesVersion >= 49 && id === "bandit" ? { nativeBanditGoal: true as const } : {}),
+      ...(this.rulesVersion >= 50 && id === "bandit" ? { nativeBanditStartup: true as const } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
@@ -1248,6 +1255,7 @@ export class Battle {
           )
             continue;
           if (pull) {
+            if (entity.nativeBanditStartup) entity.dashAttraction = tornado.buffDuration;
             const position = tornadoPull(entity, area);
             if (position) {
               entity.x = position.x;
@@ -1661,6 +1669,10 @@ export class Battle {
       let preloadTarget: Entity | undefined;
       if (e.card === "bandit")
         e.dashCooldown = Math.max(0, (e.dashCooldown ?? 0) - STEP);
+      if (e.dashAttraction !== undefined) {
+        e.dashAttraction = Math.max(0, e.dashAttraction - STEP);
+        if (e.dashAttraction <= 1e-8) e.dashAttraction = undefined;
+      }
       e.stun = Math.max(0, e.stun - STEP);
       const summoner = this.rulesVersion >= 21 ? summonProfile(e.card) : undefined;
       if (e.deploy > 0) {
@@ -1827,6 +1839,11 @@ export class Battle {
           }
         }
       }
+      if (e.dashCharge) {
+        const chargingTarget = this.entities.find((t) =>
+          t.id === e.dashCharge!.target && this.validTarget(e, t));
+        if (this.advanceBanditCharge(e, chargingTarget, hitSpeed)) continue;
+      }
       if (e.pendingAttack) {
         const pending = e.pendingAttack;
         const previous = this.entities.find((t) => t.id === pending.target);
@@ -1853,15 +1870,17 @@ export class Battle {
       if (e.card === "bandit" && (e.dashCooldown ?? 0) <= 1e-8 &&
           !e.pendingAttack && e.cooldown <= 1e-8) {
         const distance = dist(e, target) - target.radius;
-        if (distance >= bandit.dash.minimum && distance <= bandit.dash.maximum) {
-          e.dash = { target: target.id, elapsed: 0,
-            remaining: bandit.dash.maximum / banditDashSpeed(e) + STEP,
-            ...(e.nativeBanditGoal ? { goal: banditDashGoal(e, target), carry: 0 } : {}) };
-          resetMovement(e);
-          this.emitAudio("dash-start", e.team, "bandit", e.id);
-          this.emitAudio("dash-travel", e.team, "bandit", e.id);
-          this.emit("spell", e.team, e.x, e.y, "bandit", e.id,
-            { effect: "dash-start:bandit" });
+        const admitted = e.nativeBanditStartup
+          ? !e.dashAttraction && banditChargeInRange(e, target)
+          : distance >= bandit.dash.minimum && distance <= bandit.dash.maximum;
+        if (admitted) {
+          if (e.nativeBanditStartup) {
+            const frameTime = bandit.dash.startup.stepMs / 1000;
+            const before = (this.tick - 1) * STEP;
+            e.dashCharge = { target: target.id, remainingMs: bandit.dash.startup.chargeMs,
+              carry: Math.max(0, before - Math.floor((before + 1e-8) / frameTime) * frameTime) };
+            this.advanceBanditCharge(e, target, hitSpeed);
+          } else this.beginBanditDash(e, target);
           continue;
         }
       }
@@ -1885,6 +1904,46 @@ export class Battle {
       } else if (e.kind === "troop") this.moveToward(e, target);
     }
     this.updateProjectiles(projectileStep);
+  }
+  private advanceBanditCharge(e: Entity, target: Entity | undefined, hitSpeed: number) {
+    const charge = e.dashCharge!;
+    if (!target || e.dashAttraction || !banditChargeInRange(e, target, true)) {
+      e.dashCharge = undefined;
+      e.target = null;
+      resetMovement(e);
+      return false;
+    }
+    const frameTime = bandit.dash.startup.stepMs / 1000;
+    charge.carry = Math.min(frameTime, Math.max(0,
+      Number.isFinite(charge.carry) ? charge.carry : 0)) + STEP;
+    while (charge.carry + 1e-8 >= frameTime) {
+      charge.carry = Math.max(0, charge.carry - frameTime);
+      if (!charge.started) {
+        charge.started = true;
+        this.emitAudio("dash-start", e.team, "bandit", e.id);
+        this.emit("spell", e.team, e.x, e.y, "bandit", e.id,
+          { effect: "dash-charge:bandit" });
+      }
+      charge.remainingMs = Math.max(0,
+        charge.remainingMs - Math.round(bandit.dash.startup.stepMs * hitSpeed));
+      if (charge.remainingMs <= 0) {
+        e.dashCharge = undefined;
+        this.beginBanditDash(e, target);
+        break;
+      }
+    }
+    resetMovement(e);
+    return true;
+  }
+  private beginBanditDash(e: Entity, target: Entity) {
+    e.dash = { target: target.id, elapsed: 0,
+      remaining: bandit.dash.maximum / banditDashSpeed(e) + STEP,
+      ...(e.nativeBanditGoal ? { goal: banditDashGoal(e, target), carry: 0 } : {}) };
+    resetMovement(e);
+    if (!e.nativeBanditStartup) this.emitAudio("dash-start", e.team, "bandit", e.id);
+    this.emitAudio("dash-travel", e.team, "bandit", e.id);
+    this.emit("spell", e.team, e.x, e.y, "bandit", e.id,
+      { effect: e.nativeBanditStartup ? "dash-launch:bandit" : "dash-start:bandit" });
   }
   private advanceBanditDash(e: Entity) {
     const dash = e.dash!;

@@ -49,7 +49,7 @@ export interface AnimatedSprite {
 }
 export type SpriteState = Pick<
   Entity,
-  "id" | "card" | "team" | "x" | "y" | "attack" | "interval" | "move" | "chargeDistance" | "deploy" | "dash"
+  "id" | "card" | "team" | "x" | "y" | "attack" | "interval" | "move" | "chargeDistance" | "deploy" | "dash" | "dashCharge"
 > & { animationTime?: number };
 const heights: Partial<Record<SpriteId, number>> = {
   knight: 1.65,
@@ -286,6 +286,9 @@ export class SpriteLibrary {
     if (e.card === "bandit" && e.dash?.goal) {
       sprite.facingX = e.dash.goal.x - e.x;
       sprite.facingY = e.dash.goal.y - e.y;
+    } else if (e.card === "bandit" && e.dashCharge && target) {
+      sprite.facingX = target.x - e.x;
+      sprite.facingY = target.y - e.y;
     } else if (e.attack > 0 && !moving && target) {
       sprite.facingX = target.x - e.x;
       sprite.facingY = target.y - e.y;
