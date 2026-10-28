@@ -186,6 +186,7 @@ def capture(env, context, shared):
                         env["args"].dash_recovery
                         or env["args"].dash_transition
                         or env["args"].bandit_ordinary
+                        or env["args"].bandit_target_reset
                     )
                     else [1, 4]
                 ),
@@ -215,6 +216,7 @@ def capture(env, context, shared):
                         env["args"].dash_recovery
                         or env["args"].dash_transition
                         or env["args"].bandit_ordinary
+                        or env["args"].bandit_target_reset
                     )
                     else [0x25CCA0, 0x21546E]
                 ),
@@ -234,7 +236,17 @@ def capture(env, context, shared):
             return True
         elif pc == 0x218320:
             require(
-                read(sp + 4) == body and read(sp + 8) == target,
+                read(sp + 4) == body
+                and read(sp + 8)
+                in (
+                    [target, context["target_b"]]
+                    if env["args"].bandit_target_reset
+                    else [target]
+                )
+                and (
+                    not env["args"].bandit_target_reset
+                    or read(sp + 8) == read(attack + 8)
+                ),
                 "Unexpected countdown facing request",
             )
             ret()
@@ -313,6 +325,7 @@ def capture(env, context, shared):
                 env["args"].dash_recovery
                 or env["args"].dash_transition
                 or env["args"].bandit_ordinary
+                or env["args"].bandit_target_reset
             ):
                 return False  # Execute the actual landing reload initializer.
             require(
@@ -383,11 +396,21 @@ def capture(env, context, shared):
 
         return capture_delivery(env, context, shared, locals())
 
-    if env["args"].dash_transition or env["args"].bandit_ordinary:
+    if (
+        env["args"].dash_transition
+        or env["args"].bandit_ordinary
+        or env["args"].bandit_target_reset
+    ):
         from lib.dash_transition_probe import capture as capture_transition
 
         return capture_transition(
-            env, context, shared, locals(), fresh_ordinary=env["args"].bandit_ordinary
+            env,
+            context,
+            shared,
+            locals(),
+            fresh_ordinary=env["args"].bandit_ordinary
+            or env["args"].bandit_target_reset,
+            target_reset=env["args"].bandit_target_reset,
         )
 
     if env["args"].dash_recovery:

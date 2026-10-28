@@ -55,6 +55,7 @@ parser.add_argument("--dash-recovery", action="store_true", help="Execute Bandit
 parser.add_argument("--dash-transition", action="store_true", help="Execute Bandit ordinary-cycle to dash transitions and native phase-window boundaries")
 parser.add_argument("--ordinary-delivery", action="store_true", help="Execute selected nonprojectile ordinary delivery through a surviving native HP store")
 parser.add_argument("--bandit-ordinary", action="store_true", help="Execute fresh Bandit ordinary cycles, supplied modifiers and subsequent dash admission")
+parser.add_argument("--bandit-target-reset", action="store_true", help="Execute Bandit null/removal target transitions, finish grace, idle reload and supplied reselection")
 parser.add_argument("--attack-range", action="store_true", help="Capture maximum attack geometry across troop, building and Crown Tower profiles")
 parser.add_argument("--minimum-range", action="store_true", help="Capture minimum-range boundaries instead of maximum-range boundaries")
 parser.add_argument("--sight-range", action="store_true", help="Capture native sight getters and the bounded candidate sight gate")
@@ -224,6 +225,10 @@ if args.bandit_ordinary:
     ordinary_modes = {"library", "check", "attack_loop", "first_attacks", "bandit_ordinary"}
     if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in ordinary_modes):
         parser.error("--bandit-ordinary requires --attack-loop --first-attacks without another capture mode")
+if args.bandit_target_reset:
+    reset_modes = {"library", "check", "attack_loop", "first_attacks", "bandit_target_reset"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in reset_modes):
+        parser.error("--bandit-target-reset requires --attack-loop --first-attacks without another capture mode")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()

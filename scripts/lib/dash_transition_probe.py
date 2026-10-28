@@ -19,7 +19,7 @@ from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_ESP
 
 
-def capture(env, context, lifecycle, goal, fresh_ordinary=False):
+def capture(env, context, lifecycle, goal, fresh_ordinary=False, target_reset=False):
     def require(condition, message):
         if not condition:
             raise RuntimeError(message)
@@ -71,6 +71,7 @@ def capture(env, context, lifecycle, goal, fresh_ordinary=False):
         ]
     ]
     events, calls, extra_calls = [goal[k] for k in ["events", "calls", "extra_calls"]]
+    supplied_targets = [target, context["target_b"]] if target_reset else [target]
     source = env["rows"]["reference/logic/characters.csv"]["Assassin"]
     require(
         source["HitSpeed"] == "1000"
@@ -116,7 +117,7 @@ def capture(env, context, lifecycle, goal, fresh_ordinary=False):
             require(read(sp + 4) == attack, "Startup provider owner differs")
             if pc == 0x25D7C2:
                 require(
-                    read(sp + 8) == target and read(sp + 12) == 0,
+                    read(sp + 8) in supplied_targets and read(sp + 12) == 0,
                     "Startup supplied validity request differs",
                 )
             ret(1 if pc == 0x25D7C2 else 0)
@@ -125,7 +126,10 @@ def capture(env, context, lifecycle, goal, fresh_ordinary=False):
             events.append(["nativeAttackReload"])
         elif pc == 0x25E61C:
             require(
-                [read(sp + i) for i in [4, 8, 12]] == [attack, target, -1],
+                read(sp + 4) == attack
+                and read(sp + 8) in supplied_targets
+                and (not target_reset or read(sp + 8) == read(attack + 8))
+                and read(sp + 12) == -1,
                 "Recovery ordinary request arguments differ",
             )
             events.append(["ordinaryRequest", -1])
@@ -136,9 +140,18 @@ def capture(env, context, lifecycle, goal, fresh_ordinary=False):
         elif pc in [0x25C60C, 0x25D852, 0x25D4B0]:
             require(read(sp + 4) == attack, "Startup native driver owner differs")
             if pc == 0x25D852:
-                require(read(sp + 8) == target, "Startup admission target differs")
+                require(
+                    read(sp + 8) in supplied_targets, "Startup admission target differs"
+                )
             if pc == 0x25D4B0:
-                require(read(sp + 8) == 0, "Unexpected startup target assignment")
+                require(
+                    (
+                        read(sp + 8) in [0, *supplied_targets]
+                        if target_reset
+                        else read(sp + 8) == 0
+                    ),
+                    "Unexpected startup target assignment",
+                )
         elif pc == 0x25C080:
             require(
                 read(sp) in [0x25CCC0, 0x2161C3, 0x25F7A7],
@@ -174,6 +187,11 @@ def capture(env, context, lifecycle, goal, fresh_ordinary=False):
         return math.trunc(
             math.trunc(base * positive / 100) * max(0, min(100, 100 - negative)) / 100
         )
+
+    if target_reset:
+        from lib.bandit_target_reset_probe import capture as capture_reset
+
+        return capture_reset(env, context, lifecycle, goal, locals())
 
     def episode(
         direction,
