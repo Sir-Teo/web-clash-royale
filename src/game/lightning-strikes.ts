@@ -66,7 +66,7 @@ function apply(body: Entity, packet: HealthPacket) {
   if (body.hp <= 0) return;
   if (packet.healing) body.hp = Math.min(body.maxHp, body.hp + packet.damage);
   else if (packet.bypassShield) body.hp = Math.max(0, body.hp - packet.damage);
-  else if (!body.dash && !hidden(body)) {
+  else if (!body.dash && (!hidden(body) || packet.bypassHidden)) {
     if ((body.shield ?? 0) > 0)
       body.shield = Math.max(0, body.shield! - packet.damage);
     else body.hp = Math.max(0, body.hp - packet.damage);

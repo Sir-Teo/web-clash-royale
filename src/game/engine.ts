@@ -184,6 +184,8 @@ export interface Entity extends Point {
   nativeAreaCrownDamage?: true;
   /** Rules 46: native integer periodic buff damage against Crown Towers. */
   nativeBuffCrownDamage?: true;
+  /** Rules 47: retained Poison still ticks after Tesla finishes burrowing. */
+  nativeRetainedPoison?: true;
   dash?: { target: number; elapsed: number; remaining: number };
   dashCooldown?: number;
   attack: number;
@@ -278,7 +280,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -368,7 +370,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 46;
+    this.rulesVersion = r?.version ?? 47;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -877,6 +879,7 @@ export class Battle {
       ...(this.rulesVersion >= 42 && hasProjectileRange(id) ? { nativeProjectileRange: true as const } : {}),
       ...(this.rulesVersion >= 43 ? { nativeProjectileStep: true as const } : {}),
       ...(lostAttack ? { nativeLostAttack: lostAttack } : {}),
+      ...(this.rulesVersion >= 47 && id === "tesla" ? { nativeRetainedPoison: true as const } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
@@ -1323,7 +1326,7 @@ export class Battle {
       if (status.elapsed + 1e-8 >= poison.damageInterval) {
         status.elapsed -= poison.damageInterval;
         const damage = poisonTickDamage(entity);
-        this.hurt(entity, damage);
+        this.hurt(entity, damage, false, !!entity.nativeRetainedPoison);
       }
       if (status.remaining < 1e-8) entity.poison = undefined;
     }
@@ -2644,8 +2647,8 @@ export class Battle {
       }
     }
   }
-  private hurt(e: Entity, amount: number, decay = false) {
-    if (e.hp <= 0 || (!decay && (this.isHidden(e) || e.dash))) return;
+  private hurt(e: Entity, amount: number, decay = false, bypassHidden = false) {
+    if (e.hp <= 0 || (!decay && ((!bypassHidden && this.isHidden(e)) || e.dash))) return;
     if (e.shield && !decay) {
       e.shield = Math.max(0, e.shield - amount);
       if (e.shield === 0) {
