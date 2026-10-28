@@ -154,7 +154,7 @@ describe("combined pending King damage", () => {
     expect(forecast().evaluate("freeze", a).improves).toBe(true);
     battle.play("red", 1, a.x, a.y);
     step(battle, 6);
-    expect(king.hp).toBeCloseTo(270 - CARD_MAP.poison.damage * 0.4);
+    expect(king.hp).toBeCloseTo(270 - 49);
   });
 
   it("does not claim a rescue if the released shot still kills first", () => {

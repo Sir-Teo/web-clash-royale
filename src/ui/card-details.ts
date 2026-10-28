@@ -1,4 +1,5 @@
 import { projectileCrownDamage } from "../game/crown-damage";
+import { poisonTickDamage } from "../game/poison-damage";
 import { summonProfile, summonCycle } from "../game/summon-clock";
 import { balloonBombProfile } from "../game/balloon-bomb";
 import { CARD_MAP, type CardId } from "../game/cards";
@@ -301,7 +302,8 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
         stat("Damage per second", dps, "swords"),
         stat(
           "Crown Tower / second",
-          dps * poison.crownTowerDamageFraction,
+          poisonTickDamage({ kind: "tower", nativeBuffCrownDamage: true }) /
+            poison.damageInterval,
           "swords",
         ),
         stat("Duration", seconds(poison.duration), "timer"),

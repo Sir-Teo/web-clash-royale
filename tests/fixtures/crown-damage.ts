@@ -28,7 +28,7 @@ function setup() {
     "rocket",
     "lightning",
     "log",
-    "knight",
+    "poison",
     "archers",
     "zap",
   ];
@@ -39,7 +39,7 @@ function setup() {
   battle = new Battle({
     replay: {
       ...battle.exportReplay(),
-      version: Number(value("rules")) as 43 | 44 | 45,
+      version: Number(value("rules")) as 43 | 44 | 45 | 46,
     },
   });
   freeze();
@@ -79,6 +79,9 @@ document.querySelector("#cast")!.addEventListener("click", () => {
 document.querySelector("#advance")!.addEventListener("click", () => {
   for (let n = 0; n < 180; n++) battle.step();
 });
+document.querySelector("#advance3")!.addEventListener("click", () => {
+  for (let n = 0; n < 90; n++) battle.step();
+});
 document.querySelector("#replay")!.addEventListener("click", () => {
   const tick = battle.tick;
   battle = new Battle({ replay: battle.exportReplay() });
@@ -97,6 +100,7 @@ function render() {
   status.dataset.state = JSON.stringify({
     tick: battle.tick,
     version: battle.rulesVersion,
+    buffNative: !!victim.nativeBuffCrownDamage,
     hp: victim.hp,
     maxHp: victim.maxHp,
     forecast,

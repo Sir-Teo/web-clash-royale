@@ -1,5 +1,6 @@
 import { aiBodyValue as bodyValue } from "./ai-body-value";
 import { CARD_MAP, type CardId } from "./cards";
+import { poisonTickDamage } from "./poison-damage";
 import type { AreaEffect, Entity, Projectile, Team } from "./engine";
 import poison from "./poison-data.json" with { type: "json" };
 import { supportSpellTarget } from "./support-spell-targeting";
@@ -199,9 +200,7 @@ export function areaSpellTarget(
             ? 4
             : Math.min(3, (2 * radius) / Math.max(0.1, e.speed));
       const ticks = Math.floor(dwell / poison.damageInterval);
-      const packet =
-        CARD_MAP.poison.damage *
-        (e.kind === "tower" ? poison.crownTowerDamageFraction : 1);
+      const packet = poisonTickDamage(e);
       let damage = 0;
       for (let i = 0; i < ticks; i++) {
         const hit = shield > 0 ? Math.min(shield, packet) : packet;

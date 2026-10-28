@@ -223,7 +223,7 @@ describe("AI persistent area spell targets", () => {
       cloud("poison", target.x, target.y, { remaining: 2 }),
     ];
     expect(pendingSpellDamage(target, "red", [], areas)).toBeCloseTo(
-      4 * 121 * 0.4,
+      4 * 49,
     );
     expect(
       damageSpellTarget("fireball", "red", [target], [], areas),

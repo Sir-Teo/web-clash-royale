@@ -290,7 +290,7 @@ describe("AI Lightning targeting", () => {
     ).toBe(Infinity);
     step(battle, 1);
     expect(ownKing.shield).toBe(0);
-    expect(ownKing.hp).toBeCloseTo(100 - CARD_MAP.poison.damage * 0.4);
+    expect(ownKing.hp).toBeCloseTo(100 - 49);
     expect(battle.winner).toBeNull();
   });
 });

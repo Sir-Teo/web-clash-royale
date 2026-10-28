@@ -55,7 +55,7 @@ test("spell details describe their actual damage, allegiance and timed effects",
       "poison",
       {
         "Damage per second": "121",
-        "Crown Tower / second": "48.4",
+        "Crown Tower / second": "49",
         Duration: "8 s",
         Linger: "Up to 1 s",
       },

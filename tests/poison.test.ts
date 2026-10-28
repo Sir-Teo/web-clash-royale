@@ -110,7 +110,7 @@ describe("native Poison card", () => {
     const hp = tower.hp;
     expect(match.play("blue", 0, 4, 6).ok).toBe(true);
     for (let i = 0; i < 30; i++) match.step();
-    expect(tower.hp).toBeCloseTo(hp - CARD_MAP.poison.damage * 0.4);
+    expect(tower.hp).toBeCloseTo(hp - 49);
     expect(tesla.hp).toBe(tesla.maxHp);
     expect(tesla.poison).toBeUndefined();
     const host = snapshot(match);

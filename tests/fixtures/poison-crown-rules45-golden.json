@@ -1,0 +1,1778 @@
+{
+  "sourceCommit": "9b25d8f",
+  "stateFields": [
+    "tick",
+    "rulesVersion",
+    "nativeTowerLayout",
+    "nativeArmyFormation",
+    "nativeGroupFormation",
+    "nativeGroundDeployment",
+    "nativeArmyViewMirrored",
+    "entities",
+    "projectiles",
+    "areas",
+    "events",
+    "audioEvents",
+    "players",
+    "winner",
+    "reason",
+    "actions",
+    "randomState"
+  ],
+  "cases": [
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 45,
+        "seed": 3111,
+        "mode": "classic",
+        "deck": [
+          "giant",
+          "valkyrie",
+          "bomber",
+          "bowler",
+          "rage",
+          "ice-wizard",
+          "poison",
+          "goblin-barrel"
+        ],
+        "enemyDeck": [
+          "hog-rider",
+          "bandit",
+          "guards",
+          "prince",
+          "mortar",
+          "ice-wizard",
+          "rage",
+          "zap"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "valkyrie",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "guards",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 210,
+            "team": "red",
+            "card": "mortar",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 420,
+            "team": "blue",
+            "card": "giant",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 420,
+            "team": "red",
+            "card": "zap",
+            "x": 14,
+            "y": 13.133333333333047
+          },
+          {
+            "tick": 630,
+            "team": "blue",
+            "card": "bomber",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 945,
+            "team": "blue",
+            "card": "poison",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 945,
+            "team": "red",
+            "card": "prince",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1050,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1155,
+            "team": "blue",
+            "card": "rage",
+            "x": 14.365274921822666,
+            "y": 9.260853025442263
+          },
+          {
+            "tick": 1260,
+            "team": "red",
+            "card": "bandit",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1365,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1680,
+            "team": "blue",
+            "card": "goblin-barrel",
+            "x": 3.9198240613017497,
+            "y": 13.469079417608848
+          },
+          {
+            "tick": 1680,
+            "team": "red",
+            "card": "hog-rider",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1785,
+            "team": "red",
+            "card": "rage",
+            "x": 14.159057050454045,
+            "y": 14.930768564075795
+          },
+          {
+            "tick": 2100,
+            "team": "blue",
+            "card": "bowler",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2100,
+            "team": "red",
+            "card": "guards",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2415,
+            "team": "blue",
+            "card": "valkyrie",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2415,
+            "team": "red",
+            "card": "mortar",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2520,
+            "team": "red",
+            "card": "zap",
+            "x": 14,
+            "y": 15.475000000000334
+          },
+          {
+            "tick": 2835,
+            "team": "blue",
+            "card": "giant",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2940,
+            "team": "red",
+            "card": "prince",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3045,
+            "team": "blue",
+            "card": "bomber",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3255,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3360,
+            "team": "blue",
+            "card": "poison",
+            "x": 11.933224944107117,
+            "y": 25.132082388073567
+          },
+          {
+            "tick": 3465,
+            "team": "red",
+            "card": "bandit",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3570,
+            "team": "blue",
+            "card": "rage",
+            "x": 3.236761780687065,
+            "y": 9.37392874723196
+          },
+          {
+            "tick": 3780,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3780,
+            "team": "red",
+            "card": "hog-rider",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3885,
+            "team": "blue",
+            "card": "goblin-barrel",
+            "x": 14,
+            "y": 20.13333333333324
+          },
+          {
+            "tick": 3885,
+            "team": "red",
+            "card": "rage",
+            "x": 12.744499723553727,
+            "y": 14.770901050495734
+          },
+          {
+            "tick": 3990,
+            "team": "red",
+            "card": "guards",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4095,
+            "team": "blue",
+            "card": "bowler",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4095,
+            "team": "red",
+            "card": "mortar",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4200,
+            "team": "blue",
+            "card": "valkyrie",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4200,
+            "team": "red",
+            "card": "zap",
+            "x": 13.75075652114325,
+            "y": 19.180884095446842
+          },
+          {
+            "tick": 4410,
+            "team": "blue",
+            "card": "giant",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4410,
+            "team": "red",
+            "card": "prince",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4620,
+            "team": "blue",
+            "card": "bomber",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4620,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4725,
+            "team": "blue",
+            "card": "poison",
+            "x": 13.999935311801321,
+            "y": 12.299999996604042
+          },
+          {
+            "tick": 4725,
+            "team": "red",
+            "card": "bandit",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4830,
+            "team": "blue",
+            "card": "rage",
+            "x": 4.5271459078078795,
+            "y": 13.540646481826288
+          },
+          {
+            "tick": 4830,
+            "team": "red",
+            "card": "hog-rider",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4935,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4935,
+            "team": "red",
+            "card": "rage",
+            "x": 13.07311135558797,
+            "y": 13.884528147468474
+          },
+          {
+            "tick": 5040,
+            "team": "blue",
+            "card": "goblin-barrel",
+            "x": 5.818661863875386,
+            "y": 10.497083504373208
+          },
+          {
+            "tick": 5040,
+            "team": "red",
+            "card": "guards",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5250,
+            "team": "blue",
+            "card": "bowler",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5250,
+            "team": "red",
+            "card": "mortar",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5355,
+            "team": "red",
+            "card": "zap",
+            "x": 8.209434911431098,
+            "y": 7.5470762139579035
+          }
+        ],
+        "duration": 5396
+      },
+      "ai": false,
+      "deployed": [
+        "bandit",
+        "bomber",
+        "bowler",
+        "giant",
+        "goblin-barrel",
+        "guards",
+        "hog-rider",
+        "ice-wizard",
+        "mortar",
+        "poison",
+        "prince",
+        "rage",
+        "valkyrie",
+        "zap"
+      ],
+      "poisonedUpdates": {
+        "tower": 262,
+        "troop": 697
+      },
+      "buffedActiveUpdates": {
+        "rage": 589,
+        "slow": 651,
+        "both": 128
+      },
+      "barrelLandings": 3,
+      "scannedCards": [
+        "bandit",
+        "bomber",
+        "bowler",
+        "giant",
+        "goblins",
+        "guards",
+        "hog-rider",
+        "ice-wizard",
+        "mortar",
+        "prince",
+        "valkyrie"
+      ],
+      "towerDeaths": 4,
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "6d5888565c8a5dac27b48fc566ad964530df2a49de508495d494a3e25ea8e2e5"
+        },
+        {
+          "tick": 1200,
+          "digest": "af30c8bb38ad6ca3a075e272756bd9506b38c97aefedd50c2833554331f4f79f"
+        },
+        {
+          "tick": 1800,
+          "digest": "fde707496da9cdd732390c6b4ccd495a8739df7bee1cc8f04ac04c5175dd639c"
+        },
+        {
+          "tick": 2400,
+          "digest": "4b1a5c343e1934cdb38f7997e11503368c39008ee2e2317b10ffa5ce3d0b4b65"
+        },
+        {
+          "tick": 3000,
+          "digest": "a28c684c580bce75e1c7e88ab092759a14e35fc2f6250a4513619e80dbdfe2c6"
+        },
+        {
+          "tick": 3600,
+          "digest": "6d8cfd5b97063a7228b2965320398a2ce5e6a5cd1aa8e9ccd67c3f229cf24b38"
+        },
+        {
+          "tick": 4200,
+          "digest": "b57cb7a3a1b32f924add341cae2cdcf7d6df834be1e62034eb59d1c23813e590"
+        },
+        {
+          "tick": 4800,
+          "digest": "1b3190242bba729f946308b233fb84c4067ab7c97ceb4ba06dd22d273e280bd3"
+        },
+        {
+          "tick": 5396,
+          "digest": "b17d71147493917098bde603ad21c2bd8954c2c2d5abb3114d011ef29f019e60"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 45,
+        "seed": 4693,
+        "mode": "classic",
+        "deck": [
+          "sparky",
+          "bomb-tower",
+          "giant",
+          "executioner",
+          "rage",
+          "ice-wizard",
+          "freeze",
+          "mirror"
+        ],
+        "enemyDeck": [
+          "cannon",
+          "mortar",
+          "giant",
+          "electro-wizard",
+          "rage",
+          "ice-wizard",
+          "poison",
+          "lightning"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "giant",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 129,
+            "team": "red",
+            "card": "giant",
+            "x": 4.414502411149442,
+            "y": 3.5
+          },
+          {
+            "tick": 327,
+            "team": "red",
+            "card": "cannon",
+            "x": 9,
+            "y": 10
+          },
+          {
+            "tick": 420,
+            "team": "blue",
+            "card": "executioner",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 476,
+            "team": "red",
+            "card": "rage",
+            "x": 4.677440119027429,
+            "y": 10.396419950152213
+          },
+          {
+            "tick": 630,
+            "team": "blue",
+            "card": "rage",
+            "x": 11.308854308363907,
+            "y": 11.145333859817567
+          },
+          {
+            "tick": 673,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 13.883072649553966,
+            "y": 13.8
+          },
+          {
+            "tick": 840,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1103,
+            "team": "red",
+            "card": "mortar",
+            "x": 14.032070375479293,
+            "y": 14
+          },
+          {
+            "tick": 1260,
+            "team": "blue",
+            "card": "bomb-tower",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1423,
+            "team": "red",
+            "card": "poison",
+            "x": 3.5,
+            "y": 25.5
+          },
+          {
+            "tick": 1785,
+            "team": "blue",
+            "card": "mirror",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1867,
+            "team": "red",
+            "card": "giant",
+            "x": 14.08607251229696,
+            "y": 3.5
+          },
+          {
+            "tick": 2100,
+            "team": "blue",
+            "card": "freeze",
+            "x": 12.752274901627526,
+            "y": 6.410798091282049
+          },
+          {
+            "tick": 2269,
+            "team": "red",
+            "card": "electro-wizard",
+            "x": 4.408620763616637,
+            "y": 9
+          },
+          {
+            "tick": 2396,
+            "team": "red",
+            "card": "rage",
+            "x": 8.724398598521185,
+            "y": 12.299944424986183
+          },
+          {
+            "tick": 2730,
+            "team": "blue",
+            "card": "sparky",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2822,
+            "team": "red",
+            "card": "lightning",
+            "x": 11.26593652942325,
+            "y": 25.929008112298483
+          },
+          {
+            "tick": 3045,
+            "team": "blue",
+            "card": "giant",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3152,
+            "team": "red",
+            "card": "poison",
+            "x": 14.099503378508247,
+            "y": 22.704789661652416
+          },
+          {
+            "tick": 3371,
+            "team": "red",
+            "card": "cannon",
+            "x": 9,
+            "y": 10
+          },
+          {
+            "tick": 3465,
+            "team": "blue",
+            "card": "executioner",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3637,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 6.976092874499454,
+            "y": 13.059025261748452
+          },
+          {
+            "tick": 3675,
+            "team": "blue",
+            "card": "rage",
+            "x": 6.671771063627707,
+            "y": 11.139866126711485
+          },
+          {
+            "tick": 3780,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3879,
+            "team": "red",
+            "card": "giant",
+            "x": 4.650485991500318,
+            "y": 3.5
+          },
+          {
+            "tick": 3990,
+            "team": "blue",
+            "card": "bomb-tower",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4024,
+            "team": "red",
+            "card": "mortar",
+            "x": 3.8657053026804307,
+            "y": 14
+          },
+          {
+            "tick": 4179,
+            "team": "red",
+            "card": "electro-wizard",
+            "x": 14.24434682201478,
+            "y": 13.8
+          },
+          {
+            "tick": 4280,
+            "team": "red",
+            "card": "rage",
+            "x": 9.215342787745394,
+            "y": 13.990590895363873
+          },
+          {
+            "tick": 4305,
+            "team": "blue",
+            "card": "mirror",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4410,
+            "team": "blue",
+            "card": "freeze",
+            "x": 5.155207473192365,
+            "y": 13.60039500472966
+          },
+          {
+            "tick": 4425,
+            "team": "red",
+            "card": "poison",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4620,
+            "team": "blue",
+            "card": "sparky",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4657,
+            "team": "red",
+            "card": "lightning",
+            "x": 11.5,
+            "y": 25.425000000000004
+          },
+          {
+            "tick": 4830,
+            "team": "blue",
+            "card": "giant",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4937,
+            "team": "red",
+            "card": "cannon",
+            "x": 9,
+            "y": 10
+          },
+          {
+            "tick": 4971,
+            "team": "red",
+            "card": "mortar",
+            "x": 13.840694151063751,
+            "y": 14
+          },
+          {
+            "tick": 5040,
+            "team": "blue",
+            "card": "executioner",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5145,
+            "team": "blue",
+            "card": "rage",
+            "x": 14,
+            "y": 14.900000000000325
+          },
+          {
+            "tick": 5167,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 12.926541842986296,
+            "y": 13.8
+          },
+          {
+            "tick": 5250,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5254,
+            "team": "red",
+            "card": "electro-wizard",
+            "x": 10.88795697442417,
+            "y": 11.787629285596745
+          }
+        ],
+        "duration": 5400
+      },
+      "ai": true,
+      "deployed": [
+        "bomb-tower",
+        "cannon",
+        "electro-wizard",
+        "executioner",
+        "freeze",
+        "giant",
+        "ice-wizard",
+        "lightning",
+        "mirror",
+        "mortar",
+        "poison",
+        "rage",
+        "sparky"
+      ],
+      "poisonedUpdates": {
+        "tower": 58,
+        "troop": 245
+      },
+      "buffedActiveUpdates": {
+        "rage": 330,
+        "slow": 417,
+        "both": 88
+      },
+      "barrelLandings": 0,
+      "scannedCards": [
+        "bomb-tower",
+        "cannon",
+        "electro-wizard",
+        "executioner",
+        "giant",
+        "ice-wizard",
+        "mortar",
+        "sparky"
+      ],
+      "towerDeaths": 2,
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "8154d7b9b4ea81fb07576c1c21ab220fb7fcf26ece45583a19594190ce7b5075"
+        },
+        {
+          "tick": 1200,
+          "digest": "974b9d8b57f9d126574a2c2fdd0308bf7b88f19d170424ba91d8b036804775c0"
+        },
+        {
+          "tick": 1800,
+          "digest": "2db2ef92f0126fe9c1414dec4c69377b36b159892e0de4d211cd51220da7c185"
+        },
+        {
+          "tick": 2400,
+          "digest": "503121326330be3a36ed3f562f29a081262896361c47670446cbc574ac8e0b04"
+        },
+        {
+          "tick": 3000,
+          "digest": "920359c6adb6c2526b70b08a54b962510525c9b111ed0456feecf0a553ef8c70"
+        },
+        {
+          "tick": 3600,
+          "digest": "f874bb9cc253b7dd7dc5dff8751087944f3cf24b4d8605fa73e2ec30c262bd3c"
+        },
+        {
+          "tick": 4200,
+          "digest": "d033681f6d8cd370c64094702c16948de01194de89fd60b1af4dc8ad45870208"
+        },
+        {
+          "tick": 4800,
+          "digest": "6f662d3edf6215bd7bd1f3cc8d9ab6b2830a5e6fab5b658273eea7bfa5c9612b"
+        },
+        {
+          "tick": 5400,
+          "digest": "650a5459789baea0864148e86d3e6e31cf28de6a7b2d196efcddc80253cd1433"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 45,
+        "seed": 7047,
+        "mode": "classic",
+        "deck": [
+          "balloon",
+          "minions",
+          "princess",
+          "lava-hound",
+          "rage",
+          "ice-wizard",
+          "goblin-barrel",
+          "mirror"
+        ],
+        "enemyDeck": [
+          "mortar",
+          "tesla",
+          "princess",
+          "cannon",
+          "ice-wizard",
+          "minions",
+          "rage",
+          "arrows"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "balloon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "mortar",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 315,
+            "team": "blue",
+            "card": "minions",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 315,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 420,
+            "team": "blue",
+            "card": "rage",
+            "x": 14.013896865580323,
+            "y": 11.168884696633398
+          },
+          {
+            "tick": 525,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 735,
+            "team": "blue",
+            "card": "goblin-barrel",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 735,
+            "team": "red",
+            "card": "cannon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 945,
+            "team": "blue",
+            "card": "princess",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1050,
+            "team": "red",
+            "card": "tesla",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1260,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1260,
+            "team": "red",
+            "card": "arrows",
+            "x": 4,
+            "y": 19.26666666666653
+          },
+          {
+            "tick": 1575,
+            "team": "red",
+            "card": "princess",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1680,
+            "team": "red",
+            "card": "rage",
+            "x": 4,
+            "y": 12.466666666666658
+          },
+          {
+            "tick": 1785,
+            "team": "blue",
+            "card": "lava-hound",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2100,
+            "team": "red",
+            "card": "mortar",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2415,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2520,
+            "team": "blue",
+            "card": "mirror",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 2625,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2835,
+            "team": "red",
+            "card": "cannon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2940,
+            "team": "blue",
+            "card": "balloon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3150,
+            "team": "blue",
+            "card": "minions",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3150,
+            "team": "red",
+            "card": "tesla",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3360,
+            "team": "blue",
+            "card": "rage",
+            "x": 14.162415421429174,
+            "y": 9.757105423918773
+          },
+          {
+            "tick": 3360,
+            "team": "red",
+            "card": "arrows",
+            "x": 14.162415421429174,
+            "y": 9.757105423918773
+          },
+          {
+            "tick": 3570,
+            "team": "blue",
+            "card": "goblin-barrel",
+            "x": 10.450681676357606,
+            "y": 4.373921412048944
+          },
+          {
+            "tick": 3780,
+            "team": "blue",
+            "card": "princess",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 3780,
+            "team": "red",
+            "card": "princess",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3885,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3885,
+            "team": "red",
+            "card": "rage",
+            "x": 4.667645199251619,
+            "y": 18.781131615900303
+          },
+          {
+            "tick": 3990,
+            "team": "red",
+            "card": "mortar",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 4095,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4200,
+            "team": "blue",
+            "card": "lava-hound",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4305,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4515,
+            "team": "blue",
+            "card": "mirror",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4515,
+            "team": "red",
+            "card": "cannon",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 4725,
+            "team": "blue",
+            "card": "balloon",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 4830,
+            "team": "blue",
+            "card": "minions",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 4935,
+            "team": "blue",
+            "card": "rage",
+            "x": 12.352004476814892,
+            "y": 10.776597145848216
+          },
+          {
+            "tick": 5040,
+            "team": "blue",
+            "card": "goblin-barrel",
+            "x": 10.949276127687117,
+            "y": 7.522289655604974
+          },
+          {
+            "tick": 5040,
+            "team": "red",
+            "card": "tesla",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5145,
+            "team": "blue",
+            "card": "princess",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5145,
+            "team": "red",
+            "card": "arrows",
+            "x": 11.693256548626792,
+            "y": 8.109555113680567
+          },
+          {
+            "tick": 5250,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5250,
+            "team": "red",
+            "card": "princess",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5355,
+            "team": "red",
+            "card": "rage",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5460,
+            "team": "red",
+            "card": "mortar",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5565,
+            "team": "blue",
+            "card": "lava-hound",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 5565,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 5775,
+            "team": "red",
+            "card": "minions",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 5880,
+            "team": "blue",
+            "card": "mirror",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 5880,
+            "team": "red",
+            "card": "cannon",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 5985,
+            "team": "red",
+            "card": "tesla",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 6090,
+            "team": "blue",
+            "card": "balloon",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 6090,
+            "team": "red",
+            "card": "arrows",
+            "x": 12.861142485723526,
+            "y": 17.672341445749527
+          },
+          {
+            "tick": 6300,
+            "team": "blue",
+            "card": "minions",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 6405,
+            "team": "blue",
+            "card": "rage",
+            "x": 12.87888140567359,
+            "y": 11.982725685989415
+          },
+          {
+            "tick": 6510,
+            "team": "blue",
+            "card": "goblin-barrel",
+            "x": 11.392109161181141,
+            "y": 8.166733270753793
+          },
+          {
+            "tick": 6510,
+            "team": "red",
+            "card": "princess",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 6615,
+            "team": "blue",
+            "card": "princess",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 6615,
+            "team": "red",
+            "card": "rage",
+            "x": 4.572218583470068,
+            "y": 18.550435856989406
+          },
+          {
+            "tick": 6720,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 6720,
+            "team": "red",
+            "card": "mortar",
+            "x": 14,
+            "y": 10
+          }
+        ],
+        "duration": 6827
+      },
+      "ai": false,
+      "deployed": [
+        "arrows",
+        "balloon",
+        "cannon",
+        "goblin-barrel",
+        "ice-wizard",
+        "lava-hound",
+        "minions",
+        "mirror",
+        "mortar",
+        "princess",
+        "rage",
+        "tesla"
+      ],
+      "poisonedUpdates": {
+        "tower": 0,
+        "troop": 0
+      },
+      "buffedActiveUpdates": {
+        "rage": 981,
+        "slow": 2243,
+        "both": 60
+      },
+      "barrelLandings": 4,
+      "scannedCards": [
+        "balloon",
+        "cannon",
+        "goblins",
+        "ice-wizard",
+        "lava-hound",
+        "lava-pup",
+        "minions",
+        "mortar",
+        "princess",
+        "tesla"
+      ],
+      "towerDeaths": 4,
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "77608af547cc0b4f47336775f347add8e2810cb2b46e28e280c458dc3adccb44"
+        },
+        {
+          "tick": 1200,
+          "digest": "56b968fcaaf2728d104310753104e5212f66757fb5a19f9f57954db36f9717cf"
+        },
+        {
+          "tick": 1800,
+          "digest": "e846f9e24a5628d87ae5e97810f67b14268cc562956231dda592c66d10b49596"
+        },
+        {
+          "tick": 2400,
+          "digest": "ef4f7e09ac03d7cc75e3b968c2518db0a0612254808df9135a3c6c965d572e94"
+        },
+        {
+          "tick": 3000,
+          "digest": "bc5e74cb9efd1b1b19e7c31a9af30b7ac90ade15398c5964b82f5a6ef71b3c58"
+        },
+        {
+          "tick": 3600,
+          "digest": "2edbc3da8a5967e0c48fe1f409fbc0772a073c41d5a8d7c7ce0ef3d2f5536569"
+        },
+        {
+          "tick": 4200,
+          "digest": "f5e89bd06722401582c8caae31ad1eb6ad97227a36e9877b5d7d65fe57068f74"
+        },
+        {
+          "tick": 4800,
+          "digest": "390bde278a007677397c44f112b782b0c37f846634c992bfbd20eec11490b4b7"
+        },
+        {
+          "tick": 5400,
+          "digest": "406512342210baace7bbb9d23e396093879a642e416cb2092d0554b620eb1352"
+        },
+        {
+          "tick": 6000,
+          "digest": "81178ca7aa5971394200dca9f09ad715fbed680ad2a1b99781ad8ef287cb4d3c"
+        },
+        {
+          "tick": 6600,
+          "digest": "6939b8cbab2917ad1172a6cebb4a5c05b58b6b130ab84cadaf0b4fef57a6f834"
+        },
+        {
+          "tick": 6827,
+          "digest": "706bd08bc7857104e6dd5d158c1ca8c427d2c5310dc272010a7b18c903872eff"
+        }
+      ]
+    },
+    {
+      "replay": {
+        "rulesFamily": "origin",
+        "version": 45,
+        "seed": 5317,
+        "mode": "classic",
+        "deck": [
+          "poison",
+          "fireball",
+          "zap",
+          "lightning",
+          "log",
+          "electro-wizard",
+          "rage",
+          "ice-wizard"
+        ],
+        "enemyDeck": [
+          "hog-rider",
+          "bandit",
+          "guards",
+          "prince",
+          "mortar",
+          "ice-wizard",
+          "rage",
+          "zap"
+        ],
+        "actions": [
+          {
+            "tick": 0,
+            "team": "blue",
+            "card": "fireball",
+            "x": 3.5,
+            "y": 6.5
+          },
+          {
+            "tick": 0,
+            "team": "red",
+            "card": "zap",
+            "x": 3.5,
+            "y": 25.5
+          },
+          {
+            "tick": 105,
+            "team": "blue",
+            "card": "log",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 105,
+            "team": "red",
+            "card": "mortar",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 420,
+            "team": "blue",
+            "card": "poison",
+            "x": 3.5,
+            "y": 6.5
+          },
+          {
+            "tick": 630,
+            "team": "blue",
+            "card": "rage",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 630,
+            "team": "red",
+            "card": "prince",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 840,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 945,
+            "team": "blue",
+            "card": "electro-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 1050,
+            "team": "red",
+            "card": "bandit",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1260,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 22
+          },
+          {
+            "tick": 1365,
+            "team": "red",
+            "card": "hog-rider",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 1680,
+            "team": "blue",
+            "card": "lightning",
+            "x": 3.5,
+            "y": 6.5
+          },
+          {
+            "tick": 1680,
+            "team": "red",
+            "card": "guards",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 1785,
+            "team": "red",
+            "card": "rage",
+            "x": 3.576564338656084,
+            "y": 23.126505501661427
+          },
+          {
+            "tick": 1890,
+            "team": "blue",
+            "card": "zap",
+            "x": 3.5,
+            "y": 6.5
+          },
+          {
+            "tick": 1995,
+            "team": "red",
+            "card": "zap",
+            "x": 3.5,
+            "y": 25.5
+          },
+          {
+            "tick": 2205,
+            "team": "blue",
+            "card": "fireball",
+            "x": 3.5,
+            "y": 6.5
+          },
+          {
+            "tick": 2310,
+            "team": "red",
+            "card": "mortar",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2415,
+            "team": "blue",
+            "card": "log",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 2730,
+            "team": "blue",
+            "card": "poison",
+            "x": 14.5,
+            "y": 6.5
+          },
+          {
+            "tick": 2835,
+            "team": "red",
+            "card": "prince",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 2940,
+            "team": "blue",
+            "card": "rage",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 2940,
+            "team": "red",
+            "card": "ice-wizard",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3255,
+            "team": "blue",
+            "card": "electro-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3255,
+            "team": "red",
+            "card": "bandit",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "tick": 3465,
+            "team": "blue",
+            "card": "ice-wizard",
+            "x": 4,
+            "y": 22
+          },
+          {
+            "tick": 3570,
+            "team": "red",
+            "card": "hog-rider",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3780,
+            "team": "blue",
+            "card": "lightning",
+            "x": 14.5,
+            "y": 6.5
+          },
+          {
+            "tick": 3780,
+            "team": "red",
+            "card": "guards",
+            "x": 14,
+            "y": 10
+          },
+          {
+            "tick": 3885,
+            "team": "blue",
+            "card": "zap",
+            "x": 14.5,
+            "y": 6.5
+          },
+          {
+            "tick": 3885,
+            "team": "red",
+            "card": "rage",
+            "x": 9.70754635215005,
+            "y": 26.311323861829727
+          }
+        ],
+        "duration": 3943
+      },
+      "ai": false,
+      "deployed": [
+        "bandit",
+        "electro-wizard",
+        "fireball",
+        "guards",
+        "hog-rider",
+        "ice-wizard",
+        "lightning",
+        "log",
+        "mortar",
+        "poison",
+        "prince",
+        "rage",
+        "zap"
+      ],
+      "poisonedUpdates": {
+        "tower": 524,
+        "troop": 350
+      },
+      "buffedActiveUpdates": {
+        "rage": 96,
+        "slow": 654,
+        "both": 0
+      },
+      "barrelLandings": 0,
+      "scannedCards": [
+        "bandit",
+        "electro-wizard",
+        "guards",
+        "hog-rider",
+        "ice-wizard",
+        "prince"
+      ],
+      "towerDeaths": 4,
+      "checkpoints": [
+        {
+          "tick": 600,
+          "digest": "6e1f8ba0a4adc3a9a9413604fdcbce91a896cc77e4ff3aff40ae9ebb9544a611"
+        },
+        {
+          "tick": 1200,
+          "digest": "6c2106450c66638178f1b83fcbc511ff8a233bc29464e3bb7e05a6a7587675c5"
+        },
+        {
+          "tick": 1800,
+          "digest": "8ed04735196e379da14610bbb85a6060f60daaee29a0816c6cc972dd973eee85"
+        },
+        {
+          "tick": 2400,
+          "digest": "896b13008be29b4c3473ee772a64af6e93ee4a6a2695f6c50bb469f17b04f873"
+        },
+        {
+          "tick": 3000,
+          "digest": "9b74e9eace3b10a7d8a6628f3ecdd834238cf1dddf62a8ed126dd959f314e829"
+        },
+        {
+          "tick": 3600,
+          "digest": "8bffc4933bcfc17b86f2bf743a0314ececa1610a5ce4378f459b4a7834423216"
+        },
+        {
+          "tick": 3943,
+          "digest": "0f8474d955026c18505bc1479aa09f074f1359acd46251a3e19cc18190811f43"
+        }
+      ]
+    }
+  ]
+}

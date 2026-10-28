@@ -1,4 +1,4 @@
-import { CARD_MAP } from "./cards";
+import { poisonTickDamage } from "./poison-damage";
 import { COMBAT_STEP, HEAL_PER_TICK } from "./combat";
 import type { AreaEffect, Entity, Projectile } from "./engine";
 import {
@@ -124,9 +124,7 @@ export function poisonDamagePackets(
       status.elapsed -= poison.damageInterval;
       packets.push({
         step,
-        damage:
-          CARD_MAP.poison.damage *
-          (target.kind === "tower" ? poison.crownTowerDamageFraction : 1),
+        damage: poisonTickDamage(target),
         phase: 0,
         born: 0,
         order: -1,

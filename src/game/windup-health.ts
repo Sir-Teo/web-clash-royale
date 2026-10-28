@@ -14,6 +14,7 @@ import {
   type WindupHealthFrame,
 } from "./tornado-pull";
 import { healthPackets, type HealthPacket } from "./status-health";
+import { poisonTickDamage } from "./poison-damage";
 import {
   createLightningPlan,
   lightningDamageMap,
@@ -164,8 +165,7 @@ function healthProjection(
         poisoned.elapsed -= poison.damageInterval;
         record(
           step,
-          CARD_MAP.poison.damage *
-            (attacker.kind === "tower" ? poison.crownTowerDamageFraction : 1),
+          poisonTickDamage(attacker),
           0,
           -1,
         );

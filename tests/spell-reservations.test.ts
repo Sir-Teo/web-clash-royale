@@ -181,9 +181,9 @@ describe("coordinated spell reservations", () => {
     const { battle, princess, reserve } = setup();
     princess.hp = 100;
     princess.poison = { remaining: 0.2, elapsed: 0.9 };
-    expect(reserve(princess)).toBeCloseTo(CARD_MAP.poison.damage * 0.4);
+    expect(reserve(princess)).toBeCloseTo(49);
     step(battle, 6);
-    expect(princess.hp).toBeCloseTo(100 - CARD_MAP.poison.damage * 0.4);
+    expect(princess.hp).toBeCloseTo(100 - 49);
   });
 
   it.each(["troop", "tower"] as const)(

@@ -1,4 +1,5 @@
 import { projectileCrownDamage } from "./crown-damage";
+import { poisonTickDamage } from "./poison-damage";
 import { barrelFormation } from "./barrel-formation";
 import { distantTarget, spawnLane, type NativeLane } from "./distant-targets";
 import { attackReach, minimumAttackDistance, NATIVE_RANGE_RADIUS_FACTOR } from "./attack-range";
@@ -181,6 +182,8 @@ export interface Entity extends Point {
   nativeProjectileCrownDamage?: true;
   /** Rules 45: native integer area damage against Crown Towers. */
   nativeAreaCrownDamage?: true;
+  /** Rules 46: native integer periodic buff damage against Crown Towers. */
+  nativeBuffCrownDamage?: true;
   dash?: { target: number; elapsed: number; remaining: number };
   dashCooldown?: number;
   attack: number;
@@ -275,7 +278,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -365,7 +368,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 45;
+    this.rulesVersion = r?.version ?? 46;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -475,6 +478,7 @@ export class Battle {
       kind: "tower",
       ...(this.rulesVersion >= 44 ? { nativeProjectileCrownDamage: true as const } : {}),
       ...(this.rulesVersion >= 45 ? { nativeAreaCrownDamage: true as const } : {}),
+      ...(this.rulesVersion >= 46 ? { nativeBuffCrownDamage: true as const } : {}),
       hp: king ? kingHp : 3052,
       maxHp: king ? kingHp : 3052,
       radius,
@@ -1318,9 +1322,7 @@ export class Battle {
       status.elapsed += STEP;
       if (status.elapsed + 1e-8 >= poison.damageInterval) {
         status.elapsed -= poison.damageInterval;
-        const damage =
-          CARD_MAP.poison.damage *
-          (entity.kind === "tower" ? poison.crownTowerDamageFraction : 1);
+        const damage = poisonTickDamage(entity);
         this.hurt(entity, damage);
       }
       if (status.remaining < 1e-8) entity.poison = undefined;
