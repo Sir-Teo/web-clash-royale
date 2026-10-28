@@ -39,6 +39,7 @@ import { barrelTarget } from "./barrel-targeting";
 import { graveyardPlan } from "./graveyard-targeting";
 import { armyPlan, isArmyCard } from "./army-targeting";
 import { meleeInterceptTarget } from "./melee-intercept";
+import { minerInterceptTarget } from "./miner-intercept";
 import { finishesKingBefore } from "./king-spell-race";
 import { createKingDefense } from "./king-defense";
 import { attackFlight } from "./attack-flight";
@@ -3365,7 +3366,11 @@ export class Battle {
     }
     const intercept =
       threat && a.c.kind === "troop"
-        ? meleeInterceptTarget(
+        ? a.played === "miner" && currentPlacementPolicy
+          ? minerInterceptTarget("red", threat, this.entities,
+              (point) => this.canPlace("red", a.played, point.x, point.y).ok,
+              this.areas)
+          : meleeInterceptTarget(
             a.played,
             "red",
             threat,

@@ -22,6 +22,8 @@ Siege decks can save for offensive X-Bow and Mortar placements with a two-elixir
 
 Miner decks use enemy-side tunnels to pressure weaker Crowns and exposed Elixir Collectors. They keep two elixir, check which target Miner can actually acquire, and favor landings with less defensive fire. Known hazards are checked against tunnel arrival time. A nearly defeated Crown or exposed Collector can interrupt siege savings, while an approaching enemy push brings the AI back to defense.
 
+Against a moving building-seeker, a defensive Miner includes the tunnel in its intercept timing before deployment and windup. Known Freeze releases and current movement buffs affect the lead. Mirror uses the same tunnel at its actual card cost.
+
 Goblin Barrel decks can pressure weaker Crowns and exposed Collectors on a quiet field. They check all three Goblins' landing positions, keep two elixir and avoid guarded sites or spells still active when the Barrel lands. A Barrel already flying toward a target prevents another immediate cast at the same spot. Normal troop support can follow as elixir regenerates.
 
 Graveyard decks save the spell's cost plus two elixir and use placements near the arena edge to pressure a Princess while protecting the dormant King. The AI checks the whole possible spawn area, avoids guarded lanes and known harmful effects, and holds the investment when little match time remains. Huts, siege and Graveyard share a pressure budget; useful spell finishers and exposed-Collector counters can still take priority.

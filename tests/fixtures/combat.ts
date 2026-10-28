@@ -113,6 +113,10 @@ function setup() {
     replay: { rulesFamily: "local", version: 5, seed: 12, mode: "classic",
       deck: STARTER_DECK, enemyDeck: STARTER_DECK, actions: [], duration: 0 },
   } : { seed: selectedScene === "ai-lightning-combo" ? 8 : selectedScene === "ai-lightning-followup" ? 1 : selectedScene === "ai-spells-mirror" ? 2 : 12, ai: selectedScene.startsWith("ai-") });
+  if (selectedScene === "ai-miner-defense-legal") battle = new Battle({ seed: 73, ai: true,
+    deck: ["hog-rider", "knight", "archers", "skeletons", "goblins", "fireball", "zap", "cannon"],
+    enemyDeck: ["miner", "pekka", "three-musketeers", "golem", "rocket", "lightning", "freeze", "balloon"],
+  });
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
@@ -120,7 +124,7 @@ function setup() {
     battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
-  for (const t of battle.entities) t.active = false;
+  for (const t of battle.entities) t.active = selectedScene === "ai-miner-defense-legal" && !t.king;
   const scenario = (document.querySelector("#scenario") as HTMLSelectElement)
     .value;
   (document.querySelector("#five") as HTMLButtonElement).hidden = !scenario.startsWith("ai-army-");
@@ -296,6 +300,29 @@ function setup() {
       } else if (scenario.endsWith("blast")) cast("poison", "blue", 14.5, 25.5);
       else if (scenario.endsWith("guard"))
         for (const body of unit("wizard", "blue", 14.5, 25.5)) body.speed = 0;
+    }
+  } else if (scenario.startsWith("ai-miner-defense-")) {
+    if (scenario.endsWith("legal")) battle.play("blue", battle.players.blue.hand.indexOf("hog-rider"), 14.5, 18);
+    else {
+      if (scenario.endsWith("king")) {
+        const tower = battle.entities.find(e => e.team === "red" && e.lane === "right")!;
+        (battle as unknown as { hurt: (body: Entity, damage: number) => void }).hurt(tower, tower.hp);
+        Object.assign(battle.entities.find(e => e.team === "red" && e.king)!, { active: false, activation: 0 });
+      }
+      for (const hog of unit("hog-rider", "blue", 14.5, 14.2)) {
+        hog.deploy = 2.6;
+        if (scenario.endsWith("rage")) hog.rage = { remaining: 7.6 };
+        if (scenario.endsWith("stun")) hog.stun = 4.6;
+      }
+      if (scenario.endsWith("rage-area")) cast("rage", "blue", 14.5, 14.2);
+      if (scenario.endsWith("freeze-area")) {
+        cast("freeze", "red", 14.5, 14.2);
+        battle.actions = battle.actions.filter(action => action.team !== "red");
+      }
+      battle.players.red.hand = [scenario.endsWith("mirror") ? "mirror" : "miner", "pekka", "pekka", "pekka"];
+      battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
+      battle.players.red.elixir = scenario.endsWith("mirror") ? 4 : 3;
+      if (scenario.endsWith("mirror")) battle.players.red.lastPlayed = "miner";
     }
   } else if (scenario.startsWith("ai-miner-")) {
     for (const tower of battle.entities.filter(e => e.team === "blue" && !e.king)) tower.active = true;
