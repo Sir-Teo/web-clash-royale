@@ -50,6 +50,10 @@
     {
       "path": "reference/client/ordinary-delivery-native-trace.json",
       "sha256": "728859ae4e7117355e4ef00041286a79ac46d44a4e19cc723e10ce45071c24e7"
+    },
+    {
+      "path": "reference/client/bandit-ordinary-native-trace.json",
+      "sha256": "5266a984039b1772cde8aad4bc64ea7a9788ad8edbcc1110af040b030f6aa745"
     }
   ],
   "nativeDash": {
@@ -112,6 +116,25 @@
     "normalChargeUpdate": 47,
     "rageChargeUpdate": 87,
     "scope": "Post-dash committed ordinary cycles with supplied existing references; packet/level construction and natural acquisition remain excluded"
+  },
+  "nativeOrdinary": {
+    "attackUpdate": "0x25c60c..0x25d068",
+    "initialElapsedMs": 0,
+    "initialReloadMs": 0,
+    "normalRequestUpdates": [
+      8,
+      28,
+      48,
+      68
+    ],
+    "rageRequestUpdates": [
+      6,
+      21,
+      36,
+      51,
+      66
+    ],
+    "scope": "Fresh close-range supplied existing references; constructor/target-setter clock values use the separate roster prerequisite; natural deployment and acquisition remain excluded"
   },
   "output": {
     "path": "src/game/bandit-data.json",

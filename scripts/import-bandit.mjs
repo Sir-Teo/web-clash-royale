@@ -16,6 +16,7 @@ const paths = [
   "reference/client/dash-recovery-native-trace.json",
   "reference/client/dash-transition-native-trace.json",
   "reference/client/ordinary-delivery-native-trace.json",
+  "reference/client/bandit-ordinary-native-trace.json",
 ];
 const inputs = await Promise.all(paths.map((path) => readFile(path)));
 const card = csvRows(inputs[0].toString()).find((row) => row.Name === "Assassin");
@@ -27,6 +28,12 @@ const goals = JSON.parse(inputs[6]);
 const admission = JSON.parse(inputs[7]), startup = JSON.parse(inputs[8]);
 const recovery = JSON.parse(inputs[9]);
 const transition = JSON.parse(inputs[10]), delivery = JSON.parse(inputs[11]);
+const ordinary = JSON.parse(inputs[12]);
+if (createHash("sha256").update(inputs[12]).digest("hex") !== "5266a984039b1772cde8aad4bc64ea7a9788ad8edbcc1110af040b030f6aa745" ||
+    ordinary.profiles.initialTargetDistance !== 1750 || ordinary.profiles.initialElapsedMs !== 0 ||
+    ordinary.profiles.initialReloadMs !== 0 || ordinary.cases[0].frames[7].ordinaryRequests.length !== 1 ||
+    ordinary.controls[0].frames[5].elapsedMs !== 1002 || ordinary.controls[1].frames[6].clockMs !== 933)
+  throw new Error("Recheck native Bandit fresh ordinary clock and Rage phase");
 if (createHash("sha256").update(inputs[10]).digest("hex") !== "00fe570575dad3081b4ae98f9afae62b8bf8d5a271fdddc2f5608a1733860077" ||
     createHash("sha256").update(inputs[11]).digest("hex") !== "728859ae4e7117355e4ef00041286a79ac46d44a4e19cc723e10ce45071c24e7" ||
     transition.profiles.dashAdmissionPhaseMaximumMs !== startup.stepMs ||
@@ -187,6 +194,14 @@ await writeFile("reference/client/bandit-manifest.json", JSON.stringify({
     normalChargeUpdate: 47,
     rageChargeUpdate: 87,
     scope: "Post-dash committed ordinary cycles with supplied existing references; packet/level construction and natural acquisition remain excluded",
+  },
+  nativeOrdinary: {
+    attackUpdate: "0x25c60c..0x25d068",
+    initialElapsedMs: ordinary.profiles.initialElapsedMs,
+    initialReloadMs: ordinary.profiles.initialReloadMs,
+    normalRequestUpdates: [8, 28, 48, 68],
+    rageRequestUpdates: [6, 21, 36, 51, 66],
+    scope: "Fresh close-range supplied existing references; constructor/target-setter clock values use the separate roster prerequisite; natural deployment and acquisition remain excluded",
   },
   output: { path: outputPath, sha256: sha256(output) },
 }, null, 2) + "\n");

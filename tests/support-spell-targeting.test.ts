@@ -116,7 +116,7 @@ describe("friendly Heal and Clone AI", () => {
       guard,
       unit(51, "wizard"),
       wounded(52, "wizard", 0),
-      wounded(54, "wizard", 0.1, { team: "blue" }),
+      wounded(55, "wizard", 0.1, { team: "blue" }),
       wounded(55, "cannon", 0.1),
       ...b.entities.map((e) => ({ ...e, hp: 1 })),
     ];
@@ -521,7 +521,7 @@ describe("friendly Heal and Clone AI", () => {
       expect(snapshot(replay)).toEqual(snapshot(battle));
       expect(replay.audioEvents).toEqual(battle.audioEvents);
       expect(replay.exportReplay()).toMatchObject({
-        version: 54,
+        version: 55,
         rulesFamily: "origin",
       });
     });

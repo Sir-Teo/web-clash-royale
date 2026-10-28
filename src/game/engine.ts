@@ -203,6 +203,8 @@ export interface Entity extends Point {
   nativeBanditCadence?: true;
   /** Rules 54: committed post-dash ordinary hits and native fresh-charge phase. */
   nativeBanditTransitions?: true;
+  /** Rules 55: use the native clock for newly admitted ordinary attacks too. */
+  nativeBanditOrdinary?: true;
   banditRecovery?: BanditRecoveryClock;
   dashReentry?: true;
   dashCharge?: { target: number; remainingMs: number; carry: number; started?: true };
@@ -302,7 +304,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53 | 54;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -392,7 +394,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 54;
+    this.rulesVersion = r?.version ?? 55;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -909,6 +911,7 @@ export class Battle {
       ...(this.rulesVersion >= 52 && id === "bandit" ? { nativeBanditRecovery: true as const } : {}),
       ...(this.rulesVersion >= 53 && id === "bandit" ? { nativeBanditCadence: true as const } : {}),
       ...(this.rulesVersion >= 54 && id === "bandit" ? { nativeBanditTransitions: true as const } : {}),
+      ...(this.rulesVersion >= 55 && id === "bandit" ? { nativeBanditOrdinary: true as const } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
@@ -1934,6 +1937,12 @@ export class Battle {
       if (e.nativeBanditTransitions && e.banditRecovery?.elapsedMs && !committedCycle && !this.inRange(e, target))
         e.banditRecovery = undefined;
       if (this.inRange(e, target) || committedCycle) {
+        if (e.nativeBanditOrdinary && !e.banditRecovery && e.cooldown <= 1e-8) {
+          const frameTime = bandit.dash.startup.stepMs / 1000;
+          const before = (this.tick - 1) * STEP;
+          e.banditRecovery = { elapsedMs: 0, reloadMs: 0,
+            carry: Math.max(0, before - Math.floor((before + 1e-8) / frameTime) * frameTime) };
+        }
         if (e.banditRecovery) {
           const continuing = e.nativeBanditCadence && e.banditRecovery.elapsedMs > 0;
           if (continuing) {
