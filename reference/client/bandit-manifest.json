@@ -83,6 +83,19 @@
     "firstRequestAfterMissUpdates": 8,
     "scope": "First ordinary request only; downstream damage and view bodies retain shared runtime behavior"
   },
+  "nativeCadence": {
+    "attackUpdate": "0x25c60c..0x25d068",
+    "ordinaryReload": "0x25e681..0x25e69f",
+    "stepMs": 50,
+    "ordinaryRequests": 104,
+    "rageRequestUpdates": [
+      42,
+      57,
+      72,
+      86
+    ],
+    "scope": "Continuing post-landing ordinary requests; downstream damage and view bodies retain shared runtime behavior"
+  },
   "output": {
     "path": "src/game/bandit-data.json",
     "sha256": "867157ab8c7e8fd77e24e84471da7b60c9212167ef33e9efa1cadd9143569f88"

@@ -37,6 +37,11 @@ const recoveryWitnesses = [
 ];
 if (recoveryWitnesses.some(([row, tick]) => row?.frames.find((f) => f.ordinaryRequests.length)?.step !== tick))
   throw new Error("Recheck native Bandit first ordinary recovery requests");
+const ordinaryRequestCount = [...recovery.cases, ...recovery.controls].reduce((sum, row) =>
+  sum + row.frames.reduce((count, frame) => count + frame.ordinaryRequests.length, 0), 0);
+if (ordinaryRequestCount !== 104 || JSON.stringify(recovery.controls[0].frames.filter((f) =>
+    f.ordinaryRequests.length).map((f) => f.step)) !== "[42,57,72,86]")
+  throw new Error("Recheck native Bandit continuing ordinary cadence");
 if (createHash("sha256").update(inputs[7]).digest("hex") !== "a772e93de669715acf0c798fce3c6cae75e0d425442ac1d2870e11e1ccc0dbce" ||
     createHash("sha256").update(inputs[8]).digest("hex") !== "cce10a224850d79720d667d507222f8bb381169e7f65720fd376376b5d9fff63" ||
     admission.profiles.dashMinimum !== 4000 || startup.profiles.retentionMaximum !== 7500 ||
@@ -154,6 +159,14 @@ await writeFile("reference/client/bandit-manifest.json", JSON.stringify({
     firstRequestAfterHitUpdates: 19,
     firstRequestAfterMissUpdates: 8,
     scope: "First ordinary request only; downstream damage and view bodies retain shared runtime behavior",
+  },
+  nativeCadence: {
+    attackUpdate: "0x25c60c..0x25d068",
+    ordinaryReload: "0x25e681..0x25e69f",
+    stepMs: recovery.stepMs,
+    ordinaryRequests: ordinaryRequestCount,
+    rageRequestUpdates: [42, 57, 72, 86],
+    scope: "Continuing post-landing ordinary requests; downstream damage and view bodies retain shared runtime behavior",
   },
   output: { path: outputPath, sha256: sha256(output) },
 }, null, 2) + "\n");

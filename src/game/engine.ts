@@ -199,6 +199,8 @@ export interface Entity extends Point {
   nativeBanditReentry?: true;
   /** Rules 52: native first ordinary reload after a dash landing. */
   nativeBanditRecovery?: true;
+  /** Rules 53: preserve the integer clock through later ordinary cycles. */
+  nativeBanditCadence?: true;
   banditRecovery?: BanditRecoveryClock;
   dashReentry?: true;
   dashCharge?: { target: number; remainingMs: number; carry: number; started?: true };
@@ -298,7 +300,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -388,7 +390,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 52;
+    this.rulesVersion = r?.version ?? 53;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -903,6 +905,7 @@ export class Battle {
       ...(this.rulesVersion >= 50 && id === "bandit" ? { nativeBanditStartup: true as const } : {}),
       ...(this.rulesVersion >= 51 && id === "bandit" ? { nativeBanditReentry: true as const } : {}),
       ...(this.rulesVersion >= 52 && id === "bandit" ? { nativeBanditRecovery: true as const } : {}),
+      ...(this.rulesVersion >= 53 && id === "bandit" ? { nativeBanditCadence: true as const } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
@@ -1168,6 +1171,7 @@ export class Battle {
           // A new copy has no projectile-spawn ordinal of its own.
           if (this.rulesVersion >= 29) delete this.entities.at(-1)!.targetScoreBias;
           if (this.rulesVersion >= 41) delete this.entities.at(-1)!.volleyRandomState;
+          if (entity.nativeBanditCadence) delete this.entities.at(-1)!.banditRecovery;
           this.emit("deploy", area.team, x, y, entity.card, 0, {
             effect: "clone-appear",
           });
@@ -1857,6 +1861,7 @@ export class Battle {
           continue;
         }
       }
+      let banditCycleReleased = false;
       if (e.pendingAttack) {
         const pending = e.pendingAttack;
         const previous = this.entities.find((t) => t.id === pending.target);
@@ -1876,6 +1881,11 @@ export class Battle {
             pending.remaining -= STEP * hitSpeed;
             if (pending.remaining > 1e-8) continue;
           }
+          if (e.nativeBanditCadence && pending.recovery) {
+            delete pending.recovery.animating;
+            e.banditRecovery = pending.recovery;
+            banditCycleReleased = true;
+          }
           e.pendingAttack = undefined;
           this.releaseAttack(e, target, pending.damage,
             e.nativeLostAttack === "self" ? e : pending.lastPoint);
@@ -1883,10 +1893,13 @@ export class Battle {
       }
       const target = e.nativeSparkyPreload ? preloadTarget : this.acquireTarget(e);
       if (!target) {
+        if (e.nativeBanditCadence && e.banditRecovery?.elapsedMs) e.banditRecovery = undefined;
         if (e.banditRecovery) advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed, false);
         resetMovement(e);
         continue;
       }
+      if (e.nativeBanditCadence && e.banditRecovery?.elapsedMs && !this.inRange(e, target))
+        e.banditRecovery = undefined;
       if (e.dashReentry && this.inRange(e, target)) e.dashReentry = undefined;
       if (e.card === "bandit" && !e.pendingAttack &&
           (e.dashReentry || ((e.dashCooldown ?? 0) <= 1e-8 && e.cooldown <= 1e-8))) {
@@ -1909,11 +1922,19 @@ export class Battle {
       }
       if (this.inRange(e, target)) {
         if (e.banditRecovery) {
+          const continuing = e.nativeBanditCadence && e.banditRecovery.elapsedMs > 0;
+          if (continuing) {
+            if (!banditCycleReleased) advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed);
+            this.previewBanditRecovery(e, e.banditRecovery);
+            resetMovement(e);
+            // Keep choosing a target until the next attack's preparation starts.
+            if (!e.banditRecovery.animating) continue;
+          }
           e.pendingAttack = { target: target.id, damage: chargedAttackDamage(e),
             remaining: banditRecoveryRemaining(e.banditRecovery, hitSpeed), recovery: e.banditRecovery };
           e.banditRecovery = undefined;
           resetMovement(e);
-          this.advanceBanditRecoveryAttack(e, hitSpeed);
+          if (!continuing) this.advanceBanditRecoveryAttack(e, hitSpeed);
           continue;
         }
         if (e.cooldown <= 1e-8) {
@@ -1942,14 +1963,19 @@ export class Battle {
   private advanceBanditRecoveryAttack(e: Entity, rate: number) {
     const pending = e.pendingAttack!, clock = pending.recovery!;
     const released = advanceBanditRecovery(clock, STEP, rate);
-    const preparationMs = (bandit.sourceHitSpeed - Math.min(e.interval, combatTraits(e).windup)) * 1000;
-    if (!clock.animating && clock.elapsedMs >= preparationMs) {
-      clock.animating = true;
-      e.attack = Math.max(0, e.interval - (clock.elapsedMs - preparationMs) / 1000);
-      this.beginAudio(e);
-    }
+    this.previewBanditRecovery(e, clock);
     pending.remaining = released ? 0 : banditRecoveryRemaining(clock, rate);
     return released;
+  }
+  private previewBanditRecovery(e: Entity, clock: BanditRecoveryClock) {
+    const elapsedMs = e.nativeBanditCadence
+      ? clock.elapsedMs % (bandit.sourceHitSpeed * 1000) : clock.elapsedMs;
+    const preparationMs = (bandit.sourceHitSpeed - Math.min(e.interval, combatTraits(e).windup)) * 1000;
+    if (!clock.animating && elapsedMs >= preparationMs) {
+      clock.animating = true;
+      e.attack = Math.max(0, e.interval - (elapsedMs - preparationMs) / 1000);
+      this.beginAudio(e);
+    }
   }
   private advanceBanditCharge(e: Entity, target: Entity | undefined, hitSpeed: number) {
     const charge = e.dashCharge!;

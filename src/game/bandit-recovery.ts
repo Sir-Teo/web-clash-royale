@@ -1,7 +1,7 @@
 import bandit from "./bandit-data.json" with { type: "json" };
 
-/** First ordinary request after landing. Reload uses real time; elapsed uses
- * the integer attack modifier. Subsequent attacks keep the shared combat path. */
+/** Post-landing ordinary clock. Reload uses real time; elapsed uses the
+ * integer attack modifier. Rules 52 consume only its first request. */
 export interface BanditRecoveryClock {
   elapsedMs: number;
   reloadMs: number;
