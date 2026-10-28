@@ -204,6 +204,7 @@ def capture(env, context):
     ]
     env["allowed"].extend(ranges)
     phase, damage, events, calls = None, None, [], Counter()
+    overrides = {}
     names = {
         0x260C2C: "movementFrame",
         0x260D7B: "excludedMovementNotification",
@@ -234,6 +235,8 @@ def capture(env, context):
         sp = cpu.reg_read(UC_X86_REG_ESP)
         if pc in names:
             calls[names[pc]] += 1
+        if pc in overrides and overrides[pc](sp):
+            return
         if pc == 0x25CDF4:
             require(phase == "entry", "Unexpected dash request phase")
             cpu.reg_write(UC_X86_REG_ESI, body)
@@ -330,6 +333,15 @@ def capture(env, context):
             if a != b
         ]
         require(not changes, f"Unexpected dash heap mutation ({label}): {changes[:12]}")
+
+    if env["args"].dash_goals:
+        from lib.dash_goal_probe import capture as capture_goals
+
+        def set_phase(value):
+            nonlocal phase
+            phase = value
+
+        return capture_goals(env, context, locals())
 
     cases, controls = [], []
 
