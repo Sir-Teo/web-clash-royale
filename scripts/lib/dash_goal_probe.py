@@ -182,7 +182,11 @@ def capture(env, context, shared):
                 and read(sp + 8)
                 in (
                     [1, 2, 4]
-                    if (env["args"].dash_recovery or env["args"].dash_transition)
+                    if (
+                        env["args"].dash_recovery
+                        or env["args"].dash_transition
+                        or env["args"].bandit_ordinary
+                    )
                     else [1, 4]
                 ),
                 "Unexpected goal actor state request",
@@ -207,7 +211,11 @@ def capture(env, context, shared):
                 and read(sp)
                 in (
                     [0x25CCA0, 0x21546E, 0x25CEC5]
-                    if (env["args"].dash_recovery or env["args"].dash_transition)
+                    if (
+                        env["args"].dash_recovery
+                        or env["args"].dash_transition
+                        or env["args"].bandit_ordinary
+                    )
                     else [0x25CCA0, 0x21546E]
                 ),
                 "Unexpected dash goal view callback",
@@ -301,7 +309,11 @@ def capture(env, context, shared):
             ret(0)
             return True
         elif pc == 0x25C4FA:
-            if env["args"].dash_recovery or env["args"].dash_transition:
+            if (
+                env["args"].dash_recovery
+                or env["args"].dash_transition
+                or env["args"].bandit_ordinary
+            ):
                 return False  # Execute the actual landing reload initializer.
             require(
                 read(sp + 4) == attack,
@@ -371,10 +383,12 @@ def capture(env, context, shared):
 
         return capture_delivery(env, context, shared, locals())
 
-    if env["args"].dash_transition:
+    if env["args"].dash_transition or env["args"].bandit_ordinary:
         from lib.dash_transition_probe import capture as capture_transition
 
-        return capture_transition(env, context, shared, locals())
+        return capture_transition(
+            env, context, shared, locals(), fresh_ordinary=env["args"].bandit_ordinary
+        )
 
     if env["args"].dash_recovery:
         from lib.dash_recovery_probe import capture as capture_recovery

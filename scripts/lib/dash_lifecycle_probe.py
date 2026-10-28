@@ -36,6 +36,7 @@ def capture(env, context):
         env["args"].dash_recovery
         or env["args"].dash_transition
         or env["args"].ordinary_delivery
+        or env["args"].bandit_ordinary
     ):
         # The existing ordinary-request boundary owns the root attack pointer.
         attack, health = env["component"], heap + 0x7000
@@ -348,6 +349,7 @@ def capture(env, context):
         or env["args"].dash_recovery
         or env["args"].dash_transition
         or env["args"].ordinary_delivery
+        or env["args"].bandit_ordinary
     ):
         from lib.dash_goal_probe import capture as capture_goals
 

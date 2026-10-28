@@ -1,5 +1,7 @@
 """Native Bandit ordinary-cycle to dash transitions and phase boundaries.
 
+The separate fresh mode begins with supplied close targets and zero clocks.
+
 Shared target displacement is supplied before/during/after ordinary requests.
 The complete attack update and real reload prefix execute. Ordinary damage
 allocation/delivery, acquisition and natural world scheduling remain excluded.
@@ -17,7 +19,7 @@ from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_ESP
 
 
-def capture(env, context, lifecycle, goal):
+def capture(env, context, lifecycle, goal, fresh_ordinary=False):
     def require(condition, message):
         if not condition:
             raise RuntimeError(message)
@@ -173,11 +175,19 @@ def capture(env, context, lifecycle, goal):
             math.trunc(base * positive / 100) * max(0, min(100, 100 - negative)) / 100
         )
 
-    def episode(direction, scenario, recovery_buffs=(), initial_elapsed=0, updates=100):
+    def episode(
+        direction,
+        scenario,
+        recovery_buffs=(),
+        initial_elapsed=0,
+        updates=100,
+        buff_schedule=(),
+    ):
         dx, dy = direction
         cpu.mem_write(heap, b"\0" * 0x10000)
         xy = [8250, 8250]
-        target_xy = [8250 + 5000 * dx, 8250 + 5000 * dy]
+        initial_distance = 1750 if fresh_ordinary else 5000
+        target_xy = [8250 + initial_distance * dx, 8250 + initial_distance * dy]
         for ptr, value in [
             (body, 0x7B34A0),
             (body + 0x10, data),
@@ -224,7 +234,7 @@ def capture(env, context, lifecycle, goal):
         ]:
             write(ptr, value)
         cpu.mem_write(settings + 0x295, b"\1")
-        set_buffs([])
+        set_buffs(recovery_buffs if fresh_ordinary else [])
         initial_reload = 600 if scenario == "phase-boundary" else 0
         write(attack + 0xC, initial_elapsed)
         write(attack + 0x10, initial_reload)
@@ -237,31 +247,51 @@ def capture(env, context, lifecycle, goal):
             0,
             0,
         )
-        first_request = {
-            (): 46,
-            ("Rage",): 42,
-            ("IceWizardSlowDown",): 57,
-            ("Rage", "IceWizardSlowDown"): 50,
-        }[tuple(recovery_buffs)]
+        first_request = (
+            {
+                (): 8,
+                ("Rage",): 6,
+                ("IceWizardSlowDown",): 13,
+                ("Rage", "IceWizardSlowDown"): 10,
+            }
+            if fresh_ordinary
+            else {
+                (): 46,
+                ("Rage",): 42,
+                ("IceWizardSlowDown",): 57,
+                ("Rage", "IceWizardSlowDown"): 50,
+            }
+        )[tuple(recovery_buffs)]
         shift_at = {
-            "ordinary-early": 33,
-            "ordinary-windup": 39,
+            "ordinary-early": 3 if fresh_ordinary else 33,
+            "ordinary-windup": 5 if fresh_ordinary else 39,
             "ordinary-released": first_request + 1,
             "phase-boundary": None,
+            "ordinary-stationary": None,
         }[scenario]
         flag1d = 0
         previous_travel_clock = 0
-        landings, launched_before, landed_before, active_buffs = 0, False, False, []
+        landings, launched_before, landed_before, active_buffs = (
+            0,
+            False,
+            False,
+            list(recovery_buffs) if fresh_ordinary else [],
+        )
         frames = []
         for step in range(1, updates + 1):
             supplied = []
             if step == shift_at:
                 target_xy = [xy[0] + 5000 * dx, xy[1] + 5000 * dy]
                 supplied.append(["target", *target_xy])
-            if landed_before and landings == 1:
+            if landed_before and landings == 1 and not fresh_ordinary:
                 active_buffs = list(recovery_buffs)
                 set_buffs(active_buffs)
                 if recovery_buffs:
+                    supplied.append(["buffs", *active_buffs])
+            for at, names in buff_schedule:
+                if step == at:
+                    active_buffs = list(names)
+                    set_buffs(active_buffs)
                     supplied.append(["buffs", *active_buffs])
             for ptr, value in zip([target + 0x20, target + 0x24], target_xy):
                 write(ptr, value)
@@ -434,6 +464,12 @@ def capture(env, context, lifecycle, goal):
                 and calls["movementUpdate"] == int(moving),
                 f"Transition driver inventory differs at {direction}/{scenario}/{step}: {dict(startup_calls)} / {dict(extra_calls)} / {dict(calls)}",
             )
+            if fresh_ordinary:
+                require(
+                    startup_calls["providedPrimaryScan"] == int(distance2 > 1850**2)
+                    and startup_calls["providedExtraScan"] == 0,
+                    f"Fresh ordinary empty-scan inventory differs at {direction}/{scenario}/{step}",
+                )
             frames.append(
                 {
                     "step": step,
@@ -464,30 +500,81 @@ def capture(env, context, lifecycle, goal):
             "fields": {
                 "direction": list(direction),
                 "scenario": scenario,
-                "recoveryBuffs": list(recovery_buffs),
+                ("initialBuffs" if fresh_ordinary else "recoveryBuffs"): list(
+                    recovery_buffs
+                ),
                 "initialElapsedMs": initial_elapsed,
                 "initialReloadMs": initial_reload,
                 "shiftUpdate": shift_at,
+                **(
+                    {
+                        "initialTargetDistance": initial_distance,
+                        "buffSchedule": [
+                            [at, list(names)] for at, names in buff_schedule
+                        ],
+                    }
+                    if fresh_ordinary
+                    else {}
+                ),
             },
             "frames": frames,
         }
 
     directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-    cases = [
-        episode(d, scenario)
-        for d in directions
-        for scenario in ["ordinary-early", "ordinary-windup", "ordinary-released"]
-    ]
-    controls = [
-        episode(d, "ordinary-released", buffs, updates=130)
-        for d in directions
-        for buffs in [("Rage",), ("IceWizardSlowDown",), ("Rage", "IceWizardSlowDown")]
-    ]
-    controls += [
-        episode(d, "phase-boundary", initial_elapsed=value, updates=3)
-        for d in directions
-        for value in [0, 49, 50, 51, 999, 1000, 1049, 1050, 1051]
-    ]
+    if fresh_ordinary:
+        cases = [
+            episode(d, scenario, updates=80)
+            for d in directions
+            for scenario in ["ordinary-stationary", "ordinary-released"]
+        ]
+        controls = [
+            episode(d, scenario, buffs, updates=80)
+            for d in directions
+            for buffs in [
+                ("Rage",),
+                ("IceWizardSlowDown",),
+                ("Rage", "IceWizardSlowDown"),
+            ]
+            for scenario in ["ordinary-stationary", "ordinary-released"]
+        ]
+        controls += [
+            episode(d, scenario, updates=80)
+            for d in directions
+            for scenario in ["ordinary-early", "ordinary-windup"]
+        ]
+        controls += [
+            episode(d, "ordinary-stationary", buffs, updates=80, buff_schedule=schedule)
+            for d in directions
+            for buffs, schedule in [
+                (("Rage",), [(4, ())]),
+                (("IceWizardSlowDown",), [(7, ())]),
+                (
+                    ("Rage", "IceWizardSlowDown"),
+                    [(4, ("IceWizardSlowDown",)), (10, ())],
+                ),
+                ((), [(4, ("Rage",)), (11, ())]),
+            ]
+        ]
+    else:
+        cases = [
+            episode(d, scenario)
+            for d in directions
+            for scenario in ["ordinary-early", "ordinary-windup", "ordinary-released"]
+        ]
+        controls = [
+            episode(d, "ordinary-released", buffs, updates=130)
+            for d in directions
+            for buffs in [
+                ("Rage",),
+                ("IceWizardSlowDown",),
+                ("Rage", "IceWizardSlowDown"),
+            ]
+        ]
+        controls += [
+            episode(d, "phase-boundary", initial_elapsed=value, updates=3)
+            for d in directions
+            for value in [0, 49, 50, 51, 999, 1000, 1049, 1050, 1051]
+        ]
     definitions = [
         (
             "movementTime",
@@ -572,6 +659,26 @@ def capture(env, context, lifecycle, goal):
         "reference/client/roster-first-attacks-native-trace.json",
         "reference/client/dash-recovery-native-trace.json",
     ]
+    if fresh_ordinary:
+        prerequisites.append("reference/client/dash-transition-native-trace.json")
+        constructor = json.loads(Path(prerequisites[2]).read_text())
+        source_cases = [
+            r
+            for r in constructor["cases"]
+            if r["sourceName"] == "Assassin" and not r["syntheticFirstLoad"]
+        ]
+        require(
+            source_cases
+            and all(
+                not r["sourceLoadFirstHit"]
+                and r["constructed"]["elapsedMs"] == 0
+                and r["constructed"]["reloadMs"] == 0
+                and r["assigned"]["elapsedMs"] == 0
+                and r["assigned"]["reloadMs"] == 0
+                for r in source_cases
+            ),
+            "Recheck source Bandit constructed/assigned ordinary clocks",
+        )
     for path in prerequisites:
         prior = json.loads(Path(path).read_text())
         require(prior["sha256"] == env["sha"], "Recovery prerequisite binary differs")
@@ -611,20 +718,43 @@ def capture(env, context, lifecycle, goal):
             "unitsPerStep": 500,
             "chunkUnits": 250,
             "headingScale": 256,
+            **(
+                {
+                    "initialTargetDistance": 1750,
+                    "initialElapsedMs": 0,
+                    "initialReloadMs": 0,
+                }
+                if fresh_ordinary
+                else {}
+            ),
         },
-        "limits": [
-            "The complete native attack update, state entry, open-plane dash movement, surviving dash HP stores, successful landing reload and ordinary reload prefix execute. Target validity is a checked true provider and candidate scans return no new object. Acquisition, natural world/actor scheduling, navigation and collision/index writes are excluded.",
-            "Targets are displaced to a supplied point 5,000 source units from the stationary actor before, during or after the first ordinary request. The existing reference remains valid. Boundaries supply raw elapsed/reload and a zero extra clock; source HitSpeed is 1,000 and AttackDashTime is zero. These are controlled inputs, not natural retargeting or movement.",
-            "Actual ordinary function headers and reload prefixes execute across the existing checked skip of allocation, level, damage and world work. Ordinary target HP is deliberately unchanged. Ordinary requests at the supplied distant point do not establish downstream ordinary hit eligibility, delivery or damage amounts; only surviving dash HP stores execute.",
-            "Buff vectors after the first landing are supplied controls. Native natural application/expiry, full hard-stun scheduling, shields, lethal/post-store reactions, real terrain/path refresh and views/facing remain excluded or checked providers.",
-            "Each update validates all 64-KiB heap changes, ordered external events, ordinary request/reload records and selected native driver counts. Gameplay remains rules 53; no runtime admission or distant ordinary damage behavior changes in this capture.",
-        ],
+        "limits": (
+            [
+                "The complete native attack update starts from a supplied state-2 actor, valid existing Knight reference, zero elapsed/reload/extra clocks and a target 1,750 units away. The source constructor/target-setter prerequisite independently establishes those zero clock values; constructor and natural acquisition are not executed here.",
+                "Stationary close targets, four directions, initial modifier vectors and timed vector replacements are supplied. Other episodes displace the same valid target 5,000 source units from the actor before, during or after the first ordinary request. These are controlled points and modifier schedules, not natural target motion, acquisition, application or expiry.",
+                "Complete attack updates, native buff scaling, fresh dash admission, launch, open-plane dash movement, surviving dash HP stores, landing reload and ordinary reload prefixes execute. The checked ordinary boundary skips packet allocation, levels, delivery, damage and world work. Ordinary requests establish timing only; ordinary target HP remains unchanged.",
+                "Whole supplied 64-KiB heap changes, ordered external events, ordinary reload/request records and selected native driver counts are checked every frame. Candidate scans are empty checked providers; full actor/world scheduling, hard stun, shields, lethal/post-store reactions, terrain/index writes, real navigation and view/facing bodies remain excluded.",
+                "This separate fresh-ordinary capture shares the validated transition driver. Existing dash transition and recovery artifacts remain independent, byte-identical prerequisites. Gameplay remains rules 54; no before-dash attack behavior changes in this capture.",
+            ]
+            if fresh_ordinary
+            else [
+                "The complete native attack update, state entry, open-plane dash movement, surviving dash HP stores, successful landing reload and ordinary reload prefix execute. Target validity is a checked true provider and candidate scans return no new object. Acquisition, natural world/actor scheduling, navigation and collision/index writes are excluded.",
+                "Targets are displaced to a supplied point 5,000 source units from the stationary actor before, during or after the first ordinary request. The existing reference remains valid. Boundaries supply raw elapsed/reload and a zero extra clock; source HitSpeed is 1,000 and AttackDashTime is zero. These are controlled inputs, not natural retargeting or movement.",
+                "Actual ordinary function headers and reload prefixes execute across the existing checked skip of allocation, level, damage and world work. Ordinary target HP is deliberately unchanged. Ordinary requests at the supplied distant point do not establish downstream ordinary hit eligibility, delivery or damage amounts; only surviving dash HP stores execute.",
+                "Buff vectors after the first landing are supplied controls. Native natural application/expiry, full hard-stun scheduling, shields, lethal/post-store reactions, real terrain/path refresh and views/facing remain excluded or checked providers.",
+                "Each update validates all 64-KiB heap changes, ordered external events, ordinary request/reload records and selected native driver counts. Gameplay remains rules 53; no runtime admission or distant ordinary damage behavior changes in this capture.",
+            ]
+        ),
         "blocks": blocks,
         "cases": cases,
         "controls": controls,
     }
     output = json.dumps(result, indent=2) + "\n"
-    path = Path("reference/client/dash-transition-native-trace.json")
+    path = Path(
+        "reference/client/bandit-ordinary-native-trace.json"
+        if fresh_ordinary
+        else "reference/client/dash-transition-native-trace.json"
+    )
     if env["args"].check:
         require(path.read_text() == output, "Dash transition capture differs")
     else:

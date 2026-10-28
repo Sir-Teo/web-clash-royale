@@ -1133,3 +1133,20 @@ The post-dash clock now keeps an ordinary cycle active when its elapsed remainde
 All 60 supplied transition episodes match every one of their 2,868 native frames and 68 ordinary request times for both teams, including the delayed Rage admission at update 87. These checks combine native request timing with the existing normalized browser damage packet. The separate selected-delivery capture supports the absence of another distance gate; it does not establish native packet construction or level scaling. Target choice between windups, ordinary attacks before any dash, no-target and walking/cancellation fallbacks, shields, health effects, hard-stun scheduling, art and audio retain their shared runtime paths. Current-windup control and lethal King forecasts use the same commitment condition on private clocks.
 
 Seven complete rules-53 games independently built from `b8392a8` retain 73 state/RNG/audio digests across 42,947 ticks. The additional legal scene deploys Bandit and Knight, waits for a post-dash ordinary windup, then casts opposing Tornado. Both teams reach the same tick-278 witness: rules 54 delivers the existing 194-damage packet outside ordinary reach, while rules 53 cancels the swing. Guest copies, old-host replacement, Mirror, fresh Clone state and replay reconstruction retain the version boundary.
+
+### Fresh Bandit ordinary cycles before a dash
+
+`--bandit-ordinary` records `bandit-ordinary-native-trace.json` (SHA-256 `5266a984039b1772cde8aad4bc64ea7a9788ad8edbcc1110af040b030f6aa745`) through the shared complete transition driver. Eight cases and 48 controls execute 4,480 full attack updates, 192 ordinary requests and 24 surviving dash hits. Every frame checks the whole supplied 64-KiB heap, ordered events, ordinary request/reload records and selected native drivers. The empty primary scanner is called when the supplied target is outside ordinary reach; it returns no new reference. Extra scans return no object. This does not establish natural acquisition or selection behavior.
+
+Each episode supplies a state-2 Bandit with a valid Knight reference 1,750 units away and zero elapsed/reload/extra clocks. The earlier roster-first-attacks capture independently executes the constructor/setter and establishes zero natural initial clocks for all four modifier profiles; the synthetic first-load controls are excluded from that prerequisite check. Constructor and natural deployment/actor scheduling do not execute in this new capture. Its first native update combines the 600-ms LoadTime adjustment with the buff-scaled increment, yielding elapsed 650/667/632/643 ms for normal/Rage/slow/mixed profiles.
+
+| Supplied modifier | Ordinary request updates at 50 ms each | Fresh charge after first request | Launch | Landing |
+| --- | --- | --- | --- | --- |
+| None | 8, 28, 48, 68 | 9 | 28 | 35 |
+| Rage | 6, 21, 36, 51, 66 | 7 | 21 | 28 |
+| Slow | 13, 44, 75 | 14 | 45 | 52 |
+| Rage and slow | 10, 33, 56, 80 | 11 | 34 | 41 |
+
+The request sequence column uses stationary close targets. Charge/launch/landing columns use separate episodes that displace the existing target to 5,000 units on the update after the first request. Fresh Rage leaves a 2-ms remainder at its first request, so update 7 can charge; a post-landing first request leaves a 55-ms remainder and waits for the later eligible window established in the separate transition capture. Early and preparing displacements on updates 3/5 retain the normal request on update 8 before charge admission on 9. Timed replacement of supplied modifier vectors checks native clock continuation without claiming natural application or expiry.
+
+Actual ordinary headers and reload prefixes execute; packet construction, level selection, ordinary damage/delivery and world work remain skipped at the existing checked boundary. Only surviving dash HP stores execute. Native hard-stun scheduling, shields, lethal/post-store reactions, terrain/index writes, real navigation and view/facing bodies remain excluded or checked providers. Gameplay remains rules 54; this capture precedes integration of before-dash ordinary clocks.
