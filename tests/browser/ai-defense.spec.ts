@@ -19,7 +19,7 @@ for (const [scenario, label] of [
     const state = async () =>
       JSON.parse((await output.getAttribute("data-ai-defense"))!);
     const time = async () =>
-      JSON.parse((await output.getAttribute("data-state"))!).time;
+      (await state()).time;
     const step = async () => {
       const before = await time();
       await page.locator("#second").click();
@@ -95,7 +95,7 @@ for (const blocked of [false, true])
     const state = async () =>
       JSON.parse((await output.getAttribute("data-ai-defense"))!);
     const time = async () =>
-      JSON.parse((await output.getAttribute("data-state"))!).time;
+      (await state()).time;
     const step = async () => {
       const before = await time();
       await page.locator("#second").click();
@@ -155,7 +155,7 @@ for (const counter of ["missing", "unaffordable"])
     const state = async () =>
       JSON.parse((await output.getAttribute("data-ai-defense"))!);
     const time = async () =>
-      JSON.parse((await output.getAttribute("data-state"))!).time;
+      (await state()).time;
     const step = async () => {
       const before = await time();
       await page.locator("#second").click();
@@ -225,7 +225,14 @@ for (const [lane, x] of [
     page.on("pageerror", (e) => errors.push(e.message));
     const scene = `ai-defense-moving-${lane}`;
     await page.goto(`/tests/fixtures/combat.html?scene=${scene}`);
-    if (lane === "right") await page.reload();
+    if (lane === "right") {
+      await expect
+        .poll(() => page.evaluate(() => (window as any).__geometryLayout?.ready), {
+          timeout: 60000,
+        })
+        .toBe(true);
+      await page.reload();
+    }
     await expect(page.locator("#scenario")).toHaveValue(scene);
     await expect(page.locator("#status")).toContainText(
       `${expectedEffects} effects`,
@@ -235,7 +242,7 @@ for (const [lane, x] of [
     const state = async () =>
       JSON.parse((await output.getAttribute("data-ai-defense"))!);
     const time = async () =>
-      JSON.parse((await output.getAttribute("data-state"))!).time;
+      (await state()).time;
     const step = async () => {
       const before = await time();
       await page.locator("#second").click();

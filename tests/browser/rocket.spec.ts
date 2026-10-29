@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
+import { waitForCombatScene } from "./combat-ready";
 
 test("Rocket native flight and moving trails pause, rebuild and expire after both blasts", async ({
   page,
@@ -7,6 +8,7 @@ test("Rocket native flight and moving trails pause, rebuild and expire after bot
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/tests/fixtures/combat.html");
+  await waitForCombatScene(page);
   await page.locator("#scenario").selectOption("rocket");
   await expect(page.locator("#status")).toContainText(
     `${expectedEffects} effects`,

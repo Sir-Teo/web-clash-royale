@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { expectedCards } from "./native-assets";
+import { expectedAnimations, expectedCards } from "./native-assets";
 
 test("Rocket can be added to a deck and cast through the real battle controls", async ({
   page,
@@ -39,6 +39,24 @@ test("Rocket can be added to a deck and cast through the real battle controls", 
     "Rocket, 6 elixir",
   );
   await page.getByRole("button", { name: "Done", exact: true }).click();
+  // Reload a settled scene so old-document fetch cancellation cannot be
+  // mistaken for an error in the new page by WebKit's error reporting.
+  await expect
+    .poll(
+      () =>
+        page.evaluate(
+          (animations) => {
+            const state = (window as any).__arena?.state;
+            return (
+              state?.loadedAnimations === animations &&
+              state.renderPending === false
+            );
+          },
+          expectedAnimations,
+        ),
+      { timeout: 60000 },
+    )
+    .toBe(true);
   await page.reload();
   await expect(
     page.locator('#deck-preview [data-card-info="rocket"]'),

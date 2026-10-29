@@ -107,6 +107,8 @@ for (const reverse of [false, true])
               "--use-gl=angle",
               "--use-angle=swiftshader",
               "--enable-unsafe-swiftshader",
+              // Container WebKit cannot resolve Chromium's masked local ICE names.
+              "--disable-features=WebRtcHideLocalIpsWithMdns",
             ],
           })
         : undefined;

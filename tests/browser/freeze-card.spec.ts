@@ -79,8 +79,12 @@ test("Freeze can be chosen and cast from the real phone and desktop hand", async
     );
     await page.locator(`#hand [data-slot="${slot}"]`).click();
     await tap(
-      4,
-      CARD_MAP[before.hand[slot] as CardId].kind === "spell" ? 10 : 22,
+      CARD_MAP[before.hand[slot] as CardId].kind === "spell"
+        ? 9
+        : 3 + (attempt % 4) * 3,
+      CARD_MAP[before.hand[slot] as CardId].kind === "spell"
+        ? 10
+        : 22 + Math.floor(attempt / 4) * 2,
     );
     await expect
       .poll(async () => (await state()).actions)
