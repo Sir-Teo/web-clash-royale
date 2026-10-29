@@ -2,7 +2,6 @@ import type { Mode, Team } from "../game/engine";
 import type { CardId } from "../game/cards";
 import type { ClientMessage, RoomState, ServerMessage } from "./protocol";
 import { PEER_PROTOCOL } from "./protocol";
-import type { PeerPlayer } from "./peer-match";
 import type { PeerHostCommand } from "./peer-host-worker";
 import {
   decodeSignal,
@@ -10,7 +9,7 @@ import {
   PeerAssembler,
   peerChunks,
 } from "./peer-signaling";
-import { validPeerPlayer } from "./peer-match";
+import { validPeerPlayer, type PeerPlayer } from "./peer-player";
 
 const INCOMPATIBLE_PEER =
   "The other browser sent an incompatible battle update. Update both games and create a new invite.";

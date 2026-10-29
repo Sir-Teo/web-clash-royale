@@ -1,15 +1,34 @@
 import { describe, expect, it } from "vitest";
-import { Battle } from "../src/game/engine";
+import {
+  Battle,
+  type AreaEffect,
+  type Entity,
+  type Point,
+  type Projectile,
+  type Team,
+} from "../src/game/engine";
 import { CARD_MAP, type CardId } from "../src/game/cards";
 import { damageSpellTarget } from "../src/game/spell-targeting";
 import {
-  lightningStrikes,
+  createLightningPlan,
   selectLightningTarget,
 } from "../src/game/lightning-strikes";
 import {
   launchedKingDeadline,
   createKingSpellRace,
 } from "../src/game/king-damage";
+
+const lightningStrikes = (
+  team: Team,
+  point: Point,
+  entities: readonly Entity[],
+  area?: AreaEffect,
+  projectiles: readonly Projectile[] = [],
+  areas: readonly AreaEffect[] = [],
+) => {
+  const plan = createLightningPlan(team, entities, area, projectiles, areas);
+  return plan(point, area?.radius);
+};
 
 function setup(tick = 0) {
   const battle = new Battle({ seed: 12, ai: false });

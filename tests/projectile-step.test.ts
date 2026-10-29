@@ -9,10 +9,11 @@ import {
   type Team,
 } from "../src/game/engine";
 import type { CardId } from "../src/game/cards";
-import { attackFlight, attackHitSteps } from "../src/game/attack-flight";
+import { attackFlight } from "../src/game/attack-flight";
+import { attackHitSteps } from "./helpers/attack-hit-steps";
 import { attackReach } from "../src/game/attack-range";
 import { pendingKingPackets } from "../src/game/king-defense";
-import { fatalKingWindups } from "../src/game/king-spell-race";
+import { fatalKingWindups } from "./helpers/fatal-king-windups";
 import {
   applySnapshot,
   perspective,

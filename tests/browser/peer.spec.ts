@@ -114,7 +114,19 @@ test("static browsers exchange invites, fight, pause together and replay without
   test.setTimeout(360000);
   const crossBrowser =
     process.env.ARENA_CROSS_BROWSER === "1"
-      ? await (browserName === "webkit" ? chromium : webkit).launch()
+      ? await (browserName === "webkit" ? chromium : webkit).launch({
+          args:
+            browserName === "webkit"
+              ? [
+                  "--enable-webgl",
+                  "--use-gl=angle",
+                  "--use-angle=swiftshader",
+                  "--enable-unsafe-swiftshader",
+                  // Container WebKit cannot resolve masked local ICE names.
+                  "--disable-features=WebRtcHideLocalIpsWithMdns",
+                ]
+              : [],
+        })
       : undefined;
   const context = await (crossBrowser ?? browser).newContext({
     ...info.project.use,

@@ -10,7 +10,7 @@ import {
 import type { CardId } from "../src/game/cards";
 import { electroExtraTarget } from "../src/game/electro-bolts";
 import { createKingDefense } from "../src/game/king-defense";
-import { fatalKingWindups } from "../src/game/king-spell-race";
+import { fatalKingWindups } from "./helpers/fatal-king-windups";
 import { perspective, snapshot } from "../src/network/perspective";
 import native from "../reference/client/electro-bolts-native-trace.json";
 import historical from "./fixtures/electro-bolts-rules26-golden.json";

@@ -1,3 +1,4 @@
+import { preloadNativeImages } from "./native-assets";
 import type { Mode } from "../game/engine";
 import settings from "./intro-settings.json";
 import { renderRetainedNativeFrame, type NativeData } from "./native";
@@ -64,17 +65,10 @@ export class NativeIntro {
       );
       if (!r.ok) throw new Error(`Native intro: ${r.status}`);
       const data: NativeData = await r.json();
-      await document.fonts.load('40px "Supercell Magic"');
-      await Promise.all(
-        Object.values(data.shapes)
-          .flatMap((s) => s.polygons ?? [s])
-          .filter((s) => s.file)
-          .map(async (s) => {
-            const image = new Image();
-            image.src = `${import.meta.env.BASE_URL}assets/ui/intro/${s.file}`;
-            await image.decode();
-          }),
-      );
+      await Promise.all([
+        document.fonts.load('40px "Supercell Magic"'),
+        preloadNativeImages(data, `${import.meta.env.BASE_URL}assets/ui/intro`),
+      ]);
       this.data = data;
       this.signature = "";
     } catch (error) {

@@ -6,7 +6,7 @@ import type { CardId } from "../src/game/cards";
 import { snapshot, perspective, applySnapshot } from "../src/network/perspective";
 import { projectTornadoWindup } from "../src/game/tornado-pull";
 import { banditRecoveryRemaining } from "../src/game/bandit-recovery";
-import { fatalKingWindups } from "../src/game/king-spell-race";
+import { fatalKingWindups } from "./helpers/fatal-king-windups";
 import { banditTransitionOpening, pullPreparingBandit } from "./fixtures/bandit-transition-setup";
 import golden from "./fixtures/bandit-transition-rules53-golden.json";
 

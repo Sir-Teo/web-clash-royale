@@ -17,7 +17,7 @@ import {
   snapshot,
 } from "../src/network/perspective";
 import source from "../src/game/pending-range-data.json";
-import { fatalKingWindups } from "../src/game/king-spell-race";
+import { fatalKingWindups } from "./helpers/fatal-king-windups";
 import golden from "./fixtures/pending-range-rules37-golden.json";
 const native = JSON.parse(
   readFileSync("reference/client/pending-range-native-trace.json", "utf8"),

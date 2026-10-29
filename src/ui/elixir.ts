@@ -1,3 +1,4 @@
+import { preloadNativeImages } from "./native-assets";
 import {
   renderNativeFrame,
   renderRetainedNativeFrame,
@@ -103,17 +104,10 @@ export class NativeElixir {
       );
       if (!r.ok) throw new Error(`Native elixir: ${r.status}`);
       const data: NativeData = await r.json();
-      await document.fonts.load('40px "Supercell Magic"');
-      await Promise.all(
-        Object.values(data.shapes)
-          .flatMap((s) => s.polygons ?? [s])
-          .filter((s) => s.file)
-          .map(async (s) => {
-            const image = new Image();
-            image.src = `${options.path}/${s.file}`;
-            await image.decode();
-          }),
-      );
+      await Promise.all([
+        document.fonts.load('40px "Supercell Magic"'),
+        preloadNativeImages(data, options.path),
+      ]);
       this.data = data;
       renderNativeFrame(
         this.bar,

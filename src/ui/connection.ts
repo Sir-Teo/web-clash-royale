@@ -1,3 +1,4 @@
+import { preloadNativeImages } from "./native-assets";
 import { renderNativeFrame, type NativeData } from "./native";
 import "./connection.css";
 
@@ -31,15 +32,9 @@ export class NativeConnectionWarning {
       if (!response.ok)
         throw new Error(`Connection warning: ${response.status}`);
       const data: NativeData = await response.json();
-      await Promise.all(
-        Object.values(data.shapes)
-          .flatMap((s) => s.polygons ?? [s])
-          .filter((p) => p.file)
-          .map(async (p) => {
-            const image = new Image();
-            image.src = `${import.meta.env.BASE_URL}assets/ui/connection/${p.file}`;
-            await image.decode();
-          }),
+      await preloadNativeImages(
+        data,
+        `${import.meta.env.BASE_URL}assets/ui/connection`,
       );
       this.data = data;
       this.update();

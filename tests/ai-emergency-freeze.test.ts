@@ -3,10 +3,8 @@ import { Battle, type Entity, type Projectile } from "../src/game/engine";
 import { CARD_MAP, type CardId } from "../src/game/cards";
 import { areaSpellTarget } from "../src/game/area-spell-targeting";
 import { perspective, snapshot } from "../src/network/perspective";
-import {
-  fatalKingWindups,
-  finishesKingBefore,
-} from "../src/game/king-spell-race";
+import { finishesKingBefore } from "../src/game/king-spell-race";
+import { fatalKingWindups } from "./helpers/fatal-king-windups";
 
 function setup() {
   const battle = new Battle({ seed: 12, ai: false });

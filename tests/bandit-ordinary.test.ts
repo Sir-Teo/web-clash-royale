@@ -5,7 +5,7 @@ import { Battle, type Replay, type Team } from "../src/game/engine";
 import type { CardId } from "../src/game/cards";
 import { snapshot, perspective, applySnapshot } from "../src/network/perspective";
 import { projectTornadoWindup } from "../src/game/tornado-pull";
-import { fatalKingWindups } from "../src/game/king-spell-race";
+import { fatalKingWindups } from "./helpers/fatal-king-windups";
 import { banditOrdinaryOpening } from "./fixtures/bandit-ordinary-setup";
 import golden from "./fixtures/bandit-ordinary-rules54-golden.json";
 

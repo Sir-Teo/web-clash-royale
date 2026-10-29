@@ -7,7 +7,6 @@ import type { AnimatedSprite, SpriteAsset } from "../src/render/sprites";
 import { makeMaterial } from "../src/render/sprites";
 import {
   NativeChargeFilter,
-  chargeFilterColor,
   chargeFilterFrame,
 } from "../src/render/charge-filter";
 import source from "../src/render/charge-filter-data.json";
@@ -38,12 +37,12 @@ describe("native Prince charge filter", () => {
     expect(source.source).toBe("filter_protection");
     expect(source.fps).toBe(60);
     expect(source.colors).toHaveLength(54);
-    expect(chargeFilterColor(0)).toEqual([0, 0, 0, 255, 255, 255, 255]);
-    expect(chargeFilterColor(26 / 60)).toEqual([
+    expect(source.colors[chargeFilterFrame(0)]).toEqual([0, 0, 0, 255, 255, 255, 255]);
+    expect(source.colors[chargeFilterFrame(26 / 60)]).toEqual([
       68, 56, 0, 255, 255, 255, 243,
     ]);
     expect(chargeFilterFrame(-0.01)).toBe(-1);
-    expect(chargeFilterColor(54 / 60)).toBeNull();
+    expect(chargeFilterFrame(54 / 60)).toBe(-1);
   });
 
   it("ages the actor color on the match clock and restores shared sprite materials", () => {

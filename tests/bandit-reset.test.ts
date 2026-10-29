@@ -7,7 +7,7 @@ import { attackClockRate } from "../src/game/attack-clock";
 import { advanceBanditRecovery, bindBanditRecovery, type BanditRecoveryClock } from "../src/game/bandit-recovery";
 import { snapshot, perspective, applySnapshot } from "../src/network/perspective";
 import { projectTornadoWindup } from "../src/game/tornado-pull";
-import { fatalKingWindups } from "../src/game/king-spell-race";
+import { fatalKingWindups } from "./helpers/fatal-king-windups";
 import { banditResetOpening, zapBanditTarget } from "./fixtures/bandit-reset-setup";
 import golden from "./fixtures/bandit-reset-rules55-golden.json";
 

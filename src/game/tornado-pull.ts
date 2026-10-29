@@ -31,17 +31,6 @@ export function tornadoPull(
   };
 }
 
-/** Can known pulls cancel this current windup before release? Hold the target
- * and other bodies fixed; do not predict new attacks, damage or separation. */
-export function tornadoEscapeStep(
-  attacker: Entity,
-  target: Entity,
-  areas: readonly AreaEffect[],
-  proposed?: Point,
-): number | undefined {
-  return projectTornadoWindup(attacker, target, areas, proposed).cancelledStep;
-}
-
 export interface WindupProjection {
   position: Point;
   cancelledStep?: number;

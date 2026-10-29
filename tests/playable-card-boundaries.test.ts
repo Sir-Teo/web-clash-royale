@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CARDS, CARD_MAP, STARTER_DECK, type CardId } from "../src/game/cards";
-import { isPlayableCard } from "../src/game/playable-cards";
+import { isPlayableCard, PLAYABLE_CARD_IDS } from "../src/game/playable-cards";
 import { Battle } from "../src/game/engine";
 import {
   decodeDeckCode,
@@ -17,7 +17,8 @@ import {
   type RecordEntry,
 } from "../src/game/profile";
 import { exportReplayFile, importReplayFile } from "../src/game/replay-file";
-import { PeerMatch, validPeerPlayer } from "../src/network/peer-match";
+import { PeerMatch } from "../src/network/peer-match";
+import { validPeerPlayer } from "../src/network/peer-player";
 import { PeerRoomClient } from "../src/network/peer-client";
 import { PEER_PROTOCOL, PROTOCOL } from "../src/network/protocol";
 import { attachRooms } from "../server/rooms";
@@ -60,6 +61,9 @@ afterEach(() => {
 describe("playable card input boundaries", () => {
   it("accepts the full collection while retaining spawned units only in the internal map", () => {
     expect(CARDS).toHaveLength(74);
+    expect([...PLAYABLE_CARD_IDS].sort()).toEqual(
+      CARDS.map((card) => card.id).sort(),
+    );
     for (const card of CARDS) {
       const deck = [
         card.id,

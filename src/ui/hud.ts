@@ -1,3 +1,4 @@
+import { preloadNativeImages } from "./native-assets";
 import { renderRetainedNativeFrame } from "./native";
 import type { BattleTiming } from "./announcements";
 import {
@@ -55,14 +56,7 @@ export class NativeBattleHud {
       const data: HudData = await r.json();
       await Promise.all([
         document.fonts.load('28px "Supercell Magic"'),
-        ...Object.values(data.shapes)
-          .flatMap((s) => s.polygons ?? [s])
-          .filter((p) => p.file)
-          .map(async (p) => {
-            const image = new Image();
-            image.src = `${import.meta.env.BASE_URL}assets/ui/hud/${p.file}`;
-            await image.decode();
-          }),
+        preloadNativeImages(data, `${import.meta.env.BASE_URL}assets/ui/hud`),
       ]);
       this.data = data;
     } catch (error) {

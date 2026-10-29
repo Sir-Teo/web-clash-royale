@@ -5,7 +5,7 @@ import { CARD_MAP, type CardId } from "../src/game/cards";
 import { createKingDefense } from "../src/game/king-defense";
 import { areaSpellTarget } from "../src/game/area-spell-targeting";
 import { perspective, snapshot } from "../src/network/perspective";
-import { attackHitSteps } from "../src/game/attack-flight";
+import { attackHitSteps } from "./helpers/attack-hit-steps";
 import log from "../src/game/log-data.json";
 
 function setup(team: Team = "red") {

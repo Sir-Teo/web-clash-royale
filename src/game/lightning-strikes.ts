@@ -291,22 +291,6 @@ export function createLightningPlan(
   );
 }
 
-export const lightningStrikes = (
-  team: Team,
-  point: Point,
-  entities: readonly Entity[],
-  area?: AreaEffect,
-  projectiles: readonly Projectile[] = [],
-  areas: readonly AreaEffect[] = [],
-) =>
-  createLightningPlan(
-    team,
-    entities,
-    area,
-    projectiles,
-    areas,
-  )(point, area?.radius);
-
 /** Reuse released health timelines while testing counterfactual pending hits.
  * Additional packets affect selection only before a pulse, never on its frame.
  * They are inputs to ranking, not part of the returned Lightning damage. */

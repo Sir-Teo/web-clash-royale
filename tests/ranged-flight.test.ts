@@ -6,7 +6,7 @@ import {
   flightKey,
   observeFlight,
 } from "./helpers/ranged-flight";
-import { fatalKingWindups } from "../src/game/king-spell-race";
+import { fatalKingWindups } from "./helpers/fatal-king-windups";
 import { launchedKingDeadline } from "../src/game/king-damage";
 
 describe("origin-16 projectile launch compatibility", () => {

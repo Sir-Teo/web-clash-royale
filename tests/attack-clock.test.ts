@@ -11,7 +11,7 @@ import {
 import type { CardId } from "../src/game/cards";
 import { attackClockDelta, attackClockRate } from "../src/game/attack-clock";
 import { createKingDefense } from "../src/game/king-defense";
-import { fatalKingWindups } from "../src/game/king-spell-race";
+import { fatalKingWindups } from "./helpers/fatal-king-windups";
 import { projectTornadoWindup } from "../src/game/tornado-pull";
 import { perspective, snapshot } from "../src/network/perspective";
 import native from "../reference/client/first-attacks-native-trace.json";

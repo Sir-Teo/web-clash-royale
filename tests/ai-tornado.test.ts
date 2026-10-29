@@ -3,9 +3,12 @@ import { describe, expect, it } from "vitest";
 import { Battle, type Replay, type Team } from "../src/game/engine";
 import { CARD_MAP, type CardId } from "../src/game/cards";
 import { areaSpellTarget, isAreaSpell } from "../src/game/area-spell-targeting";
-import { tornadoEscapeStep } from "../src/game/tornado-pull";
+import { projectTornadoWindup } from "../src/game/tornado-pull";
 import { perspective, snapshot } from "../src/network/perspective";
 import golden from "./fixtures/tornado-pull-golden.json";
+
+const tornadoEscapeStep = (...args: Parameters<typeof projectTornadoWindup>) =>
+  projectTornadoWindup(...args).cancelledStep;
 
 function setup(team: Team = "red", version?: Replay["version"]) {
   const initial = new Battle({ seed: 12, ai: false });
