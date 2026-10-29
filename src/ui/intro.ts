@@ -1,6 +1,7 @@
+import { preloadNativeImages } from "./native-assets";
 import type { Mode } from "../game/engine";
 import settings from "./intro-settings.json";
-import { renderNativeFrame, type NativeData } from "./native";
+import { renderRetainedNativeFrame, type NativeData } from "./native";
 
 export const INTRO_ACTION_TIME = settings.actionFrame / settings.fps;
 export const INTRO_DURATION = settings.frames / settings.fps;
@@ -64,17 +65,10 @@ export class NativeIntro {
       );
       if (!r.ok) throw new Error(`Native intro: ${r.status}`);
       const data: NativeData = await r.json();
-      await document.fonts.load('40px "Supercell Magic"');
-      await Promise.all(
-        Object.values(data.shapes)
-          .flatMap((s) => s.polygons ?? [s])
-          .filter((s) => s.file)
-          .map(async (s) => {
-            const image = new Image();
-            image.src = `${import.meta.env.BASE_URL}assets/ui/intro/${s.file}`;
-            await image.decode();
-          }),
-      );
+      await Promise.all([
+        document.fonts.load('40px "Supercell Magic"'),
+        preloadNativeImages(data, `${import.meta.env.BASE_URL}assets/ui/intro`),
+      ]);
       this.data = data;
       this.signature = "";
     } catch (error) {
@@ -107,13 +101,20 @@ export class NativeIntro {
     const signature = `${this.name}:${frame}`;
     if (signature === this.signature) return;
     this.signature = signature;
-    renderNativeFrame(this.host, this.data, this.name, frame, this.overrides, {
-      path: `${import.meta.env.BASE_URL}assets/ui/intro`,
-      viewBox: "-360 -320 720 640",
-      prefix: "intro",
-      fit: true,
-      omit: ["league"],
-    });
+    renderRetainedNativeFrame(
+      this.host,
+      this.data,
+      this.name,
+      frame,
+      this.overrides,
+      {
+        path: `${import.meta.env.BASE_URL}assets/ui/intro`,
+        viewBox: "-360 -320 720 640",
+        prefix: "intro",
+        fit: true,
+        omit: ["league"],
+      },
+    );
     this.host.dataset.frame = String(frame);
     this.host.dataset.clip = this.name;
     if (this.host.classList.contains("hidden"))

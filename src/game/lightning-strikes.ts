@@ -1,3 +1,4 @@
+import { projectileCrownDamage } from "./crown-damage";
 import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
 import lightning from "./lightning-data.json" with { type: "json" };
@@ -54,14 +55,18 @@ interface Projection {
   packets: Map<number, DamagePacket[]>;
 }
 const damageFor = (e: Entity) =>
-  CARD_MAP.lightning.damage *
-  (e.kind === "tower" ? lightning.crownTowerDamageFraction : 1);
+  projectileCrownDamage(
+    "lightning",
+    e,
+    CARD_MAP.lightning.damage,
+    lightning.crownTowerDamageFraction,
+  );
 const hidden = (e: Entity) => e.deploy <= 0 && e.burrow?.phase === "hidden";
 function apply(body: Entity, packet: HealthPacket) {
   if (body.hp <= 0) return;
   if (packet.healing) body.hp = Math.min(body.maxHp, body.hp + packet.damage);
   else if (packet.bypassShield) body.hp = Math.max(0, body.hp - packet.damage);
-  else if (!body.dash && !hidden(body)) {
+  else if ((!body.dash || packet.bypassDash) && (!hidden(body) || packet.bypassHidden)) {
     if ((body.shield ?? 0) > 0)
       body.shield = Math.max(0, body.shield! - packet.damage);
     else body.hp = Math.max(0, body.hp - packet.damage);
@@ -285,22 +290,6 @@ export function createLightningPlan(
     { project },
   );
 }
-
-export const lightningStrikes = (
-  team: Team,
-  point: Point,
-  entities: readonly Entity[],
-  area?: AreaEffect,
-  projectiles: readonly Projectile[] = [],
-  areas: readonly AreaEffect[] = [],
-) =>
-  createLightningPlan(
-    team,
-    entities,
-    area,
-    projectiles,
-    areas,
-  )(point, area?.radius);
 
 /** Reuse released health timelines while testing counterfactual pending hits.
  * Additional packets affect selection only before a pulse, never on its frame.

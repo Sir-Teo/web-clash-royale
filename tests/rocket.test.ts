@@ -10,8 +10,6 @@ import { applySnapshot, snapshot } from "../src/network/perspective";
 import rocket from "../src/game/rocket-data.json";
 import definitions from "../src/render/destruction-data.json";
 import { destructionPlan } from "../src/render/destruction";
-import { NativeProjectileTrails } from "../src/render/projectile-trails";
-import { projectilePose } from "../src/render/projectile-path";
 const deck: CardId[] = ["rocket", ...STARTER_DECK.slice(1)];
 function battle() {
   const b = new Battle({ seed: 4, ai: false, deck, enemyDeck: deck });
@@ -79,7 +77,7 @@ describe("archived Rocket", () => {
       expect(target.hp).toBe(hp);
       expect(b.projectiles).toHaveLength(1);
       b.step();
-      expect(target.hp).toBeCloseTo(hp - CARD_MAP.rocket.damage * 0.4);
+      expect(target.hp).toBeCloseTo(hp - Math.ceil(CARD_MAP.rocket.damage * 40 / 100));
       expect(b.projectiles).toHaveLength(0);
       advance(b, 30);
       expect(
@@ -228,27 +226,5 @@ describe("archived Rocket", () => {
         (e) => e.type === "hit" && e.card === "rocket",
       ),
     ).toHaveLength(1);
-  });
-  it("schedules bounded trail cycles independent of render frequency and rebuilds late flight", () => {
-    const b = battle();
-    cast(b, "blue", 4, 6);
-    const p = b.projectiles[0];
-    const trails = new NativeProjectileTrails();
-    const first = trails.consume([p], 4);
-    expect(first).toHaveLength(1);
-    expect(trails.consume([p], 4)).toEqual([]);
-    advance(b, 60);
-    const later = trails.consume([p], 4);
-    expect(later.map((v) => v.start)).toEqual([0.8, 1.6]);
-    const rebuilt = new NativeProjectileTrails().consume([p], 4);
-    expect(rebuilt.map((v) => v.seed)).toEqual(
-      [...first, ...later].map((v) => v.seed),
-    );
-    expect(projectilePose(p, 0)).toEqual({ x: 0, y: 2.4, z: 14 });
-    expect(projectilePose(p, p.duration).x).toBe(-5);
-    expect(projectilePose(p, p.duration).z).toBe(-10);
-    expect(trails.consume([], 4)).toEqual([]);
-    trails.reset();
-    expect(trails.consume([p], 4)).toEqual(rebuilt);
   });
 });

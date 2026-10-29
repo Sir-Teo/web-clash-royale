@@ -1,3 +1,4 @@
+import { projectileCrownDamage } from "./crown-damage";
 import { CARD_MAP, type CardId } from "./cards";
 import { COMBAT_STEP } from "./combat";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
@@ -153,7 +154,12 @@ export function createMatchFinisher(
               return damage;
             return (
               damage +
-              CARD_MAP.lightning.damage * lightning.crownTowerDamageFraction
+              projectileCrownDamage(
+                "lightning",
+                t.entity,
+                CARD_MAP.lightning.damage,
+                lightning.crownTowerDamageFraction,
+              )
             );
           },
           t.forecast.withoutLightning.reduce(

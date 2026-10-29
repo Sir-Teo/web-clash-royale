@@ -99,7 +99,7 @@ describe("coordinated spell reservations", () => {
     const { battle, princess, cloud, reserve } = setup();
     princess.hp = 100;
     battle.areas.push(cloud(princess));
-    expect(reserve(princess)).toBe(CARD_MAP.lightning.damage * 0.4);
+    expect(reserve(princess)).toBe(552);
     expect(
       damageSpellTarget("fireball", "red", battle.entities, [], battle.areas),
     ).toBeUndefined();
@@ -181,9 +181,9 @@ describe("coordinated spell reservations", () => {
     const { battle, princess, reserve } = setup();
     princess.hp = 100;
     princess.poison = { remaining: 0.2, elapsed: 0.9 };
-    expect(reserve(princess)).toBeCloseTo(CARD_MAP.poison.damage * 0.4);
+    expect(reserve(princess)).toBeCloseTo(49);
     step(battle, 6);
-    expect(princess.hp).toBeCloseTo(100 - CARD_MAP.poison.damage * 0.4);
+    expect(princess.hp).toBeCloseTo(100 - 49);
   });
 
   it.each(["troop", "tower"] as const)(
@@ -251,8 +251,8 @@ describe("coordinated spell reservations", () => {
       battle.projectiles,
       battle.areas,
     );
-    expect(reserve(princess)).toBe(CARD_MAP.lightning.damage * 0.4);
-    expect(reserve(princess)).toBe(CARD_MAP.lightning.damage * 0.4);
+    expect(reserve(princess)).toBe(552);
+    expect(reserve(princess)).toBe(552);
     expect(JSON.stringify(battle)).toBe(before);
   });
 

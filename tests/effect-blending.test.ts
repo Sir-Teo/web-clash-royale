@@ -83,13 +83,14 @@ describe("native effect blending", () => {
     expect(new Set(geometry.groups.map((g) => g.materialIndex))).toEqual(
       new Set([0, data.textures.length * 3]),
     );
-    let vertexCount = 0;
+    let drawCount = 0;
     for (const group of geometry.groups) {
-      expect(group.start).toBe(vertexCount);
+      expect(group.start).toBe(drawCount);
       expect(asset.materials[group.materialIndex!]).toBeDefined();
-      vertexCount += group.count;
+      drawCount += group.count;
     }
-    expect(vertexCount).toBe(geometry.getAttribute("position").count);
+    expect(drawCount).toBe(geometry.getIndex()!.count);
+    expect(drawCount).toBeGreaterThan(geometry.getAttribute("position").count);
     expect(spriteGeometry(asset, frame)).toBe(geometry);
     asset.geometry.forEach((g) => g.dispose());
     asset.materials.forEach((m) => m.dispose());

@@ -37,7 +37,7 @@ for (const scene of ["out", "race", "in"])
     expect(result.kings.find((e: any) => e.team === "red").hp).toBeCloseTo(
       inward
         ? 600 - CARD_MAP.lumberjack.damage
-        : 600 - CARD_MAP.lightning.damage * 0.4,
+        : 600 - 552,
     );
     const giant = result.entities.find(
       (e: any) => e.team === "red" && e.card === "giant",
@@ -361,7 +361,7 @@ for (const card of ["rage", "freeze", "poison"] as const)
     const state = async () =>
       JSON.parse((await output.getAttribute("data-ai-areas"))!);
     const time = async () =>
-      JSON.parse((await output.getAttribute("data-state"))!).time;
+      (await state()).time;
     await expect.poll(async () => (await state()).scene).toBe(`ai-${card}`);
     const step = async () => {
       const before = await time();
@@ -413,7 +413,7 @@ for (const scene of ["ai-freeze-king", "ai-freeze-race", "ai-freeze-ranged"])
     const state = async () =>
       JSON.parse((await output.getAttribute("data-ai-areas"))!);
     const time = async () =>
-      JSON.parse((await output.getAttribute("data-state"))!).time;
+      (await state()).time;
     const step = async () => {
       const before = await time();
       await page.locator("#second").click();
@@ -467,7 +467,7 @@ test("AI takes an earlier winning Zap before the ranged attack can arrive", asyn
   const spells = async () =>
     JSON.parse((await output.getAttribute("data-ai-spells"))!);
   const time = async () =>
-    JSON.parse((await output.getAttribute("data-state"))!).time;
+    (await state()).time;
   for (let second = 0; second < 2; second++) {
     const before = await time();
     await page.locator("#second").click();

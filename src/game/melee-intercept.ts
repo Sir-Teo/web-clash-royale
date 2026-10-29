@@ -20,6 +20,7 @@ export function meleeInterceptTarget(
   entities: readonly Entity[],
   legal: (point: Point) => boolean,
   areas: readonly AreaEffect[] = [],
+  travelTime = 0,
 ): Point | undefined {
   const candidate = CARD_MAP[card],
     traits = combatTraits({ card });
@@ -69,7 +70,7 @@ export function meleeInterceptTarget(
       (threat.y >= 14.8 && threat.y <= 17.2))
   )
     return;
-  const horizon = deploymentTime(card) + Math.min(candidate.interval, traits.windup);
+  const horizon = travelTime + deploymentTime(card) + Math.min(candidate.interval, traits.windup);
   // Deployment and stun count down together, rather than adding their durations.
   const frozen = Math.max(
     0,

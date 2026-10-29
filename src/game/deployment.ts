@@ -22,7 +22,6 @@ import { nativeCardFormation, nativeFormationOffset } from "./native-formation";
 
 // Historical default; cards with archived delays keep their own timing.
 export const DEPLOY_TIME = 1;
-export const BUILDING_RADIUS = 0.8;
 /** Shared Clone separation for the simulation and read-only AI forecasts. */
 export function clonePosition(entity: Point, center: Point, team: Team): Point {
   return {

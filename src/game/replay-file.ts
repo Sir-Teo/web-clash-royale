@@ -54,6 +54,7 @@ export function importReplayFile(text: string): SharedReplay {
       "crowns",
       "opponent",
       "opponentType",
+      "practice",
       "replay",
     ]) ||
     typeof match.date !== "string" ||
@@ -136,6 +137,7 @@ export function exportReplayFile(
     ...(record.opponentType !== undefined
       ? { opponentType: record.opponentType }
       : {}),
+    ...(record.practice === true ? { practice: true } : {}),
     replay,
   };
   const output = JSON.stringify(

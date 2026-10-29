@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
+import { waitForCombatScene } from "./combat-ready";
 
 test("Local version-5 Rage renders on both teams, holds while paused and releases troop and tower colors", async ({
   page,
@@ -7,6 +8,7 @@ test("Local version-5 Rage renders on both teams, holds while paused and release
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/tests/fixtures/combat.html");
+  await waitForCombatScene(page);
   await page.locator("#scenario").selectOption("rage");
   await expect(page.locator("#status")).toContainText(
     `${expectedEffects} effects`,

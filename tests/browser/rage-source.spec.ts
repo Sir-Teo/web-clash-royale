@@ -1,10 +1,12 @@
 import { test, expect } from "@playwright/test";
 import { expectedEffects } from "./native-assets";
+import { waitForCombatScene } from "./combat-ready";
 
 test("native Rage colors friendly troops on both teams and clears with its area", async ({ page }, info) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/tests/fixtures/combat.html");
+  await waitForCombatScene(page);
   await page.locator("#scenario").selectOption("rage-troops");
   await expect(page.locator("#status")).toContainText(`${expectedEffects} effects`, { timeout: 60000 });
   const node = page.locator("#destruction");

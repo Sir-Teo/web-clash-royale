@@ -15,7 +15,22 @@
     "maximum": 6,
     "damage": 320,
     "cooldown": 1,
-    "speed": 8.333333333333334,
+    "speed": 10,
+    "legacySpeed": 8.333333333333334,
+    "startup": {
+      "stepMs": 50,
+      "chargeMs": 1000,
+      "retentionExtensionUnits": 1000
+    },
+    "goal": {
+      "stepMs": 50,
+      "unitsPerTile": 1000,
+      "tileUnits": 500,
+      "unitsPerStep": 500,
+      "chunkUnits": 250,
+      "headingScale": 256,
+      "landingExtensionUnits": 500
+    },
     "filter": "filter_bandit_charge",
     "startEffect": "assassin_dash_start",
     "travelEffect": "assassin_dashing",

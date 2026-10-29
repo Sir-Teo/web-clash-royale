@@ -1,5 +1,6 @@
 import { isCharging } from "../game/charge";
 import * as T from "three";
+import { limitTexture, loadLimited } from "./texture";
 import type { CardId } from "../game/cards";
 import type { Entity } from "../game/engine";
 import executioner from "../game/executioner-data.json" with { type: "json" };
@@ -49,7 +50,7 @@ export interface AnimatedSprite {
 }
 export type SpriteState = Pick<
   Entity,
-  "id" | "card" | "team" | "x" | "y" | "attack" | "interval" | "move" | "chargeDistance" | "deploy" | "dash"
+  "id" | "card" | "team" | "x" | "y" | "attack" | "interval" | "move" | "chargeDistance" | "deploy" | "dash" | "dashCharge"
 > & { animationTime?: number };
 const heights: Partial<Record<SpriteId, number>> = {
   knight: 1.65,
@@ -110,6 +111,9 @@ export function makeMaterial(texture: T.Texture) {
     depthWrite: false,
     toneMapped: false,
     side: T.DoubleSide,
+    // These are flat SC polygons, so a second transparent back-face pass only
+    // repeats draws and shader selection without adding a visible surface.
+    forceSinglePass: true,
   });
   material.onBeforeCompile = (shader) => {
     shader.vertexShader =
@@ -163,92 +167,133 @@ export function spriteGeometry(asset: SpriteAsset, index: number) {
     cached.userData.spriteLastUse = ++geometryUse;
     return cached;
   }
-  const positions: number[] = [],
-    uvs: number[] = [],
-    multiply: number[] = [],
-    add: number[] = [];
+  // Store each polygon corner once, then reuse it through the original fan.
+  const parts = asset.data.frames[index];
+  let vertexCount = 0,
+    indexCount = 0;
+  for (const part of parts)
+    for (const polygon of asset.data.shapes[part.shape]) {
+      if (polygon.xy.length < 3) continue;
+      vertexCount += polygon.xy.length;
+      indexCount += (polygon.xy.length - 2) * 3;
+    }
+  const vertices = new Float32Array(vertexCount * 12);
+  // WebGL reserves the largest index for primitive restart.
+  const indices =
+    vertexCount > 65535
+      ? new Uint32Array(indexCount)
+      : new Uint16Array(indexCount);
   const geometry = new T.BufferGeometry();
   let sheet = -1,
-    start = 0;
-  asset.data.frames[index].forEach((part, layer) => {
+    start = 0,
+    vertex = 0,
+    cursor = 0;
+  parts.forEach((part, layer) => {
     const m = part.matrix,
       c = part.color;
     for (const polygon of asset.data.shapes[part.shape]) {
+      const count = polygon.xy.length;
+      if (count < 3) continue;
       const blend = SPRITE_BLENDS.indexOf(
         (part.blend ?? 0) as (typeof SPRITE_BLENDS)[number],
       );
       if (blend < 0) throw new Error(`Unsupported sprite blend ${part.blend}`);
       const material = polygon.sheet + blend * asset.textures.length;
       if (material !== sheet) {
-        if (sheet >= 0)
-          geometry.addGroup(start, positions.length / 3 - start, sheet);
+        if (sheet >= 0) geometry.addGroup(start, cursor - start, sheet);
         sheet = material;
-        start = positions.length / 3;
+        start = cursor;
       }
-      for (let j = 1; j < polygon.xy.length - 1; j++)
-        for (const vertex of [0, j, j + 1]) {
-          const [x, y] = polygon.xy[vertex],
-            [u, v] = polygon.uv[vertex];
-          positions.push(
-            (m[0] * x + m[2] * y + m[4] - asset.data.anchor[0]) * asset.scale,
-            -(m[1] * x + m[3] * y + m[5] - asset.data.anchor[1]) * asset.scale,
-            layer * 0.0005,
-          );
-          uvs.push(u, 1 - v);
-          multiply.push(c[4] / 255, c[5] / 255, c[6] / 255, c[3] / 255);
-          add.push(c[0] / 255, c[1] / 255, c[2] / 255);
-        }
+      const base = vertex;
+      for (let j = 0; j < count; j++, vertex++) {
+        const [x, y] = polygon.xy[j],
+          [u, v] = polygon.uv[j];
+        const offset = vertex * 12;
+        vertices[offset] =
+          (m[0] * x + m[2] * y + m[4] - asset.data.anchor[0]) * asset.scale;
+        vertices[offset + 1] =
+          -(m[1] * x + m[3] * y + m[5] - asset.data.anchor[1]) * asset.scale;
+        vertices[offset + 2] = layer * 0.0005;
+        vertices[offset + 3] = u;
+        vertices[offset + 4] = 1 - v;
+        vertices[offset + 5] = c[4] / 255;
+        vertices[offset + 6] = c[5] / 255;
+        vertices[offset + 7] = c[6] / 255;
+        vertices[offset + 8] = c[3] / 255;
+        vertices[offset + 9] = c[0] / 255;
+        vertices[offset + 10] = c[1] / 255;
+        vertices[offset + 11] = c[2] / 255;
+      }
+      for (let j = 1; j < count - 1; j++) {
+        indices[cursor++] = base;
+        indices[cursor++] = base + j;
+        indices[cursor++] = base + j + 1;
+      }
     }
   });
-  if (sheet >= 0) geometry.addGroup(start, positions.length / 3 - start, sheet);
-  geometry.setAttribute("position", new T.Float32BufferAttribute(positions, 3));
-  geometry.setAttribute("uv", new T.Float32BufferAttribute(uvs, 2));
+  if (sheet >= 0) geometry.addGroup(start, cursor - start, sheet);
+  const buffer = new T.InterleavedBuffer(vertices, 12);
+  geometry.setAttribute(
+    "position",
+    new T.InterleavedBufferAttribute(buffer, 3, 0),
+  );
+  geometry.setAttribute("uv", new T.InterleavedBufferAttribute(buffer, 2, 3));
   geometry.setAttribute(
     "scMultiply",
-    new T.Float32BufferAttribute(multiply, 4),
+    new T.InterleavedBufferAttribute(buffer, 4, 5),
   );
-  geometry.setAttribute("scAdd", new T.Float32BufferAttribute(add, 3));
+  geometry.setAttribute(
+    "scAdd",
+    new T.InterleavedBufferAttribute(buffer, 3, 9),
+  );
+  geometry.setIndex(new T.BufferAttribute(indices, 1));
   geometry.computeBoundingSphere();
   geometry.userData.shared = true;
-  geometry.userData.spriteFrameBytes =
-    (positions.length + uvs.length + multiply.length + add.length) *
-    Float32Array.BYTES_PER_ELEMENT;
+  geometry.userData.spriteFrameBytes = vertices.byteLength + indices.byteLength;
   geometry.userData.spriteLastUse = ++geometryUse;
   asset.geometry.set(index, geometry);
   return geometry;
 }
-
 export class SpriteLibrary {
   assets = new Map<SpriteId, SpriteAsset>();
   private loader = new T.TextureLoader();
+  constructor(private readonly textureLimit = Infinity) {}
   async load() {
     const textureLoads = new Map<string, Promise<T.Texture>>();
     const loadTexture = (file: string) => {
-      const canonical = (textureAliases as Record<string, string>)[file] ?? file;
+      const canonical =
+        (textureAliases as Record<string, string>)[file] ?? file;
       let pending = textureLoads.get(canonical);
       if (!pending) {
-        pending = this.loader.loadAsync(
-          `${import.meta.env.BASE_URL}assets/animations/${canonical}`,
-        ).then((texture) => {
-          texture.colorSpace = T.SRGBColorSpace;
-          texture.minFilter = T.LinearFilter;
-          texture.magFilter = T.LinearFilter;
-          texture.generateMipmaps = false;
-          return texture;
-        });
+        pending = this.loader
+          .loadAsync(
+            `${import.meta.env.BASE_URL}assets/animations/${canonical}`,
+          )
+          .then((texture) => {
+            limitTexture(texture, this.textureLimit);
+            texture.colorSpace = T.SRGBColorSpace;
+            texture.minFilter = T.LinearFilter;
+            texture.magFilter = T.LinearFilter;
+            texture.generateMipmaps = false;
+            return texture;
+          });
         textureLoads.set(canonical, pending);
       }
       return pending;
     };
-    await Promise.all(
-      (Object.keys(heights) as SpriteId[]).map(async (id) => {
+    await loadLimited(
+      Object.keys(heights) as SpriteId[],
+      Number.isFinite(this.textureLimit) ? 4 : Infinity,
+      async (id) => {
         try {
           const response = await fetch(
             `${import.meta.env.BASE_URL}assets/animations/${id}.json`,
           );
           if (!response.ok) throw new Error(`Missing animation ${id}`);
           const data: SpriteData = await response.json();
-          const textures = await Promise.all(data.textures.map((t) => loadTexture(t.file)));
+          const textures = await Promise.all(
+            data.textures.map((t) => loadTexture(t.file)),
+          );
           this.assets.set(id, {
             data,
             textures,
@@ -259,7 +304,7 @@ export class SpriteLibrary {
         } catch (error) {
           console.warn(`Using fallback model for ${id}`, error);
         }
-      }),
+      },
     );
   }
   make(id: SpriteId): AnimatedSprite | null {
@@ -283,7 +328,13 @@ export class SpriteLibrary {
     camera: T.Camera,
     motion?: { x: number; y: number },
   ) {
-    if (e.attack > 0 && !moving && target) {
+    if (e.card === "bandit" && e.dash?.goal) {
+      sprite.facingX = e.dash.goal.x - e.x;
+      sprite.facingY = e.dash.goal.y - e.y;
+    } else if (e.card === "bandit" && e.dashCharge && target) {
+      sprite.facingX = target.x - e.x;
+      sprite.facingY = target.y - e.y;
+    } else if (e.attack > 0 && !moving && target) {
       sprite.facingX = target.x - e.x;
       sprite.facingY = target.y - e.y;
     } else if (moving && motion && Math.hypot(motion.x, motion.y) > 0.0001) {

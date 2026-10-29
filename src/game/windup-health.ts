@@ -14,6 +14,7 @@ import {
   type WindupHealthFrame,
 } from "./tornado-pull";
 import { healthPackets, type HealthPacket } from "./status-health";
+import { poisonTickDamage } from "./poison-damage";
 import {
   createLightningPlan,
   lightningDamageMap,
@@ -51,8 +52,8 @@ function healthProjection(
     deploy = attacker.deploy;
   const events: HealthPacket[] = [];
   const hidden = attacker.deploy <= 0 && attacker.burrow?.phase === "hidden";
-  const hurt = (damage: number, bypass = false) => {
-    if (hp <= 0 || (!bypass && (attacker.dash || hidden))) return;
+  const hurt = (damage: number, bypass = false, bypassHidden = false, bypassDash = false) => {
+    if (hp <= 0 || (!bypass && ((!bypassDash && attacker.dash) || (hidden && !bypassHidden)))) return;
     if (shield > 0 && !bypass) shield = Math.max(0, shield - damage);
     else hp = Math.max(0, hp - damage);
   };
@@ -62,6 +63,8 @@ function healthProjection(
     phase: number,
     order: number,
     bypass = false,
+    bypassHidden = false,
+    bypassDash = false,
   ) => {
     if (collect)
       events.push({
@@ -71,8 +74,10 @@ function healthProjection(
         order,
         born: 0,
         ...(bypass ? { bypassShield: true } : {}),
+        ...(bypassHidden ? { bypassHidden: true } : {}),
+        ...(bypassDash ? { bypassDash: true } : {}),
       });
-    hurt(damage, bypass);
+    hurt(damage, bypass, bypassHidden, bypassDash);
   };
   const result: WindupHealthFrame[] = [];
   for (const [index, frame] of frames.entries()) {
@@ -164,10 +169,12 @@ function healthProjection(
         poisoned.elapsed -= poison.damageInterval;
         record(
           step,
-          CARD_MAP.poison.damage *
-            (attacker.kind === "tower" ? poison.crownTowerDamageFraction : 1),
+          poisonTickDamage(attacker),
           0,
           -1,
+          false,
+          !!attacker.nativeRetainedPoison,
+          !!attacker.nativeBanditDash,
         );
       }
       if (poisoned.remaining < 1e-8) poisoned = undefined;

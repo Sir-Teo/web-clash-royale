@@ -22,10 +22,147 @@
     {
       "path": "reference/sc/ui-spells.bin",
       "sha256": "1683b25b113f17c7c28f87c00cf6f5d3abc070d8ee534beb7197a9f84d940c52"
+    },
+    {
+      "path": "reference/client/dash-lifecycle-native-trace.json",
+      "sha256": "91a9123774e707aadf59a1d706b9fa5af4e3695d6e3ba94415c36da6011a74eb"
+    },
+    {
+      "path": "reference/client/dash-goals-native-trace.json",
+      "sha256": "26422f0a0f651353044e75f39f9530c459a6754e00d67ee2fce40f414a636959"
+    },
+    {
+      "path": "reference/client/dash-admission-native-trace.json",
+      "sha256": "a772e93de669715acf0c798fce3c6cae75e0d425442ac1d2870e11e1ccc0dbce"
+    },
+    {
+      "path": "reference/client/dash-startup-native-trace.json",
+      "sha256": "cce10a224850d79720d667d507222f8bb381169e7f65720fd376376b5d9fff63"
+    },
+    {
+      "path": "reference/client/dash-recovery-native-trace.json",
+      "sha256": "678a1a62499b90d53da7d1ea286b23ebd9b3da5f6b5b3dd51db1acc112341fd0"
+    },
+    {
+      "path": "reference/client/dash-transition-native-trace.json",
+      "sha256": "00fe570575dad3081b4ae98f9afae62b8bf8d5a271fdddc2f5608a1733860077"
+    },
+    {
+      "path": "reference/client/ordinary-delivery-native-trace.json",
+      "sha256": "728859ae4e7117355e4ef00041286a79ac46d44a4e19cc723e10ce45071c24e7"
+    },
+    {
+      "path": "reference/client/bandit-ordinary-native-trace.json",
+      "sha256": "5266a984039b1772cde8aad4bc64ea7a9788ad8edbcc1110af040b030f6aa745"
+    },
+    {
+      "path": "reference/client/bandit-target-reset-native-trace.json",
+      "sha256": "22bcccdaed004b4a99542b57a0e9f6334237a37e77d74084455d4b126abd64b8"
     }
   ],
+  "nativeDash": {
+    "stateEntry": "0x25cdf4 -> 0x214f60",
+    "movementFrame": "0x260c2c -> 0x2613f6",
+    "stepMs": 50,
+    "sourceUnitsPerStep": 500,
+    "unitsPerTile": 1000,
+    "retainedPoison": "0x218f48 -> 0x2601ae -> 0x2602d0"
+  },
+  "nativeGoal": {
+    "launch": "0x25cd18 -> 0x263c4a",
+    "movement": "0x260c2c -> 0x2613f6 -> 0x26344e",
+    "landing": "0x2157eb..0x2159bc",
+    "fixedStepMs": 50,
+    "landingExtensionUnits": 500
+  },
+  "nativeStartup": {
+    "attackUpdate": "0x25c60c..0x25d068",
+    "admission": "0x25d852..0x25d946",
+    "cancellation": "0x25d4b0..0x25d6f2",
+    "stepMs": 50,
+    "chargeMs": 1000
+  },
+  "nativeReentry": {
+    "attackUpdate": "0x25c60c..0x25d068",
+    "landingReload": "0x25c4fa..0x25c536",
+    "admission": "0x25d852..0x25d946",
+    "nextUpdateClockMs": 950,
+    "nextUpdateReloadMs": 550
+  },
+  "nativeRecovery": {
+    "attackUpdate": "0x25c60c..0x25d068",
+    "landingReload": "0x25c4fa..0x25c536",
+    "ordinaryReload": "0x25e681..0x25e69f",
+    "stepMs": 50,
+    "loadTimeMs": 600,
+    "firstRequestAfterHitUpdates": 19,
+    "firstRequestAfterMissUpdates": 8,
+    "scope": "First ordinary request only; downstream damage and view bodies retain shared runtime behavior"
+  },
+  "nativeCadence": {
+    "attackUpdate": "0x25c60c..0x25d068",
+    "ordinaryReload": "0x25e681..0x25e69f",
+    "stepMs": 50,
+    "ordinaryRequests": 104,
+    "rageRequestUpdates": [
+      42,
+      57,
+      72,
+      86
+    ],
+    "scope": "Continuing post-landing ordinary requests; downstream damage and view bodies retain shared runtime behavior"
+  },
+  "nativeTransitions": {
+    "attackUpdate": "0x25c60c..0x25d068",
+    "phaseGate": "0x25cb57..0x25cc50",
+    "phaseMaximumMs": 50,
+    "selectedDelivery": "0x25eea7..0x25f329",
+    "normalChargeUpdate": 47,
+    "rageChargeUpdate": 87,
+    "scope": "Post-dash committed ordinary cycles with supplied existing references; packet/level construction and natural acquisition remain excluded"
+  },
+  "nativeOrdinary": {
+    "attackUpdate": "0x25c60c..0x25d068",
+    "initialElapsedMs": 0,
+    "initialReloadMs": 0,
+    "normalRequestUpdates": [
+      8,
+      28,
+      48,
+      68
+    ],
+    "rageRequestUpdates": [
+      6,
+      21,
+      36,
+      51,
+      66
+    ],
+    "scope": "Fresh close-range supplied existing references; constructor/target-setter clock values use the separate roster prerequisite; natural deployment and acquisition remain excluded"
+  },
+  "nativeTargetReset": {
+    "setter": "0x25d4b0..0x25d6f2",
+    "removal": "0x25f594..0x25f6b4",
+    "expiry": "0x25ca86..0x25cab4",
+    "finishTimeMs": 250,
+    "nullRequestUpdates": [
+      20,
+      40,
+      60
+    ],
+    "removalRequestUpdates": [
+      12,
+      32,
+      52
+    ],
+    "output": {
+      "path": "src/game/bandit-reset-data.json",
+      "sha256": "f22671e97ccd8f685e7b4747257d4d555697b3a4c55ebe323ef9c41223212cb1"
+    },
+    "scope": "Supplied null/removal transitions and close reselection; native natural death propagation and acquisition remain excluded"
+  },
   "output": {
     "path": "src/game/bandit-data.json",
-    "sha256": "f6b26da98613f0571ab86a45889aae70f3d27abe9037740149fc4e8db744173b"
+    "sha256": "867157ab8c7e8fd77e24e84471da7b60c9212167ef33e9efa1cadd9143569f88"
   }
 }

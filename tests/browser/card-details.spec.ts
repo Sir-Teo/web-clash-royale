@@ -55,24 +55,24 @@ test("spell details describe their actual damage, allegiance and timed effects",
       "poison",
       {
         "Damage per second": "121",
-        "Crown Tower / second": "48.4",
+        "Crown Tower / second": "49",
         Duration: "8 s",
         Linger: "Up to 1 s",
       },
     ],
     [
       "rocket",
-      { Damage: "1,484", "Crown Tower damage": "593.6", Radius: "2 tiles" },
+      { Damage: "1,484", "Crown Tower damage": "594", Radius: "2 tiles" },
     ],
     [
       "fireball",
-      { Damage: "689", "Crown Tower damage": number(CARD_MAP.fireball.damage * 0.4), Knockback: "1.8 tiles" },
+      { Damage: "689", "Crown Tower damage": "276", Knockback: "1.8 tiles" },
     ],
     [
       "arrows",
-      { "Volley damage": "366", "Crown Tower damage": number(CARD_MAP.arrows.damage * 0.4), Waves: "1" },
+      { "Volley damage": "366", "Crown Tower damage": "147", Waves: "1" },
     ],
-    ["zap", { Damage: "192", "Crown Tower damage": number(CARD_MAP.zap.damage * 0.4), Stun: "0.5 s" }],
+    ["zap", { Damage: "192", "Crown Tower damage": "77", Stun: "0.5 s" }],
   ] as const;
   for (const [id, expected] of cases) {
     await page.locator(`#deck-preview [data-card-info="${id}"]`).click();

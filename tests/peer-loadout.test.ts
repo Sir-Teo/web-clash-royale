@@ -1,6 +1,7 @@
 import { sendPeerCommand as send } from "./helpers/peer-command";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { PeerMatch, type PeerPlayer } from "../src/network/peer-match";
+import { PeerMatch } from "../src/network/peer-match";
+import type { PeerPlayer } from "../src/network/peer-player";
 import { PeerRoomClient } from "../src/network/peer-client";
 import {
   PEER_PROTOCOL,

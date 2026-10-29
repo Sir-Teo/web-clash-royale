@@ -3,6 +3,92 @@ import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import type { CardId } from "../game/cards";
 import type { Team } from "../game/engine";
 const materials = new Map<string, T.MeshStandardMaterial>();
+
+/** Merge the opaque diorama's colors into vertex data instead of separate draws. */
+export function batchSceneryColors(group: T.Group, exclude: T.Object3D[] = []) {
+  group.updateMatrixWorld(true);
+  const skip = new Set<T.Object3D>();
+  for (const object of exclude) object.traverse((child) => skip.add(child));
+  const groups = new Map<
+    string,
+    {
+      material: T.MeshStandardMaterial;
+      objects: T.Mesh[];
+      geometries: T.BufferGeometry[];
+    }
+  >();
+  group.traverse((object) => {
+    if (
+      !(object instanceof T.Mesh) ||
+      object instanceof T.InstancedMesh ||
+      skip.has(object) ||
+      Array.isArray(object.material)
+    )
+      return;
+    const material = object.material;
+    if (
+      !(material instanceof T.MeshStandardMaterial) ||
+      material.transparent ||
+      material.map ||
+      material.vertexColors ||
+      material.normalMap ||
+      material.roughnessMap ||
+      material.metalnessMap ||
+      material.alphaMap ||
+      material.emissiveMap ||
+      material.aoMap ||
+      material.lightMap ||
+      material.displacementMap ||
+      material.bumpMap
+    )
+      return;
+    const key = [
+      material.roughness,
+      material.metalness,
+      material.side,
+      material.flatShading,
+      material.opacity,
+      material.depthTest,
+      material.depthWrite,
+      material.toneMapped,
+      material.emissive.getHex(),
+      material.emissiveIntensity,
+    ].join(":");
+    let batch = groups.get(key);
+    if (!batch)
+      groups.set(key, (batch = { material, objects: [], geometries: [] }));
+    const geometry = object.geometry.clone().applyMatrix4(object.matrixWorld);
+    const colors = new Float32Array(geometry.attributes.position.count * 3);
+    for (let i = 0; i < colors.length; i += 3) {
+      colors[i] = material.color.r;
+      colors[i + 1] = material.color.g;
+      colors[i + 2] = material.color.b;
+    }
+    geometry.setAttribute("color", new T.BufferAttribute(colors, 3));
+    batch.geometries.push(geometry);
+    batch.objects.push(object);
+  });
+  for (const batch of groups.values()) {
+    if (batch.objects.length < 2) {
+      batch.geometries.forEach((geometry) => geometry.dispose());
+      continue;
+    }
+    const geometry = mergeGeometries(batch.geometries, false);
+    batch.geometries.forEach((part) => part.dispose());
+    if (!geometry) continue;
+    const material = batch.material.clone();
+    material.color.set(0xffffff);
+    material.vertexColors = true;
+    const mesh = new T.Mesh(geometry, material);
+    mesh.castShadow = batch.objects.some((object) => object.castShadow);
+    mesh.receiveShadow = batch.objects.some((object) => object.receiveShadow);
+    for (const object of batch.objects) {
+      object.removeFromParent();
+      object.geometry.dispose();
+    }
+    group.add(mesh);
+  }
+}
 export function mat(
   color: T.ColorRepresentation,
   roughness = 0.78,

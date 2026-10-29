@@ -155,13 +155,17 @@ test("copies only the active deck, previews without mutation, selects a slot, un
     .getByRole("button", { name: "Use this deck", exact: true })
     .click();
   await page.reload();
-  expect(
-    await page
-      .locator("#deck-preview [data-card-info]")
-      .evaluateAll((els) =>
-        els.map((e) => (e as HTMLElement).dataset.cardInfo),
-      ),
-  ).toEqual(shared);
+  await expect
+    .poll(
+      () =>
+        page
+          .locator("#deck-preview [data-card-info]")
+          .evaluateAll((els) =>
+            els.map((e) => (e as HTMLElement).dataset.cardInfo),
+          ),
+      { timeout: 15000 },
+    )
+    .toEqual(shared);
   current = JSON.parse((await saved(page))!);
   expect(current.trophies).toBe(before.trophies);
   expect(current.chests).toEqual(before.chests);
@@ -191,6 +195,12 @@ test("rejects invalid codes, hides stale previews and keeps phone controls and f
   await expect(
     page.getByRole("button", { name: "Use this deck", exact: true }),
   ).not.toBeVisible();
+  await expect(
+    page.getByRole("button", {
+      name: "Practice against this deck",
+      exact: true,
+    }),
+  ).not.toBeVisible();
   expect(await saved(page)).toBe(before);
   await preview(page);
   const close = page.getByRole("button", { name: "Close dialog", exact: true }),
@@ -206,6 +216,12 @@ test("rejects invalid codes, hides stale previews and keeps phone controls and f
   if (info.project.name !== "desktop")
     await page.setViewportSize({ width: 320, height: 740 });
   const use = page.getByRole("button", { name: "Use this deck", exact: true });
+  const practice = page.getByRole("button", {
+    name: "Practice against this deck",
+    exact: true,
+  });
+  await practice.scrollIntoViewIfNeeded();
+  expect((await practice.boundingBox())!.height).toBeGreaterThanOrEqual(44);
   await use.scrollIntoViewIfNeeded();
   expect((await use.boundingBox())!.height).toBeGreaterThanOrEqual(44);
   expect(
@@ -313,4 +329,136 @@ test("keeps adoption and Undo available when browser storage refuses writes", as
   await expect(
     page.getByLabel("YOUR CURRENT DECK", { exact: true }),
   ).toHaveValue("BRA-DECK-1:" + JSON.parse(before!).deck.join(","));
+});
+
+test("practices the shared code with the active deck, repeats it and preserves saved decks and rewards", async ({
+  page,
+}, info) => {
+  test.setTimeout(180000);
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  const state = () => page.evaluate(() => (window as any).__arena?.state);
+  await expect
+    .poll(async () => (await state())?.loadedCards, { timeout: 60000 })
+    .toBe(expectedCards);
+  await page.locator(".mode-select").click();
+  await page.locator('[data-mode="double"]').click();
+  const before = JSON.parse((await saved(page))!);
+  await open(page);
+  await preview(page);
+  await page
+    .getByLabel("Destination battle deck", { exact: true })
+    .selectOption("2");
+  await page.locator('[data-code-card="hog-rider"]').click();
+  await page
+    .getByRole("button", { name: "Back to deck codes", exact: true })
+    .click();
+  const practice = page.getByRole("button", {
+    name: "Practice against this deck",
+    exact: true,
+  });
+  await expect(practice).toHaveAttribute(
+    "aria-describedby",
+    "practice-code-note",
+  );
+  await expect(page.locator("#practice-code-note")).toContainText(
+    "against your active battle deck. No trophies or rewards.",
+  );
+  expect(JSON.parse((await saved(page))!)).toEqual(before);
+  await practice.scrollIntoViewIfNeeded();
+  await page.screenshot({
+    path: info.outputPath("practice-shared-code.png"),
+    animations: "disabled",
+  });
+  if (await page.evaluate(() => navigator.maxTouchPoints > 0))
+    await practice.tap();
+  else {
+    await practice.focus();
+    await practice.press("Enter");
+  }
+  for (let round = 0; round < 2; round++) {
+    await expect(page.locator("#battle-intro")).toHaveAttribute(
+      "data-clip",
+      "pvp_battle_start_training",
+    );
+    await expect(page.locator(".competitor.enemy b")).toHaveText("Shared deck");
+    await expect(page.locator(".competitor.enemy div > span")).toHaveText(
+      "Deck code · Training camp · Practice AI",
+    );
+    expect((await state()).enemyDeck).toEqual(shared);
+    expect(
+      (await state()).hand.every((id: string) => before.deck.includes(id)),
+    ).toBe(true);
+    await expect
+      .poll(async () => (await state()).actions, { timeout: 30000 })
+      .toBeGreaterThan(0);
+    await page
+      .getByRole("button", { name: "Pause battle", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Leave battle", exact: true })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Practice again", exact: true }),
+    ).toBeVisible({ timeout: 20000 });
+    await expect(page.locator(".practice-result-note")).toHaveText(
+      "Practice AI · no trophies or rewards",
+    );
+    const after = JSON.parse((await saved(page))!);
+    for (const field of [
+      "deck",
+      "decks",
+      "activeDeck",
+      "gold",
+      "trophies",
+      "best",
+      "chests",
+      "wins",
+      "crowns",
+    ])
+      expect(after[field]).toEqual(before[field]);
+    expect(after.battles).toBe(before.battles + round + 1);
+    expect(after.history[0]).toMatchObject({
+      mode: "training",
+      opponent: "Shared deck",
+      opponentType: "ai",
+      playerName: before.name,
+      replay: {
+        version: 56,
+        rulesFamily: "origin",
+        mode: "training",
+        deck: before.deck,
+        enemyDeck: shared,
+      },
+    });
+    expect(
+      after.history[0].replay.actions.some(
+        (action: any) => action.team === "red",
+      ),
+    ).toBe(true);
+    if (round === 0)
+      await page
+        .getByRole("button", { name: "Practice again", exact: true })
+        .click();
+  }
+  await page.getByRole("button", { name: "Watch replay", exact: true }).click();
+  expect((await state()).enemyDeck).toEqual(shared);
+  await page.locator("#replay-seek").fill("100");
+  await expect(page.locator("#replay-play")).toHaveAttribute(
+    "aria-label",
+    "Restart replay",
+  );
+  await page.locator("#replay-exit").click();
+  await expect(page.locator("#mode-name")).toHaveText("Double elixir");
+  await open(page);
+  await expect(page.locator("#current-deck-code")).toHaveValue(
+    "BRA-DECK-1:" + before.deck.join(","),
+  );
+  await expect(
+    page.getByRole("button", {
+      name: "Practice against this deck",
+      exact: true,
+    }),
+  ).toHaveCount(0);
+  expect(errors).toEqual([]);
 });

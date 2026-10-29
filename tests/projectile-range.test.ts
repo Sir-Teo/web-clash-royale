@@ -9,7 +9,8 @@ import {
   type Team,
 } from "../src/game/engine";
 import { type CardId } from "../src/game/cards";
-import { attackFlight, attackHitSteps } from "../src/game/attack-flight";
+import { attackFlight } from "../src/game/attack-flight";
+import { attackHitSteps } from "./helpers/attack-hit-steps";
 import { attackReach } from "../src/game/attack-range";
 import { projectileMuzzle } from "../src/game/projectile-muzzle";
 import {

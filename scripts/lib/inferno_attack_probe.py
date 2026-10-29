@@ -20,7 +20,7 @@ def capture(env):
     cpu, heap, body, data, component = [env[key] for key in ["cpu", "heap", "body", "data", "component"]]
     read, write, run, initialize, set_buffs, return_hook = [env[key] for key in ["read", "write", "run", "initialize", "set_buffs", "return_hook"]]
     allowed, rows, args = [env[key] for key in ["allowed", "rows", "args"]]
-    config, target_a, target_b = heap + 0xa000, heap + 0x8000, heap + 0x9000
+    config, target_a, target_b = heap + 0xa000, heap + 0x8000, heap + (0x8800 if args.bandit_target_reset else 0x9000)
     globals_path = "reference/logic/globals.csv"
     globals_bytes = Path(globals_path).read_bytes()
     globals_rows = {row["Name"]: row for row in csv.DictReader(io.StringIO(globals_bytes.decode()))}
@@ -66,7 +66,7 @@ def capture(env):
                 raise RuntimeError("Unexpected owner-state notification")
             calls[hex(address)] = calls.get(hex(address), 0) + 1
             return_hook(constants[address])
-        elif address == 0x25e637:
+        elif address == 0x25e637 and not args.ordinary_delivery:
             # Keep the actual callee frame and execute its real reload prefix,
             # skipping level/damage/world work. Restore that frame at its end.
             base = cpu.reg_read(UC_X86_REG_EBP)

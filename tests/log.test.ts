@@ -118,7 +118,7 @@ describe("native Log spell", () => {
     expect(knight.hp).toBe(knight.maxHp - CARD_MAP.log.damage);
     expect(knight.y).toBeLessThan(12);
     expect(minion.hp).toBe(minion.maxHp);
-    expect(tower.hp).toBeCloseTo(towerHp - CARD_MAP.log.damage * 0.4);
+    expect(tower.hp).toBeCloseTo(towerHp - Math.ceil(CARD_MAP.log.damage * 40 / 100));
     expect(match.events.some((event) => event.effect === "log-die")).toBe(true);
   });
 
@@ -175,7 +175,7 @@ describe("native Log spell", () => {
     for (let i = 0; i < 120; i++) match.step();
     expect(knight.hp).toBe(knight.maxHp);
     expect(tesla.hp).toBe(tesla.maxHp);
-    expect(blueTower.hp).toBeCloseTo(hp - CARD_MAP.log.damage * 0.4);
+    expect(blueTower.hp).toBeCloseTo(hp - Math.ceil(CARD_MAP.log.damage * 40 / 100));
   });
 
   it("accepts a Log cast through direct browser peer commands", () => {

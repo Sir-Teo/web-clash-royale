@@ -5,6 +5,7 @@ import { attackReach, minimumAttackDistance } from "../../src/game/attack-range"
 import mortarRules from "../../src/game/mortar-data.json" with { type: "json" };
 import { acquisitionSight } from "../../src/game/sight-range";
 import { Arena } from "../../src/render/arena";
+import { geometryLayout } from "./geometry-layout";
 import { spriteGeometry } from "../../src/render/sprites";
 import { Battle, STEP, entityVisualHeight } from "../../src/game/engine";
 import type { Entity, Team } from "../../src/game/engine";
@@ -20,6 +21,14 @@ if (
 )
   sceneSelect.value = initialScene;
 const arena = new Arena(document.querySelector("#arena")!);
+const geometryView = geometryLayout(arena.renderer, arena.scene);
+Object.defineProperty(window, "__geometryLayout", {
+  value: {
+    setExpanded: geometryView.setExpanded,
+    get ready() { return !arena.needsFrame; },
+    get state() { return geometryView.state; },
+  },
+});
 const unitPlanes = (id: number) => {
   const visual = (arena as any).units.get(id);
   if (!visual) return null;
@@ -113,16 +122,25 @@ function setup() {
     replay: { rulesFamily: "local", version: 5, seed: 12, mode: "classic",
       deck: STARTER_DECK, enemyDeck: STARTER_DECK, actions: [], duration: 0 },
   } : { seed: selectedScene === "ai-lightning-combo" ? 8 : selectedScene === "ai-lightning-followup" ? 1 : selectedScene === "ai-spells-mirror" ? 2 : 12, ai: selectedScene.startsWith("ai-") });
+  if (selectedScene === "ai-miner-defense-legal") battle = new Battle({ seed: 73, ai: true,
+    deck: ["hog-rider", "knight", "archers", "skeletons", "goblins", "fireball", "zap", "cannon"],
+    enemyDeck: ["miner", "pekka", "three-musketeers", "golem", "rocket", "lightning", "freeze", "balloon"],
+  });
+  if (selectedScene === "ai-pulled-log-legal") battle = new Battle({ seed: 2, ai: true,
+    deck: ["wizard", "knight", "archers", "skeletons", "goblins", "fireball", "zap", "cannon"],
+    enemyDeck: ["tornado", "log", "pekka", "golem", "lava-hound", "three-musketeers", "rocket", "lightning"],
+  });
   if (selectedScene === "rage")
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   const rangeRules = new URL(location.href).searchParams.get("rules");
-  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "pending-range", "projectile-muzzle", "target-loss", "sparky-preload", "sparky", "primary-score", "primary-geometry", "tower-layout", "distant-targets", "barrel-formation", "army-formation", "group-formation", "ground-deployment", "deployment"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42"].includes(rangeRules ?? "")) {
-    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 } });
+  if (["attack-range", "sight-range", "minimum-range", "electro-bolts", "attack-clock", "pending-range", "projectile-muzzle", "target-loss", "sparky-preload", "sparky", "primary-score", "primary-geometry", "tower-layout", "distant-targets", "barrel-formation", "army-formation", "group-formation", "ground-deployment", "deployment"].includes(selectedScene) && ["23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43"].includes(rangeRules ?? "")) {
+    battle = new Battle({ replay: { ...battle.exportReplay(), version: Number(rangeRules) as 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 } });
     Object.assign(battle, { replayActions: null, replayDuration: undefined });
   }
-  for (const t of battle.entities) t.active = false;
+  for (const t of battle.entities) t.active = ["ai-miner-defense-legal", "ai-pulled-log-legal"].includes(selectedScene) && !t.king;
   const scenario = (document.querySelector("#scenario") as HTMLSelectElement)
     .value;
+  (document.querySelector("#five") as HTMLButtonElement).hidden = !scenario.startsWith("ai-army-");
   (document.querySelector("#lose-target") as HTMLElement).hidden = scenario !== "target-loss";
   (document.querySelector("#preload-in") as HTMLElement).hidden = scenario !== "sparky-preload";
   (document.querySelector("#open-deployment") as HTMLElement).hidden = scenario !== "ground-deployment";
@@ -227,6 +245,163 @@ function setup() {
       : ["freeze", "clone", "pekka", "pekka"];
     battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
     battle.players.red.elixir = fast ? 4 : race ? 6 : 4;
+  } else if (scenario.startsWith("ai-army-")) {
+    const card = scenario.endsWith("hound") ? "lava-hound"
+      : ["ai-army-musketeers", "ai-army-mirror", "ai-army-blast"].includes(scenario) ? "three-musketeers" : "golem";
+    for (const tower of battle.entities.filter(e => e.team === "blue" && !e.king)) tower.active = true;
+    battle.players.red.hand = [card, "knight", "skeletons", "archers"];
+    battle.players.red.queue = ["pekka", "mirror", "rocket", "lightning"];
+    battle.players.red.elixir = scenario.endsWith("saving") || scenario.endsWith("pressure") ? 6 : Math.min(10, CARD_MAP[card].cost + 2);
+    if (scenario.endsWith("pressure")) {
+      battle.players.red.hand[3] = "musketeer";
+      for (const body of unit("baby-dragon", "blue", 4, 10)) Object.assign(body, { active: false, speed: 0 });
+    } else if (scenario.endsWith("late")) {
+      battle.tick = 166 * 30;
+      battle.players.red.elixir = 6;
+    } else {
+      battle.entities.find(e => e.team === "blue" && e.lane === (scenario.endsWith("blast") ? "left" : "right"))!.hp = 2500;
+      if (scenario.endsWith("mirror")) {
+        battle.players.red.hand[0] = "mirror";
+        battle.players.red.lastPlayed = "three-musketeers";
+        battle.players.red.elixir = 10;
+      } else if (scenario.endsWith("blast")) {
+        cast("rocket", "blue", 3.5, 9);
+        battle.projectiles.find(p => p.style === "rocket")!.delay = 2;
+      }
+    }
+  } else if (scenario.startsWith("ai-graveyard-")) {
+    for (const tower of battle.entities.filter(e => e.team === "blue" && !e.king)) tower.active = true;
+    battle.players.red.hand = ["graveyard", "knight", "golem", "three-musketeers"];
+    battle.players.red.queue = ["golem", "three-musketeers", "knight", "archers"];
+    battle.players.red.elixir = scenario.endsWith("saving") || scenario.endsWith("pressure") ? 6 : 7;
+    if (scenario.endsWith("king")) {
+      for (const tower of battle.entities.filter(e => e.team === "blue" && !e.king))
+        (battle as unknown as { hurt: (body: Entity, damage: number) => void }).hurt(tower, tower.hp);
+      Object.assign(battle.entities.find(e => e.team === "blue" && e.king)!, { hp: 1000, active: true });
+    } else if (scenario.endsWith("pressure")) {
+      battle.players.red.hand[3] = "musketeer";
+      for (const body of unit("baby-dragon", "blue", 4, 10)) Object.assign(body, { active: false, speed: 0 });
+    } else if (scenario.endsWith("late")) battle.tick = 166 * 30;
+    else if (!scenario.endsWith("saving")) {
+      battle.entities.find(e => e.team === "blue" && e.lane === "right")!.hp = 1000;
+      if (scenario.endsWith("mirror")) {
+        battle.players.red.hand[0] = "mirror";
+        battle.players.red.lastPlayed = "graveyard";
+        battle.players.red.elixir = 8;
+      } else if (scenario.endsWith("blast")) cast("poison", "blue", 14.5, 25.5);
+      else if (scenario.endsWith("guard"))
+        for (const body of unit("wizard", "blue", 14.5, 25.5)) body.speed = 0;
+    }
+  } else if (scenario.startsWith("ai-barrel-")) {
+    for (const tower of battle.entities.filter(e => e.team === "blue" && !e.king)) tower.active = true;
+    battle.players.red.hand = ["goblin-barrel", "knight", "golem", "three-musketeers"];
+    battle.players.red.queue = ["golem", "three-musketeers", "knight", "archers"];
+    battle.players.red.elixir = 6;
+    if (scenario.endsWith("collector")) unit("elixir-collector", "blue", 1.5, 30.5);
+    else if (scenario.endsWith("king")) {
+      for (const tower of battle.entities.filter(e => e.team === "blue" && !e.king))
+        (battle as unknown as { hurt: (body: Entity, damage: number) => void }).hurt(tower, tower.hp);
+      Object.assign(battle.entities.find(e => e.team === "blue" && e.king)!, { hp: 1000, active: true });
+    } else if (scenario.endsWith("pressure")) {
+      battle.players.red.hand[3] = "musketeer";
+      for (const body of unit("baby-dragon", "blue", 4, 10)) Object.assign(body, { active: false, speed: 0 });
+    } else {
+      battle.entities.find(e => e.team === "blue" && e.lane === "right")!.hp = 1000;
+      if (scenario.endsWith("mirror")) {
+        battle.players.red.hand[0] = "mirror";
+        battle.players.red.lastPlayed = "goblin-barrel";
+      } else if (scenario.endsWith("blast")) cast("poison", "blue", 14.5, 25.5);
+      else if (scenario.endsWith("guard"))
+        for (const body of unit("wizard", "blue", 14.5, 25.5)) body.speed = 0;
+    }
+  } else if (scenario.startsWith("ai-miner-defense-")) {
+    if (scenario.endsWith("legal")) battle.play("blue", battle.players.blue.hand.indexOf("hog-rider"), 14.5, 18);
+    else {
+      if (scenario.endsWith("king")) {
+        const tower = battle.entities.find(e => e.team === "red" && e.lane === "right")!;
+        (battle as unknown as { hurt: (body: Entity, damage: number) => void }).hurt(tower, tower.hp);
+        Object.assign(battle.entities.find(e => e.team === "red" && e.king)!, { active: false, activation: 0 });
+      }
+      for (const hog of unit("hog-rider", "blue", 14.5, 14.2)) {
+        hog.deploy = 2.6;
+        if (scenario.endsWith("rage")) hog.rage = { remaining: 7.6 };
+        if (scenario.endsWith("stun")) hog.stun = 4.6;
+      }
+      if (scenario.endsWith("rage-area")) cast("rage", "blue", 14.5, 14.2);
+      if (scenario.endsWith("freeze-area")) {
+        cast("freeze", "red", 14.5, 14.2);
+        battle.actions = battle.actions.filter(action => action.team !== "red");
+      }
+      battle.players.red.hand = [scenario.endsWith("mirror") ? "mirror" : "miner", "pekka", "pekka", "pekka"];
+      battle.players.red.queue = ["pekka", "pekka", "pekka", "pekka"];
+      battle.players.red.elixir = scenario.endsWith("mirror") ? 4 : 3;
+      if (scenario.endsWith("mirror")) battle.players.red.lastPlayed = "miner";
+    }
+  } else if (scenario.startsWith("ai-miner-")) {
+    for (const tower of battle.entities.filter(e => e.team === "blue" && !e.king)) tower.active = true;
+    battle.players.red.hand = ["miner", "knight", "golem", "three-musketeers"];
+    battle.players.red.queue = ["golem", "three-musketeers", "knight", "archers"];
+    battle.players.red.elixir = 6;
+    if (scenario.endsWith("collector")) unit("elixir-collector", "blue", 1.5, 30.5);
+    else if (scenario.endsWith("king")) {
+      const tower = battle.entities.find(e => e.team === "blue" && e.lane === "left")!;
+      (battle as unknown as { hurt: (body: Entity, damage: number) => void }).hurt(tower, tower.hp);
+      Object.assign(battle.entities.find(e => e.team === "blue" && e.king)!, { hp: 1000, active: true });
+    } else if (scenario.endsWith("pressure")) {
+      battle.players.red.hand[3] = "musketeer";
+      for (const body of unit("baby-dragon", "blue", 4, 10)) Object.assign(body, { active: false, speed: 0 });
+    } else {
+      battle.entities.find(e => e.team === "blue" && e.lane === "right")!.hp = 1000;
+      if (scenario.endsWith("mirror")) {
+        battle.players.red.hand[0] = "mirror";
+        battle.players.red.lastPlayed = "miner";
+      } else if (scenario.endsWith("blast")) cast("poison", "blue", 14.5, 25.5);
+    }
+  } else if (scenario.startsWith("ai-siege-")) {
+    const card = scenario.includes("mortar") ? "mortar" : "x-bow";
+    battle.players.red.hand = [card, "knight", "golem", "three-musketeers"];
+    battle.players.red.queue = ["knight", "musketeer", "archers", "golem"];
+    battle.players.red.elixir = scenario.endsWith("saving") || scenario.endsWith("pressure") ? 6 : CARD_MAP[card].cost + 2;
+    if (scenario.endsWith("weak")) battle.entities.find(e => e.team === "blue" && e.lane === "right")!.hp = 1000;
+    else if (scenario.endsWith("king")) {
+      const tower = battle.entities.find(e => e.team === "blue" && e.lane === "left")!;
+      (battle as unknown as { hurt: (body: Entity, damage: number) => void }).hurt(tower, tower.hp);
+    } else if (scenario.endsWith("pressure")) {
+      battle.players.red.hand[3] = "musketeer";
+      for (const entity of unit("baby-dragon", "blue", 4, 10)) Object.assign(entity, { active: false, speed: 0 });
+    } else if (scenario.endsWith("screen")) {
+      battle.players.red.hand = [card, "knight", "pekka", "mirror"];
+      for (const entity of unit("cannon", "blue", 9, 18)) entity.active = false;
+    } else if (scenario.endsWith("blast")) {
+      battle.entities.find(e => e.team === "blue" && e.lane === "left")!.hp = 1000;
+      cast("rocket", "blue", 3.5, 14);
+    }
+  } else if (scenario.startsWith("ai-spawner-")) {
+    const card = scenario.endsWith("goblin") ? "goblin-hut"
+      : scenario.endsWith("furnace") || scenario.endsWith("blast") ? "furnace" : "barbarian-hut";
+    battle.players.red.hand = [card, "knight", "golem", "three-musketeers"];
+    battle.players.red.queue = ["knight", "golem", "musketeer", "arrows"];
+    battle.players.red.elixir = scenario.endsWith("barbarian") ? 9 : scenario.endsWith("goblin") ? 7 : 6;
+    if (scenario.endsWith("pressure")) {
+      for (const entity of unit("knight", "blue", 4, 10))
+        Object.assign(entity, { active: false, speed: 0 });
+    } else if (scenario.endsWith("blast")) cast("rocket", "blue", 9, 10);
+    else if (scenario.endsWith("late")) {
+      battle.tick = 153 * 30;
+      // Keep this late-hut check free of a second, faster army investment.
+      battle.players.red.hand[3] = "mirror";
+    }
+  } else if (scenario.startsWith("ai-collector-")) {
+    battle.players.red.hand = ["elixir-collector", "rage", "heal", "clone"];
+    battle.players.red.queue = ["rage", "heal", "clone", "elixir-collector"];
+    battle.players.red.elixir = 8;
+    if (scenario.endsWith("pressure")) {
+      for (const entity of unit("knight", "blue", 4, 10))
+        Object.assign(entity, { active: false, speed: 0 });
+      battle.players.red.hand = ["elixir-collector", "knight", "golem", "giant"];
+    } else if (scenario.endsWith("blast")) {
+      cast("rocket", "blue", 1.5, 1.5);
+    } else if (scenario.endsWith("late")) battle.tick = 3600;
   } else if (["ai-rage", "ai-freeze", "ai-poison", "ai-heal", "ai-clone"].includes(scenario)) {
     const card = scenario.slice(3) as "rage" | "freeze" | "poison" | "heal" | "clone";
     if (card === "rage") {
@@ -307,7 +482,8 @@ function setup() {
       battle.entities.find((e) => e.team === "red" && e.lane === "right")!.hp =
         100;
     } else {
-      for (const e of unit("knight", "blue", 9, 3)) e.active = false;
+      // Approach the King without starting inside its native footprint.
+      for (const e of unit("knight", "blue", 9, 6)) e.active = false;
     }
     battle.players.red.hand =
       scenario === "ai-defense-ground-swarm"
@@ -367,12 +543,14 @@ function setup() {
     battle.players.red.hand = [card === "balloon" ? "rocket" : "fireball", "three-musketeers", "three-musketeers", "three-musketeers"];
     battle.players.red.queue = ["three-musketeers", "three-musketeers", "three-musketeers", "three-musketeers"];
     battle.actions = [];
+  } else if (scenario === "ai-pulled-log-legal") {
+    battle.play("blue", battle.players.blue.hand.indexOf("wizard"), 9, 22);
   } else if (scenario.startsWith("ai-pulled-aim-")) {
     const rest: CardId = scenario.includes("doomed") ? "three-musketeers" : "pekka";
     for (const y of [19, 20, 21])
       for (const e of unit("wizard", "blue", 5, y))
         Object.assign(e, { hp: scenario.includes("doomed") ? 200 : 500, active: false });
-    battle.players.red.hand = [scenario.endsWith("rocket") ? "rocket" : "fireball", rest, rest, rest];
+    battle.players.red.hand = [scenario.includes("-log") ? "log" : scenario.endsWith("rocket") ? "rocket" : "fireball", rest, rest, rest];
     battle.players.red.queue = [rest, rest, rest, rest];
     battle.actions = [];
   } else if (scenario.startsWith("ai-pulled-reserve-")) {
@@ -1441,12 +1619,22 @@ function advance(ticks: number) {
       }
       if (sceneSelect.value.startsWith("ai-pulled-aim-") && battle.tick === 73) {
         cast("tornado", "red", 10, 20);
-        const card = sceneSelect.value.endsWith("rocket") ? "rocket" : "fireball";
+        const card = sceneSelect.value.includes("-log") ? "log" : sceneSelect.value.endsWith("rocket") ? "rocket" : "fireball";
         const rest: CardId = sceneSelect.value.includes("doomed") ? "three-musketeers" : "pekka";
         battle.players.red.hand = [card, rest, rest, rest];
         battle.players.red.queue = [rest, rest, rest, rest];
         battle.players.red.elixir = card === "rocket" ? 6 : 4;
+        if (card === "log") {
+          const mirror = sceneSelect.value.endsWith("mirror");
+          battle.players.red.hand[0] = mirror ? "mirror" : "log";
+          battle.players.red.lastPlayed = mirror ? "log" : "tornado";
+          battle.players.red.elixir = mirror ? 3 : 2;
+          if (sceneSelect.value.endsWith("short"))
+            Object.assign(battle.areas.at(-1)!, { duration: 0.1, remaining: 0.1 });
+        }
       }
+      if (sceneSelect.value === "ai-pulled-log-legal" && battle.tick === 73)
+        battle.play("red", battle.players.red.hand.indexOf("tornado"), 13.5, 20);
       if (sceneSelect.value.startsWith("ai-pulled-reserve-") && battle.tick === 73) {
         cast("tornado", "red", sceneSelect.value.endsWith("in") ? 5 : 10, 20);
         cast("fireball", "red", 5, 20);
@@ -1489,7 +1677,9 @@ function advance(ticks: number) {
   }
 }
 document.querySelector("#step")!.addEventListener("click", () => advance(3));
+document.querySelector("#tick")!.addEventListener("click", () => advance(1));
 document.querySelector("#second")!.addEventListener("click", () => advance(30));
+document.querySelector("#five")!.addEventListener("click", () => advance(150));
 document.querySelector("#kill-tombstone")!.addEventListener("click", () => {
   const stone = battle.entities.find((e) => e.team === "blue" && e.card === "tombstone" && e.hp > 0);
   if (!stone) return;
@@ -1673,9 +1863,9 @@ function render(now: number) {
       bodies: [...attackClockTargets].map(([id,victimId])=>{
         const actor=battle.entities.find(e=>e.id === id)!, victim=battle.entities.find(e=>e.id === victimId)!;
         const visual=(arena as any).units.get(id);
-        return { id, card: actor.king ? "king-tower" : actor.card, team:actor.team, policy:!!actor.nativeProjectileMuzzle, volley:!!actor.nativeProjectileVolley, rangePolicy:!!actor.nativeProjectileRange,
+        return { id, card: actor.king ? "king-tower" : actor.card, team:actor.team, policy:!!actor.nativeProjectileMuzzle, volley:!!actor.nativeProjectileVolley, rangePolicy:!!actor.nativeProjectileRange, stepPolicy:!!actor.nativeProjectileStep,
           native:!!(visual?.sprite || visual?.building), release:muzzleReleases.get(id), victimHp:victim.hp,
-          shots:battle.projectiles.filter(p=>p.source === id).map(p=>({ id:p.id,height:arena.projectileState.find(v=>v.id === p.id)?.position[1],native:arena.projectileState.some(v=>v.id === p.id && v.sprites.length>0) })) };
+          shots:battle.projectiles.filter(p=>p.source === id).map(p=>({ id:p.id,x:p.x,y:p.y,flight:p.flight,elapsed:p.elapsed,remaining:p.remaining,duration:p.duration,height:arena.projectileState.find(v=>v.id === p.id)?.position[1],native:arena.projectileState.some(v=>v.id === p.id && v.sprites.length>0) })) };
       }),
     });
   if (sceneSelect.value === "target-loss")
@@ -1974,9 +2164,11 @@ function render(now: number) {
     JSON.stringify({
       unit: battle.entities.find((e) => e.card === "bandit" && e.team === "blue"),
       target: battle.entities.find((e) => e.card === "knight" && e.team === "red"),
-      start: battle.events.filter((e) => e.effect === "dash-start:bandit").length,
+      start: battle.events.filter((e) => e.effect === "dash-start:bandit" || e.effect === "dash-launch:bandit").length,
+      charge: battle.events.filter((e) => e.effect === "dash-charge:bandit").length,
       end: battle.events.filter((e) => e.effect === "dash-end:bandit").length,
       special: battle.events.filter((e) => e.effect === "hit-special:bandit").length,
+      normal: battle.events.filter((e) => e.type === "hit" && e.card === "bandit" && !e.effect).length,
       cues: battle.audioEvents.filter((e) => e.profile === "bandit" &&
         e.phase.startsWith("dash-")).map((e) => e.phase),
       filter: arena.banditFilterState,
@@ -2254,6 +2446,7 @@ function render(now: number) {
   (document.querySelector("#destruction") as HTMLElement).dataset.aiDefense =
     JSON.stringify({
       scene: (document.querySelector("#scenario") as HTMLSelectElement).value,
+      time: battle.time,
       actions: battle.actions.filter((a) => a.team === "red"),
       priority: (
         document.querySelector("#scenario") as HTMLSelectElement
@@ -2268,6 +2461,7 @@ function render(now: number) {
           x: e.x,
           y: e.y,
           target: e.target,
+          native: !!(arena as any).units.get(e.id)?.sprite,
         })),
       targets: battle.entities
         .filter((e) => e.team === "blue" && e.kind === "troop" && e.hp > 0)
@@ -2290,6 +2484,7 @@ function render(now: number) {
           hp: e.hp,
           maxHp: e.maxHp,
           target: e.target,
+          native: !!(arena as any).units.get(e.id)?.building,
         })),
       balloonHits: battle.events.filter(
         (e) => e.type === "hit" && e.card === "balloon",
@@ -2301,6 +2496,24 @@ function render(now: number) {
         (e) => e.type === "hit" && e.card === "hog-rider",
       ),
       elixir: battle.players.red.elixir,
+      enemyCrowns: battle.entities.filter(e => e.team === "blue" && e.kind === "tower")
+        .map(e => ({ id: e.id, x: e.x, y: e.y, hp: e.hp, maxHp: e.maxHp, king: !!e.king, lane: e.lane })),
+      siegeHits: battle.events.filter(event => event.type === "hit" && (event.card === "x-bow" || event.card === "mortar")),
+      minerHits: battle.events.filter(event => event.type === "hit" && event.card === "miner"),
+      logHits: battle.events.filter(event => event.type === "hit" && event.card === "log" && event.value! > 0),
+      graveyardHits: battle.events.filter(event => event.type === "hit" && event.card === "skeletons" && event.team === "red"),
+      enemyKingActive: battle.entities.some(e => e.team === "blue" && e.king && e.active),
+      armyBodies: battle.entities.filter(e => e.team === "red" && e.hp > 0 && ["golem", "lava-hound", "musketeer"].includes(e.card))
+        .map(e => ({ id: e.id, card: e.card, x: e.x, y: e.y, hp: e.hp, maxHp: e.maxHp,
+          deploy: e.deploy, target: e.target, native: !!(arena as any).units.get(e.id)?.sprite })),
+      armyHits: battle.events.filter(e => e.type === "hit" && e.team === "red" && ["golem", "lava-hound", "musketeer"].includes(e.card ?? "")),
+      hostileRockets: battle.projectiles.filter(p => p.team === "blue" && p.style === "rocket").length,
+      barrelHits: battle.events.filter(event => event.type === "hit" && event.card === "goblins" && event.team === "red"),
+      barrelChildren: battle.entities.filter(e => e.card === "goblins" && e.team === "red")
+        .map(e => ({ id: e.id, x: e.x, y: e.y, hp: e.hp, deploy: e.deploy, target: e.target,
+          native: !!(arena as any).units.get(e.id)?.sprite })),
+      enemyBuildings: battle.entities.filter(e => e.team === "blue" && e.kind === "building")
+        .map(e => ({ id: e.id, card: e.card, x: e.x, y: e.y, hp: e.hp, maxHp: e.maxHp })),
       towers: battle.entities
         .filter((e) => e.team === "red" && e.kind === "tower")
         .map((e) => ({ hp: e.hp, maxHp: e.maxHp, lane: e.lane, king: e.king })),

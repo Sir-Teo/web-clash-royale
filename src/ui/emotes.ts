@@ -1,3 +1,4 @@
+import { preloadNativeImages } from "./native-assets";
 import {
   EMOTES,
   EMOTE_COOLDOWN,
@@ -129,17 +130,10 @@ export class NativeEmotes {
       const response = await fetch(`${path}/emotes.json`);
       if (!response.ok) throw new Error(`Native emotes: ${response.status}`);
       const data: EmoteData = await response.json();
-      await document.fonts.load('22px "SC CCBackBeat"').catch(() => {});
-      await Promise.all(
-        Object.values(data.shapes)
-          .flatMap((s) => s.polygons ?? [s])
-          .filter((s) => s.file)
-          .map(async (s) => {
-            const image = new Image();
-            image.src = `${path}/${s.file}`;
-            await image.decode();
-          }),
-      );
+      await Promise.all([
+        document.fonts.load('22px "SC CCBackBeat"').catch(() => {}),
+        preloadNativeImages(data, path),
+      ]);
       this.data = data;
       renderNativeFrame(
         this.button,

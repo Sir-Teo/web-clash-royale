@@ -1,5 +1,5 @@
 import { PeerMatch } from "./peer-match";
-import type { PeerPlayer } from "./peer-match";
+import type { PeerPlayer } from "./peer-player";
 import type { Mode, Team } from "../game/engine";
 import type { ClientMessage, ServerMessage } from "./protocol";
 export type PeerHostCommand =

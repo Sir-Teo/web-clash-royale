@@ -12,6 +12,8 @@ The default game is a static browser app. Two players connect directly with WebR
 
 Keep the original tabs open during the exchange. Invites belong to that tab and expire when it closes or reloads. A reply only works with its matching invite. On an HTTP Wi-Fi address, browsers may hide the modern clipboard and share APIs. **Copy invite** and **Copy reply** then use a user-gesture copy command; if the browser refuses it, the code is selected for its manual Copy action. The connected lobby shows your confirmed battle deck; tap a card to inspect it. Close the menu to edit your deck or player name, then reopen it to review the accepted changes. A deck, order or name change clears both Ready checks. Changes saved after countdown begins are for future matches; the current match keeps its accepted deck and names.
 
+Preparing an invite or reply has a 25-second limit. Choosing **Connect friend** starts a separate 25-second connection limit, and an open connection must complete the game handshake within 25 seconds. A timeout returns to the invite screen with a reason and lets you try again. Sending or copying an already prepared invite or reply has no time limit while its tab stays open. **Leave connection** cancels any pending attempt immediately.
+
 After the result, choose **Play again with friend** to request another round. The other result shows who requested it, and **Cancel rematch request** withdraws your request. When both agree, both return to the same connected friend lobby with Ready cleared. Review or edit your decks and names, then both choose **Ready for battle**. The next round starts with a fresh shuffle and keeps a separate match record. Watching a replay or choosing **Back to arena** leaves the direct connection; the other player can create a new invite from their result.
 
 ## Wi-Fi and static hosting
@@ -39,7 +41,7 @@ Remote play uses Google's public STUN endpoint to discover routes, then carries 
 - Both game tabs must remain open. Hiding either tab pauses the shared match; returning resumes it. A temporary connection interruption pauses combat. If the data channel closes, the host reloads or ICE connectivity fails, create a fresh invite. There is no server-backed reload/rejoin.
 - Placement feedback confirms the host accepted a card or names its rejection reason. Choose a card again to retry; rejected commands are not automatically replayed.
 - Menus leave the match running while both tabs remain visible. Surrender produces the normal final result and replay. Friendly matches award no trophies, gold or chests.
-- Spawn lifecycle events retain a birth position after a troop moves or dies; the guest rotates it with the board. Direct lobby protocol version 4 confirms private loadouts, scopes commands and snapshots to their round and detects incompatible older clients. Update both games before creating a fresh invite when versions differ. The CR1 invite/reply codec retains its existing format.
+- Spawn lifecycle events retain a birth position after a troop moves or dies; the guest rotates it with the board. Direct lobby protocol version 5 confirms private loadouts, scopes commands and snapshots to their round and detects incompatible older clients. Update both games before creating a fresh invite when versions differ. The CR1 invite/reply codec retains its existing format.
 - Native King emotes and quick chat share a per-player cooldown enforced by the host. They remain transient and do not enter replay data.
 - Ordered data messages are split into bounded chunks for phone browsers. Slow recipients receive the latest state instead of an unbounded snapshot queue. The worker also pauses if the host UI stops responding.
 
@@ -58,3 +60,5 @@ To reproduce the native connectivity baseline separately, run `ARENA_PRODUCTION=
 
 
 `tests/peer-rematch.test.ts` verifies two-sided consent, cancellation, disconnect recovery, fresh countdowns, per-round commands and state, replay equivalence and distinct reward-free records. `tests/browser/peer-rematch.spec.ts` plays three complete rounds over one connection, changes accepted decks and names between rounds, checks reactions and both histories, and leaves for replay playback. As with the loadout case, WebKit runs against a Chromium counterpart in both host roles.
+
+`tests/peer-setup.test.ts` and `tests/browser/peer-setup.spec.ts` cover stalled browser setup, pending reply acceptance, a silent open data channel, cancellation, safe retry and late completions from an old attempt. They also verify that manual invite/reply sharing stays available beyond the automatic setup deadline. Browser setup failures use controlled WebRTC mocks; the rematch suite retains real direct connections.

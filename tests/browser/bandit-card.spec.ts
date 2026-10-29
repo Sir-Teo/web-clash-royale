@@ -14,6 +14,15 @@ test("Bandit dashes with native blue art, effects and heavy landing hit", async 
   const before = await time();
   await page.locator("#step").click();
   await expect.poll(time).toBeGreaterThan(before + 0.09);
+  expect((await data()).unit.dashCharge).toBeTruthy();
+  expect((await data()).unit.dash).toBeUndefined();
+  expect((await data()).charge).toBe(1);
+  expect((await data()).filter).toHaveLength(0);
+  expect((await data()).trail).toHaveLength(0);
+  await page.screenshot({ path: info.outputPath("bandit-charge.png"), fullPage: true });
+  const charging = await time();
+  await page.locator("#second").click();
+  await expect.poll(time).toBeGreaterThan(charging + 0.99);
   expect((await data()).unit.dash).toBeTruthy();
   expect((await data()).start).toBe(1);
   expect((await data()).cues).toContain("dash-travel");
@@ -28,7 +37,8 @@ test("Bandit dashes with native blue art, effects and heavy landing hit", async 
   await page.locator("#second").click();
   await expect.poll(time).toBeGreaterThan(second + 0.99);
   expect((await data()).unit.dash).toBeUndefined();
-  expect((await data()).target.hp).toBe(10000 - Math.round(320 * 1.1 ** 2));
+  expect((await data()).normal).toBe(1);
+  expect((await data()).target.hp).toBe(10000 - Math.round(320 * 1.1 ** 2) - Math.round(160 * 1.1 ** 2));
   expect((await data()).end).toBe(1);
   expect((await data()).special).toBe(1);
   expect((await data()).filter).toHaveLength(0);

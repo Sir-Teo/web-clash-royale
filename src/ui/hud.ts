@@ -1,4 +1,5 @@
-import { renderNativeFrame } from "./native";
+import { preloadNativeImages } from "./native-assets";
+import { renderRetainedNativeFrame } from "./native";
 import type { BattleTiming } from "./announcements";
 import {
   CrownFeedback,
@@ -10,6 +11,7 @@ import {
   type HudData,
 } from "./hud-data";
 import "./hud.css";
+let hudSerial = 0;
 export class NativeBattleHud {
   readonly crowns = new CrownFeedback();
   private data: HudData | null = null;
@@ -20,7 +22,7 @@ export class NativeBattleHud {
     "(orientation: landscape) and (max-height: 540px)",
   );
   private motion = matchMedia("(prefers-reduced-motion: reduce)");
-  private serial = 0;
+  private prefix = `hud-${hudSerial++}`;
   constructor(
     private timer: HTMLElement,
     private score: HTMLElement,
@@ -54,14 +56,7 @@ export class NativeBattleHud {
       const data: HudData = await r.json();
       await Promise.all([
         document.fonts.load('28px "Supercell Magic"'),
-        ...Object.values(data.shapes)
-          .flatMap((s) => s.polygons ?? [s])
-          .filter((p) => p.file)
-          .map(async (p) => {
-            const image = new Image();
-            image.src = `${import.meta.env.BASE_URL}assets/ui/hud/${p.file}`;
-            await image.decode();
-          }),
+        preloadNativeImages(data, `${import.meta.env.BASE_URL}assets/ui/hud`),
       ]);
       this.data = data;
     } catch (error) {
@@ -91,7 +86,7 @@ export class NativeBattleHud {
       text = hudTimeText(clock.seconds);
     const timerSignature = `${clock.name}:${clock.frame}:${text}`;
     if (this.signatures.get(this.timerArt) !== timerSignature) {
-      renderNativeFrame(
+      renderRetainedNativeFrame(
         this.timerArt,
         this.data,
         clock.name,
@@ -100,7 +95,7 @@ export class NativeBattleHud {
         {
           path: `${import.meta.env.BASE_URL}assets/ui/hud`,
           viewBox: "-104 -5 112 70",
-          prefix: `hud-timer-${++this.serial}`,
+          prefix: `${this.prefix}-timer`,
         },
       );
       this.timerArt.dataset.clip = clock.name;
@@ -122,7 +117,7 @@ export class NativeBattleHud {
     const state = this.state;
     const scoreSignature = `${state.landscape}:${state.blueFrame}:${state.redFrame}:${counts.blue}:${counts.red}`;
     if (this.signatures.get(this.scoreArt) !== scoreSignature) {
-      renderNativeFrame(
+      renderRetainedNativeFrame(
         this.scoreArt,
         hudView(this.data, state.landscape, state.blueFrame, state.redFrame),
         "display",
@@ -134,7 +129,7 @@ export class NativeBattleHud {
         {
           path: `${import.meta.env.BASE_URL}assets/ui/hud`,
           viewBox: hudBox(state.landscape),
-          prefix: `hud-score-${++this.serial}`,
+          prefix: `${this.prefix}-score`,
           bind: true,
         },
       );

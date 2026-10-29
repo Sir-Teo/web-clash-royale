@@ -1,0 +1,22 @@
+{
+  "fireball": {
+    "projectile": "FireballSpell",
+    "percent": -60
+  },
+  "arrows": {
+    "projectile": "ArrowsSpell",
+    "percent": -60
+  },
+  "rocket": {
+    "projectile": "RocketSpell",
+    "percent": -60
+  },
+  "lightning": {
+    "projectile": "LighningSpell",
+    "percent": -60
+  },
+  "log": {
+    "projectile": "LogProjectileRolling",
+    "percent": -60
+  }
+}

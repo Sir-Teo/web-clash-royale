@@ -115,9 +115,14 @@ for (const red of [false, true])
       record = before.history[red ? 1 : 0];
     // Selecting a mode does not write the profile. These authentic local
     // recordings acquire their family tag on the first subsequent save.
-    expect(before.history.every((entry: any) => entry.replay.rulesFamily === undefined)).toBe(true);
+    expect(
+      before.history.every(
+        (entry: any) => entry.replay.rulesFamily === undefined,
+      ),
+    ).toBe(true);
     const migratedHistory = before.history.map((entry: any) => ({
-      ...entry, replay: { ...entry.replay, rulesFamily: "local" },
+      ...entry,
+      replay: { ...entry.replay, rulesFamily: "local" },
     }));
     const opponentDeck = red ? legacy.deck : [...marshal.deck];
     await page.getByRole("button", { name: "Battle log", exact: true }).click();
@@ -162,7 +167,7 @@ for (const red of [false, true])
       );
       await expect(page.locator(".competitor.enemy b b")).toHaveCount(0);
       await expect(page.locator(".competitor.enemy div > span")).toHaveText(
-        "Recorded deck · Practice AI",
+        "Recorded deck · Training camp · Practice AI",
       );
       expect((await state(page)).enemyDeck).toEqual(opponentDeck);
       expect(
@@ -204,7 +209,7 @@ for (const red of [false, true])
         opponentType: "ai",
         playerName: before.name,
         replay: {
-          version: 16,
+          version: 56,
           rulesFamily: "origin",
           mode: "training",
           deck: before.deck,
@@ -240,7 +245,7 @@ for (const red of [false, true])
       .click();
     expect((await state(page)).enemyDeck).toEqual(opponentDeck);
     await expect(page.locator(".competitor.enemy div > span")).toHaveText(
-      "AI battle replay",
+      "Practice AI replay",
     );
     await page.locator("#replay-seek").fill("100");
     await expect(page.locator("#replay-play")).toHaveAttribute(

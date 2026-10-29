@@ -1,3 +1,4 @@
+import { projectileCrownDamage } from "./crown-damage";
 import { COMBAT_STEP, SPELL_CROWN_TOWER_DAMAGE_FRACTION } from "./combat";
 import type { Entity, Point, Projectile } from "./engine";
 import bowler from "./bowler-data.json" with { type: "json" };
@@ -15,7 +16,13 @@ export const impactSteps = (time: number) =>
   Math.max(1, Math.ceil((time - 1e-8) / COMBAT_STEP));
 const distance = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
 const clamp = (n: number) => Math.max(0, Math.min(1, n));
-const touch = (from: Point, to: Point, target: Entity, radius: number) => {
+const touch = (
+  from: Point,
+  to: Point,
+  target: Point,
+  targetRadius: number,
+  radius: number,
+) => {
   const dx = to.x - from.x,
     dy = to.y - from.y;
   const segment = dx * dx + dy * dy;
@@ -25,7 +32,7 @@ const touch = (from: Point, to: Point, target: Entity, radius: number) => {
       : 0;
   return (
     Math.hypot(target.x - (from.x + dx * t), target.y - (from.y + dy * t)) <=
-    radius + target.radius
+    radius + targetRadius
   );
 };
 
@@ -138,12 +145,44 @@ export function projectileDamagePackets(
             (axe && !returning ? distance(destination, p) : 0)) /
             speed,
         ) + 3;
+      // Native Logs stay in one column. Read path coordinates directly and
+      // stop at first contact without allocating a point on every roll step.
+      if (p.style === "log" && position.x === destination.x) {
+        let y = position.y;
+        const halfWidth = log.collisionHalfWidth + target.radius;
+        if (struck) return [];
+        for (let step = 1; step <= limit; step++) {
+          if (path && offset + delay + step > path.length) break;
+          const body = path ? path[offset + delay + step - 1] : target;
+          const gap = Math.abs(destination.y - y);
+          const travel = Math.min(gap, speed * COMBAT_STEP);
+          const nextY = y + Math.sign(destination.y - y) * travel;
+          if (
+            Math.abs(body.x - p.x) < halfWidth &&
+            body.y >=
+              Math.min(y, nextY) - log.collisionRadius - target.radius &&
+            body.y <= Math.max(y, nextY) + log.collisionRadius + target.radius
+          )
+            return [
+              packet(
+                step,
+                projectileCrownDamage(
+                  "log",
+                  target,
+                  p.damage,
+                  log.crownTowerDamageFraction,
+                ),
+              ),
+            ];
+          if ((gap - travel) / speed <= 1e-8) break;
+          y = nextY;
+        }
+        return [];
+      }
       const result: DamagePacket[] = [];
       for (let step = 1; step <= limit; step++) {
         if (path && offset + delay + step > path.length) break;
-        const body = path
-          ? { ...target, ...path[offset + delay + step - 1] }
-          : target;
+        const body = path ? path[offset + delay + step - 1] : target;
         const gap = distance(position, destination),
           travel = Math.min(gap, speed * COMBAT_STEP);
         const next =
@@ -168,18 +207,25 @@ export function projectileDamagePackets(
                 position,
                 next,
                 body,
+                target.radius,
                 axe ? executioner.projectile.radius : bowler.projectile.radius,
               );
         if (!struck && hit) {
           result.push(
             packet(
               step,
-              p.damage *
-                (p.style === "log" && target.kind === "tower"
-                  ? log.crownTowerDamageFraction
-                  : 1),
+              p.style === "log"
+                ? projectileCrownDamage(
+                    "log",
+                    target,
+                    p.damage,
+                    log.crownTowerDamageFraction,
+                  )
+                : p.damage,
             ),
           );
+          // Log cannot contact the same body twice; later travel adds no packet.
+          if (p.style === "log") return result;
           struck = true;
         }
         position = next;
@@ -205,10 +251,14 @@ export function projectileDamagePackets(
     return [
       packet(
         arrival,
-        p.damage *
-          (p.splash > 0 && p.source === 0 && target.kind === "tower"
-            ? (p.towerDamageFraction ?? SPELL_CROWN_TOWER_DAMAGE_FRACTION)
-            : 1),
+        p.splash > 0 && p.source === 0
+          ? projectileCrownDamage(
+              p.style,
+              target,
+              p.damage,
+              p.towerDamageFraction ?? SPELL_CROWN_TOWER_DAMAGE_FRACTION,
+            )
+          : p.damage,
       ),
     ];
   };

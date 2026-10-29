@@ -1,3 +1,4 @@
+import { projectileCrownDamage } from "./crown-damage";
 import { aiBodyValue } from "./ai-body-value";
 import { CARD_MAP, type CardId } from "./cards";
 import type { AreaEffect, Entity, Point, Projectile, Team } from "./engine";
@@ -76,6 +77,7 @@ export function damageSpellTarget(
   cost = CARD_MAP[card].cost,
   kingDeadline = Infinity,
   finisher?: MatchFinisher,
+  rulesVersion = 56,
 ): SpellTarget | undefined {
   if (card === "log")
     return logSpellTarget(
@@ -86,6 +88,7 @@ export function damageSpellTarget(
       cost,
       kingDeadline,
       finisher,
+      rulesVersion,
     );
   if (card === "lightning")
     return lightningSpellTarget(
@@ -188,13 +191,12 @@ export function damageSpellTarget(
   // Precompute point-independent value once, keeping the candidate scan cheap
   // even on a board near the troop population limit.
   const evaluated = targets.map(({ entity: e, hp, shield }) => {
-    const packet =
-      rules.damage *
-      (e.kind === "tower"
-        ? card === "rocket"
-          ? rocket.crownTowerDamageFraction
-          : 0.4
-        : 1);
+    const packet = projectileCrownDamage(
+      card,
+      e,
+      rules.damage,
+      card === "rocket" ? rocket.crownTowerDamageFraction : 0.4,
+    );
     const damage = shield > 0 ? Math.min(shield, packet) : packet;
     if (e.kind === "tower")
       return {

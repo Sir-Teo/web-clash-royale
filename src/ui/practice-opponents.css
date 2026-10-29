@@ -1,0 +1,64 @@
+.practice-intro {
+  color: #afc2d9;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0 0 18px;
+}
+.practice-choice {
+  display: block;
+  margin-bottom: 20px;
+  color: #cbd8e8;
+  font-size: 13px;
+  font-weight: 800;
+}
+.practice-choice > span {
+  position: relative;
+  display: block;
+  margin-top: 8px;
+}
+.practice-choice select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  appearance: none;
+  color-scheme: dark;
+  padding: 10px 36px 10px 12px;
+  border: 1px solid #7894b0;
+  border-radius: 7px;
+  background: #18314b;
+  color: #f0f4fb;
+  font: inherit;
+  font-size: 14px;
+}
+.practice-choice svg {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+.practice-deck-note {
+  color: #a9bdd3;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 18px 0 0;
+}
+.practice-pace {
+  margin: 16px 0;
+}
+.practice-pace .practice-choice {
+  margin-bottom: 8px;
+}
+.practice-pace-help {
+  margin: 0;
+  color: #a9bdd3;
+  font-size: 12px;
+  line-height: 1.6;
+}
+@media (max-width: 600px) {
+  .practice-choice select {
+    font-size: 16px;
+  }
+}

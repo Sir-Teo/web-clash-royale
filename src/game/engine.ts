@@ -1,3 +1,8 @@
+import { projectileCrownDamage } from "./crown-damage";
+import { poisonTickDamage } from "./poison-damage";
+import { banditDashSpeed, banditDashGoal, banditGoalFrame } from "./bandit-dash";
+import { advanceBanditRecovery, banditRecoveryRemaining, banditOrdinaryCommitted, bindBanditRecovery, type BanditRecoveryClock } from "./bandit-recovery";
+import { banditChargeInRange } from "./bandit-startup";
 import { barrelFormation } from "./barrel-formation";
 import { distantTarget, spawnLane, type NativeLane } from "./distant-targets";
 import { attackReach, minimumAttackDistance, NATIVE_RANGE_RADIUS_FACTOR } from "./attack-range";
@@ -26,7 +31,15 @@ import { areaSpellTarget, isAreaSpell } from "./area-spell-targeting";
 import { damageSpellTarget, isDamageSpell, type SpellTarget } from "./spell-targeting";
 import { defensiveThreats } from "./defensive-threats";
 import { buildingLureTarget } from "./building-lure";
+import { collectorTarget } from "./collector-targeting";
+import { spawnerPlan } from "./spawner-targeting";
+import { siegePlan, isSiegeCard } from "./siege-targeting";
+import { minerTarget } from "./miner-targeting";
+import { barrelTarget } from "./barrel-targeting";
+import { graveyardPlan } from "./graveyard-targeting";
+import { armyPlan, isArmyCard } from "./army-targeting";
 import { meleeInterceptTarget } from "./melee-intercept";
+import { minerInterceptTarget } from "./miner-intercept";
 import { finishesKingBefore } from "./king-spell-race";
 import { createKingDefense } from "./king-defense";
 import { attackFlight } from "./attack-flight";
@@ -63,7 +76,6 @@ import graveyard from "./graveyard-data.json" with { type: "json" };
 import clone from "./clone-data.json" with { type: "json" };
 import mirror from "./mirror-data.json" with { type: "json" };
 import iceWizard from "./ice-wizard-data.json" with { type: "json" };
-import princess from "./princess-data.json" with { type: "json" };
 import { advanceInfernoClock, infernoAttackRate, infernoDamage, infernoProfile } from "./inferno";
 import { attackClockRate } from "./attack-clock";
 import { barrelTargetScoreBias, comparePrimaryScores, primaryTargetScore } from "./primary-score";
@@ -80,7 +92,6 @@ import iceSpirit from "./ice-spirit-data.json" with { type: "json" };
 import iceGolem from "./ice-golem-data.json" with { type: "json" };
 import giantSkeleton from "./giant-skeleton-data.json" with { type: "json" };
 import mortar from "./mortar-data.json" with { type: "json" };
-import bombTower from "./bomb-tower-data.json" with { type: "json" };
 import xBow from "./x-bow-data.json" with { type: "json" };
 import elixirCollector from "./elixir-collector-data.json" with { type: "json" };
 import goblinHut from "./goblin-hut-data.json" with { type: "json" };
@@ -174,7 +185,40 @@ export interface Entity extends Point {
   volleyRandomState?: number;
   /** Rules 42: source caster-center projectile extension and muzzle bounds. */
   nativeProjectileRange?: true;
-  dash?: { target: number; elapsed: number; remaining: number };
+  /** Rules 43: shots created during combat first move on the next step. */
+  nativeProjectileStep?: true;
+  /** Rules 44: native integer projectile damage against Crown Towers. */
+  nativeProjectileCrownDamage?: true;
+  /** Rules 45: native integer area damage against Crown Towers. */
+  nativeAreaCrownDamage?: true;
+  /** Rules 46: native integer periodic buff damage against Crown Towers. */
+  nativeBuffCrownDamage?: true;
+  /** Rules 47: retained Poison still ticks after Tesla finishes burrowing. */
+  nativeRetainedPoison?: true;
+  /** Rules 48: native dash travel and retained-Poison damage during travel. */
+  nativeBanditDash?: true;
+  /** Rules 49: latched native dash destination and fixed movement frames. */
+  nativeBanditGoal?: true;
+  /** Rules 50: vulnerable native startup before entering dash travel. */
+  nativeBanditStartup?: true;
+  /** Rules 51: a distant follow-up can charge before ordinary recovery. */
+  nativeBanditReentry?: true;
+  /** Rules 52: native first ordinary reload after a dash landing. */
+  nativeBanditRecovery?: true;
+  /** Rules 53: preserve the integer clock through later ordinary cycles. */
+  nativeBanditCadence?: true;
+  /** Rules 54: committed post-dash ordinary hits and native fresh-charge phase. */
+  nativeBanditTransitions?: true;
+  /** Rules 55: use the native clock for newly admitted ordinary attacks too. */
+  nativeBanditOrdinary?: true;
+  /** Rules 56: retain reload and the removal finish window across references. */
+  nativeBanditTargetReset?: true;
+  banditRecovery?: BanditRecoveryClock;
+  dashReentry?: true;
+  dashCharge?: { target: number; remainingMs: number; carry: number; started?: true };
+  /** Existing source Tornado attraction prevents or cancels startup. */
+  dashAttraction?: number;
+  dash?: { target: number; elapsed: number; remaining: number; goal?: Point; carry?: number };
   dashCooldown?: number;
   attack: number;
   move: number;
@@ -189,7 +233,7 @@ export interface Entity extends Point {
   /** Rules 21: next child within a serial summon wave. */
   spawnIndex?: number;
   spawnBurst?: number;
-  pendingAttack?: { target: number; remaining: number; damage: number; lastPoint?: Point };
+  pendingAttack?: { target: number; remaining: number; damage: number; lastPoint?: Point; recovery?: BanditRecoveryClock };
   burrow?: {
     exposure: number;
     idle: number;
@@ -257,7 +301,7 @@ export interface BattleEvent extends Point {
   value?: number;
   origin?: Point & { height: number };
   height?: number;
-  effect?: "balloon-bomb" | "giant-skeleton-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "shield:guards" | "axe-die" | "bottle:lumberjack" | "summon:night-witch" | "dash-start:bandit" | "dash-end:bandit" | "hit-special:bandit" | "ice-golem-slow";
+  effect?: "balloon-bomb" | "giant-skeleton-bomb" | "log-die" | "graveyard-appear" | "clone-appear" | "miner-travel" | "hit:bowler" | "shield:dark-prince" | "shield:guards" | "axe-die" | "bottle:lumberjack" | "summon:night-witch" | "dash-start:bandit" | "dash-charge:bandit" | "dash-launch:bandit" | "dash-end:bandit" | "hit-special:bandit" | "ice-golem-slow";
   arrowVolley?: { projectileId: number; staggered: boolean };
 }
 export interface Action extends Point {
@@ -268,7 +312,7 @@ export interface Action extends Point {
 export interface Replay {
   perspective?: Team;
   rulesFamily?: "local" | "origin";
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 | 56;
   seed: number;
   mode: Mode;
   deck: CardId[];
@@ -358,7 +402,7 @@ export class Battle {
     const r = options.replay;
     if (r?.actions.some((action) => !isPlayableCard(action.card)))
       throw new Error("Replay contains an unplayable card.");
-    this.rulesVersion = r?.version ?? 42;
+    this.rulesVersion = r?.version ?? 56;
     this.nativeTowerLayout = this.rulesVersion >= 31 ? true : undefined;
     this.nativeArmyFormation = this.rulesVersion >= 34 ? true : undefined;
     this.nativeGroupFormation = this.rulesVersion >= 35 ? true : undefined;
@@ -466,6 +510,9 @@ export class Battle {
       y,
       card: "tower",
       kind: "tower",
+      ...(this.rulesVersion >= 44 ? { nativeProjectileCrownDamage: true as const } : {}),
+      ...(this.rulesVersion >= 45 ? { nativeAreaCrownDamage: true as const } : {}),
+      ...(this.rulesVersion >= 46 ? { nativeBuffCrownDamage: true as const } : {}),
       hp: king ? kingHp : 3052,
       maxHp: king ? kingHp : 3052,
       radius,
@@ -474,6 +521,7 @@ export class Battle {
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 38 && hasPendingRange("tower", king) ? { nativePendingRange: true as const } : {}),
       ...(this.rulesVersion >= 40 && hasProjectileMuzzle("tower", king) ? { nativeProjectileMuzzle: true as const } : {}),
+      ...(this.rulesVersion >= 43 ? { nativeProjectileStep: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
       ...(this.rulesVersion >= 32 ? { nativeDistantTargets: true as const, nativeLane: king ? 0 as const : lane === "left" ? 1 as const : 2 as const } : {}),
@@ -861,7 +909,18 @@ export class Battle {
       ...(this.rulesVersion >= 40 && hasProjectileMuzzle(id) ? { nativeProjectileMuzzle: true as const } : {}),
       ...(this.rulesVersion >= 41 && hasProjectileVolley(id) ? { nativeProjectileVolley: true as const } : {}),
       ...(this.rulesVersion >= 42 && hasProjectileRange(id) ? { nativeProjectileRange: true as const } : {}),
+      ...(this.rulesVersion >= 43 ? { nativeProjectileStep: true as const } : {}),
       ...(lostAttack ? { nativeLostAttack: lostAttack } : {}),
+      ...(this.rulesVersion >= 47 && id === "tesla" ? { nativeRetainedPoison: true as const } : {}),
+      ...(this.rulesVersion >= 48 && id === "bandit" ? { nativeBanditDash: true as const } : {}),
+      ...(this.rulesVersion >= 49 && id === "bandit" ? { nativeBanditGoal: true as const } : {}),
+      ...(this.rulesVersion >= 50 && id === "bandit" ? { nativeBanditStartup: true as const } : {}),
+      ...(this.rulesVersion >= 51 && id === "bandit" ? { nativeBanditReentry: true as const } : {}),
+      ...(this.rulesVersion >= 52 && id === "bandit" ? { nativeBanditRecovery: true as const } : {}),
+      ...(this.rulesVersion >= 53 && id === "bandit" ? { nativeBanditCadence: true as const } : {}),
+      ...(this.rulesVersion >= 54 && id === "bandit" ? { nativeBanditTransitions: true as const } : {}),
+      ...(this.rulesVersion >= 55 && id === "bandit" ? { nativeBanditOrdinary: true as const } : {}),
+      ...(this.rulesVersion >= 56 && id === "bandit" ? { nativeBanditTargetReset: true as const } : {}),
       ...(this.rulesVersion >= 28 ? { nativeAttackClock: true as const } : {}),
       ...(this.rulesVersion >= 29 ? { nativePrimaryScore: true as const } : {}),
       ...(this.rulesVersion >= 30 ? { nativePrimaryGeometry: true as const } : {}),
@@ -1127,6 +1186,7 @@ export class Battle {
           // A new copy has no projectile-spawn ordinal of its own.
           if (this.rulesVersion >= 29) delete this.entities.at(-1)!.targetScoreBias;
           if (this.rulesVersion >= 41) delete this.entities.at(-1)!.volleyRandomState;
+          if (entity.nativeBanditCadence) delete this.entities.at(-1)!.banditRecovery;
           this.emit("deploy", area.team, x, y, entity.card, 0, {
             effect: "clone-appear",
           });
@@ -1176,11 +1236,12 @@ export class Battle {
           );
           if (target) {
             struck.push(target.id);
-            const damage =
-              CARD_MAP.lightning.damage *
-              (target.kind === "tower"
-                ? lightning.crownTowerDamageFraction
-                : 1);
+            const damage = projectileCrownDamage(
+              "lightning",
+              target,
+              CARD_MAP.lightning.damage,
+              lightning.crownTowerDamageFraction,
+            );
             this.hurt(target, damage);
             if (target.hp > 0 && !target.dash) {
               target.stun = Math.max(target.stun, lightning.stunDuration);
@@ -1222,6 +1283,7 @@ export class Battle {
           )
             continue;
           if (pull) {
+            if (entity.nativeBanditStartup) entity.dashAttraction = tornado.buffDuration;
             const position = tornadoPull(entity, area);
             if (position) {
               entity.x = position.x;
@@ -1306,10 +1368,8 @@ export class Battle {
       status.elapsed += STEP;
       if (status.elapsed + 1e-8 >= poison.damageInterval) {
         status.elapsed -= poison.damageInterval;
-        const damage =
-          CARD_MAP.poison.damage *
-          (entity.kind === "tower" ? poison.crownTowerDamageFraction : 1);
-        this.hurt(entity, damage);
+        const damage = poisonTickDamage(entity);
+        this.hurt(entity, damage, false, !!entity.nativeRetainedPoison, !!entity.nativeBanditDash);
       }
       if (status.remaining < 1e-8) entity.poison = undefined;
     }
@@ -1576,6 +1636,7 @@ export class Battle {
   private cancelAttack(e: Entity) {
     this.cancelAudio(e);
     e.pendingAttack = undefined;
+    if (e.banditRecovery) e.banditRecovery = undefined;
     e.inferno = undefined;
     e.attack = 0;
     e.cooldown = 0;
@@ -1618,6 +1679,9 @@ export class Battle {
     return false;
   }
   private updateCombat() {
+    // Native managers snapshot objects before attack components run. Shots
+    // created in combat wait one step; spells already present still advance.
+    const projectileStep = this.rulesVersion >= 43 ? [...this.projectiles] : undefined;
     for (const e of [...this.entities]) {
       if (e.hp <= 0) continue;
       if (this.rulesVersion >= 19) advanceAnimationClock(e, this.time);
@@ -1634,6 +1698,10 @@ export class Battle {
       let preloadTarget: Entity | undefined;
       if (e.card === "bandit")
         e.dashCooldown = Math.max(0, (e.dashCooldown ?? 0) - STEP);
+      if (e.dashAttraction !== undefined) {
+        e.dashAttraction = Math.max(0, e.dashAttraction - STEP);
+        if (e.dashAttraction <= 1e-8) e.dashAttraction = undefined;
+      }
       e.stun = Math.max(0, e.stun - STEP);
       const summoner = this.rulesVersion >= 21 ? summonProfile(e.card) : undefined;
       if (e.deploy > 0) {
@@ -1657,6 +1725,8 @@ export class Battle {
         continue;
       }
       if (e.card === "bandit" && e.dash) {
+        if (e.nativeBanditTransitions && e.banditRecovery)
+          advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed, false, true);
         this.advanceBanditDash(e);
         continue;
       }
@@ -1800,44 +1870,121 @@ export class Battle {
           }
         }
       }
+      if (e.dashCharge) {
+        const chargingTarget = this.entities.find((t) =>
+          t.id === e.dashCharge!.target && this.validTarget(e, t));
+        if (this.advanceBanditCharge(e, chargingTarget, hitSpeed)) {
+          if (e.banditRecovery) advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed, false);
+          continue;
+        }
+      }
+      if (e.nativeBanditTargetReset) this.syncBanditReference(e);
+      let banditCycleReleased = false;
       if (e.pendingAttack) {
         const pending = e.pendingAttack;
         const previous = this.entities.find((t) => t.id === pending.target);
         const target = previous && this.validTarget(e, previous) ? previous : undefined;
         const lost = !!e.nativeLostAttack && (!previous || previous.hp <= 0) &&
           (e.nativeLostAttack === "self" || !!pending.lastPoint);
-        if ((!target && !lost) || (target && !(e.nativePendingRange
-          ? pendingAttackInRange(e, target) : this.inRange(e, target)))) this.cancelAttack(e);
-        else {
+        const committed = e.nativeBanditTransitions && banditOrdinaryCommitted(pending.recovery);
+        if ((!target && !lost) || (target && !committed && !(e.nativePendingRange
+          ? pendingAttackInRange(e, target) : this.inRange(e, target)))) {
+          const waiting = e.nativeBanditTransitions && target ? pending.recovery : undefined;
+          this.cancelAttack(e);
+          if (waiting) { delete waiting.animating; e.banditRecovery = waiting; }
+        } else {
           if (target && e.nativeLostAttack === "point")
             pending.lastPoint = { x: target.x, y: target.y };
-          pending.remaining -= STEP * hitSpeed;
-          if (pending.remaining > 1e-8) continue;
+          if (pending.recovery) {
+            if (!this.advanceBanditRecoveryAttack(e, hitSpeed)) continue;
+            // Resume the shared ordinary cadence from its post-windup phase.
+            e.cooldown = Math.max(0, e.interval - Math.min(e.interval, combatTraits(e).windup));
+          } else {
+            pending.remaining -= STEP * hitSpeed;
+            if (pending.remaining > 1e-8) continue;
+          }
+          if (e.nativeBanditCadence && pending.recovery) {
+            delete pending.recovery.animating;
+            e.banditRecovery = pending.recovery;
+            banditCycleReleased = true;
+          }
           e.pendingAttack = undefined;
           this.releaseAttack(e, target, pending.damage,
             e.nativeLostAttack === "self" ? e : pending.lastPoint);
         }
       }
+      if (e.nativeBanditTransitions && banditCycleReleased) { resetMovement(e); continue; }
       const target = e.nativeSparkyPreload ? preloadTarget : this.acquireTarget(e);
+      if (e.nativeBanditTargetReset && e.banditRecovery)
+        bindBanditRecovery(e.banditRecovery, target?.id, !!target && this.inRange(e, target));
       if (!target) {
+        if (e.nativeBanditTargetReset && e.banditRecovery) {
+          advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed, "targetless");
+          resetMovement(e);
+          continue;
+        }
+        if (e.nativeBanditCadence && e.banditRecovery?.elapsedMs) e.banditRecovery = undefined;
+        if (e.banditRecovery) advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed, false);
         resetMovement(e);
         continue;
       }
-      if (e.card === "bandit" && (e.dashCooldown ?? 0) <= 1e-8 &&
-          !e.pendingAttack && e.cooldown <= 1e-8) {
+      const committedCycle = e.nativeBanditTransitions && banditOrdinaryCommitted(e.banditRecovery);
+      if (e.nativeBanditCadence && !e.nativeBanditTransitions && e.banditRecovery?.elapsedMs && !this.inRange(e, target))
+        e.banditRecovery = undefined;
+      if (e.dashReentry && this.inRange(e, target)) e.dashReentry = undefined;
+      if (e.card === "bandit" && !e.pendingAttack && !committedCycle &&
+          ((e.nativeBanditTransitions && e.banditRecovery) || e.dashReentry || ((e.dashCooldown ?? 0) <= 1e-8 && e.cooldown <= 1e-8))) {
         const distance = dist(e, target) - target.radius;
-        if (distance >= bandit.dash.minimum && distance <= bandit.dash.maximum) {
-          e.dash = { target: target.id, elapsed: 0,
-            remaining: bandit.dash.maximum / bandit.dash.speed + STEP };
-          resetMovement(e);
-          this.emitAudio("dash-start", e.team, "bandit", e.id);
-          this.emitAudio("dash-travel", e.team, "bandit", e.id);
-          this.emit("spell", e.team, e.x, e.y, "bandit", e.id,
-            { effect: "dash-start:bandit" });
+        const admitted = e.nativeBanditStartup
+          ? !e.dashAttraction && banditChargeInRange(e, target)
+          : distance >= bandit.dash.minimum && distance <= bandit.dash.maximum;
+        if (admitted) {
+          if (e.banditRecovery) advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed, false);
+          if (e.dashReentry) e.dashReentry = undefined;
+          if (e.nativeBanditStartup) {
+            const frameTime = bandit.dash.startup.stepMs / 1000;
+            const before = (this.tick - 1) * STEP;
+            e.dashCharge = { target: target.id, remainingMs: bandit.dash.startup.chargeMs,
+              carry: Math.max(0, before - Math.floor((before + 1e-8) / frameTime) * frameTime) };
+            this.advanceBanditCharge(e, target, hitSpeed);
+          } else this.beginBanditDash(e, target);
           continue;
         }
       }
-      if (this.inRange(e, target)) {
+      if (e.nativeBanditTransitions && !e.nativeBanditTargetReset && e.banditRecovery?.elapsedMs && !committedCycle && !this.inRange(e, target))
+        e.banditRecovery = undefined;
+      if (this.inRange(e, target) || committedCycle) {
+        if (e.nativeBanditOrdinary && !e.banditRecovery && e.cooldown <= 1e-8) {
+          const frameTime = bandit.dash.startup.stepMs / 1000;
+          const before = (this.tick - 1) * STEP;
+          e.banditRecovery = { elapsedMs: 0, reloadMs: 0,
+            carry: Math.max(0, before - Math.floor((before + 1e-8) / frameTime) * frameTime),
+            ...(e.nativeBanditTargetReset ? { target: target.id } : {}) };
+        }
+        if (e.banditRecovery) {
+          const continuing = e.nativeBanditCadence && e.banditRecovery.elapsedMs > 0;
+          if (continuing) {
+            if (e.nativeBanditTargetReset) this.previewBanditRecovery(e, e.banditRecovery);
+            const released = !banditCycleReleased && advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed);
+            if (e.nativeBanditTargetReset && released) {
+              delete e.banditRecovery.animating;
+              e.cooldown = Math.max(0, e.interval - Math.min(e.interval, combatTraits(e).windup));
+              this.releaseAttack(e, target, chargedAttackDamage(e));
+              resetMovement(e);
+              continue;
+            }
+            this.previewBanditRecovery(e, e.banditRecovery);
+            resetMovement(e);
+            // Keep choosing a target until the next attack's preparation starts.
+            if (!e.banditRecovery.animating) continue;
+          }
+          e.pendingAttack = { target: target.id, damage: chargedAttackDamage(e),
+            remaining: banditRecoveryRemaining(e.banditRecovery, hitSpeed), recovery: e.banditRecovery };
+          e.banditRecovery = undefined;
+          resetMovement(e);
+          if (!continuing) this.advanceBanditRecoveryAttack(e, hitSpeed);
+          continue;
+        }
         if (e.cooldown <= 1e-8) {
           const damage = chargedAttackDamage(e);
           resetMovement(e);
@@ -1854,40 +2001,146 @@ export class Battle {
           };
           this.beginAudio(e);
         }
-      } else if (e.kind === "troop") this.moveToward(e, target);
+      } else if (e.kind === "troop") {
+        if (e.banditRecovery) advanceBanditRecovery(e.banditRecovery, STEP, hitSpeed, false, !!e.nativeBanditTargetReset);
+        this.moveToward(e, target);
+      }
     }
-    this.updateProjectiles();
+    this.updateProjectiles(projectileStep);
+  }
+  private retainBanditRecovery(e: Entity, clock: BanditRecoveryClock, removed: boolean) {
+    this.cancelAttack(e);
+    delete clock.animating;
+    bindBanditRecovery(clock, undefined, true, removed);
+    e.banditRecovery = clock;
+  }
+  private syncBanditReference(e: Entity) {
+    const clock = e.pendingAttack?.recovery ?? e.banditRecovery;
+    const reference = clock?.target ?? e.pendingAttack?.target;
+    if (!clock || reference === undefined) return;
+    clock.target ??= reference;
+    const previous = this.entities.find(t => t.id === reference);
+    if (!previous || previous.hp <= 0 || !this.validTarget(e, previous))
+      this.retainBanditRecovery(e, clock, !previous || previous.hp <= 0);
+  }
+  private advanceBanditRecoveryAttack(e: Entity, rate: number) {
+    const pending = e.pendingAttack!, clock = pending.recovery!;
+    const released = advanceBanditRecovery(clock, STEP, rate);
+    this.previewBanditRecovery(e, clock);
+    pending.remaining = released ? 0 : banditRecoveryRemaining(clock, rate);
+    return released;
+  }
+  private previewBanditRecovery(e: Entity, clock: BanditRecoveryClock) {
+    const elapsedMs = e.nativeBanditCadence
+      ? clock.elapsedMs % (bandit.sourceHitSpeed * 1000) : clock.elapsedMs;
+    const preparationMs = (bandit.sourceHitSpeed - Math.min(e.interval, combatTraits(e).windup)) * 1000;
+    if (!clock.animating && elapsedMs >= preparationMs) {
+      clock.animating = true;
+      e.attack = Math.max(0, e.interval - (elapsedMs - preparationMs) / 1000);
+      this.beginAudio(e);
+    }
+  }
+  private advanceBanditCharge(e: Entity, target: Entity | undefined, hitSpeed: number) {
+    const charge = e.dashCharge!;
+    if (!target || e.dashAttraction || !banditChargeInRange(e, target, true)) {
+      e.dashCharge = undefined;
+      e.target = null;
+      if (e.nativeBanditTargetReset && e.banditRecovery) {
+        const previous = this.entities.find(t => t.id === e.banditRecovery!.target);
+        this.retainBanditRecovery(e, e.banditRecovery, !previous || previous.hp <= 0);
+      }
+      resetMovement(e);
+      return false;
+    }
+    const frameTime = bandit.dash.startup.stepMs / 1000;
+    charge.carry = Math.min(frameTime, Math.max(0,
+      Number.isFinite(charge.carry) ? charge.carry : 0)) + STEP;
+    while (charge.carry + 1e-8 >= frameTime) {
+      charge.carry = Math.max(0, charge.carry - frameTime);
+      if (!charge.started) {
+        charge.started = true;
+        this.emitAudio("dash-start", e.team, "bandit", e.id);
+        this.emit("spell", e.team, e.x, e.y, "bandit", e.id,
+          { effect: "dash-charge:bandit" });
+      }
+      charge.remainingMs = Math.max(0,
+        charge.remainingMs - Math.round(bandit.dash.startup.stepMs * hitSpeed));
+      if (charge.remainingMs <= 0) {
+        e.dashCharge = undefined;
+        this.beginBanditDash(e, target, e.nativeBanditReentry ? charge.carry : 0);
+        break;
+      }
+    }
+    resetMovement(e);
+    return true;
+  }
+  private beginBanditDash(e: Entity, target: Entity, carry = 0) {
+    if (e.banditRecovery && !e.nativeBanditTransitions) e.banditRecovery = undefined;
+    e.dash = { target: target.id, elapsed: 0,
+      remaining: bandit.dash.maximum / banditDashSpeed(e) + STEP,
+      ...(e.nativeBanditGoal ? { goal: banditDashGoal(e, target), carry } : {}) };
+    resetMovement(e);
+    if (!e.nativeBanditStartup) this.emitAudio("dash-start", e.team, "bandit", e.id);
+    this.emitAudio("dash-travel", e.team, "bandit", e.id);
+    this.emit("spell", e.team, e.x, e.y, "bandit", e.id,
+      { effect: e.nativeBanditStartup ? "dash-launch:bandit" : "dash-start:bandit" });
   }
   private advanceBanditDash(e: Entity) {
     const dash = e.dash!;
     const target = this.entities.find((entry) =>
       entry.id === dash.target && this.validTarget(e, entry));
+    if (e.nativeBanditGoal && dash.goal) {
+      const frameTime = bandit.dash.goal.stepMs / 1000;
+      dash.carry = Math.min(frameTime, Math.max(0,
+        Number.isFinite(dash.carry) ? dash.carry! : 0)) + STEP;
+      while (dash.carry + 1e-8 >= frameTime) {
+        dash.carry = Math.max(0, dash.carry - frameTime);
+        const frame = banditGoalFrame(e, dash.goal, target, (point) => ({
+          x: clamp(point.x, 0.5, 17.5), y: clamp(point.y, 0.6, 31.4),
+        }));
+        e.x = frame.x; e.y = frame.y;
+        dash.elapsed += frameTime;
+        dash.remaining -= frameTime;
+        if (frame.landed || dash.remaining <= 1e-8) {
+          this.finishBanditDash(e, target, frame.hit);
+          break;
+        }
+      }
+      return;
+    }
     const contact = target && this.inRange(e, target);
     if (!target || contact || dash.remaining <= 1e-8) {
-      e.dash = undefined;
-      e.dashCooldown = bandit.dash.cooldown;
-      e.cooldown = e.interval;
-      resetMovement(e);
-      this.emitAudio("dash-end", e.team, "bandit", e.id);
-      this.emit("spell", e.team, e.x, e.y, "bandit", e.id,
-        { effect: "dash-end:bandit" });
-      if (target && contact) {
-        const damage = Math.round(bandit.dash.damage * 1.1 ** 2);
-        this.hurt(target, damage);
-        this.emit("hit", e.team, target.x, target.y, "bandit", damage,
-          { effect: "hit-special:bandit" });
-        this.emitAudio("impact-special", e.team, "bandit", e.id);
-      }
+      this.finishBanditDash(e, target, !!contact);
       return;
     }
     const dx = target.x - e.x, dy = target.y - e.y;
     const distance = Math.hypot(dx, dy) || 1;
-    const travel = Math.min(distance, bandit.dash.speed * STEP);
+    const travel = Math.min(distance, banditDashSpeed(e) * STEP);
     e.x = clamp(e.x + dx / distance * travel, 0.5, 17.5);
     e.y = clamp(e.y + dy / distance * travel, 0.6, 31.4);
     dash.elapsed += STEP;
     dash.remaining -= STEP;
     if (this.inRange(e, target)) this.advanceBanditDash(e);
+  }
+  private finishBanditDash(e: Entity, target: Entity | undefined, hit: boolean) {
+    if (e.nativeBanditRecovery) e.banditRecovery = { elapsedMs: 0,
+      reloadMs: hit ? bandit.sourceLoadTime * 1000 : 0, carry: e.dash?.carry ?? 0,
+      ...(e.nativeBanditTargetReset && target ? { target: target.id } : {}) };
+    e.dash = undefined;
+    if (e.nativeBanditReentry) e.dashReentry = true;
+    e.dashCooldown = bandit.dash.cooldown;
+    e.cooldown = e.interval;
+    resetMovement(e);
+    this.emitAudio("dash-end", e.team, "bandit", e.id);
+    this.emit("spell", e.team, e.x, e.y, "bandit", e.id,
+      { effect: "dash-end:bandit" });
+    if (target && hit) {
+      const damage = Math.round(bandit.dash.damage * 1.1 ** 2);
+      this.hurt(target, damage, false, false, !!e.nativeBanditGoal);
+      this.emit("hit", e.team, target.x, target.y, "bandit", damage,
+        { effect: "hit-special:bandit" });
+      this.emitAudio("impact-special", e.team, "bandit", e.id);
+    }
   }
   /** Preserve existing child placement/art; only the source clock changes. */
   private emitSummon(e: Entity, profile: SummonProfile,
@@ -1975,7 +2228,7 @@ export class Battle {
       if (!this.validTarget(e, target) ||
           dist(e, target) >= electroWizard.deployZap.radius + target.radius)
         continue;
-      this.hurt(target, damage * (target.kind === "tower" ? 0.4 : 1));
+      this.hurt(target, projectileCrownDamage("zap", target, damage, 0.4));
       if (target.hp > 0 && !target.dash) {
         target.stun = Math.max(target.stun, electroWizard.deployZap.stun);
         this.cancelAttack(target);
@@ -2238,8 +2491,8 @@ export class Battle {
     this.emit("hit", e.team, e.x, e.y, e.card, damage);
     this.emitImpactAudio(e, damage);
   }
-  private updateProjectiles() {
-    for (const p of [...this.projectiles]) {
+  private updateProjectiles(projectileStep = [...this.projectiles]) {
+    for (const p of projectileStep) {
       if (p.delay && p.delay > 1e-8) {
         p.delay = Math.max(0, p.delay - STEP);
         continue;
@@ -2361,7 +2614,9 @@ export class Battle {
           p.rollHits!.push(e.id);
           this.hurt(
             e,
-            p.damage * (e.kind === "tower" ? log.crownTowerDamageFraction : 1),
+            projectileCrownDamage(
+              "log", e, p.damage, log.crownTowerDamageFraction,
+            ),
           );
           this.emit("hit", p.team, e.x, e.y, "log", p.damage);
           this.emitAudio("impact", p.team, "log");
@@ -2488,10 +2743,11 @@ export class Battle {
             continue;
           this.hurt(
             e,
-            p.damage *
-              (p.source === 0 && e.kind === "tower"
-                ? (p.towerDamageFraction ?? 0.3)
-                : 1),
+            p.source === 0
+              ? projectileCrownDamage(
+                  p.style, e, p.damage, p.towerDamageFraction ?? 0.3,
+                )
+              : p.damage,
           );
           if (e.hp <= 0) continue;
           if (p.stun && !e.dash) {
@@ -2624,8 +2880,8 @@ export class Battle {
       }
     }
   }
-  private hurt(e: Entity, amount: number, decay = false) {
-    if (e.hp <= 0 || (!decay && (this.isHidden(e) || e.dash))) return;
+  private hurt(e: Entity, amount: number, decay = false, bypassHidden = false, bypassDash = false) {
+    if (e.hp <= 0 || (!decay && ((!bypassHidden && this.isHidden(e)) || (!bypassDash && e.dash)))) return;
     if (e.shield && !decay) {
       e.shield = Math.max(0, e.shield - amount);
       if (e.shield === 0) {
@@ -2819,14 +3075,14 @@ export class Battle {
   }
   private think() {
     const p = this.players.red;
-    const affordable = p.hand
+    const hand = p.hand
       .map((id, slot) => ({
         id, slot,
         played: this.cardForPlay("red", id) ?? id,
         cost: this.cardCost("red", id),
         c: CARD_MAP[this.cardForPlay("red", id) ?? id],
-      }))
-      .filter((v) => v.cost !== null && v.cost <= p.elixir + 1e-6);
+      }));
+    const affordable = hand.filter((v) => v.cost !== null && v.cost <= p.elixir + 1e-6);
     if (!affordable.length) return;
     const kingDeadline = affordable.some(
       (a) => isDamageSpell(a.played) || a.played === "poison",
@@ -2875,6 +3131,7 @@ export class Battle {
                 a.cost ?? a.c.cost,
                 kingDeadline,
                 finisher,
+                this.rulesVersion,
               )
             : areaSpellTarget(
                 a.played,
@@ -2936,7 +3193,7 @@ export class Battle {
     for (const enemy of threats) {
       const lures = new Map(
         affordable
-          .filter((a) => a.c.kind === "building")
+          .filter((a) => a.c.kind === "building" && a.played !== "elixir-collector")
           .map((a) => [
             a.id,
             buildingLureTarget(
@@ -2956,6 +3213,7 @@ export class Battle {
         affordable.some(
           (a) =>
             a.c.kind !== "spell" &&
+            a.played !== "elixir-collector" &&
             !a.c.buildingsOnly &&
             (!enemy.air || a.c.hitsAir),
         ) ||
@@ -2968,12 +3226,80 @@ export class Battle {
     }
     if (!threat && p.elixir < 6 && this.mode !== "training" && !hasSpellTarget)
       return;
+    const reinforcement = !threat ? spawnerPlan({
+      team: "red", cards: hand, remaining: this.remaining, overtime: this.time >= 180,
+      entities: this.entities, projectiles: this.projectiles, areas: this.areas,
+      legal: (card, point) => this.canPlace("red", card, point.x, point.y).ok,
+    }) : undefined;
+    const currentPlacementPolicy = this.rulesVersion >= 56;
+    const siege = !threat && currentPlacementPolicy ? siegePlan({
+      team: "red", cards: hand, remaining: this.remaining, overtime: this.time >= 180,
+      entities: this.entities, projectiles: this.projectiles, areas: this.areas,
+      legal: (card, point) => this.canPlace("red", card, point.x, point.y).ok,
+    }) : undefined;
+    const graveyardPressure = !threat && currentPlacementPolicy ? graveyardPlan({
+      team: "red", cards: hand, remaining: this.remaining,
+      entities: this.entities, projectiles: this.projectiles, areas: this.areas,
+      legal: (card, point) => this.canPlace("red", card, point.x, point.y).ok,
+    }) : undefined;
+    const army = !threat && currentPlacementPolicy ? armyPlan({
+      team: "red", rulesVersion: this.rulesVersion, cards: hand, remaining: this.remaining,
+      elixir: p.elixir, elixirRate: this.multiplier / 2.8,
+      entities: this.entities, projectiles: this.projectiles, areas: this.areas,
+      legal: (card, point) => this.canPlace("red", card, point.x, point.y).ok,
+    }) : undefined;
+    const pressurePlan = [reinforcement, siege, graveyardPressure, army]
+      .filter((plan) => plan !== undefined)
+      .sort((a, b) => a.requiredElixir - b.requiredElixir)[0];
+    const collectors = new Map(
+      affordable
+        .filter((a) => a.played === "elixir-collector")
+        .map((a) => [a.id, collectorTarget({
+          team: "red", elixir: p.elixir, cost: a.cost!, remaining: this.remaining,
+          overtime: this.time >= 180, entities: this.entities,
+          projectiles: this.projectiles, areas: this.areas,
+          legal: (point) => this.canPlace("red", a.played, point.x, point.y).ok,
+        })]),
+    );
+    const miners = new Map(
+      !threat && currentPlacementPolicy ? affordable
+        .filter((a) => a.played === "miner")
+        .map((a) => [a.id, minerTarget({
+          team: "red", elixir: p.elixir, cost: a.cost!, remaining: this.remaining,
+          entities: this.entities, projectiles: this.projectiles, areas: this.areas,
+          legal: (point) => this.canPlace("red", a.played, point.x, point.y).ok,
+        })] as const) : [],
+    );
+    const barrels = new Map(
+      !threat && currentPlacementPolicy ? affordable
+        .filter((a) => a.played === "goblin-barrel")
+        .map((a) => [a.id, barrelTarget({
+          team: "red", elixir: p.elixir, cost: a.cost!, remaining: this.remaining,
+          entities: this.entities, projectiles: this.projectiles, areas: this.areas,
+          legal: (point) => this.canPlace("red", a.played, point.x, point.y).ok,
+        })] as const) : [],
+    );
+    if (pressurePlan && p.elixir + 1e-6 < pressurePlan.requiredElixir &&
+        !hasSpellTarget && ![...collectors.values()].some(Boolean) &&
+        ![...miners.values(), ...barrels.values()].some((target) => target &&
+          (target.score > 4 || pressurePlan === army))) return;
     const scored = affordable
       .map((a) => {
         const jitter = this.random() * 2;
         let score = jitter;
         const target = spellTargets.get(a.id);
-        if (a.c.kind === "spell") {
+        if (a.played === "elixir-collector")
+          score = collectors.get(a.id) ? 4 + jitter * 0.1 : -Infinity;
+        else if (pressurePlan?.id === a.id && p.elixir + 1e-6 >= pressurePlan.requiredElixir)
+          score = 4 + jitter * 0.1;
+        else if (!threat && currentPlacementPolicy && a.played === "miner")
+          score = miners.get(a.id) ? miners.get(a.id)!.score + jitter * 0.1 : -Infinity;
+        else if (!threat && currentPlacementPolicy && a.played === "goblin-barrel")
+          score = barrels.get(a.id) ? barrels.get(a.id)!.score + jitter * 0.1 : -Infinity;
+        else if (!threat && currentPlacementPolicy && a.played === "graveyard") score = -Infinity;
+        else if (!threat && currentPlacementPolicy && isArmyCard(a.played)) score = -Infinity;
+        else if (!threat && currentPlacementPolicy && isSiegeCard(a.played)) score = -Infinity;
+        else if (a.c.kind === "spell") {
           if (optimizedSpell(a.played))
             score = target ? target.score + jitter * 0.1 : -Infinity;
           else if (threat) {
@@ -2999,7 +3325,7 @@ export class Battle {
             score += 3;
           if (a.c.kind === "building") score += 2;
         } else {
-          if (a.c.kind !== "troop" && a.played !== "mortar") score -= 7;
+          if (a.c.kind !== "troop" && (currentPlacementPolicy || a.played !== "mortar")) score -= 7;
           if (a.c.buildingsOnly) score += 2;
         }
         return { ...a, score, target };
@@ -3011,21 +3337,39 @@ export class Battle {
     let x = lane + (this.random() - 0.5) * 1.4,
       y = threat ? clamp(threat.y + 1.3, 4, 13.8) : a.c.buildingsOnly ? 3.5 : 9;
     if (a.c.kind === "spell") {
-      const target = a.target ?? (!optimizedSpell(a.played)
+      const graveyardPoint = a.played === "graveyard" && pressurePlan?.id === a.id ? pressurePlan.point : undefined;
+      const target = graveyardPoint ?? barrels.get(a.id)?.point ?? a.target ?? (!optimizedSpell(a.played)
         ? threat ?? this.entities.find((e) => e.team === "blue" && e.kind === "tower" && !e.king && e.hp > 0)
         : undefined);
       if (!target) return;
       x = target.x;
       y = target.y;
     }
+    const pressurePoint = a.c.kind === "building" && pressurePlan?.id === a.id
+      ? pressurePlan.point : undefined;
     if (a.c.kind === "building") {
       const lure = buildingLures.get(a.id);
-      x = lure?.x ?? (a.played === "mortar" ? lane : 9);
-      y = lure?.y ?? (a.played === "mortar" ? 14 : 10);
+      const economy = collectors.get(a.id);
+      x = economy?.x ?? pressurePoint?.x ?? lure?.x ?? (a.played === "mortar" ? lane : 9);
+      y = economy?.y ?? pressurePoint?.y ?? lure?.y ?? (a.played === "mortar" ? 14 : 10);
+    }
+    const tunnel = miners.get(a.id);
+    if (tunnel) {
+      x = tunnel.point.x;
+      y = tunnel.point.y;
+    }
+    const armyPoint = a.c.kind === "troop" && pressurePlan?.id === a.id ? pressurePlan.point : undefined;
+    if (armyPoint) {
+      x = armyPoint.x;
+      y = armyPoint.y;
     }
     const intercept =
       threat && a.c.kind === "troop"
-        ? meleeInterceptTarget(
+        ? a.played === "miner" && currentPlacementPolicy
+          ? minerInterceptTarget("red", threat, this.entities,
+              (point) => this.canPlace("red", a.played, point.x, point.y).ok,
+              this.areas)
+          : meleeInterceptTarget(
             a.played,
             "red",
             threat,
@@ -3038,7 +3382,7 @@ export class Battle {
       x = intercept.x;
       y = intercept.y;
     }
-    if (a.c.kind !== "spell" && !intercept) {
+    if (a.c.kind !== "spell" && !intercept && !pressurePoint && !tunnel && !armyPoint) {
       // A building can still occupy the preferred tile when the deck cycles.
       // Try nearby legal tiles instead of wasting every subsequent decision.
       const point = [

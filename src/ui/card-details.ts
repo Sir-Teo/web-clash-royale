@@ -1,3 +1,5 @@
+import { projectileCrownDamage } from "../game/crown-damage";
+import { poisonTickDamage } from "../game/poison-damage";
 import { summonProfile, summonCycle } from "../game/summon-clock";
 import { balloonBombProfile } from "../game/balloon-bomb";
 import { CARD_MAP, type CardId } from "../game/cards";
@@ -33,6 +35,13 @@ import { infernoDamage, infernoProfile } from "../game/inferno";
 import giantSkeleton from "../game/giant-skeleton-data.json" with { type: "json" };
 import electroWizard from "../game/electro-wizard-data.json" with { type: "json" };
 
+const crownDamage = (id: CardId, fraction: number) =>
+  projectileCrownDamage(
+    id,
+    { kind: "tower", nativeProjectileCrownDamage: true, nativeAreaCrownDamage: true },
+    CARD_MAP[id].damage,
+    fraction,
+  );
 const buildingSpawns = {
   "goblin-hut": { name: "Spear Goblin", rules: goblinHut, stagger: 0, deploy: 1 },
   tombstone: { name: "Skeleton", rules: tombstone, stagger: 0, deploy: 1 },
@@ -231,7 +240,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
         stat("Damage per strike", c.damage, "swords"),
         stat(
           "Crown Tower damage",
-          c.damage * lightning.crownTowerDamageFraction,
+          crownDamage(id, lightning.crownTowerDamageFraction),
           "swords",
         ),
         stat("Maximum targets", 3, "users"),
@@ -248,7 +257,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
         stat("Damage", c.damage, "swords"),
         stat(
           "Crown Tower damage",
-          c.damage * log.crownTowerDamageFraction,
+          crownDamage(id, log.crownTowerDamageFraction),
           "swords",
         ),
         stat("Rolling range", tiles(log.rollingRange), "scan"),
@@ -293,7 +302,8 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
         stat("Damage per second", dps, "swords"),
         stat(
           "Crown Tower / second",
-          dps * poison.crownTowerDamageFraction,
+          poisonTickDamage({ kind: "tower", nativeBuffCrownDamage: true }) /
+            poison.damageInterval,
           "swords",
         ),
         stat("Duration", seconds(poison.duration), "timer"),
@@ -310,7 +320,7 @@ export function cardDetails(id: CardId): { stats: CardStat[]; note?: string } {
     return {
       stats: [
         stat(id === "arrows" ? "Volley damage" : "Damage", c.damage, "swords"),
-        stat("Crown Tower damage", c.damage * fraction, "swords"),
+        stat("Crown Tower damage", crownDamage(id, fraction), "swords"),
         radius,
         targets,
         id === "arrows"

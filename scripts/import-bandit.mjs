@@ -9,12 +9,80 @@ const paths = [
   "reference/sc/chr_bandit.bin",
   "reference/sc/chr_bandit_tex.png",
   "reference/sc/ui-spells.bin",
+  "reference/client/dash-lifecycle-native-trace.json",
+  "reference/client/dash-goals-native-trace.json",
+  "reference/client/dash-admission-native-trace.json",
+  "reference/client/dash-startup-native-trace.json",
+  "reference/client/dash-recovery-native-trace.json",
+  "reference/client/dash-transition-native-trace.json",
+  "reference/client/ordinary-delivery-native-trace.json",
+  "reference/client/bandit-ordinary-native-trace.json",
+  "reference/client/bandit-target-reset-native-trace.json",
 ];
 const inputs = await Promise.all(paths.map((path) => readFile(path)));
 const card = csvRows(inputs[0].toString()).find((row) => row.Name === "Assassin");
 const unit = csvRows(inputs[1].toString()).find((row) => row.Name === "Assassin");
 const model = parseSC(inputs[2]);
 const portraits = parseSC(inputs[4]);
+const native = JSON.parse(inputs[5]);
+const goals = JSON.parse(inputs[6]);
+const admission = JSON.parse(inputs[7]), startup = JSON.parse(inputs[8]);
+const recovery = JSON.parse(inputs[9]);
+const transition = JSON.parse(inputs[10]), delivery = JSON.parse(inputs[11]);
+const ordinary = JSON.parse(inputs[12]);
+const targetReset = JSON.parse(inputs[13]);
+if (createHash("sha256").update(inputs[13]).digest("hex") !== "22bcccdaed004b4a99542b57a0e9f6334237a37e77d74084455d4b126abd64b8" ||
+    targetReset.profiles.finishTimeMs !== 250 || targetReset.profiles.targetlessPolicyReturn !== 1 ||
+    targetReset.cases[0].frames[19].ordinaryRequests.length !== 1 ||
+    targetReset.cases[1].frames[11].ordinaryRequests.length !== 1)
+  throw new Error("Recheck native Bandit target reset and removal finish window");
+if (createHash("sha256").update(inputs[12]).digest("hex") !== "5266a984039b1772cde8aad4bc64ea7a9788ad8edbcc1110af040b030f6aa745" ||
+    ordinary.profiles.initialTargetDistance !== 1750 || ordinary.profiles.initialElapsedMs !== 0 ||
+    ordinary.profiles.initialReloadMs !== 0 || ordinary.cases[0].frames[7].ordinaryRequests.length !== 1 ||
+    ordinary.controls[0].frames[5].elapsedMs !== 1002 || ordinary.controls[1].frames[6].clockMs !== 933)
+  throw new Error("Recheck native Bandit fresh ordinary clock and Rage phase");
+if (createHash("sha256").update(inputs[10]).digest("hex") !== "00fe570575dad3081b4ae98f9afae62b8bf8d5a271fdddc2f5608a1733860077" ||
+    createHash("sha256").update(inputs[11]).digest("hex") !== "728859ae4e7117355e4ef00041286a79ac46d44a4e19cc723e10ce45071c24e7" ||
+    transition.profiles.dashAdmissionPhaseMaximumMs !== startup.stepMs ||
+    transition.cases[2].frames[46].clockMs !== 950 ||
+    transition.controls[0].frames[86].clockMs !== 933 ||
+    delivery.profiles.sourceAmount !== Number(unit.Damage) ||
+    !delivery.cases.every((row) => row.result.targetHp === 840))
+  throw new Error("Recheck native Bandit ordinary commitment, dash phase and selected delivery");
+if (createHash("sha256").update(inputs[9]).digest("hex") !== "678a1a62499b90d53da7d1ea286b23ebd9b3da5f6b5b3dd51db1acc112341fd0" ||
+    recovery.profiles.loadTimeMs !== 600 || !recovery.cases.some((row) => row.fields.scenario === "chain" &&
+      row.frames[26].hit && row.frames[27].clockMs === 950 && row.frames[27].reloadMs === 550))
+  throw new Error("Recheck native Bandit immediate reentry evidence");
+const recoveryWitnesses = [
+  [recovery.cases.find((r) => r.fields.scenario === "hit"), 46],
+  [recovery.cases.find((r) => r.fields.scenario === "miss"), 36],
+  [recovery.controls.find((r) => r.fields.recoveryBuffs.join() === "Rage"), 42],
+  [recovery.controls.find((r) => r.fields.recoveryBuffs.join() === "IceWizardSlowDown"), 57],
+  [recovery.controls.find((r) => r.fields.recoveryBuffs.length === 2), 50],
+];
+if (recoveryWitnesses.some(([row, tick]) => row?.frames.find((f) => f.ordinaryRequests.length)?.step !== tick))
+  throw new Error("Recheck native Bandit first ordinary recovery requests");
+const ordinaryRequestCount = [...recovery.cases, ...recovery.controls].reduce((sum, row) =>
+  sum + row.frames.reduce((count, frame) => count + frame.ordinaryRequests.length, 0), 0);
+if (ordinaryRequestCount !== 104 || JSON.stringify(recovery.controls[0].frames.filter((f) =>
+    f.ordinaryRequests.length).map((f) => f.step)) !== "[42,57,72,86]")
+  throw new Error("Recheck native Bandit continuing ordinary cadence");
+if (createHash("sha256").update(inputs[7]).digest("hex") !== "a772e93de669715acf0c798fce3c6cae75e0d425442ac1d2870e11e1ccc0dbce" ||
+    createHash("sha256").update(inputs[8]).digest("hex") !== "cce10a224850d79720d667d507222f8bb381169e7f65720fd376376b5d9fff63" ||
+    admission.profiles.dashMinimum !== 4000 || startup.profiles.retentionMaximum !== 7500 ||
+    startup.cases[0].frames.find((frame) => frame.state === 4).step !== 20)
+  throw new Error("Recheck native Bandit admission and complete startup evidence");
+if (createHash("sha256").update(inputs[6]).digest("hex") !== "26422f0a0f651353044e75f39f9530c459a6754e00d67ee2fce40f414a636959" ||
+    goals.profiles.headingScale !== 256 || goals.profiles.chunkUnits !== 250 ||
+    !goals.controls.some((row) => row.fields.motion === "target-cleared" && row.frames.at(-1).state === 1 && row.frames.at(-1).targetHp === 1000) ||
+    !goals.controls.some((row) => row.fields.motion === "dashing-target" && row.ordinaryHitCheck.returned === 0 && row.frames.at(-1).targetHp === 680))
+  throw new Error("Recheck native Bandit goal, fixed movement and landing evidence");
+if (createHash("sha256").update(inputs[5]).digest("hex") !== "91a9123774e707aadf59a1d706b9fa5af4e3695d6e3ba94415c36da6011a74eb" ||
+    native.profiles.sourceJumpSpeed !== 500 || native.stepMs !== 50 ||
+    !native.cases.some((row) => row.fields.damage === 121 && row.frames.some((frame) =>
+      frame.state === 4 && frame.hp === 629 && frame.ordinaryHitBlocked &&
+      frame.calls.movementFrame === 1 && frame.events.some((event) => event[0] === "hp"))))
+  throw new Error("Recheck native Bandit movement and retained Poison evidence");
 if (card?.Rarity !== "Legendary" || card.ManaCost !== "3" ||
     card.SummonCharacter !== "Assassin" || card.IconFile !== "bandit" ||
     unit?.Hitpoints !== "750" || unit.Damage !== "160" ||
@@ -46,7 +114,23 @@ const output = Buffer.from(JSON.stringify({
     maximum: Number(unit.DashMaxRange) / 1000,
     damage: Number(unit.DashDamage),
     cooldown: Number(unit.DashCooldown) / 1000,
-    speed: Number(unit.JumpSpeed) / 60,
+    speed: native.profiles.sourceJumpSpeed / 1000 / (native.stepMs / 1000),
+    legacySpeed: Number(unit.JumpSpeed) / 60,
+    startup: {
+      stepMs: startup.stepMs,
+      chargeMs: startup.profiles.dashCooldownMs,
+      retentionExtensionUnits: startup.profiles.retentionMaximum -
+        admission.profiles.dashMaximum - admission.profiles.targetRadius,
+    },
+    goal: {
+      stepMs: goals.stepMs,
+      unitsPerTile: goals.profiles.sourceUnitsPerTile,
+      tileUnits: goals.profiles.goalTileSize,
+      unitsPerStep: goals.profiles.sourceJumpSpeed,
+      chunkUnits: goals.profiles.chunkUnits,
+      headingScale: goals.profiles.headingScale,
+      landingExtensionUnits: goals.profiles.landingRangeExtension,
+    },
     filter: unit.DashFilter,
     startEffect: unit.DashStartEffect,
     travelEffect: unit.DashEffect,
@@ -56,12 +140,89 @@ const output = Buffer.from(JSON.stringify({
   redExport: unit.RedExportName,
 }, null, 2) + "\n");
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
+const resetPath = "src/game/bandit-reset-data.json";
+const resetOutput = Buffer.from(JSON.stringify({ finishTimeMs: targetReset.profiles.finishTimeMs }, null, 2) + "\n");
 await writeFile(outputPath, output);
+await writeFile(resetPath, resetOutput);
 await writeFile("reference/client/bandit-manifest.json", JSON.stringify({
   source: "https://github.com/smlbiobot/cr",
   commit: "7fc7687e6de74690e902543ee4b59f562121e225",
   binarySource: "apk/1.8.1/com.supercell.clashroyale-1.8.1/assets/sc/chr_bandit",
   inputs: paths.map((path, i) => ({ path, sha256: sha256(inputs[i]) })),
+  nativeDash: {
+    stateEntry: "0x25cdf4 -> 0x214f60",
+    movementFrame: "0x260c2c -> 0x2613f6",
+    stepMs: native.stepMs,
+    sourceUnitsPerStep: native.profiles.sourceJumpSpeed,
+    unitsPerTile: 1000,
+    retainedPoison: "0x218f48 -> 0x2601ae -> 0x2602d0",
+  },
+  nativeGoal: {
+    launch: "0x25cd18 -> 0x263c4a",
+    movement: "0x260c2c -> 0x2613f6 -> 0x26344e",
+    landing: "0x2157eb..0x2159bc",
+    fixedStepMs: goals.stepMs,
+    landingExtensionUnits: goals.profiles.landingRangeExtension,
+  },
+  nativeStartup: {
+    attackUpdate: "0x25c60c..0x25d068",
+    admission: "0x25d852..0x25d946",
+    cancellation: "0x25d4b0..0x25d6f2",
+    stepMs: startup.stepMs,
+    chargeMs: startup.profiles.dashCooldownMs,
+  },
+  nativeReentry: {
+    attackUpdate: "0x25c60c..0x25d068",
+    landingReload: "0x25c4fa..0x25c536",
+    admission: "0x25d852..0x25d946",
+    nextUpdateClockMs: 950,
+    nextUpdateReloadMs: 550,
+  },
+  nativeRecovery: {
+    attackUpdate: "0x25c60c..0x25d068",
+    landingReload: "0x25c4fa..0x25c536",
+    ordinaryReload: "0x25e681..0x25e69f",
+    stepMs: recovery.stepMs,
+    loadTimeMs: recovery.profiles.loadTimeMs,
+    firstRequestAfterHitUpdates: 19,
+    firstRequestAfterMissUpdates: 8,
+    scope: "First ordinary request only; downstream damage and view bodies retain shared runtime behavior",
+  },
+  nativeCadence: {
+    attackUpdate: "0x25c60c..0x25d068",
+    ordinaryReload: "0x25e681..0x25e69f",
+    stepMs: recovery.stepMs,
+    ordinaryRequests: ordinaryRequestCount,
+    rageRequestUpdates: [42, 57, 72, 86],
+    scope: "Continuing post-landing ordinary requests; downstream damage and view bodies retain shared runtime behavior",
+  },
+  nativeTransitions: {
+    attackUpdate: "0x25c60c..0x25d068",
+    phaseGate: "0x25cb57..0x25cc50",
+    phaseMaximumMs: transition.profiles.dashAdmissionPhaseMaximumMs,
+    selectedDelivery: "0x25eea7..0x25f329",
+    normalChargeUpdate: 47,
+    rageChargeUpdate: 87,
+    scope: "Post-dash committed ordinary cycles with supplied existing references; packet/level construction and natural acquisition remain excluded",
+  },
+  nativeOrdinary: {
+    attackUpdate: "0x25c60c..0x25d068",
+    initialElapsedMs: ordinary.profiles.initialElapsedMs,
+    initialReloadMs: ordinary.profiles.initialReloadMs,
+    normalRequestUpdates: [8, 28, 48, 68],
+    rageRequestUpdates: [6, 21, 36, 51, 66],
+    scope: "Fresh close-range supplied existing references; constructor/target-setter clock values use the separate roster prerequisite; natural deployment and acquisition remain excluded",
+  },
+  nativeTargetReset: {
+    setter: "0x25d4b0..0x25d6f2",
+    removal: "0x25f594..0x25f6b4",
+    expiry: "0x25ca86..0x25cab4",
+    finishTimeMs: targetReset.profiles.finishTimeMs,
+    nullRequestUpdates: [20, 40, 60],
+    removalRequestUpdates: [12, 32, 52],
+    output: { path: resetPath, sha256: sha256(resetOutput) },
+    scope: "Supplied null/removal transitions and close reselection; native natural death propagation and acquisition remain excluded",
+  },
   output: { path: outputPath, sha256: sha256(output) },
 }, null, 2) + "\n");
 console.log("Imported archived Bandit dash and model.");

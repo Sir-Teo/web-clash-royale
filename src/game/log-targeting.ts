@@ -1,14 +1,21 @@
+import { projectileCrownDamage } from "./crown-damage";
 import { aiBodyValue } from "./ai-body-value";
 import { CARD_MAP } from "./cards";
 import type { AreaEffect, Entity, Projectile, Team } from "./engine";
 import { createKingSpellRace, kingRacePriority } from "./king-damage";
-import { logCandidatePoints, logSpellContains } from "./log-flight";
+import {
+  logCandidatePoints,
+  logSpellContains,
+  logSpellProjectile,
+} from "./log-flight";
 import type { MatchFinisher } from "./match-finisher";
+import { impactSteps, projectileDamagePackets } from "./projectile-impacts";
+import { createSpellPullPaths } from "./spell-pull-paths";
 import { createSpellDamageReservation } from "./spell-reservations";
 import { hiddenSpellTarget, type SpellTarget } from "./spell-targeting";
 import log from "./log-data.json" with { type: "json" };
 
-/** Value actual ground contacts along the stationary rolling corridor. */
+/** Value the rolling corridor against fixed bodies or their known pull paths. */
 export function logSpellTarget(
   team: Team,
   entities: readonly Entity[],
@@ -17,6 +24,7 @@ export function logSpellTarget(
   cost = CARD_MAP.log.cost,
   kingDeadline = Infinity,
   finisher?: MatchFinisher,
+  rulesVersion = 56,
 ): SpellTarget | undefined {
   const enemies = entities.filter(
     (e) =>
@@ -27,20 +35,29 @@ export function logSpellTarget(
     king && !finisher
       ? createKingSpellRace("log", team, king, projectiles, areas, entities)
       : undefined;
+  const launchStep = impactSteps(log.launchMinimumDistance / log.launchSpeed);
+  const horizon =
+    launchStep + impactSteps(log.rollingRange / log.rollingSpeed) + 3;
+  const paths =
+    rulesVersion >= 56 ? createSpellPullPaths(areas, horizon) : undefined;
   const reserve = createSpellDamageReservation(
     team,
     entities,
     projectiles,
     areas,
+    paths,
   );
   const targets = enemies
     .map((entity) => {
       const reserved = reserve(entity);
       const hp = Math.max(0, entity.hp + (entity.shield ?? 0) - reserved);
       const shield = Math.max(0, (entity.shield ?? 0) - reserved);
-      const packet =
-        CARD_MAP.log.damage *
-        (entity.kind === "tower" ? log.crownTowerDamageFraction : 1);
+      const packet = projectileCrownDamage(
+        "log",
+        entity,
+        CARD_MAP.log.damage,
+        log.crownTowerDamageFraction,
+      );
       const damage = shield > 0 ? Math.min(shield, packet) : packet;
       const lethal = hp > 1e-6 && hp <= damage + 1e-6;
       const value =
@@ -73,17 +90,43 @@ export function logSpellTarget(
           Number.isFinite(kingDeadline) &&
           race.baseline >= kingDeadline),
     );
+  const bodies = targets.map((t) => t.entity);
+  const candidates = new Map<string, { x: number; y: number }>();
+  const addCandidates = (positions: readonly Entity[], future = false) => {
+    for (const point of logCandidatePoints(team, positions)) {
+      const precision = future ? 1 : 3;
+      const key = `${future ? "future:" : ""}${point.x.toFixed(precision)},${point.y.toFixed(precision)}`;
+      if (!candidates.has(key)) candidates.set(key, point);
+    }
+  };
+  addCandidates(bodies);
+  // A bounded set of simultaneous snapshots supplies future lanes and legal
+  // launches. Every candidate is checked against the complete contact path.
+  if (bodies.some((body) => paths?.(body)))
+    for (const step of [launchStep, 30, 45, 60, 90, horizon])
+      addCandidates(
+        bodies.map((body) => {
+          const point = paths?.(body)?.[step - 1];
+          return point ? { ...body, ...point } : body;
+        }),
+        true,
+      );
   let best: SpellTarget | undefined;
-  for (const point of logCandidatePoints(
-    team,
-    targets.map((t) => t.entity),
-  )) {
+  for (const point of candidates.values()) {
+    const proposed = logSpellProjectile(team, point);
     let value = 0,
       penalty = 0,
       kingStep = Infinity;
     let lethalTower: Entity | undefined;
     for (const target of targets) {
-      if (!logSpellContains(team, point, target.entity)) continue;
+      const path = paths?.(target.entity);
+      if (
+        path
+          ? !projectileDamagePackets(target.entity, [proposed], entities, path)
+              .length
+          : !logSpellContains(team, point, target.entity)
+      )
+        continue;
       value += target.value;
       penalty += target.penalty;
       if (target.entity.king && race) {

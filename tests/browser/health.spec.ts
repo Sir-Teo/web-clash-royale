@@ -53,7 +53,7 @@ test("native health tracks damage, freezes, survives a paused rebuild, and clear
   const king = page.locator('[data-health-kind="king"]').first();
   await expect(king).toHaveAttribute(
     "aria-valuenow",
-    String(Math.ceil(5232 - CARD_MAP.zap.damage * 0.4)),
+    "5155",
   );
   const held = await page.locator(".tower-labels").innerHTML();
   await page.waitForTimeout(200);

@@ -12,8 +12,9 @@ import rules from "../src/game/bandit-data.json";
 const json = (path: string) => JSON.parse(readFileSync(path, "utf8"));
 const hash = (path: string) => createHash("sha256").update(readFileSync(path)).digest("hex");
 const setup = () => {
-  const game = new Battle({ seed: 57, ai: false,
+  const initial = new Battle({ seed: 57, ai: false,
     deck: ["bandit", ...STARTER_DECK.filter((id) => id !== "arrows")] });
+  const game = new Battle({ replay: { ...initial.exportReplay(), version: 49 } });
   for (const tower of game.entities) tower.active = false;
   game.players.blue.hand[0] = "bandit";
   game.players.blue.elixir = 10;

@@ -88,6 +88,50 @@ def capture(env, context):
         from lib.world_step_probe import capture
 
         return capture(env, context)
+    if env["args"].projectile_targets:
+        from lib.projectile_target_probe import capture
+
+        return capture(env, context)
+    if env["args"].projectile_homing:
+        from lib.projectile_homing_probe import capture
+
+        return capture(env, context)
+    if env["args"].projectile_arrival:
+        from lib.projectile_arrival_probe import capture
+
+        return capture(env, context)
+    if env["args"].projectile_bookkeeping:
+        from lib.projectile_bookkeeping_probe import capture
+
+        return capture(env, context)
+    if env["args"].projectile_hit_damage:
+        from lib.projectile_hit_damage_probe import capture
+
+        return capture(env, context)
+    if env["args"].health_shield:
+        from lib.health_shield_probe import capture
+
+        return capture(env, context)
+    if env["args"].area_crown:
+        from lib.area_crown_probe import capture
+
+        return capture(env, context)
+    if env["args"].buff_ticks:
+        from lib.buff_tick_probe import capture
+
+        return capture(env, context)
+    if env["args"].buff_lifecycle:
+        from lib.buff_lifecycle_probe import capture
+
+        return capture(env, context)
+    if env["args"].dash_admission:
+        from lib.dash_admission_probe import capture
+
+        return capture(env, context)
+    if env["args"].dash_lifecycle or env["args"].dash_goals or env["args"].dash_startup or env["args"].dash_recovery or env["args"].dash_transition or env["args"].ordinary_delivery or env["args"].bandit_ordinary or env["args"].bandit_target_reset:
+        from lib.dash_lifecycle_probe import capture
+
+        return capture(env, context)
     names = {
         "characters": ["Knight", "Archer", "Musketeer", "Giant", "HogRider", "Balloon", "Prince", "InfernoDragon", "ElectroWizard"],
         "buildings": ["Cannon", "Mortar", "InfernoTower", "KingTower", "PrincessTower"],

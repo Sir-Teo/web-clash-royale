@@ -156,6 +156,12 @@ test("inspects recorded cards, copies and undoes a deck, persists it and replays
   await page.getByRole("button", { name: "Close dialog", exact: true }).click();
   await page.reload();
   await expect
+    .poll(
+      () => page.evaluate(() => (window as any).__arena?.state.loadedCards),
+      { timeout: 60000 },
+    )
+    .toBe(expectedCards);
+  await expect
     .poll(() => ids(page.locator("#deck-preview")))
     .toEqual(replay.enemyDeck);
   await expect(page.locator("#deck-tabs > span")).toHaveText("Custom deck");

@@ -7,6 +7,7 @@ export interface RecordEntry {
   playerName?: string;
   opponent?: string;
   opponentType?: "ai" | "friend";
+  practice?: true;
   matchId?: string;
   id: number;
   winner: "blue" | "red" | "draw";
@@ -106,6 +107,7 @@ export function validRecordEntry(value: unknown): value is RecordEntry {
     (r.opponentType === undefined ||
       ["ai", "friend"].includes(r.opponentType)) &&
     (r.matchId === undefined || typeof r.matchId === "string") &&
+    (r.practice === undefined || r.practice === true) &&
     (r.replay?.perspective === undefined ||
       ["blue", "red"].includes(r.replay.perspective)) &&
     ["blue", "red", "draw"].includes(r.winner) &&
@@ -117,7 +119,7 @@ export function validRecordEntry(value: unknown): value is RecordEntry {
     (r.replay?.rulesFamily !== "local" || r.replay.version <= 5) &&
     Number.isInteger(r.replay?.version) &&
     r.replay.version >= 1 &&
-    r.replay.version <= 42 &&
+    r.replay.version <= 56 &&
     Number.isSafeInteger(r.replay.seed) &&
     r.replay.mode === r.mode &&
     Number.isInteger(r.replay.duration) &&
@@ -285,6 +287,7 @@ export function recordBattle(
   b: Battle,
   options?: {
     friendly?: boolean;
+    practice?: boolean;
     playerName?: string;
     opponent?: string;
     opponentType?: "ai" | "friend";
@@ -298,7 +301,7 @@ export function recordBattle(
   )
     return { trophies: 0, gold: 0, chest: null };
   const win = b.winner === "blue",
-    ranked = !options?.friendly && b.mode !== "training";
+    ranked = !options?.friendly && !options?.practice && b.mode !== "training";
   const trophies = ranked
     ? win
       ? 30
@@ -327,6 +330,7 @@ export function recordBattle(
     replay: options?.replay ?? b.exportReplay(),
     opponent: options?.opponent,
     opponentType: options?.opponentType,
+    ...(options?.practice ? { practice: true as const } : {}),
     matchId: options?.matchId,
     date: new Date().toISOString(),
   });

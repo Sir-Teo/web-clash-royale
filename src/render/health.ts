@@ -1,3 +1,4 @@
+import { loadNativeImage, preloadNativeImages } from "../ui/native-assets";
 import * as T from "three";
 import type { Entity } from "../game/engine";
 import {
@@ -27,6 +28,7 @@ export class HealthLibrary {
   private signatures = new WeakMap<HTMLElement, string>();
   private serial = 0;
   private disposed = false;
+  constructor(private readonly resolution = 4) {}
   async load() {
     try {
       const response = await fetch(
@@ -34,32 +36,17 @@ export class HealthLibrary {
       );
       if (!response.ok) throw new Error(`Health artwork: ${response.status}`);
       const data: HealthData = await response.json();
-      const image = await new Promise<HTMLImageElement>((resolve, reject) => {
-        const i = new Image();
-        i.onload = () => resolve(i);
-        i.onerror = () => reject(new Error("Health atlas unavailable"));
-        i.src = `${import.meta.env.BASE_URL}assets/ui/health/${data.atlas.file}`;
-      });
-      await Promise.all([
+      const path = `${import.meta.env.BASE_URL}assets/ui/health`;
+      const [image] = await Promise.all([
+        loadNativeImage(`${path}/${data.atlas.file}`),
         document.fonts.load('14px "Supercell Magic"'),
-        ...Object.values(data.shapes).flatMap((s) =>
-          (s.polygons ?? [s]).map(
-            (p) =>
-              new Promise<void>((resolve, reject) => {
-                const i = new Image();
-                i.onload = () => resolve();
-                i.onerror = () =>
-                  reject(new Error(`Health crop unavailable: ${p.file}`));
-                i.src = `${import.meta.env.BASE_URL}assets/ui/health/${p.file}`;
-              }),
-          ),
-        ),
+        preloadNativeImages(data, path),
       ]);
       if (this.disposed) return;
       // Rasterize only the two shared level labels. All bar polygons and fill
       // states stay as native geometry in one atlas/material per unit.
       const canvas = document.createElement("canvas"),
-        resolution = 4;
+        resolution = this.resolution;
       canvas.width = data.atlas.width * resolution;
       canvas.height = data.atlas.height * resolution;
       const ctx = canvas.getContext("2d")!;

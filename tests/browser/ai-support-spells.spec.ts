@@ -17,7 +17,7 @@ for (const card of ["heal", "clone"] as const)
     const state = async () =>
       JSON.parse((await output.getAttribute("data-ai-areas"))!);
     const time = async () =>
-      JSON.parse((await output.getAttribute("data-state"))!).time;
+      (await state()).time;
     await expect.poll(async () => (await state()).scene).toBe(`ai-${card}`);
     const original = (await state()).entities.filter(
       (e: any) => e.team === "red",

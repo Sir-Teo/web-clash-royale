@@ -22,11 +22,20 @@ function asset(id: string): SpriteAsset {
   };
 }
 const bytes = (geometry: T.BufferGeometry) =>
-  Object.values(geometry.attributes).reduce(
-    (sum, attribute) => sum + attribute.array.byteLength,
-    0,
+  [
+    ...new Set(
+      Object.values(geometry.attributes).map((attribute) =>
+        attribute instanceof T.InterleavedBufferAttribute
+          ? attribute.data.array
+          : attribute.array,
+      ),
+    ),
+  ].reduce(
+    (sum, array) => sum + array.byteLength,
+    geometry.getIndex()?.array.byteLength ?? 0,
   );
 const contents = (geometry: T.BufferGeometry) => ({
+  indices: Array.from(geometry.getIndex()?.array ?? []),
   attributes: Object.fromEntries(
     Object.entries(geometry.attributes).map(([name, attribute]) => [
       name,

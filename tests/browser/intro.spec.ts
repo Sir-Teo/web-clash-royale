@@ -113,10 +113,19 @@ test("replay intro fits long names on phones and seeking cancels the opening", a
   await ready(page);
   await page.getByRole("button", { name: "Battle log", exact: true }).click();
   await page.locator('[data-replay="0"]').click();
-  await expect
-    .poll(() => page.evaluate(() => (window as any).__arena.state.intro.frame))
-    .toBeGreaterThanOrEqual(68);
-  await page.getByRole("button", { name: "Pause replay", exact: true }).click();
+  // Hold the authored name pose before automation can advance into its exit.
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        const hold = () => {
+          if ((window as any).__arena.state.intro.frame >= 68) {
+            document.querySelector<HTMLButtonElement>("#replay-play")!.click();
+            resolve();
+          } else requestAnimationFrame(hold);
+        };
+        hold();
+      }),
+  );
   const opening = page.locator("#battle-intro");
   await expect(opening).toHaveAttribute("aria-label", /WWWWWWWWWWWWWWWWWW/);
   await expect(opening.locator('image[href*="shape-638"]')).toHaveCount(0);

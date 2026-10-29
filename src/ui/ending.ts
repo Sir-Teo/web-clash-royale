@@ -1,5 +1,6 @@
+import { preloadNativeImages } from "./native-assets";
 import { EndClock, endView, type EndResult } from "./ending-data";
-import { renderNativeFrame, type NativeData } from "./native";
+import { renderRetainedNativeFrame, type NativeData } from "./native";
 export class NativeEnding {
   readonly clock = new EndClock();
   private data: NativeData | null = null;
@@ -35,17 +36,10 @@ export class NativeEnding {
       );
       if (!response.ok) throw new Error(`Native ending: ${response.status}`);
       const data: NativeData = await response.json();
-      await document.fonts.load('59px "Supercell Magic"');
-      await Promise.all(
-        Object.values(data.shapes)
-          .flatMap((s) => s.polygons ?? [s])
-          .filter((s) => s.file)
-          .map(async (s) => {
-            const image = new Image();
-            image.src = `${import.meta.env.BASE_URL}assets/ui/ending/${s.file}`;
-            await image.decode();
-          }),
-      );
+      await Promise.all([
+        document.fonts.load('59px "Supercell Magic"'),
+        preloadNativeImages(data, `${import.meta.env.BASE_URL}assets/ui/ending`),
+      ]);
       this.data = data;
     } catch (error) {
       console.warn("Native ending assets unavailable", error);
@@ -88,7 +82,7 @@ export class NativeEnding {
     if (signature === this.signature) return;
     this.signature = signature;
     const scores = state.stage === "scores";
-    renderNativeFrame(
+    renderRetainedNativeFrame(
       this.art,
       scores
         ? endView(this.data, this.result, state.frame, state.still)

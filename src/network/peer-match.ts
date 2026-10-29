@@ -1,32 +1,13 @@
+import { validPeerPlayer, type PeerPlayer } from "./peer-player";
 import { isPlayableCard } from "../game/playable-cards";
 import { Battle, other, STEP } from "../game/engine";
 import type { Mode, Team } from "../game/engine";
 import { STARTER_DECK } from "../game/cards";
-import type { CardId } from "../game/cards";
 import { EMOTE_COOLDOWN, isEmote, isQuickChat } from "../game/emotes";
 import type { ClientMessage, RoomState, ServerMessage } from "./protocol";
 import { PEER_PROTOCOL } from "./protocol";
 import { snapshot } from "./perspective";
 import intro from "../ui/intro-settings.json";
-
-export interface PeerPlayer {
-  name: string;
-  deck: CardId[];
-}
-export function validPeerPlayer(value: unknown): value is PeerPlayer {
-  if (!value || typeof value !== "object") return false;
-  const p = value as PeerPlayer;
-  return (
-    typeof p.name === "string" &&
-    !!p.name.trim() &&
-    p.name.length <= 18 &&
-    !/[\u0000-\u001f\u007f]/.test(p.name) &&
-    Array.isArray(p.deck) &&
-    p.deck.length === 8 &&
-    new Set(p.deck).size === 8 &&
-    p.deck.every(isPlayableCard)
-  );
-}
 
 /** Browser-owned match. Both players use the same validated command path. */
 export class PeerMatch {

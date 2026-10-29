@@ -1,3 +1,4 @@
+import { advanceBanditRecovery, banditOrdinaryCommitted } from "./bandit-recovery";
 import { attackReach, minimumAttackDistance } from "./attack-range";
 import { attackClockDelta, attackClockRate } from "./attack-clock";
 import { pendingAttackInRange } from "./pending-range";
@@ -28,17 +29,6 @@ export function tornadoPull(
     x: clamp(body.x + (dx / gap) * travel, 0.5, 17.5),
     y: clamp(body.y + (dy / gap) * travel, 0.6, 31.4),
   };
-}
-
-/** Can known pulls cancel this current windup before release? Hold the target
- * and other bodies fixed; do not predict new attacks, damage or separation. */
-export function tornadoEscapeStep(
-  attacker: Entity,
-  target: Entity,
-  areas: readonly AreaEffect[],
-  proposed?: Point,
-): number | undefined {
-  return projectTornadoWindup(attacker, target, areas, proposed).cancelledStep;
 }
 
 export interface WindupProjection {
@@ -180,7 +170,7 @@ export function projectTornadoWindup(
   if (!attacker.pendingAttack) return { position };
   const clouds = currentAttackAreas(target, areas, proposed);
   let remaining = attacker.pendingAttack.remaining;
-  const limit = health
+  const limit = health && !attacker.pendingAttack.recovery
     ? Math.min(
         60,
         Math.max(
@@ -215,6 +205,7 @@ export function resolveWindup(
   let position = { x: attacker.x, y: attacker.y };
   if (!attacker.pendingAttack) return { position };
   let remaining = attacker.pendingAttack.remaining;
+  const recovery = attacker.pendingAttack.recovery ? { ...attacker.pendingAttack.recovery } : undefined;
   let shotSlow = 0;
   const projected = attacker.nativePendingRange
     ? { ...attacker, pendingAttack: { ...attacker.pendingAttack } } : undefined;
@@ -231,16 +222,18 @@ export function resolveWindup(
     if (
       (status && (!status.beforeAlive || status.beforeInterrupt)) ||
       frame.stun > 0 ||
-      (projected ? !pendingAttackInRange(projected, target) :
-        distance(position, target) > attackReach(attacker, target)) ||
+      (!(attacker.nativeBanditTransitions && banditOrdinaryCommitted(recovery)) &&
+        (projected ? !pendingAttackInRange(projected, target) :
+          distance(position, target) > attackReach(attacker, target))) ||
       (attacker.minimumRange !== undefined &&
         distance(position, target) < minimumAttackDistance(attacker, target))
     )
       return { position, cancelledStep: step };
-    remaining -=
-      attackClockDelta(attacker, COMBAT_STEP, frame.boost >= 1e-8,
-        Math.max(frame.slow, shotSlow) >= 1e-8);
-    if (remaining <= 1e-8) return { position, releaseStep: step };
+    const delta = attackClockDelta(attacker, COMBAT_STEP, frame.boost >= 1e-8,
+      Math.max(frame.slow, shotSlow) >= 1e-8);
+    remaining -= delta;
+    const released = recovery ? advanceBanditRecovery(recovery, COMBAT_STEP, delta / COMBAT_STEP) : remaining <= 1e-8;
+    if (released) return { position, releaseStep: step };
     if (status && (!status.afterAlive || status.interrupt))
       return { position, cancelledStep: step };
     shotSlow = Math.max(shotSlow, status?.slow ?? 0);

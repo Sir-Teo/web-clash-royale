@@ -122,6 +122,10 @@ for (const scenario of [
     expect(result.time).toBe(expected.time);
     expect(result.winner).toBe("red");
     expect(result.actions).toBe(1);
+    const plays = page.getByRole("combobox", { name: "Card plays" });
+    await expect(plays.locator("option")).toHaveCount(2);
+    await plays.selectOption(String(scenario.ticks));
+    expect(await state()).toEqual(result);
     await page.waitForTimeout(180);
     expect(await state()).toEqual(result);
     await page

@@ -1,6 +1,17 @@
 import { expectedBuildings } from "./native-assets";
 import { expectedEffects } from "./native-assets";
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
+
+async function readyCombat(page: Page) {
+  await page.goto("/tests/fixtures/combat.html");
+  // The final native-art rebuild clears transient presentations. Start these
+  // authored-lifetime checks only after all libraries have painted their scene.
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__geometryLayout?.ready), {
+      timeout: 60000,
+    })
+    .toBe(true);
+}
 
 test("native crowns fly to scores, pause, resize and finish after a King win", async ({
   page,
@@ -10,7 +21,7 @@ test("native crowns fly to scores, pause, resize and finish after a King win", a
   page.on("console", (message) => {
     if (message.type() === "error") errors.push(message.text());
   });
-  await page.goto("/tests/fixtures/combat.html");
+  await readyCombat(page);
   await page.locator("#scenario").selectOption("king");
   await expect(page.locator("#status")).toContainText(
     `${expectedEffects} effects`,
@@ -105,7 +116,7 @@ test("native swarm deaths retain all particles with bounded draw calls and pause
   page.on("console", (message) => {
     if (message.type() === "error") errors.push(message.text());
   });
-  await page.goto("/tests/fixtures/combat.html");
+  await readyCombat(page);
   await page.locator("#scenario").selectOption("death");
   await expect(page.locator("#status")).toContainText(
     `${expectedEffects} effects`,
@@ -162,7 +173,7 @@ test("native swarm deaths retain all particles with bounded draw calls and pause
 test("a paused Fireball does not keep emitting trail particles", async ({
   page,
 }) => {
-  await page.goto("/tests/fixtures/combat.html");
+  await readyCombat(page);
   await expect(page.locator("#status")).toContainText(
     `${expectedEffects} effects`,
     {
@@ -182,7 +193,7 @@ test("tower debris pauses, settles after victory, and rubble survives renderer r
 }, info) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/tests/fixtures/combat.html");
+  await readyCombat(page);
   await page.locator("#scenario").selectOption("king");
   await expect(page.locator("#status")).toContainText(
     `${expectedEffects} effects`,
@@ -190,7 +201,9 @@ test("tower debris pauses, settles after victory, and rubble survives renderer r
       timeout: 30000,
     },
   );
-  await expect(page.locator("#status")).toContainText(`${expectedBuildings} buildings loaded`);
+  await expect(page.locator("#status")).toContainText(
+    `${expectedBuildings} buildings loaded`,
+  );
   await page.locator("#princess").click();
   const step = page.locator("#step"),
     second = page.locator("#second");
@@ -239,7 +252,7 @@ test("simultaneous King losses show a draw with six crowns and persistent ruins"
 }, info) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/tests/fixtures/combat.html");
+  await readyCombat(page);
   await page.locator("#scenario").selectOption("king");
   await expect(page.locator("#status")).toContainText(
     `${expectedEffects} effects`,

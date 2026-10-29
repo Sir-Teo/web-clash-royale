@@ -1,4 +1,5 @@
 import * as T from "three";
+import { limitTexture, loadLimited } from "./texture";
 import { effectMaterials, spriteGeometry } from "./sprites";
 import type { SpriteData, SpriteAsset } from "./sprites";
 
@@ -9,6 +10,7 @@ export interface EffectSprite {
 }
 export class EffectLibrary {
   asset: SpriteAsset | null = null;
+  constructor(private readonly textureLimit = Infinity) {}
   async load() {
     try {
       const response = await fetch(
@@ -17,12 +19,18 @@ export class EffectLibrary {
       if (!response.ok) throw new Error("Missing native effects");
       const data: SpriteData = await response.json();
       const loader = new T.TextureLoader();
-      const textures = await Promise.all(
-        data.textures.map((t) =>
-          loader.loadAsync(
-            `${import.meta.env.BASE_URL}assets/effects/${t.file}`,
-          ),
-        ),
+      const textures: T.Texture[] = [];
+      await loadLimited(
+        data.textures,
+        Number.isFinite(this.textureLimit) ? 2 : Infinity,
+        async (t, index) => {
+          textures[index] = limitTexture(
+            await loader.loadAsync(
+              `${import.meta.env.BASE_URL}assets/effects/${t.file}`,
+            ),
+            this.textureLimit,
+          );
+        },
       );
       for (const texture of textures) {
         texture.colorSpace = T.SRGBColorSpace;

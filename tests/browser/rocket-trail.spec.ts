@@ -7,6 +7,11 @@ test("Rocket carries native smoke, sparks and glow into its explosion on desktop
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/tests/fixtures/combat.html");
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__geometryLayout?.ready), {
+      timeout: 60000,
+    })
+    .toBe(true);
   await page.locator("#scenario").selectOption("rocket-trail");
   await expect(page.locator("#status")).toContainText(
     `${expectedEffects} effects`,

@@ -38,6 +38,24 @@ parser.add_argument("--world-steps", action="store_true", help="Execute active o
 parser.add_argument("--projectile-flight", action="store_true", help="Execute native rolling/returning range and late height initialization, movement and collision requests")
 parser.add_argument("--projectile-range", action="store_true", help="Execute native ProjectileRadius/Range/Homing initialization and later destination bounds")
 parser.add_argument("--projectile-goals", action="store_true", help="Execute native normal-attack projectile selection, circular spread and goal requests")
+parser.add_argument("--projectile-targets", action="store_true", help="Execute native live/null-target projectile destination refresh")
+parser.add_argument("--projectile-homing", action="store_true", help="Execute initialized native projectile movement with moving and changing target references")
+parser.add_argument("--projectile-arrival", action="store_true", help="Execute native arrival bookkeeping, latch and destination position stores")
+parser.add_argument("--projectile-bookkeeping", action="store_true", help="Execute initializer target bookkeeping through native homing flight and arrival")
+parser.add_argument("--projectile-hit-damage", action="store_true", help="Execute per-candidate projectile damage component gate, Crown amount and hit request")
+parser.add_argument("--health-shield", action="store_true", help="Execute null-source damage gates, shield absorption and bounded HP reduction")
+parser.add_argument("--area-crown", action="store_true", help="Execute area pulse base/Crown amounts, world request and target damage choice")
+parser.add_argument("--buff-ticks", action="store_true", help="Execute periodic buff clocks, refresh and damage/heal amount requests")
+parser.add_argument("--buff-lifecycle", action="store_true", help="Execute retained Poison, native component phases, expiry and Tesla hide clocks")
+parser.add_argument("--dash-lifecycle", action="store_true", help="Execute Bandit dash entry, bounded open-plane movement and retained Poison damage")
+parser.add_argument("--dash-goals", action="store_true", help="Execute Bandit dash countdown, launch destination and landing hit/miss gates")
+parser.add_argument("--dash-admission", action="store_true", help="Execute Bandit dash admission range, active-clock and buff gates")
+parser.add_argument("--dash-startup", action="store_true", help="Execute complete Bandit attack updates through supplied-target dash charging and launch")
+parser.add_argument("--dash-recovery", action="store_true", help="Execute Bandit landing reload, ordinary attack recovery and immediate supplied-target recharging")
+parser.add_argument("--dash-transition", action="store_true", help="Execute Bandit ordinary-cycle to dash transitions and native phase-window boundaries")
+parser.add_argument("--ordinary-delivery", action="store_true", help="Execute selected nonprojectile ordinary delivery through a surviving native HP store")
+parser.add_argument("--bandit-ordinary", action="store_true", help="Execute fresh Bandit ordinary cycles, supplied modifiers and subsequent dash admission")
+parser.add_argument("--bandit-target-reset", action="store_true", help="Execute Bandit null/removal target transitions, finish grace, idle reload and supplied reselection")
 parser.add_argument("--attack-range", action="store_true", help="Capture maximum attack geometry across troop, building and Crown Tower profiles")
 parser.add_argument("--minimum-range", action="store_true", help="Capture minimum-range boundaries instead of maximum-range boundaries")
 parser.add_argument("--sight-range", action="store_true", help="Capture native sight getters and the bounded candidate sight gate")
@@ -139,6 +157,78 @@ if args.projectile_formation and (not args.lane_assignment or args.tower_layout 
     parser.error("--projectile-formation requires --sight-range --lane-assignment without another continuation")
 if args.group_formation and (not args.lane_assignment or args.tower_layout or args.spawn_lanes or args.projectile_formation):
     parser.error("--group-formation requires --sight-range --lane-assignment without another continuation")
+if args.projectile_targets:
+    target_modes = {"library", "check", "attack_loop", "first_attacks", "projectile_targets"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in target_modes):
+        parser.error("--projectile-targets requires --attack-loop --first-attacks without another capture mode")
+if args.projectile_homing:
+    homing_modes = {"library", "check", "attack_loop", "first_attacks", "projectile_homing"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in homing_modes):
+        parser.error("--projectile-homing requires --attack-loop --first-attacks without another capture mode")
+if args.projectile_arrival:
+    arrival_modes = {"library", "check", "attack_loop", "first_attacks", "projectile_arrival"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in arrival_modes):
+        parser.error("--projectile-arrival requires --attack-loop --first-attacks without another capture mode")
+if args.projectile_bookkeeping:
+    bookkeeping_modes = {"library", "check", "attack_loop", "first_attacks", "projectile_bookkeeping"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in bookkeeping_modes):
+        parser.error("--projectile-bookkeeping requires --attack-loop --first-attacks without another capture mode")
+if args.projectile_hit_damage:
+    hit_modes = {"library", "check", "attack_loop", "first_attacks", "projectile_hit_damage"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in hit_modes):
+        parser.error("--projectile-hit-damage requires --attack-loop --first-attacks without another capture mode")
+if args.health_shield:
+    health_modes = {"library", "check", "attack_loop", "first_attacks", "health_shield"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in health_modes):
+        parser.error("--health-shield requires --attack-loop --first-attacks without another capture mode")
+if args.area_crown:
+    area_modes = {"library", "check", "attack_loop", "first_attacks", "area_crown"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in area_modes):
+        parser.error("--area-crown requires --attack-loop --first-attacks without another capture mode")
+if args.buff_ticks:
+    buff_modes = {"library", "check", "attack_loop", "first_attacks", "buff_ticks"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in buff_modes):
+        parser.error("--buff-ticks requires --attack-loop --first-attacks without another capture mode")
+if args.buff_lifecycle:
+    lifecycle_modes = {"library", "check", "attack_loop", "first_attacks", "buff_lifecycle"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in lifecycle_modes):
+        parser.error("--buff-lifecycle requires --attack-loop --first-attacks without another capture mode")
+if args.dash_lifecycle:
+    dash_modes = {"library", "check", "attack_loop", "first_attacks", "dash_lifecycle"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in dash_modes):
+        parser.error("--dash-lifecycle requires --attack-loop --first-attacks without another capture mode")
+if args.dash_goals:
+    goal_modes = {"library", "check", "attack_loop", "first_attacks", "dash_goals"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in goal_modes):
+        parser.error("--dash-goals requires --attack-loop --first-attacks without another capture mode")
+if args.dash_admission:
+    admission_modes = {"library", "check", "attack_loop", "first_attacks", "dash_admission"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in admission_modes):
+        parser.error("--dash-admission requires --attack-loop --first-attacks without another capture mode")
+if args.dash_startup:
+    startup_modes = {"library", "check", "attack_loop", "first_attacks", "dash_startup"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in startup_modes):
+        parser.error("--dash-startup requires --attack-loop --first-attacks without another capture mode")
+if args.dash_recovery:
+    recovery_modes = {"library", "check", "attack_loop", "first_attacks", "dash_recovery"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in recovery_modes):
+        parser.error("--dash-recovery requires --attack-loop --first-attacks without another capture mode")
+if args.dash_transition:
+    transition_modes = {"library", "check", "attack_loop", "first_attacks", "dash_transition"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in transition_modes):
+        parser.error("--dash-transition requires --attack-loop --first-attacks without another capture mode")
+if args.ordinary_delivery:
+    delivery_modes = {"library", "check", "attack_loop", "first_attacks", "ordinary_delivery"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in delivery_modes):
+        parser.error("--ordinary-delivery requires --attack-loop --first-attacks without another capture mode")
+if args.bandit_ordinary:
+    ordinary_modes = {"library", "check", "attack_loop", "first_attacks", "bandit_ordinary"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in ordinary_modes):
+        parser.error("--bandit-ordinary requires --attack-loop --first-attacks without another capture mode")
+if args.bandit_target_reset:
+    reset_modes = {"library", "check", "attack_loop", "first_attacks", "bandit_target_reset"}
+    if not args.attack_loop or not args.first_attacks or any(value for key, value in vars(args).items() if key not in reset_modes):
+        parser.error("--bandit-target-reset requires --attack-loop --first-attacks without another capture mode")
 if importlib.metadata.version("unicorn") != "2.1.4":
     raise RuntimeError("Regeneration requires unicorn==2.1.4")
 binary = args.library.read_bytes()
@@ -160,6 +250,7 @@ cpu.mem_map(heap, 0x10000)
 cpu.mem_map(stack, 0x100000)
 cpu.mem_map(stop, 0x1000, UC_PROT_READ | UC_PROT_EXEC)
 body, data, component, world, buffs, array = [heap + i * 0x1000 for i in range(6)]
+component_resolvers = {component: (body, world)}
 registers = [UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX, UC_X86_REG_EDX, UC_X86_REG_ESI, UC_X86_REG_EDI, UC_X86_REG_EBP]
 from lib.instruction_ranges import InstructionRanges
 
@@ -194,9 +285,10 @@ def instruction(_cpu, address, _size, _data):
     if address == stop:
         cpu.emu_stop()
     elif address in [0x25fa64, 0x25fa3a]:
-        if read(sp + 4) != component:
+        resolved = component_resolvers.get(read(sp + 4))
+        if resolved is None:
             raise RuntimeError("Unexpected owner/world resolution")
-        return_hook(body if address == 0x25fa64 else world)
+        return_hook(resolved[0 if address == 0x25fa64 else 1])
     elif address == 0x356eb0:
         if read(sp + 4) != 1:
             raise RuntimeError("Native variable-damage assertion failed")

@@ -1,4 +1,5 @@
-import { renderNativeFrame, type NativeData } from "./native";
+import { preloadNativeImages } from "./native-assets";
+import { renderRetainedNativeFrame, type NativeData } from "./native";
 export { textureMatrix } from "./native";
 import type { Mode } from "../game/engine";
 
@@ -103,14 +104,10 @@ export class NativeAnnouncements {
       );
       if (!response.ok) throw new Error(`Native UI: ${response.status}`);
       const data: NativeData = await response.json();
-      await document.fonts.load('40px "Supercell Magic"');
-      await Promise.all(
-        Object.values(data.shapes).map(async (shape) => {
-          const image = new Image();
-          image.src = `${import.meta.env.BASE_URL}assets/ui/${shape.file}`;
-          await image.decode();
-        }),
-      );
+      await Promise.all([
+        document.fonts.load('40px "Supercell Magic"'),
+        preloadNativeImages(data, `${import.meta.env.BASE_URL}assets/ui`),
+      ]);
       this.data = data;
       this.signature = "";
     } catch (error) {
@@ -142,7 +139,7 @@ export class NativeAnnouncements {
     const signature = JSON.stringify(selected);
     if (signature === this.signature) return;
     this.signature = signature;
-    renderNativeFrame(
+    renderRetainedNativeFrame(
       this.host,
       this.data,
       selected.name,

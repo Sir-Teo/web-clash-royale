@@ -376,7 +376,7 @@ describe("Lightning known-health forecasts", () => {
     cast(king);
     step(24);
     expect(battle.winner).toBe("blue");
-    expect(king.hp).toBeCloseTo(1500 - 2 * CARD_MAP.lightning.damage * 0.4);
+    expect(king.hp).toBeCloseTo(1500 - 2 * 552);
   });
 
   it("retains incoming enemy Lightning when replacing friendly cast forecasts", () => {

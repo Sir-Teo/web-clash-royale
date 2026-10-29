@@ -1,4 +1,5 @@
 import type { CardId } from "./cards";
+import type { Mode } from "./engine";
 import { validDeck } from "./profile";
 import type { Profile, RecordEntry } from "./profile";
 
@@ -6,6 +7,13 @@ export interface DeckSelection {
   activeDeck: number;
   deck: CardId[];
   decks: CardId[][];
+}
+
+export interface PracticeOpponent {
+  name: string;
+  style: string;
+  mode: Mode;
+  deck: CardId[];
 }
 
 /** Replay decks use canonical teams; history results already use the viewer's side. */
@@ -17,15 +25,18 @@ export function recordedDecks(record: RecordEntry) {
   };
 }
 
-/** A new Training match faces the viewer's recorded opponent, including red-side guests. */
-export function recordedPractice(record: RecordEntry) {
+/** A fresh practice faces the viewer's recorded opponent, including red-side guests. */
+export function recordedPractice(
+  record: RecordEntry,
+  mode: Mode = "training",
+): PracticeOpponent {
   const deck = recordedDecks(record).opponent;
   if (!validDeck(deck))
     throw new Error("This recording has no valid opponent deck.");
   return {
     name: record.opponent ?? "Royal Trainer",
     style: "Recorded deck",
-    mode: "training" as const,
+    mode,
     deck,
   };
 }

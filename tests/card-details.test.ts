@@ -285,7 +285,7 @@ describe("current card detail stats", () => {
     }
   });
   it.each(["fireball", "arrows", "zap", "rocket"] as const)(
-    "matches a real %s Crown Tower impact without rounding damage to a whole hitpoint",
+    "matches a real %s Crown Tower impact using the current damage rule",
     (id) => {
       const battle = cast(id);
       const tower = battle.entities.find(
@@ -331,7 +331,7 @@ describe("current card detail stats", () => {
     );
     expect(rows("poison")).toMatchObject({
       "Damage per second": "121",
-      "Crown Tower / second": "48.4",
+      "Crown Tower / second": "49",
       Duration: "8 s",
       Linger: "Up to 1 s",
     });

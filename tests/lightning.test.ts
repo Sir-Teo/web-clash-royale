@@ -129,7 +129,7 @@ describe("native Lightning spell", () => {
     expect(tower.hp).toBe(hp);
     expect(match.areas[0].struck).toEqual([giant.id]);
     for (let i = 0; i < 14; i++) match.step();
-    expect(tower.hp).toBeCloseTo(hp - CARD_MAP.lightning.damage * 0.4);
+    expect(tower.hp).toBeCloseTo(hp - Math.ceil(CARD_MAP.lightning.damage * 40 / 100));
     expect(giant.hp).toBe(giant.maxHp - CARD_MAP.lightning.damage);
     for (let i = 0; i < 14; i++) match.step();
     expect(minions.some((e) => e.hp === 0)).toBe(true);

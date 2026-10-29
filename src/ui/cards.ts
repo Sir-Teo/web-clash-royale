@@ -1,3 +1,4 @@
+import { preloadNativeImages } from "./native-assets";
 import { CARD_MAP, type CardId } from "../game/cards";
 import { renderNativeFrame, type NativeData } from "./native";
 
@@ -61,22 +62,9 @@ export class NativeCards {
       );
       if (!response.ok) throw new Error(`Card artwork: ${response.status}`);
       const data: CardData = await response.json();
-      const files = new Set(
-        Object.values(data.shapes).flatMap((s) =>
-          (s.polygons ?? [s]).flatMap((p) => (p.file ? [p.file] : [])),
-        ),
-      );
       await Promise.all([
         document.fonts.load('18px "Supercell Magic"'),
-        ...[...files].map(
-          (file) =>
-            new Promise<void>((resolve, reject) => {
-              const img = new Image();
-              img.onload = () => resolve();
-              img.onerror = () => reject(new Error(`Card texture: ${file}`));
-              img.src = `${import.meta.env.BASE_URL}assets/ui/cards/${file}`;
-            }),
-        ),
+        preloadNativeImages(data, `${import.meta.env.BASE_URL}assets/ui/cards`),
       ]);
       this.data = data;
       this.hydrate();

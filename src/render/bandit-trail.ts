@@ -21,7 +21,7 @@ export function banditAfterimages(
   events: readonly BattleEvent[], entities: readonly Entity[], time: number,
 ): BanditAfterimage[] {
   const result: BanditAfterimage[] = [];
-  const starts = events.filter((event) => event.effect === "dash-start:bandit" &&
+  const starts = events.filter((event) => (event.effect === "dash-start:bandit" || event.effect === "dash-launch:bandit") &&
     event.value && time - event.time <= source.life[1] +
       (source.count - 1) * source.interval);
   for (const start of starts) {

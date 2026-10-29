@@ -11,7 +11,7 @@ import type { CardId } from "../src/game/cards";
 import { minimumAttackDistance } from "../src/game/attack-range";
 import { placementRanges } from "../src/render/placement-ranges";
 import { createKingDefense } from "../src/game/king-defense";
-import { fatalKingWindups } from "../src/game/king-spell-race";
+import { fatalKingWindups } from "./helpers/fatal-king-windups";
 import { perspective, snapshot } from "../src/network/perspective";
 import native from "../reference/client/attack-minimum-native-trace.json";
 import scanned from "../reference/client/candidate-minimum-native-trace.json";

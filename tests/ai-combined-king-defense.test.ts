@@ -5,8 +5,7 @@ import { CARD_MAP, type CardId } from "../src/game/cards";
 import { createKingDefense } from "../src/game/king-defense";
 import { areaSpellTarget } from "../src/game/area-spell-targeting";
 import { perspective, snapshot } from "../src/network/perspective";
-import { attackFlight } from "../src/game/attack-flight";
-import { impactSteps } from "../src/game/projectile-impacts";
+import { attackHitSteps } from "./helpers/attack-hit-steps";
 import log from "../src/game/log-data.json";
 
 function setup(team: Team = "red") {
@@ -155,7 +154,7 @@ describe("combined pending King damage", () => {
     expect(forecast().evaluate("freeze", a).improves).toBe(true);
     battle.play("red", 1, a.x, a.y);
     step(battle, 6);
-    expect(king.hp).toBeCloseTo(270 - CARD_MAP.poison.damage * 0.4);
+    expect(king.hp).toBeCloseTo(270 - 49);
   });
 
   it("does not claim a rescue if the released shot still kills first", () => {
@@ -212,7 +211,7 @@ describe("combined pending King damage", () => {
     king.hp = 20;
     king.shield = 50;
     const a = spawn("musketeer", 9, king.y + 3.5, 0.1, 200);
-    const flight = impactSteps(attackFlight(a, king)!.duration);
+    const flight = attackHitSteps(a, king);
     const landing =
       king.y +
       log.collisionRadius +

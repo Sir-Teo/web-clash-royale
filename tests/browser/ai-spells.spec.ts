@@ -17,7 +17,7 @@ for (const scene of ["ai-spells", "ai-spells-mirror"])
     const state = async () =>
       JSON.parse((await output.getAttribute("data-ai-spells"))!);
     const time = async () =>
-      JSON.parse((await output.getAttribute("data-state"))!).time;
+      JSON.parse((await output.getAttribute("data-ai-areas"))!).time;
     const step = async () => {
       const before = await time();
       await page.locator("#second").click();
@@ -102,7 +102,7 @@ for (const card of ["poison", "zap"] as const)
     const state = async () =>
       JSON.parse((await output.getAttribute("data-ai-areas"))!);
     const time = async () =>
-      JSON.parse((await output.getAttribute("data-state"))!).time;
+      JSON.parse((await output.getAttribute("data-ai-areas"))!).time;
     const original = await actions();
     for (let i = 0; i < 2; i++) {
       const before = await time();
@@ -144,7 +144,7 @@ for (const scene of ["ai-overtime", "ai-tiebreaker"])
     const spells = async () =>
       JSON.parse((await output.getAttribute("data-ai-spells"))!);
     const time = async () =>
-      JSON.parse((await output.getAttribute("data-state"))!).time;
+      JSON.parse((await output.getAttribute("data-ai-areas"))!).time;
     const princess = (await spells()).towers.find(
       (e: any) => e.hp === (scene === "ai-overtime" ? 50 : 100),
     );
@@ -168,7 +168,7 @@ for (const scene of ["ai-overtime", "ai-tiebreaker"])
     );
     expect(
       (await spells()).towers.find((e: any) => e.id === princess.id)?.hp ?? 0,
-    ).toBeCloseTo(scene === "ai-overtime" ? 0 : 23.2);
+    ).toBe(scene === "ai-overtime" ? 0 : 100 - Math.ceil(CARD_MAP.zap.damage * 0.4));
     if (scene === "ai-overtime") {
       expect((await state()).time).toBeGreaterThan(202.5);
       expect((await state()).time).toBeLessThan(203);

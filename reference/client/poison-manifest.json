@@ -1,6 +1,15 @@
 {
   "source": "https://github.com/smlbiobot/cr",
   "commit": "7fc7687e6de74690e902543ee4b59f562121e225",
+  "crownArithmetic": "ceil(nonnegative integer damage * max(0, 100 + percent) / 100)",
+  "nativeHelper": "0x1d7e36..0x1d7eb4",
+  "nativeRetainedTick": {
+    "target": "Tesla",
+    "componentPhases": "0x21aa0c..0x21aa54",
+    "buffManager": "0x25b18e..0x25b216",
+    "hideClock": "0x216b6c..0x216ccc"
+  },
+  "scope": "Native periodic buff Crown arithmetic and retained Poison HP on hidden Tesla applied to existing normalized damage; level projection, natural status application and full actor/world lifecycle remain excluded.",
   "inputs": [
     {
       "path": "reference/logic/spells_other.csv",
@@ -13,10 +22,18 @@
     {
       "path": "reference/logic/character_buffs.csv",
       "sha256": "fbcc636e6c8025ca0f36aab524b868806b2a6a8606186b622410a5f46fba9bbe"
+    },
+    {
+      "path": "reference/client/buff-ticks-native-trace.json",
+      "sha256": "d85bb4babb485e6e4d5653fd7520a52fc3ea759852a25d9583dcc1ef61dbd381"
+    },
+    {
+      "path": "reference/client/buff-lifecycle-native-trace.json",
+      "sha256": "916740ce447a01c9e062f1269784723c146f8325b342b6d184b38e1cc0cec511"
     }
   ],
   "output": {
     "path": "src/game/poison-data.json",
-    "sha256": "d82e35e42814841a8653044bc8e7c116aa17248296f39cc4042092e8cd9f6338"
+    "sha256": "11b942b4d3540a5e5456f3be321893879d3a7582a745acb8456007d59e71c702"
   }
 }

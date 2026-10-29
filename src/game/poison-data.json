@@ -11,6 +11,7 @@
   "damagePerSecond": 57,
   "damageInterval": 1,
   "crownTowerDamageFraction": 0.4,
+  "crownTowerDamagePercent": -60,
   "targets": "enemy",
   "hitsGround": true,
   "hitsAir": true,

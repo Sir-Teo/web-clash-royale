@@ -4,7 +4,6 @@ import { SpriteFilterStack } from "./sprite-filter";
 import source from "./charge-filter-data.json";
 
 const life = source.colors.length / source.fps;
-type Color = (typeof source.colors)[number];
 interface FilteredActor {
   start: number;
   frame: number;
@@ -15,11 +14,6 @@ export function chargeFilterFrame(age: number) {
   return age >= 0 && age < life
     ? Math.min(source.colors.length - 1, Math.floor(age * source.fps))
     : -1;
-}
-
-export function chargeFilterColor(age: number): Color | null {
-  const frame = chargeFilterFrame(age);
-  return frame < 0 ? null : source.colors[frame];
 }
 
 /** The archived Filter clip supplies a color transform for the charged actor. */
