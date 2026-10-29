@@ -1,11 +1,13 @@
 import { Arena } from "../../src/render/arena";
 import { Battle } from "../../src/game/engine";
+import { geometryLayout } from "./geometry-layout";
 
 const params = new URLSearchParams(location.search);
 const arena = new Arena(document.querySelector<HTMLElement>("#arena")!, {
   batchScenery: params.get("scenery") !== "off",
 });
 const batcher = (arena as any).spriteBatcher;
+const layout = geometryLayout(arena.renderer, arena.scene);
 const prepareSprites = batcher.prepare.bind(batcher);
 const groundBatcher = (arena as any).groundBatcher;
 const prepareGround = groundBatcher.prepare.bind(groundBatcher);
@@ -87,6 +89,7 @@ Object.defineProperty(window, "__arenaProfile", {
     },
     setBatch,
     setGroundBatch,
+    setExpanded: layout.setExpanded,
     setSinglePass(enabled: boolean) {
       arena.scene.traverse((object) => {
         const material = (object as any).material;
@@ -118,6 +121,7 @@ Object.defineProperty(window, "__arenaProfile", {
         particles: arena.particleCount,
         loadedAnimations: arena.loadedAnimations,
         drawCalls: arena.renderer.info.render.calls,
+        nativeGeometry: layout.state,
         geometries: arena.renderer.info.memory.geometries,
         textures: arena.renderer.info.memory.textures,
         renderPixelRatio: arena.renderer.getPixelRatio(),

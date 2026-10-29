@@ -126,6 +126,7 @@ console.log(JSON.stringify({
   entities: after.state.units?.length ?? after.state.entities,
   particles: after.state.particles,
   geometries: after.state.geometries,
+  nativeGeometry: after.state.nativeGeometry,
   textures: after.state.textures,
   mainThreadMs: Math.round((byMetric(afterMetrics, "TaskDuration") - byMetric(beforeMetrics, "TaskDuration")) * 1000),
   scriptMs: Math.round((byMetric(afterMetrics, "ScriptDuration") - byMetric(beforeMetrics, "ScriptDuration")) * 1000),

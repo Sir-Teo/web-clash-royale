@@ -1,0 +1,563 @@
+{
+  "source": "1cc4e82",
+  "files": [
+    {
+      "path": "public/assets/animations/archers.json",
+      "dataSha256": "c36b4eaa5c78e31b31d5c7ca4fa5971952c9a74ff2cf015c5ab93e0213083397",
+      "frames": 252,
+      "trianglesSha256": "e1dea227af6035010795fa90a412659dcc260b7bfafec92f500241cfc683d150",
+      "bytes": 289440,
+      "vertices": 6030,
+      "triangleVertices": 6030
+    },
+    {
+      "path": "public/assets/animations/baby-dragon.json",
+      "dataSha256": "212514169f6c8d12e9a438831263ac051e511d0af4fdc2c19aa0f5cbe44d5bc0",
+      "frames": 325,
+      "trianglesSha256": "4be5bf2c9c145c3ab8dc836a2cbace2c3df703bc9717455b317166dfb51883f3",
+      "bytes": 451008,
+      "vertices": 9396,
+      "triangleVertices": 9396
+    },
+    {
+      "path": "public/assets/animations/balloon.json",
+      "dataSha256": "d7a2dd5acf4c3964ee09da883faba1fc7103e18646305bd91a106ee83507d285",
+      "frames": 162,
+      "trianglesSha256": "607c839ac6b3da751ca807187139ed5cd58ef6466aefd668c7684ff5c421bb1b",
+      "bytes": 282816,
+      "vertices": 5892,
+      "triangleVertices": 5892
+    },
+    {
+      "path": "public/assets/animations/bandit.json",
+      "dataSha256": "cee84cb7266e3349ac78e18903d4e060abfc9944c976766108de1d38b74c38b5",
+      "frames": 900,
+      "trianglesSha256": "d578800cba51c01f502b251bad5d584a63543f08281598a05672698cd19e0b3a",
+      "bytes": 1033200,
+      "vertices": 21525,
+      "triangleVertices": 21525
+    },
+    {
+      "path": "public/assets/animations/barbarians.json",
+      "dataSha256": "b52870a02bc7ca7cde11ca0a6f38e8e1eb8e0831eafd93a40b26aa7ea5b8cd96",
+      "frames": 342,
+      "trianglesSha256": "bd168a78792818409ea33d7bd0a7f884bbd4cc5a9d79d12f85bfb4ad266e4d0b",
+      "bytes": 375264,
+      "vertices": 7818,
+      "triangleVertices": 7818
+    },
+    {
+      "path": "public/assets/animations/bats.json",
+      "dataSha256": "005d5eb977fa7f50b0bdbc6c6dfa895d0473b041e93ae9fb1d20f7477e740aa2",
+      "frames": 90,
+      "trianglesSha256": "de1ed6b6c636a4ab0cef4ae05d180cbc8042b972532e7a4bdfac733a997637b5",
+      "bytes": 50256,
+      "vertices": 1047,
+      "triangleVertices": 1047
+    },
+    {
+      "path": "public/assets/animations/battle-ram.json",
+      "dataSha256": "e8f1fa64aace61732429ca7863f2b1fe1abc81d48a17dfaf1606431f3fc99c3b",
+      "frames": 626,
+      "trianglesSha256": "01b69587022875a68acd9a4c3914a7f291b7c80664e39af4a6b2c1afb1ffdf92",
+      "bytes": 2017440,
+      "vertices": 42030,
+      "triangleVertices": 42030
+    },
+    {
+      "path": "public/assets/animations/bomber.json",
+      "dataSha256": "99da28e2f0825eec866c1258d8b208be700a646a997460ba150c80b824b28c64",
+      "frames": 1044,
+      "trianglesSha256": "19b8f7321514c66908237cd2a93adcc80d185f5176e4f7d6447ad1fc54f964da",
+      "bytes": 938304,
+      "vertices": 19548,
+      "triangleVertices": 19548
+    },
+    {
+      "path": "public/assets/animations/bowler.json",
+      "dataSha256": "60112ef05f1e067ad31262911f3babdfcecacc4479445fb24092aef1aafb5e95",
+      "frames": 963,
+      "trianglesSha256": "4bc9f00df66ea07a6d3be7bbc17d5882d0af20322e23b473d1b2bf864a70f9c1",
+      "bytes": 1047168,
+      "vertices": 21816,
+      "triangleVertices": 21816
+    },
+    {
+      "path": "public/assets/animations/dark-prince-shield.json",
+      "dataSha256": "6fad553b93a5427584abb1067f4d1cca73b8b2e0664ecb28ee42b73b133af9c4",
+      "frames": 512,
+      "trianglesSha256": "e9d3a6eb084abb1acf858f93236d83a165ca999448a7170446822e47bccb1623",
+      "bytes": 863856,
+      "vertices": 17997,
+      "triangleVertices": 17997
+    },
+    {
+      "path": "public/assets/animations/dark-prince.json",
+      "dataSha256": "eefcef958b5ef6872ba2622fc94ef439fdd74857bc581414b06fba8500a13f50",
+      "frames": 504,
+      "trianglesSha256": "1c2b0baa39a7e0c2fa413a3963112f5159d700708cb5dbe6a38a924ed5925780",
+      "bytes": 575280,
+      "vertices": 11985,
+      "triangleVertices": 11985
+    },
+    {
+      "path": "public/assets/animations/dart-goblin.json",
+      "dataSha256": "46dd3544e33b5c5bd8687684228df84ff7f0f65db5da99ab22f35655e98bc19b",
+      "frames": 918,
+      "trianglesSha256": "8c74d06de62c3b7eb5f4351ceb44e587ffdc4b14d20d6bfcb58d655b2ee2f015",
+      "bytes": 1017216,
+      "vertices": 21192,
+      "triangleVertices": 21192
+    },
+    {
+      "path": "public/assets/animations/electro-wizard.json",
+      "dataSha256": "e77b84315c8d530a8c664d8c2eccbbd7a7ba1e914b58415c75dc6bdb7926c188",
+      "frames": 1827,
+      "trianglesSha256": "f53728b5699eebed87b15f51a3a970494dad440854fe7f49041de954e4f2d2af",
+      "bytes": 4301568,
+      "vertices": 89616,
+      "triangleVertices": 89616
+    },
+    {
+      "path": "public/assets/animations/elite-barbarians.json",
+      "dataSha256": "be039ebd9697dab08be319ede99f5b567a362ebc980de9f97494476737f5d62c",
+      "frames": 342,
+      "trianglesSha256": "fecd717b8ffb1620cb737cdebcdcab9ccd6bfcb03b1dd66f61fc02242dd13307",
+      "bytes": 827136,
+      "vertices": 17232,
+      "triangleVertices": 17232
+    },
+    {
+      "path": "public/assets/animations/executioner.json",
+      "dataSha256": "2e2017c84a958a0f81bb80635bc1c9907483808b6f3518eba8a6f1cac42962fc",
+      "frames": 1872,
+      "trianglesSha256": "85f5237f9f724b7905454c4e55fe31db5086b7e14d902506f558a35b46905b15",
+      "bytes": 2071584,
+      "vertices": 43158,
+      "triangleVertices": 43158
+    },
+    {
+      "path": "public/assets/animations/fire-spirits.json",
+      "dataSha256": "204777d80eb78bee5e30f528c0273c7f9a2ce9503ac66f3601ae09c6136df4b6",
+      "frames": 423,
+      "trianglesSha256": "b003b45ae2dad210198f8221f51eeee496ae62b1e671dba3efc2f84b00091481",
+      "bytes": 487296,
+      "vertices": 10152,
+      "triangleVertices": 10152
+    },
+    {
+      "path": "public/assets/animations/giant-skeleton.json",
+      "dataSha256": "148262c63d3c32178ffcbcbafe30ca6dd333c13c3d28b1895ae941db0905bfa6",
+      "frames": 459,
+      "trianglesSha256": "e96e9d743df3ed60b49b780216a1b408465e07f654c3311522dc68403ed286b8",
+      "bytes": 504000,
+      "vertices": 10500,
+      "triangleVertices": 10500
+    },
+    {
+      "path": "public/assets/animations/giant.json",
+      "dataSha256": "e75a9347b7c305c0a43a8cde20a81413747ff15520b82361c1a3dd62b6a73bf7",
+      "frames": 1016,
+      "trianglesSha256": "20cd5a7f8d9c626afe0b102fe7962815e1ec04574ffc91cb4be16b88326491d6",
+      "bytes": 1165536,
+      "vertices": 24282,
+      "triangleVertices": 24282
+    },
+    {
+      "path": "public/assets/animations/goblins.json",
+      "dataSha256": "a4fedfa389220deb329ee3388fd85e30a74ec6363d3812de14a24068fd7d4321",
+      "frames": 288,
+      "trianglesSha256": "6384c319e1bcbd8cf5152d86e6ee7504c31e0bc719e08728b9527097aed38509",
+      "bytes": 294768,
+      "vertices": 6141,
+      "triangleVertices": 6141
+    },
+    {
+      "path": "public/assets/animations/golem.json",
+      "dataSha256": "17e46fac07d636f9ee154139050bd8d9d3a7c195b9d58287c5039431a2399bcc",
+      "frames": 1440,
+      "trianglesSha256": "aa1ba9bbb909c6e306cc1f39ccd3044a42fe50c5744cfe0ed476c6086530d169",
+      "bytes": 2172960,
+      "vertices": 45270,
+      "triangleVertices": 45270
+    },
+    {
+      "path": "public/assets/animations/golemite.json",
+      "dataSha256": "e18577965e757437063fb78b6b71e4ecc84ef0d4cd0b63f303907340f395533c",
+      "frames": 962,
+      "trianglesSha256": "ed56b78c9c088b96cac2062a22a6015963020ee711d8501d76aa69b1482581a3",
+      "bytes": 1031040,
+      "vertices": 21480,
+      "triangleVertices": 21480
+    },
+    {
+      "path": "public/assets/animations/guards-shield.json",
+      "dataSha256": "e7a5b4adaf7caf9305bcea809bed2311e7e320754c51193c43472ca386721041",
+      "frames": 360,
+      "trianglesSha256": "b9fc6900533fb341dd0f5b36b2427866be74e6da23eff10572e971be8a4c7b9c",
+      "bytes": 455616,
+      "vertices": 9492,
+      "triangleVertices": 9492
+    },
+    {
+      "path": "public/assets/animations/guards.json",
+      "dataSha256": "b24d1029001a657bc8777242ee0f59cf8dcc8601eca8f3066bbea100866551ca",
+      "frames": 360,
+      "trianglesSha256": "e0bba5b0ff3d5c8cd8a75816739618b2c537a1784b336d24b3ee3d5722607bb4",
+      "bytes": 286272,
+      "vertices": 5964,
+      "triangleVertices": 5964
+    },
+    {
+      "path": "public/assets/animations/hog-rider.json",
+      "dataSha256": "820318addd92fb1fcd661c58657ee7e12de064d1d1e1fb86d55544f3a6d03296",
+      "frames": 342,
+      "trianglesSha256": "3cf0e9aa4fce6a8411f0bbb5f6ffa6806c46a4dd40b8f075a1867d08b1bd2c6b",
+      "bytes": 369360,
+      "vertices": 7695,
+      "triangleVertices": 7695
+    },
+    {
+      "path": "public/assets/animations/ice-golem.json",
+      "dataSha256": "faf53b9b389e41f6613ac7f012811a45a698af54326cc39d4b4ca588c694fe56",
+      "frames": 1378,
+      "trianglesSha256": "f4cf1c323b57790883a9d6494823e986bab6e55b022b6218e26017fbe060a8d4",
+      "bytes": 1450368,
+      "vertices": 30216,
+      "triangleVertices": 30216
+    },
+    {
+      "path": "public/assets/animations/ice-spirit.json",
+      "dataSha256": "5420b7cdf1bd21c3d8ae02dad6bb5de18f1ff274653f7085c017f5d66f6b8fe8",
+      "frames": 815,
+      "trianglesSha256": "d9c136287de071740aa3f879eb39abe9d345f5c96bf6dd33422e26458b6cb2e6",
+      "bytes": 1149408,
+      "vertices": 23946,
+      "triangleVertices": 23946
+    },
+    {
+      "path": "public/assets/animations/ice-wizard.json",
+      "dataSha256": "4141711dcbf98fe66e5b67c3eb1b4798d500227ca6415607845edd278a34b7c6",
+      "frames": 1260,
+      "trianglesSha256": "1dab6815498fd8c3e17f0387c726275ebcb2112c58ad02d9995d312ae543baad",
+      "bytes": 2704464,
+      "vertices": 56343,
+      "triangleVertices": 56343
+    },
+    {
+      "path": "public/assets/animations/inferno-dragon.json",
+      "dataSha256": "85c4f999de9c374a06df14984bceb8a8a1472752de8711f66f73c7301fd10540",
+      "frames": 1117,
+      "trianglesSha256": "065ce2484a26e927b46762bb94d11da26dc1c4cdf3dcd3f2e55d8967f55c68bf",
+      "bytes": 4343904,
+      "vertices": 90498,
+      "triangleVertices": 90498
+    },
+    {
+      "path": "public/assets/animations/knight.json",
+      "dataSha256": "21695cc488b845af7a76cbc812357c157adb05f3609e43403cd7fa4b93eef159",
+      "frames": 486,
+      "trianglesSha256": "f6aa93c2988886025e0d2b4348f402b3b25a46584b718a08b5d90b0a4bf99322",
+      "bytes": 506592,
+      "vertices": 10554,
+      "triangleVertices": 10554
+    },
+    {
+      "path": "public/assets/animations/lava-hound.json",
+      "dataSha256": "e10903131be42145d0f3fdf6875e9f0b349d12c3f4db12e58bb0cd8b74d4bc9d",
+      "frames": 306,
+      "trianglesSha256": "3bc3294e97c5857f9e15111de1ba814d2698df9da8b1be4be407692ef739fe73",
+      "bytes": 320832,
+      "vertices": 6684,
+      "triangleVertices": 6684
+    },
+    {
+      "path": "public/assets/animations/lava-pup.json",
+      "dataSha256": "a42cf08cc9b7ec2091fbfee3d3c0a655ca7046a95ee1e7c296b42fba6dad5e08",
+      "frames": 510,
+      "trianglesSha256": "0e8143fe99bb6ff2d6050ebcefe38ee9e6b83ff01dfe2ce1201a4c833265e6b8",
+      "bytes": 468576,
+      "vertices": 9762,
+      "triangleVertices": 9762
+    },
+    {
+      "path": "public/assets/animations/lumberjack.json",
+      "dataSha256": "a86f3a2085833fe60687b6e6eb9477d7558a797e0bbfb72653d9630c4490ad74",
+      "frames": 772,
+      "trianglesSha256": "62ac0f4ef4c58f21c9bf0919457ba68d2eb92d112d5326a4de94522e304e3898",
+      "bytes": 846432,
+      "vertices": 17634,
+      "triangleVertices": 17634
+    },
+    {
+      "path": "public/assets/animations/mega-minion.json",
+      "dataSha256": "9ffe215d76c29d5f943c5e4fcc31fc4136a9d5589dad47d3062403fbc0aa003f",
+      "frames": 361,
+      "trianglesSha256": "17e111ea317b1eab417f8c09b467e23a0bfc5ac60acd7296e23a374ca74ff426",
+      "bytes": 453888,
+      "vertices": 9456,
+      "triangleVertices": 9456
+    },
+    {
+      "path": "public/assets/animations/miner.json",
+      "dataSha256": "d24175241e1caceb0d15d637dfb5bee9980220b14389fbbc7d874078e4429cd5",
+      "frames": 810,
+      "trianglesSha256": "db7c425822380c7b353c5aabb6972c6810e479a9cfeaff1ebd0f5270863ed975",
+      "bytes": 1065312,
+      "vertices": 22194,
+      "triangleVertices": 22194
+    },
+    {
+      "path": "public/assets/animations/mini-pekka.json",
+      "dataSha256": "9bdc3cdcb38a47f349f38aac1ee165939a01f1b209758ecadb7dbc24489ce477",
+      "frames": 416,
+      "trianglesSha256": "96205f33570d020299ab0ea7ff3725e6192673fdcef232a7e902133fca0d935a",
+      "bytes": 445680,
+      "vertices": 9285,
+      "triangleVertices": 9285
+    },
+    {
+      "path": "public/assets/animations/minions.json",
+      "dataSha256": "ce8cdbdb8448c25078442ed3a7a7cccd1da7f76ff79498aaced6a5138fe20f95",
+      "frames": 282,
+      "trianglesSha256": "96d3d0e065b27d50321d26ee743b7807686cf7a270f36f37c0474cf4aed0d648",
+      "bytes": 321696,
+      "vertices": 6702,
+      "triangleVertices": 6702
+    },
+    {
+      "path": "public/assets/animations/musketeer.json",
+      "dataSha256": "e8c6a11f268b632a01d3fd071ccb3201e8a1707f0eebc5eb7d74adfd91cc3fff",
+      "frames": 414,
+      "trianglesSha256": "96147951e8e65ea7190b585cd12b9658352d99e868a8c313ef5b9b379cbf8e36",
+      "bytes": 347040,
+      "vertices": 7230,
+      "triangleVertices": 7230
+    },
+    {
+      "path": "public/assets/animations/night-witch.json",
+      "dataSha256": "167d1ba0e122d486cf4ecd7295157072eb7baeb0d72afa484212fb39bdf3cdcd",
+      "frames": 1242,
+      "trianglesSha256": "88bc92e20cac5d35ac34de754f811b1dfade8f1a84dac89344d6c22f35a927f1",
+      "bytes": 1926720,
+      "vertices": 40140,
+      "triangleVertices": 40140
+    },
+    {
+      "path": "public/assets/animations/pekka.json",
+      "dataSha256": "c64392f043cd524c826a0b11bc298cb509a7d53b557bb57a03054cf4256ba068",
+      "frames": 396,
+      "trianglesSha256": "86806d591afc8e8faf64a9b0907bebc17143ebb47b6f007e8cf9295200317f6d",
+      "bytes": 447408,
+      "vertices": 9321,
+      "triangleVertices": 9321
+    },
+    {
+      "path": "public/assets/animations/prince.json",
+      "dataSha256": "8f3fc4e035f80ef47f7a9aca81ef272864be95885cc9c5f62b05b9c91f876fb4",
+      "frames": 531,
+      "trianglesSha256": "223c8956d64a338da06380ef3c80990ae704b472664780d84447e2ddeca57a56",
+      "bytes": 613728,
+      "vertices": 12786,
+      "triangleVertices": 12786
+    },
+    {
+      "path": "public/assets/animations/princess.json",
+      "dataSha256": "e8fcc2a36bbd17e8a4d4dcf0e050d69c587fff3e31b36322f6ebb1266847a385",
+      "frames": 1230,
+      "trianglesSha256": "5fa7483f810db7ac1beabdf3a96fa0738d9066460386f61a62b1e6c076e9d614",
+      "bytes": 1820880,
+      "vertices": 37935,
+      "triangleVertices": 37935
+    },
+    {
+      "path": "public/assets/animations/royal-giant.json",
+      "dataSha256": "be38eb6b608b2d49f2eed21f4bdc7d8e6a9fe89da33661129809b316d918b3ad",
+      "frames": 1244,
+      "trianglesSha256": "05f2f95e14ed75d6f39433be9f04ae9f44e423289d4c2812b77e57c4f8675f9b",
+      "bytes": 1526976,
+      "vertices": 31812,
+      "triangleVertices": 31812
+    },
+    {
+      "path": "public/assets/animations/skeletons.json",
+      "dataSha256": "5a3cbf2fb488b4f7d53a9d396d14ab7d97b7f19ff168feee6203c0f2abbc2581",
+      "frames": 117,
+      "trianglesSha256": "16f8c3cabbdfdd78ca2ac4219b54e8d33352de5563d7d648f37535d233194f35",
+      "bytes": 51840,
+      "vertices": 1080,
+      "triangleVertices": 1080
+    },
+    {
+      "path": "public/assets/animations/sparky.json",
+      "dataSha256": "13662e3bb9e058fbf4bd594333c2ab12fbae3fbc44fb36d6a8dc5c2b779af2f8",
+      "frames": 1030,
+      "trianglesSha256": "6636eb42e10fa2f83099afc8d062e881b19b21f7ab435a7deeca72a82e230102",
+      "bytes": 3121920,
+      "vertices": 65040,
+      "triangleVertices": 65040
+    },
+    {
+      "path": "public/assets/animations/spear-goblins.json",
+      "dataSha256": "6fd8f2ae24cdd1044fb43f25c8e77a6994160d7bc54f210c986b0af9b08dbd9e",
+      "frames": 711,
+      "trianglesSha256": "71f59b085f3a45992bb88f944edf05e2b5711d2b86b89a8e28abddbaa9819f61",
+      "bytes": 660960,
+      "vertices": 13770,
+      "triangleVertices": 13770
+    },
+    {
+      "path": "public/assets/animations/tower-princess.json",
+      "dataSha256": "bbc3b8cb1188c1c1f12864b85d85e194643f7203c97fdf145cfc7d3ea2a3c177",
+      "frames": 1016,
+      "trianglesSha256": "e624c09a3a87e37d422981a94de178be2b5f62ceec0f66c7bff0d41859c3f6b2",
+      "bytes": 1138752,
+      "vertices": 23724,
+      "triangleVertices": 23724
+    },
+    {
+      "path": "public/assets/animations/valkyrie.json",
+      "dataSha256": "e8de031efd44722465946a526b5fa7fb1c18fa47294628da12074f1ce2817928",
+      "frames": 558,
+      "trianglesSha256": "e3e0fe4c5fb6efdb06203774cc7c71810a9f1ad854fdbf8b796eb6bf32c3ac18",
+      "bytes": 698400,
+      "vertices": 14550,
+      "triangleVertices": 14550
+    },
+    {
+      "path": "public/assets/animations/witch.json",
+      "dataSha256": "50077209aaba05f46a570c6d083e42cc034c7f50e760ffcdb1f8c5c2ef063cff",
+      "frames": 432,
+      "trianglesSha256": "635d083c7a808506e93a4c16c3d6c3b9da4533a58f8c7763ca8641e41e5e38f0",
+      "bytes": 573696,
+      "vertices": 11952,
+      "triangleVertices": 11952
+    },
+    {
+      "path": "public/assets/animations/wizard.json",
+      "dataSha256": "6eca84847ef9b72d7b8c01d08f248dffd003bff8e6496d5e471e073e7b623a47",
+      "frames": 666,
+      "trianglesSha256": "2a6abb16eecb4da0b516bd8a3240f4584f6150f557f7c3810445e1b8918c41c0",
+      "bytes": 1061280,
+      "vertices": 22110,
+      "triangleVertices": 22110
+    },
+    {
+      "path": "public/assets/buildings/barbarian-hut.json",
+      "dataSha256": "5ff41c38e81a8bdbe2379d5b46d3da1c0ca5193b5dfe298f7b36d6b2c839da51",
+      "frames": 2,
+      "trianglesSha256": "c5ba83b859c809d1b2743f824ae588e95008f47a6d99ec1266a9745d4abe1067",
+      "bytes": 1728,
+      "vertices": 36,
+      "triangleVertices": 36
+    },
+    {
+      "path": "public/assets/buildings/bomb-tower.json",
+      "dataSha256": "7998c51e81936f4c0eb83f76f55e450e60dcf977954bade0841f5f8efed2e017",
+      "frames": 3,
+      "trianglesSha256": "dc5dc801069ebda893b4fbdf681d12716727da72a42a6234161c9ad2f08c19b4",
+      "bytes": 1440,
+      "vertices": 30,
+      "triangleVertices": 30
+    },
+    {
+      "path": "public/assets/buildings/cannon.json",
+      "dataSha256": "825b312064759654050285050b2f998fb3f129efe09d81042820ae0e853baaa0",
+      "frames": 38,
+      "trianglesSha256": "051c3d581dcd75093caa3cacc6642b039448de2e3304d3cbe54f06f7a27c71b2",
+      "bytes": 39744,
+      "vertices": 828,
+      "triangleVertices": 828
+    },
+    {
+      "path": "public/assets/buildings/elixir-collector.json",
+      "dataSha256": "a43fe77579a5ff15d69978404e304babdf53318d847e57915bf931ff1762ee4f",
+      "frames": 66,
+      "trianglesSha256": "388a3a3b513af301a0918a945cc609f0c5b01aa0db71506e14de64f76f64a512",
+      "bytes": 142560,
+      "vertices": 2970,
+      "triangleVertices": 2970
+    },
+    {
+      "path": "public/assets/buildings/furnace.json",
+      "dataSha256": "a613e57b386d163dff62d869caea89b14888138615465a0992b2918ec831941d",
+      "frames": 600,
+      "trianglesSha256": "5b291d853c00c5275a6bb9040d37c4a8e471d9cd662b12e7ec98c986513d3b0f",
+      "bytes": 3601152,
+      "vertices": 75024,
+      "triangleVertices": 75024
+    },
+    {
+      "path": "public/assets/buildings/goblin-hut.json",
+      "dataSha256": "6228b4bd24d061faefc804c617be3e9006e8d1e9c7c478da762e317ab9602ebd",
+      "frames": 2,
+      "trianglesSha256": "ce1a19bf63358a6f9393f03fd42f3a8ed93420f5dcc0f58177fb8e8c166b3dd6",
+      "bytes": 4608,
+      "vertices": 96,
+      "triangleVertices": 96
+    },
+    {
+      "path": "public/assets/buildings/inferno-tower.json",
+      "dataSha256": "08070e1ad41b5c870f0d99520fc4400d8fa8b2bfa8c9ce33c7ec5a63dbf60012",
+      "frames": 2,
+      "trianglesSha256": "42767a9a163c811c96334bbc2d98d362edce0da174d94a44fac7acefe0423070",
+      "bytes": 4320,
+      "vertices": 90,
+      "triangleVertices": 90
+    },
+    {
+      "path": "public/assets/buildings/king.json",
+      "dataSha256": "46a5e3c8d756b1a3b75215a0e92a91d4fcb3df1d90d1f87c3adad1fc0762b8a7",
+      "frames": 453,
+      "trianglesSha256": "3d1021acbd801495eee8be34157ba0c4eaa454c43f3f3f637d24b4b8b487ea1c",
+      "bytes": 908208,
+      "vertices": 18921,
+      "triangleVertices": 18921
+    },
+    {
+      "path": "public/assets/buildings/mortar.json",
+      "dataSha256": "0047845767bc66c0677779f7f8aec1b26531b4ff6ba03b92f4da0ac02946ca62",
+      "frames": 10,
+      "trianglesSha256": "5bc1e41d9c98f3e386125c33cfb30ea0d7e51c6f10d38bb060c53ce479b3554c",
+      "bytes": 14688,
+      "vertices": 306,
+      "triangleVertices": 306
+    },
+    {
+      "path": "public/assets/buildings/tesla.json",
+      "dataSha256": "4aba03c7d46a6ea213df9324a4dade02b153d694ba9e5792075accfbe386689b",
+      "frames": 70,
+      "trianglesSha256": "5269d923256d6dd5c588ddbb5dc60f0d1520b99647bd3234c5b327788c766375",
+      "bytes": 197568,
+      "vertices": 4116,
+      "triangleVertices": 4116
+    },
+    {
+      "path": "public/assets/buildings/tombstone.json",
+      "dataSha256": "4991a99faeb146d304d39cfb63234eb0e627e576f05d47748d862d05c87e7228",
+      "frames": 98,
+      "trianglesSha256": "ab4cf2853fbfaf367bbdf4c3bbda81ec79d81e1b5daa85e4c00dc8a829cefe46",
+      "bytes": 243072,
+      "vertices": 5064,
+      "triangleVertices": 5064
+    },
+    {
+      "path": "public/assets/buildings/x-bow.json",
+      "dataSha256": "5e579a9753d93ea4b3c4ae14d714b6d4295e54f88174b3635578b38c6ce8c317",
+      "frames": 38,
+      "trianglesSha256": "98225260c6f6739974569fe60af7ef09d2024c4e8a8a11571681e1ed1ebf2c5c",
+      "bytes": 65088,
+      "vertices": 1356,
+      "triangleVertices": 1356
+    },
+    {
+      "path": "public/assets/effects/effects.json",
+      "dataSha256": "425db21d0e684c072a1435eed0be895b922b0817e8cc85839bbc3e0c2e9b9712",
+      "frames": 12171,
+      "trianglesSha256": "718f734f5fc50caa39916e6af68c07b0ec56a94bf80d0f581de0c08d58ba9020",
+      "bytes": 26286048,
+      "vertices": 547626,
+      "triangleVertices": 547626
+    }
+  ]
+}

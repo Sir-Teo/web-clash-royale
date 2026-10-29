@@ -5,6 +5,7 @@ import { attackReach, minimumAttackDistance } from "../../src/game/attack-range"
 import mortarRules from "../../src/game/mortar-data.json" with { type: "json" };
 import { acquisitionSight } from "../../src/game/sight-range";
 import { Arena } from "../../src/render/arena";
+import { geometryLayout } from "./geometry-layout";
 import { spriteGeometry } from "../../src/render/sprites";
 import { Battle, STEP, entityVisualHeight } from "../../src/game/engine";
 import type { Entity, Team } from "../../src/game/engine";
@@ -20,6 +21,14 @@ if (
 )
   sceneSelect.value = initialScene;
 const arena = new Arena(document.querySelector("#arena")!);
+const geometryView = geometryLayout(arena.renderer, arena.scene);
+Object.defineProperty(window, "__geometryLayout", {
+  value: {
+    setExpanded: geometryView.setExpanded,
+    get ready() { return !arena.needsFrame; },
+    get state() { return geometryView.state; },
+  },
+});
 const unitPlanes = (id: number) => {
   const visual = (arena as any).units.get(id);
   if (!visual) return null;
