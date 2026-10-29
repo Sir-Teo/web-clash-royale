@@ -1,5 +1,10 @@
 import { test, expect } from "@playwright/test";
-import { expectedAnimations, expectedBuildings, expectedEffects, expectedHealth } from "./native-assets";
+import {
+  expectedAnimations,
+  expectedBuildings,
+  expectedEffects,
+  expectedHealth,
+} from "./native-assets";
 import { readFileSync } from "node:fs";
 const replay = JSON.parse(
   readFileSync("tests/fixtures/combat-v4-replay.json", "utf8"),
@@ -198,7 +203,7 @@ test("replay timer, elixir badge and crown counters fit six phone sizes without 
 
 test("live replay crown flights reach native counter artwork and seeking clears award feedback", async ({
   page,
-}) => {
+}, info) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.addInitScript(
@@ -242,8 +247,12 @@ test("live replay crown flights reach native counter artwork and seeking clears 
               s.loadedHealth === health
             );
           },
-          { effects: expectedEffects, animations: expectedAnimations,
-            buildings: expectedBuildings, health: expectedHealth },
+          {
+            effects: expectedEffects,
+            animations: expectedAnimations,
+            buildings: expectedBuildings,
+            health: expectedHealth,
+          },
         ),
       { timeout: 30000 },
     )
@@ -257,18 +266,46 @@ test("live replay crown flights reach native counter artwork and seeking clears 
     "data-red-frame",
     "99",
   );
-  await page.evaluate(() => {
+  await page.evaluate(async () => {
     (window as any).__nearestRedCrown = Infinity;
+    (window as any).__crownSamples = [];
+    const path = "/src/ui/hud.ts";
+    const { NativeBattleHud } = await import(path);
+    const target = NativeBattleHud.prototype.target;
+    NativeBattleHud.prototype.target = function (team: string) {
+      const rect = target.call(this, team);
+      if (team === "red" && rect)
+        (window as any).__lastCrownTarget = {
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+        };
+      return rect;
+    };
     const sample = () => {
-      const a = document.querySelector("#arena-canvas")!.getBoundingClientRect();
-      const r = document.querySelector('.native-score-art [data-binding="starEnemy"]')!.getBoundingClientRect();
+      const a = document
+        .querySelector("#arena-canvas")!
+        .getBoundingClientRect();
+      const r = document
+        .querySelector('.native-score-art [data-binding="starEnemy"]')!
+        .getBoundingClientRect();
       const x = r.left + r.width / 2 - a.left;
       const y = r.top + r.height / 2 - a.top;
       for (const f of (window as any).__arena.state.crownFlights)
-        if (f.team === "red" && f.visible)
+        if (f.team === "red" && f.visible) {
           (window as any).__nearestRedCrown = Math.min(
-            (window as any).__nearestRedCrown, Math.hypot(f.x - x, f.y - y),
+            (window as any).__nearestRedCrown,
+            Math.hypot(f.x - x, f.y - y),
           );
+          if ((window as any).__crownSamples.length < 300)
+            (window as any).__crownSamples.push({
+              f,
+              x,
+              y,
+              actualTarget: (window as any).__lastCrownTarget,
+              arena: { x: a.left, y: a.top },
+              time: (window as any).__arena.state.time,
+            });
+        }
       requestAnimationFrame(sample);
     };
     requestAnimationFrame(sample);
@@ -282,11 +319,20 @@ test("live replay crown flights reach native counter artwork and seeking clears 
     .poll(() => page.evaluate(() => (window as any).__arena.state.hud.redFrame))
     .toBeLessThan(99);
   await expect
-    .poll(
-      () => page.evaluate(() => (window as any).__nearestRedCrown),
-      { timeout: 5000, intervals: [25, 25, 50] },
-    )
-    .toBeLessThan(15);
+    .poll(() => page.evaluate(() => (window as any).__nearestRedCrown), {
+      timeout: 5000,
+      intervals: [25, 25, 50],
+    })
+    .toBeLessThan(15)
+    .catch(async (error) => {
+      await info.attach("crown-target-samples", {
+        body: JSON.stringify(
+          await page.evaluate(() => (window as any).__crownSamples),
+        ),
+        contentType: "application/json",
+      });
+      throw error;
+    });
   await seek.fill("100");
   await expect(page.locator(".native-score-art")).toHaveAttribute(
     "data-red-frame",

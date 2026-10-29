@@ -1,5 +1,5 @@
 import { EndClock, endView, type EndResult } from "./ending-data";
-import { renderNativeFrame, type NativeData } from "./native";
+import { renderRetainedNativeFrame, type NativeData } from "./native";
 export class NativeEnding {
   readonly clock = new EndClock();
   private data: NativeData | null = null;
@@ -88,7 +88,7 @@ export class NativeEnding {
     if (signature === this.signature) return;
     this.signature = signature;
     const scores = state.stage === "scores";
-    renderNativeFrame(
+    renderRetainedNativeFrame(
       this.art,
       scores
         ? endView(this.data, this.result, state.frame, state.still)

@@ -1,5 +1,18 @@
 # Battle rendering performance
 
+Native HUD and overlay animation now reuses the current SVG while its part structure stays the same, updating only transforms, opacity and color coefficients. It rebuilds for text, geometry, visibility, filter-mode or rendering-option changes. Intros, notices, crowns, endings and elixir effects use this path. Cache entries are weakly owned by the SVG root; removing a tree releases its bindings rather than retaining it through the host.
+
+Start Vite on port 5188 and run `node scripts/profile-native-ui.mjs` for a fixed construction comparison. It measures work on detached SVGs with bound part groups and text fitting disabled, separates node counting from five alternating timing samples, and compares final markup and accessible labels. It does not measure paint cost, physical-device FPS or battery use. One Chromium run measured:
+
+| Native sequence | Frames | SVG rebuilds before / after | Elements created before / after |
+| --- | ---: | ---: | ---: |
+| Elixir flow | 300 | 300 / 1 | 4,200 / 14 |
+| Introduction | 134 | 134 / 9 | 18,149 / 1,205 |
+| Crown counters | 100 | 100 / 1 | 10,500 / 105 |
+| Ending scores | 102 | 102 / 6 | 9,056 / 350 |
+
+Across these sequences, SVG rebuilds fall from 636 to 17 (97.3%) and created elements from 41,905 to 1,674 (96.0%). Final element counts and markup match. The same run's median construction times fell from 11.9/41.3/21.7/20.6 ms to 1.5/9.7/3.2/3.9 ms respectively; these are local batch timings. A separate Chromium garbage-collection probe confirms a detached SVG can be collected while its now-empty host remains alive. Browser regressions compare every elixir frame in both directions, complete intro/notice/crown/ending timelines and composed views, including changing geometry and text. Reused elixir filters/text also match rebuilt pixels exactly in Chromium and WebKit.
+
 The battle renderer is primarily limited by GPU submissions and pixel work on slower devices. In an iPhone-sized Chromium software-WebGL profile with a seven-entity battle, the original scene used 186 draw calls. Batching repeated scenery images and animated river waves, and caching the static sun shadow map, reduced the same light scene to about 100 draw calls. The exact number varies as troops and effects enter the battle.
 
 Coarse-pointer devices use a 30-FPS presentation budget and start at a pixel ratio of at most 1; desktop rendering targets 60 FPS at a ratio of at most 2. Two consecutive one-second samples below 85% of the target lower resolution by 0.25. A sample below 55% selects the minimum immediately, including during a cooldown. The phone minimum is 0.65; desktop keeps 1 on high-density displays or 0.75 otherwise, never exceeding the device's ratio. Ten samples at 95% of the target allow a 0.125 recovery step. Cooldowns bound reallocations. The HTML controls remain at native resolution, and simulation stays at 30 Hz. Pauses, the lobby and the opening animation do not drive this governor.

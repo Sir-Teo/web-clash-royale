@@ -1,4 +1,4 @@
-import { renderNativeFrame, type NativeData } from "./native";
+import { renderRetainedNativeFrame, type NativeData } from "./native";
 export { textureMatrix } from "./native";
 import type { Mode } from "../game/engine";
 
@@ -142,7 +142,7 @@ export class NativeAnnouncements {
     const signature = JSON.stringify(selected);
     if (signature === this.signature) return;
     this.signature = signature;
-    renderNativeFrame(
+    renderRetainedNativeFrame(
       this.host,
       this.data,
       selected.name,

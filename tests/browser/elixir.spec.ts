@@ -78,6 +78,7 @@ test("battle elixir follows actual deployment and pauses without mutating the HU
   const meter = page.locator("#elixir-hud");
   await expect(meter).toHaveAttribute("data-cost", String(card.cost));
   const before = Number(await meter.getAttribute("aria-valuenow"));
+  const beforeState = await page.evaluate(() => (window as any).__arena.state);
   const actions = await page.evaluate(
     () => (window as any).__arena.state.actions,
   );
@@ -91,7 +92,13 @@ test("battle elixir follows actual deployment and pauses without mutating the HU
   await page.getByRole("button", { name: "Pause battle", exact: true }).click();
   await expect(meter).toHaveAttribute("data-cost", "0");
   const after = Number(await meter.getAttribute("aria-valuenow"));
-  expect(before - after).toBeGreaterThan(card.cost - 0.5);
+  const paused = await page.evaluate(() => (window as any).__arena.state);
+  // Input can wait for several frames; include the normal refill before pause.
+  expect(
+    beforeState.elixir - paused.elixir + (paused.time - beforeState.time) / 2.8,
+  ).toBeCloseTo(card.cost, 1);
+  expect(after).toBe(Math.round(paused.elixir * 100) / 100);
+  expect(after).toBeLessThan(before);
   await expect(meter.locator(".elixir-floats text")).toHaveText(
     `-${card.cost}`,
   );

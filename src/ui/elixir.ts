@@ -1,4 +1,9 @@
-import { renderNativeFrame, type NativeData } from "./native";
+import {
+  renderNativeFrame,
+  renderRetainedNativeFrame,
+  type NativeData,
+} from "./native";
+import { setAttribute, setText } from "./dom";
 
 export interface ElixirSpend {
   time: number;
@@ -185,7 +190,7 @@ export class NativeElixir {
     this.signatures.set(host, signature);
     const prefix =
       (host.dataset.nativePrefix ??= `elixir-effect-${this.serial++}`);
-    renderNativeFrame(host, this.data, name, frame, overrides, {
+    renderRetainedNativeFrame(host, this.data, name, frame, overrides, {
       ...options,
       viewBox,
       prefix,
@@ -222,24 +227,28 @@ export class NativeElixir {
     this.inputSignature = input;
     this.feedback.update(time, value, multiplier);
     const integer = Math.floor(value);
-    this.number.textContent = String(integer);
-    this.host.setAttribute(
+    setText(this.number, String(integer));
+    setAttribute(
+      this.host,
       "aria-valuenow",
       String(Math.round(value * 100) / 100),
     );
-    this.host.setAttribute(
+    setAttribute(
+      this.host,
       "aria-valuetext",
       `${integer} of 10 elixir, ${multiplier} times regeneration${selectedCost !== null ? `, selected card costs ${selectedCost}` : ""}`,
     );
     this.host.classList.toggle("full", value >= 10);
-    this.host.style.setProperty("--elixir-value", `${value * 10}%`);
+    const fill = `${value * 10}%`;
+    if (this.host.style.getPropertyValue("--elixir-value") !== fill)
+      this.host.style.setProperty("--elixir-value", fill);
     this.host.classList.toggle(
       "insufficient",
       selectedCost !== null && value < selectedCost,
     );
-    this.host.dataset.cost = String(selectedCost ?? 0);
+    setAttribute(this.host, "data-cost", String(selectedCost ?? 0));
     if (!this.data) {
-      this.rate.textContent = `${multiplier}×`;
+      setText(this.rate, `${multiplier}×`);
       return;
     }
     const unit = this.trackWidth / 10;
@@ -356,7 +365,7 @@ export class NativeElixir {
         "-86 58 80 86",
         { "elixirRegen/elixir/txt": `x${multiplier}` },
       );
-    this.bar.setAttribute("aria-label", `${integer} elixir`);
+    setAttribute(this.bar, "aria-label", `${integer} elixir`);
   }
 }
 export const elixirMarkup = `<div class="elixir-hud" id="elixir-hud" role="meter" aria-label="Elixir" aria-valuemin="0" aria-valuemax="10" aria-valuenow="5"><span id="elixir-number">5</span><div class="elixir-art" aria-hidden="true"></div><div class="elixir-glints" aria-hidden="true"><div class="elixir-tip hidden"></div><div class="elixir-flow hidden"></div></div><div class="elixir-requirement hidden" aria-hidden="true"></div><div class="elixir-gain hidden" aria-hidden="true"></div><div class="elixir-floats" aria-hidden="true"></div><div class="elixir-warning hidden" aria-hidden="true"></div><div id="elixir-rate" class="native-elixir-rate" aria-label="Elixir regeneration"></div></div>`;

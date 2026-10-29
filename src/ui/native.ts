@@ -1,3 +1,5 @@
+import { setAttribute } from "./dom";
+
 type Matrix = number[];
 export interface TextStyle {
   size: number;
@@ -187,4 +189,126 @@ export function renderNativeFrame(
     .join("");
   host.innerHTML = `<svg viewBox="${options.viewBox}" aria-hidden="true"${options.stretch ? ' preserveAspectRatio="none"' : ""}>${options.transform ? `<g transform="${options.transform}">${content}</g>` : content}</svg>`;
   host.setAttribute("aria-label", labels.join(" ") || "Battle introduction");
+}
+
+type FrameOptions = Parameters<typeof renderNativeFrame>[5];
+interface RetainedFrame {
+  signature: string;
+  label: string;
+  update: ((part: Part) => void)[];
+}
+// Removed SVGs release their cached bindings along with the detached tree.
+const retainedFrames = new WeakMap<Element, RetainedFrame>();
+const tinted = (part: Part) =>
+  !(
+    part.color.slice(0, 3).every((n) => n === 0) &&
+    part.color.slice(4).every((n) => n === 255)
+  );
+
+function retainPart(group: Element, part: Part, data: NativeData) {
+  if (part.text !== undefined) {
+    const text = group.firstElementChild!;
+    const { color: fill, outlineColor, outlined } = data.texts[part.text];
+    return (next: Part) => {
+      setAttribute(group, "transform", matrix(next.matrix));
+      setAttribute(group, "opacity", String(next.color[3] / 255));
+      setAttribute(text, "fill", color(fill, next.color));
+      setAttribute(
+        text,
+        "stroke",
+        outlined ? color(outlineColor, next.color) : "none",
+      );
+    };
+  }
+  const shape = data.shapes[part.shape!];
+  let child = 0;
+  const paints = (shape.polygons ?? [shape]).map((polygon) => {
+    if (polygon.solid !== undefined) {
+      const fill = polygon.solid;
+      const node = group.children[child++];
+      return (next: Part) => {
+        setAttribute(node, "fill", color(fill, next.color));
+        setAttribute(node, "opacity", String(next.color[3] / 255));
+      };
+    }
+    const defs = group.children[child++];
+    const node = group.children[child++];
+    if (!tinted(part))
+      return (next: Part) =>
+        setAttribute(node, "opacity", String(next.color[3] / 255));
+    const channels = defs.querySelector("feComponentTransfer")!.children;
+    return (next: Part) => {
+      for (let i = 0; i < 3; i++) {
+        setAttribute(channels[i], "slope", String(next.color[4 + i] / 255));
+        setAttribute(channels[i], "intercept", String(next.color[i] / 255));
+      }
+      setAttribute(channels[3], "slope", String(next.color[3] / 255));
+    };
+  });
+  return (next: Part) => {
+    setAttribute(group, "transform", matrix(next.matrix));
+    for (const paint of paints) paint(next);
+  };
+}
+
+/** Keep one SVG per host while a native clip changes only transforms/colors. */
+export function renderRetainedNativeFrame(
+  host: HTMLElement,
+  data: NativeData,
+  name: string,
+  frame: number,
+  overrides: Record<string, string>,
+  options: FrameOptions,
+) {
+  const parts = data.clips[name].frames[frame].flatMap((part, index) => {
+    if (part.color[3] === 0 || options.omit?.includes(part.binding!)) return [];
+    const text =
+      part.text === undefined
+        ? null
+        : (overrides[part.binding!] ?? data.translations[part.binding!] ?? "");
+    if (text === "") return [];
+    return [{ part, index, text }];
+  });
+  // Include geometry values, rather than object identity: native layout code
+  // can change points, UVs, files or text styles in place between calls.
+  const signature = JSON.stringify([
+    name,
+    options,
+    parts.map(({ part, index, text }) => [
+      index,
+      part.binding,
+      text,
+      part.text !== undefined
+        ? data.texts[part.text]
+        : data.shapes[part.shape!],
+      part.text !== undefined ? null : tinted(part),
+    ]),
+  ]);
+  const current = host.firstElementChild;
+  const retained = current ? retainedFrames.get(current) : undefined;
+  if (
+    retained &&
+    retained.signature === signature &&
+    host.childNodes.length === 1
+  ) {
+    for (let i = 0; i < parts.length; i++) retained.update[i](parts[i].part);
+    setAttribute(host, "aria-label", retained.label);
+    return;
+  }
+  renderNativeFrame(host, data, name, frame, overrides, options);
+  const svg = host.firstElementChild!;
+  const root = options.transform ? svg.firstElementChild! : svg;
+  retainedFrames.set(svg, {
+    signature,
+    label: host.getAttribute("aria-label")!,
+    update: parts.map(({ part }, index) =>
+      retainPart(
+        options.bind
+          ? root.children[index].firstElementChild!
+          : root.children[index],
+        part,
+        data,
+      ),
+    ),
+  });
 }
