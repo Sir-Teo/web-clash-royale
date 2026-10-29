@@ -1,5 +1,6 @@
 import { isCharging } from "../game/charge";
 import * as T from "three";
+import { limitTexture, loadLimited } from "./texture";
 import type { CardId } from "../game/cards";
 import type { Entity } from "../game/engine";
 import executioner from "../game/executioner-data.json" with { type: "json" };
@@ -110,6 +111,9 @@ export function makeMaterial(texture: T.Texture) {
     depthWrite: false,
     toneMapped: false,
     side: T.DoubleSide,
+    // These are flat SC polygons, so a second transparent back-face pass only
+    // repeats draws and shader selection without adding a visible surface.
+    forceSinglePass: true,
   });
   material.onBeforeCompile = (shader) => {
     shader.vertexShader =
@@ -221,34 +225,43 @@ export function spriteGeometry(asset: SpriteAsset, index: number) {
 export class SpriteLibrary {
   assets = new Map<SpriteId, SpriteAsset>();
   private loader = new T.TextureLoader();
+  constructor(private readonly textureLimit = Infinity) {}
   async load() {
     const textureLoads = new Map<string, Promise<T.Texture>>();
     const loadTexture = (file: string) => {
-      const canonical = (textureAliases as Record<string, string>)[file] ?? file;
+      const canonical =
+        (textureAliases as Record<string, string>)[file] ?? file;
       let pending = textureLoads.get(canonical);
       if (!pending) {
-        pending = this.loader.loadAsync(
-          `${import.meta.env.BASE_URL}assets/animations/${canonical}`,
-        ).then((texture) => {
-          texture.colorSpace = T.SRGBColorSpace;
-          texture.minFilter = T.LinearFilter;
-          texture.magFilter = T.LinearFilter;
-          texture.generateMipmaps = false;
-          return texture;
-        });
+        pending = this.loader
+          .loadAsync(
+            `${import.meta.env.BASE_URL}assets/animations/${canonical}`,
+          )
+          .then((texture) => {
+            limitTexture(texture, this.textureLimit);
+            texture.colorSpace = T.SRGBColorSpace;
+            texture.minFilter = T.LinearFilter;
+            texture.magFilter = T.LinearFilter;
+            texture.generateMipmaps = false;
+            return texture;
+          });
         textureLoads.set(canonical, pending);
       }
       return pending;
     };
-    await Promise.all(
-      (Object.keys(heights) as SpriteId[]).map(async (id) => {
+    await loadLimited(
+      Object.keys(heights) as SpriteId[],
+      Number.isFinite(this.textureLimit) ? 4 : Infinity,
+      async (id) => {
         try {
           const response = await fetch(
             `${import.meta.env.BASE_URL}assets/animations/${id}.json`,
           );
           if (!response.ok) throw new Error(`Missing animation ${id}`);
           const data: SpriteData = await response.json();
-          const textures = await Promise.all(data.textures.map((t) => loadTexture(t.file)));
+          const textures = await Promise.all(
+            data.textures.map((t) => loadTexture(t.file)),
+          );
           this.assets.set(id, {
             data,
             textures,
@@ -259,7 +272,7 @@ export class SpriteLibrary {
         } catch (error) {
           console.warn(`Using fallback model for ${id}`, error);
         }
-      }),
+      },
     );
   }
   make(id: SpriteId): AnimatedSprite | null {

@@ -1,4 +1,5 @@
 import * as T from "three";
+import { limitTexture, loadLimited } from "./texture";
 import type { Entity, Team } from "../game/engine";
 import { makeMaterial, spriteGeometry } from "./sprites";
 import type { SpriteAsset, SpriteData } from "./sprites";
@@ -30,10 +31,26 @@ export interface BuildingSprite {
 export class BuildingLibrary {
   assets = new Map<string, SpriteAsset>();
   private princessAsset?: SpriteAsset;
+  constructor(private readonly textureLimit = Infinity) {}
   async load() {
     const loader = new T.TextureLoader();
-    await Promise.all(
-      ["cannon", "tesla", "mortar", "bomb-tower", "inferno-tower", "x-bow", "elixir-collector", "goblin-hut", "tombstone", "furnace", "barbarian-hut", "king"].map(async (id) => {
+    await loadLimited(
+      [
+        "cannon",
+        "tesla",
+        "mortar",
+        "bomb-tower",
+        "inferno-tower",
+        "x-bow",
+        "elixir-collector",
+        "goblin-hut",
+        "tombstone",
+        "furnace",
+        "barbarian-hut",
+        "king",
+      ],
+      Number.isFinite(this.textureLimit) ? 3 : Infinity,
+      async (id) => {
         try {
           const response = await fetch(
             `${import.meta.env.BASE_URL}assets/buildings/${id}.json`,
@@ -48,6 +65,7 @@ export class BuildingLibrary {
             ),
           );
           for (const texture of textures) {
+            limitTexture(texture, this.textureLimit);
             texture.colorSpace = T.SRGBColorSpace;
             texture.minFilter = texture.magFilter = T.LinearFilter;
             texture.generateMipmaps = false;
@@ -65,21 +83,33 @@ export class BuildingLibrary {
             }),
             geometry: new Map(),
             scale:
-              (id === "king" ? 3.5 : id === "mortar" ? 2.8 :
-                id === "bomb-tower" ? 2.5 :
-                id === "x-bow" ? 2.8 :
-                id === "elixir-collector" ? 2.5 :
-                id === "goblin-hut" ? 2.5 :
-                id === "tombstone" ? 2.3 :
-                id === "furnace" ? 2.5 :
-                id === "barbarian-hut" ? 2.7 :
-                id === "inferno-tower" ? 2.4 : 2.2) /
+              (id === "king"
+                ? 3.5
+                : id === "mortar"
+                  ? 2.8
+                  : id === "bomb-tower"
+                    ? 2.5
+                    : id === "x-bow"
+                      ? 2.8
+                      : id === "elixir-collector"
+                        ? 2.5
+                        : id === "goblin-hut"
+                          ? 2.5
+                          : id === "tombstone"
+                            ? 2.3
+                            : id === "furnace"
+                              ? 2.5
+                              : id === "barbarian-hut"
+                                ? 2.7
+                                : id === "inferno-tower"
+                                  ? 2.4
+                                  : 2.2) /
               (data.bounds[2] - data.bounds[0]),
           });
         } catch (error) {
           console.warn(`Using static building artwork for ${id}`, error);
         }
-      }),
+      },
     );
   }
   make(id: string, team: Team): BuildingSprite | null {

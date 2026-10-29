@@ -1,7 +1,10 @@
 import { Arena } from "../../src/render/arena";
 import { Battle } from "../../src/game/engine";
 
-const arena = new Arena(document.querySelector<HTMLElement>("#arena")!);
+const params = new URLSearchParams(location.search);
+const arena = new Arena(document.querySelector<HTMLElement>("#arena")!, {
+  batchScenery: params.get("scenery") !== "off",
+});
 const batcher = (arena as any).spriteBatcher;
 const prepareSprites = batcher.prepare.bind(batcher);
 const groundBatcher = (arena as any).groundBatcher;
@@ -14,7 +17,10 @@ function setGroundBatch(enabled: boolean) {
 }
 setBatch(new URLSearchParams(location.search).get("batch") !== "off");
 const battle = new Battle({ seed: 12, ai: false });
-const count = Math.min(24, Math.max(0, Number(new URLSearchParams(location.search).get("swarms") ?? 8)));
+const count = Math.min(
+  24,
+  Math.max(0, Number(new URLSearchParams(location.search).get("swarms") ?? 8)),
+);
 const fixedTime = new URLSearchParams(location.search).get("fixedTime");
 for (const tower of battle.entities) tower.active = false;
 for (let i = 0; i < count; i++) {
@@ -29,13 +35,24 @@ for (const entity of battle.entities) {
   entity.age = 3;
 }
 arena.setBattle(battle);
-const crowns = Math.min(3, Math.max(0, Number(new URLSearchParams(location.search).get("crowns") ?? 0)));
+const crowns = Math.min(
+  3,
+  Math.max(0, Number(new URLSearchParams(location.search).get("crowns") ?? 0)),
+);
 let pendingCrowns = false;
 function burstCrowns() {
   arena.setBattle(battle);
   pendingCrowns = true;
   for (let i = 0; i < crowns; i++)
-    battle.events.push({ id: 100000 + i, time: 0, type: "crown", team: "blue", x: 9, y: 16, value: 1 });
+    battle.events.push({
+      id: 100000 + i,
+      time: 0,
+      type: "crown",
+      team: "blue",
+      x: 9,
+      y: 16,
+      value: 1,
+    });
 }
 let frames = 0;
 const start = performance.now();
@@ -44,24 +61,55 @@ function frame(now: number) {
     pendingCrowns = false;
     const random = Math.random;
     let seed = 12345;
-    Math.random = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296);
+    Math.random = () =>
+      (seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296;
     try {
-      arena.render(0, fixedTime === null ? (now - start) / 1000 : Number(fixedTime));
+      arena.render(
+        0,
+        fixedTime === null ? (now - start) / 1000 : Number(fixedTime),
+      );
     } finally {
       Math.random = random;
     }
-  } else arena.render(0, fixedTime === null ? (now - start) / 1000 : Number(fixedTime));
+  } else
+    arena.render(
+      0,
+      fixedTime === null ? (now - start) / 1000 : Number(fixedTime),
+    );
   frames++;
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
 Object.defineProperty(window, "__arenaProfile", {
   value: {
-    setRatio(value: number) { arena.renderer.setPixelRatio(value); },
+    setRatio(value: number) {
+      arena.renderer.setPixelRatio(value);
+    },
     setBatch,
     setGroundBatch,
+    setSinglePass(enabled: boolean) {
+      arena.scene.traverse((object) => {
+        const material = (object as any).material;
+        for (const value of material
+          ? Array.isArray(material)
+            ? material
+            : [material]
+          : [])
+          if (value.transparent && value.side === 2)
+            value.forceSinglePass = enabled;
+      });
+    },
     burstCrowns,
     get state() {
+      const atlases = [
+        ...new Set<any>([
+          ...[
+            ...(arena as any).sprites.assets.values(),
+            ...(arena as any).buildings.assets.values(),
+          ].flatMap((asset: any) => asset.textures),
+          ...((arena as any).effects.asset?.textures ?? []),
+        ]),
+      ];
       return {
         // needsFrame includes pending asset loads and the requested rebuild.
         ready: !arena.needsFrame,
@@ -73,6 +121,27 @@ Object.defineProperty(window, "__arenaProfile", {
         geometries: arena.renderer.info.memory.geometries,
         textures: arena.renderer.info.memory.textures,
         renderPixelRatio: arena.renderer.getPixelRatio(),
+        targetFps: arena.targetFps,
+        antialias: arena.renderer.getContext().getContextAttributes()
+          ?.antialias,
+        shadows: arena.renderer.shadowMap.enabled,
+        atlasBytes: atlases.reduce(
+          (sum, texture) =>
+            sum + texture.image.width * texture.image.height * 4,
+          0,
+        ),
+        originalAtlasBytes: atlases.reduce(
+          (sum, texture) =>
+            sum +
+            (texture.userData.sourceBytes ??
+              texture.image.width * texture.image.height * 4),
+          0,
+        ),
+        largestAtlas: Math.max(
+          ...atlases.map((texture) =>
+            Math.max(texture.image.width, texture.image.height),
+          ),
+        ),
       };
     },
   },

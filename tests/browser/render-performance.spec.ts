@@ -34,7 +34,7 @@ test("battle scenery stays batched after native assets load", async ({ page }) =
     { timeout: 10000 },
   ).toBeLessThan(160);
   const state = await page.evaluate(() => (window as any).__arena.state);
-  expect(state.renderPixelRatio).toBeGreaterThanOrEqual(0.75);
+  expect(state.renderPixelRatio).toBeGreaterThanOrEqual(0.65);
   expect(state.renderPixelRatio).toBeLessThanOrEqual(2);
 });
 
@@ -53,7 +53,7 @@ test("swarm sprites batch within one color level of the original frame", async (
   await info.attach("batched", { body: batched, contentType: "image/png" });
   await page.evaluate(() => (window as any).__arenaProfile.setBatch(false));
   await expect.poll(async () => page.evaluate(() => (window as any).__arenaProfile.state.drawCalls))
-    .toBeGreaterThan(300);
+    .toBeGreaterThan(state.drawCalls + 60);
   const unbatched = await page.screenshot();
   await info.attach("unbatched", { body: unbatched, contentType: "image/png" });
   if (info.project.name === "desktop") expect(batched.equals(unbatched)).toBe(true);
@@ -88,7 +88,7 @@ test("swarm shadows and rings batch with confined overlap differences", async ({
   const batched = await page.screenshot();
   await page.evaluate(() => (window as any).__arenaProfile.setGroundBatch(false));
   await expect.poll(async () => page.evaluate(() => (window as any).__arenaProfile.state.drawCalls))
-    .toBeGreaterThan(400);
+    .toBeGreaterThan(state.drawCalls + 180);
   const unbatched = await page.screenshot();
   const { data: a, info } = await sharp(batched).removeAlpha().raw().toBuffer({ resolveWithObject: true });
   const b = await sharp(unbatched).removeAlpha().raw().toBuffer();

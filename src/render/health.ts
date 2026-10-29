@@ -27,6 +27,7 @@ export class HealthLibrary {
   private signatures = new WeakMap<HTMLElement, string>();
   private serial = 0;
   private disposed = false;
+  constructor(private readonly resolution = 4) {}
   async load() {
     try {
       const response = await fetch(
@@ -59,7 +60,7 @@ export class HealthLibrary {
       // Rasterize only the two shared level labels. All bar polygons and fill
       // states stay as native geometry in one atlas/material per unit.
       const canvas = document.createElement("canvas"),
-        resolution = 4;
+        resolution = this.resolution;
       canvas.width = data.atlas.width * resolution;
       canvas.height = data.atlas.height * resolution;
       const ctx = canvas.getContext("2d")!;

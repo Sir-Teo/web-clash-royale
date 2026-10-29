@@ -178,7 +178,22 @@ for (const viewer of ["blue", "red"])
       .toBeGreaterThan(held.renderedFrames);
     const shown = await quiet(page);
     expect(game(shown)).toEqual(game(held));
-    expect((await canvas.screenshot()).equals(before)).toBe(true);
+    const repainted = await canvas.screenshot();
+    if (!repainted.equals(before)) {
+      await info.attach("paused-before", {
+        body: before,
+        contentType: "image/png",
+      });
+      await info.attach("paused-repainted", {
+        body: repainted,
+        contentType: "image/png",
+      });
+      await info.attach("paused-state", {
+        body: JSON.stringify({ held, shown }),
+        contentType: "application/json",
+      });
+    }
+    expect(repainted.equals(before)).toBe(true);
 
     await page.emulateMedia({ reducedMotion: "reduce" });
     await expect

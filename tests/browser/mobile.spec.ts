@@ -25,7 +25,15 @@ test("phone controls fit six sizes, rotate during play, and accept real touch in
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("console", (m) => {
-    if (m.type() === "error") errors.push(m.text());
+    if (m.type() !== "error") return;
+    // WebKit reports the Chromium-only keyboard viewport option as an error.
+    if (
+      browserName === "webkit" &&
+      m.text() ===
+        'Viewport argument key "interactive-widget" not recognized and ignored.'
+    )
+      return;
+    errors.push(m.text());
   });
   await page.setViewportSize(phoneSizes[0]);
   await page.goto("/");
@@ -57,15 +65,14 @@ test("phone controls fit six sizes, rotate during play, and accept real touch in
       .poll(() =>
         page.locator("canvas").evaluate((e) => {
           const canvas = e as HTMLCanvasElement;
-          return (
-            Math.abs(
-              canvas.height / Math.min(devicePixelRatio, 2) -
-                canvas.getBoundingClientRect().height,
-            ) < 1
+          return Math.abs(
+            canvas.height -
+              canvas.getBoundingClientRect().height *
+                (window as any).__arena.state.renderPixelRatio,
           );
         }),
       )
-      .toBe(true);
+      .toBeLessThan(1);
     const measurements = await page.evaluate(() => {
       const box = (e: Element) => {
         const r = e.getBoundingClientRect();

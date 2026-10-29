@@ -14,6 +14,7 @@ import {
   buildingModel,
   teamColor,
   batchGeometry,
+  batchSceneryColors,
 } from "./models";
 import type { Model } from "./models";
 import { SpriteLibrary } from "./sprites";
@@ -65,6 +66,8 @@ import { arrowOffsets } from "./arrow-volley";
 import { CrownEffects } from "./crowns";
 import { HealthLibrary, type HealthSprite } from "./health";
 import { NativeScreenShake } from "./screen-shake";
+import { RenderQuality } from "./quality";
+import { limitTexture } from "./texture";
 interface Visual {
   object: T.Group;
   model?: Model;
@@ -81,6 +84,10 @@ interface Visual {
   nativeHealth?: HealthSprite;
 }
 export class Arena {
+  private readonly quality = new RenderQuality(
+    matchMedia("(pointer: coarse)").matches,
+    window.devicePixelRatio,
+  );
   readonly renderer: T.WebGLRenderer;
   readonly scene = new T.Scene();
   readonly camera: T.OrthographicCamera;
@@ -97,18 +104,18 @@ export class Arena {
   private ringMaterials: Record<Team, T.MeshBasicMaterial> = {
     blue: new T.MeshBasicMaterial({
       color: teamColor("blue"), transparent: true, opacity: 0.8,
-      depthWrite: false, side: T.DoubleSide,
+      depthWrite: false, side: T.DoubleSide, forceSinglePass: true,
     }),
     red: new T.MeshBasicMaterial({
       color: teamColor("red"), transparent: true, opacity: 0.8,
-      depthWrite: false, side: T.DoubleSide,
+      depthWrite: false, side: T.DoubleSide, forceSinglePass: true,
     }),
   };
   private shots = new Map<number, ProjectileVisual>();
   private trailCycles = new Map<number, number>();
-  private effects = new EffectLibrary();
-  private buildings = new BuildingLibrary();
-  private health = new HealthLibrary();
+  private effects = new EffectLibrary(this.quality.textureLimit);
+  private buildings = new BuildingLibrary(this.quality.textureLimit);
+  private health = new HealthLibrary(this.quality.mobile ? 2 : 4);
   private healthPosition = new T.Vector3();
   private shake = new NativeScreenShake();
   private readonly reducedMotion = matchMedia(
@@ -167,7 +174,7 @@ export class Arena {
   private height = 1;
   private labels: HTMLDivElement;
   private destroyed = false;
-  private sprites = new SpriteLibrary();
+  private sprites = new SpriteLibrary(this.quality.textureLimit);
   private towerArt = new Map<
     string,
     { texture: T.Texture; aspect: number; anchor: [number, number] }
@@ -177,24 +184,25 @@ export class Arena {
   private frameRequested = true;
   private loadingAssets = true;
   private lastReducedMotion = this.reducedMotion.matches;
-  private readonly maxPixelRatio = Math.min(window.devicePixelRatio, 2);
-  private slowFrames = 0;
-  private fastFrames = 0;
-  private resolutionCooldown = 0;
   onContextLost: () => void = () => {};
   onContextRestored: () => void = () => {};
   onCharge: (burst: MovementBurst) => void = () => {};
   crownTarget: (team: Team) => Point | null = () => null;
-  constructor(readonly host: HTMLElement) {
+  constructor(
+    readonly host: HTMLElement,
+    options: { batchScenery?: boolean } = {},
+  ) {
     this.shadowGeometry.userData.shared = true;
     this.ringGeometry.userData.shared = true;
     this.renderer = new T.WebGLRenderer({
+      // Keep multisampling for stable WebKit coverage when repainting paused scenes.
+      // The phone pixel-ratio budget bounds its cost.
       antialias: true,
       alpha: true,
       powerPreference: "high-performance",
     });
-    this.renderer.setPixelRatio(this.maxPixelRatio);
-    this.renderer.shadowMap.enabled = true;
+    this.renderer.setPixelRatio(this.quality.maximumRatio);
+    this.renderer.shadowMap.enabled = !this.quality.mobile;
     this.renderer.shadowMap.type = T.PCFSoftShadowMap;
     // The diorama is static. Troops and effects use their own ground shadows,
     // so rebuilding the 2048px sun map on every frame only stalls the GPU.
@@ -243,8 +251,11 @@ export class Arena {
     this.scene.add(new T.HemisphereLight(0xe0f4ff, 0x597846, 1.5));
     const sun = new T.DirectionalLight(0xffedce, 2.3);
     sun.position.set(-15, 28, 12);
-    sun.castShadow = true;
-    sun.shadow.mapSize.set(2048, 2048);
+    sun.castShadow = !this.quality.mobile;
+    sun.shadow.mapSize.set(
+      this.quality.mobile ? 512 : 2048,
+      this.quality.mobile ? 512 : 2048,
+    );
     sun.shadow.camera.left = -22;
     sun.shadow.camera.right = 22;
     sun.shadow.camera.top = 25;
@@ -253,7 +264,7 @@ export class Arena {
     sun.shadow.bias = -0.0002;
     this.scene.add(sun);
     this.scene.add(this.root);
-    this.buildArena();
+    this.buildArena(options.batchScenery !== false);
     this.rangeRing = new T.Mesh(
       new T.RingGeometry(1, 1.08, 64),
       new T.MeshBasicMaterial({
@@ -261,6 +272,7 @@ export class Arena {
         transparent: true,
         opacity: 0.85,
         side: T.DoubleSide,
+        forceSinglePass: true,
         depthWrite: false,
       }),
     );
@@ -334,6 +346,7 @@ export class Arena {
           const texture = await loader.loadAsync(
             `${import.meta.env.BASE_URL}assets/scenery/${name}.png`,
           );
+          limitTexture(texture, this.quality.textureLimit);
           texture.colorSpace = T.SRGBColorSpace;
           const anchorY = name.startsWith("balloon")
             ? 0.04
@@ -355,9 +368,10 @@ export class Arena {
       const texture = await loader.loadAsync(
         `${import.meta.env.BASE_URL}assets/scenery/goblin-field.png`,
       );
+      limitTexture(texture, this.quality.textureLimit);
       texture.colorSpace = T.SRGBColorSpace;
       texture.anisotropy = Math.min(
-        8,
+        this.quality.mobile ? 2 : 8,
         this.renderer.capabilities.getMaxAnisotropy(),
       );
       const floor = new T.Mesh(
@@ -381,6 +395,7 @@ export class Arena {
           const tex = await loader.loadAsync(
             `${import.meta.env.BASE_URL}assets/scenery/${item.file}`,
           );
+          limitTexture(tex, this.quality.textureLimit);
           tex.colorSpace = T.SRGBColorSpace;
           const material = new T.MeshBasicMaterial({
             map: tex,
@@ -389,6 +404,7 @@ export class Arena {
             depthWrite: false,
             toneMapped: false,
             side: T.DoubleSide,
+            forceSinglePass: true,
           });
           const geometry = new T.PlaneGeometry(item.width, item.height);
           geometry.translate(
@@ -419,7 +435,7 @@ export class Arena {
       /* Keep the fully local 3D terrain if an artwork asset fails. */
     }
   }
-  private buildArena() {
+  private buildArena(batchScenery: boolean) {
     const r = this.root;
     box(r, 0, -1.15, 0, 22.6, 1.8, 35.6, 0x35484c);
     box(r, 0, -0.42, 0, 22, 0.5, 35, 0x6a8074);
@@ -544,6 +560,7 @@ export class Arena {
           new T.MeshStandardMaterial({
             color: z < 0 ? 0xdb4b52 : 0x428fda,
             side: T.DoubleSide,
+            forceSinglePass: true,
             roughness: 1,
           }),
         );
@@ -577,7 +594,9 @@ export class Arena {
         z = -1.3 + Math.floor(i / 2) * 0.48;
       sphere(r, x, 0.1, z, 0.3, 0x8a9c8e, 1, 0.55, 0.7);
     }
-    batchGeometry(r, [this.waterWaves, ...this.flags]);
+    if (this.quality.mobile && batchScenery)
+      batchSceneryColors(r, [this.waterWaves, ...this.flags]);
+    else batchGeometry(r, [this.waterWaves, ...this.flags]);
   }
   private updateWaterWaves(dt: number, time: number) {
     if (!this.waterWaves || (dt === 0 && time === this.lastWaveTime)) return;
@@ -873,31 +892,12 @@ export class Arena {
     this.requestFrame();
   }
   adaptResolution(fps: number, active: boolean) {
-    if (!active) {
-      this.slowFrames = 0;
-      this.fastFrames = 0;
-      return;
-    }
-    if (this.resolutionCooldown > 0) {
-      this.resolutionCooldown--;
-      return;
-    }
-    this.slowFrames = fps < 42 ? this.slowFrames + 1 : 0;
-    this.fastFrames = fps > 52 ? this.fastFrames + 1 : 0;
     const current = this.renderer.getPixelRatio();
-    const minimum = this.maxPixelRatio > 1 ? 1 : 0.75;
-    if (this.slowFrames >= 3 && current > minimum) {
-      const target = fps < 22
-        ? minimum
-        : Math.max(minimum, this.maxPixelRatio - 0.5);
-      if (target < current) this.renderer.setPixelRatio(target);
-      this.slowFrames = 0;
-      this.resolutionCooldown = 8;
-    } else if (this.fastFrames >= 8 && current < this.maxPixelRatio) {
-      this.renderer.setPixelRatio(Math.min(this.maxPixelRatio, current + 0.25));
-      this.fastFrames = 0;
-      this.resolutionCooldown = 8;
-    }
+    const target = this.quality.sample(fps, active, current);
+    if (target !== current) this.renderer.setPixelRatio(target);
+  }
+  get targetFps() {
+    return this.quality.targetFps;
   }
   point(clientX: number, clientY: number): Point | null {
     const rect = this.renderer.domElement.getBoundingClientRect();
@@ -940,6 +940,7 @@ export class Arena {
       depthWrite: false,
       toneMapped: false,
       side: T.DoubleSide,
+      forceSinglePass: true,
     });
     material.userData.previewOwned = true;
     const mesh = new T.Mesh(geometry, material);
@@ -1137,6 +1138,7 @@ export class Arena {
               depthWrite: false,
               toneMapped: false,
               side: T.DoubleSide,
+              forceSinglePass: true,
             }),
           );
           object.add(art);
@@ -1166,6 +1168,7 @@ export class Arena {
               depthWrite: false,
               toneMapped: false,
               side: T.DoubleSide,
+              forceSinglePass: true,
             }),
           );
           object.add(art);

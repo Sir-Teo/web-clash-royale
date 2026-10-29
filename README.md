@@ -215,6 +215,8 @@ To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189
 
 ## Phone play
 
+Phones automatically use a 30-FPS presentation budget with smaller texture atlases and adaptive arena resolution. Controls and text retain the browser's normal resolution. Combat and replay clocks still advance at their fixed 30-Hz rate.
+
 Open the Vite **Network** URL on a phone connected to the same Wi-Fi as the development computer. `localhost` on a phone refers to the phone itself. For a friendly match, use **Share invite** or **Share reply** when available, or the **Copy** buttons on an HTTP Wi-Fi address; a game opened at `localhost` shares a code that the other phone can paste after opening the Network URL. Portrait battles fill the available browser height; rotating into landscape moves the hand alongside the arena. Safe-area padding keeps controls away from display cutouts and the home indicator. Tap a card and then the arena, or drag a card onto the battlefield. Pause and settings use 44-pixel touch targets. AI battles pause when the browser goes into the background. Direct friendly battles pause when either player switches apps. Keep both tabs open; a reload requires a new invite.
 
 If arena graphics are interrupted, local simulation and deployment wait for recovery, and direct friendly matches pause both players. A persistent notice remains until graphics return. A solo pause stays available to resume afterward; an existing manual pause is preserved. If the battle ends before recovery, its result and return-to-arena action remain available. Reload if recovery does not finish. The optional legacy server mode keeps its online battle running.

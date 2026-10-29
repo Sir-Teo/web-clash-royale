@@ -3217,7 +3217,7 @@ function frame(now: number) {
     lastRenderTime = lastFpsTime = now;
     fpsFrames = fps = 0;
     arena.adaptResolution(0, false);
-  } else if (!idle || now - lastRenderTime >= 1000 / 30 - 0.5) {
+  } else if (now - lastRenderTime >= 1000 / (idle ? 30 : arena.targetFps) - 0.5) {
     const renderElapsed = Math.max(0, (now - lastRenderTime) / 1000);
     const renderDelta = Math.min(renderElapsed, 0.1);
     lastRenderTime = now;
@@ -3367,6 +3367,7 @@ Object.defineProperty(window, "__arena", {
         frameLoopRunning: frameHandle !== undefined,
         drawCalls: arena.renderer.info.render.calls,
         renderPixelRatio: arena.renderer.getPixelRatio(),
+        renderTargetFps: arena.targetFps,
         loadedEffects: arena.loadedEffects,
         projectileArtwork: arena.projectileState,
         infernoBeams: arena.infernoBeamState,
