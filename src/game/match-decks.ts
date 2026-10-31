@@ -15,6 +15,7 @@ export interface PracticeOpponent {
   mode: Mode;
   deck: CardId[];
   playerDeck?: CardId[];
+  selection?: Readonly<{ playerSlot: number; opponentIndex: number }>;
 }
 
 /** Card order is part of a deck, and selecting another saved slot is an action. */

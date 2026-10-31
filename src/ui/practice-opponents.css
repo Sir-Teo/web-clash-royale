@@ -4,6 +4,11 @@
   line-height: 1.7;
   margin: 0 0 18px;
 }
+.practice-change-matchup {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 10px;
+}
 .practice-search {
   margin-bottom: 18px;
 }

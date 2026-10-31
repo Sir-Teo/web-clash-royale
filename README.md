@@ -54,6 +54,8 @@ Below an opponent’s recorded cards, choose a pace and **Practice against this 
 
 During a practice battle, open the pause menu and choose **Restart practice** for a fresh attempt with the same decks and pace. Restarted attempts do not save a result or grant rewards. **Leave battle** still saves the completed practice result.
 
+After a practice result, **Change practice matchup** reopens the picker with your selected player deck and pace. A matching opponent deck stays selected when available. Adjust the matchup before starting another attempt; your active lobby deck stays the same.
+
 In a solo battle, choose **Pause → Inspect battle deck** to read any of your eight starting cards. The view uses that battle's captured deck, including a selected practice loadout. Card inspection keeps the battle paused. Return to the pause menu to choose an action, or close the dialog to resume.
 
 Open **Cards → Deck codes** to copy your current eight cards or preview a code from another player. Inspect the shared cards, choose a saved battle deck and select **Use this deck** to apply it. An immediate **Undo deck change** restores your previous deck selection. Choose a practice pace and **Practice against this deck** to face the shared cards with your active deck, with no trophies or rewards. Codes contain only ordered card IDs and work across browsers; they do not include progress or rewards. Select a deck card and use **Earlier** / **Later**, or **Alt + Left / Right** while it has focus, to arrange the saved order. Opening hands are shuffled.
