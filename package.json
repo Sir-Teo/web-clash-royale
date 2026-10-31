@@ -11,6 +11,7 @@
     "test": "vitest run",
     "test:fast": "vitest run --no-isolate",
     "test:e2e": "playwright test",
+    "test:workflows": "playwright test --config tests/workflows/playwright.config.ts",
     "check": "npm test && npm run build",
     "assets": "node scripts/fetch-assets.mjs",
     "assets:app-icons": "node scripts/build-app-icons.mjs",

@@ -66,3 +66,35 @@ jobs:
           name: phone-browser-failure
           path: test-results/
           retention-days: 7
+  player-workflows:
+    name: Practice and replay flows (${{ matrix.project }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project: desktop
+            browser: chromium
+          - project: mobile
+            browser: chromium
+          - project: mobile-safari
+            browser: webkit
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - run: npm run build
+      - run: npm run test:workflows -- --project=${{ matrix.project }}
+        env:
+          ARENA_PRODUCTION: "1"
+      - uses: actions/upload-artifact@v7.0.2
+        if: failure()
+        with:
+          name: player-workflows-${{ matrix.project }}
+          path: test-results/
+          retention-days: 7

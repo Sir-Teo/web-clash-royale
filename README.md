@@ -175,6 +175,8 @@ npm run dev
 
 Use `npm run test:fast` for quicker local iterations. It reuses unit-test workers with file isolation disabled. Run `npm run check` before committing to verify the tests with file isolation, type checking and the production build. Both unit commands accept file paths after `--` for focused checks.
 
+Use `npm run test:workflows` for the practice, shared-replay, replay-inspection, settings and loading journeys. Add `-- --project=desktop`, `-- --project=mobile` or `-- --project=mobile-safari` to select one target. CI runs this group against production builds on all three targets and retains failure artifacts per target.
+
 To verify offline behavior, run `npm run preview -- --host 127.0.0.1 --port 5189 --strictPort` and then `npm run test:offline`.
 
 `npm run assets` refreshes cards, renders and audio. `npm run assets:sprites` imports complete native animation sequences and lossless textures; `npm run assets:scenery` reconstructs tower and arena textures from the retained metadata. No asset generation is needed for normal development.
