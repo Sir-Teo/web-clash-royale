@@ -3724,7 +3724,6 @@ document.addEventListener("visibilitychange", () => {
 });
 window.addEventListener("pagehide", suspendFrameLoop);
 window.addEventListener("pageshow", resumeFrameLoop);
-window.addEventListener("beforeunload", () => saveProfile(profile));
 
 lobby();
 initialized = true;
