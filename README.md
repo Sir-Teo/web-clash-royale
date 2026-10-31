@@ -40,7 +40,7 @@ Replay controls show elapsed and recorded time, with ten-second back/forward but
 
 During a replay, the swap-arrows button beside Battle settings toggles **View opponent side**. The board, hand, elixir, names and play labels follow the selected side. Switching keeps the current time, playback speed and paused state; restart keeps the chosen side. Saved recordings and progress keep their original player identity.
 
-Tap a replay hand card, press **1–4**, or focus it and press Enter/Space to inspect its current level-11 stats. Reading a card pauses playback. **Back to replay**, Escape or closing the dialog restores the previous playback state, speed and viewing side. Cards remain inspectable when unaffordable, before Mirror has a target and after the recording ends.
+Open **Battle settings → How to play** during a replay for playback guidance and shortcuts. Tap a replay hand card, press **1–4**, or focus it and press Enter/Space to inspect its current level-11 stats. Reading a card pauses playback. **Back to replay**, Escape or closing the dialog restores the previous playback state, speed and viewing side. Cards remain inspectable when unaffordable, before Mirror has a target and after the recording ends.
 
 From a shared replay preview, choose a **Destination battle deck**, then **Use recorded player deck** or **Use recorded opponent deck** to copy those cards and select that slot. **Undo deck change** restores all previous saved decks and the active selection. Card inspection keeps the destination, practice choices and Undo available.
 

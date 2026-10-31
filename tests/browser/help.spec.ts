@@ -120,7 +120,12 @@ test("keeps a solo battle paused through help and resumes after closing settings
 }) => {
   const before = await saved(page);
   await page.locator("#battle-button").click();
-  await expect.poll(async () => (await state(page)).time).toBeGreaterThan(0);
+  await expect
+    .poll(async () => (await state(page)).intro.blocking, { timeout: 30000 })
+    .toBe(false);
+  await expect
+    .poll(async () => (await state(page)).time, { timeout: 10000 })
+    .toBeGreaterThan(0);
   await page
     .getByRole("button", { name: "Battle settings", exact: true })
     .click();

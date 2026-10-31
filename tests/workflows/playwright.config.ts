@@ -17,6 +17,7 @@ export default defineConfig(common, {
     "**/replay-side.spec.ts",
     "**/replay-cards.spec.ts",
     "**/replay-plays.spec.ts",
+    "**/replay-help.spec.ts",
     "**/paused-deck.spec.ts",
     "**/deck-inspection-return.spec.ts",
     "**/help.spec.ts",
