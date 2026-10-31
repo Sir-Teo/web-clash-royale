@@ -9,6 +9,25 @@
   min-height: 44px;
   margin-top: 10px;
 }
+.practice-record {
+  margin: 16px 0 20px;
+  padding: 12px;
+  border: 1px solid #ffffff12;
+  border-radius: 9px;
+  color: #cad8e9;
+  background: #11263b66;
+}
+.practice-record p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.practice-record small {
+  display: block;
+  margin-top: 5px;
+  color: #a9bdd3;
+  font-size: 11px;
+}
 .practice-search {
   margin-bottom: 18px;
 }
