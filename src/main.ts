@@ -1428,6 +1428,7 @@ function showResult() {
     ),
     win = battle.winner === "blue",
     draw = battle.winner === "draw";
+  const practiceRecord = completedPractice ? profile.history[0] : undefined;
   applyProfilePreferences();
   refreshProfile();
   arena.showPlacement(null, null);
@@ -1446,7 +1447,7 @@ function showResult() {
           : win
             ? "Victory is yours!"
             : "A crown to chase.",
-        `<div class="result-content ${win ? "victory" : "defeat"}"><div class="result-crown">${icon("crown")}</div><span class="eyebrow">${esc(battle.reason)}</span><div class="result-score"><span class="blue">${icon("crown")} ${battle.players.blue.crowns}</span><b>–</b><span class="red">${battle.players.red.crowns} ${icon("crown")}</span></div><p>${win ? "Your kingdom stands tall. Well played." : draw ? "An even battle. A rematch awaits." : "Every great king learns from a battle."}</p><div class="result-rewards"><div>${icon("trophy")}<b>${reward.trophies > 0 ? "+" : ""}${reward.trophies}</b><small>TROPHIES</small></div><div>${icon("coins")}<b>+${reward.gold}</b><small>GOLD</small></div>${reward.chest ? `<div><img src="${import.meta.env.BASE_URL}assets/chests/${reward.chest}.png" alt="${reward.chest} chest"/><b>+1</b><small>${reward.chest.toUpperCase()} CHEST</small></div>` : ""}</div>${completedPractice ? `<p class="practice-result-note">Practice AI · no trophies or rewards</p>` : ""}${wasMultiplayer && peerNetwork ? `<p id="rematch-status" role="status"></p>` : ""}<button class="primary-button" id="rematch">${icon("swords")} ${completedPractice ? "Practice again" : "Battle again"}</button>${completedPractice ? `<button class="secondary-button practice-change-matchup" id="change-practice-matchup">${icon("target")} Change practice matchup</button>` : ""}<div class="result-links"><button class="text-button" id="watch-replay">${icon("play")} Watch replay</button><button class="text-button" id="return-home">Back to arena ${icon("arrow-right")}</button></div></div>`,
+        `<div class="result-content ${win ? "victory" : "defeat"}"><div class="result-crown">${icon("crown")}</div><span class="eyebrow">${esc(battle.reason)}</span><div class="result-score"><span class="blue">${icon("crown")} ${battle.players.blue.crowns}</span><b>–</b><span class="red">${battle.players.red.crowns} ${icon("crown")}</span></div><p>${win ? "Your kingdom stands tall. Well played." : draw ? "An even battle. A rematch awaits." : "Every great king learns from a battle."}</p><div class="result-rewards"><div>${icon("trophy")}<b>${reward.trophies > 0 ? "+" : ""}${reward.trophies}</b><small>TROPHIES</small></div><div>${icon("coins")}<b>+${reward.gold}</b><small>GOLD</small></div>${reward.chest ? `<div><img src="${import.meta.env.BASE_URL}assets/chests/${reward.chest}.png" alt="${reward.chest} chest"/><b>+1</b><small>${reward.chest.toUpperCase()} CHEST</small></div>` : ""}</div>${completedPractice ? `<p class="practice-result-note">Practice AI · no trophies or rewards</p>` : ""}${wasMultiplayer && peerNetwork ? `<p id="rematch-status" role="status"></p>` : ""}<button class="primary-button" id="rematch">${icon("swords")} ${completedPractice ? "Practice again" : "Battle again"}</button>${completedPractice ? `<button class="secondary-button practice-change-matchup" id="change-practice-matchup">${icon("target")} Change practice matchup</button>` : ""}${practiceRecord ? `<button class="secondary-button practice-change-matchup" id="practice-result-decks">${icon("layers-2")} View practice decks</button>` : ""}<div class="result-links"><button class="text-button" id="watch-replay">${icon("play")} Watch replay</button><button class="text-button" id="return-home">Back to arena ${icon("arrow-right")}</button></div></div>`,
         "result",
       );
       if (wasMultiplayer)
@@ -1476,6 +1477,11 @@ function showResult() {
       if (completedPractice)
         $("#change-practice-matchup").onclick = () =>
           changePracticeMatchup(completedPractice);
+      if (practiceRecord)
+        $("#practice-result-decks").onclick = () => {
+          lobby();
+          showMatchDetails(-1, { record: practiceRecord });
+        };
       $("#return-home").onclick = lobby;
       $("#watch-replay").onclick = () => playReplay(profile.history[0]);
     },

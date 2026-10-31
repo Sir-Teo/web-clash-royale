@@ -3675,3 +3675,13 @@ Seven focused unit checks cover both perspectives and deck sides, simultaneous o
 All 3,662 unit checks across 258 files, type checking and production build pass. All eight development cases pass on desktop Chromium and phone WebKit; all twenty-four final production cases pass across desktop Chromium, phone Chromium and phone WebKit, including full deck usage/navigation. The final dialog explains that jumps pause at the selected play. The new workflow-file pattern includes the card-play journeys in CI.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `931116a79e42` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Open captured practice decks directly from the result
+
+Completed practices now offer View practice decks. The result retains its newly recorded entry, enters the lobby and opens the existing Battle details flow. This provides destination selection and Use your recorded deck for keeping a temporary loadout, with the existing fresh-profile checks, Undo and save-status feedback. Viewing alone writes no decks or additional battle result.
+
+The new journeys finish a temporary curated matchup and inspect the exact captured decks and player name. Newer saved rewards, deck selection and history are seeded before opening the result action; the first stale adoption refreshes without writing, the explicit retry adopts the captured player deck, Undo restores only the newer deck selection, and reload retains the final choice. A blocked-storage practice still exposes its session recording, permits session adoption/Undo and keeps its unsaved battle-log entry without overwriting stored bytes.
+
+All 3,662 unit checks across 258 files, type checking and production build pass. All four development cases pass on desktop Chromium and phone WebKit; all twelve production cases pass across desktop Chromium, phone Chromium and phone WebKit, including the collection-card trial journeys. Reviewed phone results keep the new 44-pixel action visible with existing retry/navigation controls. The practice-prefixed journeys join workflow CI automatically. A read-only CLI audit covered all 408 declared cases in 61 workflow files exactly once across nine shards (47/49/40 per browser); no hosted CI was triggered.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `991bef879ce8` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
