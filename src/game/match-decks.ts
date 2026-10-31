@@ -17,6 +17,19 @@ export interface PracticeOpponent {
   playerDeck?: CardId[];
 }
 
+/** Card order is part of a deck, and selecting another saved slot is an action. */
+export function isActiveDeck(
+  profile: Pick<Profile, "activeDeck" | "deck">,
+  deck: readonly CardId[],
+  slot: number,
+) {
+  return (
+    slot === profile.activeDeck &&
+    deck.length === profile.deck.length &&
+    deck.every((id, index) => profile.deck[index] === id)
+  );
+}
+
 /** Replay decks use canonical teams; history results already use the viewer's side. */
 export function recordedDecks(record: RecordEntry) {
   const red = record.replay.perspective === "red";

@@ -3155,3 +3155,11 @@ Shared replay previews now expose a destination saved slot and explicit Use reco
 All 3,553 unit checks across 246 files pass, as do type checking and the production build. All 36 selected production browser scenarios pass across desktop Chromium, phone Chromium and phone WebKit: fifteen adoption cases, twelve imported-practice cases and nine existing portable-replay cases. Copy checks cover both recorded players from blue/red source recordings, exact card order, destination-only replacement, unchanged rewards/history/name, full Undo and reload persistence, repeated activation, retained inspection state, real touch/Enter activation, 320-pixel controls and rejected storage writes with usable in-memory decks and Undo. Viewing, watching and choosing practice options do not adopt a deck. Reviewed phone captures retain native card grids and usable copy/Undo controls.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `f10f180ff9a2` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Retain deck Undo across repeated adoption and storage retries
+
+Repeatedly adopting the same deck previously overwrote the original Undo snapshot in deck-code previews and saved-match details. All three adoption paths now retain the snapshot when the exact card order and selected destination are already active, while still retrying profile persistence and refreshing its saved/session-only notice. Adopting another order or slot remains a new action.
+
+The original lost-Undo defect was reproduced in three browser cases. A separate rejected-write recovery case exposed why skipping the repeated action entirely was insufficient. The final eight development checks pass in desktop Chromium and phone WebKit. All 27 selected production browser cases pass across desktop Chromium, phone Chromium and phone WebKit, covering repeated shared-code and blue/red match adoption, recovered storage writes, ordinary copying/inspection, imported adoption and rejected storage writes. All 3,553 unit checks across 246 files, type checking and production build pass.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `0154ab012146` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

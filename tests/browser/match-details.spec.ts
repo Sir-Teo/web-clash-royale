@@ -51,6 +51,22 @@ const saved = (page: Page) =>
   page.evaluate(() =>
     JSON.parse(localStorage.getItem("browser-royale.profile.v1")!),
   );
+for (const index of [0, 1])
+  test(`repeated adoption of a ${index ? "red" : "blue"} recorded deck preserves the original Undo`, async ({
+    page,
+  }) => {
+    const before = await saved(page);
+    await open(page, index);
+    await page.locator("#match-deck-slot").selectOption("2");
+    const use = page.locator('[data-use-match-deck="opponent"]');
+    await use.click();
+    expect((await saved(page)).activeDeck).toBe(2);
+    await use.click();
+    await page.locator("#undo-match-deck").click();
+    const after = await saved(page);
+    for (const field of ["activeDeck", "deck", "decks"])
+      expect(after[field]).toEqual(before[field]);
+  });
 const ids = (root: Locator) =>
   root
     .locator("[data-native-card]")
@@ -93,9 +109,14 @@ test("inspects recorded cards, copies and undoes a deck, persists it and replays
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   const before = await saved(page);
-  expect(before.history.every((entry: any) => entry.replay.rulesFamily === undefined)).toBe(true);
+  expect(
+    before.history.every(
+      (entry: any) => entry.replay.rulesFamily === undefined,
+    ),
+  ).toBe(true);
   const migratedHistory = before.history.map((entry: any) => ({
-    ...entry, replay: { ...entry.replay, rulesFamily: "local" },
+    ...entry,
+    replay: { ...entry.replay, rulesFamily: "local" },
   }));
   await open(page);
   expect(await ids(page.locator('[data-match-side="yours"]'))).toEqual(

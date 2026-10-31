@@ -168,6 +168,7 @@ import {
   restoreDeckSelection,
   useRecordedDeck,
   useDeck,
+  isActiveDeck,
   type PracticeOpponent,
 } from "./game/match-decks";
 import {
@@ -2172,7 +2173,10 @@ function showDeckCodes(state: Partial<DeckCodeView> = {}) {
     };
     $("#use-code-deck").onclick = () => {
       if (screen !== "lobby" || !view.preview) return;
-      const undo = useDeck(profile, view.preview, view.slot);
+      const undo =
+        view.undo && isActiveDeck(profile, view.preview, view.slot)
+          ? view.undo
+          : useDeck(profile, view.preview, view.slot);
       saveProfile(profile);
       refreshDeck();
       showDeckCodes({
@@ -2484,16 +2488,10 @@ function showSharedReplay(
       button.onclick = () => {
         if (screen !== "lobby") return;
         const side = button.dataset.useSharedDeck as "yours" | "opponent";
-        if (
-          view.undo &&
-          view.slot === profile.activeDeck &&
-          decks[side].every((id, index) => profile.deck[index] === id)
-        ) {
-          // A repeated activation must keep the original Undo snapshot.
-          $("#undo-shared-deck").focus();
-          return;
-        }
-        const undo = useDeck(profile, decks[side], view.slot);
+        const undo =
+          view.undo && isActiveDeck(profile, decks[side], view.slot)
+            ? view.undo
+            : useDeck(profile, decks[side], view.slot);
         saveProfile(profile);
         refreshDeck();
         showSharedReplay(shared, {
@@ -2623,7 +2621,10 @@ function showMatchDetails(index: number, state: Partial<MatchDeckView> = {}) {
       button.onclick = () => {
         if (screen !== "lobby") return;
         const side = button.dataset.useMatchDeck as "yours" | "opponent";
-        const undo = useRecordedDeck(profile, record, side, view.slot);
+        const undo =
+          view.undo && isActiveDeck(profile, decks[side], view.slot)
+            ? view.undo
+            : useRecordedDeck(profile, record, side, view.slot);
         saveProfile(profile);
         refreshDeck();
         showMatchDetails(index, {

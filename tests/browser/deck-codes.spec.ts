@@ -15,6 +15,56 @@ const shared = [
 const code = "BRA-DECK-1:" + shared.join(",");
 const saved = (page: Page) =>
   page.evaluate((key) => localStorage.getItem(key), key);
+test("repeated adoption of a shared code preserves the original deck Undo", async ({
+  page,
+}) => {
+  const before = JSON.parse((await saved(page))!);
+  await open(page);
+  await preview(page);
+  await page.locator("#code-deck-slot").selectOption("1");
+  await page.locator("#use-code-deck").click();
+  expect(JSON.parse((await saved(page))!).activeDeck).toBe(1);
+  await page.locator("#use-code-deck").click();
+  await page.locator("#undo-code-deck").click();
+  expect(JSON.parse((await saved(page))!)).toEqual(before);
+});
+test("repeated adoption retries storage while retaining the original Undo", async ({
+  page,
+}) => {
+  const before = JSON.parse((await saved(page))!);
+  await open(page);
+  await preview(page);
+  await page.locator("#code-deck-slot").selectOption("1");
+  await page.evaluate(() => {
+    const original = Storage.prototype.setItem;
+    (window as any).__restoreDeckStorage = () =>
+      Object.defineProperty(Storage.prototype, "setItem", {
+        configurable: true,
+        writable: true,
+        value: original,
+      });
+    Object.defineProperty(Storage.prototype, "setItem", {
+      configurable: true,
+      writable: true,
+      value() {
+        throw new DOMException("Blocked", "QuotaExceededError");
+      },
+    });
+  });
+  await page.locator("#use-code-deck").click();
+  await expect(page.locator(".deck-code-notice")).toContainText(
+    "selected for this session",
+  );
+  expect(JSON.parse((await saved(page))!)).toEqual(before);
+  await page.evaluate(() => (window as any).__restoreDeckStorage());
+  await page.locator("#use-code-deck").click();
+  await expect(page.locator(".deck-code-notice")).toContainText(
+    "selected and saved",
+  );
+  expect(JSON.parse((await saved(page))!).activeDeck).toBe(1);
+  await page.locator("#undo-code-deck").click();
+  expect(JSON.parse((await saved(page))!)).toEqual(before);
+});
 async function open(page: Page) {
   await page
     .getByRole("button", { name: `Cards ${expectedCards}`, exact: true })
