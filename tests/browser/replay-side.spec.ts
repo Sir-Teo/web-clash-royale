@@ -293,6 +293,7 @@ for (const red of [false, true])
       await page
         .getByRole("button", { name: "Restart replay", exact: true })
         .click();
+      await expect(page.locator("#replay-speed")).toHaveText("2×");
       await expect(side).toHaveAttribute("aria-pressed", "true");
       await expect(page.locator(".match-bottom .player-name")).toHaveText(
         "Rival Captain",

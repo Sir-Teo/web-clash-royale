@@ -369,7 +369,7 @@ $("#app").innerHTML = `
     </div>
     <div id="lobby-footer" class="chest-tray"><div class="chest-heading"><span>VICTORY CHESTS</span><b id="chest-count">0 / 4</b></div><div class="chest-slots" id="chest-slots"></div></div>
     <div id="battle-tray" class="battle-tray hidden"><div class="hand-row"><div class="next-card"><span>NEXT</span><div class="next-card-picture" data-native-card="" data-card-variant="thumbnail"><img id="next-card-img" alt="Next card"/>${nativeCardArt}</div><div class="native-next-cost" data-native-card="" data-card-variant="cost"><b id="next-card-cost"></b>${nativeCardArt}</div></div><div class="hand" id="hand"></div></div><div class="elixir-row">${elixirMarkup}</div><div class="tray-caption"><span id="hand-caption">Select a card, then tap your side of the arena</span><span><kbd>1</kbd>–<kbd>4</kbd> SELECT</span></div></div>
-    <div class="replay-controls hidden" role="group" aria-label="Replay controls"><div class="replay-position"><span id="replay-clock">0:00 / 0:00</span><input id="replay-seek" aria-label="Replay timeline" aria-describedby="replay-keyboard-help" type="range" min="0" max="100" step="0.01" value="0"/></div><div class="replay-actions"><button id="replay-back" class="icon-button replay-jump" aria-label="Back 10 seconds" title="Back 10 seconds (Left arrow)">${icon("rotate-ccw")}<span>10</span></button><button id="replay-play" class="icon-button" aria-label="Pause replay">${icon("pause")}</button><button id="replay-forward" class="icon-button replay-jump" aria-label="Forward 10 seconds" title="Forward 10 seconds (Right arrow)">${icon("rotate-cw")}<span>10</span></button><button id="replay-speed" class="text-button" aria-label="Playback speed: 1×">1×</button><label class="text-button replay-plays" title="Jump to a recorded card play"><span aria-hidden="true">Plays</span><select id="replay-plays" aria-label="Card plays"><option value="">No recorded plays</option></select></label><button id="replay-exit" class="text-button">Exit</button></div><span id="replay-keyboard-help" class="sr-only">Outside controls: Left or Right arrow skips ten seconds, Home goes to the beginning and End to the end. Square brackets jump to the previous or next card play. Space pauses or resumes. Keys 1 through 4 inspect hand cards. Tab to a hand card and press Enter or Space to inspect its current stats.</span></div>
+    <div class="replay-controls hidden" role="group" aria-label="Replay controls"><div class="replay-position"><span id="replay-clock">0:00 / 0:00</span><input id="replay-seek" aria-label="Replay timeline" aria-describedby="replay-keyboard-help" type="range" min="0" max="100" step="0.01" value="0"/></div><div class="replay-actions"><button id="replay-back" class="icon-button replay-jump" aria-label="Back 10 seconds" title="Back 10 seconds (Left arrow)">${icon("rotate-ccw")}<span>10</span></button><button id="replay-play" class="icon-button" aria-label="Pause replay">${icon("pause")}</button><button id="replay-forward" class="icon-button replay-jump" aria-label="Forward 10 seconds" title="Forward 10 seconds (Right arrow)">${icon("rotate-cw")}<span>10</span></button><button id="replay-speed" class="text-button" aria-label="Playback speed: 1×">1×</button><label class="text-button replay-plays" title="Jump to a recorded card play"><span aria-hidden="true">Plays</span><select id="replay-plays" aria-label="Card plays"><option value="">No recorded plays</option></select></label><button id="replay-exit" class="text-button">Exit</button></div><span id="replay-keyboard-help" class="sr-only">Outside controls: Left or Right arrow skips ten seconds, Home goes to the beginning and End to the end. Square brackets jump to the previous or next card play. Space pauses, resumes or restarts a completed replay. Keys 1 through 4 inspect hand cards. Tab to a hand card and press Enter or Space to inspect its current stats.</span></div>
    </main>
    <aside class="right-sidebar"><section class="deck-panel panel"><div class="section-heading"><div><span class="eyebrow">YOUR WINNING EIGHT</span><h3>Battle deck</h3></div><span class="deck-number">01</span></div><div class="deck-tabs" id="deck-tabs"></div><div class="deck-grid" id="deck-preview"></div><div class="deck-summary"><span><i class="tiny-drop"></i> Average elixir <b id="average-elixir">3.5</b></span><span>8 / 8</span></div><button id="edit-deck" class="secondary-button">${icon("layers-2")} Edit deck ${icon("arrow-up-right")}</button></section>
     <section class="battle-brief panel"><div class="section-heading"><h3>Battle brief</h3>${icon("scroll-text")}</div><div class="brief-item"><span>${icon("crown")}</span><div><b>Take the crown</b><p>Destroy more towers. Take the King Tower for an instant win.</p></div></div><div class="brief-item"><span class="purple">${icon("droplet")}</span><div><b>Spend wisely</b><p>Elixir refills over time. Save some to defend your side.</p></div></div><div class="brief-item"><span class="blue">${icon("timer")}</span><div><b>Three minutes. One winner.</b><p>Tied? Two-minute sudden death. Elixir speeds up as time runs out.</p></div></div><button id="how-to-play" class="text-button">How to play ${icon("arrow-right")}</button></section>
@@ -1340,6 +1340,7 @@ function playReplay(
   record: RecordEntry,
   ownerName?: string,
   opponentView = false,
+  playbackSpeed = 1,
 ) {
   if (!graphicsAvailable) {
     toast("Wait for the arena graphics to recover before watching a replay.");
@@ -1366,8 +1367,8 @@ function playReplay(
   const replay = setReplayView(record, playerName, opponentView);
   resultShown = true;
   paused = false;
-  speed = 1;
-  audio.setRate(1);
+  speed = playbackSpeed;
+  audio.setRate(speed);
   audio.stopEffects();
   announcements.reset();
   selected = -1;
@@ -1390,8 +1391,8 @@ function playReplay(
   $(".replay-controls").classList.remove("hidden");
   $("#replay-side").classList.remove("hidden");
   syncReplayControl();
-  $("#replay-speed").textContent = "1×";
-  $("#replay-speed").setAttribute("aria-label", "Playback speed: 1×");
+  $("#replay-speed").textContent = `${speed}×`;
+  $("#replay-speed").setAttribute("aria-label", `Playback speed: ${speed}×`);
   refreshDeck();
   intro.start(replayOwnerName ?? profile.name, battle.mode, opponentName);
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
@@ -2999,10 +3000,10 @@ function refreshSound() {
 function showHelp(back?: () => void) {
   const replay = screen === "replay";
   const steps = replay
-    ? `<div class="help-steps"><div><b>1</b><span><h3>Find the moment.</h3><p>Drag the timeline or use the ten-second skip buttons. Open Plays to jump to a recorded card play. Seeking keeps your speed and paused state.</p></span></div><div><b>2</b><span><h3>See either side.</h3><p>Use View opponent side beside Battle settings to switch the arena, hand, elixir and names. View recorded player side switches back.</p></span></div><div><b>3</b><span><h3>Read the hand.</h3><p>Tap a hand card or press 1–4 to inspect its level-11 stats. Reading a card pauses playback. Back to replay restores the previous playback state, speed and viewing side.</p></span></div><div><b>4</b><span><h3>Study the timing.</h3><p>Use the speed and pause controls to review a push. Restart replay begins again with the chosen viewing side.</p></span></div></div>`
+    ? `<div class="help-steps"><div><b>1</b><span><h3>Find the moment.</h3><p>Drag the timeline or use the ten-second skip buttons. Open Plays to jump to a recorded card play. Seeking keeps your speed and paused state.</p></span></div><div><b>2</b><span><h3>See either side.</h3><p>Use View opponent side beside Battle settings to switch the arena, hand, elixir and names. View recorded player side switches back.</p></span></div><div><b>3</b><span><h3>Read the hand.</h3><p>Tap a hand card or press 1–4 to inspect its level-11 stats. Reading a card pauses playback. Back to replay restores the previous playback state, speed and viewing side.</p></span></div><div><b>4</b><span><h3>Study the timing.</h3><p>Use the speed and pause controls to review a push. Restart replay begins again with the chosen speed and viewing side.</p></span></div></div>`
     : `<div class="help-steps"><div><b>1</b><span><h3>Pick your eight.</h3><p>Your deck has eight unique cards. Four are in your hand; playing one draws the next card.</p></span></div><div><b>2</b><span><h3>Make your move.</h3><p>Tap a card, then a valid position, or drag it into the arena. Most troops deploy on your half; most spells can target either half. Miner can tunnel across the river, and The Log starts on your side. Taking a Princess Tower opens that lane for deployment.</p></span></div><div><b>3</b><span><h3>Protect your kingdom.</h3><p>Troops fight automatically. Use tanks to soak up damage, ranged support to back them up, and spells to clear swarms.</p></span></div><div><b>4</b><span><h3>Take the crown.</h3><p>Destroy more towers in three minutes. Ties go to sudden death, then a lowest-tower-health tiebreaker. Destroying the King Tower wins instantly.</p></span></div></div>`;
   const shortcuts = replay
-    ? `<div class="keyboard-help"><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> Inspect hand card</span><span><kbd>←</kbd><kbd>→</kbd> Skip ten seconds</span><span><kbd>Home</kbd><kbd>End</kbd> Start / end</span><span><kbd>[</kbd><kbd>]</kbd> Previous / next play</span><span><kbd>Space</kbd> Pause / resume</span><span><kbd>Esc</kbd> Close dialog / pause</span></div>`
+    ? `<div class="keyboard-help"><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> Inspect hand card</span><span><kbd>←</kbd><kbd>→</kbd> Skip ten seconds</span><span><kbd>Home</kbd><kbd>End</kbd> Start / end</span><span><kbd>[</kbd><kbd>]</kbd> Previous / next play</span><span><kbd>Space</kbd> Pause / resume / restart</span><span><kbd>Esc</kbd> Close dialog / pause</span></div>`
     : `<div class="keyboard-help"><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> Select card</span><span><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> Aim · Shift for larger steps</span><span><kbd>Enter</kbd> Deploy</span><span><kbd>Esc</kbd> Cancel / pause</span><span><kbd>Space</kbd> Pause</span></div>`;
   modal(
     replay ? "Replay controls" : "Your first crown starts here.",
@@ -3263,7 +3264,12 @@ $(".sound-toggle").onclick = () => {
 $("#pause-button").onclick = togglePause;
 $("#replay-play").onclick = () => {
   if (replayData && replayComplete(battle, replayData) && replayRecord)
-    playReplay(replayRecord, replayRecordedName ?? undefined, replayOpponentView);
+    playReplay(
+      replayRecord,
+      replayRecordedName ?? undefined,
+      replayOpponentView,
+      speed,
+    );
   else togglePause();
 };
 $("#replay-side").onclick = () => {
@@ -3536,7 +3542,10 @@ document.addEventListener("keydown", (e) => {
     if ((e.target as HTMLElement).closest("button,a[href],[role=button]"))
       return;
     e.preventDefault();
-    if (!e.repeat) togglePause();
+    if (!e.repeat) {
+      if (screen === "replay") $("#replay-play").click();
+      else togglePause();
+    }
   }
 });
 function suspendFrameLoop() {

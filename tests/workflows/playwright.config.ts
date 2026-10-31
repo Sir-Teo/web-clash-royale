@@ -21,6 +21,7 @@ export default defineConfig(common, {
     "**/paused-deck.spec.ts",
     "**/deck-inspection-return.spec.ts",
     "**/help.spec.ts",
+    "**/keyboard-controls.spec.ts",
     "**/settings-*.spec.ts",
     "**/mobile-loading.spec.ts",
     "**/mirror-placement.spec.ts",

@@ -87,43 +87,74 @@ test("Space activates focused replay speed, pause, resume and exit controls", as
   await expect(canvas).not.toHaveAttribute("aria-keyshortcuts", /./);
 });
 
-test("Space restarts a completed replay through its focused native button", async ({
-  page,
-}) => {
-  const before = await page.evaluate(() =>
-    localStorage.getItem("browser-royale.profile.v1"),
-  );
-  await replay(page);
-  const timeline = page.getByRole("slider", { name: "Replay timeline" });
-  await timeline.focus();
-  await timeline.press("End");
-  const restart = page.getByRole("button", {
-    name: "Restart replay",
-    exact: true,
-  });
-  await expect(restart).toBeVisible();
-  await expect(page.locator("#arena-canvas canvas")).toHaveAttribute(
-    "role",
-    "application",
-  );
-  await expect(page.locator("#arena-canvas canvas")).toHaveAttribute(
-    "aria-describedby",
-    "replay-keyboard-help",
-  );
-  await restart.focus();
-  await page.keyboard.press("Space");
-  await expect(page.locator("#replay-play")).toHaveAttribute(
-    "aria-label",
-    "Pause replay",
-  );
-  expect((await state(page)).winner).toBeNull();
-  expect((await state(page)).time).toBeLessThan(1);
-  expect(
-    await page.evaluate(() =>
+for (const target of ["button", "arena"] as const)
+  test(`Space restarts a completed replay through ${target === "button" ? "its focused native button" : "the focused arena"}`, async ({
+    page,
+  }) => {
+    const before = await page.evaluate(() =>
       localStorage.getItem("browser-royale.profile.v1"),
-    ),
-  ).toBe(before);
-});
+    );
+    await replay(page);
+    await page
+      .getByRole("button", { name: "View opponent side", exact: true })
+      .click();
+    const displayedPlayer = await page
+      .locator(".match-bottom .player-name")
+      .textContent();
+    await page.locator("#replay-speed").click();
+    const timeline = page.getByRole("slider", { name: "Replay timeline" });
+    await timeline.focus();
+    await timeline.press("End");
+    const restart = page.getByRole("button", {
+      name: "Restart replay",
+      exact: true,
+    });
+    await expect(restart).toBeVisible();
+    await expect(page.locator("#arena-canvas canvas")).toHaveAttribute(
+      "role",
+      "application",
+    );
+    await expect(page.locator("#arena-canvas canvas")).toHaveAttribute(
+      "aria-describedby",
+      "replay-keyboard-help",
+    );
+    const focused =
+      target === "button"
+        ? page.locator("#replay-play")
+        : page.locator("#arena-canvas canvas");
+    await focused.focus();
+    await page.keyboard.down("Space");
+    if (target === "button") await page.keyboard.up("Space");
+    await expect(page.locator("#replay-play")).toHaveAttribute(
+      "aria-label",
+      "Pause replay",
+    );
+    await expect(focused).toBeFocused();
+    await expect(page.locator("#replay-speed")).toHaveText("2×");
+    await expect(page.locator("#replay-speed")).toHaveAttribute(
+      "aria-label",
+      "Playback speed: 2×",
+    );
+    await expect(page.locator("#replay-side")).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await expect(page.locator(".match-bottom .player-name")).toHaveText(
+      displayedPlayer!,
+    );
+    if (target === "arena") {
+      await page.keyboard.down("Space");
+      expect((await state(page)).paused).toBe(false);
+      await page.keyboard.up("Space");
+    }
+    expect((await state(page)).winner).toBeNull();
+    expect((await state(page)).time).toBeLessThan(1);
+    expect(
+      await page.evaluate(() =>
+        localStorage.getItem("browser-royale.profile.v1"),
+      ),
+    ).toBe(before);
+  });
 
 test("held battle shortcuts act once and focused emote buttons keep native Space activation", async ({
   page,
