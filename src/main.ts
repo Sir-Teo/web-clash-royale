@@ -2412,7 +2412,10 @@ function bindReplayFileInput() {
     }
   };
 }
-function showSharedReplay(shared: SharedReplay) {
+function showSharedReplay(
+  shared: SharedReplay,
+  practiceSide: "yours" | "opponent" = "opponent",
+) {
   if (screen !== "lobby") return;
   const { record, playerName } = shared,
     decks = recordedDecks(record);
@@ -2420,11 +2423,25 @@ function showSharedReplay(shared: SharedReplay) {
     `<section class="match-deck-panel"><div class="match-deck-heading"><h3>${esc(name)}</h3><span><i class="tiny-drop"></i> ${averageCost(decks[side]).toFixed(1)} average</span></div><div class="match-deck-grid">${decks[side].map((id) => cardHTML(id, `data-shared-card="${id}"`)).join("")}</div></section>`;
   modal(
     "Shared replay",
-    `<div class="shared-replay"><p class="shared-replay-names"><strong>${esc(playerName)}</strong><span>vs</span><strong>${esc(record.opponent ?? "Royal Trainer")}</strong></p><p class="shared-replay-meta">${esc(recordModeName(record))} · ${clock(record.replay.duration * STEP)} played<br>${esc(new Date(record.date).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }))}</p><p class="shared-replay-result">Recorded result: ${record.winner === "blue" ? "Victory" : record.winner === "red" ? "Defeat" : "Draw"} · ${record.crowns[0]} – ${record.crowns[1]}</p><div class="match-decks">${deck("yours", playerName)}${deck("opponent", record.opponent ?? "Royal Trainer")}</div><p class="modal-footnote">Watching this file does not add battles, rewards or decks to your progress.</p><div class="match-details-actions"><button class="text-button" id="shared-replay-back">Back to battle log</button><button class="primary-button" id="watch-shared-replay">${icon("play")} Watch shared replay</button></div></div>`,
+    `<div class="shared-replay"><p class="shared-replay-names"><strong>${esc(playerName)}</strong><span>vs</span><strong>${esc(record.opponent ?? "Royal Trainer")}</strong></p><p class="shared-replay-meta">${esc(recordModeName(record))} · ${clock(record.replay.duration * STEP)} played<br>${esc(new Date(record.date).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }))}</p><p class="shared-replay-result">Recorded result: ${record.winner === "blue" ? "Victory" : record.winner === "red" ? "Defeat" : "Draw"} · ${record.crowns[0]} – ${record.crowns[1]}</p><div class="match-decks">${deck("yours", playerName)}${deck("opponent", record.opponent ?? "Royal Trainer")}</div><section class="shared-replay-practice" aria-label="Practice a recorded deck"><label class="practice-choice" for="practice-shared-side">Practice opponent deck<span><select id="practice-shared-side" aria-describedby="practice-shared-note"><option value="opponent" ${practiceSide === "opponent" ? "selected" : ""}>Recorded opponent · ${esc(record.opponent ?? "Royal Trainer")}</option><option value="yours" ${practiceSide === "yours" ? "selected" : ""}>Recorded player · ${esc(playerName)}</option></select>${icon("chevron-down")}</span></label>${practicePaceHTML()}<button class="secondary-button" id="practice-shared-replay" aria-describedby="practice-shared-note">${icon("target")} Practice against this deck</button><p class="match-practice-note" id="practice-shared-note">AI uses the selected recorded deck against your active battle deck. No trophies or rewards.</p></section><p class="modal-footnote">Watching this file does not add battles, rewards or decks to your progress.</p><div class="match-details-actions"><button class="text-button" id="shared-replay-back">Back to battle log</button><button class="primary-button" id="watch-shared-replay">${icon("play")} Watch shared replay</button></div></div>`,
     "shared-replay",
     true,
   );
   $("#shared-replay-back").onclick = showHistory;
+  bindPracticePace();
+  $("#practice-shared-side").onchange = () => {
+    const side = $<HTMLSelectElement>("#practice-shared-side").value;
+    if (side === "yours" || side === "opponent") practiceSide = side;
+  };
+  $("#practice-shared-replay").onclick = () => {
+    if (screen !== "lobby") return;
+    const practice = recordedPractice(record, practiceMode);
+    if (practiceSide === "yours") {
+      practice.name = playerName;
+      practice.deck = [...decks.yours];
+    }
+    startBattle(false, practice);
+  };
   $("#watch-shared-replay").onclick = () => {
     if (screen === "lobby") playReplay(record, playerName);
   };
@@ -2435,7 +2452,7 @@ function showSharedReplay(shared: SharedReplay) {
         (button.onclick = () =>
           showCard(
             button.dataset.sharedCard as CardId,
-            () => showSharedReplay(shared),
+            () => showSharedReplay(shared, practiceSide),
             "Back to shared replay",
           )),
     );

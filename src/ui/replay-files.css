@@ -41,3 +41,12 @@
   overflow-wrap: anywhere;
   min-width: 0;
 }
+.shared-replay-practice {
+  margin-top: 18px;
+  padding: 14px 0;
+  border-top: 1px solid #ffffff16;
+  border-bottom: 1px solid #ffffff16;
+}
+.shared-replay-practice > button {
+  width: 100%;
+}
