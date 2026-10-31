@@ -66,6 +66,8 @@ Use the **Try** action under either recorded deck in Battle details or a shared 
 
 After a practice, **View practice decks** opens that attempt's captured Battle details. Choose a destination slot and **Use your recorded deck** to keep a trial deck, with the usual Undo and save-status feedback. Viewing the details alone keeps your saved decks unchanged.
 
+Solo result replays offer **Back to result**. Return after studying or restarting the replay, then choose **Practice again** with the captured matchup and practice speed, or **Battle again** for another solo battle.
+
 Below an opponent’s recorded cards, choose a pace and **Practice against this deck** to face those cards with your active battle deck. **Practice again** keeps the same opponent deck and pace; returning to the arena restores your selected battle mode. Practice results save their own replays and count toward your battle statistics. New records are labelled Practice in the battle log, details and shared replay previews. The practice pace stays selected for the session.
 
 Practice setup and shared/recorded deck previews offer **Practice speed** before you start. During a practice battle, **Pause → Practice speed** offers 0.5× slow motion, 1× normal speed or 2× fast practice. The choice stays selected for the session and appears beneath your name; restart and Practice again retain it. Saved replays use match time and start at normal playback speed.

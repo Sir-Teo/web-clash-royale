@@ -1487,7 +1487,9 @@ function showResult() {
         };
       $("#return-home").onclick = lobby;
       $("#watch-replay").onclick = () => {
-        if (completedRecord) playReplay(completedRecord);
+        if (!completedRecord) return;
+        if (wasMultiplayer) playReplay(completedRecord);
+        else watchPreviewReplay(completedRecord, $("#watch-replay"), "Back to result");
       };
     },
   };
@@ -1590,7 +1592,11 @@ function watchPreviewReplay(
   label: string,
   ownerName?: string,
 ) {
-  const restore = screen === "lobby" ? returnToModal(opener) : null;
+  const restore =
+    screen === "lobby" ||
+    (screen === "battle" && modalKey === "result" && !multiplayer)
+      ? returnToModal(opener)
+      : null;
   playReplay(record, ownerName);
   if (restore && screen === "replay" && replayRecord === record) {
     replayReturn = { restore, label };

@@ -3695,3 +3695,13 @@ The regressions use an actual Leave handler followed by a sound click in the sam
 All 3,662 unit checks across 258 files, type checking and production build pass. All six development cases pass across desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit, including captured practice-deck adoption. The new settings-prefixed journeys join workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `ba06a889e8cf` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Return from a solo result replay to retry the battle
+
+Solo result Watch replay now retains the result view through the existing replay-return route. Back to result restores its actual DOM, scroll, Watch replay focus and captured callbacks after entering the lobby. Replay restart keeps that route. Practice again retains the captured decks, pace and session practice speed; starting the next attempt adds no result until it finishes.
+
+The new ordinary/practice journeys finish a nonzero-length battle, watch at 2×, seek to completion, restart, switch sides and return to the result. They verify retained scroll/focus, exact saved bytes and a single recorded result. Retrying starts the expected player deck; practice also keeps its opponent and 2× practice speed while an ordinary battle uses normal speed. The ending-window history-refresh regressions continue to verify that the retained result watches its own recording. Reviewed 320-pixel restored results retain readable retry and deck-management actions.
+
+All 3,662 unit checks across 258 files, type checking and production build pass. All eight development cases pass across desktop Chromium and phone WebKit; all eighteen production cases pass across desktop Chromium, phone Chromium and phone WebKit, including captured practice-deck adoption. The settings-prefixed journeys join workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `b40e843613d5` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

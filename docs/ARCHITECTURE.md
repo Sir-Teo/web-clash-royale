@@ -351,6 +351,8 @@ Practice results retain their newly recorded RecordEntry immediately after savin
 
 Result Watch replay also retains the completed RecordEntry at save time. Friendly results select their stored match ID, including deduplicated reconnect results. Preference actions during the ending can refresh the profile/history before the result dialog appears; the replay action continues to use the retained battle rather than reading a changed first history entry.
 
+Solo result replay returns retain the actual result modal and its callbacks through the existing replay-return route. Exiting playback enters the lobby and restores that result view, scroll and Watch replay focus. Retrying uses the captured practice object, while closing the retained result returns to the arena. Restarting playback retains the same return route; restoring a result view performs no result-save operation.
+
 The lobby deck panel opens the shared read-only deck-code dialog directly from its selected session deck. It captures the ordered cards and slot title when opened, writes no profile data, and closes back to the same native button through ModalFocus. Edit/Share footer controls retain 44-pixel touch targets on phones.
 
 A shared deck-composition renderer counts the selected card definitions by troop/spell/building kind. Builder, code, practice, paused-battle and local/shared recording previews display these read-only counts using each view’s actual captured/projected cards. No profile, replay or rules fields change.
