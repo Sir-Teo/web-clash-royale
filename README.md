@@ -72,6 +72,8 @@ The picker shows saved practice wins, losses and draws for the selected deck com
 
 In a solo battle, choose **Pause → Inspect battle deck** to read any of your eight starting cards. The view uses that battle's captured deck, including a selected practice loadout. During practice, **Deck to inspect** switches between your starting cards and the opponent's. Card inspection retains that choice and keeps the battle paused. **Share deck code** copies the inspected starting deck, including a temporary practice loadout or its AI opponent. If copying is unavailable, select the displayed code manually. **Back to deck inspection** retains the inspected side and pause. Return to the pause menu to choose an action, or close the dialog to resume.
 
+**Pause → How to play** opens controls and placement rules directly during a solo battle. **Back to pause menu** retains practice speed and opening-shuffle choices; closing Help resumes the battle.
+
 Deck previews and the builder show troop, spell and building counts alongside the starting cards, helping compare deck composition.
 
 From the lobby’s **Battle deck** panel, use **Share code** to copy the selected deck directly. **Back to arena** returns focus to that button.

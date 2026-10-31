@@ -3635,3 +3635,13 @@ The new journeys check both recorded perspectives and both viewing sides, exact 
 All 3,650 unit checks across 256 files, type checking and production build pass. All twelve final development cases pass across desktop Chromium and phone WebKit; all eighteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. Existing hand-card and replay Help behavior remains covered. Reviewed desktop and 320-pixel phone layouts keep card controls and deck summaries readable. The new workflow-file pattern includes these deck journeys in CI.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `8047c8dc52c7` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Open controls directly from the solo pause menu
+
+Ordinary and practice pause menus now offer How to play. The existing Help view accepts a caller-specific Back label and retains the actual pause menu, its focus and practice speed/opening choices. Closing Help uses the pause menu's existing shared resume owner; the default Settings route remains unchanged.
+
+New ordinary/practice journeys use keyboard and touch, check 44-pixel targets, read placement guidance, retain the exact frozen time/hand/rate and restore Back focus. Practice speed and fresh-opening choices survive the return. Escape and the close button resume the battle without writing saved progress. Isolated desktop and phone WebKit checks pass; the combined workspace also runs existing playing/paused replay Help checks to protect the default Settings route. Reviewed 320-pixel Help text remains readable.
+
+All 3,650 unit checks across 256 files, type checking and production build pass. All eight combined development cases pass across desktop Chromium and phone WebKit; all twelve production cases pass across desktop Chromium, phone Chromium and phone WebKit. The practice-prefixed journeys join workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `14e68427c6db` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
