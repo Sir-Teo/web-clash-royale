@@ -9,13 +9,23 @@ export interface DeckSelection {
   decks: CardId[][];
 }
 
+export interface PracticeSourceDeck {
+  readonly name: string;
+  readonly style: string;
+  readonly deck: readonly CardId[];
+}
+
 export interface PracticeOpponent {
   name: string;
   style: string;
   mode: Mode;
   deck: CardId[];
   playerDeck?: CardId[];
-  selection?: Readonly<{ playerChoice: string; opponentIndex: number }>;
+  selection?: Readonly<{
+    playerChoice: string;
+    opponentIndex: number;
+    previousDeck?: PracticeSourceDeck;
+  }>;
 }
 
 /** Card order is part of a deck, and selecting another saved slot is an action. */

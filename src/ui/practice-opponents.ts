@@ -1,11 +1,13 @@
 import { CARD_MAP, type CardId } from "../game/cards";
 import { SOLO_OPPONENTS } from "../game/opponents";
+import type { PracticeOpponent, PracticeSourceDeck } from "../game/match-decks";
 
 interface PracticeChoice {
   readonly name: string;
   readonly style: string;
   readonly deck: readonly CardId[];
   readonly savedSlot?: number;
+  readonly previous?: true;
 }
 interface PracticeDeckChoice {
   readonly value: string;
@@ -13,11 +15,13 @@ interface PracticeDeckChoice {
   readonly deck: readonly CardId[];
   readonly opponentIndex: number;
   readonly savedSlot?: number;
+  readonly previous?: true;
 }
 
 /** Keep saved slot values stable and expose curated decks as temporary loadouts. */
 export function practiceDeckChoices(
   savedDecks: readonly (readonly CardId[])[] = [],
+  previousDeck?: PracticeSourceDeck,
 ): PracticeDeckChoice[] {
   return [
     ...savedDecks.map((deck, savedSlot) => ({
@@ -33,6 +37,17 @@ export function practiceDeckChoices(
       deck: [...opponent.deck],
       opponentIndex: index,
     })),
+    ...(previousDeck
+      ? [
+          {
+            value: "previous",
+            name: previousDeck.name,
+            deck: [...previousDeck.deck],
+            opponentIndex: SOLO_OPPONENTS.length + savedDecks.length,
+            previous: true as const,
+          },
+        ]
+      : []),
   ];
 }
 
@@ -54,6 +69,7 @@ export function swapPracticeDecks(
 /** Visit-scoped snapshots keep saved opponent decks separate from profile edits. */
 export function practiceRoster(
   savedDecks: readonly (readonly CardId[])[] = [],
+  previousDeck?: PracticeSourceDeck,
 ): PracticeChoice[] {
   return [
     ...SOLO_OPPONENTS,
@@ -63,7 +79,41 @@ export function practiceRoster(
       deck: [...deck],
       savedSlot,
     })),
+    ...(previousDeck
+      ? [
+          {
+            ...previousDeck,
+            deck: [...previousDeck.deck],
+            previous: true as const,
+          },
+        ]
+      : []),
   ];
+}
+
+/** Keep a captured matchup available when its source is outside the regular picker. */
+export function continuedPracticeChoices(
+  practice: PracticeOpponent,
+  savedDecks: readonly (readonly CardId[])[],
+  activeDeck: number,
+) {
+  const roster = practiceRoster(savedDecks);
+  const matching = roster.findIndex(
+    (entry) =>
+      entry.deck.length === practice.deck.length &&
+      entry.deck.every((id, index) => id === practice.deck[index]),
+  );
+  const previous =
+    practice.selection?.previousDeck ?? (matching < 0 ? practice : undefined);
+  return {
+    playerChoice: practice.selection?.playerChoice ?? String(activeDeck),
+    opponentIndex:
+      practice.selection?.opponentIndex ??
+      (matching < 0 ? roster.length : matching),
+    previousDeck: previous
+      ? { name: previous.name, style: previous.style, deck: [...previous.deck] }
+      : undefined,
+  };
 }
 
 const searchable = (text: string) =>
@@ -82,6 +132,7 @@ export function practiceOpponents(
     const fields = [
       opponent.name,
       opponent.style,
+      opponent.previous ? "Previous practice" : "",
       ...opponent.deck.map((id) => CARD_MAP[id].name),
     ].map(searchable);
     return terms.every((term) => fields.some((field) => field.includes(term)))

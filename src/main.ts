@@ -151,6 +151,7 @@ import { Battle, STEP } from "./game/engine";
 import { createReplayPlayback } from "./replay-playback";
 import { ReplaySeekQueue } from "./ui/replay-seek-queue";
 import {
+  continuedPracticeChoices,
   practiceDeckChoices,
   practiceOpponents,
   practiceRoster,
@@ -176,6 +177,7 @@ import {
   useDeck,
   isActiveDeck,
   type PracticeOpponent,
+  type PracticeSourceDeck,
 } from "./game/match-decks";
 import {
   decodeDeckCode,
@@ -256,6 +258,7 @@ let practiceMatch: PracticeOpponent | null = null;
 let practiceOpponentIndex = 0;
 let practiceOpponentSearch = "";
 let practiceDeckChoice: string | null = null;
+let practicePreviousDeck: PracticeSourceDeck | undefined;
 let practiceMode: Mode = "training";
 let arena: Arena;
 let battle: Battle;
@@ -649,6 +652,7 @@ function enterLobby(keepPeerConnection: boolean) {
   deploymentFeedback.reset();
   practiceMatch = null;
   practiceDeckChoice = null;
+  practicePreviousDeck = undefined;
   practiceOpponentSearch = "";
   clearKeyboardAim(true);
   resetEnding();
@@ -723,7 +727,21 @@ function startBattle(online = false, practice: PracticeOpponent | null = null) {
           ...practice,
           deck: [...practice.deck],
           playerDeck: [...(practice.playerDeck ?? profile.deck)],
-          ...(practice.selection ? { selection: { ...practice.selection } } : {}),
+          ...(practice.selection
+            ? {
+                selection: {
+                  ...practice.selection,
+                  ...(practice.selection.previousDeck
+                    ? {
+                        previousDeck: {
+                          ...practice.selection.previousDeck,
+                          deck: [...practice.selection.previousDeck.deck],
+                        },
+                      }
+                    : {}),
+                },
+              }
+            : {}),
         }
       : null;
   screen = "battle";
@@ -1277,21 +1295,15 @@ function showResult() {
       syncPeerRematch();
       if (completedPractice)
         $("#change-practice-matchup").onclick = () => {
-          const matching = practiceRoster(profile.decks).findIndex(
-            (entry) =>
-              entry.deck.length === completedPractice.deck.length &&
-              entry.deck.every(
-                (id, index) => id === completedPractice.deck[index],
-              ),
+          const selection = continuedPracticeChoices(
+            completedPractice,
+            profile.decks,
+            profile.activeDeck,
           );
-          const playerChoice =
-            completedPractice.selection?.playerChoice ??
-            String(profile.activeDeck);
-          const opponentIndex =
-            completedPractice.selection?.opponentIndex ?? Math.max(0, matching);
           lobby();
-          practiceDeckChoice = playerChoice;
-          practiceOpponentIndex = opponentIndex;
+          practiceDeckChoice = selection.playerChoice;
+          practiceOpponentIndex = selection.opponentIndex;
+          practicePreviousDeck = selection.previousDeck;
           practiceMode = completedPractice.mode;
           showPracticeOpponents();
         };
@@ -1916,8 +1928,8 @@ function showPracticeOpponents() {
   const savedDecks = profile.decks.map((deck, index) =>
     index === profile.activeDeck ? profile.deck : deck,
   );
-  const roster = practiceRoster(savedDecks);
-  const choices = practiceDeckChoices(savedDecks);
+  const roster = practiceRoster(savedDecks, practicePreviousDeck);
+  const choices = practiceDeckChoices(savedDecks, practicePreviousDeck);
   const playerChoice =
     choices.find(
       (choice) =>
@@ -1926,13 +1938,21 @@ function showPracticeOpponents() {
   const yourDeck = playerChoice.deck;
   let opponent = roster[practiceOpponentIndex] ?? roster[0];
   let matchingOpponents = practiceOpponents(practiceOpponentSearch, roster);
-  const playerOptions = ([true, false] as const)
-    .map((saved) => {
-      const entries = choices.filter(
-        (choice) => (choice.savedSlot !== undefined) === saved,
-      );
+  const groupFor = (choice: { savedSlot?: number; previous?: true }) =>
+    choice.previous
+      ? "Previous practice"
+      : choice.savedSlot !== undefined
+        ? "Your saved decks"
+        : "Curated decks";
+  const playerOptions = [
+    "Your saved decks",
+    "Curated decks",
+    "Previous practice",
+  ]
+    .map((group) => {
+      const entries = choices.filter((choice) => groupFor(choice) === group);
       return entries.length
-        ? `<optgroup label="${saved ? "Your saved decks" : "Curated decks"}">${entries.map((choice) => `<option value="${choice.value}" ${choice.value === playerChoice.value ? "selected" : ""}>${esc(choice.name)}${choice.savedSlot === profile.activeDeck ? " (active)" : ""}</option>`).join("")}</optgroup>`
+        ? `<optgroup label="${group}">${entries.map((choice) => `<option value="${choice.value}" ${choice.value === playerChoice.value ? "selected" : ""}>${esc(choice.name)}${choice.savedSlot === profile.activeDeck ? " (active)" : ""}</option>`).join("")}</optgroup>`
         : "";
     })
     .join("");
@@ -1995,6 +2015,7 @@ function showPracticeOpponents() {
       selection: {
         playerChoice: playerChoice.value,
         opponentIndex: practiceOpponentIndex,
+        ...(practicePreviousDeck ? { previousDeck: practicePreviousDeck } : {}),
       },
     });
   };
@@ -2010,13 +2031,13 @@ function showPracticeOpponents() {
     }
     const select = $<HTMLSelectElement>("#practice-opponent");
     select.innerHTML = matchingOpponents.length
-      ? ([false, true] as const)
-          .map((saved) => {
+      ? ["Curated decks", "Your saved decks", "Previous practice"]
+          .map((group) => {
             const entries = matchingOpponents.filter(
-              ({ opponent }) => (opponent.savedSlot !== undefined) === saved,
+              ({ opponent }) => groupFor(opponent) === group,
             );
             return entries.length
-              ? `<optgroup label="${saved ? "Your saved decks" : "AI opponents"}">${entries.map(({ opponent: entry, index }) => `<option value="${index}" ${index === practiceOpponentIndex ? "selected" : ""}>${esc(entry.name)} · ${esc(entry.style)}</option>`).join("")}</optgroup>`
+              ? `<optgroup label="${group === "Curated decks" ? "AI opponents" : group}">${entries.map(({ opponent: entry, index }) => `<option value="${index}" ${index === practiceOpponentIndex ? "selected" : ""}>${esc(entry.name)} · ${esc(entry.style)}</option>`).join("")}</optgroup>`
               : "";
           })
           .join("")

@@ -54,7 +54,7 @@ Below an opponent’s recorded cards, choose a pace and **Practice against this 
 
 During a practice battle, open the pause menu and choose **Restart practice** for a fresh attempt with the same decks and pace. Restarted attempts do not save a result or grant rewards. **Leave battle** still saves the completed practice result.
 
-After a practice result, **Change practice matchup** reopens the picker with your selected player deck and pace. A matching opponent deck stays selected when available. Adjust the matchup before starting another attempt; your active lobby deck stays the same.
+After a practice result, **Change practice matchup** reopens the picker with your selected player deck and pace. The chosen opponent stays selected. An unlisted deck from a shared code or recording remains available under **Previous practice** while adjusting the matchup. **Swap decks** also lets you pilot that temporary deck. Your saved slots and active lobby deck stay the same.
 
 The picker shows saved practice wins, losses and draws for the selected deck compositions and pace. Counts use matches still in your battle log and update after a finished attempt.
 
