@@ -197,6 +197,7 @@ import {
   applySettingsDraft,
   saveProfile as persistProfile,
   saveBattleResult,
+  saveEmotePreference,
   openChest,
   storageAvailable,
   exportProgress,
@@ -420,8 +421,9 @@ const emotes = new NativeEmotes(
 );
 emotes.onCue = (file, volume) => audio.play(file, volume);
 emotes.onMute = (muted) => {
-  profile.emotesMuted = muted;
-  saveProfile(profile);
+  saveEmotePreference(profile, muted);
+  applyProfilePreferences();
+  refreshProfile();
 };
 emotes.onSend = (kind) => {
   if (screen !== "battle" || paused || battle.winner || intro.clock.blocking)
@@ -3253,13 +3255,11 @@ function showProgressRestore(imported: Profile, back: () => void) {
   $("#confirm-restore").onclick = () => {
     network.leave();
     Object.assign(profile, imported);
-    audio.setEnabled(profile.sound);
-    audio.musicEnabled = profile.music;
+    applyProfilePreferences();
     audio.stopMusic();
-    emotes.setMuted(profile.emotesMuted);
+    saveProfile(profile);
     closeModal();
     lobby();
-    refreshSound();
     toast(
       storageAvailable
         ? "Progress restored."

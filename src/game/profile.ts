@@ -391,6 +391,13 @@ export function saveBattleResult(
   if (saved) Object.assign(p, saved);
   return recordBattle(p, b, { ...options, playerName });
 }
+/** Save the requested preference on trusted progress, retaining failed session changes. */
+export function saveEmotePreference(p: Profile, muted: boolean) {
+  const saved = storageAvailable ? readSavedProfile() : null;
+  if (saved) Object.assign(p, saved);
+  p.emotesMuted = muted;
+  saveProfile(p);
+}
 export function openChest(p: Profile, index: number) {
   const type = p.chests[index];
   if (!type) return null;
