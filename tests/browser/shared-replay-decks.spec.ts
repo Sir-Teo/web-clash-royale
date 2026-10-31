@@ -2,6 +2,7 @@ import { test, expect, type Page, type Locator } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { PRESETS, STARTER_DECK } from "../../src/game/cards";
 import { expectedCards } from "./native-assets";
+import { inspectDeckCode } from "./inspect-deck-code";
 
 test.use({ serviceWorkers: "block" });
 const key = "browser-royale.profile.v1";
@@ -107,6 +108,27 @@ for (const red of [false, true])
       );
       await page.locator("#practice-pace").selectOption("double");
       await page.locator("#practice-shared-side").selectOption("yours");
+      for (const codeSide of ["yours", "opponent"] as const) {
+        const cards =
+          codeSide === "yours"
+            ? red
+              ? replay.enemyDeck
+              : replay.deck
+            : red
+              ? replay.deck
+              : replay.enemyDeck;
+        await inspectDeckCode(
+          page,
+          page.locator(`[data-share-deck-code="${codeSide}"]`),
+          cards,
+          "Back to shared replay",
+        );
+        await expect(destination).toHaveValue("0");
+        await expect(page.locator("#practice-pace")).toHaveValue("double");
+        await expect(page.locator("#practice-shared-side")).toHaveValue(
+          "yours",
+        );
+      }
       const inspect = page.locator("[data-shared-card]").last();
       await inspect.scrollIntoViewIfNeeded();
       const scroll = await page

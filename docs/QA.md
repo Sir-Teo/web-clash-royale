@@ -3407,3 +3407,13 @@ The new browser journey deploys a card with an unlisted temporary shared player 
 All 3,607 unit checks across 251 files, type checking and production build pass. All six development cases pass in desktop Chromium and phone WebKit, and all nine production cases pass across desktop Chromium, phone Chromium and phone WebKit. Reviewed 320-pixel WebKit and desktop pause captures keep Restart, Change, the unsaved-attempt explanation, inspection and Leave accessible. The new practice-prefixed journey joins workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `53f66732dce2` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Share either deck directly from setup and recorded previews
+
+Practice setup, Battle details and shared replay previews now offer Share deck code beneath each deck. The shared read-only code view returns to the actual retained preview, preserving selection drafts, pace, source context, scroll and opener focus. Player/opponent controls have distinct accessible names. Practice updates rebind codes to the currently selected opponent, including saved and curated choices; recorded previews use their existing perspective-aware deck projection.
+
+The expanded journeys copy exact ordered codes for the last curated player deck, a saved opponent and a newly selected curated opponent; both local solo/red-side recording decks; and both decks from a red-side shared replay. Returns retain destination slot, practice pace, selected recorded side and focus. Existing inspection, starting/repeating a recorded practice, adopting a shared deck and its original Undo continue through these same flows. The ordinary paused sharing/manual-fallback/stale-clipboard journey also passes through the generalized view.
+
+All 3,607 unit checks across 251 files, type checking and production build pass. All ten development cases pass in desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. Coverage includes keyboard/touch activation, 44-pixel share controls, exact copied codes, retained scroll/selections, unchanged progress before adoption and original Undo afterward. Reviewed phone recorded-deck captures keep Share, Use, Try and Practice actions distinguishable. The expanded existing cases remain selected by workflow CI.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `c48dd4b048ad` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

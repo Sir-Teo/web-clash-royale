@@ -3,6 +3,7 @@ import { PRESETS, STARTER_DECK } from "../../src/game/cards";
 import { SOLO_OPPONENTS } from "../../src/game/opponents";
 import type { Profile } from "../../src/game/profile";
 import { expectedCards } from "./native-assets";
+import { inspectDeckCode } from "./inspect-deck-code";
 
 test.use({ serviceWorkers: "block" });
 const key = "browser-royale.profile.v1";
@@ -98,6 +99,25 @@ test("previews all curated player decks with stable opponent choices and read-on
         .evaluate((e) => e.scrollWidth <= e.clientWidth),
     ).toBe(true);
   }
+  for (const side of ["yours", "opponent"] as const) {
+    await inspectDeckCode(
+      page,
+      page.locator(`[data-share-deck-code="${side}"]`),
+      side === "yours" ? SOLO_OPPONENTS[16].deck : initial.decks[2],
+      "Back to practice setup",
+    );
+    await expect(own(page)).toHaveValue("curated:16");
+    await expect(enemy(page)).toHaveValue("19");
+    await expect(pace(page)).toHaveValue("double");
+  }
+  await enemy(page).selectOption("8");
+  await inspectDeckCode(
+    page,
+    page.locator('[data-share-deck-code="opponent"]'),
+    SOLO_OPPONENTS[8].deck,
+    "Back to practice setup",
+  );
+  await enemy(page).selectOption("19");
   const card = page.locator('[data-practice-card="yours-0"]');
   if (info.project.name === "desktop") await card.click();
   else await card.tap();

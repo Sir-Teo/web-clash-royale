@@ -8,6 +8,7 @@ import {
 } from "../../src/game/cards";
 import { SOLO_OPPONENTS } from "../../src/game/opponents";
 import { expectedCards } from "./native-assets";
+import { inspectDeckCode } from "./inspect-deck-code";
 const key = "browser-royale.profile.v1";
 const legacy = JSON.parse(
   readFileSync("tests/fixtures/combat-v4-replay.json", "utf8"),
@@ -127,6 +128,20 @@ for (const red of [false, true])
     const opponentDeck = red ? legacy.deck : [...marshal.deck];
     await page.getByRole("button", { name: "Battle log", exact: true }).click();
     await page.locator(`[data-match-details="${red ? 1 : 0}"]`).click();
+    await page.locator("#match-deck-slot").selectOption("0");
+    for (const side of ["yours", "opponent"] as const) {
+      await inspectDeckCode(
+        page,
+        page.locator(`[data-share-deck-code="${side}"]`),
+        side === "yours"
+          ? red
+            ? record.replay.enemyDeck
+            : record.replay.deck
+          : opponentDeck,
+        "Back to battle details",
+      );
+      await expect(page.locator("#match-deck-slot")).toHaveValue("0");
+    }
     const action = page.getByRole("button", {
       name: "Practice against this deck",
       exact: true,
