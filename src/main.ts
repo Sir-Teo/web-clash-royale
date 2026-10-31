@@ -2884,7 +2884,7 @@ function showHistory() {
     : "";
   modal(
     "Your battle log",
-    `${screen === "lobby" ? `<div class="replay-file-toolbar"><button class="secondary-button" id="open-replay-file">${icon("upload")} Open replay file</button><input id="replay-file" type="file" accept=".json,application/json" aria-label="Choose replay file" hidden/><p>Watch a shared recording without changing your progress.</p><p class="replay-file-error" role="alert" hidden></p></div>` : ""}<div class="history-summary"><div>${icon("swords")}<b>${profile.battles}</b><span>BATTLES</span></div><div>${icon("trophy")}<b>${profile.wins}</b><span>VICTORIES</span></div><div>${icon("crown")}<b>${profile.crowns}</b><span>CROWNS</span></div></div>${filters}<div class="history-list">${profile.history.length ? "" : `<div class="empty-history">${icon("swords")}<h3>Your story starts in the arena.</h3><p>Play a battle to see your results and replays here.</p><button class="primary-button" id="history-battle">Let's battle ${icon("arrow-right")}</button></div>`}</div><p class="modal-footnote">Your latest 10 battles are saved locally, with playable replays.</p>`,
+    `${screen === "lobby" ? `<div class="replay-file-toolbar"><button class="secondary-button" id="open-replay-file">${icon("upload")} Open replay file</button><input id="replay-file" type="file" accept=".json,application/json" aria-label="Choose replay file" hidden/><p>Open or drop one replay file to watch it. Your progress stays the same.</p><p class="replay-file-error" role="alert" hidden></p></div>` : ""}<div class="history-summary"><div>${icon("swords")}<b>${profile.battles}</b><span>BATTLES</span></div><div>${icon("trophy")}<b>${profile.wins}</b><span>VICTORIES</span></div><div>${icon("crown")}<b>${profile.crowns}</b><span>CROWNS</span></div></div>${filters}<div class="history-list">${profile.history.length ? "" : `<div class="empty-history">${icon("swords")}<h3>Your story starts in the arena.</h3><p>Play a battle to see your results and replays here.</p><button class="primary-button" id="history-battle">Let's battle ${icon("arrow-right")}</button></div>`}</div><p class="modal-footnote">Your latest 10 battles are saved locally, with playable replays.</p>`,
     "history",
     true,
   );
@@ -2967,16 +2967,21 @@ function bindReplayFileInput() {
   const input = document.querySelector<HTMLInputElement>("#replay-file");
   const button = document.querySelector<HTMLButtonElement>("#open-replay-file");
   if (!input || !button) return;
+  const toolbar = button.closest<HTMLElement>(".replay-file-toolbar")!;
+  const error = toolbar.querySelector<HTMLElement>(".replay-file-error")!;
+  const showError = (message: string) => {
+    error.textContent = message;
+    error.hidden = false;
+  };
   button.onclick = () => {
     input.value = "";
     input.click();
   };
-  input.onchange = async () => {
-    const file = input.files?.[0];
-    if (!file || screen !== "lobby") return;
-    const error = $(".replay-file-error");
+  const previewFile = async (file: File) => {
+    if (screen !== "lobby" || button.disabled) return;
     error.hidden = true;
     button.disabled = true;
+    toolbar.setAttribute("aria-busy", "true");
     try {
       if (file.size > MAX_REPLAY_BYTES)
         throw new Error("Choose a replay file smaller than 512 KB.");
@@ -2990,16 +2995,47 @@ function bindReplayFileInput() {
       showSharedReplay(shared);
     } catch (cause) {
       if (document.querySelector("#replay-file") !== input) return;
-      error.textContent =
+      showError(
         cause instanceof Error
           ? cause.message
-          : "Couldn’t read this replay. Try another file.";
-      error.hidden = false;
+          : "Couldn’t read this replay. Try another file.",
+      );
     } finally {
       button.disabled = false;
+      toolbar.removeAttribute("aria-busy");
     }
   };
+  input.onchange = () => {
+    const file = input.files?.[0];
+    if (file) void previewFile(file);
+  };
+  toolbar.ondragover = (event) => {
+    if (!event.dataTransfer?.types.includes("Files")) return;
+    event.preventDefault();
+    event.dataTransfer.dropEffect = button.disabled ? "none" : "copy";
+    toolbar.classList.toggle("is-dragging", !button.disabled);
+  };
+  toolbar.ondragleave = (event) => {
+    if (
+      event.relatedTarget instanceof Node &&
+      toolbar.contains(event.relatedTarget)
+    )
+      return;
+    toolbar.classList.remove("is-dragging");
+  };
+  toolbar.ondrop = (event) => {
+    if (!event.dataTransfer?.types.includes("Files")) return;
+    event.preventDefault();
+    toolbar.classList.remove("is-dragging");
+    if (button.disabled || screen !== "lobby") return;
+    if (event.dataTransfer.files.length !== 1) {
+      showError("Drop one replay file at a time.");
+      return;
+    }
+    void previewFile(event.dataTransfer.files[0]);
+  };
 }
+
 interface SharedReplayView extends MatchDeckView {
   practiceSide: "yours" | "opponent";
 }

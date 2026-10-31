@@ -3553,3 +3553,13 @@ The browser journey changes a troop into a spell in the builder and undoes it, p
 All 3,650 unit checks across 256 files, type checking and production build pass. Both development cases pass on desktop Chromium and phone WebKit; all three production targets pass. The practice-prefixed journey joins workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `80abe80f7261` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Drop a replay file into the battle log
+
+The lobby battle-log import section now accepts one dropped replay file, with a visible file-drag outline. Dropping and the existing chooser use the same bounded reader, strict replay validation and preview. Multiple files show an inline error, busy reads reject another drop and closing/navigating away discards stale asynchronous results. The native chooser remains available for keyboard and phone use.
+
+The new journeys drop a red-side recording into a filtered log, verify its projected source cards and return with filters/focus and unchanged saved bytes. They also cover drag-leave feedback, multiple/malformed/oversized files, busy-state controls, a second drop during a delayed read and closing the log before that read resolves. Existing export/import, ending/rewind/restart identities, invalid-file reselection, escaped names and phone focus trapping pass through the shared reader.
+
+All 3,650 unit checks across 256 files, type checking and production build pass. All ten development cases pass across desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. The shared-replay-prefixed drop journeys join workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `50558332a635` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

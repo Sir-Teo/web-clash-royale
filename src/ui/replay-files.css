@@ -1,3 +1,8 @@
+.replay-file-toolbar.is-dragging {
+  outline: 2px dashed #f5d67c;
+  outline-offset: 8px;
+  border-radius: 8px;
+}
 .replay-file-toolbar,
 .replay-export {
   color: #c6d6e5;
