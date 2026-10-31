@@ -88,6 +88,24 @@ export function normalizePlayerName(value: string) {
   const limit = (name.codePointAt(17) ?? 0) > 0xffff ? 17 : 18;
   return name.slice(0, limit).trimEnd() || "Sir Teo";
 }
+type ProfileSettings = Readonly<Pick<Profile, "name" | "sound" | "music">>;
+
+/** Apply edited fields to current saved progress without discarding session-only state. */
+export function applySettingsDraft(
+  profile: Profile,
+  original: ProfileSettings,
+  draft: ProfileSettings,
+  latest: Readonly<Profile> | null = null,
+) {
+  const name = normalizePlayerName(draft.name);
+  const nameChanged = name !== normalizePlayerName(original.name);
+  const soundChanged = draft.sound !== original.sound;
+  const musicChanged = draft.music !== original.music;
+  if (latest) Object.assign(profile, latest);
+  if (!latest || nameChanged) profile.name = name;
+  if (!latest || soundChanged) profile.sound = draft.sound;
+  if (!latest || musicChanged) profile.music = draft.music;
+}
 export function validRecordEntry(value: unknown): value is RecordEntry {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const r = value as RecordEntry;

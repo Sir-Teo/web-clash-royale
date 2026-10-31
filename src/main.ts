@@ -192,7 +192,7 @@ import {
   loadProfile,
   readSavedProfile,
   PROFILE_STORAGE_KEY,
-  normalizePlayerName,
+  applySettingsDraft,
   saveProfile as persistProfile,
   recordBattle,
   openChest,
@@ -3030,6 +3030,11 @@ function showMatchDetails(index: number, state: Partial<MatchDeckView> = {}) {
     };
 }
 function showSettings() {
+  const original = {
+    name: profile.name,
+    sound: profile.sound,
+    music: profile.music,
+  };
   const backups =
     screen === "lobby"
       ? `<section class="progress-backup" aria-labelledby="backup-heading"><h3 id="backup-heading">Your progress, to go</h3><p>Save your decks, rewards and battle log to a file, or restore a backup from another browser.</p><div class="backup-actions"><button type="button" class="secondary-button" id="export-progress">${icon("hard-drive-download")} Export progress</button><button type="button" class="secondary-button" id="import-progress">Restore backup ${icon("rotate-ccw")}</button></div><input type="file" id="progress-file" accept=".json,application/json" aria-label="Choose progress backup" hidden/><p class="backup-error" role="alert" hidden></p></section>`
@@ -3054,7 +3059,9 @@ function showSettings() {
     const scroll = panel.scrollTop;
     return () => {
       modalKey = "settings";
-      modalFocus.render("settings", () => $("#modal-root").replaceChildren(view));
+      modalFocus.render("settings", () =>
+        $("#modal-root").replaceChildren(view),
+      );
       syncGraphicsStatus();
       syncFullscreenControl();
       panel.scrollTop = scroll;
@@ -3104,9 +3111,17 @@ function showSettings() {
   }
   $("#settings-form").onsubmit = (e) => {
     e.preventDefault();
-    profile.name = normalizePlayerName($<HTMLInputElement>("#player-name").value);
-    profile.sound = ($("#sound-setting") as HTMLInputElement).checked;
-    profile.music = ($("#music-setting") as HTMLInputElement).checked;
+    applySettingsDraft(
+      profile,
+      original,
+      {
+        name: $<HTMLInputElement>("#player-name").value,
+        sound: $<HTMLInputElement>("#sound-setting").checked,
+        music: $<HTMLInputElement>("#music-setting").checked,
+      },
+      storageAvailable ? readSavedProfile() : null,
+    );
+    emotes.setMuted(profile.emotesMuted, false);
     audio.setEnabled(profile.sound);
     audio.musicEnabled = profile.music;
     if (graphicsAvailable && screen !== "lobby" && !paused && !battle.winner)
