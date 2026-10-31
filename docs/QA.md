@@ -3533,3 +3533,13 @@ The new journey covers both clamps, Equals and shifted Plus, held-repeat suppres
 All 3,650 unit checks across 256 files, type checking and production build pass. All ten development cases pass on desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. The expanded replay-controls journey remains selected by workflow CI.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `a6ea4bac667f` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Choose practice speed before starting a matchup
+
+Practice setup and code/local/shared-recording previews now expose the same session speed choice as the pause menu. A shared binding changes only the stored session choice in lobby forms; active practice applies it to frame/audio rate and its caption. Temporary-deck Back callbacks synchronize both pace and speed into the retained source preview. Matchup statistics continue to use deck compositions and combat pace, and replay review starts at normal playback speed.
+
+Four new journeys cover choosing half speed in setup, card inspection, recorded review/Back, starting, changing a paused attempt to double speed and returning to setup. Code, local and shared previews each pass a half-speed choice into a temporary-player setup, change it there, return with the updated source field and start direct practice at double speed. Lobby rate and saved bytes remain unchanged while choosing options or abandoning a matchup. The original pause/restart/rematch/audio/canonical-recording speed journey also passes through the shared binding. Reviewed 320-pixel setup captures keep pace, speed, matchup record and review controls distinct.
+
+All 3,650 unit checks across 256 files, type checking and production build pass. All ten development cases pass across desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. The new practice-prefixed setup journeys join workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `5c83deb7c19c` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
