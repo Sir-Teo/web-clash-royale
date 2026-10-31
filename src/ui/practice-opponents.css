@@ -86,6 +86,9 @@
   font-size: 13px;
   font-weight: 800;
 }
+.pause-actions .practice-choice {
+  margin-bottom: 0;
+}
 .practice-choice > span {
   position: relative;
   display: block;

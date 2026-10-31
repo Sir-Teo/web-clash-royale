@@ -263,6 +263,7 @@ let practiceDeckChoice: string | null = null;
 let practicePreviousDeck: PracticeSourceDeck | undefined;
 let practiceSetupBack: { label: string; restore: () => void } | null = null;
 let practiceMode: Mode = "training";
+let repeatPracticeOpening = true;
 let arena: Arena;
 let battle: Battle;
 let screen: "lobby" | "battle" | "replay" = "lobby";
@@ -743,7 +744,11 @@ function enterLobby(keepPeerConnection: boolean) {
   $(".mode-select").classList.remove("hidden");
   refreshProfile();
 }
-function startBattle(online = false, practice: PracticeOpponent | null = null) {
+function startBattle(
+  online = false,
+  practice: PracticeOpponent | null = null,
+  openingSeed?: number,
+) {
   if (!online && !graphicsAvailable) {
     toast("Wait for the arena graphics to recover before starting a battle.");
     return;
@@ -806,7 +811,7 @@ function startBattle(online = false, practice: PracticeOpponent | null = null) {
   document.body.classList.add("in-battle");
   window.scrollTo(0, 0);
   document.body.classList.remove("in-replay");
-  const seed = Math.floor(Math.random() * 2147483646) + 1;
+  const seed = openingSeed ?? Math.floor(Math.random() * 2147483646) + 1;
   const opponent = online
     ? undefined
     : (practiceMatch ??
@@ -1195,14 +1200,24 @@ function showBattlePause() {
   modalPausedBattle = true;
   modal(
     "Battle paused",
-    `<div class="pause-actions"><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button>${practiceMatch ? `<button class="secondary-button" id="restart-practice" aria-describedby="practice-restart-note">${icon("rotate-ccw")} Restart practice</button><p class="room-note" id="practice-restart-note">Start a fresh attempt with the same decks and pace. This attempt won’t be saved.</p>` : ""}<button class="secondary-button" id="inspect-battle-deck">${icon("layers-2")} Inspect battle deck</button><button class="text-button" id="surrender-button">Leave battle</button></div>`,
+    `<div class="pause-actions"><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button>${practiceMatch ? `<label class="practice-choice" for="practice-opening">Opening shuffle<span><select id="practice-opening" aria-describedby="practice-restart-note"><option value="repeat" ${repeatPracticeOpening ? "selected" : ""}>Repeat opening shuffle</option><option value="fresh" ${repeatPracticeOpening ? "" : "selected"}>Fresh opening shuffle</option></select>${icon("chevron-down")}</span></label><button class="secondary-button" id="restart-practice" aria-describedby="practice-restart-note">${icon("rotate-ccw")} Restart practice</button><p class="room-note" id="practice-restart-note">Restart with the same decks and pace. This attempt won’t be saved.</p>` : ""}<button class="secondary-button" id="inspect-battle-deck">${icon("layers-2")} Inspect battle deck</button><button class="text-button" id="surrender-button">Leave battle</button></div>`,
     "pause",
   );
   $(".modal-backdrop").classList.add("pause-cover");
   $("#resume-button").onclick = closeModal;
   $("#inspect-battle-deck").onclick = () => showBattleDeck();
-  if (practiceMatch)
-    $("#restart-practice").onclick = () => startBattle(false, practiceMatch);
+  if (practiceMatch) {
+    $("#practice-opening").onchange = () => {
+      repeatPracticeOpening =
+        $<HTMLSelectElement>("#practice-opening").value === "repeat";
+    };
+    $("#restart-practice").onclick = () =>
+      startBattle(
+        false,
+        practiceMatch,
+        repeatPracticeOpening ? battle.seed : undefined,
+      );
+  }
   $("#surrender-button").onclick = () => {
     battle.finish("red", "Surrender");
     closeModal();
@@ -3978,6 +3993,7 @@ Object.defineProperty(window, "__arena", {
         graphicsAvailable,
         selected,
         time: battle.time,
+        seed: battle.seed,
         rulesVersion: battle.rulesVersion,
         rulesFamily: battle.rulesFamily,
         winner: battle.winner,

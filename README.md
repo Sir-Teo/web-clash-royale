@@ -56,7 +56,7 @@ Use the **Try** action under either recorded deck in Battle details or a shared 
 
 Below an opponent’s recorded cards, choose a pace and **Practice against this deck** to face those cards with your active battle deck. **Practice again** keeps the same opponent deck and pace; returning to the arena restores your selected battle mode. Practice results save their own replays and count toward your battle statistics. New records are labelled Practice in the battle log, details and shared replay previews. The practice pace stays selected for the session.
 
-During a practice battle, open the pause menu and choose **Restart practice** for a fresh attempt with the same decks and pace. Restarted attempts do not save a result or grant rewards. **Leave battle** still saves the completed practice result.
+During a practice battle, open the pause menu and choose **Restart practice** with the same decks and pace. **Opening shuffle** defaults to repeating the starting shuffle so you can retry an opening; choose **Fresh opening shuffle** for a new one. The choice stays selected for the session. Restarted attempts do not save a result or grant rewards. **Practice again** after a result starts with a fresh shuffle. **Leave battle** still saves the completed practice result.
 
 After a practice result, **Change practice matchup** reopens the picker with your selected player deck and pace. The chosen opponent stays selected. An unlisted deck from a shared code or recording remains available under **Previous practice** while adjusting the matchup. **Swap decks** also lets you pilot that temporary deck. Your saved slots and active lobby deck stay the same.
 
