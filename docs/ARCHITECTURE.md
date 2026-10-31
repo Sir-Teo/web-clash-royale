@@ -156,6 +156,8 @@ Finished battles use `saveBattleResult` to refresh trusted saved progress before
 
 Builder moves, replacements and Undo/Redo call `refreshProfileForDeckEdit` before changing cards. Newer non-deck progress retains the owned edit history. Any changed saved deck or active selection resets that history and refreshes the builder before another edit, retaining collection filters and search. This read never persists an incoming snapshot; known failed writes retain session changes.
 
+Deck-code, local-recording and shared-replay adoption/Undo use the same pre-edit refresh through `prepareDeckChange`. Newer non-deck progress retains the preview’s owned Undo; changed deck state clears that Undo and rerenders the chosen destination before another change. Local Battle details retain their RecordEntry in view state, so prepending a result to the refreshed log cannot switch the source recording during adoption, Undo or conflict refresh.
+
 Emote mute/unmute uses `saveEmotePreference` to apply the requested flag to current trusted saved progress. It follows the same failed-write/session fallback as finished battles and applies incoming preferences without another persistence callback.
 
 Settings captures its original name and audio values when the form opens. Save compares the normalized draft with that original, applies edited fields to the latest complete saved profile, and persists the resulting snapshot. Untouched fields follow the saved profile. Known write failures keep the session profile as the base so an eventual retry can retain unsaved changes. Help and cancelled backup previews restore the same form and original snapshot.

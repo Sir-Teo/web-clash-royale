@@ -328,6 +328,7 @@ let historyReturn: {
 const collectionRows = new WeakMap<HTMLElement, Map<CardId, HTMLDivElement>>();
 const deckEdits = new DeckEditHistory();
 let deckEditNotice = "";
+const deckPreviewConflictNotice = "Saved decks changed in another tab. Review the current selection before changing decks.";
 let dragging = false;
 let pointerDown = false;
 let activePointerId: number | null = null;
@@ -2352,19 +2353,24 @@ function showDeckBuilder() {
   deckEditNotice = "";
   renderDeckBuilder();
 }
-function prepareDeckEdit() {
+function prepareDeckChange(onConflict: () => void) {
   const change = refreshProfileForDeckEdit(profile);
   if (change === "none") return true;
   applyProfilePreferences();
   refreshProfile();
   if (change !== "decks") return true;
-  deckEdits.reset(profile);
-  editSlot = -1;
-  deckEditNotice =
-    "Saved decks changed in another tab. Review your deck before editing.";
-  renderDeckBuilder();
-  $('[data-edit-slot="0"]').focus();
+  onConflict();
   return false;
+}
+function prepareDeckEdit() {
+  return prepareDeckChange(() => {
+    deckEdits.reset(profile);
+    editSlot = -1;
+    deckEditNotice =
+      "Saved decks changed in another tab. Review your deck before editing.";
+    renderDeckBuilder();
+    $('[data-edit-slot="0"]').focus();
+  });
 }
 function moveDeckCard(step: -1 | 1, focusCard = false, source = editSlot) {
   const destination = source + step;
@@ -2538,6 +2544,18 @@ interface DeckCodeView {
 function showDeckCodes(state: Partial<DeckCodeView> = {}) {
   if (screen !== "lobby") return;
   const view: DeckCodeView = { code: "", slot: profile.activeDeck, ...state };
+  const prepareChange = () =>
+    prepareDeckChange(() => {
+      showDeckCodes({
+        ...view,
+        undo: undefined,
+        notice: deckPreviewConflictNotice,
+      });
+      (
+        document.querySelector<HTMLElement>("#code-deck-slot") ??
+        $("#shared-deck-code")
+      ).focus();
+    });
   modal(
     "Deck codes",
     `<div class="deck-codes"><section><label class="field-label" for="current-deck-code">YOUR CURRENT DECK</label><textarea class="name-input deck-code-text" id="current-deck-code" readonly rows="3" spellcheck="false">${esc(encodeDeckCode(profile.deck))}</textarea><button class="secondary-button" id="copy-deck-code">Copy deck code</button><p id="deck-code-copy-status" role="status" aria-live="polite"></p></section><form id="deck-code-form"><label class="field-label" for="shared-deck-code">PASTE A SHARED DECK CODE</label><textarea class="name-input deck-code-text" id="shared-deck-code" rows="3" maxlength="${MAX_DECK_CODE_BYTES}" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="BRA-DECK-1:knight,…">${esc(view.code)}</textarea><button class="secondary-button" type="submit">Preview deck</button><p id="deck-code-error" class="deck-code-error" role="alert" hidden></p></form>${view.preview ? `<section id="shared-deck-preview" class="match-deck-panel"><div class="match-deck-heading"><h3>Shared deck</h3><span><i class="tiny-drop"></i> ${averageCost(view.preview).toFixed(1)} average</span></div><div class="match-deck-grid">${view.preview.map((id) => cardHTML(id, `data-code-card="${id}"`)).join("")}</div><div class="code-practice">${practicePaceHTML()}<button class="secondary-button" id="practice-code-deck" aria-describedby="practice-code-note">${icon("target")} Practice against this deck</button><p id="practice-code-note">AI uses these shared cards against your active battle deck. No trophies or rewards.</p><button class="secondary-button" id="try-code-deck" aria-describedby="try-code-note">${icon("swords")} Try this deck in practice</button><p id="try-code-note">Choose a matchup with these shared cards as your deck. Your saved slots stay the same.</p></div><div class="match-copy-target"><label for="code-deck-slot">Destination battle deck</label><div class="match-deck-choice"><select id="code-deck-slot" aria-describedby="code-deck-note">${profile.decks.map((_, slot) => `<option value="${slot}" ${slot === view.slot ? "selected" : ""}>Battle deck ${slot + 1}${slot === profile.activeDeck ? " (active)" : ""}</option>`).join("")}</select>${icon("chevron-down")}</div><p id="code-deck-note">Replaces battle deck ${view.slot + 1} and selects it.</p></div><button class="primary-button" id="use-code-deck">Use this deck</button></section>` : ""}${view.notice ? `<div class="deck-code-notice" role="status"><span>${esc(view.notice)}</span>${view.undo ? '<button class="text-button" id="undo-code-deck">Undo deck change</button>' : ""}</div>` : ""}<div class="deck-code-footer"><button class="text-button" id="deck-code-back">Back to deck builder</button></div></div>`,
@@ -2609,6 +2627,7 @@ function showDeckCodes(state: Partial<DeckCodeView> = {}) {
     };
     $("#use-code-deck").onclick = () => {
       if (screen !== "lobby" || !view.preview) return;
+      if (!prepareChange()) return;
       const undo =
         view.undo && isActiveDeck(profile, view.preview, view.slot)
           ? view.undo
@@ -2639,6 +2658,7 @@ function showDeckCodes(state: Partial<DeckCodeView> = {}) {
   if (view.undo) {
     $("#undo-code-deck").onclick = () => {
       if (screen !== "lobby" || !view.undo) return;
+      if (!prepareChange()) return;
       restoreDeckSelection(profile, view.undo);
       saveProfile(profile);
       refreshDeck();
@@ -2903,6 +2923,15 @@ function showSharedReplay(
   };
   const { record, playerName } = shared,
     decks = recordedDecks(record);
+  const prepareChange = () =>
+    prepareDeckChange(() => {
+      showSharedReplay(shared, {
+        ...view,
+        undo: undefined,
+        notice: deckPreviewConflictNotice,
+      });
+      $("#shared-deck-slot").focus();
+    });
   const deck = (side: "yours" | "opponent", name: string) =>
     `<section class="match-deck-panel"><div class="match-deck-heading"><h3>${esc(name)}</h3><span><i class="tiny-drop"></i> ${averageCost(decks[side]).toFixed(1)} average</span></div><div class="match-deck-grid">${decks[side].map((id) => cardHTML(id, `data-shared-card="${id}"`)).join("")}</div>${deckCodeButton(side)}<button class="secondary-button" data-use-shared-deck="${side}" aria-describedby="shared-copy-note">${icon("layers-2")} ${side === "yours" ? "Use recorded player deck" : "Use recorded opponent deck"}</button><button class="secondary-button" data-try-shared-deck="${side}" aria-describedby="shared-try-note">${icon("swords")} ${side === "yours" ? "Try recorded player deck" : "Try recorded opponent deck"}</button></section>`;
   modal(
@@ -2925,6 +2954,7 @@ function showSharedReplay(
     .forEach((button) => {
       button.onclick = () => {
         if (screen !== "lobby") return;
+        if (!prepareChange()) return;
         const side = button.dataset.useSharedDeck as "yours" | "opponent";
         const undo =
           view.undo && isActiveDeck(profile, decks[side], view.slot)
@@ -2965,6 +2995,7 @@ function showSharedReplay(
   if (view.undo)
     $("#undo-shared-deck").onclick = () => {
       if (screen !== "lobby" || !view.undo) return;
+      if (!prepareChange()) return;
       restoreDeckSelection(profile, view.undo);
       saveProfile(profile);
       refreshDeck();
@@ -3023,12 +3054,31 @@ interface MatchDeckView {
   undo?: DeckSelection;
   notice?: string;
 }
-function showMatchDetails(index: number, state: Partial<MatchDeckView> = {}) {
-  const record = profile.history[index];
+interface LocalMatchDeckView extends MatchDeckView {
+  record: RecordEntry;
+}
+function showMatchDetails(
+  index: number,
+  state: Partial<LocalMatchDeckView> = {},
+) {
+  const record = state.record ?? profile.history[index];
   if (!record) return;
-  const view: MatchDeckView = { slot: profile.activeDeck, ...state };
+  const view: LocalMatchDeckView = {
+    slot: profile.activeDeck,
+    ...state,
+    record,
+  };
   const decks = recordedDecks(record);
   const editable = screen === "lobby";
+  const prepareChange = () =>
+    prepareDeckChange(() => {
+      showMatchDetails(index, {
+        ...view,
+        undo: undefined,
+        notice: deckPreviewConflictNotice,
+      });
+      $("#match-deck-slot").focus();
+    });
   const section = (side: "yours" | "opponent") =>
     `<section class="match-deck-panel" data-match-side="${side}" aria-label="${side === "yours" ? "Your recorded deck" : "Opponent recorded deck"}"><div class="match-deck-heading"><div><h3>${side === "yours" ? "Your deck" : "Opponent deck"}</h3><p>${side === "yours" ? esc(record.playerName ?? "Your starting eight") : esc(record.opponent ?? "Royal Trainer")}</p></div><span><i class="tiny-drop"></i> ${averageCost(decks[side]).toFixed(1)} average</span></div><div class="match-deck-grid">${decks[side].map((id) => cardHTML(id, `data-match-card="${id}"`)).join("")}</div>${deckCodeButton(side)}${editable ? `<button class="secondary-button" data-use-match-deck="${side}" aria-describedby="match-copy-note">${icon("layers-2")} ${side === "yours" ? "Use your recorded deck" : "Use opponent deck"}</button><button class="secondary-button" data-try-match-deck="${side}" aria-describedby="match-try-note">${icon("swords")} ${side === "yours" ? "Try your recorded deck" : "Try opponent deck"}</button>${side === "opponent" ? `${practicePaceHTML()}<button class="secondary-button" id="practice-recorded-deck" aria-describedby="practice-recorded-note">${icon("target")} Practice against this deck</button><p class="match-practice-note" id="practice-recorded-note">AI uses this recorded deck against your active deck. No trophies or rewards.</p>` : ""}` : ""}</section>`;
   modal(
@@ -3097,6 +3147,7 @@ function showMatchDetails(index: number, state: Partial<MatchDeckView> = {}) {
     .forEach((button) => {
       button.onclick = () => {
         if (screen !== "lobby") return;
+        if (!prepareChange()) return;
         const side = button.dataset.useMatchDeck as "yours" | "opponent";
         const undo =
           view.undo && isActiveDeck(profile, decks[side], view.slot)
@@ -3105,6 +3156,7 @@ function showMatchDetails(index: number, state: Partial<MatchDeckView> = {}) {
         saveProfile(profile);
         refreshDeck();
         showMatchDetails(index, {
+          record,
           slot: view.slot,
           undo,
           notice: storageAvailable
@@ -3117,10 +3169,12 @@ function showMatchDetails(index: number, state: Partial<MatchDeckView> = {}) {
   if (view.undo)
     $("#undo-match-deck").onclick = () => {
       if (screen !== "lobby") return;
+      if (!prepareChange()) return;
       restoreDeckSelection(profile, view.undo!);
       saveProfile(profile);
       refreshDeck();
       showMatchDetails(index, {
+        record,
         slot: view.slot,
         notice: storageAvailable
           ? "Previous decks restored."
