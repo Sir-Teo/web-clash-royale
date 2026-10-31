@@ -2687,6 +2687,8 @@ function renderDeckBuilder() {
         ["collection", "Collection order"],
         ["cost-asc", "Elixir: low to high"],
         ["cost-desc", "Elixir: high to low"],
+        ["rarity", "Rarity: Common first"],
+        ["rarity-desc", "Rarity: Legendary first"],
         ["name", "Name: A to Z"],
       ] as const
     )

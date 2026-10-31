@@ -28,8 +28,11 @@ describe("card collection browsing", () => {
     expect(ids({ kind: "building", cost: 9 })).toEqual([]);
   });
   it("sorts equal-cost cards by name in both elixir directions", () => {
-    const names = CARDS.filter((card) => card.kind === "troop" && card.cost === 4)
-      .map((card) => card.name).sort((a, b) => a.localeCompare(b));
+    const names = CARDS.filter(
+      (card) => card.kind === "troop" && card.cost === 4,
+    )
+      .map((card) => card.name)
+      .sort((a, b) => a.localeCompare(b));
     for (const order of ["cost-asc", "cost-desc"] as const)
       expect(
         collectionCards({ kind: "troop", cost: 4, order }).map((c) => c.name),
@@ -54,12 +57,54 @@ describe("card collection browsing", () => {
     expect(collectionCards({ order: "name" })[0].name).toBe("Archers");
     expect(collectionCards({ order: "name" }).at(-1)!.name).toBe("Zap");
     collectionCards({ order: "cost-desc" });
+    collectionCards({ order: "rarity" });
+    collectionCards({ order: "rarity-desc" });
     expect(CARDS).toEqual(original);
     const defaults = collectionCards();
     expect(defaults).toEqual(CARDS);
     expect(defaults).not.toBe(CARDS);
   });
+  it("groups rarities before elixir while retaining name ties", () => {
+    expect(ids({ search: "goblin", order: "rarity" })).toEqual([
+      "goblins",
+      "spear-goblins",
+      "goblin-gang",
+      "dart-goblin",
+      "goblin-hut",
+      "goblin-barrel",
+    ]);
+  });
+  it("combines rarity ordering with cost and kind filters", () => {
+    expect(ids({ kind: "spell", cost: 3, order: "rarity" })).toEqual([
+      "arrows",
+      "heal",
+      "clone",
+      "goblin-barrel",
+      "tornado",
+    ]);
+  });
+  it("puts higher rarities first while keeping elixir and name order within each tier", () => {
+    expect(ids({ search: "goblin", order: "rarity-desc" })).toEqual([
+      "goblin-barrel",
+      "dart-goblin",
+      "goblin-hut",
+      "goblins",
+      "spear-goblins",
+      "goblin-gang",
+    ]);
+  });
+  it("combines reversed rarity groups with spell and exact-cost filters", () => {
+    expect(ids({ kind: "spell", cost: 3, order: "rarity-desc" })).toEqual([
+      "clone",
+      "goblin-barrel",
+      "tornado",
+      "heal",
+      "arrows",
+    ]);
+  });
   it("treats whitespace as an empty search and retains every eligible card", () => {
-    expect(ids({ search: " \t\n ", kind: "building" })).toEqual(CARDS.filter((card) => card.kind === "building").map((card) => card.id));
+    expect(ids({ search: " \t\n ", kind: "building" })).toEqual(
+      CARDS.filter((card) => card.kind === "building").map((card) => card.id),
+    );
   });
 });

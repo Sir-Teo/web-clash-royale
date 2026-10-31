@@ -562,7 +562,7 @@ The helper reads snapshots and consumes no randomness. It is a placement heurist
 
 ### Collection browsing
 
-`collectionCards` filters a copy of the roster by card type, exact elixir cost and a normalized name query. Search folds case and accents and ignores punctuation/spacing, so plain P.E.K.K.A names match their displayed native spelling. Default collection order follows the roster; elixir sorts break ties by English name, and alphabetical sorting ignores name punctuation. Browsing never mutates the roster or any saved deck.
+`collectionCards` filters a copy of the roster by card type, exact elixir cost and a normalized name query. Search folds case and accents and ignores punctuation/spacing, so plain P.E.K.K.A names match their displayed native spelling. Default collection order follows the roster; elixir sorts break ties by English name, and alphabetical sorting ignores name punctuation. Both rarity directions use a typed Common/Rare/Epic/Legendary ranking, then increasing elixir and the same name comparator within each tier. Browsing never mutates the roster or any saved deck.
 
 The builder keeps search, type, cost and ordering in local UI state. Card inspection, return from deck codes, deck reordering and replacement retain it; opening a fresh builder from the lobby resets it. Filtering and sorting only redraw the collection and keep focus on the active control. Type buttons expose their pressed state, the result count has a polite status region, and labeled cost/order selects have keyboard focus outlines and 44-pixel heights. They stack on narrow phones. These browsing preferences add no profile, replay, simulation or network fields.
 

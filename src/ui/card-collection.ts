@@ -1,7 +1,8 @@
 import { CARDS } from "../game/cards";
 import type { Card } from "../game/cards";
 
-export type CollectionOrder = "collection" | "cost-asc" | "cost-desc" | "name";
+export type CollectionOrder =
+  "collection" | "cost-asc" | "cost-desc" | "name" | "rarity" | "rarity-desc";
 export type CollectionKind = Card["kind"] | "all";
 export interface CollectionQuery {
   search: string;
@@ -21,6 +22,12 @@ const byName = (a: Card, b: Card) =>
     sensitivity: "base",
     ignorePunctuation: true,
   });
+const rarityRank: Record<Card["rarity"], number> = {
+  Common: 0,
+  Rare: 1,
+  Epic: 2,
+  Legendary: 3,
+};
 
 export function collectionCards({
   search = "",
@@ -36,6 +43,14 @@ export function collectionCards({
       searchable(card.name).includes(query),
   );
   if (order === "name") return matches.sort(byName);
+  if (order === "rarity" || order === "rarity-desc")
+    return matches.sort(
+      (a, b) =>
+        (rarityRank[a.rarity] - rarityRank[b.rarity]) *
+          (order === "rarity" ? 1 : -1) ||
+        a.cost - b.cost ||
+        byName(a, b),
+    );
   if (order === "cost-asc" || order === "cost-desc")
     matches.sort(
       (a, b) =>

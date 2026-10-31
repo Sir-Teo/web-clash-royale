@@ -3715,3 +3715,13 @@ New journeys cover focused lobby buttons, repeat/modifier protection, native que
 All 3,662 unit checks across 258 files, type checking and production build pass. All four final shortcut development cases pass across desktop Chromium and phone WebKit; all twenty-four production cases pass across desktop Chromium, phone Chromium and phone WebKit, including existing Settings Help and native Space/held-key behavior. The settings-prefixed journeys join workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `393a47397ddd` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Browse the collection by either rarity direction
+
+The existing Sort cards control now offers Common first and Legendary first. A typed rarity ranking groups cards by tier, retaining ascending elixir and name ordering inside each tier. Search, card-type and exact-cost filters keep applying. The choice stays in the builder's visit state and adds no saved fields.
+
+Four new unit cases verify both directions against the mixed Common/Rare/Epic Goblin cards and a spell/exact-cost subset; the source/default-order immutability check includes both modes. The new browser journey checks collection endpoints and both filtered orders, inspects Goblin Barrel, opens/cancels its temporary trial and returns to the same search, reversed rarity choice, focus and viewport without changing stored bytes. Reviewed 320-pixel controls fit the existing stacked layout. The collection-inspection file is already selected by desktop and phone WebKit CI.
+
+All 3,666 unit checks across 258 files, type checking and production build pass. Both final development cases pass on desktop Chromium and phone WebKit; all fifteen production collection cases pass across desktop Chromium, phone Chromium and phone WebKit.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `108f0354e924` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

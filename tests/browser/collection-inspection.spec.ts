@@ -1,7 +1,10 @@
 import { test, expect, type Page, type Locator } from "@playwright/test";
 import { STARTER_DECK, PRESETS, CARDS } from "../../src/game/cards";
-const fourCostTroops = CARDS.filter((card) => card.kind === "troop" && card.cost === 4)
-  .sort((a, b) => a.name.localeCompare(b.name)).map((card) => card.id);
+const fourCostTroops = CARDS.filter(
+  (card) => card.kind === "troop" && card.cost === 4,
+)
+  .sort((a, b) => a.name.localeCompare(b.name))
+  .map((card) => card.id);
 const key = "browser-royale.profile.v1";
 const saved = (page: Page) =>
   page.evaluate((key) => localStorage.getItem(key), key);
@@ -162,6 +165,62 @@ const collectionIds = (page: Page) =>
       cards.map((card) => (card as HTMLElement).dataset.collection),
     );
 
+test("rarity sorting groups matching cards and survives inspection and a temporary trial without saving", async ({
+  page,
+}, info) => {
+  if (info.project.name !== "desktop")
+    await page.setViewportSize({ width: 320, height: 740 });
+  const before = await saved(page);
+  await page.locator('[data-nav="cards"]').click();
+  const sort = page.getByLabel("Sort cards", { exact: true });
+  await sort.selectOption("rarity");
+  expect((await collectionIds(page))[0]).toBe("ice-spirit");
+  expect((await collectionIds(page)).at(-1)).toBe("lava-hound");
+  await page.locator("#card-search").fill("goblin");
+  const expected = [
+    "goblins",
+    "spear-goblins",
+    "goblin-gang",
+    "dart-goblin",
+    "goblin-hut",
+    "goblin-barrel",
+  ];
+  expect(await collectionIds(page)).toEqual(expected);
+  await sort.selectOption("rarity-desc");
+  const reverse = [
+    "goblin-barrel",
+    "dart-goblin",
+    "goblin-hut",
+    "goblins",
+    "spear-goblins",
+    "goblin-gang",
+  ];
+  expect(await collectionIds(page)).toEqual(reverse);
+  const barrel = page.locator('[data-collection="goblin-barrel"]');
+  await activate(page, barrel);
+  await page.locator("#try-card-practice").click();
+  await expect(page.locator("[data-trial-slot]")).toHaveCount(8);
+  await page.locator("#card-trial-back").click();
+  await page.locator("#card-back").click();
+  await expect(barrel).toBeFocused();
+  await expect(barrel).toBeInViewport();
+  await expect(sort).toHaveValue("rarity-desc");
+  await expect(page.locator("#card-search")).toHaveValue("goblin");
+  expect(await collectionIds(page)).toEqual(reverse);
+  expect((await sort.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  expect(await saved(page)).toBe(before);
+  await sort.scrollIntoViewIfNeeded();
+  await page.screenshot({
+    path: info.outputPath("collection-rarity-sort.png"),
+    animations: "disabled",
+  });
+});
+
 test("plain-name search and combined collection filters preserve inspection state without editing progress", async ({
   page,
 }) => {
@@ -213,7 +272,9 @@ test("plain-name search and combined collection filters preserve inspection stat
     "4",
   );
   await expect(sort).toHaveValue("name");
-  await expect(page.locator("[data-collection]")).toHaveCount(fourCostTroops.length);
+  await expect(page.locator("[data-collection]")).toHaveCount(
+    fourCostTroops.length,
+  );
   await page.locator("#deck-codes").click();
   await page.locator("#deck-code-back").click();
   await expect(sort).toHaveValue("name");
