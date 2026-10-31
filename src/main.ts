@@ -1328,7 +1328,7 @@ function showDeckCode(
   backLabel = "Back to deck inspection",
 ) {
   modal(
-    `${title} code`,
+    `${esc(title)} code`,
     `<div class="deck-codes"><p id="battle-code-note">Share these eight cards. Paste the code into Cards → Deck codes to preview or try them.</p><label class="field-label" for="battle-deck-code-value">Deck code</label><textarea class="name-input deck-code-text" id="battle-deck-code-value" readonly rows="4" spellcheck="false" aria-describedby="battle-code-note">${esc(encodeDeckCode(deck))}</textarea><button class="secondary-button" id="copy-battle-deck-code">Copy deck code</button><p id="battle-code-status" role="status" aria-live="polite"></p><div class="deck-code-footer"><button class="text-button" id="battle-code-back">${esc(backLabel)}</button></div></div>`,
     "battle-deck-code",
   );

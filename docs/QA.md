@@ -3645,3 +3645,13 @@ New ordinary/practice journeys use keyboard and touch, check 44-pixel targets, r
 All 3,650 unit checks across 256 files, type checking and production build pass. All eight combined development cases pass across desktop Chromium and phone WebKit; all twelve production cases pass across desktop Chromium, phone Chromium and phone WebKit. The practice-prefixed journeys join workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `14e68427c6db` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Keep recorded names literal and readable in deck views
+
+A new boundary check reproduced a valid 64-character opponent name extending across the elixir summary on a 320-pixel layout. Following that source through Share deck code also reproduced harmless name markup being interpreted in the title. The shared code dialog now escapes its plain-text title, deck headings wrap unbroken names and modal heading content can shrink/wrap beside its close control. An audit of modal-title callers found the remaining dynamic labels use controlled card/static titles.
+
+The final regression uses a literal `<b>Pilot</b>` player name and an unbroken 64-character opponent, covering both viewing sides of a red-side recording, portrait/landscape phones, exact title text, absence of interpreted bold elements, geometry beside elixir and close controls, nested sharing focus and unchanged saved bytes. Reviewed phone headings remain inside their panels. Existing ordered lobby sharing, unsaved-session/manual-copy fallback, late clipboard handling and full replay-deck navigation also pass through the shared helper and heading styles.
+
+All 3,650 unit checks across 256 files, type checking and production build pass. Both final development cases pass on desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. The new settings-prefixed journey joins workflow CI automatically. A read-only CLI audit covered all 390 declared workflow cases in 59 files exactly once across nine shards (45/45/40 per browser); no hosted CI was triggered.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `39459411789c` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

@@ -381,6 +381,8 @@ Replay speed uses one setter for the toolbar, initial playback and Minus/Plus/Eq
 
 Replay Settings also opens a read-only starting-deck inspector. It copies both decks from the current projected replay battle and uses its captured display names, so red-side recordings and opponent-side viewing retain the correct cards and identity. Nested card/code views retain the actual inspector DOM and focus; Back to Settings restores its original form draft and scroll. The existing modal pause owner restores prior playback when the full dialog flow closes. No profile, replay or rules fields change.
 
+Deck-code titles escape their plain-text label before entering the modal template. Shared deck headings and modal titles permit unbroken recorded names to wrap within their flex space, preserving the elixir summary and close control on narrow screens.
+
 Replay return context carries a restore callback and an accessible destination label. Local Battle details and shared previews capture their actual modal DOM before playback, preserving destination/pace/side drafts and owned deck Undo. Same-record restart retains that context; returning creates the lobby before restoring the preview, while a new battle or unrelated recording clears it. Practice review uses the same context with its existing retained setup selection.
 
 ## Canonical replay completion

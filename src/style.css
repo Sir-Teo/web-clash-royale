@@ -1677,6 +1677,9 @@ kbd {
   margin-bottom: 25px;
   gap: 20px;
 }
+.modal-heading > div {
+  min-width: 0;
+}
 .modal-heading h2 {
   font-family: var(--display);
   font-weight: 400;
@@ -1684,6 +1687,7 @@ kbd {
   color: #f5f0dd;
   margin-top: 5px;
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 .modal-heading .eyebrow {
   font-size: 8px;
