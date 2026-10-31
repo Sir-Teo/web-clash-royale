@@ -1232,10 +1232,12 @@ function showBattleDeck(side: "yours" | "opponent" = "yours") {
   const title = opponent ? "Opponent practice deck" : "Your battle deck";
   modal(
     title,
-    `<p class="room-note">${practiceMatch ? "The starting cards captured for this practice." : "Your starting cards for this battle."} Inspecting them leaves the battle paused.</p>${practiceMatch ? `<label class="practice-choice" for="battle-inspect-side">Deck to inspect<span><select id="battle-inspect-side"><option value="yours" ${opponent ? "" : "selected"}>Your battle deck</option><option value="opponent" ${opponent ? "selected" : ""}>Opponent practice deck</option></select>${icon("chevron-down")}</span></label>` : ""}<section class="match-deck-panel" aria-label="${opponent ? "Opponent starting practice deck" : "Your starting battle deck"}"><div class="match-deck-heading"><h3>${esc(opponent ? opponentName : battlePlayerName)}</h3><span><i class="tiny-drop"></i> ${averageCost(deck).toFixed(1)} average</span></div><div class="match-deck-grid">${deck.map((id, index) => cardHTML(id, `data-battle-card="${index}"`)).join("")}</div></section><button class="secondary-button" id="battle-deck-back">${icon("arrow-right")} Back to pause menu</button>`,
+    `<p class="room-note">${practiceMatch ? "The starting cards captured for this practice." : "Your starting cards for this battle."} Inspecting them leaves the battle paused.</p>${practiceMatch ? `<label class="practice-choice" for="battle-inspect-side">Deck to inspect<span><select id="battle-inspect-side"><option value="yours" ${opponent ? "" : "selected"}>Your battle deck</option><option value="opponent" ${opponent ? "selected" : ""}>Opponent practice deck</option></select>${icon("chevron-down")}</span></label>` : ""}<section class="match-deck-panel" aria-label="${opponent ? "Opponent starting practice deck" : "Your starting battle deck"}"><div class="match-deck-heading"><h3>${esc(opponent ? opponentName : battlePlayerName)}</h3><span><i class="tiny-drop"></i> ${averageCost(deck).toFixed(1)} average</span></div><div class="match-deck-grid">${deck.map((id, index) => cardHTML(id, `data-battle-card="${index}"`)).join("")}</div></section><div class="match-details-actions"><button class="text-button" id="battle-deck-code">${icon("copy")} Share deck code</button><button class="secondary-button" id="battle-deck-back">${icon("arrow-right")} Back to pause menu</button></div>`,
     "battle-deck",
   );
   $("#battle-deck-back").onclick = showBattlePause;
+  const share = $("#battle-deck-code");
+  share.onclick = () => showBattleDeckCode(deck, title, returnToModal(share));
   const select = document.querySelector<HTMLSelectElement>(
     "#battle-inspect-side",
   );
@@ -1256,6 +1258,28 @@ function showBattleDeck(side: "yours" | "opponent" = "yours") {
     });
 }
 
+function showBattleDeckCode(
+  deck: readonly CardId[],
+  title: string,
+  onBack: () => void,
+) {
+  modal(
+    `${title} code`,
+    `<div class="deck-codes"><p id="battle-code-note">Share these eight starting cards. Paste the code into Cards → Deck codes to preview or try them.</p><label class="field-label" for="battle-deck-code-value">Deck code</label><textarea class="name-input deck-code-text" id="battle-deck-code-value" readonly rows="4" spellcheck="false" aria-describedby="battle-code-note">${esc(encodeDeckCode(deck))}</textarea><button class="secondary-button" id="copy-battle-deck-code">Copy deck code</button><p id="battle-code-status" role="status" aria-live="polite"></p><div class="deck-code-footer"><button class="text-button" id="battle-code-back">Back to deck inspection</button></div></div>`,
+    "battle-deck-code",
+  );
+  const field = $<HTMLTextAreaElement>("#battle-deck-code-value");
+  const copy = $("#copy-battle-deck-code");
+  copy.onclick = async () => {
+    const copied = await copyTextValue(field);
+    if (document.querySelector("#battle-deck-code-value") !== field) return;
+    $("#battle-code-status").textContent = copied
+      ? "Deck code copied."
+      : "Select and copy the code above.";
+    if (copied) copy.focus();
+  };
+  $("#battle-code-back").onclick = onBack;
+}
 function syncReplayControl() {
   const action =
     replayData && replayComplete(battle, replayData)
@@ -1670,6 +1694,8 @@ async function copyTextValue(field: HTMLTextAreaElement) {
     } catch {
       // Some browsers expose the API but reject it on an HTTP LAN origin.
     }
+  // A delayed permission rejection must not move focus out of a newer view.
+  if (!field.isConnected) return false;
   if (legacyCopyValue(field.value)) return true;
   field.focus();
   field.select();
