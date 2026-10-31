@@ -266,6 +266,7 @@ Open **Battle settings → How to play** for controls and placement rules on pho
 - Screen readers receive keyboard help for the focused battle or replay arena. Completed battles and the lobby preview have their own descriptions; a completed replay keeps its navigation shortcuts.
 - Troops normally deploy on your half; most spells can target either half. The Log starts on your half, while Miner can tunnel to the enemy side. Destroying a Princess Tower opens deployment territory in that lane.
 - Decks, results and preferences save automatically in this browser. **Done** retries a failed deck save when storage recovers. Closing or reloading an older tab leaves newer saved progress intact.
+- Idle lobbies refresh progress saved in another tab. Open dialogs keep their drafts, and storage failures keep local session changes intact.
 - From the lobby's **Battle settings**, use **Export progress** to save a JSON backup. **Restore backup** previews its player, rewards and replay count before replacing this browser's progress. **Keep current progress** returns to your unsaved settings, including name and audio edits. Backups include all three decks, chests, preferences and the latest ten replays; they can move progress to another browser or device. If browser storage cannot save settings, the confirmation identifies the session-only change; Settings points to Export progress so those changes can still be kept in a backup.
 
 See [architecture](docs/ARCHITECTURE.md), [asset provenance](docs/ASSETS.md) and [verification](docs/QA.md).

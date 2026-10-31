@@ -35,7 +35,7 @@ export interface Profile {
   emotesMuted: boolean;
   seenTutorial: boolean;
 }
-const KEY = "browser-royale.profile.v1";
+export const PROFILE_STORAGE_KEY = "browser-royale.profile.v1";
 const base = (): Profile => ({
   version: 1,
   name: "Sir Teo",
@@ -151,9 +151,32 @@ export function validRecordEntry(value: unknown): value is RecordEntry {
 
 export function loadProfile(): Profile {
   try {
-    return decodeProfile(localStorage.getItem(KEY) ?? "") ?? base();
+    return (
+      decodeProfile(localStorage.getItem(PROFILE_STORAGE_KEY) ?? "") ?? base()
+    );
   } catch {
     return base();
+  }
+}
+/** Passive updates require a complete snapshot; startup recovery still uses loadProfile. */
+export function readSavedProfile(): Profile | null {
+  try {
+    const raw = localStorage.getItem(PROFILE_STORAGE_KEY);
+    if (!raw) return null;
+    const saved = JSON.parse(raw);
+    const profile = decodeProfile(raw);
+    if (
+      !profile ||
+      !Object.keys(profile).every(
+        (key) =>
+          JSON.stringify(profile[key as keyof Profile]) ===
+          JSON.stringify(saved[key]),
+      )
+    )
+      return null;
+    return profile;
+  } catch {
+    return null;
   }
 }
 function decodeProfile(raw: string): Profile | null {
@@ -276,7 +299,7 @@ export function importProgress(text: string): Profile {
 export let storageAvailable = true;
 export function saveProfile(p: Profile) {
   try {
-    localStorage.setItem(KEY, JSON.stringify(p));
+    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(p));
     storageAvailable = true;
   } catch {
     storageAvailable = false;

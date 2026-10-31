@@ -190,6 +190,8 @@ import { CARDS, CARD_MAP, PRESETS, averageCost, cardArt } from "./game/cards";
 import type { CardId } from "./game/cards";
 import {
   loadProfile,
+  readSavedProfile,
+  PROFILE_STORAGE_KEY,
   normalizePlayerName,
   saveProfile as persistProfile,
   recordBattle,
@@ -541,7 +543,10 @@ function closeModal() {
   const wasResult = modalKey === "result";
   const wasPause = modalKey === "pause";
   modalKey = "";
-  if (screen === "lobby") practiceSetupBack = null;
+  if (screen === "lobby") {
+    practiceSetupBack = null;
+    queueMicrotask(syncIdleProfile);
+  }
   modalFocus.close();
   if (modalPausedBattle || wasPause) {
     modalPausedBattle = false;
@@ -601,6 +606,42 @@ function refreshProfile() {
     .forEach((e) => (e.onclick = () => claimChest(Number(e.dataset.chest))));
   refreshDeck();
   refreshIcons();
+}
+function syncIdleProfile() {
+  if (
+    !initialized ||
+    screen !== "lobby" ||
+    modalKey ||
+    network.room ||
+    !storageAvailable
+  )
+    return;
+  const saved = readSavedProfile();
+  if (!saved || JSON.stringify(saved) === JSON.stringify(profile)) return;
+  const active =
+    document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+  const attribute = ["data-deck", "data-card-info", "data-chest"].find((name) =>
+    active?.hasAttribute(name),
+  );
+  const selector = active?.id
+    ? `#${CSS.escape(active.id)}`
+    : attribute
+      ? `[${attribute}="${CSS.escape(active!.getAttribute(attribute)!)}"]`
+      : null;
+  Object.assign(profile, saved);
+  audio.setEnabled(profile.sound);
+  audio.musicEnabled = profile.music;
+  emotes.setMuted(profile.emotesMuted, false);
+  refreshProfile();
+  refreshSound();
+  if (active && !active.isConnected) {
+    const replacement = selector
+      ? document.querySelector<HTMLElement>(selector)
+      : null;
+    (replacement ?? $("#battle-button")).focus({ preventScroll: true });
+  }
 }
 function refreshDeck() {
   $("#deck-tabs").innerHTML =
@@ -3710,6 +3751,7 @@ function suspendFrameLoop() {
   accumulator = 0;
 }
 function resumeFrameLoop() {
+  syncIdleProfile();
   if (document.hidden || frameHandle !== undefined) return;
   arena.requestFrame();
   frameTime = performance.now();
@@ -3724,6 +3766,9 @@ document.addEventListener("visibilitychange", () => {
 });
 window.addEventListener("pagehide", suspendFrameLoop);
 window.addEventListener("pageshow", resumeFrameLoop);
+window.addEventListener("storage", (event) => {
+  if (event.key === PROFILE_STORAGE_KEY) syncIdleProfile();
+});
 
 lobby();
 initialized = true;

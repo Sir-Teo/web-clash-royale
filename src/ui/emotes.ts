@@ -231,11 +231,11 @@ export class NativeEmotes {
         { path, viewBox: "-37 -34 74 72", prefix: "emote-mute" },
       );
   }
-  setMuted(muted: boolean) {
+  setMuted(muted: boolean, notify = true) {
     this.muted = muted;
     if (muted) this.clear();
     this.refreshMute();
-    this.onMute(muted);
+    if (notify) this.onMute(muted);
   }
   show(team: Team, kind: ReactionKind) {
     if (this.muted || document.hidden) return false;
