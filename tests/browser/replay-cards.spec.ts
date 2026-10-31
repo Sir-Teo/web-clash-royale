@@ -93,7 +93,7 @@ for (const perspective of ["blue", "red"] as const)
     await page.locator("#replay-seek").fill("0");
     await page.locator("#replay-speed").click();
     await expect(page.locator("#hand-caption")).toHaveText(
-      "Tap a hand card to inspect its stats",
+      "Tap a hand card or press 1–4 to inspect",
     );
     expect(
       await page
@@ -135,6 +135,29 @@ for (const perspective of ["blue", "red"] as const)
     await expect(mirror).toBeFocused();
     expect((await state(page)).paused).toBe(true);
 
+    const canvas = page.locator("#arena-canvas canvas");
+    const shortcut = String(initial.hand.indexOf("mirror") + 1);
+    await expect(mirror).toHaveAttribute("aria-keyshortcuts", shortcut);
+    await expect(canvas).toHaveAttribute(
+      "aria-keyshortcuts",
+      "1 2 3 4 ArrowLeft ArrowRight Home End [ ] Space",
+    );
+    await canvas.focus();
+    await page.keyboard.down(shortcut);
+    await expect(page.locator("#modal-title")).toHaveText("Mirror");
+    await page.keyboard.down(shortcut);
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    // A held shortcut cannot reopen the card after its dialog closes.
+    await page.keyboard.down(shortcut);
+    await page.keyboard.up(shortcut);
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(mirror).toBeFocused();
+    await page.locator("#replay-seek").focus();
+    await page.keyboard.press(shortcut);
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await page.locator("#replay-seek").fill("0");
+
     // Inspect the hand at the latest requested position before a seek frame runs.
     await page.evaluate(() => {
       const slider = document.querySelector<HTMLInputElement>("#replay-seek")!;
@@ -173,7 +196,10 @@ for (const perspective of ["blue", "red"] as const)
       .getByRole("button", { name: "Resume replay", exact: true })
       .click();
     await expect.poll(async () => (await state(page)).time).toBeGreaterThan(0);
-    await card.click();
+    if (perspective === "red") {
+      await canvas.focus();
+      await page.keyboard.press("1");
+    } else await card.click();
     const during = await state(page);
     await page.waitForTimeout(200);
     expect((await state(page)).time).toBe(during.time);

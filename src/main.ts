@@ -361,7 +361,7 @@ $("#app").innerHTML = `
     </div>
     <div id="lobby-footer" class="chest-tray"><div class="chest-heading"><span>VICTORY CHESTS</span><b id="chest-count">0 / 4</b></div><div class="chest-slots" id="chest-slots"></div></div>
     <div id="battle-tray" class="battle-tray hidden"><div class="hand-row"><div class="next-card"><span>NEXT</span><div class="next-card-picture" data-native-card="" data-card-variant="thumbnail"><img id="next-card-img" alt="Next card"/>${nativeCardArt}</div><div class="native-next-cost" data-native-card="" data-card-variant="cost"><b id="next-card-cost"></b>${nativeCardArt}</div></div><div class="hand" id="hand"></div></div><div class="elixir-row">${elixirMarkup}</div><div class="tray-caption"><span id="hand-caption">Select a card, then tap your side of the arena</span><span><kbd>1</kbd>–<kbd>4</kbd> SELECT</span></div></div>
-    <div class="replay-controls hidden" role="group" aria-label="Replay controls"><div class="replay-position"><span id="replay-clock">0:00 / 0:00</span><input id="replay-seek" aria-label="Replay timeline" aria-describedby="replay-keyboard-help" type="range" min="0" max="100" step="0.01" value="0"/></div><div class="replay-actions"><button id="replay-back" class="icon-button replay-jump" aria-label="Back 10 seconds" title="Back 10 seconds (Left arrow)">${icon("rotate-ccw")}<span>10</span></button><button id="replay-play" class="icon-button" aria-label="Pause replay">${icon("pause")}</button><button id="replay-forward" class="icon-button replay-jump" aria-label="Forward 10 seconds" title="Forward 10 seconds (Right arrow)">${icon("rotate-cw")}<span>10</span></button><button id="replay-speed" class="text-button" aria-label="Playback speed: 1×">1×</button><label class="text-button replay-plays" title="Jump to a recorded card play"><span aria-hidden="true">Plays</span><select id="replay-plays" aria-label="Card plays"><option value="">No recorded plays</option></select></label><button id="replay-exit" class="text-button">Exit</button></div><span id="replay-keyboard-help" class="sr-only">Outside controls: Left or Right arrow skips ten seconds, Home goes to the beginning and End to the end. Square brackets jump to the previous or next card play. Space pauses or resumes. Tab to a hand card and press Enter or Space to inspect its current stats.</span></div>
+    <div class="replay-controls hidden" role="group" aria-label="Replay controls"><div class="replay-position"><span id="replay-clock">0:00 / 0:00</span><input id="replay-seek" aria-label="Replay timeline" aria-describedby="replay-keyboard-help" type="range" min="0" max="100" step="0.01" value="0"/></div><div class="replay-actions"><button id="replay-back" class="icon-button replay-jump" aria-label="Back 10 seconds" title="Back 10 seconds (Left arrow)">${icon("rotate-ccw")}<span>10</span></button><button id="replay-play" class="icon-button" aria-label="Pause replay">${icon("pause")}</button><button id="replay-forward" class="icon-button replay-jump" aria-label="Forward 10 seconds" title="Forward 10 seconds (Right arrow)">${icon("rotate-cw")}<span>10</span></button><button id="replay-speed" class="text-button" aria-label="Playback speed: 1×">1×</button><label class="text-button replay-plays" title="Jump to a recorded card play"><span aria-hidden="true">Plays</span><select id="replay-plays" aria-label="Card plays"><option value="">No recorded plays</option></select></label><button id="replay-exit" class="text-button">Exit</button></div><span id="replay-keyboard-help" class="sr-only">Outside controls: Left or Right arrow skips ten seconds, Home goes to the beginning and End to the end. Square brackets jump to the previous or next card play. Space pauses or resumes. Keys 1 through 4 inspect hand cards. Tab to a hand card and press Enter or Space to inspect its current stats.</span></div>
    </main>
    <aside class="right-sidebar"><section class="deck-panel panel"><div class="section-heading"><div><span class="eyebrow">YOUR WINNING EIGHT</span><h3>Battle deck</h3></div><span class="deck-number">01</span></div><div class="deck-tabs" id="deck-tabs"></div><div class="deck-grid" id="deck-preview"></div><div class="deck-summary"><span><i class="tiny-drop"></i> Average elixir <b id="average-elixir">3.5</b></span><span>8 / 8</span></div><button id="edit-deck" class="secondary-button">${icon("layers-2")} Edit deck ${icon("arrow-up-right")}</button></section>
     <section class="battle-brief panel"><div class="section-heading"><h3>Battle brief</h3>${icon("scroll-text")}</div><div class="brief-item"><span>${icon("crown")}</span><div><b>Take the crown</b><p>Destroy more towers. Take the King Tower for an instant win.</p></div></div><div class="brief-item"><span class="purple">${icon("droplet")}</span><div><b>Spend wisely</b><p>Elixir refills over time. Save some to defend your side.</p></div></div><div class="brief-item"><span class="blue">${icon("timer")}</span><div><b>Three minutes. One winner.</b><p>Tied? Two-minute sudden death. Elixir speeds up as time runs out.</p></div></div><button id="how-to-play" class="text-button">How to play ${icon("arrow-right")}</button></section>
@@ -798,7 +798,7 @@ function updateBattleUI(force = false) {
       const previous = hand.children.item(i) as HTMLButtonElement | null;
       if (previous?.dataset.nativeCard === id) return;
       template.innerHTML = cardHTML(
-        id, `data-slot="${i}"`,
+        id, `data-slot="${i}" aria-keyshortcuts="${i + 1}"`,
         `hand-card ${selected === i ? "selected" : ""}`,
       );
       const e = template.content.firstElementChild as HTMLButtonElement;
@@ -873,7 +873,7 @@ function updateBattleUI(force = false) {
   });
   nativeCards.updateHand($("#hand"), battle.time);
   if (screen === "replay" && replayData) {
-    text("#hand-caption", "Tap a hand card to inspect its stats");
+    text("#hand-caption", "Tap a hand card or press 1–4 to inspect");
     const position = `${clock(battle.time)} / ${clock(replayData.duration * STEP)}`;
     text("#replay-clock", position);
     setAttribute(
@@ -933,7 +933,7 @@ function syncKeyboardArena() {
       canvas,
       "aria-keyshortcuts",
       replay
-        ? "ArrowLeft ArrowRight Home End [ ] Space"
+        ? "1 2 3 4 ArrowLeft ArrowRight Home End [ ] Space"
         : "1 2 3 4 ArrowUp ArrowDown ArrowLeft ArrowRight Enter Escape Space",
     );
   } else {
@@ -3406,7 +3406,11 @@ document.addEventListener("keydown", (e) => {
     return;
   }
   if (["1", "2", "3", "4"].includes(e.key)) {
-    if (!e.repeat) selectCard(Number(e.key) - 1, true);
+    if (!e.repeat) {
+      const slot = Number(e.key) - 1;
+      if (screen === "replay") inspectReplayCard(slot);
+      else selectCard(slot, true);
+    }
     e.preventDefault();
   }
   if (
