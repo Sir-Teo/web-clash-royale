@@ -1446,7 +1446,7 @@ button:active {
   transform: translateX(-50%);
   white-space: nowrap;
   color: #deecd0;
-  font-size: 8px;
+  font-size: 11px;
   text-shadow: 0 1px 4px #102315;
   z-index: 5;
   pointer-events: none;
@@ -1564,11 +1564,11 @@ button:active {
   justify-content: space-between;
   align-items: center;
   color: #7e93af;
-  font-size: 7px;
+  font-size: 11px;
   gap: 8px;
 }
 .tray-caption > span:last-child {
-  font-size: 6px;
+  font-size: 10px;
   letter-spacing: 0.7px;
   white-space: nowrap;
   color: #607791;
@@ -1797,14 +1797,14 @@ kbd {
   text-shadow: 0 2px #7c3a9a;
 }
 .card-detail p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.7;
   color: #b1c0d3;
   margin: 10px 0 13px;
 }
 .rarity-label {
   font-weight: 900;
-  font-size: 11px;
+  font-size: 12px;
   color: #c5d3e3;
   text-transform: capitalize;
 }
@@ -1818,7 +1818,7 @@ kbd {
   color: #f4c36a;
 }
 .level-pill {
-  font-size: 7px;
+  font-size: 10px;
   color: #8ca7c0;
   letter-spacing: 0.5px;
   font-weight: 900;
@@ -1851,7 +1851,7 @@ kbd {
   color: #839ab6;
 }
 .stat-grid small {
-  font-size: 9px;
+  font-size: 11px;
   color: #8299b5;
 }
 .stat-grid b {
@@ -3410,16 +3410,16 @@ kbd {
     max-width: 365px;
   }
   .tray-caption {
-    font-size: 6px;
+    font-size: 11px;
     max-width: 365px;
   }
   .tray-caption > span:last-child {
     display: none;
   }
   .deploy-hint {
-    font-size: 7px;
+    font-size: 11px;
     bottom: 18px;
-    max-width: 160px;
+    max-width: min(80%, 320px);
     text-align: center;
     white-space: normal;
   }
@@ -3562,23 +3562,23 @@ kbd {
     width: 100px;
   }
   .card-detail p {
-    font-size: 10px;
+    font-size: 13px;
   }
   .rarity-label {
-    font-size: 10px;
+    font-size: 12px;
   }
   .level-pill {
-    font-size: 6px;
+    font-size: 10px;
   }
   .stat-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
   }
   .stat-grid small {
-    font-size: 9px;
+    font-size: 11px;
   }
   .stat-grid b {
-    font-size: 12px;
+    font-size: 13px;
   }
   .history-summary {
     gap: 7px;
