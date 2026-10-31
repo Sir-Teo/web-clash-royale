@@ -62,7 +62,7 @@ test("restarting practice keeps its decks and pace without saving abandoned atte
     .getByRole("button", { name: "Choose a practice opponent", exact: true })
     .click();
   await page
-    .getByRole("combobox", { name: "Your saved deck", exact: true })
+    .getByRole("combobox", { name: "Your practice deck", exact: true })
     .selectOption("0");
   await page
     .getByRole("combobox", { name: "Practice opponent", exact: true })

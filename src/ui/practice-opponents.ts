@@ -7,6 +7,31 @@ interface PracticeChoice {
   readonly deck: readonly CardId[];
   readonly savedSlot?: number;
 }
+interface PracticeDeckChoice {
+  readonly value: string;
+  readonly name: string;
+  readonly deck: readonly CardId[];
+  readonly savedSlot?: number;
+}
+
+/** Keep saved slot values stable and expose curated decks as temporary loadouts. */
+export function practiceDeckChoices(
+  savedDecks: readonly (readonly CardId[])[] = [],
+): PracticeDeckChoice[] {
+  return [
+    ...savedDecks.map((deck, savedSlot) => ({
+      value: String(savedSlot),
+      name: `Battle deck ${savedSlot + 1}`,
+      deck: [...deck],
+      savedSlot,
+    })),
+    ...SOLO_OPPONENTS.map((opponent, index) => ({
+      value: `curated:${index}`,
+      name: opponent.style,
+      deck: [...opponent.deck],
+    })),
+  ];
+}
 
 /** Visit-scoped snapshots keep saved opponent decks separate from profile edits. */
 export function practiceRoster(

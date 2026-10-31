@@ -84,7 +84,7 @@ for (const source of ["picker", "recorded"] as const)
         })
         .click();
       await page
-        .getByRole("combobox", { name: "Your saved deck", exact: true })
+        .getByRole("combobox", { name: "Your practice deck", exact: true })
         .selectOption("0");
       await page
         .getByRole("combobox", { name: "Practice opponent", exact: true })
@@ -138,7 +138,7 @@ for (const source of ["picker", "recorded"] as const)
     expect((await state(page)).screen).toBe("lobby");
     const own = source === "picker" ? 0 : initial.activeDeck;
     await expect(
-      page.getByRole("combobox", { name: "Your saved deck", exact: true }),
+      page.getByRole("combobox", { name: "Your practice deck", exact: true }),
     ).toHaveValue(String(own));
     await expect(
       page.getByRole("combobox", { name: "Practice pace", exact: true }),
@@ -158,7 +158,7 @@ for (const source of ["picker", "recorded"] as const)
     ).toEqual(expectedEnemy);
     expect(await saved(page)).toEqual(afterResult);
     await page
-      .getByRole("combobox", { name: "Your saved deck", exact: true })
+      .getByRole("combobox", { name: "Your practice deck", exact: true })
       .selectOption("1");
     await page
       .getByRole("combobox", { name: "Practice opponent", exact: true })

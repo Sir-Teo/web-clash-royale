@@ -1,16 +1,65 @@
 import { expect, it } from "vitest";
 import { SOLO_OPPONENTS } from "../src/game/opponents";
 import {
+  practiceDeckChoices,
   practiceOpponents,
   practiceRoster,
 } from "../src/ui/practice-opponents";
 import { PRESETS, STARTER_DECK } from "../src/game/cards";
+import { validDeck } from "../src/game/profile";
 
 it("retains every opponent's identity and order without a search", () => {
   for (const query of ["", "  ", " · "])
     expect(practiceOpponents(query)).toEqual(
       SOLO_OPPONENTS.map((opponent, index) => ({ opponent, index })),
     );
+});
+
+it("keeps saved player slot values and adds a distinct choice for every curated deck", () => {
+  const choices = practiceDeckChoices([
+    STARTER_DECK,
+    PRESETS[1].deck,
+    PRESETS[2].deck,
+  ]);
+  expect(choices.slice(0, 3).map((choice) => choice.value)).toEqual([
+    "0",
+    "1",
+    "2",
+  ]);
+  expect(choices).toHaveLength(3 + SOLO_OPPONENTS.length);
+  expect(new Set(choices.map((choice) => choice.value)).size).toBe(
+    choices.length,
+  );
+  expect(choices.every((choice) => validDeck(choice.deck))).toBe(true);
+});
+
+it("resolves curated player choices to the exact archived card order", () => {
+  const choices = practiceDeckChoices([STARTER_DECK]);
+  for (const [index, opponent] of SOLO_OPPONENTS.entries()) {
+    const choice = choices.find(
+      (choice) => choice.value === `curated:${index}`,
+    )!;
+    expect(choice.name).toBe(opponent.style);
+    expect(choice.deck).toEqual(opponent.deck);
+    expect(choice.deck).not.toBe(opponent.deck);
+    expect(choice.savedSlot).toBeUndefined();
+  }
+});
+
+it("isolates player loadout snapshots from later saved-slot edits", () => {
+  const deck = [...STARTER_DECK];
+  const choices = practiceDeckChoices([deck, deck]);
+  deck.reverse();
+  expect(choices[0].deck).toEqual(STARTER_DECK);
+  expect(choices[1].deck).toEqual(STARTER_DECK);
+  expect(choices[0].deck).not.toBe(choices[1].deck);
+});
+
+it("keeps curated opponents unchanged when a player loadout is reordered", () => {
+  const original = [...SOLO_OPPONENTS[7].deck];
+  const choices = practiceDeckChoices();
+  (choices[7].deck as string[]).reverse();
+  expect(SOLO_OPPONENTS[7].deck).toEqual(original);
 });
 
 it("appends saved decks without changing curated opponent identities or indexes", () => {

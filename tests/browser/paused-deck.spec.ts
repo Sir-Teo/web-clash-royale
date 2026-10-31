@@ -55,7 +55,7 @@ for (const practice of [false, true])
         })
         .click();
       await page
-        .getByRole("combobox", { name: "Your saved deck", exact: true })
+        .getByRole("combobox", { name: "Your practice deck", exact: true })
         .selectOption("0");
       await page
         .getByRole("button", { name: "Start practice", exact: true })

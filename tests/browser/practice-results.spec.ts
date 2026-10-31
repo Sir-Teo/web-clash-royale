@@ -97,7 +97,7 @@ test("practice results follow both deck compositions and pace, then include a ne
     .getByRole("button", { name: "Choose a practice opponent", exact: true })
     .click();
   const own = page.getByRole("combobox", {
-    name: "Your saved deck",
+    name: "Your practice deck",
     exact: true,
   });
   const opponent = page.getByRole("combobox", {

@@ -40,7 +40,7 @@ const deck = (root: Locator) =>
 const choose = (page: Page) =>
   page.getByRole("combobox", { name: "Practice opponent", exact: true });
 const chooseDeck = (page: Page) =>
-  page.getByRole("combobox", { name: "Your saved deck", exact: true });
+  page.getByRole("combobox", { name: "Your practice deck", exact: true });
 async function open(page: Page) {
   await page.locator(".mode-select").click();
   await page
@@ -82,7 +82,9 @@ test("previews curated and saved opponent decks and returns from card inspection
   const before = await saved(page);
   await open(page);
   await expect(chooseDeck(page)).toHaveValue(String(before.activeDeck));
-  await expect(chooseDeck(page).locator("option")).toHaveCount(3);
+  await expect(chooseDeck(page).locator("option")).toHaveCount(
+    3 + SOLO_OPPONENTS.length,
+  );
   for (let slot = 0; slot < before.decks.length; slot++) {
     await chooseDeck(page).focus();
     await chooseDeck(page).selectOption(String(slot));
