@@ -74,7 +74,7 @@ test.beforeEach(async ({ page }) => {
     .toBe(expectedCards);
 });
 
-test("previews all seventeen decks and returns from card inspection with the same selection", async ({
+test("previews curated and saved opponent decks and returns from card inspection with the same selection", async ({
   page,
 }, info) => {
   const errors: string[] = [];
@@ -101,8 +101,9 @@ test("previews all seventeen decks and returns from card inspection with the sam
   }
   await chooseDeck(page).selectOption("0");
   await expect(choose(page).locator("option")).toHaveCount(
-    SOLO_OPPONENTS.length,
+    SOLO_OPPONENTS.length + before.decks.length,
   );
+  await expect(choose(page).locator("optgroup")).toHaveCount(2);
   await choose(page).focus();
   for (const [index, opponent] of SOLO_OPPONENTS.entries()) {
     await choose(page).selectOption(String(index));
@@ -123,6 +124,19 @@ test("previews all seventeen decks and returns from card inspection with the sam
         '[data-practice-side="opponent"] .match-deck-heading > span',
       ),
     ).toContainText(`${average.toFixed(1)} average`);
+  }
+  for (const [slot, expected] of before.decks.entries()) {
+    await choose(page).selectOption(String(SOLO_OPPONENTS.length + slot));
+    await expect(choose(page)).toBeFocused();
+    await expect(
+      page.locator('[data-practice-side="opponent"] .match-deck-heading p'),
+    ).toHaveText(`Battle deck ${slot + 1}`);
+    expect(await deck(page.locator('[data-practice-side="opponent"]'))).toEqual(
+      expected,
+    );
+    expect(await deck(page.locator('[data-practice-side="yours"]'))).toEqual(
+      before.decks[0],
+    );
   }
   await choose(page).selectOption("8");
   await page.screenshot({
@@ -306,7 +320,7 @@ test("finds a matchup by cards without losing deck choices or starting a hidden 
     name: "Start practice",
     exact: true,
   });
-  await expect(count).toHaveText("17 of 17 opponents");
+  await expect(count).toHaveText("20 of 20 opponents");
   await expect(clear).toBeHidden();
   await chooseDeck(page).selectOption("1");
   await pace.selectOption("double");
@@ -321,7 +335,7 @@ test("finds a matchup by cards without losing deck choices or starting a hidden 
   await expect(search).toHaveValue("sparky zap");
   await expect(choose(page)).toHaveValue("16");
   await expect(choose(page).locator("option")).toHaveCount(1);
-  await expect(count).toHaveText("1 of 17 opponents");
+  await expect(count).toHaveText("1 of 20 opponents");
   for (const side of ["yours", "opponent"])
     await expect(
       page.locator(`[data-practice-card="${side}-0"]`),
@@ -344,7 +358,7 @@ test("finds a matchup by cards without losing deck choices or starting a hidden 
   await clear.click();
   await expect(search).toBeFocused();
   await expect(choose(page)).toHaveValue("16");
-  await expect(count).toHaveText("17 of 17 opponents");
+  await expect(count).toHaveText("20 of 20 opponents");
   await expect(start).toBeEnabled();
   await search.fill('<script>alert("matchup")</script>');
   await expect(start).toBeDisabled();
@@ -384,6 +398,98 @@ test("finds a matchup by cards without losing deck choices or starting a hidden 
       before.decks[2].includes(id),
     ),
   ).toBe(true);
+  expect(errors).toEqual([]);
+});
+
+test("practices against a saved opponent deck through inspection, restart and repeat without changing saved loadouts", async ({
+  page,
+}, info) => {
+  test.setTimeout(120000);
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  if (info.project.name !== "desktop")
+    await page.setViewportSize({ width: 320, height: 740 });
+  const before = await saved(page);
+  await open(page);
+  const search = page.getByRole("searchbox", { name: "Find a matchup" });
+  await search.fill("saved");
+  await expect(page.locator("#practice-search-count")).toHaveText(
+    "3 of 20 opponents",
+  );
+  await expect(
+    choose(page).locator('optgroup[label="AI opponents"]'),
+  ).toHaveCount(0);
+  await expect(
+    choose(page).locator('optgroup[label="Your saved decks"] option'),
+  ).toHaveCount(3);
+  await chooseDeck(page).selectOption("0");
+  await choose(page).selectOption("19");
+  await page
+    .getByRole("combobox", { name: "Practice pace", exact: true })
+    .selectOption("double");
+  await search.fill("battle deck 3");
+  await expect(choose(page)).toHaveValue("19");
+  await expect(page.locator("#practice-search-count")).toHaveText(
+    "1 of 20 opponents",
+  );
+  expect(await deck(page.locator('[data-practice-side="opponent"]'))).toEqual(
+    before.decks[2],
+  );
+  const card = page.locator('[data-practice-card="opponent-0"]');
+  if (info.project.name === "desktop") {
+    await card.focus();
+    await card.press("Enter");
+  } else await card.tap();
+  await page
+    .getByRole("button", { name: "Back to practice decks", exact: true })
+    .click();
+  await expect(card).toBeFocused();
+  await expect(search).toHaveValue("battle deck 3");
+  await expect(chooseDeck(page)).toHaveValue("0");
+  await expect(choose(page)).toHaveValue("19");
+  expect(await saved(page)).toEqual(before);
+  await page.screenshot({
+    path: info.outputPath("saved-practice-opponent.png"),
+    animations: "disabled",
+  });
+  await page
+    .getByRole("button", { name: "Start practice", exact: true })
+    .click();
+  await expect(page.locator(".competitor.enemy b")).toHaveText("Battle deck 3");
+  expect((await state(page)).enemyDeck).toEqual(before.decks[2]);
+  expect(
+    (await state(page)).hand.every((id: CardId) =>
+      before.decks[0].includes(id),
+    ),
+  ).toBe(true);
+  await page.getByRole("button", { name: "Pause battle", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Restart practice", exact: true })
+    .click();
+  await expect(page.locator(".competitor.enemy b")).toHaveText("Battle deck 3");
+  expect((await state(page)).enemyDeck).toEqual(before.decks[2]);
+  expect(await saved(page)).toEqual(before);
+  await finish(page);
+  await page
+    .getByRole("button", { name: "Practice again", exact: true })
+    .click();
+  await expect(page.locator(".competitor.enemy b")).toHaveText("Battle deck 3");
+  await finish(page);
+  const after = await saved(page);
+  expect(after.history).toHaveLength(2);
+  expect(after.battles).toBe(before.battles + 2);
+  for (const record of after.history) {
+    expect(record).toMatchObject({
+      practice: true,
+      mode: "double",
+      opponent: "Battle deck 3",
+    });
+    expect(record.replay.deck).toEqual(before.decks[0]);
+    expect(record.replay.enemyDeck).toEqual(before.decks[2]);
+  }
+  expect({ ...after, history: [], battles: before.battles }).toMatchObject(
+    before,
+  );
   expect(errors).toEqual([]);
 });
 

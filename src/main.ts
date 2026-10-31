@@ -150,7 +150,7 @@ import {
 import { Battle, STEP } from "./game/engine";
 import { createReplayPlayback } from "./replay-playback";
 import { ReplaySeekQueue } from "./ui/replay-seek-queue";
-import { practiceOpponents } from "./ui/practice-opponents";
+import { practiceOpponents, practiceRoster } from "./ui/practice-opponents";
 import { replayView } from "./ui/replay-view";
 import {
   buildReplayPlays,
@@ -1869,8 +1869,9 @@ function bindPracticePace() {
 }
 function showPracticeOpponents() {
   if (screen !== "lobby") return;
-  let opponent = SOLO_OPPONENTS[practiceOpponentIndex];
-  let matchingOpponents = practiceOpponents(practiceOpponentSearch);
+  const roster = practiceRoster(profile.decks);
+  let opponent = roster[practiceOpponentIndex] ?? roster[0];
+  let matchingOpponents = practiceOpponents(practiceOpponentSearch, roster);
   const slot = practiceDeckSlot ?? profile.activeDeck;
   const yourDeck =
     slot === profile.activeDeck ? profile.deck : profile.decks[slot];
@@ -1878,7 +1879,7 @@ function showPracticeOpponents() {
     `<section class="match-deck-panel" data-practice-side="${side}" aria-label="${side === "yours" ? "Your practice deck" : "Practice opponent deck"}"><div class="match-deck-heading"><div><h3>${side === "yours" ? "Your practice deck" : "Opponent deck"}</h3><p>${side === "yours" ? `Battle deck ${slot + 1}` : esc(opponent.name)}</p></div><span><i class="tiny-drop"></i> ${averageCost([...deck]).toFixed(1)} average</span></div>${side === "yours" ? `<label class="practice-choice" for="practice-deck">Your saved deck<span><select id="practice-deck" aria-describedby="practice-deck-note">${profile.decks.map((_, index) => `<option value="${index}" ${index === slot ? "selected" : ""}>Battle deck ${index + 1}${index === profile.activeDeck ? " (active)" : ""}</option>`).join("")}</select>${icon("chevron-down")}</span></label>` : ""}<div class="match-deck-grid">${deck.map((id, index) => cardHTML(id, `data-practice-card="${side}-${index}"`)).join("")}</div></section>`;
   modal(
     "Choose a practice opponent",
-    `<p class="practice-intro" id="practice-opponent-note">Try a saved deck against any of the ${SOLO_OPPONENTS.length} AI decks at your chosen pace. No trophies or rewards.</p><div class="practice-search"><label class="field-label" for="practice-search">Find a matchup</label><input type="search" class="name-input" id="practice-search" placeholder="Opponent, style or card" maxlength="100" autocomplete="off" aria-describedby="practice-search-help" value="${esc(practiceOpponentSearch)}"/><p id="practice-search-help">Search names, play styles or cards. Multiple words narrow the decks.</p><div class="practice-search-status"><p id="practice-search-count" role="status" aria-live="polite" aria-atomic="true"></p><button class="text-button" id="clear-practice-search">Clear search</button></div></div><label class="practice-choice">Practice opponent<span><select id="practice-opponent" aria-describedby="practice-opponent-note practice-search-count"></select>${icon("chevron-down")}</span></label>${practicePaceHTML()}<div class="match-decks">${deckPanel("yours", yourDeck)}<div id="practice-opponent-preview"></div></div><p class="practice-deck-note" id="practice-deck-note">Tap a card to inspect it. Your practice deck applies to this matchup and Practice again; your active battle deck stays the same. Edit saved decks in Cards.</p><div class="match-details-actions"><button class="text-button" id="practice-back">Back to battle modes</button><button class="primary-button" id="start-practice" aria-describedby="practice-opponent-note practice-search-count">${icon("target")} Start practice</button></div>`,
+    `<p class="practice-intro" id="practice-opponent-note">Face any of the ${SOLO_OPPONENTS.length} AI decks or your ${profile.decks.length} saved decks at your chosen pace. No trophies or rewards.</p><div class="practice-search"><label class="field-label" for="practice-search">Find a matchup</label><input type="search" class="name-input" id="practice-search" placeholder="Opponent, style or card" maxlength="100" autocomplete="off" aria-describedby="practice-search-help" value="${esc(practiceOpponentSearch)}"/><p id="practice-search-help">Search names, play styles or cards. Multiple words narrow the decks.</p><div class="practice-search-status"><p id="practice-search-count" role="status" aria-live="polite" aria-atomic="true"></p><button class="text-button" id="clear-practice-search">Clear search</button></div></div><label class="practice-choice">Practice opponent<span><select id="practice-opponent" aria-describedby="practice-opponent-note practice-search-count"></select>${icon("chevron-down")}</span></label>${practicePaceHTML()}<div class="match-decks">${deckPanel("yours", yourDeck)}<div id="practice-opponent-preview"></div></div><p class="practice-deck-note" id="practice-deck-note">Tap a card to inspect it. Your practice deck applies to this matchup and Practice again; your active battle deck stays the same. Edit saved decks in Cards.</p><div class="match-details-actions"><button class="text-button" id="practice-back">Back to battle modes</button><button class="primary-button" id="start-practice" aria-describedby="practice-opponent-note practice-search-count">${icon("target")} Start practice</button></div>`,
     "practice-opponents",
     true,
   );
@@ -1919,7 +1920,7 @@ function showPracticeOpponents() {
     });
   };
   function updateOpponent() {
-    matchingOpponents = practiceOpponents(practiceOpponentSearch);
+    matchingOpponents = practiceOpponents(practiceOpponentSearch, roster);
     const match =
       matchingOpponents.find(
         (entry) => entry.index === practiceOpponentIndex,
@@ -1930,11 +1931,15 @@ function showPracticeOpponents() {
     }
     const select = $<HTMLSelectElement>("#practice-opponent");
     select.innerHTML = matchingOpponents.length
-      ? matchingOpponents
-          .map(
-            ({ opponent: entry, index }) =>
-              `<option value="${index}" ${index === practiceOpponentIndex ? "selected" : ""}>${esc(entry.name)} · ${esc(entry.style)}</option>`,
-          )
+      ? ([false, true] as const)
+          .map((saved) => {
+            const entries = matchingOpponents.filter(
+              ({ opponent }) => (opponent.savedSlot !== undefined) === saved,
+            );
+            return entries.length
+              ? `<optgroup label="${saved ? "Your saved decks" : "AI opponents"}">${entries.map(({ opponent: entry, index }) => `<option value="${index}" ${index === practiceOpponentIndex ? "selected" : ""}>${esc(entry.name)} · ${esc(entry.style)}</option>`).join("")}</optgroup>`
+              : "";
+          })
           .join("")
       : '<option value="">No matching opponents</option>';
     select.disabled = !match;
@@ -1943,7 +1948,7 @@ function showPracticeOpponents() {
     setText(
       $("#practice-search-count"),
       match
-        ? `${matchingOpponents.length} of ${SOLO_OPPONENTS.length} opponents`
+        ? `${matchingOpponents.length} of ${roster.length} opponents`
         : "No opponents match. Try another name or card, or clear the search.",
     );
     const preview = $("#practice-opponent-preview");
