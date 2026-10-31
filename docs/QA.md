@@ -3705,3 +3705,13 @@ The new ordinary/practice journeys finish a nonzero-length battle, watch at 2×,
 All 3,662 unit checks across 258 files, type checking and production build pass. All eight development cases pass across desktop Chromium and phone WebKit; all eighteen production cases pass across desktop Chromium, phone Chromium and phone WebKit, including captured practice-deck adoption. The settings-prefixed journeys join workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `b40e843613d5` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Open contextual controls with the question-mark key
+
+Question mark now opens Help from the lobby, live arena or replay when no dialog/pointer drag owns input. Contextual Back labels restore the original focus and playback state. Editable fields, browser modifiers and held repeats keep their existing behavior. Arena shortcut descriptions and Help list the key.
+
+New journeys cover focused lobby buttons, repeat/modifier protection, native question-mark typing in Settings, paused/running opponent-side replay state and a selected keyboard troop placement in slow practice. The accepted deployment retains its original recorded coordinates after Help closes. Canvas blur hides the preview while modal controls own focus, so the regression checks the accepted action. Initial automation used Playwright's Shift+/ notation, which emits a shifted slash; a native keyboard-event probe confirmed Shift+Slash emits the actual question mark, and the corrected journeys use that physical chord. Existing Help and native keyboard-control checks remain included in production validation; their exact replay shortcut expectation includes Shift+/.
+
+All 3,662 unit checks across 258 files, type checking and production build pass. All four final shortcut development cases pass across desktop Chromium and phone WebKit; all twenty-four production cases pass across desktop Chromium, phone Chromium and phone WebKit, including existing Settings Help and native Space/held-key behavior. The settings-prefixed journeys join workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `393a47397ddd` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

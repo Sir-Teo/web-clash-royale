@@ -285,6 +285,8 @@ New releases wait while a game is open. When an update is ready, **Update game**
 
 Open **Battle settings → How to play** for controls and placement rules on phones or desktop.
 
+Press **?** outside forms and dialogs to open controls from the lobby, battle or replay. Closing Help restores the previous playback state and keyboard focus. Your selected battle card and placement stay ready.
+
 - Click a hand card, then click the arena, or drag the card into position.
 - Placement previews show the complete troop formation in native artwork, with live elixir and territory feedback.
 - Keys **1–4** select a card. **Escape** cancels a selection or pauses; **Space** pauses when the arena has focus. Focused buttons keep their normal keyboard activation. Selection, cancel and pause shortcuts act once per press. The pause menu focuses **Resume battle**; **Tab** reaches Leave and Close, and **Escape** resumes.
