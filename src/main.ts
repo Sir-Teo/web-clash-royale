@@ -271,6 +271,7 @@ let practicePreviousDeck: PracticeSourceDeck | undefined;
 let practiceSetupBack: { label: string; restore: () => void } | null = null;
 let practiceMode: Mode = "training";
 let repeatPracticeOpening = true;
+let practiceSpeed = 1;
 let arena: Arena;
 let battle: Battle;
 let screen: "lobby" | "battle" | "replay" = "lobby";
@@ -731,6 +732,9 @@ function enterLobby(keepPeerConnection: boolean) {
   syncKeyboardArena();
   selected = -1;
   paused = false;
+  speed = 1;
+  audio.setRate(speed);
+  $(".match-bottom .competitor div > span").textContent = "Browser kingdom";
   resultShown = false;
   replayData = null;
   replayRecord = null;
@@ -817,8 +821,9 @@ function startBattle(
       : null;
   screen = "battle";
   paused = false;
-  speed = 1;
-  audio.setRate(1);
+  speed = practiceMatch ? practiceSpeed : 1;
+  audio.setRate(speed);
+  syncPracticeSpeedCaption();
   audio.stopEffects();
   announcements.reset();
   selected = -1;
@@ -1214,12 +1219,25 @@ function togglePause() {
     else if (graphicsAvailable && !battle.winner) audio.startMusic(battle.time);
   }
 }
+function practiceSpeedHTML() {
+  const options = [
+    [0.5, "0.5× · Slow motion"],
+    [1, "1× · Normal speed"],
+    [2, "2× · Fast practice"],
+  ] as const;
+  return `<label class="practice-choice" for="practice-speed">Practice speed<span><select id="practice-speed" aria-describedby="practice-speed-note">${options.map(([value, label]) => `<option value="${value}" ${practiceSpeed === value ? "selected" : ""}>${label}</option>`).join("")}</select>${icon("chevron-down")}</span></label><p class="room-note" id="practice-speed-note">Slow down to study placements or speed up a retry. Your choice stays selected for this session.</p>`;
+}
+function syncPracticeSpeedCaption() {
+  $(".match-bottom .competitor div > span").textContent = practiceMatch
+    ? `Practice · ${practiceSpeed}× speed`
+    : "Browser kingdom";
+}
 function showBattlePause() {
   // All pause subviews share the same resume behavior when closed.
   modalPausedBattle = true;
   modal(
     "Battle paused",
-    `<div class="pause-actions"><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button>${practiceMatch ? `<label class="practice-choice" for="practice-opening">Opening shuffle<span><select id="practice-opening" aria-describedby="practice-restart-note"><option value="repeat" ${repeatPracticeOpening ? "selected" : ""}>Repeat opening shuffle</option><option value="fresh" ${repeatPracticeOpening ? "" : "selected"}>Fresh opening shuffle</option></select>${icon("chevron-down")}</span></label><button class="secondary-button" id="restart-practice" aria-describedby="practice-restart-note">${icon("rotate-ccw")} Restart practice</button><button class="secondary-button" id="change-paused-practice" aria-describedby="practice-restart-note">${icon("target")} Change practice matchup</button><p class="room-note" id="practice-restart-note">Restart with the same decks and pace, or change the matchup. This attempt won’t be saved.</p>` : ""}<button class="secondary-button" id="inspect-battle-deck">${icon("layers-2")} Inspect battle deck</button><button class="text-button" id="surrender-button">Leave battle</button></div>`,
+    `<div class="pause-actions"><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button>${practiceMatch ? `${practiceSpeedHTML()}<label class="practice-choice" for="practice-opening">Opening shuffle<span><select id="practice-opening" aria-describedby="practice-restart-note"><option value="repeat" ${repeatPracticeOpening ? "selected" : ""}>Repeat opening shuffle</option><option value="fresh" ${repeatPracticeOpening ? "" : "selected"}>Fresh opening shuffle</option></select>${icon("chevron-down")}</span></label><button class="secondary-button" id="restart-practice" aria-describedby="practice-restart-note">${icon("rotate-ccw")} Restart practice</button><button class="secondary-button" id="change-paused-practice" aria-describedby="practice-restart-note">${icon("target")} Change practice matchup</button><p class="room-note" id="practice-restart-note">Restart with the same decks and pace, or change the matchup. This attempt won’t be saved.</p>` : ""}<button class="secondary-button" id="inspect-battle-deck">${icon("layers-2")} Inspect battle deck</button><button class="text-button" id="surrender-button">Leave battle</button></div>`,
     "pause",
   );
   $(".modal-backdrop").classList.add("pause-cover");
@@ -1227,6 +1245,14 @@ function showBattlePause() {
   $("#inspect-battle-deck").onclick = () => showBattleDeck();
   if (practiceMatch) {
     const practice = practiceMatch;
+    $("#practice-speed").onchange = () => {
+      const value = Number($<HTMLSelectElement>("#practice-speed").value);
+      if (![0.5, 1, 2].includes(value)) return;
+      practiceSpeed = speed = value;
+      audio.setRate(speed);
+      accumulator = 0;
+      syncPracticeSpeedCaption();
+    };
     $("#change-paused-practice").onclick = () =>
       changePracticeMatchup(practice);
     $("#practice-opening").onchange = () => {
@@ -1491,6 +1517,7 @@ function playReplay(
   const replay = setReplayView(record, playerName, opponentView);
   resultShown = true;
   paused = false;
+  $(".match-bottom .competitor div > span").textContent = "Replay";
   speed = playbackSpeed;
   audio.setRate(speed);
   audio.stopEffects();
@@ -4176,6 +4203,7 @@ Object.defineProperty(window, "__arena", {
       return {
         screen,
         paused,
+        speed,
         graphicsAvailable,
         selected,
         time: battle.time,

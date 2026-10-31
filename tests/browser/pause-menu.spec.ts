@@ -42,6 +42,10 @@ test("pause is a focused dialog with a frozen clock and isolated controls", asyn
   await page.locator("canvas").evaluate((e) => e.focus());
   await expect(resume).toBeFocused();
   await page.keyboard.press("Tab");
+  await expect(
+    page.getByRole("button", { name: "Inspect battle deck", exact: true }),
+  ).toBeFocused();
+  await page.keyboard.press("Tab");
   await expect(leave).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(close).toBeFocused();
@@ -90,6 +94,8 @@ test("leaving from the pause menu records one result and releases the lobby", as
   page,
 }) => {
   await page.locator("#pause-button").click();
+  await page.keyboard.press("Tab");
+  await expect(page.locator("#inspect-battle-deck")).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(page.locator("#surrender-button")).toBeFocused();
   await page.keyboard.press("Enter");

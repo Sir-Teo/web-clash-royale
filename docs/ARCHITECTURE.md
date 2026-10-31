@@ -430,6 +430,8 @@ Rerendering the same dialog key restores its active control and text selection r
 
 Solo battle pausing uses the shared dialog root and focus lifecycle. `togglePause` stops the clock and audio, clears an active pointer gesture, opens the named Battle paused dialog and focuses Resume. The dialog's regular Tab loop isolates Resume, Leave and Close while the app shell is inert. Closing by Resume, Escape, Close or the backdrop clears the pause, resets the frame accumulator, resumes music when appropriate and focuses the battlefield. A held Space repeat is consumed while the menu is open so the opening press cannot also activate Resume on keyup. Native button activation remains available for a fresh Space or Enter press.
 
+Practice pause also offers a session speed of 0.5, 1 or 2. It uses the existing fixed-step frame accumulator, presentation multiplier and audio rate; simulation rules and recorded tick times stay unchanged. Start/restart/rematch apply the selected practice speed and a player subtitle identifies it. Inspecting decks retains the paused selection. Ordinary battles and new replay playback start at normal speed, and entering the lobby resets the shared frame/audio rate. Read-only diagnostics expose the applied speed and native music playback rate.
+
 Leave records the surrender before closing the pause dialog, preventing a brief music restart or an extra simulation step. Existing result presentation and reward/history recording then run normally. The pause backdrop retains the `pause-cover` class for deterministic inspection captures that hide overlays. Replay pause remains in its replay toolbar, and friendly battles use their existing online options menu.
 
 

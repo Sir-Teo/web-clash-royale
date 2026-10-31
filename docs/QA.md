@@ -3513,3 +3513,13 @@ The browser journey checks zero-length, three-second, three-minute and five-minu
 All 3,650 unit checks across 256 files, type checking and production build pass. Both final development cases pass on desktop Chromium and phone WebKit; all three production targets pass, each checking all three viewport sizes. The settings-prefixed journey joins workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `8347498fcd70` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Study practice timing at half, normal or double speed
+
+The practice pause menu now offers 0.5× slow motion, 1× normal speed and 2× fast practice. The session choice appears beneath the player name and survives deck inspection, restart and Practice again. It drives the existing fixed-step accumulator, presentation multiplier and audio rate; recorded commands retain match ticks. Ordinary battles and new replay playback use normal speed. Entering the lobby resets frame/audio rate, including after fast replay playback. Read-only diagnostics expose the applied speed and the native music element's rate.
+
+The new journey plays at half speed, changes to double speed, discards an attempt through restart, saves a later attempt and reconstructs that recording independently. Its exact clock, hand, elixir and troop count match the captured paused battle. It also checks unchanged saved decks/rewards, one completed result after restart, retained rematch speed, normal-speed replay/ordinary battle and actual native music rates. Reviewed desktop and 320-pixel phone pause captures keep all speed, shuffle, restart, inspection and Leave actions available.
+
+All 3,650 unit checks across 256 files, type checking and production build pass. All twelve distinct development cases pass across desktop Chromium and phone WebKit; all eighteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. Existing repeat/fresh-shuffle restart, graphics recovery and ordinary pause/resume/leave behavior remain covered. Broader pause checks exposed two old Tab-order expectations that skipped Inspect battle deck; both now explicitly traverse that control before Leave. Corrected focus cycling passes throughout, and the corrected Leave journey passes separately on both development and all three production targets. The new practice-prefixed speed journey joins workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `da40c5325eae` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

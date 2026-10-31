@@ -32,6 +32,7 @@ export class GameAudio {
       file: this.musicFile || null,
       position: this.music?.currentTime ?? 0,
       paused: this.music?.paused ?? true,
+      rate: this.music?.playbackRate ?? this.rate,
     };
   }
   play(name: string, volume = 0.45, options: SoundOptions = {}) {
