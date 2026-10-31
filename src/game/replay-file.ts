@@ -1,3 +1,4 @@
+import { exportFileName } from "./export-name";
 import type { Replay } from "./engine";
 import { migrateLocalRecord } from "./replay-family";
 import { validRecordEntry, type RecordEntry } from "./profile";
@@ -107,16 +108,11 @@ export function importReplayFile(text: string): SharedReplay {
 
 /** Keep downloaded recordings recognizable and safe to name on common filesystems. */
 export function replayFileName(record: Pick<RecordEntry, "date" | "opponent">) {
-  const timestamp = new Date(record.date).toISOString().replaceAll(":", "-");
-  const name = (record.opponent ?? "Royal Trainer")
-    .normalize("NFKD")
-    .replace(/\p{M}/gu, "")
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}]+/gu, "-")
-    .replace(/^-+|-+$/g, "");
-  const opponent =
-    Array.from(name).slice(0, 36).join("").replace(/-+$/, "") || "opponent";
-  return `browser-arena-replay-${timestamp}-vs-${opponent}.json`;
+  return exportFileName(
+    "replay",
+    new Date(record.date),
+    record.opponent ?? "Royal Trainer",
+  );
 }
 
 /** Whitelist one recording; never include progress, reward totals or room IDs. */

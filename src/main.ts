@@ -1,3 +1,4 @@
+import { exportFileName } from "./game/export-name";
 import { NativeConnectionWarning } from "./ui/connection";
 import { OfflineUpdates } from "./ui/offline-updates";
 import { ModalFocus } from "./ui/modal-focus";
@@ -3365,7 +3366,7 @@ function showSettings() {
     $("#export-progress").onclick = () => {
       downloadJson(
         exportProgress(profile),
-        `browser-arena-progress-${new Date().toISOString().slice(0, 10)}.json`,
+        exportFileName("progress", new Date(), profile.name),
       );
     };
     const input = $<HTMLInputElement>("#progress-file");

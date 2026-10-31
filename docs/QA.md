@@ -3573,3 +3573,13 @@ The new download journey distinguishes two same-time rivals, retains a mixed acc
 All 3,650 unit checks across 256 files, type checking and production build pass. All eight development cases pass across desktop Chromium and phone WebKit; all twelve production cases pass across desktop Chromium, phone Chromium and phone WebKit. Existing replay export/import, identities, invalid-file reselection and phone focus checks remain covered. The shared-replay-prefixed filename journey joins workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `3abd5f714cd3` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Distinguish progress backups by player and precise UTC time
+
+Progress backup filenames now include the session player's normalized name and the precise current UTC timestamp. Replay and progress downloads share a small naming helper, preserving the already verified replay format and bounded Unicode/path normalization. Settings form drafts remain unsaved and do not rename or modify exported session progress.
+
+The new journey exports twice one millisecond apart under an accented/Chinese player name while another name remains drafted in Settings. Actual download names differ, original session data stays identical and saved bytes stay unchanged. Existing successful restore/cancel/reload, malformed/oversized rejection, narrow-screen controls and blocked-storage restore/export journeys also pass, along with replay-name international/UTC/bounds checks through the shared helper.
+
+All 3,650 unit checks across 256 files, type checking and production build pass. All twelve development cases pass across desktop Chromium and phone WebKit; all eighteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. The new settings-prefixed filename journey joins workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `5423ffbe65f2` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

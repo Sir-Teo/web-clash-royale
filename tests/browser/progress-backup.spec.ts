@@ -51,7 +51,7 @@ test("exports a file, previews and cancels restoration, then restores all saved 
     .click();
   const download = await downloadEvent;
   expect(download.suggestedFilename()).toMatch(
-    /^browser-arena-progress-\d{4}-\d{2}-\d{2}\.json$/,
+    /^browser-arena-progress-\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.\d{3}Z-for-backup-king\.json$/,
   );
   const backupPath = (await download.path())!;
   const backup = JSON.parse(await readFile(backupPath, "utf8"));
@@ -62,7 +62,8 @@ test("exports a file, previews and cancels restoration, then restores all saved 
   });
   // Bare history has no local provenance; export pins its origin default.
   expect(backup.profile.history[0].replay).toEqual({
-    ...fixture.replay, rulesFamily: "origin",
+    ...fixture.replay,
+    rulesFamily: "origin",
   });
   await page.getByLabel("PLAYER NAME", { exact: true }).fill("Current King");
   await page
@@ -216,13 +217,11 @@ test("keeps restored progress usable and exportable when browser storage refuses
       throw new DOMException("Storage is full", "QuotaExceededError");
     };
   });
-  await page
-    .locator("#progress-file")
-    .setInputFiles({
-      name: "progress.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(backup)),
-    });
+  await page.locator("#progress-file").setInputFiles({
+    name: "progress.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(backup)),
+  });
   await page
     .getByRole("button", { name: "Restore progress", exact: true })
     .click();
