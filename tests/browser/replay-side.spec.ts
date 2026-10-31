@@ -308,6 +308,12 @@ for (const red of [false, true])
         "Local King",
       );
       expect(await saved(page)).toBe(before);
+      if (entry === "shared") {
+        await expect(
+          page.getByRole("heading", { name: "Shared replay", exact: true }),
+        ).toBeVisible();
+        await page.keyboard.press("Escape");
+      }
       await page.locator("#battle-button").click();
       await expect(side).toBeHidden();
       expect(errors).toEqual([]);

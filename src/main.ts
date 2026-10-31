@@ -301,7 +301,7 @@ let replayRecord: RecordEntry | null = null;
 let replayOwnerName: string | null = null;
 let replayRecordedName: string | null = null;
 let replayOpponentView = false;
-let replayReturn: (() => void) | null = null;
+let replayReturn: { restore: () => void; label: string } | null = null;
 let replayPlays: ReplayPlay[] = [];
 const replaySeeks = new ReplaySeekQueue((tick) => seekReplay(tick));
 let replayScrubPointer: number | null = null;
@@ -1527,8 +1527,21 @@ function playReplay(
   audio.startMusic(battle.time);
   refreshIcons();
 }
+function watchPreviewReplay(
+  record: RecordEntry,
+  opener: HTMLElement,
+  label: string,
+  ownerName?: string,
+) {
+  const restore = screen === "lobby" ? returnToModal(opener) : null;
+  playReplay(record, ownerName);
+  if (restore && screen === "replay" && replayRecord === record) {
+    replayReturn = { restore, label };
+    syncReplayExit();
+  }
+}
 function syncReplayExit() {
-  const label = replayReturn ? "Back to practice" : "Exit";
+  const label = replayReturn?.label ?? "Exit";
   const button = $("#replay-exit");
   button.textContent = replayReturn ? "Back" : "Exit";
   button.setAttribute("aria-label", label);
@@ -2201,14 +2214,17 @@ function showPracticeOpponents() {
     };
     playReplay(record);
     if (replayRecord !== record) return;
-    replayReturn = () => {
-      practiceDeckChoice = selection.playerChoice;
-      practiceOpponentIndex = selection.opponentIndex;
-      practiceMode = selection.mode;
-      practiceOpponentSearch = selection.search;
-      practicePreviousDeck = selection.previousDeck;
-      practiceSetupBack = selection.setupBack;
-      restore();
+    replayReturn = {
+      label: "Back to practice",
+      restore: () => {
+        practiceDeckChoice = selection.playerChoice;
+        practiceOpponentIndex = selection.opponentIndex;
+        practiceMode = selection.mode;
+        practiceOpponentSearch = selection.search;
+        practicePreviousDeck = selection.previousDeck;
+        practiceSetupBack = selection.setupBack;
+        restore();
+      },
     };
     syncReplayExit();
   };
@@ -3033,7 +3049,13 @@ function showSharedReplay(
     startBattle(false, practice);
   };
   $("#watch-shared-replay").onclick = () => {
-    if (screen === "lobby") playReplay(record, playerName);
+    if (screen === "lobby")
+      watchPreviewReplay(
+        record,
+        $("#watch-shared-replay"),
+        "Back to shared replay",
+        playerName,
+      );
   };
   document
     .querySelectorAll<HTMLButtonElement>("[data-shared-card]")
@@ -3099,7 +3121,8 @@ function showMatchDetails(
   );
   bindDeckCodeButtons(decks, "Back to battle details");
   $("#match-log").onclick = showHistory;
-  $("#match-replay").onclick = () => playReplay(record);
+  $("#match-replay").onclick = () =>
+    watchPreviewReplay(record, $("#match-replay"), "Back to battle details");
   $("#export-replay-file").onclick = () => {
     const error = $(".replay-file-error");
     error.hidden = true;
@@ -3655,7 +3678,7 @@ $("#replay-speed").onclick = () => {
 $("#replay-exit").onclick = () => {
   const returnTo = replayReturn;
   lobby();
-  returnTo?.();
+  returnTo?.restore();
 };
 function seekReplayPlay(play: ReplayPlay) {
   ($("#replay-plays") as HTMLSelectElement).value = String(play.tick);

@@ -365,6 +365,8 @@ A live card play mutates battle state between fixed simulation steps and records
 This restores the final deployment, hand/queue, spent elixir, projectile or area and presentation-event history without changing the clock, unit age, deployment delay, status timers or rules version. Intermediate replay ticks keep their previous ordering. Surrender outcome metadata remains a viewer concern; the engine does not infer a surrender or manufacture another simulation tick. Canonical red-side playback receives the corrected state through the existing perspective projection.
 
 
+Replay return context carries a restore callback and an accessible destination label. Local Battle details and shared previews capture their actual modal DOM before playback, preserving destination/pace/side drafts and owned deck Undo. Same-record restart retains that context; returning creates the lobby before restoring the preview, while a new battle or unrelated recording clears it. Practice review uses the same context with its existing retained setup selection.
+
 ## Canonical replay completion
 
 `src/game/replay-completion.ts` treats either a natural winner or the recorded duration as completion. A recording ending without a natural winner is finished on its canonical Battle, with the recorded viewer-relative winner converted back to canonical teams before projection. This keeps the authoritative winner and event-ID allocator together; finishing a red-side display copy could otherwise reuse an existing ID. Natural combat outcomes are preserved even when file metadata claims another winner or a longer duration.
