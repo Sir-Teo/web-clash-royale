@@ -199,6 +199,7 @@ import {
   saveBattleResult,
   saveEmotePreference,
   refreshProfileForDeckEdit,
+  markTutorialSeen,
   openChest,
   storageAvailable,
   exportProgress,
@@ -867,11 +868,12 @@ function startBattle(
   nativeCards.reset(battle.time, battle.players.blue.hand);
   matchHud.reset(arena.effectTime, crownCounts());
   updateBattleUI(true);
-  if (graphicsAvailable) audio.startMusic(battle.time);
   if (!profile.seenTutorial) {
-    profile.seenTutorial = true;
-    saveProfile(profile);
+    markTutorialSeen(profile);
+    applyProfilePreferences();
+    refreshProfile();
   }
+  if (graphicsAvailable) audio.startMusic(battle.time);
 }
 let lastHand = "";
 function updateBattleUI(force = false) {

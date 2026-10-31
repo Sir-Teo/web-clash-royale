@@ -398,6 +398,14 @@ export function saveEmotePreference(p: Profile, muted: boolean) {
   p.emotesMuted = muted;
   saveProfile(p);
 }
+/** Mark a first battle against current progress instead of replacing it with an older profile. */
+export function markTutorialSeen(p: Profile) {
+  const saved = storageAvailable ? readSavedProfile() : null;
+  if (saved) Object.assign(p, saved);
+  if (p.seenTutorial) return;
+  p.seenTutorial = true;
+  saveProfile(p);
+}
 /** Refresh an open editor before changing cards; reading never persists a snapshot. */
 export function refreshProfileForDeckEdit(
   p: Profile,
