@@ -478,6 +478,9 @@ function syncGraphicsStatus() {
   const ready = document.querySelector<HTMLButtonElement>("#room-ready");
   if (ready && !graphicsAvailable && !ready.disabled) ready.disabled = true;
   const resume = document.querySelector<HTMLButtonElement>("#resume-button");
+  const restart = document.querySelector<HTMLButtonElement>("#restart-practice");
+  if (restart && restart.disabled !== !graphicsAvailable)
+    restart.disabled = !graphicsAvailable;
   if (resume) {
     if (resume.disabled !== !graphicsAvailable)
       resume.disabled = !graphicsAvailable;
@@ -1093,11 +1096,13 @@ function togglePause() {
       audio.stopMusic();
       modal(
         "Battle paused",
-        `<div class="pause-actions"><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button><button class="text-button" id="surrender-button">Leave battle</button></div>`,
+        `<div class="pause-actions"><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button>${practiceMatch ? `<button class="secondary-button" id="restart-practice" aria-describedby="practice-restart-note">${icon("rotate-ccw")} Restart practice</button><p class="room-note" id="practice-restart-note">Start a fresh attempt with the same decks and pace. This attempt won’t be saved.</p>` : ""}<button class="text-button" id="surrender-button">Leave battle</button></div>`,
         "pause",
       );
       $(".modal-backdrop").classList.add("pause-cover");
       $("#resume-button").onclick = closeModal;
+      if (practiceMatch)
+        $("#restart-practice").onclick = () => startBattle(false, practiceMatch);
       $("#surrender-button").onclick = () => {
         battle.finish("red", "Surrender");
         closeModal();
