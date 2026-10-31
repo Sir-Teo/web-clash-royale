@@ -18,7 +18,7 @@ export default defineConfig(common, {
     "**/replay-cards.spec.ts",
     "**/paused-deck.spec.ts",
     "**/help.spec.ts",
-    "**/settings-controls.spec.ts",
+    "**/settings-*.spec.ts",
     "**/mobile-loading.spec.ts",
     "**/mirror-placement.spec.ts",
   ],

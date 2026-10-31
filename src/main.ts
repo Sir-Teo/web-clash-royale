@@ -2788,20 +2788,21 @@ function showSettings() {
     "afterend",
     `<button class="secondary-button" id="settings-help">${icon("scroll-text")} How to play</button>${backups}`,
   );
-  $("#settings-help").onclick = () => {
-    const view = $("#modal-root").firstElementChild!;
-    const panel = view.querySelector<HTMLElement>(".modal")!;
+  const view = $("#modal-root").firstElementChild!;
+  const panel = view.querySelector<HTMLElement>(".modal")!;
+  const returnToSettings = (opener: HTMLElement) => {
     const scroll = panel.scrollTop;
-    const opener = $("#settings-help");
-    showHelp(() => {
+    return () => {
       modalKey = "settings";
       modalFocus.render("settings", () => $("#modal-root").replaceChildren(view));
       syncGraphicsStatus();
       syncFullscreenControl();
       panel.scrollTop = scroll;
       opener.focus({ preventScroll: true });
-    });
+    };
   };
+  $("#settings-help").onclick = () =>
+    showHelp(returnToSettings($("#settings-help")));
   refreshIcons();
   if (backups) {
     $("#export-progress").onclick = () => {
@@ -2827,7 +2828,8 @@ function showSettings() {
           throw new Error("Choose a progress backup smaller than 2 MB.");
         const imported = importProgress(await file.text());
         if (document.querySelector("#progress-file") !== input) return;
-        showProgressRestore(imported);
+        input.value = "";
+        showProgressRestore(imported, returnToSettings(restore));
       } catch (cause) {
         if (document.querySelector("#progress-file") !== input) return;
         error.textContent =
@@ -2886,13 +2888,13 @@ function syncFullscreenControl() {
   button.disabled = fullscreenPending;
 }
 document.addEventListener("fullscreenchange", syncFullscreenControl);
-function showProgressRestore(imported: Profile) {
+function showProgressRestore(imported: Profile, back: () => void) {
   modal(
     "Restore your kingdom?",
     `<div class="restore-progress"><p>This replaces the progress saved in this browser.</p><h3>${esc(imported.name)}</h3><dl><div><dt>Trophies</dt><dd>${fmt(imported.trophies)}</dd></div><div><dt>Gold</dt><dd>${fmt(imported.gold)}</dd></div><div><dt>Saved replays</dt><dd>${imported.history.length}</dd></div></dl><button class="primary-button" id="confirm-restore">Restore progress ${icon("check")}</button><button class="text-button" id="cancel-restore">Keep current progress</button></div>`,
     "restore-progress",
   );
-  $("#cancel-restore").onclick = showSettings;
+  $("#cancel-restore").onclick = back;
   $("#confirm-restore").onclick = () => {
     network.leave();
     Object.assign(profile, imported);
