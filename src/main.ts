@@ -1200,13 +1200,16 @@ function showBattlePause() {
   modalPausedBattle = true;
   modal(
     "Battle paused",
-    `<div class="pause-actions"><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button>${practiceMatch ? `<label class="practice-choice" for="practice-opening">Opening shuffle<span><select id="practice-opening" aria-describedby="practice-restart-note"><option value="repeat" ${repeatPracticeOpening ? "selected" : ""}>Repeat opening shuffle</option><option value="fresh" ${repeatPracticeOpening ? "" : "selected"}>Fresh opening shuffle</option></select>${icon("chevron-down")}</span></label><button class="secondary-button" id="restart-practice" aria-describedby="practice-restart-note">${icon("rotate-ccw")} Restart practice</button><p class="room-note" id="practice-restart-note">Restart with the same decks and pace. This attempt won’t be saved.</p>` : ""}<button class="secondary-button" id="inspect-battle-deck">${icon("layers-2")} Inspect battle deck</button><button class="text-button" id="surrender-button">Leave battle</button></div>`,
+    `<div class="pause-actions"><button class="primary-button" id="resume-button">${icon("play")} Resume battle</button>${practiceMatch ? `<label class="practice-choice" for="practice-opening">Opening shuffle<span><select id="practice-opening" aria-describedby="practice-restart-note"><option value="repeat" ${repeatPracticeOpening ? "selected" : ""}>Repeat opening shuffle</option><option value="fresh" ${repeatPracticeOpening ? "" : "selected"}>Fresh opening shuffle</option></select>${icon("chevron-down")}</span></label><button class="secondary-button" id="restart-practice" aria-describedby="practice-restart-note">${icon("rotate-ccw")} Restart practice</button><button class="secondary-button" id="change-paused-practice" aria-describedby="practice-restart-note">${icon("target")} Change practice matchup</button><p class="room-note" id="practice-restart-note">Restart with the same decks and pace, or change the matchup. This attempt won’t be saved.</p>` : ""}<button class="secondary-button" id="inspect-battle-deck">${icon("layers-2")} Inspect battle deck</button><button class="text-button" id="surrender-button">Leave battle</button></div>`,
     "pause",
   );
   $(".modal-backdrop").classList.add("pause-cover");
   $("#resume-button").onclick = closeModal;
   $("#inspect-battle-deck").onclick = () => showBattleDeck();
   if (practiceMatch) {
+    const practice = practiceMatch;
+    $("#change-paused-practice").onclick = () =>
+      changePracticeMatchup(practice);
     $("#practice-opening").onchange = () => {
       repeatPracticeOpening =
         $<HTMLSelectElement>("#practice-opening").value === "repeat";
@@ -1214,7 +1217,7 @@ function showBattlePause() {
     $("#restart-practice").onclick = () =>
       startBattle(
         false,
-        practiceMatch,
+        practice,
         repeatPracticeOpening ? battle.seed : undefined,
       );
   }
@@ -1381,19 +1384,8 @@ function showResult() {
       };
       syncPeerRematch();
       if (completedPractice)
-        $("#change-practice-matchup").onclick = () => {
-          const selection = continuedPracticeChoices(
-            completedPractice,
-            profile.decks,
-            profile.activeDeck,
-          );
-          lobby();
-          practiceDeckChoice = selection.playerChoice;
-          practiceOpponentIndex = selection.opponentIndex;
-          practicePreviousDeck = selection.previousDeck;
-          practiceMode = completedPractice.mode;
-          showPracticeOpponents();
-        };
+        $("#change-practice-matchup").onclick = () =>
+          changePracticeMatchup(completedPractice);
       $("#return-home").onclick = lobby;
       $("#watch-replay").onclick = () => playReplay(profile.history[0]);
     },
@@ -2044,6 +2036,19 @@ function tryPracticeDeck(
   practiceDeckChoice = "previous";
   practiceOpponentIndex = SOLO_OPPONENTS.length + profile.activeDeck;
   practiceOpponentSearch = "";
+  showPracticeOpponents();
+}
+function changePracticeMatchup(practice: PracticeOpponent) {
+  const selection = continuedPracticeChoices(
+    practice,
+    profile.decks,
+    profile.activeDeck,
+  );
+  lobby();
+  practiceDeckChoice = selection.playerChoice;
+  practiceOpponentIndex = selection.opponentIndex;
+  practicePreviousDeck = selection.previousDeck;
+  practiceMode = practice.mode;
   showPracticeOpponents();
 }
 function showPracticeOpponents() {

@@ -229,6 +229,9 @@ test("ordinary AI battles keep their existing pause and leave actions", async ({
   ).toHaveCount(0);
   await expect(page.locator("#practice-restart-note")).toHaveCount(0);
   await expect(page.locator("#practice-opening")).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Change practice matchup", exact: true }),
+  ).toHaveCount(0);
   await expect(page.locator("#resume-button")).toBeEnabled();
   await expect(page.locator("#surrender-button")).toBeEnabled();
   await page.locator("#resume-button").click();
