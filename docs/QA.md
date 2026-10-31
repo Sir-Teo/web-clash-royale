@@ -3485,3 +3485,13 @@ New local/shared journeys adopt a deck, change the next destination and practice
 All 3,645 unit checks across 256 files, type checking and production build pass. All sixteen distinct development cases pass across desktop Chromium and phone WebKit; all twenty-four production cases pass across desktop Chromium, phone Chromium and phone WebKit. Coverage includes the two new previews, existing practice review/setup returns and local/shared blue/red playback through seeks, ending and restart. The new shared-replay-prefixed cases join workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `e80c07accb67` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Keep battle-log returns tied to the viewed recording
+
+A complete saved-profile update during Battle details reproduced losing the selected row and scroll after a deck action, even when its recordings stayed unchanged. Return state now captures an array snapshot and compares recording contents rather than array identity. An unchanged log restores the same panel/list positions and control. If newer results shift the original recording, its current Details/Replay row receives focus and scrolls into view. Full recording contents distinguish repeated legacy IDs. If that recording leaves the saved log, search receives focus; file-picker returns retain their own control.
+
+Four new journeys cover a name-only refresh, a prepended result with duplicate IDs, a removed recording, and idle profile refresh after directly opened playback. Details retain their original recording through adopt/Undo, filters remain selected, returning never writes storage, and the refocused row opens the original opponent. The initial name-only regression fails at the expected row-focus assertion before the fix. Existing nested card/details returns, direct filtered replay, shared preview and combined battle-type navigation also pass.
+
+All 3,645 unit checks across 256 files, type checking and production build pass. All sixteen development cases pass across desktop Chromium and phone WebKit; all twenty-four production cases pass across desktop Chromium, phone Chromium and phone WebKit. The new settings-prefixed journeys join workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `90ef38fa90cd` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

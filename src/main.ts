@@ -2781,7 +2781,7 @@ function renderCollection() {
 function rememberHistoryPosition(focus: string) {
   if (modalKey !== "history") return;
   historyReturn = {
-    records: profile.history,
+    records: [...profile.history],
     panel: $(".modal").scrollTop,
     list: $(".history-list").scrollTop,
     focus,
@@ -2876,12 +2876,29 @@ function showHistory() {
   bindReplayFileInput();
   if (document.querySelector("#history-battle"))
     $("#history-battle").onclick = () => closeModal();
-  if (historyReturn && historyReturn.records === profile.history) {
-    document
-      .querySelector<HTMLElement>(historyReturn.focus)
-      ?.focus({ preventScroll: true });
-    $(".modal").scrollTop = historyReturn.panel;
-    $(".history-list").scrollTop = historyReturn.list;
+  if (historyReturn) {
+    const unchanged =
+      JSON.stringify(historyReturn.records) === JSON.stringify(profile.history);
+    let focus = historyReturn.focus;
+    const row = /^\[(data-match-details|data-replay)="(\d+)"\]$/.exec(focus);
+    if (!unchanged && row) {
+      // Legacy IDs can repeat. Match the captured recording, never just its ID.
+      const original = historyReturn.records[Number(row[2])];
+      const index = profile.history.findIndex(
+        (record) => JSON.stringify(record) === JSON.stringify(original),
+      );
+      focus = index < 0 ? "#history-search" : `[${row[1]}="${index}"]`;
+    }
+    const target =
+      document.querySelector<HTMLElement>(focus) ??
+      document.querySelector<HTMLElement>("#history-search") ??
+      document.querySelector<HTMLElement>("#open-replay-file") ??
+      document.querySelector<HTMLElement>(".close-modal");
+    target?.focus({ preventScroll: unchanged });
+    if (unchanged) {
+      $(".modal").scrollTop = historyReturn.panel;
+      $(".history-list").scrollTop = historyReturn.list;
+    }
   }
   historyReturn = null;
 }
