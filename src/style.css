@@ -2640,6 +2640,10 @@ kbd {
   mask-image: radial-gradient(ellipse, black, transparent 65%);
   pointer-events: none;
 }
+#settings-help {
+  min-height: 44px;
+  margin-top: 16px;
+}
 .help-steps {
   display: flex;
   flex-direction: column;

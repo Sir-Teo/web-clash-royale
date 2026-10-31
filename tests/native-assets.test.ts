@@ -17,22 +17,39 @@ beforeEach(() => {
   vi.stubGlobal(
     "Image",
     class {
-      src = "";
+      private source = "";
       decoding = "";
+      private cancel = () => {};
+      get src() {
+        return this.source;
+      }
+      set src(value: string) {
+        this.source = value;
+        if (value === "data:,") this.cancel();
+      }
+      removeAttribute(attribute: string) {
+        if (attribute === "src") {
+          this.src = "";
+          this.cancel();
+        }
+      }
       decode() {
         active++;
         peak = Math.max(peak, active);
+        let settled = false;
+        const complete = (callback: () => void) => {
+          if (settled) return;
+          settled = true;
+          active--;
+          callback();
+        };
         return new Promise<void>((resolve, reject) => {
+          this.cancel = () =>
+            complete(() => reject(new Error("Image aborted")));
           images.push(
             Object.assign(this, {
-              finish: () => {
-                active--;
-                resolve();
-              },
-              fail: (error: Error) => {
-                active--;
-                reject(error);
-              },
+              finish: () => complete(resolve),
+              fail: (error: Error) => complete(() => reject(error)),
             }),
           );
         });
@@ -40,7 +57,10 @@ beforeEach(() => {
     },
   );
 });
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
 
 const settle = async () => {
   // Let the queue release completed jobs and start their successors.
@@ -57,6 +77,68 @@ const shape = (file: string, polygons?: Shape[]): Shape => ({
 });
 
 describe("shared native UI image loading", () => {
+  it("releases stalled decodes so queued libraries can finish", async () => {
+    vi.useFakeTimers();
+    const { loadNativeImage } = await import("../src/ui/native-assets");
+    const requests = Array.from({ length: 5 }, (_, index) =>
+      loadNativeImage(`/stalled/${index}.png`),
+    );
+    const results = Promise.allSettled(requests);
+    expect(images).toHaveLength(4);
+    await vi.advanceTimersByTimeAsync(25_000);
+    expect(images).toHaveLength(5);
+    images[4].finish();
+    expect((await results).map((result) => result.status)).toEqual([
+      "rejected",
+      "rejected",
+      "rejected",
+      "rejected",
+      "fulfilled",
+    ]);
+    expect(images.slice(0, 4).every((image) => image.src === "")).toBe(true);
+    expect(active).toBe(0);
+    expect(peak).toBe(4);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("coalesces stalled requests and permits retry without a late completion losing the new request", async () => {
+    vi.useFakeTimers();
+    const { loadNativeImage } = await import("../src/ui/native-assets");
+    const first = loadNativeImage("/stalled/retry.png");
+    const result = first.catch((error: Error) => error.message);
+    expect(loadNativeImage("/stalled/retry.png")).toBe(first);
+    await vi.advanceTimersByTimeAsync(25_000);
+    expect(await result).toBe("Artwork loading timed out.");
+    const retry = loadNativeImage("/stalled/retry.png");
+    expect(retry).not.toBe(first);
+    images[0].finish();
+    await settle();
+    expect(loadNativeImage("/stalled/retry.png")).toBe(retry);
+    images[1].finish();
+    await expect(retry).resolves.toBe(images[1]);
+    await vi.advanceTimersByTimeAsync(25_000);
+    expect(active).toBe(0);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("clears deadlines for successful and failed decodes", async () => {
+    vi.useFakeTimers();
+    const { loadNativeImage } = await import("../src/ui/native-assets");
+    const success = loadNativeImage("/art/ok.png");
+    const failure = loadNativeImage("/art/bad.png").catch(
+      (error: Error) => error.message,
+    );
+    await vi.advanceTimersByTimeAsync(24_999);
+    images[0].finish();
+    images[1].fail(new Error("Decode failed"));
+    await expect(success).resolves.toBe(images[0]);
+    expect(await failure).toBe("Decode failed");
+    await vi.advanceTimersByTimeAsync(25_000);
+    expect(images[0].src).toBe("/art/ok.png");
+    expect(active).toBe(0);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
   it("bounds simultaneous libraries and the health atlas to four decodes", async () => {
     const { loadNativeImage, preloadNativeImages } =
       await import("../src/ui/native-assets");

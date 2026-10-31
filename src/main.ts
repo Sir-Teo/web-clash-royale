@@ -2561,7 +2561,23 @@ function showSettings() {
     `<form id="settings-form"><label class="field-label" for="player-name">PLAYER NAME</label><input class="name-input" id="player-name" maxlength="18" value="${esc(profile.name)}" required/><div class="setting-row"><div>${icon("volume-2")}<span><b>Sound effects</b><small>Deploys, spells, and a familiar king laugh</small></span></div><label class="switch"><input type="checkbox" id="sound-setting" ${profile.sound ? "checked" : ""}/><span></span></label></div><div class="setting-row"><div>${icon("music-2")}<span><b>Battle music</b><small>The soundtrack to your next victory</small></span></div><label class="switch"><input type="checkbox" id="music-setting" ${profile.music ? "checked" : ""}/><span></span></label></div><div class="setting-row"><div>${icon("maximize")}<span><b>More room for the arena</b><small>Toggle fullscreen mode</small></span></div><button type="button" class="icon-button" id="fullscreen">${icon("expand")}</button></div><div class="save-note">${icon(storageAvailable ? "shield-check" : "hard-drive-download")}<span>${saveNote}</span></div><button type="submit" class="primary-button">Save settings ${icon("check")}</button></form>`,
     "settings",
   );
-  $("#settings-form").insertAdjacentHTML("afterend", backups);
+  $("#settings-form").insertAdjacentHTML(
+    "afterend",
+    `<button class="secondary-button" id="settings-help">${icon("scroll-text")} How to play</button>${backups}`,
+  );
+  $("#settings-help").onclick = () => {
+    const view = $("#modal-root").firstElementChild!;
+    const panel = view.querySelector<HTMLElement>(".modal")!;
+    const scroll = panel.scrollTop;
+    const opener = $("#settings-help");
+    showHelp(() => {
+      modalKey = "settings";
+      modalFocus.render("settings", () => $("#modal-root").replaceChildren(view));
+      syncGraphicsStatus();
+      panel.scrollTop = scroll;
+      opener.focus({ preventScroll: true });
+    });
+  };
   refreshIcons();
   if (backups) {
     $("#export-progress").onclick = () => {
@@ -2660,13 +2676,13 @@ function refreshSound() {
   );
   refreshIcons();
 }
-function showHelp() {
+function showHelp(back?: () => void) {
   modal(
     "Your first crown starts here.",
-    `<div class="help-steps"><div><b>1</b><span><h3>Pick your eight.</h3><p>Your deck has eight unique cards. Four are in your hand; playing one draws the next card.</p></span></div><div><b>2</b><span><h3>Make your move.</h3><p>Select a card and click your half of the arena. Or drag a card straight onto the battlefield. Spells can target anywhere.</p></span></div><div><b>3</b><span><h3>Protect your kingdom.</h3><p>Troops fight automatically. Use tanks to soak up damage, ranged support to back them up, and spells to clear swarms.</p></span></div><div><b>4</b><span><h3>Take the crown.</h3><p>Destroy more towers in three minutes. Ties go to sudden death, then a lowest-tower-health tiebreaker. Destroying the King Tower wins instantly.</p></span></div></div><div class="keyboard-help"><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> Select card</span><span><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> Aim · Shift for larger steps</span><span><kbd>Enter</kbd> Deploy</span><span><kbd>Esc</kbd> Cancel / pause</span><span><kbd>Space</kbd> Pause</span></div><button class="primary-button" id="help-done">Ready for the arena ${icon("swords")}</button>`,
+    `<div class="help-steps"><div><b>1</b><span><h3>Pick your eight.</h3><p>Your deck has eight unique cards. Four are in your hand; playing one draws the next card.</p></span></div><div><b>2</b><span><h3>Make your move.</h3><p>Tap a card, then a valid position, or drag it into the arena. Most troops deploy on your half; most spells can target either half. Miner can tunnel across the river, and The Log starts on your side. Taking a Princess Tower opens that lane for deployment.</p></span></div><div><b>3</b><span><h3>Protect your kingdom.</h3><p>Troops fight automatically. Use tanks to soak up damage, ranged support to back them up, and spells to clear swarms.</p></span></div><div><b>4</b><span><h3>Take the crown.</h3><p>Destroy more towers in three minutes. Ties go to sudden death, then a lowest-tower-health tiebreaker. Destroying the King Tower wins instantly.</p></span></div></div><div class="keyboard-help"><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> Select card</span><span><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> Aim · Shift for larger steps</span><span><kbd>Enter</kbd> Deploy</span><span><kbd>Esc</kbd> Cancel / pause</span><span><kbd>Space</kbd> Pause</span></div><button class="primary-button" id="help-done">${back ? `Back to settings ${icon("arrow-right")}` : `Ready for the arena ${icon("swords")}`}</button>`,
     "help",
   );
-  $("#help-done").onclick = closeModal;
+  $("#help-done").onclick = back ?? closeModal;
 }
 
 function updateCombatAudio() {
@@ -2881,7 +2897,7 @@ $("#friend-button").onclick = () => showMultiplayer();
 $(".mode-select").onclick = showModes;
 $("#arena-settings").onclick = showSettings;
 $("#edit-deck").onclick = showDeckBuilder;
-$("#how-to-play").onclick = showHelp;
+$("#how-to-play").onclick = () => showHelp();
 document
   .querySelectorAll<HTMLButtonElement>("[data-settings]")
   .forEach((e) => (e.onclick = showSettings));

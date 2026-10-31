@@ -233,6 +233,8 @@ New releases wait while a game is open. When an update is ready, **Update game**
 
 ## Controls
 
+Open **Battle settings → How to play** for controls and placement rules on phones or desktop.
+
 - Click a hand card, then click the arena, or drag the card into position.
 - Placement previews show the complete troop formation in native artwork, with live elixir and territory feedback.
 - Keys **1–4** select a card. **Escape** cancels a selection or pauses; **Space** pauses when the arena has focus. Focused buttons keep their normal keyboard activation. Selection, cancel and pause shortcuts act once per press. The pause menu focuses **Resume battle**; **Tab** reaches Leave and Close, and **Escape** resumes.

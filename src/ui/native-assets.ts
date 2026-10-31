@@ -12,8 +12,23 @@ async function decode(source: string) {
   const image = new Image();
   image.decoding = "async";
   image.src = source;
-  await image.decode();
-  return image;
+  let timedOut = false;
+  const timeout = setTimeout(() => {
+    timedOut = true;
+    // An empty URL leaves decode pending in Chromium. An empty data response
+    // changes the image request without another download, causing rejection.
+    image.src = "data:,";
+  }, 25_000);
+  try {
+    await image.decode();
+    return image;
+  } catch (error) {
+    if (timedOut) throw new Error("Artwork loading timed out.");
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+    if (timedOut) image.removeAttribute("src");
+  }
 }
 
 function drain() {
