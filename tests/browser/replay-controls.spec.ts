@@ -3,6 +3,7 @@ import { build } from "esbuild";
 import { pathToFileURL } from "node:url";
 import { readFileSync } from "node:fs";
 import type { Replay } from "../../src/game/engine";
+import { expectedCards } from "./native-assets";
 let rules: typeof import("../../src/game/engine");
 const replay: Replay = {
   ...JSON.parse(readFileSync("tests/fixtures/combat-v4-replay.json", "utf8"))
@@ -265,3 +266,133 @@ for (const viewer of ["blue", "red"] as const)
     );
     expect(errors).toEqual([]);
   });
+
+test("replay speed keys clamp rates, preserve pause and restart, and leave native controls and modifiers alone", async ({
+  page,
+}, info) => {
+  test.setTimeout(120000);
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.addInitScript(
+    ({ key, replay }) => {
+      if (!localStorage.getItem(key))
+        localStorage.setItem(
+          key,
+          JSON.stringify({
+            version: 1,
+            name: "Speed Navigator",
+            sound: false,
+            music: true,
+            seenTutorial: true,
+            history: [
+              {
+                id: 42,
+                date: "2026-10-24T12:00:00.000Z",
+                mode: replay.mode,
+                winner: "red",
+                crowns: [0, 3],
+                opponent: "Other King",
+                opponentType: "friend",
+                replay,
+              },
+            ],
+          }),
+        );
+    },
+    { key, replay },
+  );
+  if (info.project.name !== "desktop")
+    await page.setViewportSize({ width: 320, height: 740 });
+  await page.goto("/");
+  await expect
+    .poll(
+      () => page.evaluate(() => (window as any).__arena?.state.loadedCards),
+      { timeout: 60000 },
+    )
+    .toBe(expectedCards);
+  const before = await page.evaluate((key) => localStorage.getItem(key), key);
+  await page.getByRole("button", { name: "Battle log", exact: true }).click();
+  await page.locator("[data-replay]").click();
+  await page.locator("#replay-play").click();
+  const frozen = (await state(page)).time;
+  const canvas = page.locator("#arena-canvas canvas");
+  const speed = page.locator("#replay-speed");
+  async function rate(expected: number) {
+    await expect(speed).toHaveText(`${expected}×`);
+    await expect(speed).toHaveAttribute(
+      "aria-label",
+      `Playback speed: ${expected}×`,
+    );
+    const current = await state(page);
+    expect(current.speed).toBe(expected);
+    expect(current.music.rate).toBe(expected);
+    expect(current.paused).toBe(true);
+    expect(current.time).toBe(frozen);
+  }
+  await canvas.focus();
+  await page.keyboard.press("-");
+  await rate(0.5);
+  await page.keyboard.press("-");
+  await rate(0.25);
+  await page.keyboard.press("-");
+  await rate(0.25);
+  await page.keyboard.press("=");
+  await rate(0.5);
+  await page.keyboard.press("Shift+=");
+  await rate(1);
+  await page.keyboard.press("Shift+=");
+  await rate(2);
+  await canvas.dispatchEvent("keydown", {
+    key: "=",
+    code: "Equal",
+    repeat: true,
+  });
+  await rate(2);
+  await page.keyboard.press("=");
+  await rate(4);
+  await page.keyboard.press("Shift+=");
+  await rate(4);
+  expect(
+    await canvas.evaluate((e) => {
+      const event = new KeyboardEvent("keydown", {
+        key: "-",
+        ctrlKey: true,
+        bubbles: true,
+        cancelable: true,
+      });
+      e.dispatchEvent(event);
+      return event.defaultPrevented;
+    }),
+  ).toBe(false);
+  await rate(4);
+  await speed.press("Space");
+  await rate(0.5);
+  await page.locator("#replay-seek").focus();
+  await page.keyboard.press("=");
+  await rate(0.5);
+  await page
+    .getByRole("button", { name: "Battle settings", exact: true })
+    .click();
+  await page.locator("#player-name").fill("");
+  await page.locator("#player-name").press("=");
+  await page.locator("#player-name").press("-");
+  await page.locator("#player-name").press("Shift+=");
+  await rate(0.5);
+  await page.keyboard.press("Escape");
+  await canvas.focus();
+  await page.keyboard.press("=");
+  await page.keyboard.press("=");
+  await rate(2);
+  await page.locator("#replay-seek").fill("100");
+  await page
+    .getByRole("button", { name: "Restart replay", exact: true })
+    .click();
+  await expect(speed).toHaveText("2×");
+  await expect(speed).toHaveAttribute("title", /Minus|slower|Slower/);
+  await page.locator("#replay-exit").click();
+  expect((await state(page)).speed).toBe(1);
+  expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(
+    before,
+  );
+  expect(errors).toEqual([]);
+});

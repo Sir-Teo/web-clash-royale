@@ -3523,3 +3523,13 @@ The new journey plays at half speed, changes to double speed, discards an attemp
 All 3,650 unit checks across 256 files, type checking and production build pass. All twelve distinct development cases pass across desktop Chromium and phone WebKit; all eighteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. Existing repeat/fresh-shuffle restart, graphics recovery and ordinary pause/resume/leave behavior remain covered. Broader pause checks exposed two old Tab-order expectations that skipped Inspect battle deck; both now explicitly traverse that control before Leave. Corrected focus cycling passes throughout, and the corrected Leave journey passes separately on both development and all three production targets. The new practice-prefixed speed journey joins workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `da40c5325eae` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Change replay speed with Minus, Plus or Equals
+
+Outside controls, Minus steps replay playback slower and Plus/Equals steps faster through 0.25×, 0.5×, 1×, 2× and 4×, clamping at either end. Held repeats, browser modifiers, editable controls and focused buttons/links retain their existing behavior. One setter updates playback/audio rate, the toolbar label and its shortcut title; the existing click/Space toolbar cycle stays intact. Arena instructions, accessible shortcuts, Help and the player guide describe the keys.
+
+The new journey covers both clamps, Equals and shifted Plus, held-repeat suppression, untouched Ctrl shortcuts, native Space activation, range/text controls, paused clock preservation, native music rate and restart retention. It leaves raw profile storage unchanged. After startup readiness was guarded, the before-change run fails at the missing Minus rate change. Existing blue/red canonical seek comparisons and running/paused Help with retained Settings drafts also pass; reviewed phone Help shows the extra shortcut row within the dialog.
+
+All 3,650 unit checks across 256 files, type checking and production build pass. All ten development cases pass on desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. The expanded replay-controls journey remains selected by workflow CI.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `a6ea4bac667f` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
