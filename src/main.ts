@@ -74,6 +74,7 @@ import {
   Droplet,
   Timer,
   ArrowRight,
+  ArrowLeftRight,
   ExternalLink,
   X,
   PackageOpen,
@@ -120,6 +121,7 @@ const icons = {
   Droplet,
   Timer,
   ArrowRight,
+  ArrowLeftRight,
   ExternalLink,
   X,
   PackageOpen,
@@ -149,6 +151,7 @@ import { Battle, STEP } from "./game/engine";
 import { createReplayPlayback } from "./replay-playback";
 import { ReplaySeekQueue } from "./ui/replay-seek-queue";
 import { practiceOpponents } from "./ui/practice-opponents";
+import { replayView } from "./ui/replay-view";
 import {
   buildReplayPlays,
   adjacentReplayPlay,
@@ -274,6 +277,8 @@ let pendingResult: { battle: Battle; time: number; show: () => void } | null =
 let replayData: Replay | null = null;
 let replayRecord: RecordEntry | null = null;
 let replayOwnerName: string | null = null;
+let replayRecordedName: string | null = null;
+let replayOpponentView = false;
 let replayPlays: ReplayPlay[] = [];
 const replaySeeks = new ReplaySeekQueue((tick) => seekReplay(tick));
 let replayScrubPointer: number | null = null;
@@ -337,7 +342,7 @@ $("#app").innerHTML = `
     <div class="local-save">${icon("hard-drive-download")}<div><b>YOUR PROGRESS, SAVED</b><span>Stored on this browser</span></div><i></i></div>
    </aside>
    <main class="arena-panel">
-    <div class="arena-heading"><div><span class="eyebrow">ARENA 1</span><h1>Goblin Stadium</h1></div><button class="mode-select">${icon("swords")}<span id="mode-name">Classic 1v1</span>${icon("chevron-down")}</button><button class="icon-button" id="arena-settings" aria-label="Battle settings">${icon("settings-2")}</button></div>
+    <div class="arena-heading"><div><span class="eyebrow">ARENA 1</span><h1>Goblin Stadium</h1></div><button class="mode-select">${icon("swords")}<span id="mode-name">Classic 1v1</span>${icon("chevron-down")}</button><button class="icon-button hidden" id="replay-side" aria-label="View opponent side" aria-pressed="false" aria-controls="arena-canvas" title="View opponent side">${icon("arrow-left-right")}</button><button class="icon-button" id="arena-settings" aria-label="Battle settings">${icon("settings-2")}</button></div>
     <div class="arena-stage" id="arena-stage"><div class="arena-vignette"></div><div class="arena-canvas" id="arena-canvas"></div><p class="keyboard-deployment-a11y" id="keyboard-deployment-instructions">Battle controls: keys 1 through 4 select a card. Arrow keys aim in half-tile steps. Hold Shift for two-tile steps. Enter deploys. Escape cancels a selection or pauses. Space pauses. Tab leaves the battlefield.</p><p class="keyboard-deployment-a11y" id="keyboard-deployment-status" role="status" aria-live="polite" aria-atomic="true"></p>
      <div class="arena-corner top-left"></div><div class="arena-corner bottom-right"></div>
      <div class="lobby-badge"><span class="live-dot"></span> THE ARENA IS YOURS</div>
@@ -466,6 +471,9 @@ function syncGraphicsStatus() {
   const battleButton = $<HTMLButtonElement>("#battle-button");
   if (battleButton.disabled !== !graphicsAvailable)
     battleButton.disabled = !graphicsAvailable;
+  const replaySide = $<HTMLButtonElement>("#replay-side");
+  if (replaySide.disabled !== !graphicsAvailable)
+    replaySide.disabled = !graphicsAvailable;
   const ready = document.querySelector<HTMLButtonElement>("#room-ready");
   if (ready && !graphicsAvailable && !ready.disabled) ready.disabled = true;
   const resume = document.querySelector<HTMLButtonElement>("#resume-button");
@@ -635,6 +643,8 @@ function enterLobby(keepPeerConnection: boolean) {
   replayData = null;
   replayRecord = null;
   replayOwnerName = null;
+  replayRecordedName = null;
+  replayOpponentView = false;
   accumulator = 0;
   audio.stopMusic();
   audio.stopEffects();
@@ -650,6 +660,7 @@ function enterLobby(keepPeerConnection: boolean) {
   $("#lobby-footer").classList.remove("hidden");
   $("#battle-tray").classList.add("hidden");
   $(".replay-controls").classList.add("hidden");
+  $("#replay-side").classList.add("hidden");
   document
     .querySelectorAll(".match-top,.match-bottom,.match-crowns")
     .forEach((e) => e.classList.add("hidden"));
@@ -666,6 +677,8 @@ function startBattle(online = false, practice: PracticeOpponent | null = null) {
   deploymentFeedback.reset();
   clearKeyboardAim(true);
   replayOwnerName = null;
+  replayRecordedName = null;
+  replayOpponentView = false;
   const loadout = online ? peerNetwork?.loadout : null;
   battlePlayerName = online
     ? (loadout?.name ??
@@ -739,6 +752,7 @@ function startBattle(online = false, practice: PracticeOpponent | null = null) {
   $(".mode-select").classList.add("hidden");
   $("#deploy-hint").classList.remove("hidden");
   $(".replay-controls").classList.add("hidden");
+  $("#replay-side").classList.add("hidden");
   refreshDeck();
   intro.start(battlePlayerName, battle.mode, opponentName);
   elixir.reset(battle.time, battle.players.blue.elixir, battle.multiplier);
@@ -864,7 +878,7 @@ function updateBattleUI(force = false) {
       replayRecord &&
       completeRecordedReplay(
         replaySource ?? battle,
-        replayData,
+        replayRecord.replay,
         replayRecord.winner,
       )
     ) {
@@ -1211,7 +1225,11 @@ function syncPeerRematch() {
   if (button.textContent !== label) button.textContent = label;
   if (status.textContent !== message) status.textContent = message;
 }
-function playReplay(record: RecordEntry, ownerName?: string) {
+function playReplay(
+  record: RecordEntry,
+  ownerName?: string,
+  opponentView = false,
+) {
   if (!graphicsAvailable) {
     toast("Wait for the arena graphics to recover before watching a replay.");
     return;
@@ -1224,8 +1242,6 @@ function playReplay(record: RecordEntry, ownerName?: string) {
   if (network.room) network.leave();
   multiplayer = false;
   $("#connection-status").classList.add("hidden");
-  opponentName = record.opponent ?? "Royal Trainer";
-  $(".competitor.enemy b").textContent = opponentName;
   $(".competitor.enemy div > span").textContent = record.practice
     ? "Practice AI replay"
     : record.opponentType === "ai"
@@ -1235,18 +1251,8 @@ function playReplay(record: RecordEntry, ownerName?: string) {
         : "Training guild";
   closeModal();
   screen = "replay";
-  replayOwnerName = playerName;
-  $(".match-bottom .player-name").textContent = playerName;
   replayRecord = record;
-  replayData = record.replay;
-  replayPlays = buildReplayPlays(replayData);
-  const plays = $("#replay-plays") as HTMLSelectElement;
-  plays.replaceChildren(
-    new Option(replayPlays.length ? "Jump to a play" : "No recorded plays", ""),
-    ...replayPlays.map((play) => new Option(play.label, String(play.tick))),
-  );
-  plays.disabled = replayPlays.length === 0;
-  plays.parentElement!.toggleAttribute("data-empty", plays.disabled);
+  const replay = setReplayView(record, playerName, opponentView);
   resultShown = true;
   paused = false;
   speed = 1;
@@ -1258,7 +1264,7 @@ function playReplay(record: RecordEntry, ownerName?: string) {
   eventCursor = 0;
   document.body.classList.add("in-battle", "in-replay");
   window.scrollTo(0, 0);
-  createReplayBattle(replayData);
+  createReplayBattle(replay);
   arena.setBattle(battle);
   arena.showPlacement(null, null);
   $(".lobby-badge").classList.add("hidden");
@@ -1271,6 +1277,7 @@ function playReplay(record: RecordEntry, ownerName?: string) {
   $(".mode-select").classList.add("hidden");
   $("#deploy-hint").classList.add("hidden");
   $(".replay-controls").classList.remove("hidden");
+  $("#replay-side").classList.remove("hidden");
   syncReplayControl();
   $("#replay-speed").textContent = "1×";
   $("#replay-speed").setAttribute("aria-label", "Playback speed: 1×");
@@ -1282,6 +1289,34 @@ function playReplay(record: RecordEntry, ownerName?: string) {
   updateBattleUI(true);
   audio.startMusic(battle.time);
   refreshIcons();
+}
+function setReplayView(
+  record: RecordEntry,
+  playerName: string,
+  opponentView: boolean,
+) {
+  const view = replayView(record, playerName, opponentView);
+  replayRecordedName = playerName;
+  replayOpponentView = opponentView;
+  replayOwnerName = view.playerName;
+  opponentName = view.opponentName;
+  replayData = view.replay;
+  $(".match-bottom .player-name").textContent = view.playerName;
+  $(".competitor.enemy b").textContent = view.opponentName;
+  $("#replay-side").setAttribute("aria-pressed", String(opponentView));
+  $("#replay-side").setAttribute(
+    "title",
+    opponentView ? "View recorded player side" : "View opponent side",
+  );
+  replayPlays = buildReplayPlays(view.replay);
+  const plays = $<HTMLSelectElement>("#replay-plays");
+  plays.replaceChildren(
+    new Option(replayPlays.length ? "Jump to a play" : "No recorded plays", ""),
+    ...replayPlays.map((play) => new Option(play.label, String(play.tick))),
+  );
+  plays.disabled = replayPlays.length === 0;
+  plays.parentElement!.toggleAttribute("data-empty", plays.disabled);
+  return view.replay;
 }
 function createReplayBattle(replay: Replay, targetTick = 0) {
   const playback = createReplayPlayback(replay, targetTick);
@@ -2935,8 +2970,14 @@ $(".sound-toggle").onclick = () => {
 $("#pause-button").onclick = togglePause;
 $("#replay-play").onclick = () => {
   if (replayData && replayComplete(battle, replayData) && replayRecord)
-    playReplay(replayRecord, replayOwnerName ?? undefined);
+    playReplay(replayRecord, replayRecordedName ?? undefined, replayOpponentView);
   else togglePause();
+};
+$("#replay-side").onclick = () => {
+  if (screen !== "replay" || !replayRecord || !graphicsAvailable) return;
+  const tick = replaySeeks.target ?? battle.tick;
+  setReplayView(replayRecord, replayRecordedName ?? profile.name, !replayOpponentView);
+  seekReplay(tick);
 };
 $("#replay-speed").onclick = () => {
   speed =

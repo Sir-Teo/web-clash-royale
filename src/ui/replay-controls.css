@@ -14,6 +14,18 @@
   min-width: 0;
   gap: 8px;
 }
+#replay-side {
+  min-width: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
+}
+#replay-side[aria-pressed="true"] {
+  background: #ffd05c18;
+  color: #ffd05c;
+}
+#replay-side:disabled {
+  opacity: 0.45;
+}
 #replay-keyboard-help {
   display: block;
   position: absolute;
