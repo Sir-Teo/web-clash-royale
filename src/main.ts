@@ -196,7 +196,7 @@ import {
   PROFILE_STORAGE_KEY,
   applySettingsDraft,
   saveProfile as persistProfile,
-  recordBattle,
+  saveBattleResult,
   openChest,
   storageAvailable,
   exportProgress,
@@ -610,6 +610,12 @@ function refreshProfile() {
   refreshDeck();
   refreshIcons();
 }
+function applyProfilePreferences() {
+  audio.setEnabled(profile.sound);
+  audio.musicEnabled = profile.music;
+  emotes.setMuted(profile.emotesMuted, false);
+  refreshSound();
+}
 function syncIdleProfile() {
   if (
     !initialized ||
@@ -634,11 +640,8 @@ function syncIdleProfile() {
       ? `[${attribute}="${CSS.escape(active!.getAttribute(attribute)!)}"]`
       : null;
   Object.assign(profile, saved);
-  audio.setEnabled(profile.sound);
-  audio.musicEnabled = profile.music;
-  emotes.setMuted(profile.emotesMuted, false);
+  applyProfilePreferences();
   refreshProfile();
-  refreshSound();
   if (active && !active.isConnected) {
     const replacement = selector
       ? document.querySelector<HTMLElement>(selector)
@@ -1340,7 +1343,7 @@ function showResult() {
   audio.stopEffects();
   if (graphicsAvailable) announcements.cue("Gameend Horn");
   const wasMultiplayer = multiplayer;
-  const reward = recordBattle(
+  const reward = saveBattleResult(
       profile,
       battle,
       wasMultiplayer
@@ -1363,6 +1366,7 @@ function showResult() {
     ),
     win = battle.winner === "blue",
     draw = battle.winner === "draw";
+  applyProfilePreferences();
   refreshProfile();
   arena.showPlacement(null, null);
   $("#deploy-hint").classList.add("hidden");

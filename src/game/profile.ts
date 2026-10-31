@@ -379,6 +379,18 @@ export function recordBattle(
   saveProfile(p);
   return { trophies, gold, chest };
 }
+/** Apply a finished result to trusted saved progress while retaining failed session writes. */
+export function saveBattleResult(
+  p: Profile,
+  b: Battle,
+  options?: Parameters<typeof recordBattle>[2],
+) {
+  if (!b.winner) return { trophies: 0, gold: 0, chest: null };
+  const playerName = options?.playerName ?? p.name;
+  const saved = storageAvailable ? readSavedProfile() : null;
+  if (saved) Object.assign(p, saved);
+  return recordBattle(p, b, { ...options, playerName });
+}
 export function openChest(p: Profile, index: number) {
   const type = p.chests[index];
   if (!type) return null;
