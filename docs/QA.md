@@ -3495,3 +3495,11 @@ Four new journeys cover a name-only refresh, a prepended result with duplicate I
 All 3,645 unit checks across 256 files, type checking and production build pass. All sixteen development cases pass across desktop Chromium and phone WebKit; all twenty-four production cases pass across desktop Chromium, phone Chromium and phone WebKit. The new settings-prefixed journeys join workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `90ef38fa90cd` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Search the battle log by captured player names
+
+Battle-log search now includes a recording's captured playerName alongside its opponent and both starting decks. It uses the existing accent/punctuation normalization and combined result/mode/type filters. The input and guidance identify recorded player names; anonymous legacy entries do not acquire the current profile's name.
+
+Five added unit cases cover accented names, Chinese names, cross-field name/opponent/card terms, a red viewer combined with all filters and anonymous older recordings. All twenty-four focused matcher checks pass after four new matching expectations fail before the change. All 3,650 unit checks across 256 files, type checking and production build pass. Both development cases pass on desktop Chromium and phone WebKit; all three production targets pass. The browser journey searches earlier names, opens the correct Details view, watches a red-side recording with its captured identity, returns with filters/focus, excludes the current unrecorded name and retains unchanged storage. Phone search and filters remain usable without horizontal overflow. The settings-prefixed journey joins workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `a111dbf7281e` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

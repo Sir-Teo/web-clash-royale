@@ -42,6 +42,7 @@ export function historyMatches(
     )
       return [];
     const fields = [
+      record.playerName ?? "",
       record.opponent ?? "Royal Trainer",
       ...record.replay.deck.map((id) => CARD_MAP[id].name),
       ...record.replay.enemyDeck.map((id) => CARD_MAP[id].name),

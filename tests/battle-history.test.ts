@@ -47,6 +47,62 @@ const mixedHistory = [
 ];
 
 describe("battle log browsing", () => {
+  const namedHistory = [
+    record({
+      playerName: "Élodie King",
+      opponent: "Siege Rival",
+      opponentType: "ai",
+      practice: true,
+    }),
+    record({
+      playerName: "王小明",
+      opponent: "Cycle Rival",
+      opponentType: "friend",
+      winner: "red",
+      mode: "double",
+      replay: { ...replay, mode: "double", perspective: "red" },
+    }),
+    record({ opponentType: "ai" }),
+  ];
+  it.each([
+    ["ELODIE king", [0]],
+    ["王小", [1]],
+    ["élodie siege cannon", [0]],
+  ] as const)("finds recorded player names with %s", (search, expected) => {
+    expect(
+      historyMatches(namedHistory, { search }).map(({ index }) => index),
+    ).toEqual(expected);
+  });
+
+  it("combines a red viewer's recorded name with card, opponent, result, pace and type", () => {
+    const query = {
+      search: "王小 cannon cycle",
+      result: "red",
+      mode: "double",
+      type: "friend",
+    } as const;
+    expect(historyMatches(namedHistory, query)).toEqual([
+      { record: namedHistory[1], index: 1 },
+    ]);
+    expect(
+      historyMatches(namedHistory, { ...query, type: "practice" }),
+    ).toEqual([]);
+    expect(historyMatches(namedHistory, { ...query, result: "blue" })).toEqual(
+      [],
+    );
+    expect(historyMatches(namedHistory, { ...query, mode: "classic" })).toEqual(
+      [],
+    );
+  });
+
+  it("leaves an absent historical player name unknown", () => {
+    expect(historyMatches(namedHistory, { search: "Sir Teo" })).toEqual([]);
+    expect(historyMatches(namedHistory, { search: "Royal Trainer" })).toEqual([
+      { record: namedHistory[2], index: 2 },
+    ]);
+    expect(namedHistory[2].playerName).toBeUndefined();
+  });
+
   it.each([
     ["  ELODIE  ", [0]],
     ["ÉloDiE", [0]],
