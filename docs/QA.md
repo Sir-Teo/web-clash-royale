@@ -3725,3 +3725,13 @@ Four new unit cases verify both directions against the mixed Common/Rare/Epic Go
 All 3,666 unit checks across 258 files, type checking and production build pass. Both final development cases pass on desktop Chromium and phone WebKit; all fifteen production collection cases pass across desktop Chromium, phone Chromium and phone WebKit.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `108f0354e924` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Preview and replay a fixed daily practice matchup
+
+The battle-mode menu now offers Daily practice, with two captured curated decks, fixed Classic pace and an opening shuffle selected from the UTC date. The preview exposes card details, composition and average elixir, plus session practice speed and Back to modes. Initial start and Practice again reuse the captured opening; existing repeat/fresh restart choices remain available. Changing the matchup carries both curated selections into the normal picker. Daily attempts use existing practice rewards and recording behavior.
+
+Six new unit checks cover same-day stability, local offset/UTC boundaries, midnight seed changes, distinct valid archetypes and full-roster variety across 400 dates, independent deck copies and reproducible simulation hands/AI opening commands. Browser journeys inspect both decks, retain speed and native Back/card focus without writes, start Classic daily play from a Double-elixir lobby, compare the exact seed/opening hand, record the actual temporary deck without rewards or saved-slot changes, review the replay and retry the same opening. Changing a paused retry retains its curated decks and Classic pace without saving the discarded attempt. Existing practice restart and ordinary AI pause/leave checks remain included.
+
+All 3,672 unit checks across 259 files, type checking and production build pass. All four development cases pass across desktop Chromium and phone WebKit; all twelve production cases pass across desktop Chromium, phone Chromium and phone WebKit. Reviewed phone previews keep the UTC date and both deck summaries readable. The practice-prefixed journeys join workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `e67a1e1dd2f1` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

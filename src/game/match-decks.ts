@@ -23,6 +23,7 @@ export interface PracticeOpponent {
   mode: Mode;
   deck: CardId[];
   playerDeck?: CardId[];
+  openingSeed?: number;
   selection?: Readonly<{
     playerChoice: string;
     opponentIndex: number;

@@ -7,6 +7,7 @@ import { ModalFocus } from "./ui/modal-focus";
 import { cardDetails } from "./ui/card-details";
 import { replayDeckUsage } from "./ui/replay-deck-usage";
 import { replayCardPlays } from "./ui/replay-card-plays";
+import { dailyPractice } from "./ui/daily-practice";
 import { DeckEditHistory, copyDeckSelection } from "./ui/deck-edit-history";
 import { collectionCards } from "./ui/card-collection";
 import type { CollectionKind, CollectionOrder } from "./ui/card-collection";
@@ -1474,7 +1475,7 @@ function showResult() {
             lobby();
             showMultiplayer();
           }
-        } else startBattle(false, completedPractice);
+        } else startBattle(false, completedPractice, completedPractice?.openingSeed);
       };
       syncPeerRematch();
       if (completedPractice)
@@ -2207,10 +2208,11 @@ function showModes() {
   if (screen !== "lobby") return;
   modal(
     "Choose your battle",
-    `<div class="mode-list">${(["classic", "double", "training"] as Mode[]).map((m) => `<button class="mode-option ${m === mode ? "chosen" : ""}" data-mode="${m}"><span class="mode-icon">${icon(m === "double" ? "droplet" : m === "training" ? "target" : "swords")}</span><div><h3>${modeNames[m]}</h3><p>${m === "classic" ? "The classic arena experience. Earn trophies and victory chests." : m === "double" ? "Double elixir from the start. Bigger pushes, faster battles." : "A relaxed AI opponent. Practice new cards without risking trophies."}</p></div>${icon(m === mode ? "circle-check" : "chevron-right")}</button>`).join("")}<button class="mode-option" id="choose-practice-opponent" aria-label="Choose a practice opponent"><span class="mode-icon">${icon("layers-2")}</span><div><h3>Practice a deck</h3><p>Choose from ${SOLO_OPPONENTS.length} opponents and inspect their starting cards.</p></div>${icon("chevron-right")}</button></div>`,
+    `<div class="mode-list">${(["classic", "double", "training"] as Mode[]).map((m) => `<button class="mode-option ${m === mode ? "chosen" : ""}" data-mode="${m}"><span class="mode-icon">${icon(m === "double" ? "droplet" : m === "training" ? "target" : "swords")}</span><div><h3>${modeNames[m]}</h3><p>${m === "classic" ? "The classic arena experience. Earn trophies and victory chests." : m === "double" ? "Double elixir from the start. Bigger pushes, faster battles." : "A relaxed AI opponent. Practice new cards without risking trophies."}</p></div>${icon(m === mode ? "circle-check" : "chevron-right")}</button>`).join("")}<button class="mode-option" id="choose-practice-opponent" aria-label="Choose a practice opponent"><span class="mode-icon">${icon("layers-2")}</span><div><h3>Practice a deck</h3><p>Choose from ${SOLO_OPPONENTS.length} opponents and inspect their starting cards.</p></div>${icon("chevron-right")}</button><button class="mode-option" id="choose-daily-practice"><span class="mode-icon">${icon("target")}</span><div><h3>Daily practice</h3><p>Fixed decks and opening for today. Classic pace, no rewards.</p></div>${icon("chevron-right")}</button></div>`,
     "modes",
   );
   $("#choose-practice-opponent").onclick = showPracticeOpponents;
+  $("#choose-daily-practice").onclick = () => showDailyPractice($("#choose-daily-practice"));
   document.querySelectorAll<HTMLButtonElement>("[data-mode]").forEach(
     (e) =>
       (e.onclick = () => {
@@ -2220,6 +2222,42 @@ function showModes() {
         audio.play("button_click_02");
       }),
   );
+}
+function showDailyPractice(opener: HTMLElement) {
+  if (screen !== "lobby") return;
+  const back = returnToModal(opener);
+  const { day, playerStyle, opponentStyle, practice } = dailyPractice();
+  modal(
+    "Today's practice",
+    `<p class="room-note" id="daily-practice-note"><time datetime="${day}">${day}</time> UTC · Fixed decks, Classic pace and starting shuffle for today. Practice AI; no trophies or rewards.</p><div class="match-decks" data-daily-day="${day}">${(
+      ["yours", "opponent"] as const
+    )
+      .map((side) => {
+        const deck = side === "yours" ? practice.playerDeck! : practice.deck;
+        return `<section class="match-deck-panel" data-daily-side="${side}"><div class="match-deck-heading"><div><h3>${side === "yours" ? "Your daily deck" : "Opponent daily deck"}</h3><p>${esc(side === "yours" ? playerStyle : opponentStyle)}</p></div><span><i class="tiny-drop"></i> ${averageCost(deck).toFixed(1)} average</span></div>${deckCompositionHTML(deck)}<div class="match-deck-grid">${deck.map((id, index) => cardHTML(id, `data-daily-card="${side}-${index}"`)).join("")}</div></section>`;
+      })
+      .join(
+        "",
+      )}</div>${practiceSpeedHTML()}<div class="match-details-actions"><button class="text-button" id="daily-practice-back">Back to battle modes</button><button class="primary-button" id="start-daily-practice" aria-describedby="daily-practice-note">${icon("target")} Start today's practice</button></div>`,
+    "daily-practice",
+    true,
+  );
+  bindPracticeSpeed();
+  $("#daily-practice-back").onclick = back;
+  $("#start-daily-practice").onclick = () => {
+    practiceMode = "classic";
+    startBattle(false, practice, practice.openingSeed);
+  };
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-daily-card]")
+    .forEach((button) => {
+      button.onclick = () =>
+        showCard(
+          button.dataset.nativeCard as CardId,
+          returnToModal(button),
+          "Back to daily practice",
+        );
+    });
 }
 function practiceOptionsHTML() {
   return `<div class="practice-pace"><label class="practice-choice" for="practice-pace">Practice pace<span><select id="practice-pace" aria-describedby="practice-pace-help">${(["training", "classic", "double"] as const).map((pace) => `<option value="${pace}" ${pace === practiceMode ? "selected" : ""}>${modeNames[pace]}</option>`).join("")}</select>${icon("chevron-down")}</span></label><p class="practice-pace-help" id="practice-pace-help">Training uses relaxed AI. Classic and Double elixir use regular AI; Double elixir refills twice as fast from the start.</p></div>${practiceSpeedHTML()}`;
