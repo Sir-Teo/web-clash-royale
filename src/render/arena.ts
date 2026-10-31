@@ -3,6 +3,7 @@ import { Battle, entityVisualHeight } from "../game/engine";
 import { deploymentYBounds } from "../game/placement-bounds";
 import type { Entity, Point, Team } from "../game/engine";
 import { CARD_MAP } from "../game/cards";
+import { placementTerritory } from "./placement-territory";
 import type { CardId } from "../game/cards";
 import {
   box,
@@ -160,6 +161,7 @@ export class Arena {
   private blindSpot = new BlindSpotIndicator();
   private block = new T.Group();
   private blockedLanes: T.Mesh[] = [];
+  private riverBlock: T.Mesh;
   private deployment: DeploymentPreview;
   private placementFeedback: HTMLDivElement;
   private placement: {
@@ -307,10 +309,10 @@ export class Arena {
       this.blockedLanes.push(overlay);
       this.block.add(overlay);
     }
-    const river = new T.Mesh(new T.PlaneGeometry(18, 3), illegalMaterial);
-    river.rotation.x = -Math.PI / 2;
-    river.position.set(0, 0.22, 0);
-    this.block.add(river);
+    this.riverBlock = new T.Mesh(new T.PlaneGeometry(18, 3), illegalMaterial);
+    this.riverBlock.rotation.x = -Math.PI / 2;
+    this.riverBlock.position.set(0, 0.22, 0);
+    this.block.add(this.riverBlock);
     this.block.visible = false;
     this.scene.add(this.block);
     this.observer = new ResizeObserver(() => this.resize());
@@ -869,6 +871,7 @@ export class Arena {
             ? this.deployment.nativeCount
             : 0,
           blockedUntil: this.blockedLanes.map((o) => o.scale.y),
+          riverBlocked: this.block.visible && this.riverBlock.visible,
           minimumRange: this.blindSpot.radius,
           maximumRange: this.rangeRing.scale.x,
         }
@@ -958,7 +961,8 @@ export class Arena {
     // The HUD repeatedly hides an already absent preview while paused.
     if (id || this.placement) this.requestFrame();
     this.placement = id ? { card: id, point, valid, reason } : null;
-    this.block.visible = !!id && CARD_MAP[id].kind !== "spell";
+    this.block.visible = !!id;
+    this.riverBlock.visible = placementTerritory(id, true).river;
     this.cursor.visible = !!id && !!point;
     const ranges = id ? placementRanges(id, this.battle?.rulesVersion ?? 0) : { inner: 0, outer: 0 };
     this.blindSpot.show(point ? ranges.inner : 0, valid);
@@ -973,7 +977,8 @@ export class Arena {
           e.lane === lane &&
           e.hp > 0,
       );
-      const height = enemyTower ? 17.8 : 11.5;
+      const height = placementTerritory(id, !!enemyTower).blockedUntil;
+      overlay.visible = height > 0;
       overlay.scale.y = height;
       overlay.position.z = height / 2 - 16;
     });

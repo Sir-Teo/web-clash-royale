@@ -27,7 +27,8 @@ test("Miner renders and deploys from the desktop and phone hand", async ({ page 
   const slot = before.hand.indexOf("miner");
   expect(slot).toBeGreaterThanOrEqual(0);
   await page.locator(`#hand [data-slot="${slot}"]`).click();
-  await expect(page.locator("#hand-caption")).toContainText("Miner · 3 elixir");
+  await expect(page.locator("#hand-caption")).toContainText("Miner · 3 elixir · Deploy on either half");
+  await expect(page.locator("#deploy-hint")).toHaveText("Miner · Deploy on either half");
   const point = await page.evaluate(() => (window as any).__arena.project(4, 8));
   if (await page.evaluate(() => navigator.maxTouchPoints > 0)) await page.touchscreen.tap(point.x, point.y);
   else await page.mouse.click(point.x, point.y);

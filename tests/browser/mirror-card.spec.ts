@@ -79,7 +79,7 @@ test("Mirror shows its changing cost and repeats a troop on desktop and phone", 
     .elementHandle();
   await mirror.click();
   await expect(page.locator("#hand-caption")).toContainText(
-    "Mirror → Skeletons · 2 elixir",
+    "Mirror → Skeletons · 2 elixir · Deploy on your side or opened territory",
   );
   await page.screenshot({
     path: info.outputPath("mirror-selected.png"),

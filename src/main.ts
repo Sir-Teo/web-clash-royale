@@ -946,6 +946,13 @@ function beginKeyboardAim() {
   keyboardTarget = { ...(keyboardTarget ?? DEFAULT_KEYBOARD_TARGET) };
   hover = { ...keyboardTarget };
 }
+function placementHint(id: CardId) {
+  if (id === "log") return "Deploy on your side";
+  if (id === "miner") return "Deploy on either half";
+  return CARD_MAP[id].kind === "spell"
+    ? "Target anywhere"
+    : "Deploy on your side or opened territory";
+}
 function selectCard(slot: number, keyboard = false) {
   if (
     !graphicsAvailable ||
@@ -975,13 +982,11 @@ function selectCard(slot: number, keyboard = false) {
     $("#hand-caption").textContent =
       cost === null
         ? "Play another card before Mirror"
-        : `${id === "mirror" ? `Mirror → ${c.name}` : c.name} · ${cost} elixir · ${c.kind === "spell" ? "Target anywhere" : "Deploy on the blue half"}`;
+        : `${id === "mirror" ? `Mirror → ${c.name}` : c.name} · ${cost} elixir · ${placementHint(c.id)}`;
     $("#deploy-hint").textContent =
       cost === null
         ? "Play another card before Mirror"
-        : c.kind === "spell"
-          ? `${c.name} · Target anywhere`
-          : `${c.name} · Deploy on your side`;
+        : `${c.name} · ${placementHint(c.id)}`;
     refreshPlacement();
   }
   updateBattleUI();
@@ -1011,7 +1016,7 @@ function refreshPlacement() {
   const playedCard = CARD_MAP[repeated ?? id];
   const name =
     id === "mirror" && repeated ? `Mirror → ${playedCard.name}` : c.name;
-  const caption = `${name} · ${cost ?? "?"} elixir · ${keyboardAiming ? "Arrows aim · Shift moves farther · Enter deploys" : playedCard.kind === "spell" ? "Target anywhere" : "Deploy on the blue half"}`;
+  const caption = `${name} · ${cost ?? "?"} elixir · ${keyboardAiming ? "Arrows aim · Shift moves farther · Enter deploys" : placementHint(playedCard.id)}`;
   if ($("#hand-caption").textContent !== caption)
     $("#hand-caption").textContent = caption;
   if (keyboardAiming && hover) {
@@ -2944,7 +2949,9 @@ arena.host.addEventListener("pointermove", (e) => {
   hover = arena.point(e.clientX, e.clientY);
   refreshPlacement();
 });
-arena.host.addEventListener("pointerleave", () => {
+arena.host.addEventListener("pointerleave", (event) => {
+  // Touch leaves after every tap; retain a rejected placement and its reason.
+  if (event.pointerType === "touch" && selected >= 0) return;
   if (!dragging && !keyboardAiming) {
     hover = null;
     refreshPlacement();

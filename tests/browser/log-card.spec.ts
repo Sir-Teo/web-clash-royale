@@ -94,6 +94,8 @@ test("The Log can be selected and cast from the real desktop and phone hand", as
     { timeout: 30000 },
   );
   await page.locator(`#hand [data-slot="${slot}"]`).click();
+  await expect(page.locator("#hand-caption")).toContainText("The Log · 2 elixir · Deploy on your side");
+  await expect(page.locator("#deploy-hint")).toHaveText("The Log · Deploy on your side");
   await tap(4, 22);
   await expect
     .poll(async () => (await state()).actions)
