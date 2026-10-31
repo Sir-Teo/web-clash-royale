@@ -1428,7 +1428,10 @@ function showResult() {
     ),
     win = battle.winner === "blue",
     draw = battle.winner === "draw";
-  const practiceRecord = completedPractice ? profile.history[0] : undefined;
+  const completedRecord = wasMultiplayer && completedMatchId
+    ? profile.history.find((record) => record.matchId === completedMatchId)
+    : profile.history[0];
+  const practiceRecord = completedPractice ? completedRecord : undefined;
   applyProfilePreferences();
   refreshProfile();
   arena.showPlacement(null, null);
@@ -1483,7 +1486,9 @@ function showResult() {
           showMatchDetails(-1, { record: practiceRecord });
         };
       $("#return-home").onclick = lobby;
-      $("#watch-replay").onclick = () => playReplay(profile.history[0]);
+      $("#watch-replay").onclick = () => {
+        if (completedRecord) playReplay(completedRecord);
+      };
     },
   };
 }

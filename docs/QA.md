@@ -3685,3 +3685,13 @@ The new journeys finish a temporary curated matchup and inspect the exact captur
 All 3,662 unit checks across 258 files, type checking and production build pass. All four development cases pass on desktop Chromium and phone WebKit; all twelve production cases pass across desktop Chromium, phone Chromium and phone WebKit, including the collection-card trial journeys. Reviewed phone results keep the new 44-pixel action visible with existing retry/navigation controls. The practice-prefixed journeys join workflow CI automatically. A read-only CLI audit covered all 408 declared cases in 61 workflow files exactly once across nine shards (47/49/40 per browser); no hosted CI was triggered.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `991bef879ce8` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Retain the completed battle for result replay actions
+
+New ordinary/practice timing checks reproduced result Watch replay opening a different battle. After the current result was saved, a newer saved profile was seeded during the ending and the HUD sound action refreshed it before the result dialog appeared. Reading profile.history[0] then selected Other Pilot instead of the completed Result Captain recording. Results now retain their own entry immediately after saving; friendly results find their stored match ID, including deduplicated reconnect results. Practice deck viewing shares the retained entry.
+
+The regressions use an actual Leave handler followed by a sound click in the same event turn to exercise the ending window. Newer name, gold, battle totals and a different first history entry survive. Watch replay must display the completed player's/opponent's captured names and enemy deck, and must leave the refreshed saved bytes unchanged. Existing battle/replay sound checks remain included to protect preference merging, captured battle identity, playback rate and pause behavior.
+
+All 3,662 unit checks across 258 files, type checking and production build pass. All six development cases pass across desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit, including captured practice-deck adoption. The new settings-prefixed journeys join workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `ba06a889e8cf` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
