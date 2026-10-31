@@ -4,6 +4,7 @@ import {
   practiceDeckChoices,
   practiceOpponents,
   practiceRoster,
+  swapPracticeDecks,
 } from "../src/ui/practice-opponents";
 import { PRESETS, STARTER_DECK } from "../src/game/cards";
 import { validDeck } from "../src/game/profile";
@@ -60,6 +61,47 @@ it("keeps curated opponents unchanged when a player loadout is reordered", () =>
   const choices = practiceDeckChoices();
   (choices[7].deck as string[]).reverse();
   expect(SOLO_OPPONENTS[7].deck).toEqual(original);
+});
+
+it("swaps every saved/curated pairing and restores exact source identities on a second swap", () => {
+  // Identical saved cards must retain their distinct slot identities.
+  const choices = practiceDeckChoices([
+    STARTER_DECK,
+    STARTER_DECK,
+    PRESETS[2].deck,
+  ]);
+  const before = structuredClone(choices);
+  const roster = practiceRoster([STARTER_DECK, STARTER_DECK, PRESETS[2].deck]);
+  for (const player of choices) {
+    for (const opponent of choices) {
+      const swapped = swapPracticeDecks(
+        choices,
+        player.value,
+        opponent.opponentIndex,
+      )!;
+      expect(swapped).toEqual({
+        playerChoice: opponent.value,
+        opponentIndex: player.opponentIndex,
+      });
+      expect(roster[swapped.opponentIndex].deck).toEqual(player.deck);
+      expect(
+        swapPracticeDecks(choices, swapped.playerChoice, swapped.opponentIndex),
+      ).toEqual({
+        playerChoice: player.value,
+        opponentIndex: opponent.opponentIndex,
+      });
+    }
+  }
+  expect(choices).toEqual(before);
+});
+
+it("rejects missing practice choices instead of substituting another deck", () => {
+  const choices = practiceDeckChoices([STARTER_DECK]);
+  expect(swapPracticeDecks(choices, "missing", 0)).toBeNull();
+  expect(swapPracticeDecks(choices, "0", -1)).toBeNull();
+  expect(swapPracticeDecks(choices, "curated:0", 18)).toBeNull();
+  expect(swapPracticeDecks(choices, "0", NaN)).toBeNull();
+  expect(swapPracticeDecks([], "0", 0)).toBeNull();
 });
 
 it("appends saved decks without changing curated opponent identities or indexes", () => {

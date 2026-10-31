@@ -28,6 +28,19 @@
   color: #a9bdd3;
   font-size: 11px;
 }
+.practice-swap {
+  margin-bottom: 20px;
+}
+.practice-swap .secondary-button {
+  width: 100%;
+  min-height: 44px;
+}
+.practice-swap p {
+  margin: 8px 0 0;
+  color: #a9bdd3;
+  font-size: 12px;
+  line-height: 1.6;
+}
 .practice-search {
   margin-bottom: 18px;
 }

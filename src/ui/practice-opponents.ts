@@ -11,6 +11,7 @@ interface PracticeDeckChoice {
   readonly value: string;
   readonly name: string;
   readonly deck: readonly CardId[];
+  readonly opponentIndex: number;
   readonly savedSlot?: number;
 }
 
@@ -23,14 +24,31 @@ export function practiceDeckChoices(
       value: String(savedSlot),
       name: `Battle deck ${savedSlot + 1}`,
       deck: [...deck],
+      opponentIndex: SOLO_OPPONENTS.length + savedSlot,
       savedSlot,
     })),
     ...SOLO_OPPONENTS.map((opponent, index) => ({
       value: `curated:${index}`,
       name: opponent.style,
       deck: [...opponent.deck],
+      opponentIndex: index,
     })),
   ];
+}
+
+/** Exchange source identities even when two choices contain the same cards. */
+export function swapPracticeDecks(
+  choices: readonly PracticeDeckChoice[],
+  playerValue: string,
+  opponentIndex: number,
+) {
+  const player = choices.find((choice) => choice.value === playerValue);
+  const opponent = choices.find(
+    (choice) => choice.opponentIndex === opponentIndex,
+  );
+  return player && opponent
+    ? { playerChoice: opponent.value, opponentIndex: player.opponentIndex }
+    : null;
 }
 
 /** Visit-scoped snapshots keep saved opponent decks separate from profile edits. */
