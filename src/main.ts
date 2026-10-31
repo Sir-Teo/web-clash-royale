@@ -210,6 +210,7 @@ import {
 } from "./game/profile";
 import {
   exportReplayFile,
+  replayFileName,
   importReplayFile,
   MAX_REPLAY_BYTES,
   type SharedReplay,
@@ -3232,7 +3233,7 @@ function showMatchDetails(
       const text = exportReplayFile(record, profile.name);
       downloadJson(
         text,
-        `browser-arena-replay-${new Date(record.date).toISOString().slice(0, 10)}.json`,
+        replayFileName(record),
       );
     } catch (cause) {
       error.textContent =

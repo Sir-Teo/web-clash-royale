@@ -3563,3 +3563,13 @@ The new journeys drop a red-side recording into a filtered log, verify its proje
 All 3,650 unit checks across 256 files, type checking and production build pass. All ten development cases pass across desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. The shared-replay-prefixed drop journeys join workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `50558332a635` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Identify replay downloads by opponent and UTC timestamp
+
+Replay filenames now include the recorded UTC timestamp, including milliseconds, and a bounded opponent slug. Unicode letters/numbers survive, accents normalize, path punctuation becomes separators and truncation follows code points. The original replay metadata stays unchanged; anonymous opponents use the existing Royal Trainer fallback. The legacy date-only export assertion now expects the richer filename.
+
+The new download journey distinguishes two same-time rivals, retains a mixed accented/Chinese opponent, bounds a long Chinese name and normalizes a date crossing a UTC day boundary. It reads each actual browser download to verify original opponent/date/player metadata and the absence of profile totals, internal record IDs and room IDs. Export leaves raw saved progress unchanged. Keyboard invalid-import/retry focus was also investigated in Chromium and WebKit; both existing paths already pass, so no focus change was made.
+
+All 3,650 unit checks across 256 files, type checking and production build pass. All eight development cases pass across desktop Chromium and phone WebKit; all twelve production cases pass across desktop Chromium, phone Chromium and phone WebKit. Existing replay export/import, identities, invalid-file reselection and phone focus checks remain covered. The shared-replay-prefixed filename journey joins workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `3abd5f714cd3` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

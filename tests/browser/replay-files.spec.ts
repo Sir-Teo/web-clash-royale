@@ -83,8 +83,8 @@ test("exports one recording and watches its import without changing local progre
     .getByRole("button", { name: "Export replay", exact: true })
     .click();
   const download = await downloading;
-  expect(download.suggestedFilename()).toMatch(
-    /^browser-arena-replay-2026-10-24\.json$/,
+  expect(download.suggestedFilename()).toBe(
+    "browser-arena-replay-2026-10-24T12-00-00.000Z-vs-royal-trainer.json",
   );
   const text = await read((await download.path())!, "utf8"),
     data = JSON.parse(text);

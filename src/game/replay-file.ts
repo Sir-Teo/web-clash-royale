@@ -105,6 +105,20 @@ export function importReplayFile(text: string): SharedReplay {
   return { playerName: saved.playerName as string, record };
 }
 
+/** Keep downloaded recordings recognizable and safe to name on common filesystems. */
+export function replayFileName(record: Pick<RecordEntry, "date" | "opponent">) {
+  const timestamp = new Date(record.date).toISOString().replaceAll(":", "-");
+  const name = (record.opponent ?? "Royal Trainer")
+    .normalize("NFKD")
+    .replace(/\p{M}/gu, "")
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, "-")
+    .replace(/^-+|-+$/g, "");
+  const opponent =
+    Array.from(name).slice(0, 36).join("").replace(/-+$/, "") || "opponent";
+  return `browser-arena-replay-${timestamp}-vs-${opponent}.json`;
+}
+
 /** Whitelist one recording; never include progress, reward totals or room IDs. */
 export function exportReplayFile(
   record: RecordEntry,
