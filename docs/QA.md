@@ -3655,3 +3655,13 @@ The final regression uses a literal `<b>Pilot</b>` player name and an unbroken 6
 All 3,650 unit checks across 256 files, type checking and production build pass. Both final development cases pass on desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. The new settings-prefixed journey joins workflow CI automatically. A read-only CLI audit covered all 390 declared workflow cases in 59 files exactly once across nine shards (45/45/40 per browser); no hosted CI was triggered.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `39459411789c` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Count accepted card plays in the replay deck inspector
+
+Each replay deck now shows its accepted card-play total and a badge on cards played by the displayed moment. Zero-use cards remain unbadged; accessible labels report their unused state or exact count. Counts use the canonical simulation's accepted commands and current display perspective, keeping red-side recordings, side switches, seeks and final-tick behavior aligned with actual playback. Visual badges cap at 99+ without shortening the accessible count.
+
+Five focused unit checks cover empty sides, repeated/simultaneous commands, Mirror, frozen source data, red-side projection and canonical first/final consumption, including a zero-duration recording. New blue/red browser journeys use the fixture's known blue Arrows at tick 0, red Mini P.E.K.K.A at 129 and blue Mini P.E.K.K.A at 260: ten seconds shows two blue plays and one red play, correctly projected for both viewing sides. Card inspection retains those badges and exact paused time, rewinding clears them, and saved bytes stay unchanged. Existing deck inspection, sharing, Settings-draft return and long/literal-name checks remain included in validation.
+
+All 3,655 unit checks across 257 files, type checking and production build pass. All eight development cases pass on desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. The existing replay-deck workflow includes the new counter journeys.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `6f480b1965d2` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

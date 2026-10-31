@@ -174,3 +174,118 @@ for (const perspective of ["blue", "red"] as const)
     );
     expect(errors).toEqual([]);
   });
+
+for (const perspective of ["blue", "red"] as const)
+  test(`${perspective} replay deck play counts follow accepted actions, viewing sides and rewinds`, async ({
+    page,
+  }, info) => {
+    test.setTimeout(150000);
+    await page.addInitScript(
+      ({ key, replay, perspective }) => {
+        localStorage.setItem(
+          key,
+          JSON.stringify({
+            version: 1,
+            name: "Play Counter",
+            sound: false,
+            music: false,
+            seenTutorial: true,
+            history: [
+              {
+                id: 42,
+                date: "2026-10-24T12:00:00.000Z",
+                mode: replay.mode,
+                playerName: "Recorded Pilot",
+                opponent: "Other King",
+                winner: "red",
+                crowns: [0, 3],
+                replay: { ...replay, perspective },
+              },
+            ],
+          }),
+        );
+      },
+      { key, replay, perspective },
+    );
+    if (info.project.name !== "desktop")
+      await page.setViewportSize({ width: 320, height: 740 });
+    await page.goto("/");
+    await expect
+      .poll(
+        () => page.evaluate(() => (window as any).__arena?.state.loadedCards),
+        { timeout: 60000 },
+      )
+      .toBe(expectedCards);
+    const saved = await page.evaluate((key) => localStorage.getItem(key), key);
+    await page.getByRole("button", { name: "Battle log", exact: true }).click();
+    await page.locator("[data-replay]").click();
+    await page.locator("#replay-play").click();
+    await page.locator("#replay-seek").fill("0");
+    async function openDecks() {
+      await page.locator("#arena-settings").click();
+      await page.locator("#settings-replay-decks").click();
+    }
+    async function check(side: string, counts: Record<string, number>) {
+      const section = page.locator(`[data-replay-deck-side="${side}"]`);
+      const total = Object.values(counts).reduce((a, b) => a + b, 0);
+      await expect(section.locator(".replay-deck-play-total")).toHaveText(
+        `${total} ${total === 1 ? "card play" : "card plays"} so far`,
+      );
+      for (const card of await section
+        .locator("[data-replay-deck-card]")
+        .all()) {
+        const id = (await card.getAttribute("data-native-card"))!;
+        const count = counts[id] ?? 0;
+        await expect(card).toHaveAttribute("data-replay-plays", String(count));
+        await expect(card).toHaveAttribute(
+          "aria-label",
+          count === 0
+            ? /not played yet$/
+            : new RegExp(`played ${count} ${count === 1 ? "time" : "times"}$`),
+        );
+        if (count > 0)
+          await expect(card.locator(".replay-card-play-count")).toHaveText(
+            String(count),
+          );
+        else
+          await expect(card.locator(".replay-card-play-count")).toHaveCount(0);
+      }
+    }
+    await openDecks();
+    await check("viewed", {});
+    await check("opponent", {});
+    await page.locator(".close-modal").click();
+    await page.locator("#replay-forward").click();
+    expect((await state(page)).time).toBe(10);
+    // The fixture has blue Arrows at tick 0, red Mini P.E.K.K.A at 129,
+    // and blue Mini P.E.K.K.A at 260; the next command is after ten seconds.
+    const blue = { arrows: 1, "mini-pekka": 1 };
+    const red = { "mini-pekka": 1 };
+    for (const opponentView of [false, true]) {
+      if (opponentView) await page.locator("#replay-side").click();
+      const redView = (perspective === "red") !== opponentView;
+      await openDecks();
+      await check("viewed", redView ? red : blue);
+      await check("opponent", redView ? blue : red);
+      await page.screenshot({
+        path: info.outputPath(`replay-deck-plays-${opponentView}.png`),
+        animations: "disabled",
+      });
+      const card = page
+        .locator('[data-replay-deck-side="viewed"] [data-replay-deck-card]')
+        .first();
+      await card.click();
+      await page.locator("#card-back").click();
+      await check("viewed", redView ? red : blue);
+      await page.locator(".close-modal").click();
+      expect(await state(page)).toMatchObject({ time: 10, paused: true });
+    }
+    await page.locator("#arena-canvas canvas").focus();
+    await page.keyboard.press("Home");
+    await openDecks();
+    await check("viewed", {});
+    await check("opponent", {});
+    expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(
+      saved,
+    );
+  });

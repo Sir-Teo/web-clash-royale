@@ -34,6 +34,28 @@
   min-height: 44px;
   margin-top: 18px;
 }
+.replay-deck-play-total {
+  margin: 0 0 8px;
+  color: #c6d5e6;
+  font-size: 12px;
+}
+.replay-card-play-count {
+  position: absolute;
+  z-index: 4;
+  top: 1px;
+  right: 0;
+  min-width: 18px;
+  padding: 1px 4px;
+  border: 1px solid #f2cf79;
+  border-radius: 10px;
+  background: #17334e;
+  color: #fff1c8;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
+}
 #replay-keyboard-help {
   display: block;
   position: absolute;

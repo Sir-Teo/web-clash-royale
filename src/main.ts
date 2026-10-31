@@ -5,6 +5,7 @@ import { NativeConnectionWarning } from "./ui/connection";
 import { OfflineUpdates } from "./ui/offline-updates";
 import { ModalFocus } from "./ui/modal-focus";
 import { cardDetails } from "./ui/card-details";
+import { replayDeckUsage } from "./ui/replay-deck-usage";
 import { DeckEditHistory, copyDeckSelection } from "./ui/deck-edit-history";
 import { collectionCards } from "./ui/card-collection";
 import type { CollectionKind, CollectionOrder } from "./ui/card-collection";
@@ -1619,13 +1620,17 @@ function showReplayDecks(back: () => void) {
     viewed: [...battle.deck],
     opponent: [...battle.enemyDeck],
   };
+  const usage = replayDeckUsage(
+    (replaySource ?? battle).actions,
+    replayData?.perspective,
+  );
   const names = {
     viewed: replayOwnerName ?? "Recorded player",
     opponent: opponentName,
   };
   modal(
     "Replay starting decks",
-    `<p class="room-note">The starting cards for the side you are viewing and its opponent. Reading them keeps the replay paused.</p><div class="match-decks">${(["viewed", "opponent"] as const).map((side) => `<section class="match-deck-panel" data-replay-deck-side="${side}" aria-label="${side === "viewed" ? "Viewed side starting deck" : "Opponent starting deck"}"><div class="match-deck-heading"><div><h3>${esc(names[side])}</h3><p>${side === "viewed" ? "Viewed side" : "Opponent"}</p></div><span><i class="tiny-drop"></i> ${averageCost(decks[side]).toFixed(1)} average</span></div>${deckCompositionHTML(decks[side])}<div class="match-deck-grid">${decks[side].map((id, index) => cardHTML(id, `data-replay-deck-card="${index}"`)).join("")}</div><button class="text-button match-deck-code" data-replay-deck-code="${side}">${icon("copy")} Share deck code</button></section>`).join("")}</div><button class="secondary-button" id="replay-decks-back">Back to settings</button>`,
+    `<p class="room-note">The starting cards for the side you are viewing and its opponent. Reading them keeps the replay paused. Badges count cards played so far.</p><div class="match-decks">${(["viewed", "opponent"] as const).map((side) => `<section class="match-deck-panel" data-replay-deck-side="${side}" aria-label="${side === "viewed" ? "Viewed side starting deck" : "Opponent starting deck"}"><div class="match-deck-heading"><div><h3>${esc(names[side])}</h3><p>${side === "viewed" ? "Viewed side" : "Opponent"}</p></div><span><i class="tiny-drop"></i> ${averageCost(decks[side]).toFixed(1)} average</span></div><p class="replay-deck-play-total">${usage[side].total} ${usage[side].total === 1 ? "card play" : "card plays"} so far</p>${deckCompositionHTML(decks[side])}<div class="match-deck-grid">${decks[side].map((id, index) => cardHTML(id, `data-replay-deck-card="${index}"`)).join("")}</div><button class="text-button match-deck-code" data-replay-deck-code="${side}">${icon("copy")} Share deck code</button></section>`).join("")}</div><button class="secondary-button" id="replay-decks-back">Back to settings</button>`,
     "replay-decks",
     true,
   );
@@ -1633,6 +1638,23 @@ function showReplayDecks(back: () => void) {
   document
     .querySelectorAll<HTMLButtonElement>("[data-replay-deck-card]")
     .forEach((button) => {
+      const side = button.closest<HTMLElement>("[data-replay-deck-side]")!
+        .dataset.replayDeckSide as keyof typeof usage;
+      const count =
+        usage[side].byCard.get(button.dataset.nativeCard as CardId) ?? 0;
+      button.dataset.replayPlays = String(count);
+      button.setAttribute(
+        "aria-label",
+        `${button.getAttribute("aria-label")}, ${count === 0 ? "not played yet" : `played ${count} ${count === 1 ? "time" : "times"}`}`,
+      );
+      if (count > 0) {
+        const badge = document.createElement("span");
+        badge.className = "replay-card-play-count";
+        badge.ariaHidden = "true";
+        badge.title = `${count} ${count === 1 ? "play" : "plays"} so far`;
+        badge.textContent = count > 99 ? "99+" : String(count);
+        button.append(badge);
+      }
       button.onclick = () =>
         showCard(
           button.dataset.nativeCard as CardId,

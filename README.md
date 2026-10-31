@@ -46,6 +46,8 @@ Open **Battle settings → How to play** during a replay for playback guidance a
 
 Use **Battle settings → Inspect replay decks** to see both starting decks, their average elixir and card types without leaving playback. Card details and deck codes stay read-only. The lists follow the current viewing side, and **Back to settings** retains any unsaved settings draft.
 
+Replay deck badges count each card's accepted plays up to the displayed moment, with a total for each side. Cards not played yet have no badge. Seeking and switching sides update the counts when you reopen the view.
+
 From a shared replay preview, choose a **Destination battle deck**, then **Use recorded player deck** or **Use recorded opponent deck** to copy those cards and select that slot. **Undo deck change** restores all previous saved decks and the active selection. Card inspection keeps the destination, practice choices and Undo available.
 
 Search the battle log by recorded player name, opponent or cards in either starting deck, and combine that search with result, mode and battle-type filters. Choose Practice to see labelled practice recordings, AI battles for other AI matches, or Friends for friendly games. Each row shows the opponent, mode, date and recorded replay length, including on phones. Filters stay selected during the session; returning from Details restores the selected row, keyboard focus and scroll position. Refreshed saved progress keeps the return tied to the viewed recording even when a newer result shifts its row. If that recording leaves the saved log, focus returns to the search. Clear filters restores the full saved log.
