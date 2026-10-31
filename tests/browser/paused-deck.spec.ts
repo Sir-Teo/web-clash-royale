@@ -77,6 +77,9 @@ for (const practice of [false, true])
       await inspect.press("Enter");
     } else await inspect.tap();
     await expect(page.locator("#modal-title")).toHaveText("Your battle deck");
+    await expect(
+      page.getByRole("combobox", { name: "Deck to inspect", exact: true }),
+    ).toHaveCount(practice ? 1 : 0);
     const expected = practice ? initial.decks[0] : initial.deck;
     expect(
       await page

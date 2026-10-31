@@ -1152,7 +1152,7 @@ function showBattlePause() {
   );
   $(".modal-backdrop").classList.add("pause-cover");
   $("#resume-button").onclick = closeModal;
-  $("#inspect-battle-deck").onclick = showBattleDeck;
+  $("#inspect-battle-deck").onclick = () => showBattleDeck();
   if (practiceMatch)
     $("#restart-practice").onclick = () => startBattle(false, practiceMatch);
   $("#surrender-button").onclick = () => {
@@ -1162,37 +1162,37 @@ function showBattlePause() {
   };
   $(graphicsAvailable ? "#resume-button" : "#surrender-button").focus();
 }
-function showBattleDeck() {
+function showBattleDeck(side: "yours" | "opponent" = "yours") {
   if (screen !== "battle" || multiplayer || !paused || battle.winner) return;
+  const opponent = side === "opponent" && !!practiceMatch;
+  const deck = opponent ? battle.enemyDeck : battle.deck;
+  const title = opponent ? "Opponent practice deck" : "Your battle deck";
   modal(
-    "Your battle deck",
-    `<p class="room-note">Your starting cards for this battle. Inspecting them leaves the battle paused.</p><section class="match-deck-panel" aria-label="Your starting battle deck"><div class="match-deck-heading"><h3>${esc(battlePlayerName)}</h3><span><i class="tiny-drop"></i> ${averageCost(battle.deck).toFixed(1)} average</span></div><div class="match-deck-grid">${battle.deck.map((id, index) => cardHTML(id, `data-battle-card="${index}"`)).join("")}</div></section><button class="secondary-button" id="battle-deck-back">${icon("arrow-right")} Back to pause menu</button>`,
+    title,
+    `<p class="room-note">${practiceMatch ? "The starting cards captured for this practice." : "Your starting cards for this battle."} Inspecting them leaves the battle paused.</p>${practiceMatch ? `<label class="practice-choice" for="battle-inspect-side">Deck to inspect<span><select id="battle-inspect-side"><option value="yours" ${opponent ? "" : "selected"}>Your battle deck</option><option value="opponent" ${opponent ? "selected" : ""}>Opponent practice deck</option></select>${icon("chevron-down")}</span></label>` : ""}<section class="match-deck-panel" aria-label="${opponent ? "Opponent starting practice deck" : "Your starting battle deck"}"><div class="match-deck-heading"><h3>${esc(opponent ? opponentName : battlePlayerName)}</h3><span><i class="tiny-drop"></i> ${averageCost(deck).toFixed(1)} average</span></div><div class="match-deck-grid">${deck.map((id, index) => cardHTML(id, `data-battle-card="${index}"`)).join("")}</div></section><button class="secondary-button" id="battle-deck-back">${icon("arrow-right")} Back to pause menu</button>`,
     "battle-deck",
   );
   $("#battle-deck-back").onclick = showBattlePause;
+  const select = document.querySelector<HTMLSelectElement>(
+    "#battle-inspect-side",
+  );
+  if (select)
+    select.onchange = () => {
+      if (select.value === "yours" || select.value === "opponent")
+        showBattleDeck(select.value);
+    };
   document
     .querySelectorAll<HTMLButtonElement>("[data-battle-card]")
     .forEach((button) => {
-      button.onclick = () => {
-        const id = battle.deck[Number(button.dataset.battleCard)];
-        const preview = $("#modal-root").firstElementChild!;
-        const dialog = preview.querySelector<HTMLElement>(".modal")!;
-        const scroll = dialog.scrollTop;
+      button.onclick = () =>
         showCard(
-          id,
-          () => {
-            modalKey = "battle-deck";
-            modalFocus.render("battle-deck", () =>
-              $("#modal-root").replaceChildren(preview),
-            );
-            dialog.scrollTop = scroll;
-            button.focus({ preventScroll: true });
-          },
+          deck[Number(button.dataset.battleCard)],
+          returnToModal(button),
           "Back to battle deck",
         );
-      };
     });
 }
+
 function syncReplayControl() {
   const action =
     replayData && replayComplete(battle, replayData)
