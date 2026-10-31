@@ -52,6 +52,8 @@ Open the battle-mode menu and choose **Practice a deck** to pick any of the seve
 
 From **Cards → Deck codes**, preview a shared code and choose **Try this deck in practice** to use it as a temporary player deck. Choose an opponent and pace before starting. **Back to shared deck** restores the preview, destination and Undo. Your saved slots stay the same.
 
+Use the **Try** action under either recorded deck in Battle details or a shared replay preview to pilot those cards temporarily. The choices follow the recording’s original player and opponent, including red-side guests. **Back to battle details** or **Back to shared replay** restores the original preview and its choices.
+
 Below an opponent’s recorded cards, choose a pace and **Practice against this deck** to face those cards with your active battle deck. **Practice again** keeps the same opponent deck and pace; returning to the arena restores your selected battle mode. Practice results save their own replays and count toward your battle statistics. New records are labelled Practice in the battle log, details and shared replay previews. The practice pace stays selected for the session.
 
 During a practice battle, open the pause menu and choose **Restart practice** for a fresh attempt with the same decks and pace. Restarted attempts do not save a result or grant rewards. **Leave battle** still saves the completed practice result.

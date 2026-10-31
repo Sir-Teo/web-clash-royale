@@ -163,37 +163,43 @@ it("keeps a distinct temporary identity even when its cards duplicate a regular 
   ).toEqual({ playerChoice: "previous", opponentIndex: 7 });
 });
 
-it("keeps a shared-code trial distinguishable and searchable on either side", () => {
-  const source = { ...practice(), category: "Shared deck" as const };
-  const roster = practiceRoster(decks, source);
-  const choices = practiceDeckChoices(decks, source);
-  expect(roster[20].category).toBe("Shared deck");
-  expect(choices[20].category).toBe("Shared deck");
-  expect(
-    practiceOpponents("shared deck", roster).map((entry) => entry.index),
-  ).toEqual([20]);
-  expect(swapPracticeDecks(choices, "previous", 19)).toEqual({
-    playerChoice: "2",
-    opponentIndex: 20,
-  });
-});
+it.each(["Shared deck", "Recorded deck", "Shared replay"] as const)(
+  "keeps a %s trial distinguishable and searchable on either side",
+  (category) => {
+    const source = { ...practice(), category };
+    const roster = practiceRoster(decks, source);
+    const choices = practiceDeckChoices(decks, source);
+    expect(roster[20].category).toBe(category);
+    expect(choices[20].category).toBe(category);
+    expect(
+      practiceOpponents(category, roster).map((entry) => entry.index),
+    ).toEqual([20]);
+    expect(swapPracticeDecks(choices, "previous", 19)).toEqual({
+      playerChoice: "2",
+      opponentIndex: 20,
+    });
+  },
+);
 
-it("retains a shared-code trial category when a completed practice reopens its setup", () => {
-  const previousDeck = { ...practice(), category: "Shared deck" as const };
-  const source = {
-    ...practice(),
-    deck: [...decks[2]],
-    playerDeck: [...previousDeck.deck],
-    selection: { playerChoice: "previous", opponentIndex: 19, previousDeck },
-  };
-  const result = continuedPracticeChoices(source, decks, 2);
-  expect(result.previousDeck).toEqual({
-    name: previousDeck.name,
-    style: previousDeck.style,
-    category: "Shared deck",
-    deck: previousDeck.deck,
-  });
-  expect(result.previousDeck!.deck).not.toBe(previousDeck.deck);
-  expect(result.playerChoice).toBe("previous");
-  expect(result.opponentIndex).toBe(19);
-});
+it.each(["Shared deck", "Recorded deck", "Shared replay"] as const)(
+  "retains a %s trial category when a completed practice reopens its setup",
+  (category) => {
+    const previousDeck = { ...practice(), category };
+    const source = {
+      ...practice(),
+      deck: [...decks[2]],
+      playerDeck: [...previousDeck.deck],
+      selection: { playerChoice: "previous", opponentIndex: 19, previousDeck },
+    };
+    const result = continuedPracticeChoices(source, decks, 2);
+    expect(result.previousDeck).toEqual({
+      name: previousDeck.name,
+      style: previousDeck.style,
+      category,
+      deck: previousDeck.deck,
+    });
+    expect(result.previousDeck!.deck).not.toBe(previousDeck.deck);
+    expect(result.playerChoice).toBe("previous");
+    expect(result.opponentIndex).toBe(19);
+  },
+);
