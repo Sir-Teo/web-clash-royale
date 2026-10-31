@@ -140,7 +140,7 @@ for (const perspective of ["blue", "red"] as const)
     await expect(mirror).toHaveAttribute("aria-keyshortcuts", shortcut);
     await expect(canvas).toHaveAttribute(
       "aria-keyshortcuts",
-      "1 2 3 4 ArrowLeft ArrowRight Home End [ ] Space",
+      /^1 2 3 4(?: |$)/,
     );
     await canvas.focus();
     await page.keyboard.down(shortcut);

@@ -26,6 +26,14 @@
 #replay-side:disabled {
   opacity: 0.45;
 }
+#settings-replay-decks {
+  min-height: 44px;
+  margin-top: 12px;
+}
+#replay-decks-back {
+  min-height: 44px;
+  margin-top: 18px;
+}
 #replay-keyboard-help {
   display: block;
   position: absolute;

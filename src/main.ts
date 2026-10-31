@@ -1611,6 +1611,47 @@ function inspectReplayCard(slot: number) {
   });
   showCard(id, closeModal, "Back to replay");
 }
+function showReplayDecks(back: () => void) {
+  if (screen !== "replay" || !replayRecord) return;
+  const decks = {
+    viewed: [...battle.deck],
+    opponent: [...battle.enemyDeck],
+  };
+  const names = {
+    viewed: replayOwnerName ?? "Recorded player",
+    opponent: opponentName,
+  };
+  modal(
+    "Replay starting decks",
+    `<p class="room-note">The starting cards for the side you are viewing and its opponent. Reading them keeps the replay paused.</p><div class="match-decks">${(["viewed", "opponent"] as const).map((side) => `<section class="match-deck-panel" data-replay-deck-side="${side}" aria-label="${side === "viewed" ? "Viewed side starting deck" : "Opponent starting deck"}"><div class="match-deck-heading"><div><h3>${esc(names[side])}</h3><p>${side === "viewed" ? "Viewed side" : "Opponent"}</p></div><span><i class="tiny-drop"></i> ${averageCost(decks[side]).toFixed(1)} average</span></div>${deckCompositionHTML(decks[side])}<div class="match-deck-grid">${decks[side].map((id, index) => cardHTML(id, `data-replay-deck-card="${index}"`)).join("")}</div><button class="text-button match-deck-code" data-replay-deck-code="${side}">${icon("copy")} Share deck code</button></section>`).join("")}</div><button class="secondary-button" id="replay-decks-back">Back to settings</button>`,
+    "replay-decks",
+    true,
+  );
+  $("#replay-decks-back").onclick = back;
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-replay-deck-card]")
+    .forEach((button) => {
+      button.onclick = () =>
+        showCard(
+          button.dataset.nativeCard as CardId,
+          returnToModal(button),
+          "Back to replay decks",
+        );
+    });
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-replay-deck-code]")
+    .forEach((button) => {
+      button.onclick = () => {
+        const side = button.dataset.replayDeckCode as keyof typeof decks;
+        showDeckCode(
+          decks[side],
+          `${names[side]}'s replay deck`,
+          returnToModal(button),
+          "Back to replay decks",
+        );
+      };
+    });
+}
 function setReplayView(
   record: RecordEntry,
   playerName: string,
@@ -3382,7 +3423,7 @@ function showSettings() {
   );
   $("#settings-form").insertAdjacentHTML(
     "afterend",
-    `<button class="secondary-button" id="settings-help">${icon("scroll-text")} How to play</button>${backups}`,
+    `<button class="secondary-button" id="settings-help">${icon("scroll-text")} How to play</button>${screen === "replay" ? `<button class="secondary-button" id="settings-replay-decks">${icon("layers-2")} Inspect replay decks</button>` : ""}${backups}`,
   );
   const view = $("#modal-root").firstElementChild!;
   const panel = view.querySelector<HTMLElement>(".modal")!;
@@ -3401,6 +3442,9 @@ function showSettings() {
   };
   $("#settings-help").onclick = () =>
     showHelp(returnToSettings($("#settings-help")));
+  const replayDecks = document.querySelector<HTMLElement>("#settings-replay-decks");
+  if (replayDecks)
+    replayDecks.onclick = () => showReplayDecks(returnToSettings(replayDecks));
   refreshIcons();
   if (backups) {
     $("#export-progress").onclick = () => {

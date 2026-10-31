@@ -3625,3 +3625,13 @@ The regression verifies Minus, Equals and Plus while the speed button retains fo
 All 3,650 unit checks across 256 files, type checking and production build pass. All four combined development cases pass across desktop Chromium and phone WebKit; all six production cases pass across desktop Chromium, phone Chromium and phone WebKit. The existing workflow file includes the regression automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `26614ccbcdc8` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Inspect both starting decks during replay playback
+
+Replay Settings now opens a read-only view of both starting decks. The lists copy the active replay battle's projected cards and captured display names, following blue/red recordings and opponent-side viewing. Each side shows average elixir and troop/spell/building counts. Card inspection and sharing return to the actual deck view; Back to Settings retains the original draft, scroll and opener. Closing the dialog flow restores its previous playing/paused state.
+
+The new journeys check both recorded perspectives and both viewing sides, exact ordered cards and deck codes, captured names distinct from the current profile, nested focus restoration, unsaved Settings drafts, exact paused time/rate/hand and automatic resume from playing playback. No deck-adoption or practice action appears, and saved bytes remain unchanged. Existing hand-card checks initially failed against an obsolete exact arena shortcut list; their assertion now checks the hand keys relevant to that journey, while the dedicated keyboard tests retain the full shortcut contract.
+
+All 3,650 unit checks across 256 files, type checking and production build pass. All twelve final development cases pass across desktop Chromium and phone WebKit; all eighteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. Existing hand-card and replay Help behavior remains covered. Reviewed desktop and 320-pixel phone layouts keep card controls and deck summaries readable. The new workflow-file pattern includes these deck journeys in CI.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `8047c8dc52c7` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

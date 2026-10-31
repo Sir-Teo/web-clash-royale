@@ -377,6 +377,8 @@ This restores the final deployment, hand/queue, spent elixir, projectile or area
 
 Replay speed uses one setter for the toolbar, initial playback and Minus/Plus/Equals shortcuts. Keyboard steps clamp to the ordered 0.25/0.5/1/2/4 rates and ignore held repeats, modifiers, editable controls and unrelated focused buttons/links. The speed button itself accepts its advertised rate keys and exposes aria-keyshortcuts, while retaining its native Space cycle. Changing rate preserves the clock, pause and viewing side while updating audio and the accessible label; the arena shortcut description, Help and toolbar title expose the keys.
 
+Replay Settings also opens a read-only starting-deck inspector. It copies both decks from the current projected replay battle and uses its captured display names, so red-side recordings and opponent-side viewing retain the correct cards and identity. Nested card/code views retain the actual inspector DOM and focus; Back to Settings restores its original form draft and scroll. The existing modal pause owner restores prior playback when the full dialog flow closes. No profile, replay or rules fields change.
+
 Replay return context carries a restore callback and an accessible destination label. Local Battle details and shared previews capture their actual modal DOM before playback, preserving destination/pace/side drafts and owned deck Undo. Same-record restart retains that context; returning creates the lobby before restoring the preview, while a new battle or unrelated recording clears it. Practice review uses the same context with its existing retained setup selection.
 
 ## Canonical replay completion
