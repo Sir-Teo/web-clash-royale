@@ -3665,3 +3665,13 @@ Five focused unit checks cover empty sides, repeated/simultaneous commands, Mirr
 All 3,655 unit checks across 257 files, type checking and production build pass. All eight development cases pass on desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. The existing replay-deck workflow includes the new counter journeys.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `6f480b1965d2` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Jump from replay card details to that side's recorded plays
+
+Replay hand and full-deck card details now offer Previous play and Next play, with recorded times and a use count. The picker follows the card's canonical team under either viewing side and reuses existing replay group/boundary targets. An explicit jump closes the dialog flow, pauses at the selected use and focuses the arena while keeping speed and viewing side. Back and close retain their existing restoration behavior; unused cards explain their status with disabled navigation.
+
+Seven focused unit checks cover both perspectives and deck sides, simultaneous opposing commands, unrelated cards, zero-duration/final targets and frozen replay data. New blue/red browser journeys use a twenty-second fixture containing only blue Arrows at tick 0, red Mini P.E.K.K.A at 129 and blue Mini P.E.K.K.A at 260. Hand-card Next reaches tick 1 or 130; red Mini P.E.K.K.A cannot borrow blue's later command. Unused Fireball remains read-only. Previous from the opponent deck after completion returns to that original team's first play, retains 2× speed/viewing side, keeps playback paused and focuses the canvas. Existing hand-card inspection protects Back/close restoration and saved progress.
+
+All 3,662 unit checks across 258 files, type checking and production build pass. All eight development cases pass on desktop Chromium and phone WebKit; all twenty-four final production cases pass across desktop Chromium, phone Chromium and phone WebKit, including full deck usage/navigation. The final dialog explains that jumps pause at the selected play. The new workflow-file pattern includes the card-play journeys in CI.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `931116a79e42` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

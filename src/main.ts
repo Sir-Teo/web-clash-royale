@@ -6,6 +6,7 @@ import { OfflineUpdates } from "./ui/offline-updates";
 import { ModalFocus } from "./ui/modal-focus";
 import { cardDetails } from "./ui/card-details";
 import { replayDeckUsage } from "./ui/replay-deck-usage";
+import { replayCardPlays } from "./ui/replay-card-plays";
 import { DeckEditHistory, copyDeckSelection } from "./ui/deck-edit-history";
 import { collectionCards } from "./ui/card-collection";
 import type { CollectionKind, CollectionOrder } from "./ui/card-collection";
@@ -1603,6 +1604,36 @@ function syncReplayExit() {
   button.title = label;
 }
 
+function showReplayCard(
+  id: CardId,
+  back: () => void,
+  backLabel: string,
+  side: "viewed" | "opponent" = "viewed",
+) {
+  if (screen !== "replay" || !replayData) return;
+  const plays = replayCardPlays(replayData, id, side);
+  const previous = adjacentReplayPlay(plays, battle.tick, -1);
+  const next = adjacentReplayPlay(plays, battle.tick, 1);
+  showCard(id, back, backLabel);
+  const label = (play: ReplayPlay | undefined) =>
+    play ? ` · ${clock(play.tick * STEP)}` : "";
+  $("#card-back").insertAdjacentHTML(
+    "beforebegin",
+    `<section class="replay-card-plays" aria-label="Recorded card plays"><p>${side === "viewed" ? "Viewed side" : "Opponent"} · ${plays.length ? `${plays.length} recorded ${plays.length === 1 ? "play" : "plays"}` : "Not played in this recording"}</p><small>Jumps pause at the selected play.</small><div><button class="secondary-button" id="replay-card-previous" ${previous ? "" : "disabled"}>Previous play${label(previous)}</button><button class="secondary-button" id="replay-card-next" ${next ? "" : "disabled"}>Next play${label(next)}</button></div></section>`,
+  );
+  const jump = (play: ReplayPlay | undefined) => {
+    if (!play || screen !== "replay" || !graphicsAvailable) return;
+    // An explicit study jump ends the dialog flow and keeps playback paused.
+    modalPausedBattle = false;
+    closeModal();
+    paused = true;
+    audio.stopMusic();
+    seekReplayPlay(play);
+    arena.renderer.domElement.focus({ preventScroll: true });
+  };
+  $("#replay-card-previous").onclick = () => jump(previous);
+  $("#replay-card-next").onclick = () => jump(next);
+}
 function inspectReplayCard(slot: number) {
   if (screen !== "replay" || !graphicsAvailable || modalKey) return;
   replaySeeks.flush();
@@ -1612,7 +1643,7 @@ function inspectReplayCard(slot: number) {
   ($("#hand").children.item(slot) as HTMLElement | null)?.focus({
     preventScroll: true,
   });
-  showCard(id, closeModal, "Back to replay");
+  showReplayCard(id, closeModal, "Back to replay");
 }
 function showReplayDecks(back: () => void) {
   if (screen !== "replay" || !replayRecord) return;
@@ -1656,10 +1687,11 @@ function showReplayDecks(back: () => void) {
         button.append(badge);
       }
       button.onclick = () =>
-        showCard(
+        showReplayCard(
           button.dataset.nativeCard as CardId,
           returnToModal(button),
           "Back to replay decks",
+          side,
         );
     });
   document

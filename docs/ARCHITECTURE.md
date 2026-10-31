@@ -385,6 +385,8 @@ Deck-code titles escape their plain-text label before entering the modal templat
 
 Replay deck usage counts accepted commands from the canonical replay battle (`replaySource ?? battle`), then projects the totals and per-card maps using the active viewing perspective. It does not infer consumption from raw timestamps: simulation replay consumption already handles initial/final boundary commands, including zero-duration recordings. Opening the paused inspector captures current counts; rebuilding/seeking and side changes supply a fresh source on the next visit. Nonzero card badges cap visually at 99+, while accessible labels and titles retain the full count. No recording or profile fields change.
 
+Replay hand/deck card inspectors filter recorded commands by card and canonical team, then reuse the existing grouped-play target ticks and adjacent-play navigation. An opponent deck card retains its own team under a switched view. Explicit Previous/Next play clears the modal resume owner, closes the dialog flow, pauses and seeks while retaining speed/viewing side, then focuses the arena. Ordinary Back/close behavior retains its previous playback restoration. An unused card exposes disabled navigation and a plain recorded-use note.
+
 Replay return context carries a restore callback and an accessible destination label. Local Battle details and shared previews capture their actual modal DOM before playback, preserving destination/pace/side drafts and owned deck Undo. Same-record restart retains that context; returning creates the lobby before restoring the preview, while a new battle or unrelated recording clears it. Practice review uses the same context with its existing retained setup selection.
 
 ## Canonical replay completion

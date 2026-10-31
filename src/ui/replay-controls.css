@@ -56,6 +56,32 @@
   text-align: center;
   pointer-events: none;
 }
+.replay-card-plays {
+  margin: 18px 0;
+  padding: 14px 0;
+  border-top: 1px solid #ffffff16;
+}
+.replay-card-plays > p {
+  margin: 0 0 12px;
+  color: #c6d5e6;
+  font-size: 12px;
+}
+.replay-card-plays > small {
+  display: block;
+  margin-bottom: 12px;
+  color: #a9bdd3;
+  font-size: 12px;
+}
+.replay-card-plays > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.replay-card-plays button {
+  width: 100%;
+  min-height: 44px;
+  font-size: 12px;
+}
 #replay-keyboard-help {
   display: block;
   position: absolute;
