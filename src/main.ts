@@ -200,7 +200,9 @@ import {
   saveEmotePreference,
   refreshProfileForDeckEdit,
   markTutorialSeen,
-  openChest,
+  claimSavedChest,
+  saveSoundPreference,
+  selectSavedDeck,
   storageAvailable,
   exportProgress,
   importProgress,
@@ -667,11 +669,11 @@ function refreshDeck() {
     (e) =>
       (e.onclick = () => {
         if (screen !== "lobby") return;
-        profile.decks[profile.activeDeck] = [...profile.deck];
-        profile.activeDeck = Number(e.dataset.deck);
-        profile.deck = [...profile.decks[profile.activeDeck]];
-        saveProfile(profile);
-        refreshDeck();
+        if (!selectSavedDeck(profile, Number(e.dataset.deck))) return;
+        peerNetwork?.updatePlayer({ name: profile.name, deck: profile.deck });
+        applyProfilePreferences();
+        refreshProfile();
+        $(`[data-deck="${profile.activeDeck}"]`).focus({ preventScroll: true });
         audio.play("button_click_02");
       }),
   );
@@ -687,10 +689,16 @@ function refreshDeck() {
   refreshIcons();
 }
 function claimChest(index: number) {
-  const reward = openChest(profile, index);
+  const result = claimSavedChest(profile, index);
+  applyProfilePreferences();
+  refreshProfile();
+  if (result.status === "changed") {
+    toast("Chest slots changed in another tab. Choose a current chest.");
+    return;
+  }
+  const reward = result.reward;
   if (!reward) return;
   audio.play("gold_chest_open_01");
-  refreshProfile();
   modal(
     "Victory tastes golden.",
     `<div class="chest-reward"><div class="reward-rays"></div><img class="reward-chest" src="${import.meta.env.BASE_URL}assets/chests/${reward.type}.png" alt="Opened ${reward.type} chest"/><h3>${reward.type} chest</h3><p>A little something for your next victory.</p><div class="reward-items"><span>${icon("coins")}<b>+${reward.gold}</b><small>GOLD</small></span><span>${icon("crown")}<b>Well played!</b><small>REWARD CLAIMED</small></span></div><button class="primary-button" id="claim-done">Collect rewards ${icon("check")}</button></div>`,
@@ -3607,10 +3615,9 @@ document.querySelectorAll<HTMLButtonElement>("[data-nav]").forEach(
     }),
 );
 $(".sound-toggle").onclick = () => {
-  profile.sound = !profile.sound;
-  audio.setEnabled(profile.sound);
-  saveProfile(profile);
-  refreshSound();
+  saveSoundPreference(profile, !profile.sound);
+  applyProfilePreferences();
+  refreshProfile();
   audio.play("button_click_02");
 };
 $("#pause-button").onclick = togglePause;

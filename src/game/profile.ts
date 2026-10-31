@@ -398,6 +398,37 @@ export function saveEmotePreference(p: Profile, muted: boolean) {
   p.emotesMuted = muted;
   saveProfile(p);
 }
+export function saveSoundPreference(p: Profile, sound: boolean) {
+  const saved = storageAvailable ? readSavedProfile() : null;
+  if (saved) Object.assign(p, saved);
+  p.sound = sound;
+  saveProfile(p);
+}
+export function selectSavedDeck(p: Profile, index: number) {
+  if (!Number.isInteger(index) || index < 0 || index >= p.decks.length)
+    return false;
+  const saved = storageAvailable ? readSavedProfile() : null;
+  if (saved) Object.assign(p, saved);
+  p.decks[p.activeDeck] = [...p.deck];
+  p.activeDeck = index;
+  p.deck = [...p.decks[index]];
+  saveProfile(p);
+  return true;
+}
+/** A stale chest slot must refresh before its current occupant can be claimed. */
+export function claimSavedChest(p: Profile, index: number) {
+  const saved = storageAvailable ? readSavedProfile() : null;
+  if (saved) {
+    const changed = JSON.stringify(saved.chests) !== JSON.stringify(p.chests);
+    Object.assign(p, saved);
+    if (changed) return { status: "changed" as const, reward: null };
+  }
+  const reward = openChest(p, index);
+  return {
+    status: reward ? ("opened" as const) : ("missing" as const),
+    reward,
+  };
+}
 /** Mark a first battle against current progress instead of replacing it with an older profile. */
 export function markTutorialSeen(p: Profile) {
   const saved = storageAvailable ? readSavedProfile() : null;
