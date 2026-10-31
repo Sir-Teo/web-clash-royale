@@ -3605,3 +3605,13 @@ The new journeys share a reordered deck and a newly selected saved slot, verify 
 All 3,650 unit checks across 256 files, type checking and production build pass. All four development cases pass across desktop Chromium and phone WebKit; all six production cases pass across desktop Chromium, phone Chromium and phone WebKit. The settings-prefixed journeys join workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `8690df04affe` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Try a collection card without changing saved decks
+
+The Cards inspector now offers a temporary practice trial. A card absent from the active deck opens an eight-card replacement picker; an existing card goes directly to practice setup. The picker captures the session deck and each choice copies that original list, so returning and choosing another slot cannot accumulate replacements. Card trials reuse the existing temporary practice source, matchup selection, pace and speed. Battle, replay and recorded-deck inspectors keep their read-only behavior.
+
+The new journeys replace different slots with Miner, restore the original picker and card/collection focus, retain the collection query and chosen pace/speed, and verify exact player/opponent cards through setup, paused inspection and the completed replay. Finishing practice records a practice battle while keeping saved decks, selected slot, gold, trophies and chests intact. Changing the next matchup retains the temporary source. A Knight trial verifies the direct path and Back to card details without writing progress. Reviewed desktop and 320-pixel phone replacement views remain readable.
+
+All 3,650 unit checks across 256 files, type checking and production build pass. Thirty development cases pass across desktop Chromium and phone WebKit, including twenty-six existing collection/detail checks. All six new production cases pass across desktop Chromium, phone Chromium and phone WebKit. The practice-prefixed journeys join workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `685fab677e3b` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

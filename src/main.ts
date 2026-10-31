@@ -1,3 +1,4 @@
+import "./ui/card-trial.css";
 import "./ui/battle-controls.css";
 import { exportFileName } from "./game/export-name";
 import { NativeConnectionWarning } from "./ui/connection";
@@ -2407,17 +2408,52 @@ function showCard(
   id: CardId,
   back?: () => void,
   backLabel = "Back to battle details",
+  allowPracticeTrial = false,
 ) {
   const c = CARD_MAP[id];
   const details = cardDetails(id);
   modal(
     c.name,
-    `<div class="card-detail"><div class="detail-art ${c.rarity.toLowerCase()}" data-native-card="${id}" data-card-variant="deck">${nativeCardArt}<img src="${cardArt(id)}" alt="${c.name}"/><span class="cost">${c.cost}</span></div><div><span class="rarity-label ${c.rarity.toLowerCase()}">${c.rarity} · ${c.kind}</span><p>${c.description}</p><span class="level-pill">CURRENT ARENA STATS · LEVEL 11</span></div></div><div class="stat-grid">${details.stats.map((row) => `<div data-card-stat="${esc(row.label)}">${icon(row.icon)}<small>${esc(row.label)}</small><b>${esc(row.value)}</b></div>`).join("")}</div>${details.note ? `<p class="card-rule-note">${esc(details.note)}</p>` : ""}${back ? `<button class="secondary-button" id="card-back">${icon("arrow-right")} ${esc(backLabel)}</button>` : screen === "lobby" ? `<button class="secondary-button" id="card-edit-deck">${icon("layers-2")} Open deck builder</button>` : ""}`,
+    `<div class="card-detail"><div class="detail-art ${c.rarity.toLowerCase()}" data-native-card="${id}" data-card-variant="deck">${nativeCardArt}<img src="${cardArt(id)}" alt="${c.name}"/><span class="cost">${c.cost}</span></div><div><span class="rarity-label ${c.rarity.toLowerCase()}">${c.rarity} · ${c.kind}</span><p>${c.description}</p><span class="level-pill">CURRENT ARENA STATS · LEVEL 11</span></div></div><div class="stat-grid">${details.stats.map((row) => `<div data-card-stat="${esc(row.label)}">${icon(row.icon)}<small>${esc(row.label)}</small><b>${esc(row.value)}</b></div>`).join("")}</div>${details.note ? `<p class="card-rule-note">${esc(details.note)}</p>` : ""}${allowPracticeTrial && screen === "lobby" ? `<div class="card-trial-action"><button class="primary-button" id="try-card-practice" aria-label="Try ${esc(c.name)} in practice">${icon("target")} Try card in practice</button><p>Build a temporary practice deck. Your saved decks stay the same.</p></div>` : ""}${back ? `<button class="secondary-button" id="card-back">${icon("arrow-right")} ${esc(backLabel)}</button>` : screen === "lobby" ? `<button class="secondary-button" id="card-edit-deck">${icon("layers-2")} Open deck builder</button>` : ""}`,
     "card",
   );
+  const trial = document.querySelector<HTMLElement>("#try-card-practice");
+  if (trial) trial.onclick = () => showCardTrial(id, trial);
   if (back) $("#card-back").onclick = back;
   else if (screen === "lobby") $("#card-edit-deck").onclick = showDeckBuilder;
 }
+function showCardTrial(id: CardId, opener: HTMLElement) {
+  if (screen !== "lobby") return;
+  const card = CARD_MAP[id];
+  const deck = [...profile.deck];
+  const source = (cards: CardId[]): PracticeSourceDeck => ({
+    name: `${card.name} trial`,
+    style: "Card trial",
+    category: "Card trial",
+    deck: cards,
+  });
+  if (deck.includes(id)) {
+    tryPracticeDeck(source(deck), opener, "Back to card details");
+    return;
+  }
+  const back = returnToModal(opener);
+  modal(
+    `Try ${card.name} in practice`,
+    `<p class="room-note" id="card-trial-note">Choose one card from your current deck to replace with ${esc(card.name)} for this practice. Your saved decks stay the same.</p>${deckCompositionHTML(deck)}<div class="match-deck-grid">${deck.map((card, slot) => cardHTML(card, `data-trial-slot="${slot}" aria-describedby="card-trial-note"`)).join("")}</div><button class="secondary-button" id="card-trial-back">Back to card details</button>`,
+    "card-trial",
+  );
+  $("#card-trial-back").onclick = back;
+  document.querySelectorAll<HTMLButtonElement>("[data-trial-slot]").forEach((button) => {
+    button.onclick = () => {
+      const slot = Number(button.dataset.trialSlot);
+      if (!Number.isInteger(slot) || slot < 0 || slot >= deck.length) return;
+      const trialDeck = [...deck];
+      trialDeck[slot] = id;
+      tryPracticeDeck(source(trialDeck), button, "Back to card trial");
+    };
+  });
+}
+
 function showDeckBuilder() {
   if (screen !== "lobby") {
     toast("Finish your battle to edit your deck.");
@@ -2805,6 +2841,7 @@ function renderCollection() {
                 ?.focus();
             },
             "Back to collection",
+            true,
           );
           return;
         }

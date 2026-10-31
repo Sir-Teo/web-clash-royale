@@ -13,7 +13,8 @@ export interface PracticeSourceDeck {
   readonly name: string;
   readonly style: string;
   readonly deck: readonly CardId[];
-  readonly category?: "Shared deck" | "Recorded deck" | "Shared replay";
+  readonly category?:
+    "Shared deck" | "Recorded deck" | "Shared replay" | "Card trial";
 }
 
 export interface PracticeOpponent {
