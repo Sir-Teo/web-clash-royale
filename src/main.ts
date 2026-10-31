@@ -2558,7 +2558,7 @@ function showSettings() {
       : "Browser storage is unavailable. Progress lasts for this session.";
   modal(
     "Make yourself at home",
-    `<form id="settings-form"><label class="field-label" for="player-name">PLAYER NAME</label><input class="name-input" id="player-name" maxlength="18" value="${esc(profile.name)}" required/><div class="setting-row"><div>${icon("volume-2")}<span><b>Sound effects</b><small>Deploys, spells, and a familiar king laugh</small></span></div><label class="switch"><input type="checkbox" id="sound-setting" ${profile.sound ? "checked" : ""}/><span></span></label></div><div class="setting-row"><div>${icon("music-2")}<span><b>Battle music</b><small>The soundtrack to your next victory</small></span></div><label class="switch"><input type="checkbox" id="music-setting" ${profile.music ? "checked" : ""}/><span></span></label></div><div class="setting-row"><div>${icon("maximize")}<span><b>More room for the arena</b><small>Toggle fullscreen mode</small></span></div><button type="button" class="icon-button" id="fullscreen">${icon("expand")}</button></div><div class="save-note">${icon(storageAvailable ? "shield-check" : "hard-drive-download")}<span>${saveNote}</span></div><button type="submit" class="primary-button">Save settings ${icon("check")}</button></form>`,
+    `<form id="settings-form"><label class="field-label" for="player-name">PLAYER NAME</label><input class="name-input" id="player-name" maxlength="18" value="${esc(profile.name)}" required/><div class="setting-row"><div>${icon("volume-2")}<span><b>Sound effects</b><small>Deploys, spells, and a familiar king laugh</small></span></div><label class="switch"><input type="checkbox" id="sound-setting" aria-label="Sound effects" ${profile.sound ? "checked" : ""}/><span></span></label></div><div class="setting-row"><div>${icon("music-2")}<span><b>Battle music</b><small>The soundtrack to your next victory</small></span></div><label class="switch"><input type="checkbox" id="music-setting" aria-label="Battle music" ${profile.music ? "checked" : ""}/><span></span></label></div><div class="setting-row"><div>${icon("maximize")}<span><b>More room for the arena</b><small>Toggle fullscreen mode</small></span></div><button type="button" class="icon-button" id="fullscreen" aria-label="Toggle fullscreen">${icon("expand")}</button></div><div class="save-note">${icon(storageAvailable ? "shield-check" : "hard-drive-download")}<span>${saveNote}</span></div><button type="submit" class="primary-button">Save settings ${icon("check")}</button></form>`,
     "settings",
   );
   $("#settings-form").insertAdjacentHTML(
@@ -2636,12 +2636,13 @@ function showSettings() {
         : "Settings applied for this session. Browser storage is unavailable.",
     );
   };
-  $("#fullscreen").onclick = () => {
-    if (document.fullscreenElement) void document.exitFullscreen();
-    else
-      void document.documentElement
-        .requestFullscreen()
-        .catch(() => toast("Fullscreen is unavailable in this browser."));
+  $("#fullscreen").onclick = async () => {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else await document.documentElement.requestFullscreen();
+    } catch {
+      toast("Fullscreen is unavailable in this browser.");
+    }
   };
 }
 function showProgressRestore(imported: Profile) {

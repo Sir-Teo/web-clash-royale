@@ -72,6 +72,17 @@ test("opens help from phone settings and restores unsaved controls and focus", a
     ).toBe(true);
   }
   await page.setViewportSize({ width: 320, height: 740 });
+  expect(
+    await page
+      .locator(".help-steps p")
+      .first()
+      .evaluate((element) => parseFloat(getComputedStyle(element).fontSize)),
+  ).toBeGreaterThanOrEqual(13);
+  expect(
+    await page
+      .locator(".keyboard-help")
+      .evaluate((element) => parseFloat(getComputedStyle(element).fontSize)),
+  ).toBeGreaterThanOrEqual(11);
   await page.getByRole("dialog").evaluate((dialog) => (dialog.scrollTop = 0));
   await page.screenshot({
     path: info.outputPath("phone-help.png"),
