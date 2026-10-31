@@ -48,6 +48,9 @@
 .code-practice button {
   width: 100%;
 }
+#try-code-deck {
+  margin-top: 16px;
+}
 .code-practice p {
   margin: 10px 0 0;
 }

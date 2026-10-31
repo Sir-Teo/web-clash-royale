@@ -8,6 +8,7 @@ interface PracticeChoice {
   readonly deck: readonly CardId[];
   readonly savedSlot?: number;
   readonly previous?: true;
+  readonly category?: PracticeSourceDeck["category"];
 }
 interface PracticeDeckChoice {
   readonly value: string;
@@ -16,6 +17,7 @@ interface PracticeDeckChoice {
   readonly opponentIndex: number;
   readonly savedSlot?: number;
   readonly previous?: true;
+  readonly category?: PracticeSourceDeck["category"];
 }
 
 /** Keep saved slot values stable and expose curated decks as temporary loadouts. */
@@ -45,6 +47,9 @@ export function practiceDeckChoices(
             deck: [...previousDeck.deck],
             opponentIndex: SOLO_OPPONENTS.length + savedDecks.length,
             previous: true as const,
+            ...(previousDeck.category
+              ? { category: previousDeck.category }
+              : {}),
           },
         ]
       : []),
@@ -103,7 +108,7 @@ export function continuedPracticeChoices(
       entry.deck.length === practice.deck.length &&
       entry.deck.every((id, index) => id === practice.deck[index]),
   );
-  const previous =
+  const previous: PracticeSourceDeck | undefined =
     practice.selection?.previousDeck ?? (matching < 0 ? practice : undefined);
   return {
     playerChoice: practice.selection?.playerChoice ?? String(activeDeck),
@@ -111,7 +116,12 @@ export function continuedPracticeChoices(
       practice.selection?.opponentIndex ??
       (matching < 0 ? roster.length : matching),
     previousDeck: previous
-      ? { name: previous.name, style: previous.style, deck: [...previous.deck] }
+      ? {
+          name: previous.name,
+          style: previous.style,
+          deck: [...previous.deck],
+          ...(previous.category ? { category: previous.category } : {}),
+        }
       : undefined,
   };
 }
@@ -132,7 +142,7 @@ export function practiceOpponents(
     const fields = [
       opponent.name,
       opponent.style,
-      opponent.previous ? "Previous practice" : "",
+      opponent.previous ? (opponent.category ?? "Previous practice") : "",
       ...opponent.deck.map((id) => CARD_MAP[id].name),
     ].map(searchable);
     return terms.every((term) => fields.some((field) => field.includes(term)))

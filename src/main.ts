@@ -259,6 +259,7 @@ let practiceOpponentIndex = 0;
 let practiceOpponentSearch = "";
 let practiceDeckChoice: string | null = null;
 let practicePreviousDeck: PracticeSourceDeck | undefined;
+let practiceSetupBack: (() => void) | null = null;
 let practiceMode: Mode = "training";
 let arena: Arena;
 let battle: Battle;
@@ -676,6 +677,7 @@ function enterLobby(keepPeerConnection: boolean) {
   replayRecordedName = null;
   replayOpponentView = false;
   replayReturn = null;
+  practiceSetupBack = null;
   accumulator = 0;
   audio.stopMusic();
   audio.stopEffects();
@@ -711,6 +713,7 @@ function startBattle(online = false, practice: PracticeOpponent | null = null) {
   replayRecordedName = null;
   replayOpponentView = false;
   replayReturn = null;
+  practiceSetupBack = null;
   const loadout = online ? peerNetwork?.loadout : null;
   battlePlayerName = online
     ? (loadout?.name ??
@@ -1954,16 +1957,20 @@ function showPracticeOpponents() {
   const yourDeck = playerChoice.deck;
   let opponent = roster[practiceOpponentIndex] ?? roster[0];
   let matchingOpponents = practiceOpponents(practiceOpponentSearch, roster);
-  const groupFor = (choice: { savedSlot?: number; previous?: true }) =>
+  const groupFor = (choice: {
+    savedSlot?: number;
+    previous?: true;
+    category?: string;
+  }) =>
     choice.previous
-      ? "Previous practice"
+      ? (choice.category ?? "Previous practice")
       : choice.savedSlot !== undefined
         ? "Your saved decks"
         : "Curated decks";
   const playerOptions = [
     "Your saved decks",
     "Curated decks",
-    "Previous practice",
+    practicePreviousDeck?.category ?? "Previous practice",
   ]
     .map((group) => {
       const entries = choices.filter((choice) => groupFor(choice) === group);
@@ -1976,7 +1983,7 @@ function showPracticeOpponents() {
     `<section class="match-deck-panel" data-practice-side="${side}" aria-label="${side === "yours" ? "Your practice deck" : "Practice opponent deck"}"><div class="match-deck-heading"><div><h3>${side === "yours" ? "Your practice deck" : "Opponent deck"}</h3><p>${esc(side === "yours" ? playerChoice.name : opponent.name)}</p></div><span><i class="tiny-drop"></i> ${averageCost([...deck]).toFixed(1)} average</span></div>${side === "yours" ? `<label class="practice-choice" for="practice-deck">Your practice deck<span><select id="practice-deck" aria-describedby="practice-deck-note">${playerOptions}</select>${icon("chevron-down")}</span></label>` : ""}<div class="match-deck-grid">${deck.map((id, index) => cardHTML(id, `data-practice-card="${side}-${index}"`)).join("")}</div></section>`;
   modal(
     "Choose a practice opponent",
-    `<p class="practice-intro" id="practice-opponent-note">Choose saved or curated decks for both sides at your chosen pace. No trophies or rewards.</p><div class="practice-search"><label class="field-label" for="practice-search">Find a matchup</label><input type="search" class="name-input" id="practice-search" placeholder="Opponent, style or card" maxlength="100" autocomplete="off" aria-describedby="practice-search-help" value="${esc(practiceOpponentSearch)}"/><p id="practice-search-help">Search names, play styles or cards. Multiple words narrow the decks.</p><div class="practice-search-status"><p id="practice-search-count" role="status" aria-live="polite" aria-atomic="true"></p><button class="text-button" id="clear-practice-search">Clear search</button></div></div><label class="practice-choice">Practice opponent<span><select id="practice-opponent" aria-describedby="practice-opponent-note practice-search-count"></select>${icon("chevron-down")}</span></label>${practicePaceHTML()}<div class="practice-record" id="practice-record" role="status" aria-live="polite" aria-atomic="true"><p></p><small>From your current battle log.</small></div><button class="secondary-button practice-review" id="review-practice" aria-describedby="practice-record" hidden>${icon("play")} Review latest practice</button><div class="practice-swap"><button class="secondary-button" id="swap-practice-decks" aria-describedby="practice-swap-help">${icon("arrow-left-right")} Swap decks</button><p id="practice-swap-help">Try the matchup from the other side. Swapping clears the opponent search.</p></div><div class="match-decks">${deckPanel("yours", yourDeck)}<div id="practice-opponent-preview"></div></div><p class="practice-deck-note" id="practice-deck-note">Tap a card to inspect it. Your practice deck applies to this matchup and Practice again; your active battle deck stays the same. Edit saved decks in Cards.</p><div class="match-details-actions"><button class="text-button" id="practice-back">Back to battle modes</button><button class="primary-button" id="start-practice" aria-describedby="practice-opponent-note practice-search-count">${icon("target")} Start practice</button></div>`,
+    `<p class="practice-intro" id="practice-opponent-note">Choose saved or curated decks for both sides at your chosen pace. No trophies or rewards.</p><div class="practice-search"><label class="field-label" for="practice-search">Find a matchup</label><input type="search" class="name-input" id="practice-search" placeholder="Opponent, style or card" maxlength="100" autocomplete="off" aria-describedby="practice-search-help" value="${esc(practiceOpponentSearch)}"/><p id="practice-search-help">Search names, play styles or cards. Multiple words narrow the decks.</p><div class="practice-search-status"><p id="practice-search-count" role="status" aria-live="polite" aria-atomic="true"></p><button class="text-button" id="clear-practice-search">Clear search</button></div></div><label class="practice-choice">Practice opponent<span><select id="practice-opponent" aria-describedby="practice-opponent-note practice-search-count"></select>${icon("chevron-down")}</span></label>${practicePaceHTML()}<div class="practice-record" id="practice-record" role="status" aria-live="polite" aria-atomic="true"><p></p><small>From your current battle log.</small></div><button class="secondary-button practice-review" id="review-practice" aria-describedby="practice-record" hidden>${icon("play")} Review latest practice</button><div class="practice-swap"><button class="secondary-button" id="swap-practice-decks" aria-describedby="practice-swap-help">${icon("arrow-left-right")} Swap decks</button><p id="practice-swap-help">Try the matchup from the other side. Swapping clears the opponent search.</p></div><div class="match-decks">${deckPanel("yours", yourDeck)}<div id="practice-opponent-preview"></div></div><p class="practice-deck-note" id="practice-deck-note">Tap a card to inspect it. Your practice deck applies to this matchup and Practice again; your active battle deck stays the same. Edit saved decks in Cards.</p><div class="match-details-actions"><button class="text-button" id="practice-back">${practiceSetupBack ? "Back to shared deck" : "Back to battle modes"}</button><button class="primary-button" id="start-practice" aria-describedby="practice-opponent-note practice-search-count">${icon("target")} Start practice</button></div>`,
     "practice-opponents",
     true,
   );
@@ -2020,6 +2027,12 @@ function showPracticeOpponents() {
     showPracticeOpponents();
   };
   $("#practice-back").onclick = () => {
+    if (practiceSetupBack) {
+      const back = practiceSetupBack;
+      practiceSetupBack = null;
+      back();
+      return;
+    }
     showModes();
     $("#choose-practice-opponent").focus();
   };
@@ -2033,6 +2046,7 @@ function showPracticeOpponents() {
       mode: practiceMode,
       search: practiceOpponentSearch,
       previousDeck: practicePreviousDeck,
+      setupBack: practiceSetupBack,
     };
     playReplay(record);
     if (replayRecord !== record) return;
@@ -2042,6 +2056,7 @@ function showPracticeOpponents() {
       practiceMode = selection.mode;
       practiceOpponentSearch = selection.search;
       practicePreviousDeck = selection.previousDeck;
+      practiceSetupBack = selection.setupBack;
       restore();
     };
     syncReplayExit();
@@ -2072,7 +2087,11 @@ function showPracticeOpponents() {
     }
     const select = $<HTMLSelectElement>("#practice-opponent");
     select.innerHTML = matchingOpponents.length
-      ? ["Curated decks", "Your saved decks", "Previous practice"]
+      ? [
+          "Curated decks",
+          "Your saved decks",
+          practicePreviousDeck?.category ?? "Previous practice",
+        ]
           .map((group) => {
             const entries = matchingOpponents.filter(
               ({ opponent }) => groupFor(opponent) === group,
@@ -2361,7 +2380,7 @@ function showDeckCodes(state: Partial<DeckCodeView> = {}) {
   const view: DeckCodeView = { code: "", slot: profile.activeDeck, ...state };
   modal(
     "Deck codes",
-    `<div class="deck-codes"><section><label class="field-label" for="current-deck-code">YOUR CURRENT DECK</label><textarea class="name-input deck-code-text" id="current-deck-code" readonly rows="3" spellcheck="false">${esc(encodeDeckCode(profile.deck))}</textarea><button class="secondary-button" id="copy-deck-code">Copy deck code</button><p id="deck-code-copy-status" role="status" aria-live="polite"></p></section><form id="deck-code-form"><label class="field-label" for="shared-deck-code">PASTE A SHARED DECK CODE</label><textarea class="name-input deck-code-text" id="shared-deck-code" rows="3" maxlength="${MAX_DECK_CODE_BYTES}" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="BRA-DECK-1:knight,…">${esc(view.code)}</textarea><button class="secondary-button" type="submit">Preview deck</button><p id="deck-code-error" class="deck-code-error" role="alert" hidden></p></form>${view.preview ? `<section id="shared-deck-preview" class="match-deck-panel"><div class="match-deck-heading"><h3>Shared deck</h3><span><i class="tiny-drop"></i> ${averageCost(view.preview).toFixed(1)} average</span></div><div class="match-deck-grid">${view.preview.map((id) => cardHTML(id, `data-code-card="${id}"`)).join("")}</div><div class="code-practice">${practicePaceHTML()}<button class="secondary-button" id="practice-code-deck" aria-describedby="practice-code-note">${icon("target")} Practice against this deck</button><p id="practice-code-note">AI uses these shared cards against your active battle deck. No trophies or rewards.</p></div><div class="match-copy-target"><label for="code-deck-slot">Destination battle deck</label><div class="match-deck-choice"><select id="code-deck-slot" aria-describedby="code-deck-note">${profile.decks.map((_, slot) => `<option value="${slot}" ${slot === view.slot ? "selected" : ""}>Battle deck ${slot + 1}${slot === profile.activeDeck ? " (active)" : ""}</option>`).join("")}</select>${icon("chevron-down")}</div><p id="code-deck-note">Replaces battle deck ${view.slot + 1} and selects it.</p></div><button class="primary-button" id="use-code-deck">Use this deck</button></section>` : ""}${view.notice ? `<div class="deck-code-notice" role="status"><span>${esc(view.notice)}</span>${view.undo ? '<button class="text-button" id="undo-code-deck">Undo deck change</button>' : ""}</div>` : ""}<div class="deck-code-footer"><button class="text-button" id="deck-code-back">Back to deck builder</button></div></div>`,
+    `<div class="deck-codes"><section><label class="field-label" for="current-deck-code">YOUR CURRENT DECK</label><textarea class="name-input deck-code-text" id="current-deck-code" readonly rows="3" spellcheck="false">${esc(encodeDeckCode(profile.deck))}</textarea><button class="secondary-button" id="copy-deck-code">Copy deck code</button><p id="deck-code-copy-status" role="status" aria-live="polite"></p></section><form id="deck-code-form"><label class="field-label" for="shared-deck-code">PASTE A SHARED DECK CODE</label><textarea class="name-input deck-code-text" id="shared-deck-code" rows="3" maxlength="${MAX_DECK_CODE_BYTES}" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="BRA-DECK-1:knight,…">${esc(view.code)}</textarea><button class="secondary-button" type="submit">Preview deck</button><p id="deck-code-error" class="deck-code-error" role="alert" hidden></p></form>${view.preview ? `<section id="shared-deck-preview" class="match-deck-panel"><div class="match-deck-heading"><h3>Shared deck</h3><span><i class="tiny-drop"></i> ${averageCost(view.preview).toFixed(1)} average</span></div><div class="match-deck-grid">${view.preview.map((id) => cardHTML(id, `data-code-card="${id}"`)).join("")}</div><div class="code-practice">${practicePaceHTML()}<button class="secondary-button" id="practice-code-deck" aria-describedby="practice-code-note">${icon("target")} Practice against this deck</button><p id="practice-code-note">AI uses these shared cards against your active battle deck. No trophies or rewards.</p><button class="secondary-button" id="try-code-deck" aria-describedby="try-code-note">${icon("swords")} Try this deck in practice</button><p id="try-code-note">Choose a matchup with these shared cards as your deck. Your saved slots stay the same.</p></div><div class="match-copy-target"><label for="code-deck-slot">Destination battle deck</label><div class="match-deck-choice"><select id="code-deck-slot" aria-describedby="code-deck-note">${profile.decks.map((_, slot) => `<option value="${slot}" ${slot === view.slot ? "selected" : ""}>Battle deck ${slot + 1}${slot === profile.activeDeck ? " (active)" : ""}</option>`).join("")}</select>${icon("chevron-down")}</div><p id="code-deck-note">Replaces battle deck ${view.slot + 1} and selects it.</p></div><button class="primary-button" id="use-code-deck">Use this deck</button></section>` : ""}${view.notice ? `<div class="deck-code-notice" role="status"><span>${esc(view.notice)}</span>${view.undo ? '<button class="text-button" id="undo-code-deck">Undo deck change</button>' : ""}</div>` : ""}<div class="deck-code-footer"><button class="text-button" id="deck-code-back">Back to deck builder</button></div></div>`,
     "deck-codes",
     true,
   );
@@ -2401,6 +2420,24 @@ function showDeckCodes(state: Partial<DeckCodeView> = {}) {
   $("#deck-code-back").onclick = renderDeckBuilder;
   if (view.preview) {
     bindPracticePace();
+    $("#try-code-deck").onclick = () => {
+      if (screen !== "lobby" || !view.preview) return;
+      const restore = returnToModal($("#try-code-deck"));
+      practiceSetupBack = () => {
+        restore();
+        $<HTMLSelectElement>("#practice-pace").value = practiceMode;
+      };
+      practicePreviousDeck = {
+        name: "Shared deck",
+        style: "Deck code",
+        deck: [...view.preview],
+        category: "Shared deck",
+      };
+      practiceDeckChoice = "previous";
+      practiceOpponentIndex = SOLO_OPPONENTS.length + profile.activeDeck;
+      practiceOpponentSearch = "";
+      showPracticeOpponents();
+    };
     $("#practice-code-deck").onclick = () => {
       if (screen !== "lobby" || !view.preview) return;
       startBattle(false, {
