@@ -3583,3 +3583,15 @@ The new journey exports twice one millisecond apart under an accented/Chinese pl
 All 3,650 unit checks across 256 files, type checking and production build pass. All twelve development cases pass across desktop Chromium and phone WebKit; all eighteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. The new settings-prefixed filename journey joins workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `5423ffbe65f2` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Control sound effects directly from battle and replay
+
+The battle/replay HUD now offers a speaker button beside emotes and Pause. It shares the lobby control's fresh-profile preference action, icon/label refresh and independent sound-effects behavior. M outside controls invokes the same action while held repeats, modifiers and open dialogs keep their existing behavior. Help, the arena shortcut description and button titles expose it. The bottom player label can shrink with ellipsis to keep three 44-pixel controls available on narrow screens.
+
+The new journey seeds newer saved rewards, name, deck selection and history during an older active practice, then mutes with M and unmutes with native Space/touch. Current progress survives while captured battle identity/cards and the selected placement remain intact. Music keeps playing, the live clock continues, Settings typing does not toggle sound, and a paused opponent-side replay retains its exact time/rate/side through muting. Reviewed 320-pixel and rotated layouts keep the player label and all controls separate. Broader keyboard checks initially expected the old exact replay shortcut string; that assertion now includes speed keys and M.
+
+An additional keyboard check reproduced M being ignored when a speaker button itself had focus despite advertising that shortcut. The same change now accepts M on those two specific controls while protecting unrelated controls. Lobby/battle focus journeys verify native Space, held-repeat suppression, retained focus and untouched Ctrl modifiers on all three production targets.
+
+All 3,650 unit checks across 256 files, type checking and the final production build pass. Twenty-six distinct development cases pass across desktop Chromium and phone WebKit; thirty-nine distinct production cases pass across desktop Chromium, phone Chromium and phone WebKit. This includes twenty broader keyboard/Help development cases, thirty-three corresponding production cases including the main sound journey, plus the focused-speaker checks and a repeat of the sound journey against the final build. The new settings-prefixed journeys join workflow CI automatically. A CLI selection audit before adding the final focus file covered all 354 then-declared workflow cases exactly once across nine shards; no hosted CI was triggered.
+
+Final root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `a27a2ba53afa` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
