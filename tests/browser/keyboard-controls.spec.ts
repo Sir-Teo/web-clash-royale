@@ -60,7 +60,7 @@ test("Space activates focused replay speed, pause, resume and exit controls", as
   );
   await expect(canvas).toHaveAttribute(
     "aria-keyshortcuts",
-    "1 2 3 4 ArrowLeft ArrowRight Home End [ ] Space",
+    "1 2 3 4 ArrowLeft ArrowRight Shift+ArrowLeft Shift+ArrowRight Home End [ ] Space",
   );
   const speed = page.locator("#replay-speed");
   await speed.focus();

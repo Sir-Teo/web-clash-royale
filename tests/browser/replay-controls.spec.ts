@@ -82,6 +82,9 @@ for (const viewer of ["blue", "red"] as const)
     async function check(tick: number) {
       const expected = new rules.Battle({ replay });
       while (expected.tick < tick && !expected.winner) expected.step();
+      await expect
+        .poll(async () => (await state(page)).time)
+        .toBe(expected.time);
       const actual = await state(page);
       expect(actual.time).toBe(expected.time);
       expect(actual.hand).toEqual(expected.players[viewer].hand);
@@ -93,6 +96,19 @@ for (const viewer of ["blue", "red"] as const)
       expect(actual.paused).toBe(true);
     }
     await canvas.focus();
+    await page.keyboard.press("Home");
+    await expect(canvas).toHaveAttribute(
+      "aria-keyshortcuts",
+      /Shift\+ArrowLeft Shift\+ArrowRight/,
+    );
+    await page.keyboard.press("Shift+ArrowLeft");
+    await check(0);
+    await page.keyboard.press("Shift+ArrowRight");
+    await check(30);
+    await page.keyboard.press("Shift+ArrowRight");
+    await check(60);
+    await page.keyboard.press("Shift+ArrowLeft");
+    await check(30);
     await page.keyboard.press("Home");
     await back.click();
     await check(0);
@@ -110,6 +126,14 @@ for (const viewer of ["blue", "red"] as const)
     await check(600);
     await page.keyboard.press("Control+ArrowRight");
     await check(600);
+    await page.keyboard.down("Shift");
+    await page.keyboard.down("ArrowRight");
+    await page.keyboard.down("ArrowRight");
+    await page.keyboard.up("ArrowRight");
+    await page.keyboard.up("Shift");
+    await check(630);
+    await page.keyboard.press("Shift+ArrowLeft");
+    await check(600);
     // Holding a shortcut must not continuously rebuild a long replay.
     await page.keyboard.down("ArrowRight");
     await page.keyboard.down("ArrowRight");
@@ -121,6 +145,8 @@ for (const viewer of ["blue", "red"] as const)
     await seek.focus();
     await page.keyboard.press("ArrowRight");
     expect((await state(page)).time).toBeLessThan(20.1);
+    await page.keyboard.press("Shift+ArrowRight");
+    expect((await state(page)).time).toBeLessThan(20.5);
     await canvas.focus();
     await page.keyboard.press("Home");
     await forward.click();
@@ -141,6 +167,14 @@ for (const viewer of ["blue", "red"] as const)
     await check(900);
     await page.locator("#replay-play").click();
     await expect.poll(async () => (await state(page)).time).toBeGreaterThan(30);
+    const finePlaying = (await state(page)).time;
+    await canvas.focus();
+    await page.keyboard.press("Shift+ArrowRight");
+    await expect
+      .poll(async () => (await state(page)).time)
+      .toBeGreaterThanOrEqual(finePlaying + 1);
+    expect((await state(page)).paused).toBe(false);
+    await expect(page.locator("#replay-speed")).toHaveText("2×");
     const playing = (await state(page)).time;
     await forward.click();
     const advanced = await state(page);
@@ -157,6 +191,15 @@ for (const viewer of ["blue", "red"] as const)
     await expect(seek).toHaveValue("100");
     await expect(seek).toHaveAttribute("aria-valuetext", /replay complete$/);
     const end = (await state(page)).time;
+    await page.keyboard.press("Shift+ArrowRight");
+    expect((await state(page)).time).toBe(end);
+    await page.keyboard.press("Shift+ArrowLeft");
+    await expect
+      .poll(async () => (await state(page)).time)
+      .toBeCloseTo(end - 1, 9);
+    expect((await state(page)).paused).toBe(true);
+    await page.keyboard.press("Shift+ArrowRight");
+    await expect.poll(async () => (await state(page)).time).toBe(end);
     await forward.click();
     expect((await state(page)).time).toBe(end);
     await back.click();
