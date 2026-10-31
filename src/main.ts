@@ -2384,7 +2384,7 @@ function renderDeckBuilder() {
   };
   $("#deck-codes").onclick = () => showDeckCodes();
   $("#deck-done").onclick = () => {
-    saveProfile(profile);
+    if (!storageAvailable) saveProfile(profile);
     refreshDeck();
     closeModal();
   };
