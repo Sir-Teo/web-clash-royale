@@ -157,7 +157,7 @@ import {
   practiceRoster,
   swapPracticeDecks,
 } from "./ui/practice-opponents";
-import { practiceResults } from "./ui/practice-results";
+import { latestPracticeRecord, practiceResults } from "./ui/practice-results";
 import { replayView } from "./ui/replay-view";
 import {
   buildReplayPlays,
@@ -290,6 +290,7 @@ let replayRecord: RecordEntry | null = null;
 let replayOwnerName: string | null = null;
 let replayRecordedName: string | null = null;
 let replayOpponentView = false;
+let replayReturn: (() => void) | null = null;
 let replayPlays: ReplayPlay[] = [];
 const replaySeeks = new ReplaySeekQueue((tick) => seekReplay(tick));
 let replayScrubPointer: number | null = null;
@@ -674,6 +675,7 @@ function enterLobby(keepPeerConnection: boolean) {
   replayOwnerName = null;
   replayRecordedName = null;
   replayOpponentView = false;
+  replayReturn = null;
   accumulator = 0;
   audio.stopMusic();
   audio.stopEffects();
@@ -708,6 +710,7 @@ function startBattle(online = false, practice: PracticeOpponent | null = null) {
   replayOwnerName = null;
   replayRecordedName = null;
   replayOpponentView = false;
+  replayReturn = null;
   const loadout = online ? peerNetwork?.loadout : null;
   battlePlayerName = online
     ? (loadout?.name ??
@@ -1346,6 +1349,8 @@ function playReplay(
     toast("Wait for the arena graphics to recover before watching a replay.");
     return;
   }
+  const returnTo =
+    screen === "replay" && replayRecord === record ? replayReturn : null;
   cancelReplaySeeks();
   deploymentFeedback.reset();
   clearKeyboardAim(true);
@@ -1364,6 +1369,7 @@ function playReplay(
   closeModal();
   screen = "replay";
   replayRecord = record;
+  replayReturn = returnTo;
   const replay = setReplayView(record, playerName, opponentView);
   resultShown = true;
   paused = false;
@@ -1390,6 +1396,7 @@ function playReplay(
   $("#deploy-hint").classList.add("hidden");
   $(".replay-controls").classList.remove("hidden");
   $("#replay-side").classList.remove("hidden");
+  syncReplayExit();
   syncReplayControl();
   $("#replay-speed").textContent = `${speed}×`;
   $("#replay-speed").setAttribute("aria-label", `Playback speed: ${speed}×`);
@@ -1402,6 +1409,14 @@ function playReplay(
   audio.startMusic(battle.time);
   refreshIcons();
 }
+function syncReplayExit() {
+  const label = replayReturn ? "Back to practice" : "Exit";
+  const button = $("#replay-exit");
+  button.textContent = replayReturn ? "Back" : "Exit";
+  button.setAttribute("aria-label", label);
+  button.title = label;
+}
+
 function inspectReplayCard(slot: number) {
   if (screen !== "replay" || !graphicsAvailable || modalKey) return;
   replaySeeks.flush();
@@ -1961,11 +1976,13 @@ function showPracticeOpponents() {
     `<section class="match-deck-panel" data-practice-side="${side}" aria-label="${side === "yours" ? "Your practice deck" : "Practice opponent deck"}"><div class="match-deck-heading"><div><h3>${side === "yours" ? "Your practice deck" : "Opponent deck"}</h3><p>${esc(side === "yours" ? playerChoice.name : opponent.name)}</p></div><span><i class="tiny-drop"></i> ${averageCost([...deck]).toFixed(1)} average</span></div>${side === "yours" ? `<label class="practice-choice" for="practice-deck">Your practice deck<span><select id="practice-deck" aria-describedby="practice-deck-note">${playerOptions}</select>${icon("chevron-down")}</span></label>` : ""}<div class="match-deck-grid">${deck.map((id, index) => cardHTML(id, `data-practice-card="${side}-${index}"`)).join("")}</div></section>`;
   modal(
     "Choose a practice opponent",
-    `<p class="practice-intro" id="practice-opponent-note">Choose saved or curated decks for both sides at your chosen pace. No trophies or rewards.</p><div class="practice-search"><label class="field-label" for="practice-search">Find a matchup</label><input type="search" class="name-input" id="practice-search" placeholder="Opponent, style or card" maxlength="100" autocomplete="off" aria-describedby="practice-search-help" value="${esc(practiceOpponentSearch)}"/><p id="practice-search-help">Search names, play styles or cards. Multiple words narrow the decks.</p><div class="practice-search-status"><p id="practice-search-count" role="status" aria-live="polite" aria-atomic="true"></p><button class="text-button" id="clear-practice-search">Clear search</button></div></div><label class="practice-choice">Practice opponent<span><select id="practice-opponent" aria-describedby="practice-opponent-note practice-search-count"></select>${icon("chevron-down")}</span></label>${practicePaceHTML()}<div class="practice-record" id="practice-record" role="status" aria-live="polite" aria-atomic="true"><p></p><small>From your current battle log.</small></div><div class="practice-swap"><button class="secondary-button" id="swap-practice-decks" aria-describedby="practice-swap-help">${icon("arrow-left-right")} Swap decks</button><p id="practice-swap-help">Try the matchup from the other side. Swapping clears the opponent search.</p></div><div class="match-decks">${deckPanel("yours", yourDeck)}<div id="practice-opponent-preview"></div></div><p class="practice-deck-note" id="practice-deck-note">Tap a card to inspect it. Your practice deck applies to this matchup and Practice again; your active battle deck stays the same. Edit saved decks in Cards.</p><div class="match-details-actions"><button class="text-button" id="practice-back">Back to battle modes</button><button class="primary-button" id="start-practice" aria-describedby="practice-opponent-note practice-search-count">${icon("target")} Start practice</button></div>`,
+    `<p class="practice-intro" id="practice-opponent-note">Choose saved or curated decks for both sides at your chosen pace. No trophies or rewards.</p><div class="practice-search"><label class="field-label" for="practice-search">Find a matchup</label><input type="search" class="name-input" id="practice-search" placeholder="Opponent, style or card" maxlength="100" autocomplete="off" aria-describedby="practice-search-help" value="${esc(practiceOpponentSearch)}"/><p id="practice-search-help">Search names, play styles or cards. Multiple words narrow the decks.</p><div class="practice-search-status"><p id="practice-search-count" role="status" aria-live="polite" aria-atomic="true"></p><button class="text-button" id="clear-practice-search">Clear search</button></div></div><label class="practice-choice">Practice opponent<span><select id="practice-opponent" aria-describedby="practice-opponent-note practice-search-count"></select>${icon("chevron-down")}</span></label>${practicePaceHTML()}<div class="practice-record" id="practice-record" role="status" aria-live="polite" aria-atomic="true"><p></p><small>From your current battle log.</small></div><button class="secondary-button practice-review" id="review-practice" aria-describedby="practice-record" hidden>${icon("play")} Review latest practice</button><div class="practice-swap"><button class="secondary-button" id="swap-practice-decks" aria-describedby="practice-swap-help">${icon("arrow-left-right")} Swap decks</button><p id="practice-swap-help">Try the matchup from the other side. Swapping clears the opponent search.</p></div><div class="match-decks">${deckPanel("yours", yourDeck)}<div id="practice-opponent-preview"></div></div><p class="practice-deck-note" id="practice-deck-note">Tap a card to inspect it. Your practice deck applies to this matchup and Practice again; your active battle deck stays the same. Edit saved decks in Cards.</p><div class="match-details-actions"><button class="text-button" id="practice-back">Back to battle modes</button><button class="primary-button" id="start-practice" aria-describedby="practice-opponent-note practice-search-count">${icon("target")} Start practice</button></div>`,
     "practice-opponents",
     true,
   );
   const recordSummary = $("#practice-record");
+  const review = $<HTMLButtonElement>("#review-practice");
+  let latestRecord: RecordEntry | undefined;
   bindPracticePace(updatePracticeRecord);
   $("#practice-deck").onchange = () => {
     const value = $<HTMLSelectElement>("#practice-deck").value;
@@ -2005,6 +2022,29 @@ function showPracticeOpponents() {
   $("#practice-back").onclick = () => {
     showModes();
     $("#choose-practice-opponent").focus();
+  };
+  review.onclick = () => {
+    if (screen !== "lobby" || !latestRecord) return;
+    const record = latestRecord;
+    const restore = returnToModal(review);
+    const selection = {
+      playerChoice: playerChoice.value,
+      opponentIndex: practiceOpponentIndex,
+      mode: practiceMode,
+      search: practiceOpponentSearch,
+      previousDeck: practicePreviousDeck,
+    };
+    playReplay(record);
+    if (replayRecord !== record) return;
+    replayReturn = () => {
+      practiceDeckChoice = selection.playerChoice;
+      practiceOpponentIndex = selection.opponentIndex;
+      practiceMode = selection.mode;
+      practiceOpponentSearch = selection.search;
+      practicePreviousDeck = selection.previousDeck;
+      restore();
+    };
+    syncReplayExit();
   };
   $("#start-practice").onclick = () => {
     if (screen !== "lobby" || matchingOpponents.length === 0) return;
@@ -2067,7 +2107,18 @@ function showPracticeOpponents() {
   function updatePracticeRecord() {
     if (!recordSummary.isConnected) return;
     recordSummary.hidden = matchingOpponents.length === 0;
-    if (recordSummary.hidden) return;
+    if (recordSummary.hidden) {
+      latestRecord = undefined;
+      review.hidden = true;
+      return;
+    }
+    latestRecord = latestPracticeRecord(
+      profile.history,
+      yourDeck,
+      opponent.deck,
+      practiceMode,
+    );
+    review.hidden = !latestRecord;
     const result = practiceResults(
       profile.history,
       yourDeck,
@@ -3293,7 +3344,11 @@ $("#replay-speed").onclick = () => {
   $("#replay-speed").textContent = `${speed}×`;
   $("#replay-speed").setAttribute("aria-label", `Playback speed: ${speed}×`);
 };
-$("#replay-exit").onclick = lobby;
+$("#replay-exit").onclick = () => {
+  const returnTo = replayReturn;
+  lobby();
+  returnTo?.();
+};
 function seekReplayPlay(play: ReplayPlay) {
   ($("#replay-plays") as HTMLSelectElement).value = String(play.tick);
   seekReplay(play.targetTick);

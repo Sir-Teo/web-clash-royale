@@ -31,6 +31,14 @@
 .practice-swap {
   margin-bottom: 20px;
 }
+.practice-review {
+  width: 100%;
+  min-height: 44px;
+  margin: -6px 0 20px;
+}
+.practice-review[hidden] {
+  display: none;
+}
 .practice-swap .secondary-button {
   width: 100%;
   min-height: 44px;

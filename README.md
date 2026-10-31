@@ -56,7 +56,7 @@ During a practice battle, open the pause menu and choose **Restart practice** fo
 
 After a practice result, **Change practice matchup** reopens the picker with your selected player deck and pace. The chosen opponent stays selected. An unlisted deck from a shared code or recording remains available under **Previous practice** while adjusting the matchup. **Swap decks** also lets you pilot that temporary deck. Your saved slots and active lobby deck stay the same.
 
-The picker shows saved practice wins, losses and draws for the selected deck compositions and pace. Counts use matches still in your battle log and update after a finished attempt.
+The picker shows saved practice wins, losses and draws for the selected deck compositions and pace. Counts use matches still in your battle log and update after a finished attempt. **Review latest practice** opens the newest matching recording, including recorded red-side players. **Back** returns to the same deck choices, pace, search and scroll position; restarting the replay keeps that return route.
 
 In a solo battle, choose **Pause → Inspect battle deck** to read any of your eight starting cards. The view uses that battle's captured deck, including a selected practice loadout. During practice, **Deck to inspect** switches between your starting cards and the opponent's. Card inspection retains that choice and keeps the battle paused. Return to the pause menu to choose an action, or close the dialog to resume.
 

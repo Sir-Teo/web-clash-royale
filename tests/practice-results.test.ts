@@ -2,7 +2,10 @@ import { expect, it } from "vitest";
 import { PRESETS, STARTER_DECK, type CardId } from "../src/game/cards";
 import type { RecordEntry } from "../src/game/profile";
 import type { Mode } from "../src/game/engine";
-import { practiceResults } from "../src/ui/practice-results";
+import {
+  latestPracticeRecord,
+  practiceResults,
+} from "../src/ui/practice-results";
 
 const own = STARTER_DECK;
 const enemy = PRESETS[2].deck;
@@ -163,4 +166,73 @@ it("does not mutate saved recordings or selected card order", () => {
   Object.freeze(history);
   practiceResults(history, own, enemy, "classic");
   expect(JSON.stringify({ history, own, enemy })).toBe(before);
+});
+
+it("offers no review when there is no saved practice for the selected matchup and pace", () => {
+  expect(latestPracticeRecord([], own, enemy, "classic")).toBeUndefined();
+  expect(
+    latestPracticeRecord(
+      [
+        record("blue", { practice: false }),
+        record("red", { mode: "double" }),
+        record("red", { player: PRESETS[1].deck }),
+      ],
+      own,
+      enemy,
+      "classic",
+    ),
+  ).toBeUndefined();
+});
+
+it("finds the newest matching date even when the battle log is not chronologically ordered", () => {
+  const earlier = { ...record("blue"), date: "2026-10-29T12:00:00.000Z" };
+  const latest = { ...record("red"), date: "2026-10-30T12:00:00.000Z" };
+  const oldest = { ...record("draw"), date: "2026-10-28T12:00:00.000Z" };
+  const unrelated = {
+    ...record("blue", { mode: "double" }),
+    date: "2026-10-31T12:00:00.000Z",
+  };
+  expect(
+    latestPracticeRecord(
+      [earlier, latest, unrelated, oldest],
+      own,
+      enemy,
+      "classic",
+    ),
+  ).toBe(latest);
+});
+
+it("reviews the original red-side record when its compositions match in another card order", () => {
+  const latest = record("blue", {
+    red: true,
+    player: [...own].reverse(),
+    opponent: [...enemy].reverse(),
+  });
+  expect(latestPracticeRecord([latest], own, enemy, "classic")).toBe(latest);
+  expect(latest.replay.perspective).toBe("red");
+});
+
+it("keeps reversed player/opponent matchups out of the latest review", () => {
+  const match = { ...record("red"), date: "2026-10-29T12:00:00.000Z" };
+  const reversed = record("blue", { player: enemy, opponent: own });
+  expect(latestPracticeRecord([reversed, match], own, enemy, "classic")).toBe(
+    match,
+  );
+});
+
+it("uses battle-log order to break equal-date ties without changing the records", () => {
+  const first = record("red");
+  const second = record("blue");
+  expect(latestPracticeRecord([first, second], own, enemy, "classic")).toBe(
+    first,
+  );
+});
+
+it("keeps the battle log and both source decks immutable while choosing a review", () => {
+  const history = [record("red", { red: true }), record("blue")];
+  const player = [...own];
+  const opponent = [...enemy];
+  const before = structuredClone({ history, player, opponent });
+  latestPracticeRecord(history, player, opponent, "classic");
+  expect({ history, player, opponent }).toEqual(before);
 });
