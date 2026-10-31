@@ -154,6 +154,8 @@ Profile mutations persist through their actions. Confirmed backup restoration wr
 
 Finished battles use `saveBattleResult` to refresh trusted saved progress before `recordBattle` updates counters, rewards and history. Player names are captured before this refresh; replay decks come from the finished battle. Known write failures retain the session profile as the base. The UI applies incoming audio/emote preferences silently when presenting the result.
 
+Builder moves, replacements and Undo/Redo call `refreshProfileForDeckEdit` before changing cards. Newer non-deck progress retains the owned edit history. Any changed saved deck or active selection resets that history and refreshes the builder before another edit, retaining collection filters and search. This read never persists an incoming snapshot; known failed writes retain session changes.
+
 Emote mute/unmute uses `saveEmotePreference` to apply the requested flag to current trusted saved progress. It follows the same failed-write/session fallback as finished battles and applies incoming preferences without another persistence callback.
 
 Settings captures its original name and audio values when the form opens. Save compares the normalized draft with that original, applies edited fields to the latest complete saved profile, and persists the resulting snapshot. Untouched fields follow the saved profile. Known write failures keep the session profile as the base so an eventual retry can retain unsaved changes. Help and cancelled backup previews restore the same form and original snapshot.

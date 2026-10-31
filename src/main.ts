@@ -198,6 +198,7 @@ import {
   saveProfile as persistProfile,
   saveBattleResult,
   saveEmotePreference,
+  refreshProfileForDeckEdit,
   openChest,
   storageAvailable,
   exportProgress,
@@ -2351,6 +2352,20 @@ function showDeckBuilder() {
   deckEditNotice = "";
   renderDeckBuilder();
 }
+function prepareDeckEdit() {
+  const change = refreshProfileForDeckEdit(profile);
+  if (change === "none") return true;
+  applyProfilePreferences();
+  refreshProfile();
+  if (change !== "decks") return true;
+  deckEdits.reset(profile);
+  editSlot = -1;
+  deckEditNotice =
+    "Saved decks changed in another tab. Review your deck before editing.";
+  renderDeckBuilder();
+  $('[data-edit-slot="0"]').focus();
+  return false;
+}
 function moveDeckCard(step: -1 | 1, focusCard = false, source = editSlot) {
   const destination = source + step;
   if (
@@ -2360,6 +2375,7 @@ function moveDeckCard(step: -1 | 1, focusCard = false, source = editSlot) {
     destination >= profile.deck.length
   )
     return;
+  if (!prepareDeckEdit()) return;
   const id = profile.deck[source];
   const before = copyDeckSelection(profile);
   [profile.deck[source], profile.deck[destination]] = [
@@ -2387,6 +2403,7 @@ function moveDeckCard(step: -1 | 1, focusCard = false, source = editSlot) {
 }
 function restoreDeckEdit(direction: "undo" | "redo", keyboard = false) {
   if (screen !== "lobby" || modalKey !== "deck") return;
+  if (!prepareDeckEdit()) return;
   const edit = deckEdits[direction](profile);
   if (!edit) {
     renderDeckBuilder();
@@ -2692,6 +2709,7 @@ function renderCollection() {
           );
           return;
         }
+        if (!prepareDeckEdit()) return;
         if (profile.deck.includes(id)) {
           toast("That card is already in your deck.");
           return;

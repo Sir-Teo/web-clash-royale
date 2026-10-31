@@ -398,6 +398,18 @@ export function saveEmotePreference(p: Profile, muted: boolean) {
   p.emotesMuted = muted;
   saveProfile(p);
 }
+/** Refresh an open editor before changing cards; reading never persists a snapshot. */
+export function refreshProfileForDeckEdit(
+  p: Profile,
+): "none" | "progress" | "decks" {
+  const saved = storageAvailable ? readSavedProfile() : null;
+  if (!saved || JSON.stringify(saved) === JSON.stringify(p)) return "none";
+  const decksChanged = (["activeDeck", "deck", "decks"] as const).some(
+    (key) => JSON.stringify(saved[key]) !== JSON.stringify(p[key]),
+  );
+  Object.assign(p, saved);
+  return decksChanged ? "decks" : "progress";
+}
 export function openChest(p: Profile, index: number) {
   const type = p.chests[index];
   if (!type) return null;
