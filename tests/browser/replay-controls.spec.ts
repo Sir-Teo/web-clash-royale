@@ -396,3 +396,80 @@ test("replay speed keys clamp rates, preserve pause and restart, and leave nativ
   );
   expect(errors).toEqual([]);
 });
+
+test("focused playback speed accepts its advertised keys without changing time or other controls", async ({
+  page,
+}, info) => {
+  await page.addInitScript(
+    ({ key, replay }) => {
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          version: 1,
+          name: "Rate Navigator",
+          sound: false,
+          music: false,
+          seenTutorial: true,
+          history: [
+            {
+              id: 42,
+              date: "2026-10-24T12:00:00.000Z",
+              mode: replay.mode,
+              winner: "red",
+              crowns: [0, 3],
+              opponent: "Other King",
+              replay,
+            },
+          ],
+        }),
+      );
+    },
+    { key, replay },
+  );
+  if (info.project.name !== "desktop")
+    await page.setViewportSize({ width: 320, height: 740 });
+  await page.goto("/");
+  await expect
+    .poll(
+      () => page.evaluate(() => (window as any).__arena?.state.loadedCards),
+      { timeout: 60000 },
+    )
+    .toBe(expectedCards);
+  const before = await page.evaluate((key) => localStorage.getItem(key), key);
+  await page.getByRole("button", { name: "Battle log", exact: true }).click();
+  await page.locator("[data-replay]").click();
+  await page.locator("#replay-play").click();
+  const frozen = (await state(page)).time;
+  const speed = page.locator("#replay-speed");
+  await expect(speed).toHaveAttribute("aria-keyshortcuts", "- = Shift+=");
+  await speed.focus();
+  await speed.press("-");
+  await expect(speed).toHaveText("0.5×");
+  await speed.press("=");
+  await expect(speed).toHaveText("1×");
+  await speed.press("Shift+=");
+  await expect(speed).toHaveText("2×");
+  await speed.dispatchEvent("keydown", {
+    key: "-",
+    code: "Minus",
+    repeat: true,
+  });
+  await expect(speed).toHaveText("2×");
+  await speed.press("Control+-");
+  await expect(speed).toHaveText("2×");
+  await speed.press("Space");
+  await expect(speed).toHaveText("4×");
+  await expect(speed).toBeFocused();
+  await page.locator("#replay-forward").press("-");
+  await expect(speed).toHaveText("4×");
+  await page.locator("#replay-seek").press("=");
+  await expect(speed).toHaveText("4×");
+  const current = await state(page);
+  expect(current.speed).toBe(4);
+  expect(current.music.rate).toBe(4);
+  expect(current.time).toBe(frozen);
+  expect(current.paused).toBe(true);
+  expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(
+    before,
+  );
+});

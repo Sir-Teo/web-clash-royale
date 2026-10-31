@@ -3615,3 +3615,13 @@ The new journeys replace different slots with Miner, restore the original picker
 All 3,650 unit checks across 256 files, type checking and production build pass. Thirty development cases pass across desktop Chromium and phone WebKit, including twenty-six existing collection/detail checks. All six new production cases pass across desktop Chromium, phone Chromium and phone WebKit. The practice-prefixed journeys join workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `685fab677e3b` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Keep playback-speed shortcuts available on the focused speed button
+
+A new keyboard journey reproduced the speed button ignoring Minus despite advertising it in its title. The replay shortcut guard now accepts rate keys on that specific button and exposes its keys through aria-keyshortcuts. Other focused buttons, links, editable fields and the timeline keep their native behavior; held keys and browser modifiers still leave the rate unchanged. Native Space continues to cycle rates.
+
+The regression verifies Minus, Equals and Plus while the speed button retains focus, repeat/modifier protection, Space cycling, unrelated controls, exact paused match time, audio rate and unchanged saved bytes. It passes in an isolated checkout and in the combined development workspace alongside the existing rate-clamping, pause, restart and settings-input journey.
+
+All 3,650 unit checks across 256 files, type checking and production build pass. All four combined development cases pass across desktop Chromium and phone WebKit; all six production cases pass across desktop Chromium, phone Chromium and phone WebKit. The existing workflow file includes the regression automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `26614ccbcdc8` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

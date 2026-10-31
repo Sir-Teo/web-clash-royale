@@ -1589,6 +1589,7 @@ function setReplaySpeed(value: number) {
   button.textContent = `${speed}×`;
   const label = `Playback speed: ${speed}×`;
   button.setAttribute("aria-label", label);
+  button.setAttribute("aria-keyshortcuts", "- = Shift+=");
   button.title = `${label}. Minus: slower; Plus or Equals: faster.`;
 }
 function syncReplayExit() {
@@ -4013,9 +4014,10 @@ document.addEventListener("keydown", (e) => {
   if (
     screen === "replay" &&
     ["-", "=", "+"].includes(e.key) &&
-    !(e.target as HTMLElement).closest(
-      "button,a[href],input,textarea,select,[contenteditable]:not([contenteditable=false])",
-    )
+    ((e.target as HTMLElement).closest("#replay-speed") ||
+      !(e.target as HTMLElement).closest(
+        "button,a[href],input,textarea,select,[contenteditable]:not([contenteditable=false])",
+      ))
   ) {
     e.preventDefault();
     if (!e.repeat) {
