@@ -14,6 +14,7 @@ export interface PracticeOpponent {
   style: string;
   mode: Mode;
   deck: CardId[];
+  playerDeck?: CardId[];
 }
 
 /** Replay decks use canonical teams; history results already use the viewer's side. */

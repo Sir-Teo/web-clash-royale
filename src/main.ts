@@ -148,6 +148,7 @@ import {
 import { Battle, STEP } from "./game/engine";
 import { createReplayPlayback } from "./replay-playback";
 import { ReplaySeekQueue } from "./ui/replay-seek-queue";
+import { practiceOpponents } from "./ui/practice-opponents";
 import {
   buildReplayPlays,
   adjacentReplayPlay,
@@ -243,6 +244,8 @@ let networkBattleCode = "";
 let opponentName = "Royal Trainer";
 let practiceMatch: PracticeOpponent | null = null;
 let practiceOpponentIndex = 0;
+let practiceOpponentSearch = "";
+let practiceDeckSlot: number | null = null;
 let practiceMode: Mode = "training";
 let arena: Arena;
 let battle: Battle;
@@ -612,6 +615,8 @@ function enterLobby(keepPeerConnection: boolean) {
   cancelReplaySeeks();
   deploymentFeedback.reset();
   practiceMatch = null;
+  practiceDeckSlot = null;
+  practiceOpponentSearch = "";
   clearKeyboardAim(true);
   resetEnding();
   if (!keepPeerConnection && initialized && (network.room || multiplayer))
@@ -652,10 +657,7 @@ function enterLobby(keepPeerConnection: boolean) {
   $(".mode-select").classList.remove("hidden");
   refreshProfile();
 }
-function startBattle(
-  online = false,
-  practice: PracticeOpponent | null = null,
-) {
+function startBattle(online = false, practice: PracticeOpponent | null = null) {
   if (!online && !graphicsAvailable) {
     toast("Wait for the arena graphics to recover before starting a battle.");
     return;
@@ -678,7 +680,13 @@ function startBattle(
   replaySource = null;
   closeModal();
   practiceMatch =
-    !online && practice ? { ...practice, deck: [...practice.deck] } : null;
+    !online && practice
+      ? {
+          ...practice,
+          deck: [...practice.deck],
+          playerDeck: [...(practice.playerDeck ?? profile.deck)],
+        }
+      : null;
   screen = "battle";
   paused = false;
   speed = 1;
@@ -699,7 +707,7 @@ function startBattle(
     : (practiceMatch ??
       soloOpponent(seed, mode, previousSoloOpponent(profile.history)));
   battle = new Battle({
-    deck: loadout?.deck ?? profile.deck,
+    deck: loadout?.deck ?? practiceMatch?.playerDeck ?? profile.deck,
     enemyDeck: opponent?.deck,
     mode: online ? (network.room?.mode ?? mode) : (practiceMatch?.mode ?? mode),
     ai: !online,
@@ -1758,57 +1766,119 @@ function bindPracticePace() {
 }
 function showPracticeOpponents() {
   if (screen !== "lobby") return;
-  const opponent = SOLO_OPPONENTS[practiceOpponentIndex];
+  let opponent = SOLO_OPPONENTS[practiceOpponentIndex];
+  let matchingOpponents = practiceOpponents(practiceOpponentSearch);
+  const slot = practiceDeckSlot ?? profile.activeDeck;
+  const yourDeck =
+    slot === profile.activeDeck ? profile.deck : profile.decks[slot];
   const deckPanel = (side: "yours" | "opponent", deck: readonly CardId[]) =>
-    `<section class="match-deck-panel" data-practice-side="${side}" aria-label="${side === "yours" ? "Your active deck" : "Practice opponent deck"}"><div class="match-deck-heading"><div><h3>${side === "yours" ? "Your active deck" : "Opponent deck"}</h3><p>${side === "yours" ? `Battle deck ${profile.activeDeck + 1}` : esc(opponent.name)}</p></div><span><i class="tiny-drop"></i> ${averageCost([...deck]).toFixed(1)} average</span></div><div class="match-deck-grid">${deck.map((id, index) => cardHTML(id, `data-practice-card="${side}-${index}"`)).join("")}</div></section>`;
+    `<section class="match-deck-panel" data-practice-side="${side}" aria-label="${side === "yours" ? "Your practice deck" : "Practice opponent deck"}"><div class="match-deck-heading"><div><h3>${side === "yours" ? "Your practice deck" : "Opponent deck"}</h3><p>${side === "yours" ? `Battle deck ${slot + 1}` : esc(opponent.name)}</p></div><span><i class="tiny-drop"></i> ${averageCost([...deck]).toFixed(1)} average</span></div>${side === "yours" ? `<label class="practice-choice" for="practice-deck">Your saved deck<span><select id="practice-deck" aria-describedby="practice-deck-note">${profile.decks.map((_, index) => `<option value="${index}" ${index === slot ? "selected" : ""}>Battle deck ${index + 1}${index === profile.activeDeck ? " (active)" : ""}</option>`).join("")}</select>${icon("chevron-down")}</span></label>` : ""}<div class="match-deck-grid">${deck.map((id, index) => cardHTML(id, `data-practice-card="${side}-${index}"`)).join("")}</div></section>`;
   modal(
     "Choose a practice opponent",
-    `<p class="practice-intro" id="practice-opponent-note">Try your active deck against any of the ${SOLO_OPPONENTS.length} AI decks at your chosen pace. No trophies or rewards.</p><label class="practice-choice">Practice opponent<span><select id="practice-opponent" aria-describedby="practice-opponent-note">${SOLO_OPPONENTS.map((entry, index) => `<option value="${index}" ${index === practiceOpponentIndex ? "selected" : ""}>${esc(entry.name)} · ${esc(entry.style)}</option>`).join("")}</select>${icon("chevron-down")}</span></label>${practicePaceHTML()}<div class="match-decks">${deckPanel("yours", profile.deck)}${deckPanel("opponent", opponent.deck)}</div><p class="practice-deck-note">Tap a card to inspect it. To change your active deck, close this menu and open Cards.</p><div class="match-details-actions"><button class="text-button" id="practice-back">Back to battle modes</button><button class="primary-button" id="start-practice" aria-describedby="practice-opponent-note">${icon("target")} Start practice</button></div>`,
+    `<p class="practice-intro" id="practice-opponent-note">Try a saved deck against any of the ${SOLO_OPPONENTS.length} AI decks at your chosen pace. No trophies or rewards.</p><div class="practice-search"><label class="field-label" for="practice-search">Find a matchup</label><input type="search" class="name-input" id="practice-search" placeholder="Opponent, style or card" maxlength="100" autocomplete="off" aria-describedby="practice-search-help" value="${esc(practiceOpponentSearch)}"/><p id="practice-search-help">Search names, play styles or cards. Multiple words narrow the decks.</p><div class="practice-search-status"><p id="practice-search-count" role="status" aria-live="polite" aria-atomic="true"></p><button class="text-button" id="clear-practice-search">Clear search</button></div></div><label class="practice-choice">Practice opponent<span><select id="practice-opponent" aria-describedby="practice-opponent-note practice-search-count"></select>${icon("chevron-down")}</span></label>${practicePaceHTML()}<div class="match-decks">${deckPanel("yours", yourDeck)}<div id="practice-opponent-preview"></div></div><p class="practice-deck-note" id="practice-deck-note">Tap a card to inspect it. Your practice deck applies to this matchup and Practice again; your active battle deck stays the same. Edit saved decks in Cards.</p><div class="match-details-actions"><button class="text-button" id="practice-back">Back to battle modes</button><button class="primary-button" id="start-practice" aria-describedby="practice-opponent-note practice-search-count">${icon("target")} Start practice</button></div>`,
     "practice-opponents",
     true,
   );
   bindPracticePace();
+  $("#practice-deck").onchange = () => {
+    const index = Number($<HTMLSelectElement>("#practice-deck").value);
+    if (!Number.isInteger(index) || !profile.decks[index]) return;
+    practiceDeckSlot = index;
+    showPracticeOpponents();
+  };
   $("#practice-opponent").onchange = () => {
     const index = Number($<HTMLSelectElement>("#practice-opponent").value);
-    if (!Number.isInteger(index) || !SOLO_OPPONENTS[index]) return;
+    if (!matchingOpponents.some((entry) => entry.index === index)) return;
     practiceOpponentIndex = index;
-    showPracticeOpponents();
+    updateOpponent();
+  };
+  $("#practice-search").oninput = () => {
+    practiceOpponentSearch = $<HTMLInputElement>("#practice-search").value;
+    updateOpponent();
+  };
+  $("#clear-practice-search").onclick = () => {
+    practiceOpponentSearch = "";
+    $<HTMLInputElement>("#practice-search").value = "";
+    updateOpponent();
+    $("#practice-search").focus();
   };
   $("#practice-back").onclick = () => {
     showModes();
     $("#choose-practice-opponent").focus();
   };
   $("#start-practice").onclick = () => {
-    if (screen !== "lobby") return;
+    if (screen !== "lobby" || matchingOpponents.length === 0) return;
     startBattle(false, {
       ...opponent,
       mode: practiceMode,
       deck: [...opponent.deck],
+      playerDeck: [...yourDeck],
     });
   };
-  document
-    .querySelectorAll<HTMLButtonElement>("[data-practice-card]")
-    .forEach((button) => {
-      button.onclick = () => {
-        const view = $("#modal-root").firstElementChild!;
-        const panel = view.querySelector<HTMLElement>(".modal")!;
-        const scroll = panel.scrollTop;
-        showCard(
-          button.dataset.nativeCard as CardId,
-          () => {
-            modalKey = "practice-opponents";
-            modalFocus.render("practice-opponents", () =>
-              $("#modal-root").replaceChildren(view),
-            );
-            nativeCards.hydrate(view);
-            syncGraphicsStatus();
-            panel.scrollTop = scroll;
-            button.focus({ preventScroll: true });
-          },
-          "Back to practice decks",
-        );
-      };
-    });
+  function updateOpponent() {
+    matchingOpponents = practiceOpponents(practiceOpponentSearch);
+    const match =
+      matchingOpponents.find(
+        (entry) => entry.index === practiceOpponentIndex,
+      ) ?? matchingOpponents[0];
+    if (match) {
+      practiceOpponentIndex = match.index;
+      opponent = match.opponent;
+    }
+    const select = $<HTMLSelectElement>("#practice-opponent");
+    select.innerHTML = matchingOpponents.length
+      ? matchingOpponents
+          .map(
+            ({ opponent: entry, index }) =>
+              `<option value="${index}" ${index === practiceOpponentIndex ? "selected" : ""}>${esc(entry.name)} · ${esc(entry.style)}</option>`,
+          )
+          .join("")
+      : '<option value="">No matching opponents</option>';
+    select.disabled = !match;
+    $<HTMLButtonElement>("#start-practice").disabled = !match;
+    $("#clear-practice-search").hidden = !practiceOpponentSearch;
+    setText(
+      $("#practice-search-count"),
+      match
+        ? `${matchingOpponents.length} of ${SOLO_OPPONENTS.length} opponents`
+        : "No opponents match. Try another name or card, or clear the search.",
+    );
+    const preview = $("#practice-opponent-preview");
+    // Preserve the existing cards when a search still selects the same opponent.
+    if (preview.dataset.opponent !== String(match?.index)) {
+      preview.dataset.opponent = String(match?.index);
+      preview.innerHTML = match ? deckPanel("opponent", opponent.deck) : "";
+      nativeCards.hydrate(preview);
+      refreshIcons();
+    }
+    bindPracticeCards();
+  }
+  function bindPracticeCards() {
+    document
+      .querySelectorAll<HTMLButtonElement>("[data-practice-card]")
+      .forEach((button) => {
+        button.onclick = () => {
+          const view = $("#modal-root").firstElementChild!;
+          const panel = view.querySelector<HTMLElement>(".modal")!;
+          const scroll = panel.scrollTop;
+          showCard(
+            button.dataset.nativeCard as CardId,
+            () => {
+              modalKey = "practice-opponents";
+              modalFocus.render("practice-opponents", () =>
+                $("#modal-root").replaceChildren(view),
+              );
+              nativeCards.hydrate(view);
+              syncGraphicsStatus();
+              panel.scrollTop = scroll;
+              button.focus({ preventScroll: true });
+            },
+            "Back to practice decks",
+          );
+        };
+      });
+  }
+  updateOpponent();
 }
 function showCard(
   id: CardId,

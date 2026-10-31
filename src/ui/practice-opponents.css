@@ -4,6 +4,36 @@
   line-height: 1.7;
   margin: 0 0 18px;
 }
+.practice-search {
+  margin-bottom: 18px;
+}
+.practice-search .name-input {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+.practice-search > p,
+.practice-search-status p {
+  color: #a9bdd3;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 8px 0;
+}
+.practice-search-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.practice-search-status .text-button {
+  flex-shrink: 0;
+  min-height: 44px;
+}
+.practice-search-status .text-button[hidden] {
+  display: none;
+}
+#practice-opponent-preview {
+  min-width: 0;
+}
 .practice-choice {
   display: block;
   margin-bottom: 20px;
