@@ -3503,3 +3503,13 @@ Battle-log search now includes a recording's captured playerName alongside its o
 Five added unit cases cover accented names, Chinese names, cross-field name/opponent/card terms, a red viewer combined with all filters and anonymous older recordings. All twenty-four focused matcher checks pass after four new matching expectations fail before the change. All 3,650 unit checks across 256 files, type checking and production build pass. Both development cases pass on desktop Chromium and phone WebKit; all three production targets pass. The browser journey searches earlier names, opens the correct Details view, watches a red-side recording with its captured identity, returns with filters/focus, excludes the current unrecorded name and retains unchanged storage. Phone search and filters remain usable without horizontal overflow. The settings-prefixed journey joins workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `a111dbf7281e` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Read replay lengths directly in a clearer battle log
+
+Phone review showed the old mode/date metadata rendered at eight pixels. Log rows now use fourteen-pixel result headings and twelve-pixel opponent/metadata text, with a lighter metadata color. Mode and date/recorded length occupy separate lines. Length comes from recorded ticks at the shared fixed step; a native time element retains the original timestamp. Opening a recording and the saved profile remain unchanged.
+
+The browser journey checks zero-length, three-second, three-minute and five-minute recordings; desktop, 320-pixel portrait and rotated-phone layouts; readable computed text sizes, line height, non-overlapping crown scores and 44-pixel actions. Details show the matching duration and Back restores focus without writing storage. The initial metadata-only layout was refined to give result/opponent labels matching readable sizes, then both development targets passed again. Reviewed phone captures keep the mode, date, length and both actions readable.
+
+All 3,650 unit checks across 256 files, type checking and production build pass. Both final development cases pass on desktop Chromium and phone WebKit; all three production targets pass, each checking all three viewport sizes. The settings-prefixed journey joins workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `8347498fcd70` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

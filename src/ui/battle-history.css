@@ -89,6 +89,20 @@
   font-size: 12px;
   line-height: 1.6;
 }
+.history-entry > div > b {
+  font-size: 14px;
+}
+.history-entry > div > b > small {
+  font-size: 12px;
+}
+.history-entry .history-record-meta {
+  color: #a9bdd3;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.history-record-meta > span {
+  display: block;
+}
 .history-entry b small {
   overflow-wrap: anywhere;
 }
