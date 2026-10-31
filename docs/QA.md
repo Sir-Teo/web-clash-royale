@@ -3543,3 +3543,13 @@ Four new journeys cover choosing half speed in setup, card inspection, recorded 
 All 3,650 unit checks across 256 files, type checking and production build pass. All ten development cases pass across desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit. The new practice-prefixed setup journeys join workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `5c83deb7c19c` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Compare troop, spell and building counts in deck previews
+
+The builder and code, practice, paused-battle and local/shared-recording previews now show a compact composition summary beside their cards. A shared read-only renderer counts the selected card definitions by kind, including zero counts and singular building labels. Recorded previews use the existing viewer-perspective deck projection, and paused inspection uses captured starting decks.
+
+The browser journey changes a troop into a spell in the builder and undoes it, previews a three-troop/four-spell/one-building code, swaps saved practice decks, inspects both captured sides and reads local/shared red-side recordings. Exact summaries follow every source and update; readonly navigation leaves saved bytes unchanged after the intentional edit/Undo. Reviewed phone summaries remain readable at twelve pixels and fit without horizontal overflow.
+
+All 3,650 unit checks across 256 files, type checking and production build pass. Both development cases pass on desktop Chromium and phone WebKit; all three production targets pass. The practice-prefixed journey joins workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `80abe80f7261` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

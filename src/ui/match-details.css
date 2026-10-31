@@ -125,6 +125,12 @@
   background: #11263b66;
   min-width: 0;
 }
+.deck-composition {
+  margin: 0 0 12px;
+  color: #a9bdd3;
+  font-size: 12px;
+  line-height: 1.5;
+}
 .match-deck-heading {
   display: flex;
   align-items: center;
