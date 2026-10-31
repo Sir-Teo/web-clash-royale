@@ -261,3 +261,18 @@
   font-size: 12px;
   line-height: 1.6;
 }
+
+.deck-panel > #edit-deck,
+.deck-panel > #share-deck {
+  min-height: 44px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+.deck-panel > #share-deck {
+  margin-top: 8px;
+  justify-content: center;
+}
+.deck-panel > #share-deck > svg {
+  margin-left: 0;
+  flex-shrink: 0;
+}

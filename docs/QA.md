@@ -3595,3 +3595,13 @@ An additional keyboard check reproduced M being ignored when a speaker button it
 All 3,650 unit checks across 256 files, type checking and the final production build pass. Twenty-six distinct development cases pass across desktop Chromium and phone WebKit; thirty-nine distinct production cases pass across desktop Chromium, phone Chromium and phone WebKit. This includes twenty broader keyboard/Help development cases, thirty-three corresponding production cases including the main sound journey, plus the focused-speaker checks and a repeat of the sound journey against the final build. The new settings-prefixed journeys join workflow CI automatically. A CLI selection audit before adding the final focus file covered all 354 then-declared workflow cases exactly once across nine shards; no hosted CI was triggered.
 
 Final root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `a27a2ba53afa` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Share the selected battle deck directly from the lobby
+
+The lobby's Battle deck panel now offers Share code, opening the existing read-only code view with the selected slot's captured ordered cards. Back to arena closes the view and restores its native opener. Both Edit and Share footer actions retain 44-pixel touch targets on narrow screens. Sharing remains a read-only operation, including when the session deck cannot be saved.
+
+The new journeys share a reordered deck and a newly selected saved slot, verify exact copied codes, restore focus/page position and leave stored bytes unchanged. A blocked-save edit then shares the actual unsaved session deck through manual-copy fallback without retrying storage. A clipboard rejection arriving after the dialog closes cannot steal focus. Reviewed phone panels keep both footer actions readable and separate.
+
+All 3,650 unit checks across 256 files, type checking and production build pass. All four development cases pass across desktop Chromium and phone WebKit; all six production cases pass across desktop Chromium, phone Chromium and phone WebKit. The settings-prefixed journeys join workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `8690df04affe` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

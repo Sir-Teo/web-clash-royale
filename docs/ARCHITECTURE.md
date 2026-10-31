@@ -343,6 +343,8 @@ Battle log details read the original eight-card lists from the replay. `src/game
 
 The lobby-only adoption action validates the selected deck and destination before replacing a saved slot and selecting it. Its Undo snapshot captures only the active slot, current deck and all three saved decks; rewards, preferences and history remain untouched. Undo restores fresh array copies and persists them through the existing storage path. If browser storage rejects a write, the working deck remains usable for the session and the details view states that limit. Undo remains available in the current details view, including after card inspection; leaving the view ends that local Undo context.
 
+The lobby deck panel opens the shared read-only deck-code dialog directly from its selected session deck. It captures the ordered cards and slot title when opened, writes no profile data, and closes back to the same native button through ModalFocus. Edit/Share footer controls retain 44-pixel touch targets on phones.
+
 A shared deck-composition renderer counts the selected card definitions by troop/spell/building kind. Builder, code, practice, paused-battle and local/shared recording previews display these read-only counts using each view’s actual captured/projected cards. No profile, replay or rules fields change.
 
 `src/ui/match-details.css` lays out the two native card panels side by side on desktop and stacks them on narrow phones. The history actions, destination select, cards and copy/replay buttons retain 44-pixel touch targets. Dialog keyboard handling includes selects and textareas in its focus cycle. Saved-deck labels now match their actual preset composition or read Custom deck after edits and copying.

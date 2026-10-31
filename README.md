@@ -68,6 +68,8 @@ In a solo battle, choose **Pause → Inspect battle deck** to read any of your e
 
 Deck previews and the builder show troop, spell and building counts alongside the starting cards, helping compare deck composition.
 
+From the lobby’s **Battle deck** panel, use **Share code** to copy the selected deck directly. **Back to arena** returns focus to that button.
+
 Use **Share deck code** beneath either deck in practice setup, Battle details or a shared replay preview. **Back** returns to that preview with its selections, scroll and focus.
 
 Deck adoption and Undo also retain newer rewards and battle-log entries from other tabs. A change to saved decks clears stale preview Undo and lets you review the selected destination before changing decks again. Open Battle details keep showing their original recording when new results enter the log.
