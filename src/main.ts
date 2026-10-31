@@ -258,6 +258,7 @@ let screen: "lobby" | "battle" | "replay" = "lobby";
 let mode: Mode = "classic";
 let selected = -1;
 let paused = false;
+let fullscreenPending = false;
 let graphicsAvailable = true;
 let soundPaused = false;
 let modalPausedBattle = false;
@@ -2796,6 +2797,7 @@ function showSettings() {
       modalKey = "settings";
       modalFocus.render("settings", () => $("#modal-root").replaceChildren(view));
       syncGraphicsStatus();
+      syncFullscreenControl();
       panel.scrollTop = scroll;
       opener.focus({ preventScroll: true });
     });
@@ -2859,14 +2861,31 @@ function showSettings() {
     );
   };
   $("#fullscreen").onclick = async () => {
+    if (fullscreenPending) return;
+    fullscreenPending = true;
+    syncFullscreenControl();
     try {
       if (document.fullscreenElement) await document.exitFullscreen();
       else await document.documentElement.requestFullscreen();
     } catch {
       toast("Fullscreen is unavailable in this browser.");
+    } finally {
+      fullscreenPending = false;
+      syncFullscreenControl();
     }
   };
+  syncFullscreenControl();
 }
+function syncFullscreenControl() {
+  const button = document.querySelector<HTMLButtonElement>("#fullscreen");
+  if (!button) return;
+  const active = !!document.fullscreenElement;
+  setAttribute(button, "aria-pressed", String(active));
+  setAttribute(button, "aria-busy", String(fullscreenPending));
+  setAttribute(button, "title", active ? "Exit fullscreen" : "Enter fullscreen");
+  button.disabled = fullscreenPending;
+}
+document.addEventListener("fullscreenchange", syncFullscreenControl);
 function showProgressRestore(imported: Profile) {
   modal(
     "Restore your kingdom?",
