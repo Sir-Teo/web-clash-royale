@@ -1625,8 +1625,18 @@ kbd {
   font-size: 10px;
 }
 .in-replay .battle-tray {
-  opacity: 0.6;
   pointer-events: none;
+}
+.in-replay .hand-card {
+  pointer-events: auto;
+}
+.in-replay .tray-caption {
+  color: #b4c7e0;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.in-replay .tray-caption > span:last-child {
+  display: none;
 }
 .in-replay .arena-stage {
   height: clamp(360px, calc(100vh - 400px), 600px);

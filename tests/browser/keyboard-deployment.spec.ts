@@ -33,6 +33,8 @@ test.beforeEach(async ({ page }) => {
     .toBe(false);
 });
 async function select(page: Page, card: string) {
+  // Keep the startup tap away from the arena before exercising keyboard aim.
+  await page.mouse.move(0, 0);
   const slot = (await state(page)).hand.indexOf(card);
   expect(slot).toBeGreaterThanOrEqual(0);
   await page.keyboard.press(String(slot + 1));
