@@ -121,11 +121,14 @@ test("previews curated and saved opponent decks and returns from card inspection
     );
     const average =
       opponent.deck.reduce((sum, id) => sum + CARD_MAP[id].cost, 0) / 8;
+    const expectedAverage = opponent.deck.includes("mirror")
+      ? "4.3–4.8"
+      : average.toFixed(1);
     await expect(
       page.locator(
         '[data-practice-side="opponent"] .match-deck-heading > span',
       ),
-    ).toContainText(`${average.toFixed(1)} average`);
+    ).toContainText(`${expectedAverage} average`);
   }
   for (const [slot, expected] of before.decks.entries()) {
     await choose(page).selectOption(String(SOLO_OPPONENTS.length + slot));

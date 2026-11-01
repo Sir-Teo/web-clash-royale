@@ -3883,3 +3883,13 @@ The baseline keyboard journey selected Giant in slot three, focused Fireball in 
 All 3,695 unit checks across 262 files, type checking and production build pass. All six production cases pass across desktop Chromium, phone Chromium and phone WebKit, including accessible per-slot descriptions with blocked storage and the preserved session-only save notice. Both focused development journeys pass through persisted and recorded keyboard ordering.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `884a20696cd0` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Announce Mirror's variable cost on static card buttons
+
+The shared static card renderer now labels Mirror with a variable elixir cost; other cards retain their numeric labels and archived artwork. Starting-deck replay play counts inherit the new label. Stateful live/replay hand updates retain their current price, repeated-card information and initial unknown state. This changes accessible text without adding saved data or changing combat prices.
+
+Direct desktop Chromium and 320-pixel phone WebKit inspection confirms variable labels in builder slots, collection cards and replay starting decks, including the unplayed-count suffix. The underlying replay hand still announces its actual initial unknown price. Average ranges, long-name layouts and exact stored bytes remain intact. No new persistent test cases were added for this text correction.
+
+All 3,695 unit checks across 262 files, type checking and production build pass. Direct final-production observations on desktop Chromium and 320-pixel phone WebKit confirm variable static labels, retained replay-use counts, stateful hand pricing labels, consistent summaries and unchanged saved bytes. The existing full-roster preview expectation now uses Village Warden's actual `4.3–4.8` average range; all three final production preview journeys pass across desktop Chromium, phone Chromium and phone WebKit.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Final root cache is `72da6c919ec2` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

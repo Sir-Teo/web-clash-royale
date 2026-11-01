@@ -360,7 +360,8 @@ const modeNames: Record<Mode, string> = {
 };
 const cardHTML = (id: CardId, attrs = "", extra = "") => {
   const c = CARD_MAP[id];
-  return `<button class="game-card ${c.rarity.toLowerCase()} ${extra}" data-native-card="${id}" data-card-variant="${extra.includes("hand-card") ? "hand" : "deck"}" ${attrs} aria-label="${c.name}, ${c.cost} elixir"><span class="cost">${c.cost}</span><img src="${cardArt(id)}" alt="${c.name}" draggable="false"/>${nativeCardArt}<span class="card-level">Level 11</span><span class="card-name">${c.name}</span></button>`;
+  const costLabel = id === "mirror" ? "variable elixir cost" : `${c.cost} elixir`;
+  return `<button class="game-card ${c.rarity.toLowerCase()} ${extra}" data-native-card="${id}" data-card-variant="${extra.includes("hand-card") ? "hand" : "deck"}" ${attrs} aria-label="${c.name}, ${costLabel}"><span class="cost">${c.cost}</span><img src="${cardArt(id)}" alt="${c.name}" draggable="false"/>${nativeCardArt}<span class="card-level">Level 11</span><span class="card-name">${c.name}</span></button>`;
 };
 
 $("#app").innerHTML = `
