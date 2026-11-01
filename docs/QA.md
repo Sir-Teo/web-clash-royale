@@ -3841,3 +3841,13 @@ A read-only workflow collection audit lists 477 cases across 72 files. Each brow
 All 3,692 unit checks across 261 files, type checking and production build pass. All fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit, including existing coarse/fine seeking, native timeline behavior and phone control layout. The expanded frame journeys are already selected by workflow CI.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `e1c3c0b808cb` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Explore a random curated practice matchup
+
+Practice setup now pairs Random matchup with Swap decks. Random chooses two different curated sources, clears opponent search and rerenders the existing previews while retaining pace and speed. It stays available with an empty search result, offering a quick way to explore another matchup without editing saved slots.
+
+Direct desktop Chromium and 320-pixel phone WebKit inspection sampled five random pairs per browser. Every pair contained distinct valid curated sources and two legal eight-card previews; Double pace, 2× speed, cleared search and keyboard focus stayed intact. Card inspection returned to the chosen pair, Swap exchanged the actual preview decks, and Start used those decks with 2× speed while leaving exact saved bytes unchanged. Both controls measure at least 44 pixels high and the narrow layout has no overflow. All four existing swap development journeys pass across desktop Chromium and phone WebKit. No new persistent test cases were added for this reversible setup shortcut.
+
+All 3,692 unit checks across 261 files, type checking and production build pass. All six production swap cases pass across desktop Chromium, phone Chromium and phone WebKit. Direct production observations on desktop Chromium and 320-pixel phone WebKit also pass for random source validity, pace/speed/focus retention, search recovery, inspection, Swap, startup and unchanged saved bytes.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `fa87befd1c3e` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
