@@ -2790,7 +2790,7 @@ function renderDeckBuilder() {
       )
       .join(
         "",
-      )}</select>${icon("chevron-down")}</div></div></div></div><p id="collection-results" role="status" aria-live="polite"></p><div class="collection-grid" id="collection-grid"></div><div class="builder-footer"><span id="builder-hint">${editSlot < 0 ? "Choose a collection card to inspect its stats." : `${CARD_MAP[profile.deck[editSlot]].name} selected · Choose a replacement below, or select it again to cancel.`}</span><button class="primary-button" id="deck-done">${icon("check")} Done</button></div>`,
+      )}</select>${icon("chevron-down")}</div></div></div></div><div class="collection-results-row"><p id="collection-results" role="status" aria-live="polite"></p><button class="text-button" id="clear-collection-filters" aria-controls="collection-grid" aria-describedby="collection-results">Clear filters</button></div><div class="collection-grid" id="collection-grid"></div><div class="builder-footer"><span id="builder-hint">${editSlot < 0 ? "Choose a collection card to inspect its stats." : `${CARD_MAP[profile.deck[editSlot]].name} selected · Choose a replacement below, or select it again to cancel.`}</span><button class="primary-button" id="deck-done">${icon("check")} Done</button></div>`,
     "deck",
     true,
   );
@@ -2844,6 +2844,21 @@ function renderDeckBuilder() {
     const value = $<HTMLSelectElement>("#collection-cost").value;
     collectionCost = value === "all" ? "all" : Number(value);
     renderCollection();
+  };
+  $("#clear-collection-filters").onclick = () => {
+    search = "";
+    filter = "all";
+    collectionCost = "all";
+    const input = $<HTMLInputElement>("#card-search");
+    input.value = "";
+    $<HTMLSelectElement>("#collection-cost").value = "all";
+    for (const button of filterButtons) {
+      const active = button.dataset.filter === "all";
+      button.classList.toggle("active", active);
+      setAttribute(button, "aria-pressed", String(active));
+    }
+    renderCollection();
+    input.focus();
   };
   $("#collection-order").onchange = () => {
     collectionOrder = $<HTMLSelectElement>("#collection-order")
@@ -2997,6 +3012,8 @@ function showDeckCodes(state: Partial<DeckCodeView> = {}) {
   }
 }
 function renderCollection() {
+  $<HTMLButtonElement>("#clear-collection-filters").disabled =
+    !search && filter === "all" && collectionCost === "all";
   const grid = $("#collection-grid");
   setAttribute(grid, "data-collection-mode", editSlot < 0 ? "inspect" : "replace");
   let rows = collectionRows.get(grid);

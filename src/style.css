@@ -2062,8 +2062,19 @@ kbd {
   outline: 3px solid #86d9ff;
   outline-offset: 3px;
 }
+.collection-results-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+}
+#clear-collection-filters {
+  flex: 0 0 auto;
+  min-height: 44px;
+}
 #collection-results {
-  margin: 14px 0 0;
+  margin: 0;
   font-size: 11px;
   color: #a8bdd4;
 }

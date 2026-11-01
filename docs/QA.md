@@ -3757,3 +3757,13 @@ A read-only workflow collection audit lists 441 cases across 66 files. Each brow
 All 3,689 unit checks across 260 files, type checking and production build pass. All four development journeys pass across desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit, including the existing daily date selection and result replay/retry journeys. The practice-prefixed file joins workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `b2cf41224c1b` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Clear collection filters without losing a replacement selection
+
+The collection result row now offers Clear filters. It resets search, card type and exact elixir cost in place, updates the pressed type state and restores search focus. Sort order, any selected replacement slot and the builder edit history remain intact. The action is disabled when no filters are active and adds no saved fields or writes.
+
+Direct desktop and 320-pixel browser inspection started with a selected replacement slot, Legendary-first sorting, Spells, nine elixir and a no-match search. Clearing restored all 74 cards, the empty search, All cards and Any elixir while keeping slot four, sorting and exact stored bytes. Search owned focus, the clear action was disabled again and neither viewport overflowed. The visible no-match row keeps Clear filters within reach. The ten existing collection journeys pass on desktop Chromium and phone WebKit, including inspection, touch replacement, rarity sorting, temporary card trials and combined filters.
+
+All 3,689 unit checks across 260 files, type checking and production build pass. All fifteen production collection cases pass across desktop Chromium, phone Chromium and phone WebKit. No new persistent test cases were added for this UI reset; direct browser observations cover the action and the existing collection suite protects established flows.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `72efea6c27c6` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
