@@ -3863,3 +3863,13 @@ The first screenshot exposed a missing shared sr-only utility: accessible expans
 All 3,692 unit checks across 261 files, type checking and production build pass. All sixteen final development cases pass across desktop Chromium and phone WebKit; all twenty-four production cases pass across desktop Chromium, phone Chromium and phone WebKit, covering existing collection and frame-study behavior. Direct production curve observations also pass on desktop Chromium and 320-pixel phone WebKit. The clipped frame status remains available as one accessible status, and the phone replay controls retain their 88-pixel height.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `3aedbc2fcb9f` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Show actual average-cost ranges for Mirror decks
+
+Visible deck averages now show the possible range of Mirror's actual price instead of treating its printed one-elixir placeholder as fixed. The helper uses the other cards' lowest/highest prices plus Mirror's surcharge; a deck whose eligible Mirror targets all cost the same shows one accurate average. Fixed-cost decks keep the previous single label. All nine visible average call sites use the shared formatter, including the lobby and deck previews. Numeric deck calculations, saved data and combat rules are unchanged.
+
+Three focused unit cases preserve the ordinary starter average, compare the complete range against actual Battle.cardCost prices (including two- and ten-elixir Mirror), retain a frozen input deck and collapse equal endpoints. Direct desktop Chromium and 320-pixel phone WebKit observations verify the range across lobby, builder, shared code, both practice decks, history and replay summaries while stored bytes remain unchanged. A further phone observation puts Mirror decks on both recorded sides beside a 64-character opponent name; both ranges remain readable without overflow. The four existing shared-code and long-recorded-name development cases pass across desktop Chromium and phone WebKit.
+
+All 3,695 unit checks across 262 files, type checking and production build pass. All six production cases pass across desktop Chromium, phone Chromium and phone WebKit. Direct production observations also pass on desktop Chromium and 320-pixel phone WebKit with Mirror on both recorded sides, long rival names, all summary contexts and unchanged saved bytes.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `d4884a01942f` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
