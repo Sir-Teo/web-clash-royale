@@ -1,3 +1,4 @@
+import "./ui/deck-elixir-curve.css";
 import "./ui/daily-practice.css";
 import "./ui/card-trial.css";
 import "./ui/battle-controls.css";
@@ -324,6 +325,7 @@ let filter: CollectionKind = "all";
 let search = "";
 let collectionCost: number | "all" = "all";
 let collectionOrder: CollectionOrder = "collection";
+let deckCurveOpen = false;
 const historyQuery: HistoryQuery = {
   search: "",
   result: "all",
@@ -2710,6 +2712,7 @@ function showDeckBuilder() {
   search = "";
   collectionCost = "all";
   collectionOrder = "collection";
+  deckCurveOpen = false;
   deckEdits.reset(profile);
   deckEditNotice = "";
   renderDeckBuilder();
@@ -2796,6 +2799,28 @@ function restoreDeckEdit(direction: "undo" | "redo", keyboard = false) {
   ).focus();
   audio.play("button_click_02");
 }
+function deckElixirCurveHTML(deck: readonly CardId[]) {
+  const columns = Array.from({ length: 9 }, (_, index) => {
+    const cost = index + 1;
+    return {
+      key: String(cost),
+      label: String(cost),
+      name: `${cost} elixir`,
+      count: deck.filter((id) => id !== "mirror" && CARD_MAP[id].cost === cost)
+        .length,
+    };
+  });
+  const mirror = deck.includes("mirror");
+  if (mirror)
+    columns.push({
+      key: "variable",
+      label: "?",
+      name: "Mirror, variable elixir cost",
+      count: 1,
+    });
+  const peak = Math.max(1, ...columns.map((column) => column.count));
+  return `<details class="deck-elixir-curve" id="deck-elixir-curve" ${deckCurveOpen ? "open" : ""}><summary tabindex="0">Elixir curve</summary><dl class="deck-elixir-bars" aria-label="Deck cards by elixir cost" style="--curve-columns:${columns.length}">${columns.map((column) => `<div class="deck-elixir-column ${column.count ? "" : "empty"}" data-deck-cost="${column.key}" data-card-count="${column.count}"><dt><span aria-hidden="true">${column.label}</span><span class="sr-only">${column.name}</span></dt><dd><span>${column.count}<span class="sr-only"> ${column.count === 1 ? "card" : "cards"}</span></span><i aria-hidden="true" style="height:${Math.max(2, Math.round((column.count / peak) * 36))}px"></i></dd></div>`).join("")}</dl>${mirror ? "<p>Mirror costs one more than the last card played.</p>" : ""}</details>`;
+}
 function renderDeckBuilder() {
   if (deckEdits.sync(profile))
     deckEditNotice =
@@ -2803,7 +2828,7 @@ function renderDeckBuilder() {
   const orderDescription = `deck-order-position deck-order-help${storageAvailable ? "" : " deck-order-save"}`;
   modal(
     "Build your winning eight",
-    `<div class="builder-top"><p>Inspect a collection card, or select a deck card to move or replace.</p><span><i class="tiny-drop"></i> ${averageCost(profile.deck).toFixed(1)} average</span></div>${deckCompositionHTML(profile.deck)}<div class="builder-deck">${profile.deck.map((id, i) => cardHTML(id, `data-edit-slot="${i}" aria-pressed="${editSlot === i}" aria-keyshortcuts="Alt+ArrowLeft Alt+ArrowRight" aria-describedby="${orderDescription}"`, editSlot === i ? "selected" : "")).join("")}</div><div class="builder-order" role="group" aria-label="Deck order"><div><b id="deck-order-position">${editSlot < 0 ? "Arrange your deck" : `${CARD_MAP[profile.deck[editSlot]].name} · Slot ${editSlot + 1} of 8`}</b><p id="deck-order-help">${editSlot < 0 ? "Select a deck card to move it." : "Move this card with the buttons or Alt + Left / Right."}</p>${storageAvailable ? "" : '<p id="deck-order-save" role="status">Changes are available for this session. Browser storage is unavailable.</p>'}</div><div class="builder-order-actions"><button class="secondary-button" id="deck-move-earlier" aria-describedby="${orderDescription}" ${editSlot <= 0 ? "disabled" : ""}>Earlier</button><button class="secondary-button" id="deck-move-later" aria-describedby="${orderDescription}" ${editSlot < 0 || editSlot >= 7 ? "disabled" : ""}>Later</button></div></div><div class="builder-history" role="group" aria-label="Deck edit history"><div><p id="deck-edit-status" role="status" aria-live="polite">${esc(deckEditNotice || "Undo and redo deck edits made during this visit.")}</p><small>Undo: Ctrl/Cmd + Z · Redo: Ctrl/Cmd + Shift + Z</small></div><div class="builder-history-actions"><button class="secondary-button" id="deck-undo" aria-describedby="deck-edit-status" aria-keyshortcuts="Control+z Meta+z" title="${esc(deckEdits.undoLabel ? `Undo: ${deckEdits.undoLabel}` : "No deck edit to undo")}" ${deckEdits.undoLabel ? "" : "disabled"}>Undo</button><button class="secondary-button" id="deck-redo" aria-describedby="deck-edit-status" aria-keyshortcuts="Control+Shift+z Meta+Shift+z Control+y" title="${esc(deckEdits.redoLabel ? `Redo: ${deckEdits.redoLabel}` : "No deck edit to redo")}" ${deckEdits.redoLabel ? "" : "disabled"}>Redo</button></div></div><div class="builder-sharing"><button class="secondary-button" id="deck-codes">Deck codes</button><p>Copy your deck or preview a shared code.</p></div><div class="builder-controls"><div class="collection-label"><h3>Card collection</h3><span>${CARDS.length} / ${CARDS.length} unlocked</span></div><label class="search-input">${icon("search")}<input id="card-search" placeholder="Find a card…" value="${esc(search)}" aria-label="Search cards"/></label><div class="filter-row" role="group" aria-label="Card type">${["all", "troop", "spell", "building"].map((f) => `<button class="${filter === f ? "active" : ""}" data-filter="${f}" aria-pressed="${filter === f}">${f === "all" ? "All cards" : f === "troop" ? "Troops" : f === "spell" ? "Spells" : "Buildings"}</button>`).join("")}</div><div class="collection-options"><div><label for="collection-cost">Elixir cost</label><div class="match-deck-choice"><select id="collection-cost"><option value="all" ${collectionCost === "all" ? "selected" : ""}>Any elixir</option>${[
+    `<div class="builder-top"><p>Inspect a collection card, or select a deck card to move or replace.</p><span><i class="tiny-drop"></i> ${averageCost(profile.deck).toFixed(1)} average</span></div>${deckCompositionHTML(profile.deck)}${deckElixirCurveHTML(profile.deck)}<div class="builder-deck">${profile.deck.map((id, i) => cardHTML(id, `data-edit-slot="${i}" aria-pressed="${editSlot === i}" aria-keyshortcuts="Alt+ArrowLeft Alt+ArrowRight" aria-describedby="${orderDescription}"`, editSlot === i ? "selected" : "")).join("")}</div><div class="builder-order" role="group" aria-label="Deck order"><div><b id="deck-order-position">${editSlot < 0 ? "Arrange your deck" : `${CARD_MAP[profile.deck[editSlot]].name} · Slot ${editSlot + 1} of 8`}</b><p id="deck-order-help">${editSlot < 0 ? "Select a deck card to move it." : "Move this card with the buttons or Alt + Left / Right."}</p>${storageAvailable ? "" : '<p id="deck-order-save" role="status">Changes are available for this session. Browser storage is unavailable.</p>'}</div><div class="builder-order-actions"><button class="secondary-button" id="deck-move-earlier" aria-describedby="${orderDescription}" ${editSlot <= 0 ? "disabled" : ""}>Earlier</button><button class="secondary-button" id="deck-move-later" aria-describedby="${orderDescription}" ${editSlot < 0 || editSlot >= 7 ? "disabled" : ""}>Later</button></div></div><div class="builder-history" role="group" aria-label="Deck edit history"><div><p id="deck-edit-status" role="status" aria-live="polite">${esc(deckEditNotice || "Undo and redo deck edits made during this visit.")}</p><small>Undo: Ctrl/Cmd + Z · Redo: Ctrl/Cmd + Shift + Z</small></div><div class="builder-history-actions"><button class="secondary-button" id="deck-undo" aria-describedby="deck-edit-status" aria-keyshortcuts="Control+z Meta+z" title="${esc(deckEdits.undoLabel ? `Undo: ${deckEdits.undoLabel}` : "No deck edit to undo")}" ${deckEdits.undoLabel ? "" : "disabled"}>Undo</button><button class="secondary-button" id="deck-redo" aria-describedby="deck-edit-status" aria-keyshortcuts="Control+Shift+z Meta+Shift+z Control+y" title="${esc(deckEdits.redoLabel ? `Redo: ${deckEdits.redoLabel}` : "No deck edit to redo")}" ${deckEdits.redoLabel ? "" : "disabled"}>Redo</button></div></div><div class="builder-sharing"><button class="secondary-button" id="deck-codes">Deck codes</button><p>Copy your deck or preview a shared code.</p></div><div class="builder-controls"><div class="collection-label"><h3>Card collection</h3><span>${CARDS.length} / ${CARDS.length} unlocked</span></div><label class="search-input">${icon("search")}<input id="card-search" placeholder="Find a card…" value="${esc(search)}" aria-label="Search cards"/></label><div class="filter-row" role="group" aria-label="Card type">${["all", "troop", "spell", "building"].map((f) => `<button class="${filter === f ? "active" : ""}" data-filter="${f}" aria-pressed="${filter === f}">${f === "all" ? "All cards" : f === "troop" ? "Troops" : f === "spell" ? "Spells" : "Buildings"}</button>`).join("")}</div><div class="collection-options"><div><label for="collection-cost">Elixir cost</label><div class="match-deck-choice"><select id="collection-cost"><option value="all" ${collectionCost === "all" ? "selected" : ""}>Any elixir</option>${[
       ...new Set(CARDS.map((c) => c.cost)),
     ]
       .sort((a, b) => a - b)
@@ -2833,6 +2858,10 @@ function renderDeckBuilder() {
     "deck",
     true,
   );
+  const curve = $<HTMLDetailsElement>("#deck-elixir-curve");
+  curve.ontoggle = () => {
+    if (curve.isConnected) deckCurveOpen = curve.open;
+  };
   document
     .querySelectorAll<HTMLButtonElement>("[data-edit-slot]")
     .forEach((e) => {
@@ -4295,7 +4324,7 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "Tab") {
       const focusables = Array.from(
         document.querySelectorAll<HTMLElement>(
-          ".modal button:not(:disabled),.modal input:not(:disabled),.modal select:not(:disabled),.modal textarea:not(:disabled),.modal a[href]",
+          ".modal button:not(:disabled),.modal input:not(:disabled),.modal select:not(:disabled),.modal textarea:not(:disabled),.modal a[href],.modal summary",
         ),
       ).filter(
         (element) =>

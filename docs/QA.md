@@ -3851,3 +3851,15 @@ Direct desktop Chromium and 320-pixel phone WebKit inspection sampled five rando
 All 3,692 unit checks across 261 files, type checking and production build pass. All six production swap cases pass across desktop Chromium, phone Chromium and phone WebKit. Direct production observations on desktop Chromium and 320-pixel phone WebKit also pass for random source validity, pace/speed/focus retention, search recovery, inspection, Swap, startup and unchanged saved bytes.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `fa87befd1c3e` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Inspect a deck's elixir curve while editing
+
+Cards now offers a collapsed Elixir curve with fixed-cost card counts and a separate variable-cost Mirror column. Native Enter/Space opens/closes it, and Tab/Shift+Tab includes its summary in the modal's focus cycle. The open state survives inspection, replacement and Undo/Redo during this visit; a new builder visit starts collapsed. The chart adds no saved state.
+
+Direct desktop Chromium and 320-pixel phone WebKit observations use a known eight-card deck spanning one through nine elixir plus Mirror. Counts match the expected distribution, Mirror replacement removes its variable column and adds a five-elixir card, Undo restores the original curve and Redo reapplies the change without collapsing it. Inspection preserves the view, chart opening keeps saved bytes unchanged, later explicit deck edits preserve all reward/history counters, the summary is 44 pixels high and neither viewport overflows. No new persistent test cases were added for this reversible view.
+
+The first screenshot exposed a missing shared sr-only utility: accessible expansion words were visible beside the counts. The shared clipping style now hides those words and the replay frame live region while retaining accessible content. Revised Mirror and fixed-cost phone screenshots are reviewed, and the existing collection/frame journeys are rerun after the correction.
+
+All 3,692 unit checks across 261 files, type checking and production build pass. All sixteen final development cases pass across desktop Chromium and phone WebKit; all twenty-four production cases pass across desktop Chromium, phone Chromium and phone WebKit, covering existing collection and frame-study behavior. Direct production curve observations also pass on desktop Chromium and 320-pixel phone WebKit. The clipped frame status remains available as one accessible status, and the phone replay controls retain their 88-pixel height.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `3aedbc2fcb9f` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

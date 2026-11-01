@@ -1,0 +1,67 @@
+.deck-elixir-curve {
+  margin: 0 0 18px;
+  border: 1px solid #ffffff18;
+  border-radius: 8px;
+  background: #11263b66;
+}
+.deck-elixir-curve summary {
+  min-height: 44px;
+  padding: 12px;
+  color: #d3b4e9;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.deck-elixir-curve summary:focus-visible {
+  outline: 3px solid #86d9ff;
+  outline-offset: 3px;
+}
+.deck-elixir-curve[open] summary {
+  border-bottom: 1px solid #ffffff12;
+}
+.deck-elixir-bars {
+  display: grid;
+  grid-template-columns: repeat(var(--curve-columns), minmax(0, 1fr));
+  gap: 4px;
+  margin: 12px;
+}
+.deck-elixir-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  text-align: center;
+}
+.deck-elixir-column dt {
+  order: 2;
+  color: #b6c9dc;
+  font-size: 11px;
+}
+.deck-elixir-column dd {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-end;
+  min-height: 54px;
+  margin: 0 0 6px;
+  color: #f0d9fa;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.deck-elixir-column i {
+  display: block;
+  margin-top: 3px;
+  border-radius: 3px;
+  background: linear-gradient(#dfa3ef, #a85ec6);
+}
+.deck-elixir-column.empty dd {
+  color: #829ab3;
+}
+.deck-elixir-column.empty i {
+  background: #7f96b63d;
+}
+.deck-elixir-curve p {
+  margin: 8px 12px 12px;
+  color: #a8bdd4;
+  font-size: 11px;
+  line-height: 1.5;
+}
