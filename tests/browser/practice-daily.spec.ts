@@ -202,3 +202,88 @@ test("daily practice repeats its captured opening through result replay and reta
   ).toEqual(expected.practice.deck);
   expect(await saved(page)).toBe(after);
 });
+
+test("daily date selection retains speed and focus, validates empty dates and starts the chosen opening", async ({
+  page,
+}, info) => {
+  const before = await saved(page);
+  await openDaily(page);
+  await page.locator("#practice-speed").selectOption("0.5");
+  const date = page.locator("#daily-practice-day");
+  await date.focus();
+  await date.fill("2020-02-29");
+  await expect(date).toBeFocused();
+  await expect(page.locator("[data-daily-day]")).toHaveAttribute(
+    "data-daily-day",
+    "2020-02-29",
+  );
+  const selected = rules.dailyPractice(new Date("2020-02-29T12:00:00Z"));
+  expect(
+    await ids(page, '[data-daily-side="yours"] [data-daily-card]'),
+  ).toEqual(selected.practice.playerDeck);
+  expect(
+    await ids(page, '[data-daily-side="opponent"] [data-daily-card]'),
+  ).toEqual(selected.practice.deck);
+  await expect(page.locator("#practice-speed")).toHaveValue("0.5");
+  const card = page.locator('[data-daily-card="opponent-0"]');
+  await card.click();
+  await page.locator("#card-back").click();
+  await expect(card).toBeFocused();
+  await expect(date).toHaveValue("2020-02-29");
+  await date.fill("");
+  await expect(date).toHaveAttribute("aria-invalid", "true");
+  await expect(page.locator("#daily-date-error")).toHaveText(
+    "Choose a valid UTC date.",
+  );
+  await expect(date).toHaveAccessibleDescription(/Choose a valid UTC date/);
+  await expect(page.locator("#start-daily-practice")).toBeDisabled();
+  await date.fill("2026-11-01");
+  await expect(page.locator("#daily-date-error")).toBeHidden();
+  await expect(date).not.toHaveAccessibleDescription(/Choose a valid UTC date/);
+  await expect(page.locator("#start-daily-practice")).toBeEnabled();
+  if (info.project.name === "desktop") {
+    await date.focus();
+    await page.keyboard.press("ArrowRight");
+    await page.keyboard.press("ArrowRight");
+    await page.keyboard.press("ArrowUp");
+    await page.keyboard.press("ArrowUp");
+    await expect(date).toHaveValue("2028-11-01");
+    await expect(page.locator("[data-daily-day]")).toHaveAttribute(
+      "data-daily-day",
+      "2028-11-01",
+    );
+  }
+  const beforeToday = await page.evaluate(() =>
+    new Date().toISOString().slice(0, 10),
+  );
+  await page.locator("#daily-today").click();
+  const today = await date.inputValue();
+  const afterToday = await page.evaluate(() =>
+    new Date().toISOString().slice(0, 10),
+  );
+  expect([beforeToday, afterToday]).toContain(today);
+  await expect(page.locator("[data-daily-day]")).toHaveAttribute(
+    "data-daily-day",
+    today,
+  );
+  await expect(page.locator("#practice-speed")).toHaveValue("0.5");
+  expect(
+    (await page.locator("#daily-today").boundingBox())!.height,
+  ).toBeGreaterThanOrEqual(44);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await date.fill("2020-02-29");
+  await page.screenshot({
+    path: info.outputPath("daily-practice-date.png"),
+    animations: "disabled",
+  });
+  expect(await saved(page)).toBe(before);
+  await page.locator("#start-daily-practice").click();
+  expect((await state(page)).seed).toBe(selected.practice.openingSeed);
+  expect((await state(page)).enemyDeck).toEqual(selected.practice.deck);
+  expect((await state(page)).speed).toBe(0.5);
+  expect(await saved(page)).toBe(before);
+});

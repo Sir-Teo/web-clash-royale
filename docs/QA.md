@@ -3735,3 +3735,13 @@ Six new unit checks cover same-day stability, local offset/UTC boundaries, midni
 All 3,672 unit checks across 259 files, type checking and production build pass. All four development cases pass across desktop Chromium and phone WebKit; all twelve production cases pass across desktop Chromium, phone Chromium and phone WebKit. Reviewed phone previews keep the UTC date and both deck summaries readable. The practice-prefixed journeys join workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `e67a1e1dd2f1` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Select and revisit a daily practice date
+
+Daily practice now offers a native UTC date field and Today action. A selected valid date updates the captured decks and opening; empty/invalid dates disable Start and show an inline accessible error. Recovery clears both the visible and described error, while speed, card-inspection return and the modes Back route remain intact. The preview stays read-only until starting.
+
+A native keyboard probe found that rebuilding the date input after a year increment reset its active segment: the next increment changed the month. The view now keeps date/speed/action controls mounted and updates only derived deck/note content. The regression verifies two consecutive year increments, leap-day selection, invalid-date recovery with accessible-description cleanup, Today reset across a possible UTC boundary, exact deck previews and the selected opening seed on start. The prior preview, replay/retry, reward protection and matchup-change journeys remain included. These controls add no saved fields or replay-format changes.
+
+All 3,672 unit checks across 259 files, type checking and production build pass. All six development cases pass across desktop Chromium and phone WebKit, including a focused repeat of both validation-recovery checks after clearing described errors. All fifteen final production cases pass across desktop Chromium, phone Chromium and phone WebKit, including existing practice restart and ordinary AI pause/leave behavior. Reviewed 320-pixel previews keep native date controls and both deck summaries readable.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `a10e924987f5` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

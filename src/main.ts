@@ -1,3 +1,4 @@
+import "./ui/daily-practice.css";
 import "./ui/card-trial.css";
 import "./ui/battle-controls.css";
 import { exportFileName } from "./game/export-name";
@@ -2226,38 +2227,73 @@ function showModes() {
 function showDailyPractice(opener: HTMLElement) {
   if (screen !== "lobby") return;
   const back = returnToModal(opener);
-  const { day, playerStyle, opponentStyle, practice } = dailyPractice();
-  modal(
-    "Today's practice",
-    `<p class="room-note" id="daily-practice-note"><time datetime="${day}">${day}</time> UTC · Fixed decks, Classic pace and starting shuffle for today. Practice AI; no trophies or rewards.</p><div class="match-decks" data-daily-day="${day}">${(
-      ["yours", "opponent"] as const
-    )
+  let challenge = dailyPractice();
+  const note = () =>
+    `<time datetime="${challenge.day}">${challenge.day}</time> UTC · Fixed decks, Classic pace and starting shuffle for this date. Practice AI; no trophies or rewards.`;
+  const panels = () => {
+    const { practice, playerStyle, opponentStyle } = challenge;
+    return (["yours", "opponent"] as const)
       .map((side) => {
         const deck = side === "yours" ? practice.playerDeck! : practice.deck;
         return `<section class="match-deck-panel" data-daily-side="${side}"><div class="match-deck-heading"><div><h3>${side === "yours" ? "Your daily deck" : "Opponent daily deck"}</h3><p>${esc(side === "yours" ? playerStyle : opponentStyle)}</p></div><span><i class="tiny-drop"></i> ${averageCost(deck).toFixed(1)} average</span></div>${deckCompositionHTML(deck)}<div class="match-deck-grid">${deck.map((id, index) => cardHTML(id, `data-daily-card="${side}-${index}"`)).join("")}</div></section>`;
       })
-      .join(
-        "",
-      )}</div>${practiceSpeedHTML()}<div class="match-details-actions"><button class="text-button" id="daily-practice-back">Back to battle modes</button><button class="primary-button" id="start-daily-practice" aria-describedby="daily-practice-note">${icon("target")} Start today's practice</button></div>`,
+      .join("");
+  };
+  modal(
+    "Daily practice",
+    `<div class="daily-date-controls"><div><label class="field-label" for="daily-practice-day">UTC date</label><input class="name-input" type="date" id="daily-practice-day" value="${challenge.day}" min="0001-01-01" max="9999-12-31" required aria-describedby="daily-date-error daily-practice-note"/></div><button class="secondary-button" id="daily-today">Today</button></div><p id="daily-date-error" role="alert" hidden></p><p class="room-note" id="daily-practice-note">${note()}</p><div class="match-decks" id="daily-practice-decks" data-daily-day="${challenge.day}">${panels()}</div>${practiceSpeedHTML()}<div class="match-details-actions"><button class="text-button" id="daily-practice-back">Back to battle modes</button><button class="primary-button" id="start-daily-practice" aria-describedby="daily-practice-note">${icon("target")} Start daily practice</button></div>`,
     "daily-practice",
     true,
   );
   bindPracticeSpeed();
-  $("#daily-practice-back").onclick = back;
-  $("#start-daily-practice").onclick = () => {
-    practiceMode = "classic";
-    startBattle(false, practice, practice.openingSeed);
+  const dateField = $<HTMLInputElement>("#daily-practice-day");
+  const start = $<HTMLButtonElement>("#start-daily-practice");
+  function bindCards() {
+    document
+      .querySelectorAll<HTMLButtonElement>("[data-daily-card]")
+      .forEach((button) => {
+        button.onclick = () =>
+          showCard(
+            button.dataset.nativeCard as CardId,
+            returnToModal(button),
+            "Back to daily practice",
+          );
+      });
+  }
+  function updateDaily(date: Date) {
+    challenge = dailyPractice(date);
+    if (dateField.value !== challenge.day) dateField.value = challenge.day;
+    dateField.removeAttribute("aria-invalid");
+    const error = $("#daily-date-error");
+    error.textContent = "";
+    error.hidden = true;
+    start.disabled = false;
+    $("#daily-practice-note").innerHTML = note();
+    const decks = $("#daily-practice-decks");
+    decks.dataset.dailyDay = challenge.day;
+    decks.innerHTML = panels();
+    nativeCards.hydrate(decks);
+    bindCards();
+    refreshIcons();
+  }
+  dateField.onchange = () => {
+    const selected = dateField.valueAsDate;
+    if (!dateField.validity.valid || !selected) {
+      dateField.setAttribute("aria-invalid", "true");
+      $("#daily-date-error").textContent = "Choose a valid UTC date.";
+      $("#daily-date-error").hidden = false;
+      start.disabled = true;
+      return;
+    }
+    updateDaily(selected);
   };
-  document
-    .querySelectorAll<HTMLButtonElement>("[data-daily-card]")
-    .forEach((button) => {
-      button.onclick = () =>
-        showCard(
-          button.dataset.nativeCard as CardId,
-          returnToModal(button),
-          "Back to daily practice",
-        );
-    });
+  $("#daily-today").onclick = () => updateDaily(new Date());
+  $("#daily-practice-back").onclick = back;
+  start.onclick = () => {
+    practiceMode = "classic";
+    startBattle(false, challenge.practice, challenge.practice.openingSeed);
+  };
+  bindCards();
 }
 function practiceOptionsHTML() {
   return `<div class="practice-pace"><label class="practice-choice" for="practice-pace">Practice pace<span><select id="practice-pace" aria-describedby="practice-pace-help">${(["training", "classic", "double"] as const).map((pace) => `<option value="${pace}" ${pace === practiceMode ? "selected" : ""}>${modeNames[pace]}</option>`).join("")}</select>${icon("chevron-down")}</span></label><p class="practice-pace-help" id="practice-pace-help">Training uses relaxed AI. Classic and Double elixir use regular AI; Double elixir refills twice as fast from the start.</p></div>${practiceSpeedHTML()}`;

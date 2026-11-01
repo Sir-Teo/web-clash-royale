@@ -1,0 +1,29 @@
+.daily-date-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.daily-date-controls > div {
+  flex: 1;
+  min-width: 0;
+}
+#daily-practice-day {
+  min-width: 0;
+  width: 100%;
+  min-height: 44px;
+  color-scheme: dark;
+}
+#daily-today {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 64px;
+  min-height: 44px;
+  margin-bottom: 0;
+  font-size: 12px;
+}
+#daily-date-error {
+  margin: 8px 0 14px;
+  color: #ffb5b5;
+  font-size: 12px;
+}
