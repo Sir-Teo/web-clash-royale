@@ -1638,7 +1638,7 @@ function showReplayCard(
     play ? ` · ${clock(play.tick * STEP)}` : "";
   $("#card-back").insertAdjacentHTML(
     "beforebegin",
-    `<section class="replay-card-plays" aria-label="Recorded card plays"><p>${side === "viewed" ? "Viewed side" : "Opponent"} · ${plays.length ? `${plays.length} recorded ${plays.length === 1 ? "play" : "plays"}` : "Not played in this recording"}</p><small>Jumps pause at the selected play.</small><div><button class="secondary-button" id="replay-card-previous" ${previous ? "" : "disabled"}>Previous play${label(previous)}</button><button class="secondary-button" id="replay-card-next" ${next ? "" : "disabled"}>Next play${label(next)}</button></div></section>`,
+    `<section class="replay-card-plays" aria-label="Recorded card plays"><p id="replay-card-play-summary">${side === "viewed" ? "Viewed side" : "Opponent"} · ${plays.length ? `${plays.length} recorded ${plays.length === 1 ? "play" : "plays"}` : "Not played in this recording"}</p><small>Jumps pause at the selected play.</small>${plays.length > 1 ? `<label class="practice-choice" for="replay-card-play-picker">Jump to a recorded play<span><select id="replay-card-play-picker" aria-describedby="replay-card-play-summary"><option value="">Choose a play</option>${plays.map((play, index) => `<option value="${play.tick}">Play ${index + 1} · ${clock(play.tick * STEP)}</option>`).join("")}</select>${icon("chevron-down")}</span></label>` : ""}<div><button class="secondary-button" id="replay-card-previous" ${previous ? "" : "disabled"}>Previous play${label(previous)}</button><button class="secondary-button" id="replay-card-next" ${next ? "" : "disabled"}>Next play${label(next)}</button></div></section>`,
   );
   const jump = (play: ReplayPlay | undefined) => {
     if (!play || screen !== "replay" || !graphicsAvailable) return;
@@ -1650,8 +1650,19 @@ function showReplayCard(
     seekReplayPlay(play);
     arena.renderer.domElement.focus({ preventScroll: true });
   };
+  const picker = document.querySelector<HTMLSelectElement>("#replay-card-play-picker");
+  if (picker) {
+    picker.onchange = () => {
+      if (picker.value === "") return;
+      jump(plays.find((play) => play.tick === Number(picker.value)));
+    };
+    picker.onkeydown = (event) => {
+      if (event.key !== "Tab") event.stopPropagation();
+    };
+  }
   $("#replay-card-previous").onclick = () => jump(previous);
   $("#replay-card-next").onclick = () => jump(next);
+  refreshIcons();
 }
 function inspectReplayCard(slot: number) {
   if (screen !== "replay" || !graphicsAvailable || modalKey) return;

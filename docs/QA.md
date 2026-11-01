@@ -3787,3 +3787,15 @@ Three focused unit checks cover exact-opening counts, unsorted duplicate-ID late
 All 3,692 unit checks across 261 files, type checking and production build pass. Both final development journeys pass on desktop Chromium and phone WebKit; all eighteen production daily cases pass across desktop Chromium, phone Chromium and phone WebKit, including recorded-date reopening, native date editing and result replay/retry. Reviewed 320-pixel summaries, review and start controls fit without overflow. The practice-prefixed file joins workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `65d93da93d9e` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Pick any recorded use of a replay card
+
+Replay card inspectors with multiple recorded uses now offer Jump to a recorded play. Native options list each numbered timestamp for that card and canonical team; choosing one reuses the existing paused study-jump path and focuses the arena while keeping speed and perspective. Single-use and unused cards retain their existing Previous/Next controls. Native Escape stays inside the selector and Tab retains modal focus trapping.
+
+New blue/red browser journeys use the full recording, inspect the viewed deck's repeated card and choose its last use directly. They switch viewing side, inspect the other deck and choose an earlier/intermediate use. Exact time, hand, elixir and accepted command count match canonical simulation at the selected play; 2× speed, paused state, arena focus and exact saved bytes survive. A direct simulation probe confirms the chosen later ticks are reachable before the recording's winner. Native Escape retains the inspector, option values match that team's uses, and reviewed 320-pixel labels and selectors fit the card detail view.
+
+A read-only workflow collection audit lists 459 cases across 68 files. Each browser's shards contain 51, 56 and 46 cases, with complete, disjoint coverage and no duplicate assignments. Hosted CI has not been run.
+
+All 3,692 unit checks across 261 files, type checking and production build pass. All four new development cases pass across desktop Chromium and phone WebKit; all eighteen production cases pass across desktop Chromium, phone Chromium and phone WebKit, including the original Previous/Next and hand-inspection restoration journeys. The expanded replay-card-plays file is already selected by workflow CI.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `83af9636bd52` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

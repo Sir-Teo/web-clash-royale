@@ -156,3 +156,144 @@ for (const perspective of ["blue", "red"] as const)
     );
     expect(errors).toEqual([]);
   });
+
+test.describe("recorded-card play picker", () => {
+  let rules: typeof import("../../src/game/engine");
+  const fullReplay = { ...fixture, version: 5 as const, rulesFamily: "origin" as const };
+  test.beforeAll(async ({}, info) => {
+    const { build } = await import("esbuild");
+    const { pathToFileURL } = await import("node:url");
+    const file = info.outputPath("card-play-picker-rules.mjs");
+    await build({
+      stdin: {
+        contents: 'export { Battle } from "./src/game/engine.ts";',
+        resolveDir: process.cwd(),
+      },
+      bundle: true,
+      platform: "node",
+      format: "esm",
+      outfile: file,
+    });
+    rules = await import(pathToFileURL(file).href);
+  });
+  for (const perspective of ["blue", "red"] as const) {
+    test(`${perspective} card play picker jumps directly to later own and opponent uses while retaining paused speed and source`, async ({
+      page,
+    }, info) => {
+      test.setTimeout(150000);
+      if (info.project.name !== "desktop")
+        await page.setViewportSize({ width: 320, height: 740 });
+      await page.addInitScript(
+        ({ key, replay, perspective }) =>
+          localStorage.setItem(
+            key,
+            JSON.stringify({
+              version: 1,
+              name: "Play Finder",
+              sound: false,
+              music: false,
+              seenTutorial: true,
+              history: [
+                {
+                  id: 42,
+                  date: "2026-11-01T00:00:00Z",
+                  mode: replay.mode,
+                  playerName: "Recorded Pilot",
+                  opponent: "Other King",
+                  winner: "red",
+                  crowns: [0, 3],
+                  replay: { ...replay, perspective },
+                },
+              ],
+            }),
+          ),
+        { key, replay: fullReplay, perspective },
+      );
+      await page.goto("/");
+      await expect
+        .poll(
+          () => page.evaluate(() => (window as any).__arena?.state.loadedCards),
+          { timeout: 60000 },
+        )
+        .toBe(expectedCards);
+      const raw = await page.evaluate((key) => localStorage.getItem(key), key);
+      await page
+        .getByRole("button", { name: "Battle log", exact: true })
+        .click();
+      await page.locator("[data-replay]").click();
+      await page.locator("#replay-play").click();
+      await page.locator("#replay-speed").click();
+      const canvas = page.locator("#arena-canvas canvas");
+      for (const opponent of [false, true]) {
+        if (opponent) await page.locator("#replay-side").click();
+        const team = opponent
+          ? perspective === "blue"
+            ? "red"
+            : "blue"
+          : perspective;
+        const card = team === "blue" ? "arrows" : "mini-pekka";
+        const actions = fullReplay.actions.filter(
+          (action: { team: string; card: string }) =>
+            action.team === team && action.card === card,
+        );
+        await page.locator("#arena-settings").click();
+        await page.locator("#settings-replay-decks").click();
+        await page
+          .locator(
+            `[data-replay-deck-side="viewed"] [data-native-card="${card}"]`,
+          )
+          .click();
+        const picker = page.getByRole("combobox", {
+          name: "Jump to a recorded play",
+          exact: true,
+        });
+        expect(
+          await picker
+            .locator("option")
+            .evaluateAll((options) =>
+              options
+                .slice(1)
+                .map((option) => (option as HTMLOptionElement).value),
+            ),
+        ).toEqual(
+          actions.map((action: { tick: number }) => String(action.tick)),
+        );
+        await picker.focus();
+        await picker.press("Escape");
+        await expect(page.locator(".replay-card-plays")).toBeVisible();
+        await expect(picker).toBeFocused();
+        expect((await picker.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+        expect(
+          await page
+            .getByRole("dialog")
+            .evaluate((dialog) => dialog.scrollWidth <= dialog.clientWidth + 1),
+        ).toBe(true);
+        if (!opponent)
+          await page.screenshot({
+            path: info.outputPath("replay-card-play-picker.png"),
+            animations: "disabled",
+          });
+        const action =
+          actions[
+            opponent ? Math.floor((actions.length - 1) / 2) : actions.length - 1
+          ];
+        const target = Math.min(fullReplay.duration, action.tick + 1);
+        await picker.selectOption(String(action.tick));
+        await expect(page.getByRole("dialog")).toHaveCount(0);
+        await expect(canvas).toBeFocused();
+        const expected = new rules.Battle({ replay: fullReplay });
+        while (expected.tick < target && !expected.winner) expected.step();
+        const actual = await state(page);
+        expect(actual.time).toBe(expected.time);
+        expect(actual.hand).toEqual(expected.players[team].hand);
+        expect(actual.elixir).toBeCloseTo(expected.players[team].elixir, 9);
+        expect(actual.actions).toBe(expected.actions.length);
+        expect(actual.paused).toBe(true);
+        expect(actual.speed).toBe(2);
+      }
+      expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(
+        raw,
+      );
+    });
+  }
+});

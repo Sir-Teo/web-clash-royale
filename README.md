@@ -48,7 +48,7 @@ Use **Battle settings → Inspect replay decks** to see both starting decks, the
 
 Replay deck badges count each card's accepted plays up to the displayed moment, with a total for each side. Cards not played yet have no badge. Seeking and switching sides update the counts when you reopen the view.
 
-Replay card details offer **Previous play** and **Next play** for that side's recorded uses. A jump closes the dialogs and pauses at the selected play while keeping speed and viewing side. Unused cards show that they were not played in the recording.
+Replay card details offer **Previous play** and **Next play** for that side's recorded uses. Cards used more than once also offer **Jump to a recorded play**, listing each timestamp so you can select a later use directly. A jump closes the dialogs and pauses at the selected play while keeping speed and viewing side. Unused cards show that they were not played in the recording.
 
 From a shared replay preview, choose a **Destination battle deck**, then **Use recorded player deck** or **Use recorded opponent deck** to copy those cards and select that slot. **Undo deck change** restores all previous saved decks and the active selection. Card inspection keeps the destination, practice choices and Undo available.
 
