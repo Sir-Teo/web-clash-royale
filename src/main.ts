@@ -4041,6 +4041,7 @@ function cancelPointer() {
 document.addEventListener("pointercancel", (e) => {
   if (e.pointerId === activePointerId) cancelPointer();
 });
+window.addEventListener("blur", cancelPointer);
 $("#battle-button").onclick = () => startBattle();
 $("#friend-button").onclick = () => showMultiplayer();
 $(".mode-select").onclick = showModes;

@@ -3819,3 +3819,13 @@ The new practice journeys exercise right/middle clicks and synthetic pen-barrel 
 All 3,692 unit checks across 261 files, type checking and production build pass. All six final development cases pass across desktop Chromium and phone WebKit: four new auxiliary-button cases and both corrected deployment journeys. All nine production cases pass across desktop Chromium, phone Chromium and phone WebKit. The new practice-prefixed regressions join workflow CI automatically; the corrected deployment file is now explicitly selected too. A read-only selection check confirms its case in all three workflow projects.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `56571f6bb720` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Cancel an interrupted hand drag when the window loses focus
+
+Window blur now reuses pointer cancellation to clear active drag state, pointer ownership, hover and the placement preview. The selected card remains available for a later explicit placement. A delivered pointerup after focus loss cannot deploy the interrupted gesture.
+
+The baseline desktop journey dragged Knight into valid territory, dispatched a window blur and released. Knight was deployed and the next card was drawn. Both fixed development journeys now keep the original hand/selection after release, then accept a deliberate primary click. Finishing practice records exactly that one Knight command. The cases cover desktop Chromium and phone WebKit with a focus-loss event while the document remains visible; they also verify the existing visible-window playback state remains active. The practice-prefixed regression joins workflow CI automatically.
+
+All 3,692 unit checks across 261 files, type checking and production build pass. Both development cases pass across desktop Chromium and phone WebKit; all twelve production cases pass across desktop Chromium, phone Chromium and phone WebKit, including auxiliary-button guards and the existing deployment/formation journey.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `7d831a5ab51c` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
