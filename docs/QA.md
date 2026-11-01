@@ -3873,3 +3873,13 @@ Three focused unit cases preserve the ordinary starter average, compare the comp
 All 3,695 unit checks across 262 files, type checking and production build pass. All six production cases pass across desktop Chromium, phone Chromium and phone WebKit. Direct production observations also pass on desktop Chromium and 320-pixel phone WebKit with Mirror on both recorded sides, long rival names, all summary contexts and unchanged saved bytes.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `d4884a01942f` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Describe the focused deck card's own slot
+
+Editable deck cards now reference their own slot description and activation/Alt-arrow instructions. Earlier/Later controls retain the selected-card heading, and session-only save notices remain referenced. Native hidden description nodes provide accessible text without adding visible layout or tab stops.
+
+The baseline keyboard journey selected Giant in slot three, focused Fireball in slot six and received “Giant · Slot 3 of 8” as Fireball's accessible description. The expanded journey now requires Fireball's own sixth slot, the first card's own slot and the correct final slot reference after moving. Both development cases pass on desktop Chromium and phone WebKit through keyboard rotation, shared codes, reload and a recorded battle. Profile rewards and the final saved/recorded order remain protected by the existing journey. The deck-order file is already selected by desktop and phone WebKit core CI.
+
+All 3,695 unit checks across 262 files, type checking and production build pass. All six production cases pass across desktop Chromium, phone Chromium and phone WebKit, including accessible per-slot descriptions with blocked storage and the preserved session-only save notice. Both focused development journeys pass through persisted and recorded keyboard ordering.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `884a20696cd0` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

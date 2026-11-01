@@ -62,7 +62,14 @@ test("keyboard deck order persists through codes, reload and a recorded battle",
   await open(page);
   await expect(page.locator("#deck-move-earlier")).toBeDisabled();
   await expect(page.locator("#deck-move-later")).toBeDisabled();
+  await page.locator('[data-edit-slot="2"]').click();
+  const other = page.locator('[data-edit-slot="5"]');
+  await other.focus();
+  await expect(other).toHaveAccessibleDescription(/Deck slot 6 of 8/);
   await page.locator('[data-edit-slot="0"]').focus();
+  await expect(
+    page.locator('[data-edit-slot="0"]'),
+  ).toHaveAccessibleDescription(/Deck slot 1 of 8/);
   await page.keyboard.press("Alt+ArrowLeft");
   expect(await saved(page)).toEqual(before);
   for (let i = 0; i < 7; i++) await page.keyboard.press("Alt+ArrowRight");
@@ -70,10 +77,7 @@ test("keyboard deck order persists through codes, reload and a recorded battle",
   const selected = page.locator('[data-edit-slot="7"]');
   await expect(selected).toBeFocused();
   await expect(selected).toHaveAttribute("aria-pressed", "true");
-  await expect(selected).toHaveAttribute(
-    "aria-describedby",
-    /deck-order-position/,
-  );
+  await expect(selected).toHaveAttribute("aria-describedby", /deck-slot-7/);
   await expect(selected).toHaveAttribute("data-native-card", before.deck[0]);
   await expect(page.locator("#deck-move-later")).toBeDisabled();
   const changed = await saved(page);
@@ -178,6 +182,12 @@ test("deck order remains usable and exportable when browser storage refuses writ
   await expect(page.locator("#deck-order-save")).toContainText(
     "for this session",
   );
+  await expect(
+    page.locator('[data-edit-slot="0"]'),
+  ).toHaveAccessibleDescription(/Deck slot 1 of 8/);
+  await expect(
+    page.locator('[data-edit-slot="0"]'),
+  ).toHaveAccessibleDescription(/for this session/);
   expect(await saved(page)).toEqual(before);
   await page.locator("#deck-codes").click();
   await expect(page.locator("#current-deck-code")).toHaveValue(
