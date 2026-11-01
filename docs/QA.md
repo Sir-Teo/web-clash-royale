@@ -3745,3 +3745,15 @@ A native keyboard probe found that rebuilding the date input after a year increm
 All 3,672 unit checks across 259 files, type checking and production build pass. All six development cases pass across desktop Chromium and phone WebKit, including a focused repeat of both validation-recovery checks after clearing described errors. All fifteen final production cases pass across desktop Chromium, phone Chromium and phone WebKit, including existing practice restart and ordinary AI pause/leave behavior. Reviewed 320-pixel previews keep native date controls and both deck summaries readable.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `a10e924987f5` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Reopen a recorded daily practice date
+
+Matching daily Battle details and shared replay previews now offer Open daily practice. Recognition verifies AI practice, both Classic modes, origin rules version 56 or later, local perspective, an exact valid dated opponent name, seed and both ordered decks against the current daily selector. Fresh openings, other matchups, historical/local rules and changed curated decks retain their ordinary actions. No metadata fields are added.
+
+Seventeen focused unit cases cover the native calendar's first/last years and leap day independently of recording date, portable export/import, source immutability and rejected lookalikes. Local and shared browser journeys adopt an opponent deck into another slot, open its original leap-day preview, inspect a card, change speed and return to the actual retained record view. Destination, Undo, scroll and opener focus survive; returning updates the session speed control. Undo still restores the original saved decks, and starting the reopened daily uses the original seed, decks and chosen speed without adding progress. Reviewed phone previews fit 320-pixel widths.
+
+A read-only workflow collection audit lists 441 cases across 66 files. Each browser's three shards contain 50, 51 and 46 cases, with complete, disjoint coverage and no duplicate assignments. This verifies local selection; hosted CI has not been run.
+
+All 3,689 unit checks across 260 files, type checking and production build pass. All four development journeys pass across desktop Chromium and phone WebKit; all fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit, including the existing daily date selection and result replay/retry journeys. The practice-prefixed file joins workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `b2cf41224c1b` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
