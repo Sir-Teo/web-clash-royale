@@ -186,3 +186,26 @@
     grid-template-rows: 44px minmax(0, 1fr) 88px;
   }
 }
+
+.replay-frames {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #ffffff18;
+}
+.replay-frames h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.replay-frames p {
+  color: #a8bdd4;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.replay-frames > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.replay-frames button {
+  min-height: 44px;
+}

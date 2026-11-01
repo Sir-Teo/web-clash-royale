@@ -3767,3 +3767,13 @@ Direct desktop and 320-pixel browser inspection started with a selected replacem
 All 3,689 unit checks across 260 files, type checking and production build pass. All fifteen production collection cases pass across desktop Chromium, phone Chromium and phone WebKit. No new persistent test cases were added for this UI reset; direct browser observations cover the action and the existing collection suite protects established flows.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `72efea6c27c6` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Study replays one frame at a time
+
+Comma and Period now step one simulation frame backward/forward and pause. Replay settings also offers Previous frame and Next frame, a current/total frame description and disabled boundaries. Each frame is 1/30 second. Steps close the dialog, focus the arena and keep speed and viewing side. Existing canonical reconstruction, final-boundary handling and seek cancellation remain authoritative; profile/replay formats and combat rules stay unchanged.
+
+The blue/red browser journeys compare exact time, accepted action counts, hand and elixir against canonical replay simulation around command ticks, including the command consumed between frames 129 and 130. They cover held repeats, modifiers, native punctuation typing and timeline input, paused/running playback, switched views at 2×, final rewind, boundary disabling, unchanged saved bytes and 320-pixel controls. A same-event pending fractional scrub followed by a settings step checks integer frame display, stepping from the requested position and cancellation of the older queued callback. Zero-duration recordings retain their final-boundary command with both settings buttons disabled. Existing native Space activation continues to cover speed/pause/resume/exit and the updated shortcut description.
+
+All 3,689 unit checks across 260 files, type checking and production build pass. All six final frame-step development cases and both focused native-Space cases pass across desktop Chromium and phone WebKit. All eighteen production cases pass across desktop Chromium, phone Chromium and phone WebKit, including existing running/paused replay Help. Reviewed 320-pixel settings keep the frame description and both controls readable. An explicit workflow matcher includes the new file; a read-only collection snapshot lists 450 cases across 67 files, including its nine frame journeys across all three browsers.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `f213b791ce80` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
