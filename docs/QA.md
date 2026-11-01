@@ -3799,3 +3799,13 @@ A read-only workflow collection audit lists 459 cases across 68 files. Each brow
 All 3,692 unit checks across 261 files, type checking and production build pass. All four new development cases pass across desktop Chromium and phone WebKit; all eighteen production cases pass across desktop Chromium, phone Chromium and phone WebKit, including the original Previous/Next and hand-inspection restoration journeys. The expanded replay-card-plays file is already selected by workflow CI.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `83af9636bd52` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Export the original recording directly from Replay settings
+
+Replay settings now offers Export replay with the existing portable JSON format and opponent/UTC filename. The action captures the original recording and recorded-player name, preserving original perspective, all commands beyond the current position and complete duration after seeking or viewing-side changes. It leaves the settings draft, current paused position and saved bytes intact. A blocked Blob/download reports an inline error; a successful retry clears it.
+
+Local blue-side and shared red-side browser journeys seek, switch view, set 2× speed and edit unsaved name/sound controls before downloading. They verify the complete whitelisted file, original name/perspective/filename, future commands and omitted room/progress data; then reimport it and check original HUD names and starting hands. The shared case keeps a different recording first in local history. The local case covers blocked-download recovery and a legacy recording's captured fallback name. Closing settings restores the prior running or paused state. Reviewed 320-pixel export controls fit without overflow.
+
+All 3,692 unit checks across 261 files, type checking and production build pass. All four development journeys pass across desktop Chromium and phone WebKit; all eighteen production cases pass across desktop Chromium, phone Chromium and phone WebKit, including frame stepping and existing portable export filenames/metadata. The settings-prefixed file joins workflow CI automatically.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `d5a2943c0e65` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).

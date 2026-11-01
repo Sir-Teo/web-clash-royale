@@ -3619,6 +3619,8 @@ function showMatchDetails(
     };
 }
 function showSettings() {
+  const recordedReplay = screen === "replay" ? replayRecord : null;
+  const recordedName = replayRecordedName ?? profile.name;
   const original = {
     name: profile.name,
     sound: profile.sound,
@@ -3640,7 +3642,7 @@ function showSettings() {
   );
   $("#settings-form").insertAdjacentHTML(
     "afterend",
-    `<button class="secondary-button" id="settings-help">${icon("scroll-text")} How to play</button>${screen === "replay" ? `<button class="secondary-button" id="settings-replay-decks">${icon("layers-2")} Inspect replay decks</button>${replayFrameControlsHTML()}` : ""}${backups}`,
+    `<button class="secondary-button" id="settings-help">${icon("scroll-text")} How to play</button>${screen === "replay" ? `<button class="secondary-button" id="settings-replay-decks">${icon("layers-2")} Inspect replay decks</button><div class="replay-export"><button class="secondary-button" id="settings-export-replay">${icon("hard-drive-download")} Export replay</button><p>Save this recording to watch in another browser.</p><p id="settings-export-replay-error" class="replay-file-error" role="alert" hidden></p></div>${replayFrameControlsHTML()}` : ""}${backups}`,
   );
   const view = $("#modal-root").firstElementChild!;
   const panel = view.querySelector<HTMLElement>(".modal")!;
@@ -3662,6 +3664,22 @@ function showSettings() {
   const replayDecks = document.querySelector<HTMLElement>("#settings-replay-decks");
   if (replayDecks)
     replayDecks.onclick = () => showReplayDecks(returnToSettings(replayDecks));
+  if (recordedReplay) {
+    $("#settings-export-replay").onclick = () => {
+      const error = $("#settings-export-replay-error");
+      error.textContent = "";
+      error.hidden = true;
+      try {
+        downloadJson(
+          exportReplayFile(recordedReplay, recordedName),
+          replayFileName(recordedReplay),
+        );
+      } catch (cause) {
+        error.textContent = cause instanceof Error ? cause.message : "Couldn’t export this replay.";
+        error.hidden = false;
+      }
+    };
+  }
   if (screen === "replay") {
     $("#replay-frame-previous").onclick = () => stepReplayFrame(-1);
     $("#replay-frame-next").onclick = () => stepReplayFrame(1);
