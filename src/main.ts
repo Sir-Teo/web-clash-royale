@@ -8,7 +8,7 @@ import { ModalFocus } from "./ui/modal-focus";
 import { cardDetails } from "./ui/card-details";
 import { replayDeckUsage } from "./ui/replay-deck-usage";
 import { replayCardPlays } from "./ui/replay-card-plays";
-import { dailyPractice, recordedDailyDate } from "./ui/daily-practice";
+import { dailyPractice, recordedDailyDate, dailyPracticeResults } from "./ui/daily-practice";
 import { DeckEditHistory, copyDeckSelection } from "./ui/deck-edit-history";
 import { collectionCards } from "./ui/card-collection";
 import type { CollectionKind, CollectionOrder } from "./ui/card-collection";
@@ -2250,13 +2250,28 @@ function showDailyPractice(
   };
   modal(
     "Daily practice",
-    `<div class="daily-date-controls"><div><label class="field-label" for="daily-practice-day">UTC date</label><input class="name-input" type="date" id="daily-practice-day" value="${challenge.day}" min="0001-01-01" max="9999-12-31" required aria-describedby="daily-date-error daily-practice-note"/></div><button class="secondary-button" id="daily-today">Today</button></div><p id="daily-date-error" role="alert" hidden></p><p class="room-note" id="daily-practice-note">${note()}</p><div class="match-decks" id="daily-practice-decks" data-daily-day="${challenge.day}">${panels()}</div>${practiceSpeedHTML()}<div class="match-details-actions"><button class="text-button" id="daily-practice-back">${esc(backLabel)}</button><button class="primary-button" id="start-daily-practice" aria-describedby="daily-practice-note">${icon("target")} Start daily practice</button></div>`,
+    `<div class="daily-date-controls"><div><label class="field-label" for="daily-practice-day">UTC date</label><input class="name-input" type="date" id="daily-practice-day" value="${challenge.day}" min="0001-01-01" max="9999-12-31" required aria-describedby="daily-date-error daily-practice-note"/></div><button class="secondary-button" id="daily-today">Today</button></div><p id="daily-date-error" role="alert" hidden></p><p class="room-note" id="daily-practice-note">${note()}</p><div class="match-decks" id="daily-practice-decks" data-daily-day="${challenge.day}">${panels()}</div>${practiceSpeedHTML()}<div class="practice-record" id="daily-practice-record" role="status" aria-live="polite" aria-atomic="true"><p></p><small>From your current battle log.</small></div><button class="secondary-button practice-review" id="review-daily-practice" hidden>${icon("play")} Review latest attempt</button><div class="match-details-actions"><button class="text-button" id="daily-practice-back">${esc(backLabel)}</button><button class="primary-button" id="start-daily-practice" aria-describedby="daily-practice-note">${icon("target")} Start daily practice</button></div>`,
     "daily-practice",
     true,
   );
   bindPracticeSpeed();
   const dateField = $<HTMLInputElement>("#daily-practice-day");
   const start = $<HTMLButtonElement>("#start-daily-practice");
+  const review = $<HTMLButtonElement>("#review-daily-practice");
+  let latestRecord: RecordEntry | undefined;
+  function updateRecord() {
+    const result = dailyPracticeResults(profile.history, challenge.day);
+    latestRecord = result.latest;
+    review.hidden = !latestRecord;
+    review.disabled = !dateField.validity.valid;
+    $("#daily-practice-record p").textContent = latestRecord
+      ? `Saved daily attempts: ${result.wins} ${result.wins === 1 ? "win" : "wins"} · ${result.losses} ${result.losses === 1 ? "loss" : "losses"} · ${result.draws} ${result.draws === 1 ? "draw" : "draws"}.`
+      : "No saved attempts for this UTC date.";
+  }
+  review.onclick = () => {
+    if (latestRecord)
+      watchPreviewReplay(latestRecord, review, "Back to daily practice");
+  };
   function bindCards() {
     document
       .querySelectorAll<HTMLButtonElement>("[data-daily-card]")
@@ -2283,6 +2298,7 @@ function showDailyPractice(
     decks.innerHTML = panels();
     nativeCards.hydrate(decks);
     bindCards();
+    updateRecord();
     refreshIcons();
   }
   dateField.onchange = () => {
@@ -2292,6 +2308,7 @@ function showDailyPractice(
       $("#daily-date-error").textContent = "Choose a valid UTC date.";
       $("#daily-date-error").hidden = false;
       start.disabled = true;
+      review.disabled = true;
       return;
     }
     updateDaily(selected);
@@ -2303,6 +2320,7 @@ function showDailyPractice(
     startBattle(false, challenge.practice, challenge.practice.openingSeed);
   };
   bindCards();
+  updateRecord();
 }
 function dailyRecordButtonHTML(day: string) {
   return `<div class="replay-export"><button class="secondary-button" id="open-recorded-daily">${icon("target")} Open daily practice</button><p>Revisit the fixed matchup and opening for <time datetime="${day}">${day}</time> UTC.</p></div>`;

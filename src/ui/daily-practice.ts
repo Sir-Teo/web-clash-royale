@@ -69,3 +69,28 @@ export function recordedDailyDate(record: RecordEntry): string | undefined {
   )
     return day;
 }
+
+/** Summarize only saved attempts of the exact daily matchup and opening. */
+export function dailyPracticeResults(
+  history: readonly RecordEntry[],
+  day: string,
+) {
+  const result = {
+    wins: 0,
+    losses: 0,
+    draws: 0,
+    latest: undefined as RecordEntry | undefined,
+  };
+  for (const record of history) {
+    if (recordedDailyDate(record) !== day) continue;
+    if (record.winner === "blue") result.wins++;
+    else if (record.winner === "red") result.losses++;
+    else result.draws++;
+    if (
+      !result.latest ||
+      Date.parse(record.date) > Date.parse(result.latest.date)
+    )
+      result.latest = record;
+  }
+  return result;
+}
