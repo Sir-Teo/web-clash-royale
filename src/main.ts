@@ -943,7 +943,7 @@ function updateBattleUI(force = false) {
           intro.clock.blocking
         )
           return;
-        if (!event.isPrimary || pointerDown) return;
+        if (!event.isPrimary || event.button !== 0 || pointerDown) return;
         clearKeyboardAim();
         activeSlot = Number(e.dataset.slot);
         pointerDown = true;
@@ -3973,7 +3973,7 @@ arena.host.addEventListener("pointerleave", (event) => {
   }
 });
 arena.host.addEventListener("pointerdown", (e) => {
-  if (!e.isPrimary) return;
+  if (!e.isPrimary || e.button !== 0) return;
   if (screen !== "battle" || selected < 0 || paused || pointerDown) return;
   clearKeyboardAim();
   const p = arena.point(e.clientX, e.clientY);

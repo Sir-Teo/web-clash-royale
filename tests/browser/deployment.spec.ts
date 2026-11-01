@@ -48,7 +48,7 @@ test("native deployment formations and invalid placement feedback work through t
     ? 15
     : /Archers/.test(label!)
       ? 2
-      : /^Goblins/.test(label!)
+      : /^Skeletons/.test(label!)
         ? 4
         : 3;
   await group.click();

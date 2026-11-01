@@ -24,6 +24,7 @@ export default defineConfig(common, {
     "**/replay-help.spec.ts",
     "**/paused-deck.spec.ts",
     "**/deck-inspection-return.spec.ts",
+    "**/deployment.spec.ts",
     "**/help.spec.ts",
     "**/keyboard-controls.spec.ts",
     "**/settings-*.spec.ts",

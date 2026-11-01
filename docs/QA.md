@@ -3809,3 +3809,13 @@ Local blue-side and shared red-side browser journeys seek, switch view, set 2× 
 All 3,692 unit checks across 261 files, type checking and production build pass. All four development journeys pass across desktop Chromium and phone WebKit; all eighteen production cases pass across desktop Chromium, phone Chromium and phone WebKit, including frame stepping and existing portable export filenames/metadata. The settings-prefixed file joins workflow CI automatically.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `d5a2943c0e65` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Prevent auxiliary buttons from selecting or deploying battle cards
+
+Both hand and arena pointerdown handlers now require button zero as well as the primary pointer. Native right-click baseline journeys reproduced both faults: a selected Knight was deployed by an arena right-click, and a hand right-click selected it. isPrimary alone only identifies the primary pointer for its device type and accepts auxiliary mouse buttons.
+
+The new practice journeys exercise right/middle clicks and synthetic pen-barrel events before a genuine primary click/touch or drag. They require unchanged selection/hand for auxiliary input and exactly one accepted Knight command at the intended tile after the primary action. All four initial fixed development cases pass on desktop Chromium and phone WebKit, including native touch and mouse dragging. The existing deployment journey initially exposed stale counts for two random opening swarms: archived Skeletons deploy four bodies and Goblins three. The regression's Skeletons expectation is corrected; Goblins follows the three-body default. Formations, invalid placement feedback, dragging and affordability are rechecked with that historical expectation.
+
+All 3,692 unit checks across 261 files, type checking and production build pass. All six final development cases pass across desktop Chromium and phone WebKit: four new auxiliary-button cases and both corrected deployment journeys. All nine production cases pass across desktop Chromium, phone Chromium and phone WebKit. The new practice-prefixed regressions join workflow CI automatically; the corrected deployment file is now explicitly selected too. A read-only selection check confirms its case in all three workflow projects.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `56571f6bb720` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
