@@ -99,6 +99,10 @@ for (const perspective of ["blue", "red"] as const) {
     await canvas.focus();
     await page.keyboard.press(".");
     await check(1);
+    const feedback = page.locator("#replay-frame-feedback");
+    await expect(feedback).toHaveAttribute("role", "status");
+    await expect(feedback).toHaveAttribute("aria-live", "polite");
+    await expect(feedback).toHaveText("Paused at frame 1 of 600.");
     await page.keyboard.down("Period");
     await check(2);
     await page.keyboard.down("Period");
@@ -152,6 +156,7 @@ for (const perspective of ["blue", "red"] as const) {
     await page.keyboard.press(",");
     await check(129, other);
     await page.locator("#replay-play").click();
+    await expect(feedback).toHaveText("");
     await canvas.focus();
     const beforeStep = await canvas.evaluate((canvas) => {
       const time = (window as any).__arena.state.time;
@@ -166,7 +171,11 @@ for (const perspective of ["blue", "red"] as const) {
       return Math.round(time * 30);
     });
     await check(beforeStep + 1, other);
+    await expect(feedback).toHaveText(
+      `Paused at frame ${beforeStep + 1} of 600.`,
+    );
     await page.keyboard.press("End");
+    await expect(feedback).toHaveText("");
     await check(600, other);
     await page.keyboard.press(".");
     await check(600, other);

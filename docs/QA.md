@@ -3829,3 +3829,15 @@ The baseline desktop journey dragged Knight into valid territory, dispatched a w
 All 3,692 unit checks across 261 files, type checking and production build pass. Both development cases pass across desktop Chromium and phone WebKit; all twelve production cases pass across desktop Chromium, phone Chromium and phone WebKit, including auxiliary-button guards and the existing deployment/formation journey.
 
 Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `7d831a5ab51c` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
+
+## Announce the exact paused replay frame
+
+Explicit frame steps now update an atomic polite live region after reconstructing the moment and focusing the arena. The announcement identifies the actual frame and total recorded frames, providing feedback when stepping does not change the whole-second visual clock. It clears when playback resumes or another seek replaces the moment; normal playback does not announce every simulation tick.
+
+The existing blue/red frame journeys now check the status role, polite semantics and exact frame message, plus cleanup on resume and a later seek. Their canonical timing, command boundaries, queued fractional scrub, viewing-side, native-control and zero-duration checks remain included. All six development cases pass on desktop Chromium and phone WebKit.
+
+A read-only workflow collection audit lists 477 cases across 72 files. Each browser's shards contain 53, 58 and 48 cases, with complete, disjoint coverage and no duplicate assignments. Hosted CI has not been run.
+
+All 3,692 unit checks across 261 files, type checking and production build pass. All fifteen production cases pass across desktop Chromium, phone Chromium and phone WebKit, including existing coarse/fine seeking, native timeline behavior and phone control layout. The expanded frame journeys are already selected by workflow CI.
+
+Root production offline reload, cached match worker, battle startup and all 278 native combat/death/music files pass. Root cache is `e1c3c0b808cb` (921 URLs, 894 unique files, 8.1 MB duplicate bytes omitted).
